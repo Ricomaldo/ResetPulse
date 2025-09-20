@@ -1,5 +1,6 @@
 // src/styles/theme.js
 import { Dimensions } from 'react-native';
+import paletteData from './palette.json';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,7 +23,7 @@ const getDeviceSize = () => {
 
 // Brand colors - IRIM palette (fixed brand identity)
 const BRAND_COLORS = {
-  primary: '#FF6B6B',    // Rouge énergisant IRIM
+  primary: '#8B1538',    // Rouge énergisant IRIM
   secondary: '#4ECDC4',  // Turquoise IRIM
   accent: '#95E1D3',     // Vert apaisant IRIM
   deep: '#3D5A80',       // Bleu profond IRIM
@@ -42,40 +43,21 @@ const BRAND_COLORS = {
   info: '#3D5A80',
 };
 
-// Timer palette system (customizable for timer colors)
-const TIMER_PALETTES = {
-  // Palette IRIM originale
-  irim: {
-    energy: '#FF6B6B',     // Rouge énergisant
-    focus: '#4ECDC4',      // Turquoise concentration
-    calm: '#95E1D3',       // Vert apaisant
-    deep: '#3D5A80',       // Bleu profond méditation
-  },
-  
-  // Palette Laser
-  laser: {
-    energy: '#00FF00',     // Vert laser
-    focus: '#00FFFF',      // Cyan laser
-    calm: '#FF00FF',       // Magenta laser
-    deep: '#FFFF00',       // Jaune laser
-  },
-  
-  // Palette Nature
-  nature: {
-    energy: '#FF6B6B',     // Rouge feu
-    focus: '#4ECDC4',      // Turquoise océan
-    calm: '#95E1D3',       // Vert forêt
-    deep: '#3D5A80',       // Bleu nuit
-  },
-  
-  // Palette Monochrome
-  mono: {
-    energy: '#FF6B6B',     // Rouge
-    focus: '#8B5A3C',      // Marron
-    calm: '#6B7280',       // Gris
-    deep: '#374151',       // Gris foncé
-  },
+// Convert JSON palette data to theme format
+const convertPaletteToTheme = (paletteArray) => {
+  return {
+    energy: paletteArray[0],   // Première couleur
+    focus: paletteArray[1],    // Deuxième couleur
+    calm: paletteArray[2],     // Troisième couleur
+    deep: paletteArray[3],     // Quatrième couleur
+  };
 };
+
+// Timer palette system (from palette.json)
+const TIMER_PALETTES = Object.keys(paletteData).reduce((acc, paletteName) => {
+  acc[paletteName] = convertPaletteToTheme(paletteData[paletteName]);
+  return acc;
+}, {});
 
 // Timer states (independent of palette)
 const TIMER_STATES = {
@@ -170,8 +152,8 @@ const LAYOUT = {
 };
 
 // Theme factory function
-export const createTheme = (paletteName = 'irim') => {
-  const selectedPalette = TIMER_PALETTES[paletteName] || TIMER_PALETTES.irim;
+export const createTheme = (paletteName = 'classique') => {
+  const selectedPalette = TIMER_PALETTES[paletteName] || TIMER_PALETTES.classique;
   
   return {
     // Brand colors (fixed)
@@ -206,8 +188,8 @@ export const createTheme = (paletteName = 'irim') => {
   };
 };
 
-// Default theme with IRIM palette
-export const theme = createTheme('irim');
+// Default theme with classique palette
+export const theme = createTheme('classique');
 
 // Export palette names for easy access
 export const PALETTE_NAMES = Object.keys(TIMER_PALETTES);

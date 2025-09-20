@@ -88,7 +88,7 @@ export default function TimeTimer() {
     },
     
     presetButtonTextActive: {
-      color: 'black',
+      color: theme.colors.background,
     },
     
     controlButton: {

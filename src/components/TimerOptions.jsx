@@ -57,7 +57,7 @@ export default function TimerOptions() {
     },
 
     optionTextActive: {
-      color: 'black',
+      color: theme.colors.background,
       fontWeight: '600',
     },
   });

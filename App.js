@@ -6,7 +6,7 @@ import TimerScreen from './src/screens/TimerScreen';
 
 export default function App() {
   return (
-    <ThemeProvider>
+    <ThemeProvider initialPalette="laser">
       <StatusBar barStyle="dark-content" backgroundColor="#FEFEFE" />
       <TimerScreen />
     </ThemeProvider>

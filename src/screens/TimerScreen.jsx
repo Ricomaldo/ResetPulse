@@ -6,6 +6,7 @@ import { TimerOptionsProvider } from '../contexts/TimerOptionsContext';
 import ColorSwitch from '../components/ColorSwitch';
 import TimeTimer from '../components/TimeTimer';
 import TimerOptions from '../components/TimerOptions';
+import { PaletteSelector } from '../components/PaletteSelector';
 
 export default function TimerScreen() {
   const theme = useTheme();
@@ -13,6 +14,7 @@ export default function TimerScreen() {
   return (
     <TimerOptionsProvider>
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <PaletteSelector />
         <ColorSwitch />
         <TimeTimer />
         <TimerOptions />

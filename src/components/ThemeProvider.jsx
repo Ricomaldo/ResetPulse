@@ -4,7 +4,7 @@ import { createTheme, PALETTE_NAMES } from '../styles/theme';
 
 const ThemeContext = createContext();
 
-export const ThemeProvider = ({ children, initialPalette = 'irim' }) => {
+export const ThemeProvider = ({ children, initialPalette = 'classique' }) => {
   const [currentPalette, setCurrentPalette] = useState(initialPalette);
   
   const theme = useMemo(() => createTheme(currentPalette), [currentPalette]);
