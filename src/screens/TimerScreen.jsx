@@ -1,16 +1,23 @@
 // src/screens/TimerScreen.jsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '../components/ThemeProvider';
+import { TimerOptionsProvider } from '../contexts/TimerOptionsContext';
+import ColorSwitch from '../components/ColorSwitch';
 import TimeTimer from '../components/TimeTimer';
+import TimerOptions from '../components/TimerOptions';
 
 export default function TimerScreen() {
   const theme = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <TimeTimer />
-    </View>
+    <TimerOptionsProvider>
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <ColorSwitch />
+        <TimeTimer />
+        <TimerOptions />
+      </View>
+    </TimerOptionsProvider>
   );
 }
 

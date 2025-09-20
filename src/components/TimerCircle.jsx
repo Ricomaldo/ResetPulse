@@ -9,7 +9,9 @@ export default function TimerCircle({
   progress = 1,
   color,
   size = null,
-  clockwise = false
+  clockwise = false,
+  scaleMode = '60min',
+  duration = 240
 }) {
   const theme = useTheme();
   
@@ -20,12 +22,18 @@ export default function TimerCircle({
   const maxMinutes = 60;
   
   // Progress angle calculation
-  const progressAngle = progress * 360;
+  // In 60min mode: 20min duration = 120° (1/3 of circle), progress scales that
+  // In full mode: always use full 360°, progress scales that
+  const maxAngle = scaleMode === '60min'
+    ? Math.min(360, (duration / 3600) * 360) // duration in seconds: 1200s = 120°, 3600s = 360°
+    : 360; // Full mode always uses full circle
+  const progressAngle = maxAngle * progress;
   
-  // Create graduation marks for minutes
-  const graduationMarks = Array.from({ length: 60 }, (_, i) => {
-    const angle = (i * 6) - 90; // 6 degrees per minute, -90 to start at top
-    const isHour = i % 5 === 0; // Longer marks every 5 minutes
+  // Create graduation marks based on scale mode
+  const graduationCount = scaleMode === '60min' ? 60 : Math.min(60, duration / 60 * 5);
+  const graduationMarks = Array.from({ length: graduationCount }, (_, i) => {
+    const angle = (i * (360 / graduationCount)) - 90; // Distribute evenly, -90 to start at top
+    const isHour = scaleMode === '60min' ? (i % 5 === 0) : (i % Math.max(1, Math.floor(graduationCount / 12)) === 0);
     const tickLength = isHour ? radius * 0.08 : radius * 0.04;
     const innerRadius = radius - tickLength;
     
@@ -45,28 +53,67 @@ export default function TimerCircle({
     };
   });
   
-  // Create minute numbers (every 5 minutes)
-  const minuteNumbers = Array.from({ length: 12 }, (_, i) => {
-    let minute;
-    if (clockwise) {
-      // Clockwise: 0, 55, 50, 45...
-      minute = i === 0 ? 0 : 60 - (i * 5);
+  // Create numbers based on scale mode
+  const createNumbers = () => {
+    if (scaleMode === '60min') {
+      // Classic 60-minute scale - position changes based on clockwise
+      return Array.from({ length: 12 }, (_, i) => {
+        const minute = (i * 5) % 60;
+        let angle;
+        if (clockwise) {
+          // Clockwise: 0 at top, 15 at right, 30 at bottom, 45 at left
+          angle = (minute * 6) - 90; // 6 degrees per minute
+        } else {
+          // Anti-clockwise: 0 at top, 15 at left, 30 at bottom, 45 at right
+          angle = -(minute * 6) - 90;
+        }
+        return { index: i, value: minute, angle };
+      });
     } else {
-      // Counter-clockwise: 0, 5, 10, 15...
-      minute = (i * 5) % 60;
+      // Full scale based on duration
+      const durationMinutes = Math.ceil(duration / 60);
+      let numberCount;
+      let step;
+
+      if (durationMinutes <= 5) {
+        numberCount = durationMinutes + 1;
+        step = 1;
+      } else if (durationMinutes <= 15) {
+        numberCount = Math.ceil(durationMinutes / 2.5) + 1;
+        step = Math.ceil(durationMinutes / (numberCount - 1));
+      } else if (durationMinutes <= 30) {
+        numberCount = Math.ceil(durationMinutes / 5) + 1;
+        step = 5;
+      } else {
+        numberCount = Math.ceil(durationMinutes / 10) + 1;
+        step = 10;
+      }
+
+      return Array.from({ length: numberCount }, (_, i) => {
+        const minute = Math.min(i * step, durationMinutes);
+        let angle;
+        if (clockwise) {
+          angle = (minute / durationMinutes * 360) - 90;
+        } else {
+          angle = -(minute / durationMinutes * 360) - 90;
+        }
+        return { index: i, value: minute, angle };
+      });
     }
-    
-    const angle = (i * 30) - 90; // 30 degrees between each number
+  };
+
+  const minuteNumbers = createNumbers().map((num) => {
+    const angle = num.angle;
     const numberRadius = radius + 12;
     
     const x = circleSize / 2 + numberRadius * Math.cos((angle * Math.PI) / 180);
     const y = circleSize / 2 + numberRadius * Math.sin((angle * Math.PI) / 180);
-    
+
     return {
-      key: `num-${i}`,
+      key: `num-${num.index}`,
       x,
       y,
-      minute,
+      minute: num.value,
       fontSize: Math.max(9, circleSize * 0.035)
     };
   });
@@ -86,8 +133,8 @@ export default function TimerCircle({
       return `
         M ${centerX} ${centerY}
         L ${centerX} ${centerY - radius}
-        A ${radius} ${radius} 0 ${progressAngle > 180 ? 1 : 0} 0
-          ${centerX - radius * Math.sin((progressAngle * Math.PI) / 180)}
+        A ${radius} ${radius} 0 ${progressAngle > 180 ? 1 : 0} 1
+          ${centerX + radius * Math.sin((progressAngle * Math.PI) / 180)}
           ${centerY - radius * Math.cos((progressAngle * Math.PI) / 180)}
         Z
       `;
@@ -95,8 +142,8 @@ export default function TimerCircle({
       return `
         M ${centerX} ${centerY}
         L ${centerX} ${centerY - radius}
-        A ${radius} ${radius} 0 ${progressAngle > 180 ? 1 : 0} 1
-          ${centerX + radius * Math.sin((progressAngle * Math.PI) / 180)}
+        A ${radius} ${radius} 0 ${progressAngle > 180 ? 1 : 0} 0
+          ${centerX - radius * Math.sin((progressAngle * Math.PI) / 180)}
           ${centerY - radius * Math.cos((progressAngle * Math.PI) / 180)}
         Z
       `;

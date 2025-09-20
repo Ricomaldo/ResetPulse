@@ -29,13 +29,12 @@ export default function useTimer(initialDuration = 240) {
 
     if (newRemaining > 0 && running) {
       intervalRef.current = requestAnimationFrame(updateTimer);
-    } else {
+    } else if (newRemaining === 0) {
+      // Timer finished - reset states properly
       setRunning(false);
       setStartTime(null);
-      if (newRemaining === 0) {
-        // Timer finished - could trigger haptic/sound here
-        console.log('⏰ Timer terminé!');
-      }
+      setIsPaused(false);
+      console.log('⏰ Timer terminé!');
     }
   }, [startTime, duration, running]);
 
@@ -108,38 +107,38 @@ export default function useTimer(initialDuration = 240) {
 
   // Controls
   const toggleRunning = useCallback(() => {
-    setRunning((prev) => {
-      const newRunning = !prev;
-
-      if (newRunning) {
-        if (remaining === 0) {
-          // Restart after completion
-          setRemaining(duration);
-          setShowParti(true);
-          setShowReparti(false);
-          setTimeout(() => setShowParti(false), 2000);
-        } else if (isPaused) {
-          // Resume after pause
-          setShowReparti(true);
-          setShowParti(false);
-          setTimeout(() => setShowReparti(false), 2000);
-        } else {
-          // First start or after reset
-          setShowParti(true);
-          setShowReparti(false);
-          setTimeout(() => setShowParti(false), 2000);
-        }
-        setIsPaused(false);
-      } else {
-        // Pause
-        setIsPaused(true);
+    if (remaining === 0) {
+      // Restart after completion - reset everything first
+      setRemaining(duration);
+      setStartTime(null);
+      setIsPaused(false);
+      setShowParti(true);
+      setShowReparti(false);
+      setTimeout(() => setShowParti(false), 2000);
+      setRunning(true);
+    } else if (!running) {
+      // Start or resume
+      if (isPaused) {
+        // Resume after pause
+        setShowReparti(true);
         setShowParti(false);
+        setTimeout(() => setShowReparti(false), 2000);
+      } else {
+        // First start
+        setShowParti(true);
         setShowReparti(false);
+        setTimeout(() => setShowParti(false), 2000);
       }
-
-      return newRunning;
-    });
-  }, [remaining, duration, isPaused]);
+      setIsPaused(false);
+      setRunning(true);
+    } else {
+      // Pause
+      setRunning(false);
+      setIsPaused(true);
+      setShowParti(false);
+      setShowReparti(false);
+    }
+  }, [remaining, duration, isPaused, running]);
 
   const resetTimer = useCallback(() => {
     setRemaining(duration);
@@ -155,7 +154,7 @@ export default function useTimer(initialDuration = 240) {
     setDuration(newDuration);
   }, []);
 
-  // Progress calculation (0 to 1)
+  // Progress calculation (1 = full at start, 0 = empty at end)
   const progress = duration > 0 ? remaining / duration : 0;
 
   return {

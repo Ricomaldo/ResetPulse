@@ -1,31 +1,19 @@
 // src/components/TimeTimer.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from './ThemeProvider';
+import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { responsiveSize, getGoldenDimensions } from '../styles/layout';
 import useTimer from '../hooks/useTimer';
 import TimerCircle from './TimerCircle';
-
-// Simple icon components (we'll replace with actual icons later)
-const PlayIcon = () => <Text style={{ fontSize: 20, color: 'white' }}>▶</Text>;
-const PauseIcon = () => <Text style={{ fontSize: 20, color: 'white' }}>⏸</Text>;
-const ResetIcon = () => <Text style={{ fontSize: 20, color: 'white' }}>⟲</Text>;
+import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 
 export default function TimeTimer() {
   const theme = useTheme();
-  const [currentColor, setCurrentColor] = useState(theme.colors.energy);
-  const [clockwise, setClockwise] = useState(false);
+  const { currentColor, clockwise, scaleMode } = useTimerOptions();
   
   // Initialize timer with 4 minutes default
   const timer = useTimer(4 * 60);
-  
-  // Color palette (4 basic colors for M1)
-  const colors = [
-    theme.colors.energy,
-    theme.colors.focus, 
-    theme.colors.calm,
-    theme.colors.deep
-  ];
   
   // Get responsive dimensions using golden ratio
   const containerSize = responsiveSize(340);
@@ -90,7 +78,7 @@ export default function TimeTimer() {
     },
     
     presetButtonActive: {
-      backgroundColor: currentColor,
+      backgroundColor: theme.colors.primary,
     },
     
     presetButtonText: {
@@ -112,40 +100,19 @@ export default function TimeTimer() {
       justifyContent: 'center',
       ...theme.shadows.sm,
     },
-    
-    colorRow: {
-      position: 'absolute',
-      right: theme.spacing.sm,
-      top: '50%',
-      transform: [{ translateY: -50 }],
-      flexDirection: 'column',
-      gap: theme.spacing.xs,
-      alignItems: 'center',
-    },
-    
-    colorButton: {
-      width: responsiveSize(24),
-      height: responsiveSize(24),
-      borderRadius: responsiveSize(12),
-      borderWidth: 2,
-      borderColor: theme.colors.border,
-    },
-    
-    colorButtonActive: {
-      borderColor: theme.colors.primary,
-      transform: [{ scale: 1.2 }],
-    },
   });
   
   return (
     <View style={styles.container}>
       {/* Timer Circle */}
       <View style={styles.timerWrapper}>
-        <TimerCircle 
+        <TimerCircle
           progress={timer.progress}
           color={currentColor}
           size={circleSize}
           clockwise={clockwise}
+          scaleMode={scaleMode}
+          duration={timer.duration}
         />
         
         {/* Message Overlay */}
@@ -192,34 +159,19 @@ export default function TimeTimer() {
         </TouchableOpacity>
         
         {/* Control Buttons */}
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.controlButton}
           onPress={timer.toggleRunning}
         >
-          {timer.running ? <PauseIcon /> : <PlayIcon />}
+          {timer.running ? <PauseIcon size={20} color="white" /> : <PlayIcon size={20} color="white" />}
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.controlButton}
           onPress={timer.resetTimer}
         >
-          <ResetIcon />
+          <ResetIcon size={20} color="white" />
         </TouchableOpacity>
-      </View>
-      
-      {/* Color Selector */}
-      <View style={styles.colorRow}>
-        {colors.map((color, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.colorButton,
-              { backgroundColor: color },
-              currentColor === color && styles.colorButtonActive
-            ]}
-            onPress={() => setCurrentColor(color)}
-          />
-        ))}
       </View>
     </View>
   );
