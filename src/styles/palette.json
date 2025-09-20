@@ -1,0 +1,11 @@
+{
+    "terre": ["#8B3A3A", "#FFD700", "#68752C", "#4A5568"],
+    "classique": ["#2E5090", "#D94040", "#E8B93C", "#5AAA50"],
+    "laser": ["#00FF00", "#00FFFF", "#FF00FF", "#FFFF00"],
+    "douce": ["#E8B4B8", "#C5A3C0", "#A7C7E7", "#B8D4B8"],
+    "pastel_girly": ["#FFB3D9", "#E0BBE4", "#FFDFD3", "#C7CEEA"],
+    "verts": ["#2D5016", "#4A7C2E", "#6FA84A", "#9ED16F"],
+    "bleus": ["#003366", "#0066CC", "#3399FF", "#66CCFF"],
+    "canard": ["#004D4D", "#008080", "#20B2AA", "#48D1CC"]
+  }
+  
