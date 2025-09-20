@@ -2,16 +2,16 @@
 import React from 'react';
 import { View } from 'react-native';
 import Svg, { Circle, Path, Line, Text as SvgText } from 'react-native-svg';
-import { useTheme } from '../components/ThemeProvider';
+import { useTheme } from './ThemeProvider';
 import { responsiveSize } from '../styles/layout';
 
-export default function TimerCircle({ 
-  progress = 1, 
-  color, 
+export default function TimerCircle({
+  progress = 1,
+  color,
   size = null,
-  clockwise = false 
+  clockwise = false
 }) {
-  const { theme } = useTheme();
+  const theme = useTheme();
   
   // Calculate responsive size if not provided
   const circleSize = size || responsiveSize(280);

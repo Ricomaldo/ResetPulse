@@ -22,15 +22,15 @@ const getDeviceSize = () => {
 
 // Color tokens - IRIM palette
 const COLORS = {
-  // Primary timer colors
-  energy: '#FF6B6B',     // Rouge énergisant
-  focus: '#4ECDC4',      // Turquoise concentration
-  calm: '#95E1D3',       // Vert apaisant
-  deep: '#3D5A80',       // Bleu profond méditation
+  // Primary timer colors - Laser palette
+  energy: '#00FF00',     // Vert laser
+  focus: '#00FFFF',      // Cyan laser
+  calm: '#FF00FF',       // Magenta laser
+  deep: '#FFFF00',       // Jaune laser
 
   // Mapped colors for components
-  primary: '#FF6B6B',    // Mapped to energy
-  secondary: '#4ECDC4',  // Mapped to focus
+  primary: '#00FF00',    // Mapped to energy (laser green)
+  secondary: '#00FFFF',  // Mapped to focus (laser cyan)
 
   // System colors
   background: '#FEFEFE',
@@ -38,6 +38,7 @@ const COLORS = {
   text: '#2D3748',
   textLight: '#718096',
   border: '#E2E8F0',
+  neutral: '#A0AEC0',
 
   // Timer states
   running: '#48BB78',

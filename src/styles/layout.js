@@ -1,5 +1,27 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { theme } from './theme';
+
+const { width } = Dimensions.get('window');
+
+// Responsive size helper
+export const responsiveSize = (size) => {
+  const baseWidth = 375; // iPhone SE width as base
+  return Math.round((size * width) / baseWidth);
+};
+
+// Golden dimensions calculator
+export const getGoldenDimensions = (baseSize, type = 'rectangle') => {
+  if (type === 'rectangle') {
+    return {
+      width: baseSize,
+      height: baseSize / theme.golden,
+    };
+  }
+  return {
+    width: baseSize,
+    height: baseSize,
+  };
+};
 
 export const layoutStyles = StyleSheet.create({
   // Container styles

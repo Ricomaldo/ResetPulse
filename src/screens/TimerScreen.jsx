@@ -9,9 +9,6 @@ export default function TimerScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        ResetPulse Timer
-      </Text>
       <TimeTimer />
     </View>
   );

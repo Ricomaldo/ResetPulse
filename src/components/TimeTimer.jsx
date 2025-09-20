@@ -12,7 +12,7 @@ const PauseIcon = () => <Text style={{ fontSize: 20, color: 'white' }}>⏸</Text
 const ResetIcon = () => <Text style={{ fontSize: 20, color: 'white' }}>⟲</Text>;
 
 export default function TimeTimer() {
-  const { theme } = useTheme();
+  const theme = useTheme();
   const [currentColor, setCurrentColor] = useState(theme.colors.energy);
   const [clockwise, setClockwise] = useState(false);
   
@@ -29,7 +29,7 @@ export default function TimeTimer() {
   
   // Get responsive dimensions using golden ratio
   const containerSize = responsiveSize(340);
-  const circleSize = containerSize * theme.spacing.golden.ratio;
+  const circleSize = containerSize * 0.8; // 80% of container for circle
   const { width: buttonWidth, height: buttonHeight } = getGoldenDimensions(
     containerSize * 0.2,
     'rectangle'
@@ -90,7 +90,7 @@ export default function TimeTimer() {
     },
     
     presetButtonActive: {
-      backgroundColor: theme.colors.primary,
+      backgroundColor: currentColor,
     },
     
     presetButtonText: {
@@ -100,7 +100,7 @@ export default function TimeTimer() {
     },
     
     presetButtonTextActive: {
-      color: 'white',
+      color: 'black',
     },
     
     controlButton: {
