@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Added - 2025-09-22
+- Settings modal with native iOS-style interface
+- Palette selector with visual preview (8 palettes: terre, classique, laser, douce, pastel_girly, verts, bleus, canard)
+- TimerOptions context for managing timer display settings
+- Cadran toggle (60min mode vs Full duration mode)
+- Rotation toggle (Clockwise vs Counter-clockwise)
+- Settings icon in top-right corner
+- PalettePreview component for visual color display
+- Clean, minimal main screen layout (timer + color selector at thumb height)
+
+### Changed
+- Moved timer options to settings modal for cleaner UI
+- Repositioned color selector below timer for better thumb accessibility (bottom: 120px)
+- Removed PaletteSelector from main screen (now in settings)
+- Simplified TimerScreen layout to focus on core timer functionality
+
+### Added - Initial
 - Initial React Native/Expo project setup
 - Core timer functionality with useTimer hook (requestAnimationFrame-based for precision)
 - TimerCircle component with SVG-based circular progress visualization
