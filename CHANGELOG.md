@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2025-09-23
+- Data persistence with AsyncStorage for user preferences
+- usePersistedState and usePersistedObject hooks for automatic state persistence
+- Palette carousel with horizontal swipe navigation between 8 color palettes
+- Animated palette name display when switching palettes
+- Visual indicators (dots) showing current palette position
+- Automatic color validation when switching palettes
+- Premium-ready palette system (infrastructure for future premium features)
+
+### Changed - 2025-09-23
+- Enhanced TimeTimer UI with improved layout and controls
+- Timer default duration changed from 4 to 5 minutes
+- Added increment/decrement buttons (±1 minute) for duration adjustment
+- Redesigned preset buttons in 2x2 grid layout (5m, 15m, 30m, 45m)
+- Improved ColorSwitch with larger touch targets and better visual feedback
+- Enhanced TimerCircle with refined stroke width and gradient center dot
+- Color switch container now has background and shadow for better visibility
+
+### Fixed - 2025-09-23
+- User preferences now persist across app restarts (palette, color, timer options)
+- Color selection resets to default when switching to incompatible palette
+
 ### Added - 2025-09-22
 - Settings modal with native iOS-style interface
 - Palette selector with visual preview (8 palettes: terre, classique, laser, douce, pastel_girly, verts, bleus, canard)

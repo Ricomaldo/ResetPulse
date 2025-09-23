@@ -1,11 +1,15 @@
 // src/components/ThemeProvider.jsx
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import { createTheme, PALETTE_NAMES } from '../styles/theme';
+import { usePersistedState } from '../hooks/usePersistedState';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children, initialPalette = 'classique' }) => {
-  const [currentPalette, setCurrentPalette] = useState(initialPalette);
+  const [currentPalette, setCurrentPalette, isLoading] = usePersistedState(
+    '@ResetPulse:palette',
+    initialPalette
+  );
   
   const theme = useMemo(() => createTheme(currentPalette), [currentPalette]);
   
@@ -14,7 +18,13 @@ export const ThemeProvider = ({ children, initialPalette = 'classique' }) => {
     setPalette: setCurrentPalette,
     availablePalettes: PALETTE_NAMES,
     currentPalette,
-  }), [theme, currentPalette]);
+    isLoadingPalette: isLoading,
+  }), [theme, currentPalette, isLoading]);
+
+  // Ne pas rendre les enfants tant que le chargement n'est pas terminé
+  if (isLoading) {
+    return null; // Ou un loader si préféré
+  }
 
   return (
     <ThemeContext.Provider value={contextValue}>

@@ -18,7 +18,7 @@ export default function TimerCircle({
   // Calculate responsive size if not provided
   const circleSize = size || responsiveSize(280);
   const radius = (circleSize / 2) - 20;
-  const strokeWidth = 3;
+  const strokeWidth = 2.5;
   const maxMinutes = 60;
   
   // Progress angle calculation
@@ -231,12 +231,20 @@ export default function TimerCircle({
           fill="none"
         />
         
-        {/* Center dot */}
+        {/* Center dot with gradient effect */}
         <Circle
           cx={circleSize / 2}
           cy={circleSize / 2}
-          r={radius * 0.15}
+          r={radius * 0.12}
           fill={theme.colors.neutral}
+          opacity={0.8}
+        />
+        <Circle
+          cx={circleSize / 2}
+          cy={circleSize / 2}
+          r={radius * 0.08}
+          fill={theme.colors.text}
+          opacity={0.4}
         />
       </Svg>
     </View>

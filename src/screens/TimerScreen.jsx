@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../components/ThemeProvider';
 import { TimerOptionsProvider } from '../contexts/TimerOptionsContext';
-import ColorSwitch from '../components/ColorSwitch';
+import PaletteCarousel from '../components/PaletteCarousel';
 import TimeTimer from '../components/TimeTimer';
 import SettingsModal from '../components/SettingsModal';
 import { SettingsIcon } from '../components/Icons';
@@ -26,9 +26,9 @@ export default function TimerScreen() {
 
         <TimeTimer />
 
-        {/* Color Switch positioned for thumb reach */}
+        {/* Palette Carousel positioned for thumb reach */}
         <View style={styles.colorSwitchContainer}>
-          <ColorSwitch />
+          <PaletteCarousel />
         </View>
 
         {/* Settings Modal */}
@@ -65,8 +65,17 @@ const styles = StyleSheet.create({
   },
   colorSwitchContainer: {
     position: 'absolute',
-    bottom: 120, // Positioned for comfortable thumb reach
+    bottom: 100, // Positioned for comfortable thumb reach
     alignSelf: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
   },
   title: {
     fontSize: 24,

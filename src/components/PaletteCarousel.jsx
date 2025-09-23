@@ -1,61 +1,76 @@
-// src/components/ColorSwitch.jsx
-import React, { useRef, useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Animated } from 'react-native';
+// src/components/PaletteCarousel.jsx
+import React, { useRef, useEffect } from 'react';
+import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated } from 'react-native';
 import { useTheme, usePalette } from './ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { responsiveSize } from '../styles/layout';
-import { PALETTE_NAMES } from '../styles/theme';
+import { PALETTE_NAMES, TIMER_PALETTES } from '../styles/theme';
 
-export default function ColorSwitch() {
+export default function PaletteCarousel() {
   const theme = useTheme();
   const { currentColor, setCurrentColor } = useTimerOptions();
   const { currentPalette, setPalette } = usePalette();
   const scrollViewRef = useRef(null);
-  const [showPaletteName, setShowPaletteName] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  // Available timer colors
-  const colors = [
-    theme.colors.energy,
-    theme.colors.focus,
-    theme.colors.calm,
-    theme.colors.deep
-  ];
 
   // Get current palette index
   const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
 
+  // Scroll to current palette on mount
+  useEffect(() => {
+    if (scrollViewRef.current && currentPaletteIndex >= 0) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          x: currentPaletteIndex * responsiveSize(220),
+          animated: false
+        });
+      }, 100);
+    }
+  }, []);
+
+  // Show palette name with animation
+  const showPaletteName = () => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.delay(1500),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
   // Handle scroll end to detect palette change
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const containerWidth = responsiveSize(220); // Width of color pills container
+    const containerWidth = responsiveSize(220);
     const newIndex = Math.round(offsetX / containerWidth);
 
     if (newIndex !== currentPaletteIndex && newIndex >= 0 && newIndex < PALETTE_NAMES.length) {
       const newPaletteName = PALETTE_NAMES[newIndex];
       setPalette(newPaletteName);
-
-      // Show palette name briefly
-      setShowPaletteName(true);
-      Animated.sequence([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.delay(1500),
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start(() => setShowPaletteName(false));
+      showPaletteName();
     }
   };
 
   // Format palette name for display
   const formatPaletteName = (name) => {
-    return name.charAt(0).toUpperCase() + name.slice(1);
+    const nameMap = {
+      'classique': 'Classique',
+      'laser': 'Laser',
+      'tropical': 'Tropical',
+      'zen': 'Zen',
+      'forêt': 'Forêt',
+      'océan': 'Océan',
+      'aurore': 'Aurore',
+      'crépuscule': 'Crépuscule'
+    };
+    return nameMap[name] || name;
   };
 
   const styles = StyleSheet.create({
@@ -66,7 +81,7 @@ export default function ColorSwitch() {
     },
 
     scrollView: {
-      maxWidth: responsiveSize(220), // Width to show 4 pills
+      maxWidth: responsiveSize(220),
     },
 
     scrollContent: {
@@ -100,16 +115,16 @@ export default function ColorSwitch() {
 
     paletteLabel: {
       position: 'absolute',
-      top: -25,
+      top: -30,
       backgroundColor: theme.colors.background,
-      paddingHorizontal: theme.spacing.md,
+      paddingHorizontal: theme.spacing.lg,
       paddingVertical: theme.spacing.xs,
-      borderRadius: theme.borderRadius.md,
-      ...theme.shadows.sm,
+      borderRadius: theme.borderRadius.lg,
+      ...theme.shadows.md,
     },
 
     paletteLabelText: {
-      fontSize: responsiveSize(12),
+      fontSize: responsiveSize(13),
       fontWeight: '600',
       color: theme.colors.text,
       letterSpacing: 0.5,
@@ -117,34 +132,48 @@ export default function ColorSwitch() {
 
     scrollIndicator: {
       position: 'absolute',
-      bottom: -5,
+      bottom: -10,
       flexDirection: 'row',
-      gap: 4,
+      gap: 5,
     },
 
     dot: {
-      width: 4,
-      height: 4,
-      borderRadius: 2,
+      width: 5,
+      height: 5,
+      borderRadius: 2.5,
       backgroundColor: theme.colors.neutral,
+      opacity: 0.3,
     },
 
     dotActive: {
       backgroundColor: currentColor,
-      width: 12,
+      opacity: 1,
+      width: 15,
     },
   });
 
   return (
     <View style={styles.outerContainer}>
       {/* Palette name label */}
-      {showPaletteName && (
-        <Animated.View style={[styles.paletteLabel, { opacity: fadeAnim }]}>
-          <Text style={styles.paletteLabelText}>
-            {formatPaletteName(currentPalette)}
-          </Text>
-        </Animated.View>
-      )}
+      <Animated.View
+        style={[
+          styles.paletteLabel,
+          {
+            opacity: fadeAnim,
+            transform: [{
+              translateY: fadeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [5, 0]
+              })
+            }]
+          }
+        ]}
+        pointerEvents="none"
+      >
+        <Text style={styles.paletteLabelText}>
+          {formatPaletteName(currentPalette)}
+        </Text>
+      </Animated.View>
 
       {/* Scrollable color pills */}
       <ScrollView
@@ -158,20 +187,18 @@ export default function ColorSwitch() {
         contentContainerStyle={styles.scrollContent}
         snapToInterval={responsiveSize(220)}
         decelerationRate="fast"
-        contentOffset={{ x: currentPaletteIndex * responsiveSize(220), y: 0 }}
       >
         {PALETTE_NAMES.map((paletteName, paletteIndex) => {
           // Get colors for this palette
-          const paletteColors = [
-            theme.timer.palette.energy,
-            theme.timer.palette.focus,
-            theme.timer.palette.calm,
-            theme.timer.palette.deep,
-          ];
-
-          // If this is the current palette, use actual colors
-          // Otherwise, we'd need to load that palette's colors
+          const paletteColors = TIMER_PALETTES[paletteName];
           const isCurrentPalette = paletteName === currentPalette;
+
+          const colors = [
+            paletteColors.energy,
+            paletteColors.focus,
+            paletteColors.calm,
+            paletteColors.deep,
+          ];
 
           return (
             <View key={paletteName} style={styles.paletteContainer}>
@@ -181,8 +208,8 @@ export default function ColorSwitch() {
                   style={[
                     styles.colorButton,
                     {
-                      backgroundColor: isCurrentPalette ? color : theme.colors.neutral,
-                      opacity: isCurrentPalette ? 1 : 0.4
+                      backgroundColor: color,
+                      opacity: isCurrentPalette ? 1 : 0.5
                     },
                     isCurrentPalette && currentColor === color && styles.colorButtonActive
                   ]}
@@ -190,11 +217,10 @@ export default function ColorSwitch() {
                     if (isCurrentPalette) {
                       setCurrentColor(color);
                     } else {
-                      // Scroll to that palette
-                      scrollViewRef.current?.scrollTo({
-                        x: paletteIndex * responsiveSize(220),
-                        animated: true
-                      });
+                      // Switch to that palette
+                      setPalette(paletteName);
+                      setCurrentColor(color);
+                      showPaletteName();
                     }
                   }}
                   activeOpacity={0.7}

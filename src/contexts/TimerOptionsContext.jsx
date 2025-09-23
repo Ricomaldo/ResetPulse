@@ -1,28 +1,50 @@
 // src/contexts/TimerOptionsContext.jsx
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { useTheme } from '../components/ThemeProvider';
+import { usePersistedObject } from '../hooks/usePersistedState';
 
 const TimerOptionsContext = createContext(null);
 
 export const TimerOptionsProvider = ({ children }) => {
   const theme = useTheme();
 
-  // Timer display options
-  const [clockwise, setClockwise] = useState(false);
-  const [scaleMode, setScaleMode] = useState('60min'); // '60min' | 'full'
-  const [currentColor, setCurrentColor] = useState(theme.colors.energy);
+  // Utiliser un seul objet persisté pour toutes les options
+  const { values, updateValue, isLoading } = usePersistedObject(
+    '@ResetPulse:timerOptions',
+    {
+      clockwise: false,
+      scaleMode: '60min',
+      currentColor: theme.colors.energy,
+    }
+  );
+
+  // Mettre à jour la couleur si elle n'existe pas dans la palette actuelle
+  useEffect(() => {
+    const paletteColors = Object.values(theme.colors);
+    if (!paletteColors.includes(values.currentColor)) {
+      updateValue('currentColor', theme.colors.energy);
+    }
+  }, [theme.colors]);
 
   const value = {
     // States
-    clockwise,
-    scaleMode,
-    currentColor,
+    clockwise: values.clockwise,
+    scaleMode: values.scaleMode,
+    currentColor: values.currentColor,
 
     // Actions
-    setClockwise,
-    setScaleMode,
-    setCurrentColor
+    setClockwise: (val) => updateValue('clockwise', val),
+    setScaleMode: (val) => updateValue('scaleMode', val),
+    setCurrentColor: (val) => updateValue('currentColor', val),
+
+    // Loading state
+    isLoading
   };
+
+  // Ne pas rendre les enfants tant que le chargement n'est pas terminé
+  if (isLoading) {
+    return null; // Ou un loader si préféré
+  }
 
   return (
     <TimerOptionsContext.Provider value={value}>

@@ -11,97 +11,157 @@ import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 export default function TimeTimer() {
   const theme = useTheme();
   const { currentColor, clockwise, scaleMode } = useTimerOptions();
-  
-  // Initialize timer with 4 minutes default
-  const timer = useTimer(4 * 60);
+
+  // Initialize timer with 5 minutes default
+  const timer = useTimer(5 * 60);
   
   // Get responsive dimensions using golden ratio
   const containerSize = responsiveSize(340);
-  const circleSize = containerSize * 0.8; // 80% of container for circle
+  const circleSize = containerSize * 0.8; // Back to golden ratio 80%
   const { width: buttonWidth, height: buttonHeight } = getGoldenDimensions(
-    containerSize * 0.2,
+    containerSize * 0.15,
     'rectangle'
   );
   
   const styles = StyleSheet.create({
     container: {
       width: containerSize,
-      height: containerSize,
       backgroundColor: theme.colors.background,
-      borderRadius: theme.borderRadius.lg,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      paddingVertical: theme.spacing.md,
-      paddingHorizontal: theme.spacing.sm,
+      borderRadius: theme.borderRadius.xl,
+      paddingVertical: theme.spacing.lg,
+      paddingHorizontal: theme.spacing.md,
       alignItems: 'center',
-      justifyContent: 'space-between',
-      ...theme.shadows.md,
+      ...theme.shadows.lg,
     },
-    
+
     timerWrapper: {
-      flex: 1,
+      width: circleSize,
+      height: circleSize,
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
+      marginBottom: theme.spacing.md,
     },
-    
+
     messageOverlay: {
       position: 'absolute',
-      top: '75%',
+      top: '70%',
       alignItems: 'center',
       justifyContent: 'center',
+      backgroundColor: theme.colors.background,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.borderRadius.md,
     },
-    
+
     messageText: {
-      fontSize: responsiveSize(16),
-      fontWeight: 'bold',
+      fontSize: responsiveSize(18),
+      fontWeight: '700',
       color: currentColor,
       textAlign: 'center',
+      letterSpacing: 0.5,
     },
     
-    controlsRow: {
+    controlsContainer: {
       flexDirection: 'row',
+      width: '100%',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: theme.spacing.sm,
-      paddingVertical: theme.spacing.xs,
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.md,
+      paddingHorizontal: theme.spacing.xs,
     },
-    
+
+    presetsGrid: {
+      width: responsiveSize(110),
+    },
+
+    presetsRow: {
+      flexDirection: 'row',
+      gap: theme.spacing.xs,
+      marginBottom: theme.spacing.xs,
+    },
+
+    controlsButtons: {
+      flexDirection: 'row',
+      gap: theme.spacing.md,
+    },
+
     presetButton: {
       backgroundColor: theme.colors.surface,
       paddingVertical: theme.spacing.xs,
       paddingHorizontal: theme.spacing.sm,
       borderRadius: theme.borderRadius.md,
-      minWidth: buttonWidth * 0.8,
+      width: responsiveSize(48),
+      height: responsiveSize(36),
       alignItems: 'center',
       justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: theme.colors.border,
     },
-    
+
     presetButtonActive: {
-      backgroundColor: theme.colors.primary,
+      backgroundColor: currentColor,
+      borderColor: currentColor,
+      transform: [{ scale: 1.05 }],
+      ...theme.shadows.md,
     },
-    
+
     presetButtonText: {
       color: theme.colors.text,
-      fontSize: responsiveSize(12),
-      fontWeight: '500',
+      fontSize: responsiveSize(13),
+      fontWeight: '600',
     },
-    
+
     presetButtonTextActive: {
       color: theme.colors.background,
+      fontWeight: '700',
     },
-    
+
     controlButton: {
-      backgroundColor: theme.colors.surface,
-      width: buttonWidth,
-      height: buttonHeight,
-      borderRadius: theme.borderRadius.md,
+      backgroundColor: currentColor,
+      width: responsiveSize(56),
+      height: responsiveSize(56),
+      borderRadius: responsiveSize(28),
       alignItems: 'center',
       justifyContent: 'center',
+      ...theme.shadows.md,
+    },
+
+    incrementControls: {
+      position: 'absolute',
+      bottom: 15,
+      left: '50%',
+      transform: [{ translateX: -40 }],
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+    },
+
+    incrementButton: {
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: theme.colors.border,
       ...theme.shadows.sm,
+    },
+
+    incrementButtonText: {
+      fontSize: responsiveSize(20),
+      fontWeight: '700',
+      color: theme.colors.text,
+      lineHeight: responsiveSize(20),
     },
   });
   
+  // Helper function to increment/decrement duration
+  const adjustDuration = (minutes) => {
+    const newDuration = Math.max(60, Math.min(3600, timer.duration + (minutes * 60)));
+    timer.setDuration(newDuration);
+  };
+
   return (
     <View style={styles.container}>
       {/* Timer Circle */}
@@ -114,7 +174,7 @@ export default function TimeTimer() {
           scaleMode={scaleMode}
           duration={timer.duration}
         />
-        
+
         {/* Message Overlay */}
         {timer.displayMessage && (
           <View style={styles.messageOverlay}>
@@ -123,55 +183,117 @@ export default function TimeTimer() {
             </Text>
           </View>
         )}
-      </View>
-      
-      {/* Controls */}
-      <View style={styles.controlsRow}>
-        {/* Preset Buttons */}
-        <TouchableOpacity 
-          style={[
-            styles.presetButton,
-            timer.duration === 240 && styles.presetButtonActive
-          ]}
-          onPress={() => timer.setPresetDuration(4)}
-        >
-          <Text style={[
-            styles.presetButtonText,
-            timer.duration === 240 && styles.presetButtonTextActive
-          ]}>
-            4m
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[
-            styles.presetButton,
-            timer.duration === 1200 && styles.presetButtonActive
-          ]}
-          onPress={() => timer.setPresetDuration(20)}
-        >
-          <Text style={[
-            styles.presetButtonText,
-            timer.duration === 1200 && styles.presetButtonTextActive
-          ]}>
-            20m
-          </Text>
-        </TouchableOpacity>
-        
-        {/* Control Buttons */}
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={timer.toggleRunning}
-        >
-          {timer.running ? <PauseIcon size={20} color="white" /> : <PlayIcon size={20} color="white" />}
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={timer.resetTimer}
-        >
-          <ResetIcon size={20} color="white" />
-        </TouchableOpacity>
+        {/* Increment/Decrement Controls at the bottom of the circle */}
+        <View style={styles.incrementControls}>
+          <TouchableOpacity
+            style={styles.incrementButton}
+            onPress={() => adjustDuration(-1)}
+            activeOpacity={0.6}
+          >
+            <Text style={styles.incrementButtonText}>−</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.incrementButton}
+            onPress={() => adjustDuration(1)}
+            activeOpacity={0.6}
+          >
+            <Text style={styles.incrementButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Controls Container with Presets on left, Play/Reset on right */}
+      <View style={styles.controlsContainer}>
+        {/* Preset Buttons in 2x2 Grid */}
+        <View style={styles.presetsGrid}>
+          <View style={styles.presetsRow}>
+            <TouchableOpacity
+              style={[
+                styles.presetButton,
+                timer.duration === 300 && styles.presetButtonActive
+              ]}
+              onPress={() => timer.setPresetDuration(5)}
+            activeOpacity={0.7}
+            >
+              <Text style={[
+                styles.presetButtonText,
+                timer.duration === 300 && styles.presetButtonTextActive
+              ]}>
+                5m
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.presetButton,
+                timer.duration === 900 && styles.presetButtonActive
+              ]}
+              onPress={() => timer.setPresetDuration(15)}
+            activeOpacity={0.7}
+            >
+              <Text style={[
+                styles.presetButtonText,
+                timer.duration === 900 && styles.presetButtonTextActive
+              ]}>
+                15m
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.presetsRow}>
+            <TouchableOpacity
+              style={[
+                styles.presetButton,
+                timer.duration === 1800 && styles.presetButtonActive
+              ]}
+              onPress={() => timer.setPresetDuration(30)}
+            activeOpacity={0.7}
+            >
+              <Text style={[
+                styles.presetButtonText,
+                timer.duration === 1800 && styles.presetButtonTextActive
+              ]}>
+                30m
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.presetButton,
+                timer.duration === 2700 && styles.presetButtonActive
+              ]}
+              onPress={() => timer.setPresetDuration(45)}
+            activeOpacity={0.7}
+            >
+              <Text style={[
+                styles.presetButtonText,
+                timer.duration === 2700 && styles.presetButtonTextActive
+              ]}>
+                45m
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Control Buttons */}
+        <View style={styles.controlsButtons}>
+          <TouchableOpacity
+            style={[styles.controlButton, { opacity: timer.running ? 1 : 0.9 }]}
+            onPress={timer.toggleRunning}
+            activeOpacity={0.7}
+          >
+            {timer.running ? <PauseIcon size={24} color="white" /> : <PlayIcon size={24} color="white" />}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.controlButton, { backgroundColor: theme.colors.neutral, transform: [{ scale: 0.9 }] }]}
+            onPress={timer.resetTimer}
+            activeOpacity={0.7}
+          >
+            <ResetIcon size={22} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
