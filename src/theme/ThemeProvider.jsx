@@ -1,11 +1,22 @@
 // src/theme/ThemeProvider.jsx
-// Provider simplifié pour la gestion light/dark mode
+// Provider simplifié pour la gestion light/dark mode avec support platform-adaptive
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, Platform } from 'react-native';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { lightTheme, darkTheme } from './colors';
 import { spacing, borderRadius, shadows, typography, layout, animation, zIndex } from './tokens';
+import { shadow, themedShadow, componentShadows } from '../styles/shadows';
+import {
+  createButtonStyle,
+  createCardStyle,
+  createModalStyle,
+  createInputStyle,
+  getSwitchProps,
+  getAnimationConfig,
+  getTouchableProps,
+  platformValues
+} from '../styles/platformStyles';
 
 // Context du thème
 const ThemeContext = createContext(null);
@@ -25,7 +36,7 @@ export const ThemeProvider = ({ children }) => {
   // Sélection des couleurs selon le mode
   const colors = isDark ? darkTheme : lightTheme;
 
-  // Adaptation des ombres selon le thème
+  // Adaptation des ombres selon le thème (legacy)
   const themedShadows = Object.entries(shadows).reduce((acc, [key, shadow]) => {
     acc[key] = {
       ...shadow,
@@ -34,12 +45,12 @@ export const ThemeProvider = ({ children }) => {
     return acc;
   }, {});
 
-  // Objet thème complet
+  // Objet thème complet avec support platform-adaptive
   const theme = {
     // Couleurs adaptatives
     colors,
 
-    // Design tokens
+    // Design tokens (legacy)
     spacing,
     borderRadius,
     shadows: themedShadows,
@@ -47,6 +58,26 @@ export const ThemeProvider = ({ children }) => {
     layout,
     animation,
     zIndex,
+
+    // Platform-adaptive shadows (new)
+    shadow: (level) => themedShadow(level, isDark),
+    componentShadows,
+
+    // Platform-adaptive style creators
+    styles: {
+      button: (variant) => createButtonStyle(variant, { colors }),
+      card: () => createCardStyle({ colors, border: colors.border }),
+      modal: () => createModalStyle({ colors, border: colors.border }),
+      input: (focused) => createInputStyle({ colors, inputBackground: colors.surface }, focused),
+      switch: (value) => getSwitchProps({ colors }, value),
+    },
+
+    // Platform-adaptive utilities
+    platform: {
+      ...platformValues,
+      animation: getAnimationConfig(),
+      touchable: getTouchableProps(),
+    },
 
     // État et contrôles du thème
     isDark,

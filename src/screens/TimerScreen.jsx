@@ -69,7 +69,7 @@ function TimerScreenContent() {
       paddingHorizontal: rs(20),
       borderRadius: rs(35),
       borderWidth: 1,
-      borderColor: theme.colors.brand.accent,
+      borderColor: theme.colors.brand.primary,
       ...theme.shadows.lg,
     },
   });

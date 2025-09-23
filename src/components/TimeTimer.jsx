@@ -9,6 +9,7 @@ import { getGoldenDimensions } from '../styles/layout';
 import useTimer from '../hooks/useTimer';
 import TimerCircle from './TimerCircle';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
+import haptics from '../utils/haptics';
 
 export default function TimeTimer() {
   const theme = useTheme();
@@ -66,7 +67,7 @@ export default function TimeTimer() {
     messageText: {
       fontSize: rs(18, 'min'),
       fontWeight: '700',
-      color: currentColor,
+      color: theme.colors.brand.primary,
       textAlign: 'center',
       letterSpacing: 0.5,
     },
@@ -109,7 +110,7 @@ export default function TimeTimer() {
     },
 
     presetButtonActive: {
-      backgroundColor: theme.colors.brand.secondary,
+      backgroundColor: theme.colors.brand.primary,
       borderColor: theme.colors.brand.secondary,
       transform: [{ scale: 1.05 }],
       ...theme.shadows.md,
@@ -127,7 +128,7 @@ export default function TimeTimer() {
     },
 
     controlButton: {
-      backgroundColor: currentColor,
+      backgroundColor: theme.colors.brand.primary,
       width: rs(56, 'min'),
       height: rs(56, 'min'),
       borderRadius: rs(28, 'min'),
@@ -137,36 +138,43 @@ export default function TimeTimer() {
     },
 
     incrementControls: {
-      position: 'absolute',
-      bottom: 15,
-      left: '50%',
-      transform: [{ translateX: -40 }],
-      flexDirection: 'row',
-      gap: theme.spacing.sm,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: theme.spacing.xs,
+      marginHorizontal: theme.spacing.sm,
     },
 
     incrementButton: {
-      backgroundColor: theme.colors.overlayLight,
-      width: 34,
-      height: 34,
-      borderRadius: 17,
+      backgroundColor: theme.colors.surface,
+      width: rs(36, 'min'),
+      height: rs(36, 'min'),
+      borderRadius: rs(18, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,
-      borderColor: theme.colors.brand.accent,
-      ...theme.shadows.sm,
+      borderColor: theme.colors.border,
+      ...theme.shadow('sm'),
     },
 
     incrementButtonText: {
       fontSize: rs(20, 'min'),
-      fontWeight: '700',
+      fontWeight: '600',
       color: theme.colors.text,
       lineHeight: rs(20, 'min'),
+    },
+
+    durationDisplay: {
+      fontSize: rs(13, 'min'),
+      color: theme.colors.text,
+      fontWeight: '500',
+      marginVertical: 2,
     },
   });
   
   // Helper function to increment/decrement duration
   const adjustDuration = (minutes) => {
+    haptics.selection().catch(() => {});
     const newDuration = Math.max(60, Math.min(3600, timer.duration + (minutes * 60)));
     timer.setDuration(newDuration);
   };
@@ -182,8 +190,9 @@ export default function TimeTimer() {
           clockwise={clockwise}
           scaleMode={scaleMode}
           duration={timer.duration}
-          activityEmoji={currentActivity?.emoji}
+          activityEmoji={currentActivity?.id === "none" ? null : currentActivity?.emoji}
           isRunning={timer.running}
+          shouldPulse={true}
         />
 
         {/* Message Overlay */}
@@ -194,24 +203,6 @@ export default function TimeTimer() {
             </Text>
           </View>
         )}
-
-        {/* Increment/Decrement Controls at the bottom of the circle */}
-        <View style={styles.incrementControls}>
-          <TouchableOpacity
-            style={styles.incrementButton}
-            onPress={() => adjustDuration(-1)}
-            activeOpacity={0.6}
-          >
-            <Text style={styles.incrementButtonText}>−</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.incrementButton}
-            onPress={() => adjustDuration(1)}
-            activeOpacity={0.6}
-          >
-            <Text style={styles.incrementButtonText}>+</Text>
-          </TouchableOpacity>
-        </View>
       </View>
 
       {/* Controls Container with Presets on left, Play/Reset on right */}
@@ -285,6 +276,29 @@ export default function TimeTimer() {
               </Text>
             </TouchableOpacity>
           </View>
+        </View>
+
+        {/* Duration Increment/Decrement Controls */}
+        <View style={styles.incrementControls}>
+          <TouchableOpacity
+            style={styles.incrementButton}
+            onPress={() => adjustDuration(1)}
+            activeOpacity={0.7}
+            disabled={timer.running}
+          >
+            <Text style={styles.incrementButtonText}>+</Text>
+          </TouchableOpacity>
+          <Text style={styles.durationDisplay}>
+            {Math.floor(timer.duration / 60)}m
+          </Text>
+          <TouchableOpacity
+            style={styles.incrementButton}
+            onPress={() => adjustDuration(-1)}
+            activeOpacity={0.7}
+            disabled={timer.running}
+          >
+            <Text style={styles.incrementButtonText}>−</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Control Buttons */}

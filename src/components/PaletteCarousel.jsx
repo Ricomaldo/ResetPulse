@@ -155,7 +155,7 @@ export default function PaletteCarousel() {
     },
 
     dotActive: {
-      backgroundColor: currentColor,
+      backgroundColor: theme.colors.brand.secondary,
       opacity: 1,
       width: 15,
     },

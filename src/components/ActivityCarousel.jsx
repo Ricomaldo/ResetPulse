@@ -1,11 +1,12 @@
 // src/components/ActivityCarousel.jsx
 import React, { useRef, useEffect } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated } from 'react-native';
+import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated, Platform, TouchableNativeFeedback } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities } from '../config/activities';
+import haptics from '../utils/haptics';
 
 export default function ActivityCarousel() {
   const theme = useTheme();
@@ -89,10 +90,12 @@ export default function ActivityCarousel() {
 
   const handleActivityPress = (activity) => {
     if (activity.isPremium && !isPremiumUser) {
+      haptics.warning().catch(() => {});
       // TODO: Show premium modal
       return;
     }
 
+    haptics.selection().catch(() => {});
     setCurrentActivity(activity);
 
     // Update duration based on activity default
@@ -104,6 +107,17 @@ export default function ActivityCarousel() {
 
     animateSelection();
     showActivityName();
+  };
+
+  // Platform-specific touchable
+  const Touchable = Platform.OS === 'android' && TouchableNativeFeedback?.canUseNativeForeground?.()
+    ? TouchableNativeFeedback
+    : TouchableOpacity;
+
+  const touchableProps = Platform.OS === 'android' && TouchableNativeFeedback?.Ripple ? {
+    background: TouchableNativeFeedback.Ripple(theme.colors.brand.primary + '30', true)
+  } : {
+    activeOpacity: 0.8
   };
 
   const styles = StyleSheet.create({
@@ -132,14 +146,14 @@ export default function ActivityCarousel() {
       borderRadius: getComponentSizes().activityButton / 2,
       backgroundColor: theme.colors.surface,
       padding: theme.spacing.xs,
-      ...theme.shadows.sm,
+      ...theme.shadow('sm'),
     },
 
     activityButtonActive: {
-      backgroundColor: currentColor,
+      backgroundColor: theme.colors.brand.primary,
       borderWidth: 2,
-      borderColor: currentColor,
-      ...theme.shadows.md,
+      borderColor: theme.colors.brand.secondary,
+      ...theme.shadow('md'),
       transform: [{ scale: 1.1 }],
     },
 
@@ -185,7 +199,7 @@ export default function ActivityCarousel() {
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.xs,
       borderRadius: theme.borderRadius.lg,
-      ...theme.shadows.md,
+      ...theme.shadow('md'),
     },
 
     activityNameText: {
@@ -234,7 +248,7 @@ export default function ActivityCarousel() {
           const isLocked = activity.isPremium && !isPremiumUser;
 
           return (
-            <TouchableOpacity
+            <Touchable
               key={activity.id}
               style={[
                 styles.activityButton,
@@ -242,7 +256,7 @@ export default function ActivityCarousel() {
                 { opacity: isLocked ? 0.5 : 1 }
               ]}
               onPress={() => handleActivityPress(activity)}
-              activeOpacity={0.7}
+              {...touchableProps}
             >
               <Animated.View
                 style={[
@@ -266,7 +280,7 @@ export default function ActivityCarousel() {
                   <Text style={styles.lockIcon}>🔒</Text>
                 </View>
               )}
-            </TouchableOpacity>
+            </Touchable>
           );
         })}
       </ScrollView>

@@ -13,7 +13,8 @@ export default function TimerCircle({
   scaleMode = '60min',
   duration = 240,
   activityEmoji = null,
-  isRunning = false
+  isRunning = false,
+  shouldPulse = true
 }) {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -25,9 +26,9 @@ export default function TimerCircle({
   const strokeWidth = 2.5;
   const maxMinutes = 60;
 
-  // Pulse animation for activity emoji
+  // Pulse animation for activity emoji or pulse effect
   useEffect(() => {
-    if (isRunning && activityEmoji) {
+    if (isRunning && shouldPulse) {
       const pulseAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
@@ -68,7 +69,7 @@ export default function TimerCircle({
         glowAnim.setValue(0.3);
       };
     }
-  }, [isRunning, activityEmoji]);
+  }, [isRunning, shouldPulse]);
   
   // Progress angle calculation
   // In 60min mode: 20min duration = 120° (1/3 of circle), progress scales that
@@ -177,23 +178,25 @@ export default function TimerCircle({
     
     const centerX = circleSize / 2;
     const centerY = circleSize / 2;
+    // Use a slightly larger radius to ensure complete coverage of the background circle
+    const progressRadius = radius + strokeWidth/2;
     
     if (clockwise) {
       return `
         M ${centerX} ${centerY}
-        L ${centerX} ${centerY - radius}
-        A ${radius} ${radius} 0 ${progressAngle > 180 ? 1 : 0} 1
-          ${centerX + radius * Math.sin((progressAngle * Math.PI) / 180)}
-          ${centerY - radius * Math.cos((progressAngle * Math.PI) / 180)}
+        L ${centerX} ${centerY - progressRadius}
+        A ${progressRadius} ${progressRadius} 0 ${progressAngle > 180 ? 1 : 0} 1
+          ${centerX + progressRadius * Math.sin((progressAngle * Math.PI) / 180)}
+          ${centerY - progressRadius * Math.cos((progressAngle * Math.PI) / 180)}
         Z
       `;
     } else {
       return `
         M ${centerX} ${centerY}
-        L ${centerX} ${centerY - radius}
-        A ${radius} ${radius} 0 ${progressAngle > 180 ? 1 : 0} 0
-          ${centerX - radius * Math.sin((progressAngle * Math.PI) / 180)}
-          ${centerY - radius * Math.cos((progressAngle * Math.PI) / 180)}
+        L ${centerX} ${centerY - progressRadius}
+        A ${progressRadius} ${progressRadius} 0 ${progressAngle > 180 ? 1 : 0} 0
+          ${centerX - progressRadius * Math.sin((progressAngle * Math.PI) / 180)}
+          ${centerY - progressRadius * Math.cos((progressAngle * Math.PI) / 180)}
         Z
       `;
     }
@@ -257,15 +260,15 @@ export default function TimerCircle({
             <Circle
               cx={circleSize / 2}
               cy={circleSize / 2}
-              r={radius}
+              r={radius + strokeWidth/2}
               fill={color || theme.colors.energy}
-              opacity={0.9}
+              opacity={1}
             />
           ) : (
             <Path
               d={progressPath}
               fill={color || theme.colors.energy}
-              opacity={0.9}
+              opacity={1}
             />
           )
         )}
@@ -324,7 +327,7 @@ export default function TimerCircle({
                 width: circleSize * 0.35,
                 height: circleSize * 0.35,
                 borderRadius: (circleSize * 0.35) / 2,
-                backgroundColor: color || theme.colors.primary,
+                backgroundColor: theme.colors.brand.primary,
                 opacity: glowAnim,
               }}
             />
@@ -337,6 +340,52 @@ export default function TimerCircle({
             >
               {activityEmoji}
             </Text>
+          </Animated.View>
+        </View>
+      )}
+
+      {/* Pulse effect for "none" activity when running */}
+      {!activityEmoji && isRunning && shouldPulse && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Animated.View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: [{ scale: pulseAnim }],
+            }}
+          >
+            {/* More visible glow/pulse effect for basic timer */}
+            <Animated.View
+              style={{
+                position: 'absolute',
+                width: circleSize * 0.35,
+                height: circleSize * 0.35,
+                borderRadius: (circleSize * 0.35) / 2,
+                backgroundColor: color || theme.colors.brand.primary,
+                opacity: glowAnim * 0.8, // More visible opacity
+              }}
+            />
+            {/* Additional inner pulse circle */}
+            <Animated.View
+              style={{
+                position: 'absolute',
+                width: circleSize * 0.2,
+                height: circleSize * 0.2,
+                borderRadius: (circleSize * 0.2) / 2,
+                backgroundColor: color || theme.colors.brand.primary,
+                opacity: glowAnim * 1.2, // Even more visible for the center
+              }}
+            />
           </Animated.View>
         </View>
       )}

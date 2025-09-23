@@ -3,8 +3,8 @@
 export const ACTIVITIES = [
   {
     id: "none",
-    emoji: "",
-    label: "Simple",
+    emoji: "⏱️",
+    label: "Basique",
     defaultDuration: 300, // 5 minutes default
     isPremium: false,
     suggestedColor: "calm",
@@ -39,7 +39,7 @@ export const ACTIVITIES = [
   },
   {
     id: "work",
-    emoji: "💼",
+    emoji: "💻",
     label: "Travail",
     defaultDuration: 1500, // 25 minutes (Pomodoro)
     isPremium: false,

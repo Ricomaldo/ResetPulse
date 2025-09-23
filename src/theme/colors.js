@@ -10,9 +10,9 @@ const baseColors = {
   // - Verts subtils : feedback positif et zones actives
   // - Bleus doux : navigation et information secondaire
   brand: {
-    primary: '#4A5568',    // Rouge vénitien - accents forts et CTA
-    secondary: '#8B3A3A',  // Bleu gris doux - éléments secondaires
-    accent: '#68752C',     // Vert très pâle - zones actives/sélectionnées
+    primary: '#4A5568',    // Gris bleu - accents forts et CTA
+    secondary: '#68752C',  // Rouge brique - éléments secondaires
+    accent: '#8B3A3A',     // Olive foncé - zones actives/sélectionnées
     deep: '#5A5A5A',       // Gris anthracite - textes et icônes
   },
 
@@ -62,7 +62,13 @@ export const lightTheme = {
 // Thème sombre
 export const darkTheme = {
   ...baseColors,
-
+  // Override brand colors pour meilleur contraste
+  brand: {
+    primary: '#6B7A8A',    // Version éclaircie du gris-bleu
+    secondary: '#8A9B4A',  // Version éclaircie de l'olive  
+    accent: '#B85A5A',     // Version éclaircie du rouge brique
+    deep: '#8A8A8A',       // Gris plus clair
+  },
   // Couleurs adaptatives pour le mode sombre
   background: '#1A1A1A',          // Fond principal
   surface: '#2D2D2D',             // Cartes et surfaces

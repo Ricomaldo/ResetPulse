@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Switch
+  Switch,
+  Platform,
+  TouchableNativeFeedback
 } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
@@ -16,6 +18,7 @@ import { rs } from '../styles/responsive';
 import PalettePreview from './PalettePreview';
 import { getAllActivities } from '../config/activities';
 import { TIMER_PALETTES, isPalettePremium } from '../config/timerPalettes';
+import haptics from '../utils/haptics';
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
@@ -32,27 +35,52 @@ export default function SettingsModal({ visible, onClose }) {
   const allActivities = getAllActivities();
 
   const toggleFavorite = (activityId) => {
+    haptics.selection().catch(() => {});
     const newFavorites = favoriteActivities.includes(activityId)
       ? favoriteActivities.filter(id => id !== activityId)
       : [...favoriteActivities, activityId];
     setFavoriteActivities(newFavorites);
   };
 
+  // Platform-specific touchable component
+  const Touchable = Platform.OS === 'android' && TouchableNativeFeedback?.canUseNativeForeground?.()
+    ? TouchableNativeFeedback
+    : TouchableOpacity;
+
+  const touchableProps = Platform.OS === 'android' && TouchableNativeFeedback?.Ripple ? {
+    background: TouchableNativeFeedback.Ripple(theme.colors.brand.primary + '20', false)
+  } : {
+    activeOpacity: 0.7
+  };
+
   const styles = StyleSheet.create({
     overlay: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: Platform.select({
+        ios: 'rgba(0, 0, 0, 0.4)',
+        android: 'rgba(0, 0, 0, 0.5)',
+      }),
       justifyContent: 'center',
       alignItems: 'center',
     },
 
     modalContainer: {
       backgroundColor: theme.colors.background,
-      borderRadius: theme.borderRadius.lg,
+      borderRadius: Platform.select({
+        ios: 16,
+        android: 12,
+      }),
       width: '90%',
       maxHeight: '80%',
       padding: theme.spacing.lg,
-      ...theme.shadows.lg,
+      ...theme.shadow('xl'),
+      ...Platform.select({
+        ios: {
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: theme.colors.border + '30',
+        },
+        android: {},
+      }),
     },
 
     header: {
@@ -126,9 +154,10 @@ export default function SettingsModal({ visible, onClose }) {
     segmentButton: {
       flex: 1,
       paddingVertical: theme.spacing.xs,
-      paddingHorizontal: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.xs,
       borderRadius: theme.borderRadius.md - 2,
       alignItems: 'center',
+      minWidth: 60,
     },
 
     segmentButtonActive: {
@@ -136,9 +165,10 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     segmentText: {
-      fontSize: rs(12, 'min'),
+      fontSize: rs(11, 'min'),
       color: theme.colors.text,
       fontWeight: '500',
+      textAlign: 'center',
     },
 
     segmentTextActive: {
@@ -161,13 +191,13 @@ export default function SettingsModal({ visible, onClose }) {
       borderColor: 'transparent',
       backgroundColor: theme.colors.surface,
       marginBottom: theme.spacing.sm,
-      ...theme.shadows.sm,
+      ...theme.shadow('sm'),
     },
 
     paletteItemActive: {
       borderColor: theme.colors.primary,
       backgroundColor: theme.colors.background,
-      ...theme.shadows.md,
+      ...theme.shadow('md'),
     },
 
     paletteItemLocked: {
@@ -234,13 +264,13 @@ export default function SettingsModal({ visible, onClose }) {
       justifyContent: 'center',
       borderWidth: 2,
       borderColor: 'transparent',
-      ...theme.shadows.sm,
+      ...theme.shadow('sm'),
     },
 
     activityItemFavorite: {
       borderColor: theme.colors.primary,
       backgroundColor: theme.colors.background,
-      ...theme.shadows.md,
+      ...theme.shadow('md'),
     },
 
     activityEmoji: {
@@ -297,6 +327,78 @@ export default function SettingsModal({ visible, onClose }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
+            {/* Appearance */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Apparence</Text>
+              
+              {/* Theme Mode */}
+              <View style={styles.optionRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Thème</Text>
+                  <Text style={styles.optionDescription}>
+                    {theme.mode === 'auto' ? 'Automatique (système)' : 
+                     theme.mode === 'dark' ? 'Sombre' : 'Clair'}
+                  </Text>
+                </View>
+                <View style={styles.segmentedControl}>
+                  <Touchable
+                    style={[
+                      styles.segmentButton,
+                      theme.mode === 'light' && styles.segmentButtonActive
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      theme.setTheme('light');
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text style={[
+                      styles.segmentText,
+                      theme.mode === 'light' && styles.segmentTextActive
+                    ]}>
+                      ☀️ Clair
+                    </Text>
+                  </Touchable>
+                  <Touchable
+                    style={[
+                      styles.segmentButton,
+                      theme.mode === 'dark' && styles.segmentButtonActive
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      theme.setTheme('dark');
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text style={[
+                      styles.segmentText,
+                      theme.mode === 'dark' && styles.segmentTextActive
+                    ]}>
+                      🌙 Sombre
+                    </Text>
+                  </Touchable>
+                  <Touchable
+                    style={[
+                      styles.segmentButton,
+                      theme.mode === 'auto' && styles.segmentButtonActive
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      theme.setTheme('auto');
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text style={[
+                      styles.segmentText,
+                      theme.mode === 'auto' && styles.segmentTextActive
+                    ]}>
+                      📱 Auto
+                    </Text>
+                  </Touchable>
+                </View>
+              </View>
+            </View>
+
             {/* Timer Options */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Options du Timer</Text>
@@ -310,12 +412,16 @@ export default function SettingsModal({ visible, onClose }) {
                   </Text>
                 </View>
                 <View style={styles.segmentedControl}>
-                  <TouchableOpacity
+                  <Touchable
                     style={[
                       styles.segmentButton,
                       scaleMode === '60min' && styles.segmentButtonActive
                     ]}
-                    onPress={() => setScaleMode('60min')}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setScaleMode('60min');
+                    }}
+                    {...touchableProps}
                   >
                     <Text style={[
                       styles.segmentText,
@@ -323,13 +429,17 @@ export default function SettingsModal({ visible, onClose }) {
                     ]}>
                       60min
                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
+                  </Touchable>
+                  <Touchable
                     style={[
                       styles.segmentButton,
                       scaleMode === 'full' && styles.segmentButtonActive
                     ]}
-                    onPress={() => setScaleMode('full')}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setScaleMode('full');
+                    }}
+                    {...touchableProps}
                   >
                     <Text style={[
                       styles.segmentText,
@@ -337,7 +447,7 @@ export default function SettingsModal({ visible, onClose }) {
                     ]}>
                       Full
                     </Text>
-                  </TouchableOpacity>
+                  </Touchable>
                 </View>
               </View>
 
@@ -351,9 +461,11 @@ export default function SettingsModal({ visible, onClose }) {
                 </View>
                 <Switch
                   value={clockwise}
-                  onValueChange={setClockwise}
-                  trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
-                  thumbColor={theme.colors.background}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setClockwise(value);
+                  }}
+                  {...theme.styles.switch(clockwise)}
                 />
               </View>
             </View>

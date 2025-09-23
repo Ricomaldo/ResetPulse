@@ -34,7 +34,7 @@ export default function ColorSelector() {
 
     selected: {
       borderWidth: 3,
-      borderColor: theme.colors.background,
+      borderColor: theme.colors.brand.secondary,
       transform: [{ scale: 1.1 }],
       ...theme.shadows.md,
     },
