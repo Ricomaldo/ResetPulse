@@ -7,6 +7,7 @@ import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities } from '../config/activities';
 import haptics from '../utils/haptics';
+import { isTestPremium } from '../config/testMode';
 
 export default function ActivityCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -16,15 +17,15 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // TODO: Replace with actual premium status check
-  const isPremiumUser = false;
+  // Check premium status (test mode or actual premium)
+  const isPremiumUser = isTestPremium();
 
   // Get all activities and sort by favorites
   const allActivities = getAllActivities();
 
   // Sort activities: 'none' first, then favorites, then others
   const activities = [...allActivities].sort((a, b) => {
-    // 'none' (Simple) always comes first
+    // 'none' (Basique) always comes first
     if (a.id === 'none') return -1;
     if (b.id === 'none') return 1;
 
@@ -252,6 +253,11 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
           return (
             <Touchable
               key={activity.id}
+              accessible={true}
+              accessibilityLabel={`Activité ${activity.label}`}
+              accessibilityRole="button"
+              accessibilityState={{selected: isActive, disabled: isLocked}}
+              accessibilityHint={isLocked ? "Activité premium verrouillée" : `Sélectionner ${activity.label}`}
               style={[
                 styles.activityButton,
                 isActive && styles.activityButtonActive,

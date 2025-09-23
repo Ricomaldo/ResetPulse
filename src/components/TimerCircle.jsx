@@ -227,8 +227,8 @@ function TimerCircle({
     
     const centerX = svgSize / 2;
     const centerY = svgSize / 2;
-    // Use inner radius to keep progress inside the circle border
-    const progressRadius = radius - strokeWidth * 2;
+    // Use full radius to fill up to the border
+    const progressRadius = radius - strokeWidth / 2; // Fill right up to the border
     
     if (clockwise) {
       return `
@@ -274,33 +274,45 @@ function TimerCircle({
     const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90; // +90 to start from top
     const normalizedAngle = angle < 0 ? angle + 360 : angle;
 
-    // Convert angle to minutes based on scale mode
+    // Convert angle to minutes based on scale mode with correct angular distribution
     let minutes;
+
     if (scaleMode === '60min') {
+      // 60min mode: 360° = 60 minutes, so 6° per minute
+      const degreesPerMinute = 6;
+
       if (clockwise) {
-        minutes = Math.round((normalizedAngle / 360) * 60) % 60;
+        minutes = Math.round(normalizedAngle / degreesPerMinute);
       } else {
-        minutes = Math.round(((360 - normalizedAngle) / 360) * 60) % 60;
+        minutes = Math.round((360 - normalizedAngle) / degreesPerMinute);
       }
-      // Ensure at least 1 minute
+
+      // Wrap around: 0 should be 60
       if (minutes === 0) minutes = 60;
+      // Ensure we stay within 1-60 range
+      if (minutes > 60) minutes = 60;
+
     } else {
-      // 25min mode - simple calculation like 60min but with 25 as max
+      // 25min mode: 360° = 25 minutes, so 14.4° per minute
+      const degreesPerMinute = 360 / 25; // 14.4
+
       if (clockwise) {
-        minutes = Math.round((normalizedAngle / 360) * 25);
+        minutes = Math.round(normalizedAngle / degreesPerMinute);
       } else {
-        minutes = Math.round(((360 - normalizedAngle) / 360) * 25);
+        minutes = Math.round((360 - normalizedAngle) / degreesPerMinute);
       }
-      // Ensure at least 1 minute, max 25
+
+      // Wrap around: 0 should be 25
       if (minutes === 0) minutes = 25;
-      minutes = Math.min(25, minutes);
+      // Ensure we stay within 1-25 range
+      if (minutes > 25) minutes = 25;
     }
 
     return minutes;
   };
 
-  // Pan responder for drag gesture
-  const panResponder = useRef(
+  // Pan responder for drag gesture - recreate when scaleMode changes
+  const panResponder = useMemo(() =>
     PanResponder.create({
       onStartShouldSetPanResponder: () => !isRunning && !!onGraduationTap,
       onMoveShouldSetPanResponder: () => !isRunning && !!onGraduationTap,
@@ -321,8 +333,9 @@ function TimerCircle({
       onPanResponderRelease: () => {
         setIsDragging(false);
       },
-    })
-  ).current;
+    }),
+    [scaleMode, clockwise, isRunning, onGraduationTap] // Recreate when these change
+  );
 
   return (
     <Animated.View
@@ -347,7 +360,26 @@ function TimerCircle({
           fill="white"
         />
         
-        {/* Graduation marks */}
+        {/* Progress arc - BEFORE graduations so they appear on top */}
+        {progress > 0 && (
+          progressAngle >= 359.9 ? (
+            <AnimatedCircle
+              cx={svgSize / 2}
+              cy={svgSize / 2}
+              r={radius - strokeWidth / 2}
+              fill={animatedColor}
+              opacity={1}
+            />
+          ) : (
+            <AnimatedPath
+              d={progressPath}
+              fill={animatedColor}
+              opacity={1}
+            />
+          )
+        )}
+
+        {/* Graduation marks - AFTER progress so they appear on top */}
         {graduationMarks.map(mark => (
           <Line
             key={mark.key}
@@ -360,8 +392,8 @@ function TimerCircle({
             opacity={mark.opacity}
           />
         ))}
-        
-        {/* Minute numbers */}
+
+        {/* Minute numbers - AFTER progress so they appear on top */}
         {minuteNumbers.map(num => (
           <SvgText
             key={num.key}
@@ -378,26 +410,7 @@ function TimerCircle({
             {num.minute}
           </SvgText>
         ))}
-        
-        {/* Progress arc */}
-        {progress > 0 && (
-          progressAngle >= 359.9 ? (
-            <AnimatedCircle
-              cx={svgSize / 2}
-              cy={svgSize / 2}
-              r={radius - strokeWidth * 2}
-              fill={animatedColor}
-              opacity={1}
-            />
-          ) : (
-            <AnimatedPath
-              d={progressPath}
-              fill={animatedColor}
-              opacity={1}
-            />
-          )
-        )}
-        
+
         {/* Outer border */}
         <Circle
           cx={svgSize / 2}

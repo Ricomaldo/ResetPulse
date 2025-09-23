@@ -72,9 +72,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
   }, [running, startTime, remaining, duration]);
 
-  // Effect 2: Start/stop animation loop (bug fix - no remaining in deps)
+  // Effect 2: Start/stop animation loop
   useEffect(() => {
-    if (running && remaining > 0 && startTime) {
+    if (running && startTime) {
       intervalRef.current = requestAnimationFrame(updateTimer);
     } else {
       if (intervalRef.current) {

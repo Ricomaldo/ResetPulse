@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ResetPulse",
-    "slug": "ResetPulse",
+    "slug": "resetPulse",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,11 +10,14 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F5F5F0"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.ResetPulse"
+      "bundleIdentifier": "com.irimwebforge.resetpulse",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,10 +25,15 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.ResetPulse"
+      "package": "com.irimwebforge.resetpulse"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f98f80b8-4a15-4ece-afa5-5311174f67b8"
+      }
     }
   }
 }

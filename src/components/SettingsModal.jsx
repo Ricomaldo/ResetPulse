@@ -9,7 +9,8 @@ import {
   ScrollView,
   Switch,
   Platform,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
+  Alert
 } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
@@ -19,6 +20,7 @@ import PalettePreview from './PalettePreview';
 import { getAllActivities } from '../config/activities';
 import { TIMER_PALETTES, isPalettePremium } from '../config/timerPalettes';
 import haptics from '../utils/haptics';
+import { isTestPremium } from '../config/testMode';
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
@@ -39,6 +41,7 @@ export default function SettingsModal({ visible, onClose }) {
   } = useTimerOptions();
 
   const allActivities = getAllActivities();
+  const isPremiumUser = isTestPremium(); // Check premium status for test mode
 
   const toggleFavorite = (activityId) => {
     haptics.selection().catch(() => {});
@@ -324,7 +327,12 @@ export default function SettingsModal({ visible, onClose }) {
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Paramètres</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="Fermer les paramètres"
+              accessibilityRole="button"
+              onPress={onClose}
+              style={styles.closeButton}>
               <Text style={styles.closeText}>✕</Text>
             </TouchableOpacity>
           </View>
@@ -346,11 +354,15 @@ export default function SettingsModal({ visible, onClose }) {
                   </Text>
                 </View>
                 <Switch
+                  accessible={true}
+                  accessibilityLabel="Afficher les activités"
+                  accessibilityRole="switch"
+                  accessibilityState={{checked: showActivities}}
                   value={showActivities}
                   onValueChange={(value) => {
                     haptics.switchToggle().catch(() => {});
                     setShowActivities(value);
-                    
+
                     // Si on masque les activités, remettre à "none" (Basique)
                     if (!value) {
                       const noneActivity = allActivities.find(activity => activity.id === 'none');
@@ -374,8 +386,33 @@ export default function SettingsModal({ visible, onClose }) {
                 <Switch
                   value={shouldPulse}
                   onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setShouldPulse(value);
+                    if (value) {
+                      // Avertissement pour conformité épilepsie/photosensibilité
+                      Alert.alert(
+                        "Animation de pulsation",
+                        "Cette option active une animation visuelle répétitive.\n\nÉvitez d'activer cette fonctionnalité si vous êtes sensible aux effets visuels ou si vous avez des antécédents de photosensibilité.",
+                        [
+                          {
+                            text: "Annuler",
+                            style: "cancel",
+                            onPress: () => {
+                              haptics.selection().catch(() => {});
+                            }
+                          },
+                          {
+                            text: "Activer",
+                            onPress: () => {
+                              haptics.switchToggle().catch(() => {});
+                              setShouldPulse(true);
+                            }
+                          }
+                        ],
+                        { cancelable: true }
+                      );
+                    } else {
+                      haptics.switchToggle().catch(() => {});
+                      setShouldPulse(false);
+                    }
                   }}
                   {...theme.styles.switch(shouldPulse)}
                 />
@@ -389,15 +426,21 @@ export default function SettingsModal({ visible, onClose }) {
                   <View style={styles.favoritesGrid}>
                 {allActivities.map((activity) => {
                   const isFavorite = favoriteActivities.includes(activity.id);
+                  const isLocked = activity.isPremium && !isPremiumUser;
                   return (
                     <TouchableOpacity
                       key={activity.id}
                       style={[
                         styles.activityItem,
-                        isFavorite && styles.activityItemFavorite
+                        isFavorite && styles.activityItemFavorite,
+                        isLocked && styles.activityItemLocked
                       ]}
-                      onPress={() => toggleFavorite(activity.id)}
-                      activeOpacity={0.7}
+                      onPress={() => {
+                        if (!isLocked) {
+                          toggleFavorite(activity.id)
+                        }
+                      }}
+                      activeOpacity={isLocked ? 1 : 0.7}
                     >
                       <Text style={styles.activityEmoji}>{activity.emoji}</Text>
                       <Text style={[
@@ -406,7 +449,7 @@ export default function SettingsModal({ visible, onClose }) {
                       ]}>
                         {activity.label}
                       </Text>
-                      {activity.isPremium && (
+                      {isLocked && (
                         <View style={styles.premiumBadge}>
                           <Text style={styles.lockMini}>🔒</Text>
                         </View>
@@ -427,7 +470,7 @@ export default function SettingsModal({ visible, onClose }) {
               </Text>
               <View style={styles.paletteGrid}>
                 {Object.keys(TIMER_PALETTES).map((paletteName) => {
-                  const isPremium = isPalettePremium(paletteName);
+                  const isLocked = isPalettePremium(paletteName) && !isPremiumUser;
                   const isActive = currentPalette === paletteName;
                   const paletteInfo = TIMER_PALETTES[paletteName];
 
@@ -437,14 +480,14 @@ export default function SettingsModal({ visible, onClose }) {
                       style={[
                         styles.paletteItem,
                         isActive && styles.paletteItemActive,
-                        isPremium && styles.paletteItemLocked
+                        isLocked && styles.paletteItemLocked
                       ]}
                       onPress={() => {
-                        if (!isPremium) {
+                        if (!isLocked) {
                           setPalette(paletteName);
                         }
                       }}
-                      activeOpacity={isPremium ? 1 : 0.7}
+                      activeOpacity={isLocked ? 1 : 0.7}
                     >
                       <PalettePreview paletteName={paletteName} />
                       <Text style={[
@@ -453,7 +496,7 @@ export default function SettingsModal({ visible, onClose }) {
                       ]}>
                         {paletteInfo?.name || paletteName}
                       </Text>
-                      {isPremium && (
+                      {isLocked && (
                         <View style={styles.paletteLockBadge}>
                           <Text style={styles.lockIcon}>🔒</Text>
                         </View>
@@ -525,6 +568,10 @@ export default function SettingsModal({ visible, onClose }) {
                   </Text>
                 </View>
                 <Switch
+                  accessible={true}
+                  accessibilityLabel="Sens de rotation"
+                  accessibilityRole="switch"
+                  accessibilityState={{checked: clockwise}}
                   value={clockwise}
                   onValueChange={(value) => {
                     haptics.switchToggle().catch(() => {});

@@ -113,12 +113,17 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
     if (timer.running) return;
 
     haptics.selection().catch(() => {});
-    // Convert minutes to seconds with max limit for 25min mode
-    let newDuration = Math.max(60, minutes * 60);
 
-    // In 25min mode, limit maximum duration to 25 minutes
+    // Convert minutes to seconds and apply limits based on mode
+    let newDuration;
     if (scaleMode === '25min') {
-      newDuration = Math.min(newDuration, 1500); // 25 * 60 = 1500 seconds
+      // Mode 25min: strict limit to 25 minutes max
+      const clampedMinutes = Math.max(1, Math.min(25, minutes));
+      newDuration = clampedMinutes * 60;
+    } else {
+      // Mode 60min: allow up to 60 minutes
+      const clampedMinutes = Math.max(1, Math.min(60, minutes));
+      newDuration = clampedMinutes * 60;
     }
 
     timer.setDuration(newDuration);
@@ -143,6 +148,10 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
     <View style={styles.container}>
       {/* Timer Circle */}
       <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={`Timer: ${Math.floor(timer.remaining / 60)} minutes ${timer.remaining % 60} secondes`}
+        accessibilityHint="Double-tap pour démarrer ou arrêter le timer"
+        accessibilityRole="button"
         activeOpacity={1}
         onPress={handleDoubleTap}
         style={styles.timerWrapper}>

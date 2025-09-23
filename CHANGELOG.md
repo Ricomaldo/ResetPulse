@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2025-09-24 (Part 11 - Freemium Strategy & Final Polish)
+- Test mode configuration for unlocking all premium content during testing
+- 12 new premium activities (Pause, Sport, Yoga, Marche, Lecture, Étude, Créativité, Cuisine, Jeux, Devoirs, Musique, Ménage)
+- Activity lock system with visual indicators in settings
+- Smart activity ordering with favorites prioritization in carousel
+- Default timer color changed to blue-gray (#4A5568) for better first impression
+
+### Changed - 2025-09-24 (Part 11)
+- Restructured freemium model: 4 free activities vs 12 premium (more compelling upgrade incentive)
+- "Pause" activity moved to premium tier (creates desire after using "Travail")
+- Splash screen background color adjusted to match icon (#F5F5F0)
+- PanResponder now recreates on mode change for accurate touch handling
+- Activity carousel maintains favorites sorting for personalized experience
+
+### Fixed - 2025-09-24 (Part 11)
+- Timer duration selection now accurate in both 60min and 25min modes
+- PanResponder stale closure issue when switching between timer modes
+- Premium content locks properly respect test mode status
+- Activity ordering consistency between carousel and settings
+
+### Fixed - 2025-09-24 (Part 10 - Timer Selection Accuracy)
+- Fixed incorrect duration selection in 25min mode where visual positions didn't match selected minutes
+- Refactored angleToMinutes calculation to use proper angular distributions per mode
+- 60min mode now correctly uses 6° per minute distribution
+- 25min mode now correctly uses 14.4° per minute distribution
+- Clicking on graduation "15" in 25min mode now correctly selects 15 minutes (was showing 45-50)
+
 ### Added - 2025-09-24 (Part 9 - Code Quality & Performance)
 - PlatformTouchable utility component for cross-platform touch handling
 - Constants directory with centralized design tokens and animation durations

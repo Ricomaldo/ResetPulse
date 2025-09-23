@@ -17,7 +17,7 @@ export const TimerPaletteProvider = ({ children }) => {
   // Couleur sélectionnée dans la palette
   const [selectedColorIndex, setSelectedColorIndex] = usePersistedState(
     '@ResetPulse:selectedColor',
-    0 // Index de la couleur (0-3)
+    1 // Index de la couleur - bleu par défaut (index 1)
   );
 
   // Récupération des couleurs

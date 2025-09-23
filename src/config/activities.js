@@ -1,32 +1,26 @@
 // src/config/activities.js
 
 export const ACTIVITIES = [
+  // Basic timer - always first
   {
     id: "none",
-    emoji: "⏱️",
+    emoji: "",
     label: "Basique",
-    defaultDuration: 300, // 5 minutes default
+    defaultDuration: 2700, // 45 minutes
     isPremium: false,
     suggestedColor: "calm",
     description: "Timer simple sans activité",
   },
+
+  // Free activities - limited to create desire for premium
   {
-    id: "meditation",
-    emoji: "🧘",
-    label: "Méditation",
-    defaultDuration: 1200, // 20 minutes
+    id: "work",
+    emoji: "💻",
+    label: "Travail",
+    defaultDuration: 1500, // 25 minutes (Pomodoro)
     isPremium: false,
-    suggestedColor: "calm",
-    description: "Sessions de méditation guidée",
-  },
-  {
-    id: "reading",
-    emoji: "📖",
-    label: "Lecture",
-    defaultDuration: 1800, // 30 minutes
-    isPremium: false,
-    suggestedColor: "focus",
-    description: "Focus lecture profonde",
+    suggestedColor: "deep",
+    description: "Sessions de travail concentré",
   },
   {
     id: "breathing",
@@ -38,15 +32,25 @@ export const ACTIVITIES = [
     description: "Exercices de respiration",
   },
   {
-    id: "work",
-    emoji: "💻",
-    label: "Travail",
-    defaultDuration: 1500, // 25 minutes (Pomodoro)
+    id: "meditation",
+    emoji: "🧘",
+    label: "Méditation",
+    defaultDuration: 1200, // 20 minutes
     isPremium: false,
-    suggestedColor: "deep",
-    description: "Sessions de travail concentré",
+    suggestedColor: "calm",
+    description: "Sessions de méditation guidée",
   },
-  // Premium activities
+
+  // Premium activities - everything else users want!
+  {
+    id: "break",
+    emoji: "☕",
+    label: "Pause",
+    defaultDuration: 900, // 15 minutes
+    isPremium: true, // Frustrating not to have with Work!
+    suggestedColor: "calm",
+    description: "Vraie déconnexion",
+  },
   {
     id: "sport",
     emoji: "💪",
@@ -55,6 +59,42 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "energy",
     description: "Étirements et exercices courts",
+  },
+  {
+    id: "yoga",
+    emoji: "🧘‍♀️",
+    label: "Yoga",
+    defaultDuration: 900, // 15 minutes
+    isPremium: true,
+    suggestedColor: "calm",
+    description: "Étirements et postures",
+  },
+  {
+    id: "walking",
+    emoji: "🚶",
+    label: "Marche",
+    defaultDuration: 1200, // 20 minutes
+    isPremium: true,
+    suggestedColor: "deep",
+    description: "Mouvement conscient",
+  },
+  {
+    id: "reading",
+    emoji: "📖",
+    label: "Lecture",
+    defaultDuration: 1800, // 30 minutes
+    isPremium: true,
+    suggestedColor: "focus",
+    description: "Focus lecture profonde",
+  },
+  {
+    id: "study",
+    emoji: "📚",
+    label: "Étude",
+    defaultDuration: 2700, // 45 minutes
+    isPremium: true,
+    suggestedColor: "focus",
+    description: "Sessions d'apprentissage",
   },
   {
     id: "creativity",
@@ -66,22 +106,49 @@ export const ACTIVITIES = [
     description: "Dessin, écriture libre",
   },
   {
-    id: "break",
-    emoji: "☕",
-    label: "Pause",
-    defaultDuration: 900, // 15 minutes
+    id: "cooking",
+    emoji: "👨‍🍳",
+    label: "Cuisine",
+    defaultDuration: 1800, // 30 minutes
     isPremium: true,
-    suggestedColor: "calm",
-    description: "Vraie déconnexion",
+    suggestedColor: "energy",
+    description: "Préparation de repas",
   },
   {
-    id: "walking",
-    emoji: "🚶",
-    label: "Marche",
+    id: "gaming",
+    emoji: "🎮",
+    label: "Jeux",
     defaultDuration: 1200, // 20 minutes
     isPremium: true,
-    suggestedColor: "deep",
-    description: "Mouvement conscient",
+    suggestedColor: "energy",
+    description: "Temps d'écran contrôlé",
+  },
+  {
+    id: "homework",
+    emoji: "✏️",
+    label: "Devoirs",
+    defaultDuration: 1800, // 30 minutes
+    isPremium: true,
+    suggestedColor: "focus",
+    description: "Aide aux devoirs",
+  },
+  {
+    id: "music",
+    emoji: "🎵",
+    label: "Musique",
+    defaultDuration: 1800, // 30 minutes
+    isPremium: true,
+    suggestedColor: "calm",
+    description: "Pratique instrumentale",
+  },
+  {
+    id: "cleaning",
+    emoji: "🧹",
+    label: "Ménage",
+    defaultDuration: 900, // 15 minutes
+    isPremium: true,
+    suggestedColor: "energy",
+    description: "Tâches ménagères",
   },
 ];
 

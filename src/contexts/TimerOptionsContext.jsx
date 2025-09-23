@@ -10,7 +10,7 @@ export const TimerOptionsProvider = ({ children }) => {
   const { values, updateValue, isLoading } = usePersistedObject(
     '@ResetPulse:timerOptions',
     {
-      shouldPulse: true, // Animation de pulsation activée par défaut
+      shouldPulse: false, // Animation de pulsation désactivée par défaut (conformité épilepsie)
       showActivities: true, // Affichage des activités activé par défaut
       clockwise: false,
       scaleMode: '60min',

@@ -5,6 +5,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs } from '../styles/responsive';
 import { TIMER_PALETTES } from '../config/timerPalettes';
+import { isTestPremium } from '../config/testMode';
 
 export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -20,7 +21,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const isPremiumUser = false; // TODO: Get from app context
+  const isPremiumUser = isTestPremium(); // Check premium status
   const PALETTE_NAMES = Object.keys(TIMER_PALETTES);
   const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
 
@@ -197,23 +198,27 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
           const paletteInfo = TIMER_PALETTES[paletteName];
           const colors = paletteInfo.colors;
           const isCurrentPalette = paletteName === currentPalette;
-          const isPremium = paletteInfo.isPremium;
+          const isLocked = paletteInfo.isPremium && !isPremiumUser;
 
           return (
             <View key={paletteName} style={styles.paletteContainer}>
               {colors.map((color, colorIndex) => (
                 <View key={`${paletteName}-${colorIndex}`} style={{ position: 'relative' }}>
                   <TouchableOpacity
+                    accessible={true}
+                    accessibilityLabel={`Couleur ${colorIndex + 1} de la palette ${paletteInfo.name}`}
+                    accessibilityRole="button"
+                    accessibilityState={{selected: isCurrentPalette && currentColor === color}}
                     style={[
                       styles.colorButton,
                       {
                         backgroundColor: color,
-                        opacity: isPremium ? 0.4 : (isCurrentPalette ? 1 : 0.5)
+                        opacity: isLocked ? 0.4 : (isCurrentPalette ? 1 : 0.5)
                       },
                       isCurrentPalette && currentColor === color && styles.colorButtonActive
                     ]}
                     onPress={() => {
-                      if (!isPremium || isPremiumUser) {
+                      if (!isLocked) {
                         if (isCurrentPalette) {
                           setColorIndex(colorIndex);
                         } else {
@@ -224,9 +229,9 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                         }
                       }
                     }}
-                    activeOpacity={isPremium ? 1 : 0.7}
+                    activeOpacity={isLocked ? 1 : 0.7}
                   />
-                  {isPremium && colorIndex === 1 && (
+                  {isLocked && colorIndex === 1 && (
                     <View style={styles.lockOverlay} pointerEvents="none">
                       <Text style={styles.lockIcon}>🔒</Text>
                     </View>

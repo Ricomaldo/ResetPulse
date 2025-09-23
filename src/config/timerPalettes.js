@@ -64,7 +64,7 @@ export const TIMER_PALETTES = {
   },
   pastel_girly: {
     colors: ['#FFB3D9', '#E0BBE4', '#FFDFD3', '#C7CEEA'],
-    name: 'Pastel Girly',
+    name: 'Pastelles',
     isPremium: true,
     description: 'Pastels féminins tendres'
   },
