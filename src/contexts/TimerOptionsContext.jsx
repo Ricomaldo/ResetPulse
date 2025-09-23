@@ -1,47 +1,36 @@
 // src/contexts/TimerOptionsContext.jsx
-import React, { createContext, useContext, useEffect } from 'react';
-import { useTheme } from '../components/ThemeProvider';
+import React, { createContext, useContext } from 'react';
 import { usePersistedObject } from '../hooks/usePersistedState';
 import { getDefaultActivity } from '../config/activities';
 
 const TimerOptionsContext = createContext(null);
 
 export const TimerOptionsProvider = ({ children }) => {
-  const theme = useTheme();
-
   // Utiliser un seul objet persisté pour toutes les options
   const { values, updateValue, isLoading } = usePersistedObject(
     '@ResetPulse:timerOptions',
     {
       clockwise: false,
       scaleMode: '60min',
-      currentColor: theme.colors.energy,
       currentActivity: getDefaultActivity(),
+      currentDuration: 300, // 5 minutes par défaut
       favoriteActivities: ['breathing', 'meditation', 'reading', 'work'], // Default favorites
     }
   );
-
-  // Mettre à jour la couleur si elle n'existe pas dans la palette actuelle
-  useEffect(() => {
-    const paletteColors = Object.values(theme.colors);
-    if (!paletteColors.includes(values.currentColor)) {
-      updateValue('currentColor', theme.colors.energy);
-    }
-  }, [theme.colors]);
 
   const value = {
     // States
     clockwise: values.clockwise,
     scaleMode: values.scaleMode,
-    currentColor: values.currentColor,
     currentActivity: values.currentActivity,
+    currentDuration: values.currentDuration,
     favoriteActivities: values.favoriteActivities,
 
     // Actions
     setClockwise: (val) => updateValue('clockwise', val),
     setScaleMode: (val) => updateValue('scaleMode', val),
-    setCurrentColor: (val) => updateValue('currentColor', val),
     setCurrentActivity: (val) => updateValue('currentActivity', val),
+    setCurrentDuration: (val) => updateValue('currentDuration', val),
     setFavoriteActivities: (val) => updateValue('favoriteActivities', val),
 
     // Loading state

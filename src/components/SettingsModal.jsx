@@ -9,13 +9,12 @@ import {
   ScrollView,
   Switch
 } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { rs } from '../styles/responsive';
 import PalettePreview from './PalettePreview';
-import { PALETTE_NAMES } from '../styles/theme';
 import { getAllActivities } from '../config/activities';
-import { PALETTE_CONFIG, isPalettePremium } from '../config/palettes';
+import { TIMER_PALETTES, isPalettePremium } from '../config/timerPalettes';
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
@@ -364,10 +363,10 @@ export default function SettingsModal({ visible, onClose }) {
                 Version gratuite : Terre et Laser disponibles
               </Text>
               <View style={styles.paletteGrid}>
-                {PALETTE_NAMES.map((paletteName) => {
+                {Object.keys(TIMER_PALETTES).map((paletteName) => {
                   const isPremium = isPalettePremium(paletteName);
                   const isActive = theme.currentPalette === paletteName;
-                  const paletteInfo = PALETTE_CONFIG[paletteName];
+                  const paletteInfo = TIMER_PALETTES[paletteName];
 
                   return (
                     <TouchableOpacity

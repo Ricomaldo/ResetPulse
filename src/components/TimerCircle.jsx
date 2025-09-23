@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Animated } from 'react-native';
 import Svg, { Circle, Path, Line, Text as SvgText } from 'react-native-svg';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
 
 export default function TimerCircle({

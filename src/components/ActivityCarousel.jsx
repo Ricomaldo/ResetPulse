@@ -1,14 +1,16 @@
 // src/components/ActivityCarousel.jsx
 import React, { useRef, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities } from '../config/activities';
 
 export default function ActivityCarousel() {
   const theme = useTheme();
-  const { currentActivity, setCurrentActivity, setCurrentColor, favoriteActivities = [] } = useTimerOptions();
+  const { currentActivity, setCurrentActivity, setCurrentDuration, favoriteActivities = [] } = useTimerOptions();
+  const { setColorByType, currentColor } = useTimerPalette();
   const scrollViewRef = useRef(null);
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -19,8 +21,12 @@ export default function ActivityCarousel() {
   // Get all activities and sort by favorites
   const allActivities = getAllActivities();
 
-  // Sort activities: favorites first, then others
+  // Sort activities: 'none' first, then favorites, then others
   const activities = [...allActivities].sort((a, b) => {
+    // 'none' (Simple) always comes first
+    if (a.id === 'none') return -1;
+    if (b.id === 'none') return 1;
+
     const aIsFavorite = favoriteActivities.includes(a.id);
     const bIsFavorite = favoriteActivities.includes(b.id);
 
@@ -89,10 +95,12 @@ export default function ActivityCarousel() {
 
     setCurrentActivity(activity);
 
-    // Update color if suggested color exists
-    if (activity.suggestedColor && theme.colors[activity.suggestedColor]) {
-      setCurrentColor(theme.colors[activity.suggestedColor]);
+    // Update duration based on activity default
+    if (activity.defaultDuration) {
+      setCurrentDuration(activity.defaultDuration);
     }
+
+    // Don't change color - let user choose their own color
 
     animateSelection();
     showActivityName();
@@ -128,7 +136,7 @@ export default function ActivityCarousel() {
     },
 
     activityButtonActive: {
-      backgroundColor: theme.colors.primary,
+      backgroundColor: currentColor,
       ...theme.shadows.md,
       transform: [{ scale: 1.1 }],
     },
@@ -142,7 +150,7 @@ export default function ActivityCarousel() {
     activityLabel: {
       fontSize: rs(9, 'min'),
       marginTop: 2,
-      color: theme.colors.textLight,
+      color: theme.colors.textSecondary,
       fontWeight: '500',
       textAlign: 'center',
     },
@@ -156,7 +164,7 @@ export default function ActivityCarousel() {
       position: 'absolute',
       top: 0,
       right: 0,
-      backgroundColor: theme.colors.warning,
+      backgroundColor: theme.colors.semantic.warning,
       width: rs(20, 'min'),
       height: rs(20, 'min'),
       borderRadius: rs(10, 'min'),

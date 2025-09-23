@@ -1,7 +1,7 @@
 // src/components/TimerOptions.jsx
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { rs } from '../styles/responsive';
 

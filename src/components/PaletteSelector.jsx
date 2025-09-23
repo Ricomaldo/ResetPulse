@@ -1,15 +1,17 @@
 // src/components/PaletteSelector.jsx
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { usePalette, useTheme } from './ThemeProvider';
+import { useTheme } from '../theme/ThemeProvider';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
 
 export const PaletteSelector = () => {
-  const { setPalette, availablePalettes, currentPalette } = usePalette();
-  const { brand, spacing, borderRadius } = useTheme();
+  const { setPalette, getAvailablePalettes, currentPalette } = useTimerPalette();
+  const availablePalettes = getAvailablePalettes();
+  const theme = useTheme();
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: brand.text }]}>
+      <Text style={[styles.title, { color: theme.colors.text }]}>
         Choisir une palette
       </Text>
       
@@ -20,22 +22,22 @@ export const PaletteSelector = () => {
             style={[
               styles.paletteButton,
               {
-                backgroundColor: currentPalette === paletteName 
-                  ? brand.primary 
-                  : brand.surface,
-                borderColor: brand.border,
-                borderRadius: borderRadius.md,
-                padding: spacing.sm,
+                backgroundColor: currentPalette === paletteName
+                  ? theme.colors.brand.primary
+                  : theme.colors.surface,
+                borderColor: theme.colors.border,
+                borderRadius: theme.borderRadius.md,
+                padding: theme.spacing.sm,
               }
             ]}
             onPress={() => setPalette(paletteName)}
           >
             <Text style={[
               styles.paletteText,
-              { 
-                color: currentPalette === paletteName 
-                  ? brand.background 
-                  : brand.text 
+              {
+                color: currentPalette === paletteName
+                  ? theme.colors.background
+                  : theme.colors.text
               }
             ]}>
               {paletteName.toUpperCase()}

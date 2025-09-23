@@ -1,26 +1,23 @@
 // src/components/ColorSwitch.jsx
 import React, { useRef, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Animated } from 'react-native';
-import { useTheme, usePalette } from './ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTheme } from '../theme/ThemeProvider';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs } from '../styles/responsive';
-import { PALETTE_NAMES } from '../styles/theme';
+import { TIMER_PALETTES } from '../config/timerPalettes';
 
 export default function ColorSwitch() {
   const theme = useTheme();
-  const { currentColor, setCurrentColor } = useTimerOptions();
-  const { currentPalette, setPalette } = usePalette();
+  const { currentColor, setColorIndex, paletteColors, selectedColorIndex, currentPalette, setPalette } = useTimerPalette();
   const scrollViewRef = useRef(null);
   const [showPaletteName, setShowPaletteName] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Available timer colors
-  const colors = [
-    theme.colors.energy,
-    theme.colors.focus,
-    theme.colors.calm,
-    theme.colors.deep
-  ];
+  // Available timer colors from current palette
+  const colors = paletteColors || [];
+
+  // Get all palette names
+  const PALETTE_NAMES = Object.keys(TIMER_PALETTES);
 
   // Get current palette index
   const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
@@ -162,20 +159,12 @@ export default function ColorSwitch() {
       >
         {PALETTE_NAMES.map((paletteName, paletteIndex) => {
           // Get colors for this palette
-          const paletteColors = [
-            theme.timer.palette.energy,
-            theme.timer.palette.focus,
-            theme.timer.palette.calm,
-            theme.timer.palette.deep,
-          ];
-
-          // If this is the current palette, use actual colors
-          // Otherwise, we'd need to load that palette's colors
+          const thisPaletteColors = TIMER_PALETTES[paletteName]?.colors || [];
           const isCurrentPalette = paletteName === currentPalette;
 
           return (
             <View key={paletteName} style={styles.paletteContainer}>
-              {colors.map((color, colorIndex) => (
+              {thisPaletteColors.map((color, colorIndex) => (
                 <TouchableOpacity
                   key={`${paletteName}-${colorIndex}`}
                   style={[
@@ -188,7 +177,7 @@ export default function ColorSwitch() {
                   ]}
                   onPress={() => {
                     if (isCurrentPalette) {
-                      setCurrentColor(color);
+                      setColorIndex(colorIndex);
                     } else {
                       // Scroll to that palette
                       scrollViewRef.current?.scrollTo({

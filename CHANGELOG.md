@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2025-09-23 (Part 3 - Theme Refactoring)
+- New simplified theme system with clear separation of concerns
+- `src/theme/` directory with modular color and token management
+- Light/Dark theme support infrastructure (dark mode ready)
+- Dedicated `TimerPaletteContext` for timer color management
+- IRIM brand colors: Turquoise (#00A0A0), Bleu foncé (#004466), Orange (#F06424)
+- Documentation: `docs/theme-management.md` for theme system guide
+- Improved light theme with subtle gray background (#F9FAFB)
+
+### Changed - 2025-09-23 (Part 3)
+- Major theme system refactoring from monolithic to modular architecture
+- Default palette changed from "laser" to "terre" (more natural colors)
+- Activities no longer force color changes - user maintains control
+- Activity selection uses current palette color instead of brand color
+- Separated UI theme colors from timer palette colors
+- Reduced shadow opacity for subtler depth (0.08 from 0.1)
+- Overlay colors less aggressive (rgba(248,249,250,0.92) from pure white)
+
+### Fixed - 2025-09-23 (Part 3)
+- Activity carousel showing wrong color (turquoise) for selected items
+- Import errors from old theme system references
+- Layout.js dependency on deleted theme file
+- Settings modal using outdated palette imports
+- Visual regression where selected activities lost palette harmony
+
+### Removed - 2025-09-23 (Part 3)
+- Old monolithic `src/styles/theme.js` file
+- Obsolete `src/styles/palette.json` file
+- Redundant `src/config/palettes.js` file
+- Temporary compatibility `src/components/ThemeProvider.jsx`
+- 90% of unused code from `src/styles/layout.js`
+
 ### Added - 2025-09-23 (Part 2)
 - Activity carousel with 8 emoji activities (4 free, 4 premium)
 - Favorites system for activity reordering in settings modal

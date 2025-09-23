@@ -1,21 +1,22 @@
 // src/components/PalettePreview.jsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme, usePalette } from './ThemeProvider';
-import paletteData from '../styles/palette.json';
+import { useTheme } from '../theme/ThemeProvider';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { TIMER_PALETTES } from '../config/timerPalettes';
 
 export const PalettePreview = ({ paletteName }) => {
-  const { brand, spacing, borderRadius } = useTheme();
-  const { currentPalette, availablePalettes } = usePalette();
+  const theme = useTheme();
+  const { currentPalette, getAvailablePalettes } = useTimerPalette();
 
   // If paletteName is provided, use it for color preview
   if (paletteName) {
-    const colors = paletteData[paletteName];
-    if (!colors) return null;
+    const paletteColors = TIMER_PALETTES[paletteName]?.colors;
+    if (!paletteColors) return null;
 
     return (
       <View style={styles.colorContainer}>
-        {colors.map((color, index) => (
+        {paletteColors.map((color, index) => (
           <View
             key={index}
             style={[styles.colorBar, { backgroundColor: color }]}
@@ -26,14 +27,16 @@ export const PalettePreview = ({ paletteName }) => {
   }
 
   // Original component behavior when no paletteName provided
+  const availablePalettes = getAvailablePalettes();
+
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: brand.text }]}>
+      <Text style={[styles.title, { color: theme.colors.text }]}>
         Palette actuelle: {currentPalette}
       </Text>
 
       <View style={styles.paletteInfo}>
-        <Text style={[styles.info, { color: brand.textLight }]}>
+        <Text style={[styles.info, { color: theme.colors.textSecondary }]}>
           Palettes disponibles: {availablePalettes.join(', ')}
         </Text>
       </View>

@@ -1,8 +1,9 @@
 // src/components/TimeTimer.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getGoldenDimensions } from '../styles/layout';
 import useTimer from '../hooks/useTimer';
@@ -11,10 +12,18 @@ import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 
 export default function TimeTimer() {
   const theme = useTheme();
-  const { currentColor, clockwise, scaleMode, currentActivity } = useTimerOptions();
+  const { clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
+  const { currentColor } = useTimerPalette();
 
-  // Initialize timer with 5 minutes default
-  const timer = useTimer(5 * 60);
+  // Initialize timer with current duration or 5 minutes default
+  const timer = useTimer(currentDuration || 5 * 60);
+
+  // Update timer duration when currentDuration changes
+  useEffect(() => {
+    if (currentDuration && currentDuration !== timer.duration) {
+      timer.setDuration(currentDuration);
+    }
+  }, [currentDuration]);
 
   // Get responsive dimensions
   const { timerCircle } = getComponentSizes();
@@ -137,7 +146,7 @@ export default function TimeTimer() {
     },
 
     incrementButton: {
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      backgroundColor: theme.colors.overlayLight,
       width: 34,
       height: 34,
       borderRadius: 17,

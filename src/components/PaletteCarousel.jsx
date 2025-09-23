@@ -1,20 +1,27 @@
 // src/components/PaletteCarousel.jsx
 import React, { useRef, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated } from 'react-native';
-import { useTheme, usePalette } from './ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTheme } from '../theme/ThemeProvider';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs } from '../styles/responsive';
-import { PALETTE_NAMES, TIMER_PALETTES } from '../styles/theme';
-import { isPalettePremium } from '../config/palettes';
+import { TIMER_PALETTES } from '../config/timerPalettes';
 
 export default function PaletteCarousel() {
   const theme = useTheme();
-  const { currentColor, setCurrentColor } = useTimerOptions();
-  const { currentPalette, setPalette } = usePalette();
+  const {
+    currentPalette,
+    setPalette,
+    paletteColors,
+    currentColor,
+    selectedColorIndex,
+    setColorIndex,
+    getAvailablePalettes
+  } = useTimerPalette();
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Get current palette index
+  const isPremiumUser = false; // TODO: Get from app context
+  const PALETTE_NAMES = Object.keys(TIMER_PALETTES);
   const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
 
   // Scroll to current palette on mount
@@ -54,8 +61,9 @@ export default function PaletteCarousel() {
 
     if (newIndex !== currentPaletteIndex && newIndex >= 0 && newIndex < PALETTE_NAMES.length) {
       const newPaletteName = PALETTE_NAMES[newIndex];
-      // Only change palette if it's not premium
-      if (!isPalettePremium(newPaletteName)) {
+      const paletteInfo = TIMER_PALETTES[newPaletteName];
+      // Only change palette if it's not premium or user is premium
+      if (!paletteInfo.isPremium || isPremiumUser) {
         setPalette(newPaletteName);
         showPaletteName();
       } else {
@@ -70,17 +78,7 @@ export default function PaletteCarousel() {
 
   // Format palette name for display
   const formatPaletteName = (name) => {
-    const nameMap = {
-      'classique': 'Classique',
-      'laser': 'Laser',
-      'tropical': 'Tropical',
-      'zen': 'Zen',
-      'forêt': 'Forêt',
-      'océan': 'Océan',
-      'aurore': 'Aurore',
-      'crépuscule': 'Crépuscule'
-    };
-    return nameMap[name] || name;
+    return TIMER_PALETTES[name]?.name || name;
   };
 
   const styles = StyleSheet.create({
@@ -217,16 +215,10 @@ export default function PaletteCarousel() {
       >
         {PALETTE_NAMES.map((paletteName, paletteIndex) => {
           // Get colors for this palette
-          const paletteColors = TIMER_PALETTES[paletteName];
+          const paletteInfo = TIMER_PALETTES[paletteName];
+          const colors = paletteInfo.colors;
           const isCurrentPalette = paletteName === currentPalette;
-          const isPremium = isPalettePremium(paletteName);
-
-          const colors = [
-            paletteColors.energy,
-            paletteColors.focus,
-            paletteColors.calm,
-            paletteColors.deep,
-          ];
+          const isPremium = paletteInfo.isPremium;
 
           return (
             <View key={paletteName} style={styles.paletteContainer}>
@@ -242,13 +234,13 @@ export default function PaletteCarousel() {
                       isCurrentPalette && currentColor === color && styles.colorButtonActive
                     ]}
                     onPress={() => {
-                      if (!isPremium) {
+                      if (!isPremium || isPremiumUser) {
                         if (isCurrentPalette) {
-                          setCurrentColor(color);
+                          setColorIndex(colorIndex);
                         } else {
                           // Switch to that palette
                           setPalette(paletteName);
-                          setCurrentColor(color);
+                          setColorIndex(colorIndex);
                           showPaletteName();
                         }
                       }
