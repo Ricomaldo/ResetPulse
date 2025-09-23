@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2025-09-23 (Part 7 - Timer Completion Feedback)
+- Haptic feedback on timer completion (respects system settings)
+- Visual completion animation with 3 gentle pulses
+- Color transition to green (#48BB78) on timer completion
+- Contextual completion messages based on activity type
+- "shouldPulse" toggle in settings to control timer pulsation
+- Automatic detection and respect of device silent mode
+- Platform-aware haptic patterns (iOS notification success)
+
+### Changed - 2025-09-23 (Part 7)
+- Timer completion now provides multi-sensory feedback
+- Activity-specific completion messages (e.g., "Méditation terminée")
+- Enhanced useTimer hook with completion state management
+- TimerCircle component supports completion animations
+
+### Fixed - 2025-09-23 (Part 7)
+- Timer completion state properly resets after animation
+- Haptic feedback gracefully handles failures
+- Completion animation timing synchronized with haptic feedback
+
+### Fixed - 2025-09-23 (Part 6 - 25min Mode Fixes)
+- Fixed 25 appearing above 0 in 25min mode timer display
+- Corrected angle-to-minutes calculation for 25min mode to match visual distribution
+- Limited maximum timer duration to 25 minutes when in 25min mode
+- Fixed incorrect minute selection when clicking/dragging in 25min mode
+- Aligned number distribution with actual timer functionality in Pomodoro mode
+
 ### Added - 2025-09-23 (Part 5 - Gesture Controls & UI Polish)
 - Tap on timer graduations to set duration instantly
 - Drag gesture on timer dial for continuous duration adjustment

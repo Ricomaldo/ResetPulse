@@ -1,9 +1,9 @@
 // src/screens/TimerScreen.jsx
-import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, PanResponder } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, PanResponder, Animated } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
-import { TimerOptionsProvider } from '../contexts/TimerOptionsContext';
+import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import ActivityCarousel from '../components/ActivityCarousel';
 import PaletteCarousel from '../components/PaletteCarousel';
 import TimeTimer from '../components/TimeTimer';
@@ -13,11 +13,64 @@ import { rs, getLayout, getDeviceInfo } from '../styles/responsive';
 
 function TimerScreenContent() {
   const theme = useTheme();
+  const { showActivities } = useTimerOptions();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerRef = useRef(null);
   const { isLandscape } = getDeviceInfo();
   const layout = getLayout();
+
+  // Animation values for staggered entrance
+  const headerAnim = useRef(new Animated.Value(0)).current;
+  const activityAnim = useRef(new Animated.Value(0)).current;
+  const timerAnim = useRef(new Animated.Value(0)).current;
+  const timerScaleAnim = useRef(new Animated.Value(0.8)).current;
+  const paletteAnim = useRef(new Animated.Value(0)).current;
+
+  // Staggered entrance animations
+  useEffect(() => {
+    const animations = [
+      // Header slides down
+      Animated.timing(headerAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: 200,
+        useNativeDriver: true,
+      }),
+      // Activities slide in from left
+      Animated.timing(activityAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: 400,
+        useNativeDriver: true,
+      }),
+      // Timer fades and scales in
+      Animated.parallel([
+        Animated.timing(timerAnim, {
+          toValue: 1,
+          duration: 600,
+          delay: 600,
+          useNativeDriver: true,
+        }),
+        Animated.spring(timerScaleAnim, {
+          toValue: 1,
+          tension: 40,
+          friction: 7,
+          delay: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Palette slides up
+      Animated.timing(paletteAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: 800,
+        useNativeDriver: true,
+      }),
+    ];
+
+    Animated.stagger(0, animations).start();
+  }, []);
 
   // Swipe to exit zen mode (when timer is running)
   const panResponder = useRef(
@@ -101,7 +154,19 @@ function TimerScreenContent() {
       edges={['top', 'bottom']}
       {...panResponder.panHandlers}>
       {/* Header with Settings Button */}
-      <View style={styles.header}>
+      <Animated.View
+        style={[
+          styles.header,
+          {
+            opacity: headerAnim,
+            transform: [{
+              translateY: headerAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-20, 0]
+              })
+            }]
+          }
+        ]}>
         <View style={{ flex: 1 }} />
         <TouchableOpacity
           style={[styles.settingsButton, {
@@ -114,30 +179,69 @@ function TimerScreenContent() {
         >
           <SettingsIcon size={24} color={theme.colors.brand.primary} />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
-      {/* Activities Section */}
-      <View style={[styles.activitySection, { opacity: isTimerRunning ? 0.2 : 1 }]}>
-        <ActivityCarousel isTimerRunning={isTimerRunning} />
-      </View>
+      {/* Activities Section - Conditionnel */}
+      {showActivities && (
+        <Animated.View
+          style={[
+            styles.activitySection,
+            {
+              opacity: Animated.multiply(
+                activityAnim,
+                isTimerRunning ? 0.2 : 1
+              ),
+              transform: [{
+                translateX: activityAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [-30, 0]
+                })
+              }]
+            }
+          ]}>
+          <ActivityCarousel isTimerRunning={isTimerRunning} />
+        </Animated.View>
+      )}
 
       {/* Timer Section - Flex to take available space */}
-      <View style={styles.timerSection}>
+      <Animated.View
+        style={[
+          styles.timerSection,
+          {
+            opacity: timerAnim,
+            transform: [{
+              scale: timerScaleAnim
+            }]
+          }
+        ]}>
         <TimeTimer
           onRunningChange={setIsTimerRunning}
           onTimerRef={(ref) => { timerRef.current = ref; }}
         />
-      </View>
+      </Animated.View>
 
       {/* Palette Section */}
-      <View style={[styles.paletteSection, {
-        opacity: isTimerRunning ? 0 : 1,
-        transform: [{ translateY: isTimerRunning ? 50 : 0 }]
+      <Animated.View style={[styles.paletteSection, {
+        opacity: Animated.multiply(
+          paletteAnim,
+          isTimerRunning ? 0 : 1
+        ),
+        transform: [
+          {
+            translateY: Animated.add(
+              paletteAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [30, 0]
+              }),
+              isTimerRunning ? 50 : 0
+            )
+          }
+        ]
       }]}>
         <View style={styles.paletteContainer}>
           <PaletteCarousel isTimerRunning={isTimerRunning} />
         </View>
-      </View>
+      </Animated.View>
 
       {/* Settings Modal */}
       <SettingsModal

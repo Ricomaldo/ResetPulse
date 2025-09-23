@@ -15,11 +15,15 @@ export default function TimerCircle({
   activityEmoji = null,
   isRunning = false,
   shouldPulse = true,
-  onGraduationTap = null
+  onGraduationTap = null,
+  isCompleted = false,
+  currentActivity = null
 }) {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const glowAnim = useRef(new Animated.Value(0.3)).current;
+  const completionAnim = useRef(new Animated.Value(1)).current;
+  const completionColorAnim = useRef(new Animated.Value(0)).current;
   const [isDragging, setIsDragging] = useState(false);
   
   // Calculate responsive size if not provided
@@ -74,6 +78,61 @@ export default function TimerCircle({
       };
     }
   }, [isRunning, shouldPulse]);
+
+  // Completion animation
+  useEffect(() => {
+    if (isCompleted) {
+      // Animate color transition to green
+      Animated.timing(completionColorAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: false, // Can't use native driver for color interpolation
+      }).start();
+
+      // Three gentle pulses
+      Animated.sequence([
+        Animated.timing(completionAnim, {
+          toValue: 1.1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(completionAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(completionAnim, {
+          toValue: 1.08,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(completionAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(completionAnim, {
+          toValue: 1.05,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(completionAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Reset color after animation
+        setTimeout(() => {
+          Animated.timing(completionColorAnim, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: false,
+          }).start();
+        }, 500);
+      });
+    }
+  }, [isCompleted]);
   
   // Progress angle calculation
   // In 60min mode: duration scales to portion of circle (20min = 120°)
@@ -124,14 +183,16 @@ export default function TimerCircle({
         return { index: i, value: minute, angle };
       });
     } else {
-      // 25min Pomodoro scale - always show 0, 5, 10, 15, 20, 25
-      return Array.from({ length: 6 }, (_, i) => {
+      // 25min Pomodoro scale - show 0, 5, 10, 15, 20 distributed like 60min mode
+      return Array.from({ length: 5 }, (_, i) => {
         const minute = i * 5;
         let angle;
         if (clockwise) {
-          angle = (minute / 25 * 360) - 90;
+          // Clockwise: same formula as 60min but scaled to 25
+          angle = (minute * (360/25)) - 90; // 14.4 degrees per minute
         } else {
-          angle = -(minute / 25 * 360) - 90;
+          // Anti-clockwise: same as 60min but scaled to 25
+          angle = -(minute * (360/25)) - 90;
         }
         return { index: i, value: minute, angle };
       });
@@ -190,6 +251,15 @@ export default function TimerCircle({
   
   const progressPath = createProgressArc();
 
+  // Animated color for completion
+  const animatedColor = completionColorAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [color || theme.colors.energy, '#48BB78'] // Green color for completion
+  });
+
+  const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+  const AnimatedPath = Animated.createAnimatedComponent(Path);
+
   // Calculate minutes from angle
   const angleToMinutes = (locationX, locationY) => {
     const centerX = svgSize / 2;
@@ -212,14 +282,15 @@ export default function TimerCircle({
       // Ensure at least 1 minute
       if (minutes === 0) minutes = 60;
     } else {
-      // 25min mode
+      // 25min mode - simple calculation like 60min but with 25 as max
       if (clockwise) {
         minutes = Math.round((normalizedAngle / 360) * 25);
       } else {
         minutes = Math.round(((360 - normalizedAngle) / 360) * 25);
       }
-      // Ensure at least 1 minute
+      // Ensure at least 1 minute, max 25
       if (minutes === 0) minutes = 25;
+      minutes = Math.min(25, minutes);
     }
 
     return minutes;
@@ -251,14 +322,16 @@ export default function TimerCircle({
   ).current;
 
   return (
-    <View
+    <Animated.View
       {...(!isRunning && onGraduationTap ? panResponder.panHandlers : {})}
-      style={{
+      style={[{
         width: svgSize,
         height: svgSize,
         alignItems: 'center',
         justifyContent: 'center'
-      }}
+      },
+      { transform: [{ scale: completionAnim }] }
+      ]}
     >
       <Svg width={svgSize} height={svgSize} style={{ position: 'absolute' }}>
         {/* Background white circle */}
@@ -306,17 +379,17 @@ export default function TimerCircle({
         {/* Progress arc */}
         {progress > 0 && (
           progressAngle >= 359.9 ? (
-            <Circle
+            <AnimatedCircle
               cx={svgSize / 2}
               cy={svgSize / 2}
               r={radius - strokeWidth * 2}
-              fill={color || theme.colors.energy}
+              fill={animatedColor}
               opacity={1}
             />
           ) : (
-            <Path
+            <AnimatedPath
               d={progressPath}
-              fill={color || theme.colors.energy}
+              fill={animatedColor}
               opacity={1}
             />
           )
@@ -366,20 +439,22 @@ export default function TimerCircle({
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              transform: [{ scale: pulseAnim }],
+              transform: isRunning && shouldPulse ? [{ scale: pulseAnim }] : [{ scale: 1 }],
             }}
           >
-            {/* Glow/Halo effect */}
-            <Animated.View
-              style={{
-                position: 'absolute',
-                width: circleSize * 0.35,
-                height: circleSize * 0.35,
-                borderRadius: (circleSize * 0.35) / 2,
-                backgroundColor: theme.colors.brand.primary,
-                opacity: glowAnim,
-              }}
-            />
+            {/* Glow/Halo effect - only show when running and pulse enabled */}
+            {isRunning && shouldPulse && (
+              <Animated.View
+                style={{
+                  position: 'absolute',
+                  width: circleSize * 0.35,
+                  height: circleSize * 0.35,
+                  borderRadius: (circleSize * 0.35) / 2,
+                  backgroundColor: theme.colors.brand.primary,
+                  opacity: glowAnim,
+                }}
+              />
+            )}
             <Text
               style={{
                 fontSize: circleSize * 0.2,
@@ -461,6 +536,6 @@ export default function TimerCircle({
           </Text>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 }

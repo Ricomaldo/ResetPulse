@@ -1,7 +1,8 @@
 // src/hooks/useTimer.js
 import { useState, useEffect, useRef, useCallback } from 'react';
+import haptics from '../utils/haptics';
 
-export default function useTimer(initialDuration = 240) {
+export default function useTimer(initialDuration = 240, onComplete) {
   // Core timer states
   const [duration, setDuration] = useState(initialDuration);
   const [remaining, setRemaining] = useState(initialDuration);
@@ -12,10 +13,12 @@ export default function useTimer(initialDuration = 240) {
   const [isPaused, setIsPaused] = useState(false);
   const [showParti, setShowParti] = useState(false);
   const [showReparti, setShowReparti] = useState(false);
+  const [hasCompleted, setHasCompleted] = useState(false);
 
   // Refs
   const intervalRef = useRef(null);
   const isMountedRef = useRef(true);
+  const hasTriggeredCompletion = useRef(false);
 
   // Timer update function with bug fix
   const updateTimer = useCallback(() => {
@@ -34,6 +37,28 @@ export default function useTimer(initialDuration = 240) {
       setRunning(false);
       setStartTime(null);
       setIsPaused(false);
+
+      // Trigger completion feedback (only once)
+      if (!hasTriggeredCompletion.current) {
+        hasTriggeredCompletion.current = true;
+        setHasCompleted(true);
+
+        // Haptic feedback
+        haptics.notification('success').catch(() => {});
+
+        // Call completion callback if provided
+        if (onComplete) {
+          onComplete();
+        }
+
+        // Reset completion state after animation
+        setTimeout(() => {
+          if (isMountedRef.current) {
+            setHasCompleted(false);
+            hasTriggeredCompletion.current = false;
+          }
+        }, 2000);
+      }
       console.log('⏰ Timer terminé!');
     }
   }, [startTime, duration, running]);
@@ -164,6 +189,7 @@ export default function useTimer(initialDuration = 240) {
     running,
     progress,
     displayMessage: displayTime(),
+    isCompleted: hasCompleted,
 
     // Controls
     toggleRunning,

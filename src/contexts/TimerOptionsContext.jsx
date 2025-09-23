@@ -10,6 +10,8 @@ export const TimerOptionsProvider = ({ children }) => {
   const { values, updateValue, isLoading } = usePersistedObject(
     '@ResetPulse:timerOptions',
     {
+      shouldPulse: true, // Animation de pulsation activée par défaut
+      showActivities: true, // Affichage des activités activé par défaut
       clockwise: false,
       scaleMode: '60min',
       currentActivity: getDefaultActivity(),
@@ -20,6 +22,8 @@ export const TimerOptionsProvider = ({ children }) => {
 
   const value = {
     // States
+    shouldPulse: values.shouldPulse,
+    showActivities: values.showActivities,
     clockwise: values.clockwise,
     scaleMode: values.scaleMode,
     currentActivity: values.currentActivity,
@@ -27,6 +31,8 @@ export const TimerOptionsProvider = ({ children }) => {
     favoriteActivities: values.favoriteActivities,
 
     // Actions
+    setShouldPulse: (val) => updateValue('shouldPulse', val),
+    setShowActivities: (val) => updateValue('showActivities', val),
     setClockwise: (val) => updateValue('clockwise', val),
     setScaleMode: (val) => updateValue('scaleMode', val),
     setCurrentActivity: (val) => updateValue('currentActivity', val),

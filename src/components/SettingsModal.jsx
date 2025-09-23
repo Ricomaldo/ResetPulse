@@ -24,6 +24,12 @@ export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
   const { currentPalette, setPalette } = useTimerPalette();
   const {
+    shouldPulse,
+    setShouldPulse,
+    showActivities,
+    setShowActivities,
+    currentActivity,
+    setCurrentActivity,
     clockwise,
     setClockwise,
     scaleMode,
@@ -330,10 +336,57 @@ export default function SettingsModal({ visible, onClose }) {
             {/* Favorites Section - NOW FIRST */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Activités favorites</Text>
-              <Text style={styles.optionDescription}>
-                Sélectionnez vos favoris pour les voir en premier
-              </Text>
-              <View style={styles.favoritesGrid}>
+              
+              {/* Afficher les activités - EN HAUT */}
+              <View style={styles.optionRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Afficher les activités</Text>
+                  <Text style={styles.optionDescription}>
+                    {showActivities ? 'Activités visibles dans l\'interface' : 'Activités masquées'}
+                  </Text>
+                </View>
+                <Switch
+                  value={showActivities}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setShowActivities(value);
+                    
+                    // Si on masque les activités, remettre à "none" (Basique)
+                    if (!value) {
+                      const noneActivity = allActivities.find(activity => activity.id === 'none');
+                      if (noneActivity) {
+                        setCurrentActivity(noneActivity);
+                      }
+                    }
+                  }}
+                  {...theme.styles.switch(showActivities)}
+                />
+              </View>
+
+              {/* Animation Pulse - APRÈS Afficher les activités */}
+              <View style={styles.optionRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Animation Pulse</Text>
+                  <Text style={styles.optionDescription}>
+                    {shouldPulse ? 'Animation activée pendant le timer' : 'Animation désactivée'}
+                  </Text>
+                </View>
+                <Switch
+                  value={shouldPulse}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setShouldPulse(value);
+                  }}
+                  {...theme.styles.switch(shouldPulse)}
+                />
+              </View>
+
+              {showActivities && (
+                <>
+                  <Text style={styles.optionDescription}>
+                    Sélectionnez vos favoris pour les voir en premier
+                  </Text>
+                  <View style={styles.favoritesGrid}>
                 {allActivities.map((activity) => {
                   const isFavorite = favoriteActivities.includes(activity.id);
                   return (
@@ -361,7 +414,9 @@ export default function SettingsModal({ visible, onClose }) {
                     </TouchableOpacity>
                   );
                 })}
-              </View>
+                  </View>
+                </>
+              )}
             </View>
 
             {/* Color Palettes - SECOND */}

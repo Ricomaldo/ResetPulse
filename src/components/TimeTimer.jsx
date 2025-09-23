@@ -13,7 +13,7 @@ import haptics from '../utils/haptics';
 
 export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const theme = useTheme();
-  const { clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
+  const { shouldPulse, clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const lastTap = React.useRef(null);
 
@@ -113,8 +113,14 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
     if (timer.running) return;
 
     haptics.selection().catch(() => {});
-    // Convert minutes to seconds
-    const newDuration = Math.max(60, minutes * 60);
+    // Convert minutes to seconds with max limit for 25min mode
+    let newDuration = Math.max(60, minutes * 60);
+
+    // In 25min mode, limit maximum duration to 25 minutes
+    if (scaleMode === '25min') {
+      newDuration = Math.min(newDuration, 1500); // 25 * 60 = 1500 seconds
+    }
+
     timer.setDuration(newDuration);
   };
 
@@ -149,8 +155,10 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
           duration={timer.duration}
           activityEmoji={currentActivity?.id === "none" ? null : currentActivity?.emoji}
           isRunning={timer.running}
-          shouldPulse={true}
+          shouldPulse={shouldPulse}
           onGraduationTap={handleGraduationTap}
+          isCompleted={timer.isCompleted}
+          currentActivity={currentActivity}
         />
 
         {/* Message Overlay */}
@@ -161,6 +169,8 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
                 ? currentActivity.label
                 : timer.displayMessage === "C'est reparti" && currentActivity?.label
                 ? currentActivity.label
+                : timer.displayMessage === "C'est fini" && currentActivity?.label
+                ? `${currentActivity.label} terminée`
                 : timer.displayMessage}
             </Text>
           </View>
