@@ -140,12 +140,12 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     },
 
     activityButton: {
-      width: rs(58, 'min'), // R\u00e9duit pour \u00e9viter la coupure
-      height: rs(58, 'min'),
-      marginHorizontal: rs(3, 'min'),
+      width: rs(60, 'min'),
+      height: rs(60, 'min'),
+      marginHorizontal: rs(4, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: rs(29, 'min'),
+      borderRadius: rs(30, 'min'),
       backgroundColor: theme.colors.surface,
       padding: theme.spacing.xs,
       ...theme.shadow('sm'),
@@ -160,8 +160,8 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     },
 
     activityEmoji: {
-      fontSize: rs(28, 'min'),
-      lineHeight: rs(30, 'min'),
+      fontSize: rs(34, 'min'),
+      lineHeight: rs(36, 'min'),
       textAlign: 'center',
     },
 
@@ -268,12 +268,6 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
               >
                 <Text style={styles.activityEmoji}>
                   {activity.emoji}
-                </Text>
-                <Text style={[
-                  styles.activityLabel,
-                  isActive && styles.activityLabelActive
-                ]}>
-                  {activity.label}
                 </Text>
               </Animated.View>
 

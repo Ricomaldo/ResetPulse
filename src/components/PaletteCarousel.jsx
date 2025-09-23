@@ -139,27 +139,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       letterSpacing: 0.5,
     },
 
-    scrollIndicator: {
-      position: 'absolute',
-      bottom: -10,
-      flexDirection: 'row',
-      gap: 5,
-    },
-
-    dot: {
-      width: 5,
-      height: 5,
-      borderRadius: 2.5,
-      backgroundColor: theme.colors.neutral,
-      opacity: 0.3,
-    },
-
-    dotActive: {
-      backgroundColor: theme.colors.brand.secondary,
-      opacity: 1,
-      width: 15,
-    },
-
     lockOverlay: {
       position: 'absolute',
       top: 0,
@@ -259,18 +238,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         })}
       </ScrollView>
 
-      {/* Scroll indicators */}
-      <View style={styles.scrollIndicator}>
-        {PALETTE_NAMES.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              index === currentPaletteIndex && styles.dotActive
-            ]}
-          />
-        ))}
-      </View>
     </View>
   );
 }

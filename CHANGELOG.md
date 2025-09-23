@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2025-09-23 (Part 5 - Gesture Controls & UI Polish)
+- Tap on timer graduations to set duration instantly
+- Drag gesture on timer dial for continuous duration adjustment
+- Double tap on timer for quick play/pause
+- Vertical swipe gesture to pause timer during execution (zen mode exit)
+- Visual feedback showing duration while dragging
+- Activity name display instead of generic "C'est parti!" when starting
+- Larger SVG container to prevent graduation numbers from being cut off
+
+### Changed - 2025-09-23 (Part 5)
+- Timer dial visibility improved with thicker stroke (4.5px) and darker graduations
+- Activity carousel simplified - removed text labels, increased emoji size (28px → 34px)
+- Control buttons repositioned to bottom center for better ergonomics
+- Palette carousel dots removed for cleaner interface
+- Graduation numbers positioned with more spacing from dial (18px)
+- Focus mode animation - UI elements fade when timer is running
+- Timer size limited to 320px max to maintain golden ratio proportions
+
+### Fixed - 2025-09-23 (Part 5)
+- Activity buttons being cut off by container overflow
+- Control buttons positioned too high on screen
+- Drag and tap gestures not properly blocked during timer execution
+- Graduation numbers being cut off at container edges
+- Palette dots spacing issues in carousel
+
+### Removed - 2025-09-23 (Part 5)
+- Duration preset buttons (replaced by tap/drag gestures)
+- Activity text labels in carousel (cleaner emoji-only design)
+- Palette scroll indicator dots
+
 ### Added - 2025-09-23 (Part 4 - Cross-Platform Adaptive Design)
 - Platform-adaptive styling system with `platformStyles.js`
 - Adaptive shadow system (iOS shadows vs Android Material elevation)

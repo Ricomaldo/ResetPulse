@@ -1,6 +1,6 @@
 // src/components/TimerCircle.jsx
-import React, { useRef, useEffect } from 'react';
-import { View, Text, Animated } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, Text, Animated, TouchableOpacity, PanResponder } from 'react-native';
 import Svg, { Circle, Path, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
@@ -14,17 +14,21 @@ export default function TimerCircle({
   duration = 240,
   activityEmoji = null,
   isRunning = false,
-  shouldPulse = true
+  shouldPulse = true,
+  onGraduationTap = null
 }) {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const glowAnim = useRef(new Animated.Value(0.3)).current;
+  const [isDragging, setIsDragging] = useState(false);
   
   // Calculate responsive size if not provided
   const circleSize = size || rs(280, 'min');
-  const radius = (circleSize / 2) - 20;
+  const svgSize = circleSize + 50; // Extra space for numbers outside with more padding
+  const radius = (circleSize / 2) - 25; // Adjusted for new SVG size
   const strokeWidth = 4.5; // Trait plus épais pour meilleure visibilité
   const maxMinutes = 60;
+  const svgOffset = 25; // Offset for centering in larger SVG
 
   // Pulse animation for activity emoji or pulse effect
   useEffect(() => {
@@ -87,10 +91,10 @@ export default function TimerCircle({
     const tickLength = isHour ? radius * 0.08 : radius * 0.04;
     const innerRadius = radius - tickLength;
     
-    const x1 = circleSize / 2 + innerRadius * Math.cos((angle * Math.PI) / 180);
-    const y1 = circleSize / 2 + innerRadius * Math.sin((angle * Math.PI) / 180);
-    const x2 = circleSize / 2 + radius * Math.cos((angle * Math.PI) / 180);
-    const y2 = circleSize / 2 + radius * Math.sin((angle * Math.PI) / 180);
+    const x1 = svgSize / 2 + innerRadius * Math.cos((angle * Math.PI) / 180);
+    const y1 = svgSize / 2 + innerRadius * Math.sin((angle * Math.PI) / 180);
+    const x2 = svgSize / 2 + radius * Math.cos((angle * Math.PI) / 180);
+    const y2 = svgSize / 2 + radius * Math.sin((angle * Math.PI) / 180);
     
     return {
       key: i,
@@ -154,10 +158,10 @@ export default function TimerCircle({
 
   const minuteNumbers = createNumbers().map((num) => {
     const angle = num.angle;
-    const numberRadius = radius + 12;
-    
-    const x = circleSize / 2 + numberRadius * Math.cos((angle * Math.PI) / 180);
-    const y = circleSize / 2 + numberRadius * Math.sin((angle * Math.PI) / 180);
+    const numberRadius = radius + 18; // More space from the dial
+
+    const x = svgSize / 2 + numberRadius * Math.cos((angle * Math.PI) / 180);
+    const y = svgSize / 2 + numberRadius * Math.sin((angle * Math.PI) / 180);
 
     return {
       key: `num-${num.index}`,
@@ -176,8 +180,8 @@ export default function TimerCircle({
       return null; // Will render as full circle instead
     }
     
-    const centerX = circleSize / 2;
-    const centerY = circleSize / 2;
+    const centerX = svgSize / 2;
+    const centerY = svgSize / 2;
     // Use a slightly larger radius to ensure complete coverage of the background circle
     const progressRadius = radius + strokeWidth/2;
     
@@ -203,19 +207,82 @@ export default function TimerCircle({
   };
   
   const progressPath = createProgressArc();
-  
+
+  // Calculate minutes from angle
+  const angleToMinutes = (locationX, locationY) => {
+    const centerX = svgSize / 2;
+    const centerY = svgSize / 2;
+
+    // Calculate angle from center
+    const dx = locationX - centerX;
+    const dy = locationY - centerY;
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90; // +90 to start from top
+    const normalizedAngle = angle < 0 ? angle + 360 : angle;
+
+    // Convert angle to minutes based on scale mode
+    let minutes;
+    if (scaleMode === '60min') {
+      if (clockwise) {
+        minutes = Math.round((normalizedAngle / 360) * 60) % 60;
+      } else {
+        minutes = Math.round(((360 - normalizedAngle) / 360) * 60) % 60;
+      }
+      // Ensure at least 1 minute
+      if (minutes === 0) minutes = 60;
+    } else {
+      const durationMinutes = Math.ceil(duration / 60);
+      if (clockwise) {
+        minutes = Math.round((normalizedAngle / 360) * durationMinutes);
+      } else {
+        minutes = Math.round(((360 - normalizedAngle) / 360) * durationMinutes);
+      }
+      // Ensure at least 1 minute
+      if (minutes === 0) minutes = durationMinutes;
+    }
+
+    return minutes;
+  };
+
+  // Pan responder for drag gesture
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => !isRunning && !!onGraduationTap,
+      onMoveShouldSetPanResponder: () => !isRunning && !!onGraduationTap,
+
+      onPanResponderGrant: (evt) => {
+        if (isRunning) return;
+        setIsDragging(true);
+        const minutes = angleToMinutes(evt.nativeEvent.locationX, evt.nativeEvent.locationY);
+        onGraduationTap(minutes);
+      },
+
+      onPanResponderMove: (evt) => {
+        if (isRunning) return;
+        const minutes = angleToMinutes(evt.nativeEvent.locationX, evt.nativeEvent.locationY);
+        onGraduationTap(minutes);
+      },
+
+      onPanResponderRelease: () => {
+        setIsDragging(false);
+      },
+    })
+  ).current;
+
   return (
-    <View style={{ 
-      width: circleSize, 
-      height: circleSize,
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <Svg width={circleSize} height={circleSize}>
+    <View
+      {...(!isRunning && onGraduationTap ? panResponder.panHandlers : {})}
+      style={{
+        width: svgSize,
+        height: svgSize,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <Svg width={svgSize} height={svgSize} style={{ position: 'absolute' }}>
         {/* Background white circle */}
         <Circle
-          cx={circleSize / 2}
-          cy={circleSize / 2}
+          cx={svgSize / 2}
+          cy={svgSize / 2}
           r={radius}
           stroke={theme.colors.neutral}
           strokeWidth={strokeWidth}
@@ -275,8 +342,8 @@ export default function TimerCircle({
         
         {/* Outer border */}
         <Circle
-          cx={circleSize / 2}
-          cy={circleSize / 2}
+          cx={svgSize / 2}
+          cy={svgSize / 2}
           r={radius}
           stroke={theme.colors.neutral}
           strokeWidth={strokeWidth}
@@ -285,15 +352,15 @@ export default function TimerCircle({
         
         {/* Center dot with gradient effect */}
         <Circle
-          cx={circleSize / 2}
-          cy={circleSize / 2}
+          cx={svgSize / 2}
+          cy={svgSize / 2}
           r={radius * 0.12}
           fill={theme.colors.neutral}
           opacity={0.8}
         />
         <Circle
-          cx={circleSize / 2}
-          cy={circleSize / 2}
+          cx={svgSize / 2}
+          cy={svgSize / 2}
           r={radius * 0.08}
           fill={theme.colors.text}
           opacity={0.4}
@@ -387,6 +454,29 @@ export default function TimerCircle({
               }}
             />
           </Animated.View>
+        </View>
+      )}
+
+      {/* Dragging indicator */}
+      {isDragging && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 10,
+            backgroundColor: theme.colors.background,
+            paddingHorizontal: theme.spacing.md,
+            paddingVertical: theme.spacing.xs,
+            borderRadius: theme.borderRadius.md,
+            ...theme.shadow('md'),
+          }}
+        >
+          <Text style={{
+            fontSize: 16,
+            fontWeight: '600',
+            color: theme.colors.text,
+          }}>
+            {Math.floor(duration / 60)} min
+          </Text>
         </View>
       )}
     </View>

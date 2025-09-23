@@ -11,13 +11,21 @@ import TimerCircle from './TimerCircle';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 
-export default function TimeTimer({ onRunningChange }) {
+export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const theme = useTheme();
   const { clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
   const { currentColor } = useTimerPalette();
+  const lastTap = React.useRef(null);
 
   // Initialize timer with current duration or 5 minutes default
   const timer = useTimer(currentDuration || 5 * 60);
+
+  // Pass timer ref to parent if needed
+  useEffect(() => {
+    if (onTimerRef) {
+      onTimerRef(timer);
+    }
+  }, [timer, onTimerRef]);
 
   // Update timer duration when currentDuration changes
   useEffect(() => {
@@ -88,52 +96,6 @@ export default function TimeTimer({ onRunningChange }) {
       width: '100%',
     },
 
-    presetsGrid: {
-      width: rs(110, 'min'),
-    },
-
-    presetsRow: {
-      flexDirection: 'row',
-      gap: theme.spacing.xs,
-    },
-
-    controlsButtons: {
-      flexDirection: 'row',
-      gap: theme.spacing.md,
-    },
-
-    presetButton: {
-      backgroundColor: theme.colors.surface,
-      paddingVertical: theme.spacing.xs,
-      paddingHorizontal: theme.spacing.md,
-      borderRadius: theme.borderRadius.lg,
-      minWidth: rs(50, 'min'),
-      height: rs(38, 'min'),
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      ...theme.shadow('sm'),
-    },
-
-    presetButtonActive: {
-      backgroundColor: theme.colors.brand.primary,
-      borderColor: theme.colors.brand.secondary,
-      transform: [{ scale: 1.05 }],
-      ...theme.shadows.md,
-    },
-
-    presetButtonText: {
-      color: theme.colors.text,
-      fontSize: rs(13, 'min'),
-      fontWeight: '600',
-    },
-
-    presetButtonTextActive: {
-      color: theme.colors.background,
-      fontWeight: '700',
-    },
-
     controlButton: {
       backgroundColor: theme.colors.brand.primary,
       width: rs(60, 'min'),
@@ -146,17 +108,38 @@ export default function TimeTimer({ onRunningChange }) {
     },
   });
   
-  // Helper function to increment/decrement duration
-  const adjustDuration = (minutes) => {
+  // Handle tap on graduation to set duration
+  const handleGraduationTap = (minutes) => {
+    if (timer.running) return;
+
     haptics.selection().catch(() => {});
-    const newDuration = Math.max(60, Math.min(3600, timer.duration + (minutes * 60)));
+    // Convert minutes to seconds
+    const newDuration = Math.max(60, minutes * 60);
     timer.setDuration(newDuration);
+  };
+
+  // Handle double tap for play/pause
+  const handleDoubleTap = () => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+
+    if (lastTap.current && (now - lastTap.current) < DOUBLE_TAP_DELAY) {
+      // Double tap detected
+      timer.toggleRunning();
+      haptics.impact('light').catch(() => {});
+      lastTap.current = null;
+    } else {
+      lastTap.current = now;
+    }
   };
 
   return (
     <View style={styles.container}>
       {/* Timer Circle */}
-      <View style={styles.timerWrapper}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={handleDoubleTap}
+        style={styles.timerWrapper}>
         <TimerCircle
           progress={timer.progress}
           color={currentColor}
@@ -167,17 +150,22 @@ export default function TimeTimer({ onRunningChange }) {
           activityEmoji={currentActivity?.id === "none" ? null : currentActivity?.emoji}
           isRunning={timer.running}
           shouldPulse={true}
+          onGraduationTap={handleGraduationTap}
         />
 
         {/* Message Overlay */}
         {timer.displayMessage && (
           <View style={styles.messageOverlay}>
             <Text style={styles.messageText}>
-              {timer.displayMessage}
+              {timer.displayMessage === "C'est parti" && currentActivity?.label
+                ? currentActivity.label
+                : timer.displayMessage === "C'est reparti" && currentActivity?.label
+                ? currentActivity.label
+                : timer.displayMessage}
             </Text>
           </View>
         )}
-      </View>
+      </TouchableOpacity>
 
       {/* Centered Control Buttons */}
       <View style={styles.controlsContainer}>

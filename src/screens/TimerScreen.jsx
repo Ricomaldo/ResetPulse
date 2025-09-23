@@ -1,6 +1,6 @@
 // src/screens/TimerScreen.jsx
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, PanResponder } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider } from '../contexts/TimerOptionsContext';
@@ -15,8 +15,26 @@ function TimerScreenContent() {
   const theme = useTheme();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const timerRef = useRef(null);
   const { isLandscape } = getDeviceInfo();
   const layout = getLayout();
+
+  // Swipe to exit zen mode (when timer is running)
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => isTimerRunning,
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        // Only respond to vertical swipes when timer is running
+        return isTimerRunning && Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 10;
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        // Pause timer on significant vertical swipe
+        if (Math.abs(gestureState.dy) > 50 && timerRef.current) {
+          timerRef.current.toggleRunning();
+        }
+      },
+    })
+  ).current;
 
   const styles = StyleSheet.create({
     container: {
@@ -78,7 +96,10 @@ function TimerScreenContent() {
   });
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      edges={['top', 'bottom']}
+      {...panResponder.panHandlers}>
       {/* Header with Settings Button */}
       <View style={styles.header}>
         <View style={{ flex: 1 }} />
@@ -102,7 +123,10 @@ function TimerScreenContent() {
 
       {/* Timer Section - Flex to take available space */}
       <View style={styles.timerSection}>
-        <TimeTimer onRunningChange={setIsTimerRunning} />
+        <TimeTimer
+          onRunningChange={setIsTimerRunning}
+          onTimerRef={(ref) => { timerRef.current = ref; }}
+        />
       </View>
 
       {/* Palette Section */}
