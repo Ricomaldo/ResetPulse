@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs } from '../styles/responsive';
 import PalettePreview from './PalettePreview';
 import { getAllActivities } from '../config/activities';
@@ -18,6 +19,7 @@ import { TIMER_PALETTES, isPalettePremium } from '../config/timerPalettes';
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
+  const { currentPalette, setPalette } = useTimerPalette();
   const {
     clockwise,
     setClockwise,
@@ -365,7 +367,7 @@ export default function SettingsModal({ visible, onClose }) {
               <View style={styles.paletteGrid}>
                 {Object.keys(TIMER_PALETTES).map((paletteName) => {
                   const isPremium = isPalettePremium(paletteName);
-                  const isActive = theme.currentPalette === paletteName;
+                  const isActive = currentPalette === paletteName;
                   const paletteInfo = TIMER_PALETTES[paletteName];
 
                   return (
@@ -378,7 +380,7 @@ export default function SettingsModal({ visible, onClose }) {
                       ]}
                       onPress={() => {
                         if (!isPremium) {
-                          theme.setPalette(paletteName);
+                          setPalette(paletteName);
                         }
                       }}
                       activeOpacity={isPremium ? 1 : 0.7}

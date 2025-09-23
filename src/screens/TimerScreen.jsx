@@ -64,10 +64,12 @@ function TimerScreenContent() {
     },
 
     paletteContainer: {
-      backgroundColor: theme.colors.overlayLight,
+      backgroundColor: theme.isDark ? theme.colors.brand.deep : theme.colors.brand.neutral,
       paddingVertical: rs(8),
       paddingHorizontal: rs(20),
       borderRadius: rs(35),
+      borderWidth: 1,
+      borderColor: theme.colors.brand.accent,
       ...theme.shadows.lg,
     },
   });
@@ -78,11 +80,15 @@ function TimerScreenContent() {
       <View style={styles.header}>
         <View style={{ flex: 1 }} />
         <TouchableOpacity
-          style={[styles.settingsButton, { backgroundColor: theme.colors.surface }]}
+          style={[styles.settingsButton, {
+            backgroundColor: theme.colors.brand.neutral,
+            borderWidth: 1,
+            borderColor: theme.colors.brand.secondary
+          }]}
           onPress={() => setSettingsVisible(true)}
           activeOpacity={0.7}
         >
-          <SettingsIcon size={24} color={theme.colors.text} />
+          <SettingsIcon size={24} color={theme.colors.brand.primary} />
         </TouchableOpacity>
       </View>
 

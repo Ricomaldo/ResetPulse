@@ -109,8 +109,8 @@ export default function TimeTimer() {
     },
 
     presetButtonActive: {
-      backgroundColor: currentColor,
-      borderColor: currentColor,
+      backgroundColor: theme.colors.brand.secondary,
+      borderColor: theme.colors.brand.secondary,
       transform: [{ scale: 1.05 }],
       ...theme.shadows.md,
     },
@@ -153,7 +153,7 @@ export default function TimeTimer() {
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: theme.colors.brand.accent,
       ...theme.shadows.sm,
     },
 

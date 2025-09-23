@@ -3,12 +3,17 @@
 
 // Couleurs de base partagées entre les thèmes
 const baseColors = {
-  // Marque IRIM - Identité visuelle fixe
+  // Palette "Interface Apaisante" - Ergonomie cognitive pour TDAH/TSA
+  // Hiérarchie visuelle claire sans fatigue oculaire :
+  // - Rouge vénitien : points focaux et actions importantes uniquement
+  // - Gris chauds : structure UI sans agressivité
+  // - Verts subtils : feedback positif et zones actives
+  // - Bleus doux : navigation et information secondaire
   brand: {
-    primary: '#00A0A0',    // Turquoise authentique IRIM
-    secondary: '#004466',  // Bleu foncé IRIM
-    accent: '#F06424',     // Orange accentuation IRIM
-    deep: '#003955',       // Bleu accessible IRIM
+    primary: '#4A5568',    // Rouge vénitien - accents forts et CTA
+    secondary: '#8B3A3A',  // Bleu gris doux - éléments secondaires
+    accent: '#68752C',     // Vert très pâle - zones actives/sélectionnées
+    deep: '#5A5A5A',       // Gris anthracite - textes et icônes
   },
 
   // États sémantiques - Même signification en light/dark

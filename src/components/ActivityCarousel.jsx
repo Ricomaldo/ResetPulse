@@ -137,6 +137,8 @@ export default function ActivityCarousel() {
 
     activityButtonActive: {
       backgroundColor: currentColor,
+      borderWidth: 2,
+      borderColor: currentColor,
       ...theme.shadows.md,
       transform: [{ scale: 1.1 }],
     },

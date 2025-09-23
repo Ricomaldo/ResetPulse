@@ -11,7 +11,7 @@ export const TimerPaletteProvider = ({ children }) => {
   // Palette actuelle (persistée)
   const [currentPalette, setCurrentPalette] = usePersistedState(
     '@ResetPulse:timerPalette',
-    'terre' // Palette par défaut - couleurs naturelles
+    'terre' // Palette par défaut
   );
 
   // Couleur sélectionnée dans la palette

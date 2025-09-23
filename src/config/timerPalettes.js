@@ -3,7 +3,7 @@
 
 export const TIMER_PALETTES = {
   terre: {
-    colors: ['#8B3A3A', '#FFD700', '#68752C', '#4A5568'],
+    colors: ['#68752C','#4A5568',  '#8B3A3A','#FFD700'],
     name: 'Terre',
     isPremium: false,
     description: 'Couleurs naturelles et apaisantes'
