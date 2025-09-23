@@ -84,15 +84,15 @@ export default function TimerOptions() {
           <TouchableOpacity
             style={[
               styles.optionButton,
-              scaleMode === 'full' && styles.optionButtonActive
+              scaleMode === '25min' && styles.optionButtonActive
             ]}
-            onPress={() => setScaleMode('full')}
+            onPress={() => setScaleMode('25min')}
           >
             <Text style={[
               styles.optionText,
-              scaleMode === 'full' && styles.optionTextActive
+              scaleMode === '25min' && styles.optionTextActive
             ]}>
-              Cadran Full
+              25min
             </Text>
           </TouchableOpacity>
         </View>

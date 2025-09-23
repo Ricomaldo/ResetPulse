@@ -76,18 +76,18 @@ export default function TimerCircle({
   }, [isRunning, shouldPulse]);
   
   // Progress angle calculation
-  // In 60min mode: 20min duration = 120° (1/3 of circle), progress scales that
-  // In full mode: always use full 360°, progress scales that
+  // In 60min mode: duration scales to portion of circle (20min = 120°)
+  // In 25min mode: always show full 25 minutes scale
   const maxAngle = scaleMode === '60min'
     ? Math.min(360, (duration / 3600) * 360) // duration in seconds: 1200s = 120°, 3600s = 360°
-    : 360; // Full mode always uses full circle
+    : Math.min(360, (duration / 1500) * 360); // 25min mode: scale to 25 minutes (1500s)
   const progressAngle = maxAngle * progress;
   
   // Create graduation marks based on scale mode
-  const graduationCount = scaleMode === '60min' ? 60 : Math.min(60, duration / 60 * 5);
+  const graduationCount = scaleMode === '60min' ? 60 : 25; // 25 marks for 25min mode
   const graduationMarks = Array.from({ length: graduationCount }, (_, i) => {
     const angle = (i * (360 / graduationCount)) - 90; // Distribute evenly, -90 to start at top
-    const isHour = scaleMode === '60min' ? (i % 5 === 0) : (i % Math.max(1, Math.floor(graduationCount / 12)) === 0);
+    const isHour = scaleMode === '60min' ? (i % 5 === 0) : (i % 5 === 0); // Every 5 minutes in both modes
     const tickLength = isHour ? radius * 0.08 : radius * 0.04;
     const innerRadius = radius - tickLength;
     
@@ -124,32 +124,14 @@ export default function TimerCircle({
         return { index: i, value: minute, angle };
       });
     } else {
-      // Full scale based on duration
-      const durationMinutes = Math.ceil(duration / 60);
-      let numberCount;
-      let step;
-
-      if (durationMinutes <= 5) {
-        numberCount = durationMinutes + 1;
-        step = 1;
-      } else if (durationMinutes <= 15) {
-        numberCount = Math.ceil(durationMinutes / 2.5) + 1;
-        step = Math.ceil(durationMinutes / (numberCount - 1));
-      } else if (durationMinutes <= 30) {
-        numberCount = Math.ceil(durationMinutes / 5) + 1;
-        step = 5;
-      } else {
-        numberCount = Math.ceil(durationMinutes / 10) + 1;
-        step = 10;
-      }
-
-      return Array.from({ length: numberCount }, (_, i) => {
-        const minute = Math.min(i * step, durationMinutes);
+      // 25min Pomodoro scale - always show 0, 5, 10, 15, 20, 25
+      return Array.from({ length: 6 }, (_, i) => {
+        const minute = i * 5;
         let angle;
         if (clockwise) {
-          angle = (minute / durationMinutes * 360) - 90;
+          angle = (minute / 25 * 360) - 90;
         } else {
-          angle = -(minute / durationMinutes * 360) - 90;
+          angle = -(minute / 25 * 360) - 90;
         }
         return { index: i, value: minute, angle };
       });
@@ -182,8 +164,8 @@ export default function TimerCircle({
     
     const centerX = svgSize / 2;
     const centerY = svgSize / 2;
-    // Use a slightly larger radius to ensure complete coverage of the background circle
-    const progressRadius = radius + strokeWidth/2;
+    // Use inner radius to keep progress inside the circle border
+    const progressRadius = radius - strokeWidth * 2;
     
     if (clockwise) {
       return `
@@ -230,14 +212,14 @@ export default function TimerCircle({
       // Ensure at least 1 minute
       if (minutes === 0) minutes = 60;
     } else {
-      const durationMinutes = Math.ceil(duration / 60);
+      // 25min mode
       if (clockwise) {
-        minutes = Math.round((normalizedAngle / 360) * durationMinutes);
+        minutes = Math.round((normalizedAngle / 360) * 25);
       } else {
-        minutes = Math.round(((360 - normalizedAngle) / 360) * durationMinutes);
+        minutes = Math.round(((360 - normalizedAngle) / 360) * 25);
       }
       // Ensure at least 1 minute
-      if (minutes === 0) minutes = durationMinutes;
+      if (minutes === 0) minutes = 25;
     }
 
     return minutes;
@@ -325,9 +307,9 @@ export default function TimerCircle({
         {progress > 0 && (
           progressAngle >= 359.9 ? (
             <Circle
-              cx={circleSize / 2}
-              cy={circleSize / 2}
-              r={radius + strokeWidth/2}
+              cx={svgSize / 2}
+              cy={svgSize / 2}
+              r={radius - strokeWidth * 2}
               fill={color || theme.colors.energy}
               opacity={1}
             />

@@ -161,7 +161,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     segmentButtonActive: {
-      backgroundColor: theme.colors.primary,
+      backgroundColor: theme.colors.brand.primary,
     },
 
     segmentText: {
@@ -195,7 +195,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     paletteItemActive: {
-      borderColor: theme.colors.primary,
+      borderColor: theme.colors.brand.primary,
       backgroundColor: theme.colors.background,
       ...theme.shadow('md'),
     },
@@ -213,7 +213,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     paletteNameActive: {
-      color: theme.colors.primary,
+      color: theme.colors.brand.primary,
       fontWeight: '600',
     },
 
@@ -221,7 +221,7 @@ export default function SettingsModal({ visible, onClose }) {
       position: 'absolute',
       top: 4,
       right: 4,
-      backgroundColor: theme.colors.warning,
+      backgroundColor: theme.colors.semantic.warning,
       width: 18,
       height: 18,
       borderRadius: 9,
@@ -268,7 +268,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     activityItemFavorite: {
-      borderColor: theme.colors.primary,
+      borderColor: theme.colors.brand.primary,
       backgroundColor: theme.colors.background,
       ...theme.shadow('md'),
     },
@@ -293,7 +293,7 @@ export default function SettingsModal({ visible, onClose }) {
       position: 'absolute',
       top: 2,
       right: 2,
-      backgroundColor: theme.colors.warning,
+      backgroundColor: theme.colors.semantic.warning,
       width: 16,
       height: 16,
       borderRadius: 8,
@@ -327,16 +327,169 @@ export default function SettingsModal({ visible, onClose }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            {/* Appearance */}
+            {/* Favorites Section - NOW FIRST */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Activités favorites</Text>
+              <Text style={styles.optionDescription}>
+                Sélectionnez vos favoris pour les voir en premier
+              </Text>
+              <View style={styles.favoritesGrid}>
+                {allActivities.map((activity) => {
+                  const isFavorite = favoriteActivities.includes(activity.id);
+                  return (
+                    <TouchableOpacity
+                      key={activity.id}
+                      style={[
+                        styles.activityItem,
+                        isFavorite && styles.activityItemFavorite
+                      ]}
+                      onPress={() => toggleFavorite(activity.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.activityEmoji}>{activity.emoji}</Text>
+                      <Text style={[
+                        styles.activityItemLabel,
+                        isFavorite && styles.activityItemLabelFavorite
+                      ]}>
+                        {activity.label}
+                      </Text>
+                      {activity.isPremium && (
+                        <View style={styles.premiumBadge}>
+                          <Text style={styles.lockMini}>🔒</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+
+            {/* Color Palettes - SECOND */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Palettes de Couleurs</Text>
+              <Text style={styles.optionDescription}>
+                Version gratuite : Terre et Laser disponibles
+              </Text>
+              <View style={styles.paletteGrid}>
+                {Object.keys(TIMER_PALETTES).map((paletteName) => {
+                  const isPremium = isPalettePremium(paletteName);
+                  const isActive = currentPalette === paletteName;
+                  const paletteInfo = TIMER_PALETTES[paletteName];
+
+                  return (
+                    <TouchableOpacity
+                      key={paletteName}
+                      style={[
+                        styles.paletteItem,
+                        isActive && styles.paletteItemActive,
+                        isPremium && styles.paletteItemLocked
+                      ]}
+                      onPress={() => {
+                        if (!isPremium) {
+                          setPalette(paletteName);
+                        }
+                      }}
+                      activeOpacity={isPremium ? 1 : 0.7}
+                    >
+                      <PalettePreview paletteName={paletteName} />
+                      <Text style={[
+                        styles.paletteName,
+                        isActive && styles.paletteNameActive
+                      ]}>
+                        {paletteInfo?.name || paletteName}
+                      </Text>
+                      {isPremium && (
+                        <View style={styles.paletteLockBadge}>
+                          <Text style={styles.lockIcon}>🔒</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+
+            {/* Timer Options - THIRD */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Options du Timer</Text>
+
+              {/* Scale Mode */}
+              <View style={styles.optionRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Mode Cadran</Text>
+                  <Text style={styles.optionDescription}>
+                    {scaleMode === '60min' ? 'Échelle 60 minutes' : '25 minutes Pomodoro'}
+                  </Text>
+                </View>
+                <View style={styles.segmentedControl}>
+                  <Touchable
+                    style={[
+                      styles.segmentButton,
+                      scaleMode === '60min' && styles.segmentButtonActive
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setScaleMode('60min');
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text style={[
+                      styles.segmentText,
+                      scaleMode === '60min' && styles.segmentTextActive
+                    ]}>
+                      60min
+                    </Text>
+                  </Touchable>
+                  <Touchable
+                    style={[
+                      styles.segmentButton,
+                      scaleMode === '25min' && styles.segmentButtonActive
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setScaleMode('25min');
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text style={[
+                      styles.segmentText,
+                      scaleMode === '25min' && styles.segmentTextActive
+                    ]}>
+                      25min
+                    </Text>
+                  </Touchable>
+                </View>
+              </View>
+
+              {/* Direction */}
+              <View style={styles.optionRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Sens de Rotation</Text>
+                  <Text style={styles.optionDescription}>
+                    {clockwise ? 'Sens horaire' : 'Sens anti-horaire'}
+                  </Text>
+                </View>
+                <Switch
+                  value={clockwise}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setClockwise(value);
+                  }}
+                  {...theme.styles.switch(clockwise)}
+                />
+              </View>
+            </View>
+
+            {/* Appearance - NOW FOURTH */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Apparence</Text>
-              
+
               {/* Theme Mode */}
               <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Thème</Text>
                   <Text style={styles.optionDescription}>
-                    {theme.mode === 'auto' ? 'Automatique (système)' : 
+                    {theme.mode === 'auto' ? 'Automatique (système)' :
                      theme.mode === 'dark' ? 'Sombre' : 'Clair'}
                   </Text>
                 </View>
@@ -396,159 +549,6 @@ export default function SettingsModal({ visible, onClose }) {
                     </Text>
                   </Touchable>
                 </View>
-              </View>
-            </View>
-
-            {/* Timer Options */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Options du Timer</Text>
-
-              {/* Scale Mode */}
-              <View style={styles.optionRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Mode Cadran</Text>
-                  <Text style={styles.optionDescription}>
-                    {scaleMode === '60min' ? 'Échelle 60 minutes' : 'Durée complète'}
-                  </Text>
-                </View>
-                <View style={styles.segmentedControl}>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      scaleMode === '60min' && styles.segmentButtonActive
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setScaleMode('60min');
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text style={[
-                      styles.segmentText,
-                      scaleMode === '60min' && styles.segmentTextActive
-                    ]}>
-                      60min
-                    </Text>
-                  </Touchable>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      scaleMode === 'full' && styles.segmentButtonActive
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setScaleMode('full');
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text style={[
-                      styles.segmentText,
-                      scaleMode === 'full' && styles.segmentTextActive
-                    ]}>
-                      Full
-                    </Text>
-                  </Touchable>
-                </View>
-              </View>
-
-              {/* Direction */}
-              <View style={styles.optionRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Sens de Rotation</Text>
-                  <Text style={styles.optionDescription}>
-                    {clockwise ? 'Sens horaire' : 'Sens anti-horaire'}
-                  </Text>
-                </View>
-                <Switch
-                  value={clockwise}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setClockwise(value);
-                  }}
-                  {...theme.styles.switch(clockwise)}
-                />
-              </View>
-            </View>
-
-            {/* Color Palettes */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Palettes de Couleurs</Text>
-              <Text style={styles.optionDescription}>
-                Version gratuite : Terre et Laser disponibles
-              </Text>
-              <View style={styles.paletteGrid}>
-                {Object.keys(TIMER_PALETTES).map((paletteName) => {
-                  const isPremium = isPalettePremium(paletteName);
-                  const isActive = currentPalette === paletteName;
-                  const paletteInfo = TIMER_PALETTES[paletteName];
-
-                  return (
-                    <TouchableOpacity
-                      key={paletteName}
-                      style={[
-                        styles.paletteItem,
-                        isActive && styles.paletteItemActive,
-                        isPremium && styles.paletteItemLocked
-                      ]}
-                      onPress={() => {
-                        if (!isPremium) {
-                          setPalette(paletteName);
-                        }
-                      }}
-                      activeOpacity={isPremium ? 1 : 0.7}
-                    >
-                      <PalettePreview paletteName={paletteName} />
-                      <Text style={[
-                        styles.paletteName,
-                        isActive && styles.paletteNameActive
-                      ]}>
-                        {paletteInfo?.name || paletteName}
-                      </Text>
-                      {isPremium && (
-                        <View style={styles.paletteLockBadge}>
-                          <Text style={styles.lockIcon}>🔒</Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-
-            {/* Favorites Section */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Activités favorites</Text>
-              <Text style={styles.optionDescription}>
-                Sélectionnez vos favoris pour les voir en premier
-              </Text>
-              <View style={styles.favoritesGrid}>
-                {allActivities.map((activity) => {
-                  const isFavorite = favoriteActivities.includes(activity.id);
-                  return (
-                    <TouchableOpacity
-                      key={activity.id}
-                      style={[
-                        styles.activityItem,
-                        isFavorite && styles.activityItemFavorite
-                      ]}
-                      onPress={() => toggleFavorite(activity.id)}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={styles.activityEmoji}>{activity.emoji}</Text>
-                      <Text style={[
-                        styles.activityItemLabel,
-                        isFavorite && styles.activityItemLabelFavorite
-                      ]}>
-                        {activity.label}
-                      </Text>
-                      {activity.isPremium && (
-                        <View style={styles.premiumBadge}>
-                          <Text style={styles.lockMini}>🔒</Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  );
-                })}
               </View>
             </View>
 
