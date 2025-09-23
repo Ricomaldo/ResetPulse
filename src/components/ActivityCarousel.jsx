@@ -1,0 +1,265 @@
+// src/components/ActivityCarousel.jsx
+import React, { useRef, useEffect } from 'react';
+import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated } from 'react-native';
+import { useTheme } from './ThemeProvider';
+import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { rs, getComponentSizes } from '../styles/responsive';
+import { getAllActivities } from '../config/activities';
+
+export default function ActivityCarousel() {
+  const theme = useTheme();
+  const { currentActivity, setCurrentActivity, setCurrentColor, favoriteActivities = [] } = useTimerOptions();
+  const scrollViewRef = useRef(null);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // TODO: Replace with actual premium status check
+  const isPremiumUser = false;
+
+  // Get all activities and sort by favorites
+  const allActivities = getAllActivities();
+
+  // Sort activities: favorites first, then others
+  const activities = [...allActivities].sort((a, b) => {
+    const aIsFavorite = favoriteActivities.includes(a.id);
+    const bIsFavorite = favoriteActivities.includes(b.id);
+
+    if (aIsFavorite && !bIsFavorite) return -1;
+    if (!aIsFavorite && bIsFavorite) return 1;
+
+    // If both are favorites, maintain their order in favoriteActivities
+    if (aIsFavorite && bIsFavorite) {
+      return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);
+    }
+
+    return 0;
+  });
+
+  // Find current activity index
+  const currentIndex = activities.findIndex(a => a.id === currentActivity?.id) || 0;
+
+  // Scroll to current activity on mount
+  useEffect(() => {
+    if (scrollViewRef.current && currentIndex >= 0) {
+      setTimeout(() => {
+        const offsetX = currentIndex * rs(80, 'width');
+        scrollViewRef.current?.scrollTo({ x: offsetX, animated: false });
+      }, 100);
+    }
+  }, []);
+
+  // Animate selection
+  const animateSelection = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 1.2,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  // Show activity name briefly
+  const showActivityName = () => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.delay(1500),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const handleActivityPress = (activity) => {
+    if (activity.isPremium && !isPremiumUser) {
+      // TODO: Show premium modal
+      return;
+    }
+
+    setCurrentActivity(activity);
+
+    // Update color if suggested color exists
+    if (activity.suggestedColor && theme.colors[activity.suggestedColor]) {
+      setCurrentColor(theme.colors[activity.suggestedColor]);
+    }
+
+    animateSelection();
+    showActivityName();
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      position: 'relative',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
+
+    scrollView: {
+      // Remove fixed height
+    },
+
+    scrollContent: {
+      paddingHorizontal: theme.spacing.md,
+      alignItems: 'center',
+    },
+
+    activityButton: {
+      width: getComponentSizes().activityButton,
+      height: getComponentSizes().activityButton,
+      marginHorizontal: rs(4, 'min'),
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: getComponentSizes().activityButton / 2,
+      backgroundColor: theme.colors.surface,
+      padding: theme.spacing.xs,
+      ...theme.shadows.sm,
+    },
+
+    activityButtonActive: {
+      backgroundColor: theme.colors.primary,
+      ...theme.shadows.md,
+      transform: [{ scale: 1.1 }],
+    },
+
+    activityEmoji: {
+      fontSize: rs(28, 'min'),
+      lineHeight: rs(30, 'min'),
+      textAlign: 'center',
+    },
+
+    activityLabel: {
+      fontSize: rs(9, 'min'),
+      marginTop: 2,
+      color: theme.colors.textLight,
+      fontWeight: '500',
+      textAlign: 'center',
+    },
+
+    activityLabelActive: {
+      color: theme.colors.background,
+      fontWeight: '600',
+    },
+
+    premiumBadge: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      backgroundColor: theme.colors.warning,
+      width: rs(20, 'min'),
+      height: rs(20, 'min'),
+      borderRadius: rs(10, 'min'),
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    lockIcon: {
+      fontSize: rs(12, 'min'),
+    },
+
+    activityNameBadge: {
+      position: 'absolute',
+      top: -35,
+      backgroundColor: theme.colors.background,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.borderRadius.lg,
+      ...theme.shadows.md,
+    },
+
+    activityNameText: {
+      fontSize: rs(14, 'min'),
+      fontWeight: '600',
+      color: theme.colors.text,
+    },
+  });
+
+  return (
+    <View style={styles.container}>
+      {/* Activity name display */}
+      {currentActivity && (
+        <Animated.View
+          style={[
+            styles.activityNameBadge,
+            {
+              opacity: fadeAnim,
+              transform: [{
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [5, 0]
+                })
+              }]
+            }
+          ]}
+          pointerEvents="none"
+        >
+          <Text style={styles.activityNameText}>
+            {currentActivity.label}
+          </Text>
+        </Animated.View>
+      )}
+
+      {/* Scrollable activities */}
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        scrollEventThrottle={16}
+      >
+        {activities.map((activity) => {
+          const isActive = currentActivity?.id === activity.id;
+          const isLocked = activity.isPremium && !isPremiumUser;
+
+          return (
+            <TouchableOpacity
+              key={activity.id}
+              style={[
+                styles.activityButton,
+                isActive && styles.activityButtonActive,
+                { opacity: isLocked ? 0.5 : 1 }
+              ]}
+              onPress={() => handleActivityPress(activity)}
+              activeOpacity={0.7}
+            >
+              <Animated.View
+                style={[
+                  { alignItems: 'center', justifyContent: 'center', width: '100%' },
+                  isActive ? { transform: [{ scale: scaleAnim }] } : {}
+                ]}
+              >
+                <Text style={styles.activityEmoji}>
+                  {activity.emoji}
+                </Text>
+                <Text style={[
+                  styles.activityLabel,
+                  isActive && styles.activityLabelActive
+                ]}>
+                  {activity.label}
+                </Text>
+              </Animated.View>
+
+              {isLocked && (
+                <View style={styles.premiumBadge}>
+                  <Text style={styles.lockIcon}>🔒</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}

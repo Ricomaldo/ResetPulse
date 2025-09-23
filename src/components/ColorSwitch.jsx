@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Animated } from 'react-native';
 import { useTheme, usePalette } from './ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { responsiveSize } from '../styles/layout';
+import { rs } from '../styles/responsive';
 import { PALETTE_NAMES } from '../styles/theme';
 
 export default function ColorSwitch() {
@@ -28,7 +28,7 @@ export default function ColorSwitch() {
   // Handle scroll end to detect palette change
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const containerWidth = responsiveSize(220); // Width of color pills container
+    const containerWidth = rs(220, 'width'); // Width of color pills container
     const newIndex = Math.round(offsetX / containerWidth);
 
     if (newIndex !== currentPaletteIndex && newIndex >= 0 && newIndex < PALETTE_NAMES.length) {
@@ -66,7 +66,7 @@ export default function ColorSwitch() {
     },
 
     scrollView: {
-      maxWidth: responsiveSize(220), // Width to show 4 pills
+      maxWidth: rs(220, 'width'), // Width to show 4 pills
     },
 
     scrollContent: {
@@ -74,7 +74,7 @@ export default function ColorSwitch() {
     },
 
     paletteContainer: {
-      width: responsiveSize(220),
+      width: rs(220, 'width'),
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -83,9 +83,9 @@ export default function ColorSwitch() {
     },
 
     colorButton: {
-      width: responsiveSize(44),
-      height: responsiveSize(44),
-      borderRadius: responsiveSize(22),
+      width: rs(44, 'min'),
+      height: rs(44, 'min'),
+      borderRadius: rs(22, 'min'),
       borderWidth: 3,
       borderColor: 'transparent',
       ...theme.shadows.md,
@@ -109,7 +109,7 @@ export default function ColorSwitch() {
     },
 
     paletteLabelText: {
-      fontSize: responsiveSize(12),
+      fontSize: rs(12, 'min'),
       fontWeight: '600',
       color: theme.colors.text,
       letterSpacing: 0.5,
@@ -156,9 +156,9 @@ export default function ColorSwitch() {
         onMomentumScrollEnd={handleScrollEnd}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
-        snapToInterval={responsiveSize(220)}
+        snapToInterval={rs(220, 'width')}
         decelerationRate="fast"
-        contentOffset={{ x: currentPaletteIndex * responsiveSize(220), y: 0 }}
+        contentOffset={{ x: currentPaletteIndex * rs(220, 'width'), y: 0 }}
       >
         {PALETTE_NAMES.map((paletteName, paletteIndex) => {
           // Get colors for this palette
@@ -192,7 +192,7 @@ export default function ColorSwitch() {
                     } else {
                       // Scroll to that palette
                       scrollViewRef.current?.scrollTo({
-                        x: paletteIndex * responsiveSize(220),
+                        x: paletteIndex * rs(220, 'width'),
                         animated: true
                       });
                     }

@@ -3,8 +3,9 @@ import React, { useRef, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated } from 'react-native';
 import { useTheme, usePalette } from './ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { responsiveSize } from '../styles/layout';
+import { rs } from '../styles/responsive';
 import { PALETTE_NAMES, TIMER_PALETTES } from '../styles/theme';
+import { isPalettePremium } from '../config/palettes';
 
 export default function PaletteCarousel() {
   const theme = useTheme();
@@ -21,7 +22,7 @@ export default function PaletteCarousel() {
     if (scrollViewRef.current && currentPaletteIndex >= 0) {
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
-          x: currentPaletteIndex * responsiveSize(220),
+          x: currentPaletteIndex * rs(220, 'width'),
           animated: false
         });
       }, 100);
@@ -48,13 +49,22 @@ export default function PaletteCarousel() {
   // Handle scroll end to detect palette change
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const containerWidth = responsiveSize(220);
+    const containerWidth = rs(220, 'width');
     const newIndex = Math.round(offsetX / containerWidth);
 
     if (newIndex !== currentPaletteIndex && newIndex >= 0 && newIndex < PALETTE_NAMES.length) {
       const newPaletteName = PALETTE_NAMES[newIndex];
-      setPalette(newPaletteName);
-      showPaletteName();
+      // Only change palette if it's not premium
+      if (!isPalettePremium(newPaletteName)) {
+        setPalette(newPaletteName);
+        showPaletteName();
+      } else {
+        // Scroll back to current palette if trying to select premium
+        scrollViewRef.current?.scrollTo({
+          x: currentPaletteIndex * rs(220, 'width'),
+          animated: true
+        });
+      }
     }
   };
 
@@ -77,11 +87,12 @@ export default function PaletteCarousel() {
     outerContainer: {
       position: 'relative',
       alignItems: 'center',
-      marginBottom: theme.spacing.sm,
+      justifyContent: 'center',
+      height: '100%',
     },
 
     scrollView: {
-      maxWidth: responsiveSize(220),
+      maxWidth: rs(220, 'width'),
     },
 
     scrollContent: {
@@ -89,18 +100,18 @@ export default function PaletteCarousel() {
     },
 
     paletteContainer: {
-      width: responsiveSize(220),
+      width: rs(220, 'width'),
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
       gap: theme.spacing.md,
-      paddingVertical: theme.spacing.sm,
+      paddingVertical: theme.spacing.xs,
     },
 
     colorButton: {
-      width: responsiveSize(44),
-      height: responsiveSize(44),
-      borderRadius: responsiveSize(22),
+      width: rs(44, 'min'),
+      height: rs(44, 'min'),
+      borderRadius: rs(22, 'min'),
       borderWidth: 3,
       borderColor: 'transparent',
       ...theme.shadows.md,
@@ -124,7 +135,7 @@ export default function PaletteCarousel() {
     },
 
     paletteLabelText: {
-      fontSize: responsiveSize(13),
+      fontSize: rs(13, 'min'),
       fontWeight: '600',
       color: theme.colors.text,
       letterSpacing: 0.5,
@@ -149,6 +160,22 @@ export default function PaletteCarousel() {
       backgroundColor: currentColor,
       opacity: 1,
       width: 15,
+    },
+
+    lockOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(255, 255, 255, 0.6)',
+      borderRadius: rs(22, 'min'),
+    },
+
+    lockIcon: {
+      fontSize: rs(20, 'min'),
     },
   });
 
@@ -185,13 +212,14 @@ export default function PaletteCarousel() {
         onMomentumScrollEnd={handleScrollEnd}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
-        snapToInterval={responsiveSize(220)}
+        snapToInterval={rs(220, 'width')}
         decelerationRate="fast"
       >
         {PALETTE_NAMES.map((paletteName, paletteIndex) => {
           // Get colors for this palette
           const paletteColors = TIMER_PALETTES[paletteName];
           const isCurrentPalette = paletteName === currentPalette;
+          const isPremium = isPalettePremium(paletteName);
 
           const colors = [
             paletteColors.energy,
@@ -203,28 +231,36 @@ export default function PaletteCarousel() {
           return (
             <View key={paletteName} style={styles.paletteContainer}>
               {colors.map((color, colorIndex) => (
-                <TouchableOpacity
-                  key={`${paletteName}-${colorIndex}`}
-                  style={[
-                    styles.colorButton,
-                    {
-                      backgroundColor: color,
-                      opacity: isCurrentPalette ? 1 : 0.5
-                    },
-                    isCurrentPalette && currentColor === color && styles.colorButtonActive
-                  ]}
-                  onPress={() => {
-                    if (isCurrentPalette) {
-                      setCurrentColor(color);
-                    } else {
-                      // Switch to that palette
-                      setPalette(paletteName);
-                      setCurrentColor(color);
-                      showPaletteName();
-                    }
-                  }}
-                  activeOpacity={0.7}
-                />
+                <View key={`${paletteName}-${colorIndex}`} style={{ position: 'relative' }}>
+                  <TouchableOpacity
+                    style={[
+                      styles.colorButton,
+                      {
+                        backgroundColor: color,
+                        opacity: isPremium ? 0.4 : (isCurrentPalette ? 1 : 0.5)
+                      },
+                      isCurrentPalette && currentColor === color && styles.colorButtonActive
+                    ]}
+                    onPress={() => {
+                      if (!isPremium) {
+                        if (isCurrentPalette) {
+                          setCurrentColor(color);
+                        } else {
+                          // Switch to that palette
+                          setPalette(paletteName);
+                          setCurrentColor(color);
+                          showPaletteName();
+                        }
+                      }
+                    }}
+                    activeOpacity={isPremium ? 1 : 0.7}
+                  />
+                  {isPremium && colorIndex === 1 && (
+                    <View style={styles.lockOverlay} pointerEvents="none">
+                      <Text style={styles.lockIcon}>🔒</Text>
+                    </View>
+                  )}
+                </View>
               ))}
             </View>
           );

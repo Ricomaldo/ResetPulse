@@ -5,7 +5,7 @@ import { usePersistedState } from '../hooks/usePersistedState';
 
 const ThemeContext = createContext();
 
-export const ThemeProvider = ({ children, initialPalette = 'classique' }) => {
+export const ThemeProvider = ({ children, initialPalette = 'terre' }) => {
   const [currentPalette, setCurrentPalette, isLoading] = usePersistedState(
     '@ResetPulse:palette',
     initialPalette

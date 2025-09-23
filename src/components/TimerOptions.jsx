@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from './ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { responsiveSize } from '../styles/layout';
+import { rs } from '../styles/responsive';
 
 export default function TimerOptions() {
   const theme = useTheme();
@@ -41,7 +41,7 @@ export default function TimerOptions() {
       borderRadius: theme.borderRadius.sm,
       borderWidth: 1,
       borderColor: theme.colors.border,
-      minWidth: responsiveSize(90),
+      minWidth: rs(90, 'min'),
       alignItems: 'center',
     },
 
@@ -51,7 +51,7 @@ export default function TimerOptions() {
     },
 
     optionText: {
-      fontSize: responsiveSize(11),
+      fontSize: rs(11, 'min'),
       color: theme.colors.text,
       fontWeight: '500',
     },

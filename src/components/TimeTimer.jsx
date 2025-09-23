@@ -3,34 +3,34 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from './ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { responsiveSize, getGoldenDimensions } from '../styles/layout';
+import { rs, getComponentSizes } from '../styles/responsive';
+import { getGoldenDimensions } from '../styles/layout';
 import useTimer from '../hooks/useTimer';
 import TimerCircle from './TimerCircle';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 
 export default function TimeTimer() {
   const theme = useTheme();
-  const { currentColor, clockwise, scaleMode } = useTimerOptions();
+  const { currentColor, clockwise, scaleMode, currentActivity } = useTimerOptions();
 
   // Initialize timer with 5 minutes default
   const timer = useTimer(5 * 60);
-  
-  // Get responsive dimensions using golden ratio
-  const containerSize = responsiveSize(340);
-  const circleSize = containerSize * 0.8; // Back to golden ratio 80%
+
+  // Get responsive dimensions
+  const { timerCircle } = getComponentSizes();
+  const circleSize = timerCircle;
   const { width: buttonWidth, height: buttonHeight } = getGoldenDimensions(
-    containerSize * 0.15,
+    rs(50, 'min'),
     'rectangle'
   );
   
   const styles = StyleSheet.create({
     container: {
-      width: containerSize,
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadius.xl,
-      paddingVertical: theme.spacing.lg,
-      paddingHorizontal: theme.spacing.md,
+      padding: rs(20, 'min'),
       alignItems: 'center',
+      justifyContent: 'center',
       ...theme.shadows.lg,
     },
 
@@ -55,7 +55,7 @@ export default function TimeTimer() {
     },
 
     messageText: {
-      fontSize: responsiveSize(18),
+      fontSize: rs(18, 'min'),
       fontWeight: '700',
       color: currentColor,
       textAlign: 'center',
@@ -72,7 +72,7 @@ export default function TimeTimer() {
     },
 
     presetsGrid: {
-      width: responsiveSize(110),
+      width: rs(110, 'min'),
     },
 
     presetsRow: {
@@ -91,8 +91,8 @@ export default function TimeTimer() {
       paddingVertical: theme.spacing.xs,
       paddingHorizontal: theme.spacing.sm,
       borderRadius: theme.borderRadius.md,
-      width: responsiveSize(48),
-      height: responsiveSize(36),
+      width: rs(48, 'min'),
+      height: rs(36, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,
@@ -108,7 +108,7 @@ export default function TimeTimer() {
 
     presetButtonText: {
       color: theme.colors.text,
-      fontSize: responsiveSize(13),
+      fontSize: rs(13, 'min'),
       fontWeight: '600',
     },
 
@@ -119,9 +119,9 @@ export default function TimeTimer() {
 
     controlButton: {
       backgroundColor: currentColor,
-      width: responsiveSize(56),
-      height: responsiveSize(56),
-      borderRadius: responsiveSize(28),
+      width: rs(56, 'min'),
+      height: rs(56, 'min'),
+      borderRadius: rs(28, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
       ...theme.shadows.md,
@@ -149,10 +149,10 @@ export default function TimeTimer() {
     },
 
     incrementButtonText: {
-      fontSize: responsiveSize(20),
+      fontSize: rs(20, 'min'),
       fontWeight: '700',
       color: theme.colors.text,
-      lineHeight: responsiveSize(20),
+      lineHeight: rs(20, 'min'),
     },
   });
   
@@ -173,6 +173,8 @@ export default function TimeTimer() {
           clockwise={clockwise}
           scaleMode={scaleMode}
           duration={timer.duration}
+          activityEmoji={currentActivity?.emoji}
+          isRunning={timer.running}
         />
 
         {/* Message Overlay */}

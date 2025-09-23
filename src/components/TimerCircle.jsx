@@ -1,9 +1,9 @@
 // src/components/TimerCircle.jsx
-import React from 'react';
-import { View } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, Animated } from 'react-native';
 import Svg, { Circle, Path, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from './ThemeProvider';
-import { responsiveSize } from '../styles/layout';
+import { rs } from '../styles/responsive';
 
 export default function TimerCircle({
   progress = 1,
@@ -11,15 +11,64 @@ export default function TimerCircle({
   size = null,
   clockwise = false,
   scaleMode = '60min',
-  duration = 240
+  duration = 240,
+  activityEmoji = null,
+  isRunning = false
 }) {
   const theme = useTheme();
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const glowAnim = useRef(new Animated.Value(0.3)).current;
   
   // Calculate responsive size if not provided
-  const circleSize = size || responsiveSize(280);
+  const circleSize = size || rs(280, 'min');
   const radius = (circleSize / 2) - 20;
   const strokeWidth = 2.5;
   const maxMinutes = 60;
+
+  // Pulse animation for activity emoji
+  useEffect(() => {
+    if (isRunning && activityEmoji) {
+      const pulseAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.15,
+            duration: 800, // ~72 bpm
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+
+      const glowAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(glowAnim, {
+            toValue: 0.6,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.timing(glowAnim, {
+            toValue: 0.3,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+
+      pulseAnimation.start();
+      glowAnimation.start();
+
+      return () => {
+        pulseAnimation.stop();
+        glowAnimation.stop();
+        pulseAnim.setValue(1);
+        glowAnim.setValue(0.3);
+      };
+    }
+  }, [isRunning, activityEmoji]);
   
   // Progress angle calculation
   // In 60min mode: 20min duration = 120° (1/3 of circle), progress scales that
@@ -247,6 +296,50 @@ export default function TimerCircle({
           opacity={0.4}
         />
       </Svg>
+
+      {/* Activity Emoji Display - Perfectly Centered */}
+      {activityEmoji && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Animated.View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: [{ scale: pulseAnim }],
+            }}
+          >
+            {/* Glow/Halo effect */}
+            <Animated.View
+              style={{
+                position: 'absolute',
+                width: circleSize * 0.35,
+                height: circleSize * 0.35,
+                borderRadius: (circleSize * 0.35) / 2,
+                backgroundColor: color || theme.colors.primary,
+                opacity: glowAnim,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: circleSize * 0.2,
+                opacity: 0.9,
+                textAlign: 'center',
+              }}
+            >
+              {activityEmoji}
+            </Text>
+          </Animated.View>
+        </View>
+      )}
     </View>
   );
 }

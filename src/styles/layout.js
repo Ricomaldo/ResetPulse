@@ -1,13 +1,11 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { theme } from './theme';
+import { rs } from './responsive';
 
 const { width } = Dimensions.get('window');
 
-// Responsive size helper
-export const responsiveSize = (size) => {
-  const baseWidth = 375; // iPhone SE width as base
-  return Math.round((size * width) / baseWidth);
-};
+// Export from responsive.js for backward compatibility
+export const responsiveSize = (size) => rs(size, 'width');
 
 // Golden dimensions calculator
 export const getGoldenDimensions = (baseSize, type = 'rectangle') => {

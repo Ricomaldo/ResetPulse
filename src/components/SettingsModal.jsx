@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { useTheme } from './ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { responsiveSize } from '../styles/layout';
+import { rs } from '../styles/responsive';
 import PalettePreview from './PalettePreview';
 import { PALETTE_NAMES } from '../styles/theme';
+import { getAllActivities } from '../config/activities';
+import { PALETTE_CONFIG, isPalettePremium } from '../config/palettes';
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
@@ -21,8 +23,19 @@ export default function SettingsModal({ visible, onClose }) {
     clockwise,
     setClockwise,
     scaleMode,
-    setScaleMode
+    setScaleMode,
+    favoriteActivities,
+    setFavoriteActivities
   } = useTimerOptions();
+
+  const allActivities = getAllActivities();
+
+  const toggleFavorite = (activityId) => {
+    const newFavorites = favoriteActivities.includes(activityId)
+      ? favoriteActivities.filter(id => id !== activityId)
+      : [...favoriteActivities, activityId];
+    setFavoriteActivities(newFavorites);
+  };
 
   const styles = StyleSheet.create({
     overlay: {
@@ -52,7 +65,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     title: {
-      fontSize: responsiveSize(24),
+      fontSize: rs(24, 'min'),
       fontWeight: 'bold',
       color: theme.colors.text,
     },
@@ -62,7 +75,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     closeText: {
-      fontSize: responsiveSize(20),
+      fontSize: rs(20, 'min'),
       color: theme.colors.text,
     },
 
@@ -75,7 +88,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     sectionTitle: {
-      fontSize: responsiveSize(16),
+      fontSize: rs(16, 'min'),
       fontWeight: '600',
       color: theme.colors.text,
       marginBottom: theme.spacing.sm,
@@ -91,13 +104,13 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     optionLabel: {
-      fontSize: responsiveSize(14),
+      fontSize: rs(14, 'min'),
       color: theme.colors.text,
       flex: 1,
     },
 
     optionDescription: {
-      fontSize: responsiveSize(11),
+      fontSize: rs(11, 'min'),
       color: theme.colors.textLight,
       marginTop: theme.spacing.xs / 2,
     },
@@ -122,7 +135,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     segmentText: {
-      fontSize: responsiveSize(12),
+      fontSize: rs(12, 'min'),
       color: theme.colors.text,
       fontWeight: '500',
     },
@@ -145,17 +158,48 @@ export default function SettingsModal({ visible, onClose }) {
       padding: theme.spacing.xs,
       borderWidth: 2,
       borderColor: 'transparent',
+      backgroundColor: theme.colors.surface,
+      marginBottom: theme.spacing.sm,
+      ...theme.shadows.sm,
     },
 
     paletteItemActive: {
       borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.background,
+      ...theme.shadows.md,
+    },
+
+    paletteItemLocked: {
+      opacity: 0.6,
     },
 
     paletteName: {
-      fontSize: responsiveSize(10),
+      fontSize: rs(10, 'min'),
       color: theme.colors.text,
       textAlign: 'center',
       marginTop: theme.spacing.xs / 2,
+      fontWeight: '500',
+    },
+
+    paletteNameActive: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+
+    paletteLockBadge: {
+      position: 'absolute',
+      top: 4,
+      right: 4,
+      backgroundColor: theme.colors.warning,
+      width: 18,
+      height: 18,
+      borderRadius: 9,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    lockIcon: {
+      fontSize: 11,
     },
 
     colorRow: {
@@ -167,6 +211,67 @@ export default function SettingsModal({ visible, onClose }) {
 
     colorSegment: {
       flex: 1,
+    },
+
+    favoritesSection: {
+      marginTop: theme.spacing.md,
+    },
+
+    favoritesGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
+    },
+
+    activityItem: {
+      width: '22%',
+      aspectRatio: 1,
+      borderRadius: theme.borderRadius.md,
+      backgroundColor: theme.colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 2,
+      borderColor: 'transparent',
+      ...theme.shadows.sm,
+    },
+
+    activityItemFavorite: {
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.background,
+      ...theme.shadows.md,
+    },
+
+    activityEmoji: {
+      fontSize: rs(24, 'min'),
+      marginBottom: 2,
+    },
+
+    activityItemLabel: {
+      fontSize: rs(9, 'min'),
+      color: theme.colors.textLight,
+      fontWeight: '500',
+    },
+
+    activityItemLabelFavorite: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+
+    premiumBadge: {
+      position: 'absolute',
+      top: 2,
+      right: 2,
+      backgroundColor: theme.colors.warning,
+      width: 16,
+      height: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    lockMini: {
+      fontSize: 10,
     },
   });
 
@@ -255,22 +360,82 @@ export default function SettingsModal({ visible, onClose }) {
             {/* Color Palettes */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Palettes de Couleurs</Text>
+              <Text style={styles.optionDescription}>
+                Version gratuite : Terre et Laser disponibles
+              </Text>
               <View style={styles.paletteGrid}>
-                {PALETTE_NAMES.map((paletteName) => (
-                  <TouchableOpacity
-                    key={paletteName}
-                    style={[
-                      styles.paletteItem,
-                      theme.currentPalette === paletteName && styles.paletteItemActive
-                    ]}
-                    onPress={() => theme.setPalette(paletteName)}
-                  >
-                    <PalettePreview paletteName={paletteName} />
-                    <Text style={styles.paletteName}>
-                      {paletteName}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                {PALETTE_NAMES.map((paletteName) => {
+                  const isPremium = isPalettePremium(paletteName);
+                  const isActive = theme.currentPalette === paletteName;
+                  const paletteInfo = PALETTE_CONFIG[paletteName];
+
+                  return (
+                    <TouchableOpacity
+                      key={paletteName}
+                      style={[
+                        styles.paletteItem,
+                        isActive && styles.paletteItemActive,
+                        isPremium && styles.paletteItemLocked
+                      ]}
+                      onPress={() => {
+                        if (!isPremium) {
+                          theme.setPalette(paletteName);
+                        }
+                      }}
+                      activeOpacity={isPremium ? 1 : 0.7}
+                    >
+                      <PalettePreview paletteName={paletteName} />
+                      <Text style={[
+                        styles.paletteName,
+                        isActive && styles.paletteNameActive
+                      ]}>
+                        {paletteInfo?.name || paletteName}
+                      </Text>
+                      {isPremium && (
+                        <View style={styles.paletteLockBadge}>
+                          <Text style={styles.lockIcon}>🔒</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+
+            {/* Favorites Section */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Activités favorites</Text>
+              <Text style={styles.optionDescription}>
+                Sélectionnez vos favoris pour les voir en premier
+              </Text>
+              <View style={styles.favoritesGrid}>
+                {allActivities.map((activity) => {
+                  const isFavorite = favoriteActivities.includes(activity.id);
+                  return (
+                    <TouchableOpacity
+                      key={activity.id}
+                      style={[
+                        styles.activityItem,
+                        isFavorite && styles.activityItemFavorite
+                      ]}
+                      onPress={() => toggleFavorite(activity.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.activityEmoji}>{activity.emoji}</Text>
+                      <Text style={[
+                        styles.activityItemLabel,
+                        isFavorite && styles.activityItemLabelFavorite
+                      ]}>
+                        {activity.label}
+                      </Text>
+                      {activity.isPremium && (
+                        <View style={styles.premiumBadge}>
+                          <Text style={styles.lockMini}>🔒</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </View>
 

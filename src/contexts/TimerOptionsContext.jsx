@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { useTheme } from '../components/ThemeProvider';
 import { usePersistedObject } from '../hooks/usePersistedState';
+import { getDefaultActivity } from '../config/activities';
 
 const TimerOptionsContext = createContext(null);
 
@@ -15,6 +16,8 @@ export const TimerOptionsProvider = ({ children }) => {
       clockwise: false,
       scaleMode: '60min',
       currentColor: theme.colors.energy,
+      currentActivity: getDefaultActivity(),
+      favoriteActivities: ['breathing', 'meditation', 'reading', 'work'], // Default favorites
     }
   );
 
@@ -31,11 +34,15 @@ export const TimerOptionsProvider = ({ children }) => {
     clockwise: values.clockwise,
     scaleMode: values.scaleMode,
     currentColor: values.currentColor,
+    currentActivity: values.currentActivity,
+    favoriteActivities: values.favoriteActivities,
 
     // Actions
     setClockwise: (val) => updateValue('clockwise', val),
     setScaleMode: (val) => updateValue('scaleMode', val),
     setCurrentColor: (val) => updateValue('currentColor', val),
+    setCurrentActivity: (val) => updateValue('currentActivity', val),
+    setFavoriteActivities: (val) => updateValue('favoriteActivities', val),
 
     // Loading state
     isLoading
