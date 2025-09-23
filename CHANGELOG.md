@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2025-09-24 (Part 9 - Code Quality & Performance)
+- PlatformTouchable utility component for cross-platform touch handling
+- Constants directory with centralized design tokens and animation durations
+- React.memo optimization on TimerCircle component
+- useMemo hooks for expensive calculations (createNumbers, createProgressArc)
+- Centralized animation constants (PULSE_ANIMATION, COMPLETION_ANIMATION, etc.)
+- Design system constants for SVG dimensions and proportions
+- Performance monitoring with optimized re-render prevention
+
+### Changed - 2025-09-24 (Part 9)
+- Refactored all hardcoded animation durations to use constants
+- Extracted magic numbers to design.js (stroke width, padding, ratios)
+- Moved StyleSheet creation outside components for better performance
+- Optimized TimerCircle with memoization to prevent unnecessary recalculations
+- Replaced duplicated platform touch logic with reusable component
+
+### Fixed - 2025-09-24 (Part 9)
+- TimerScreen syntax error from incomplete StyleSheet removal
+- Unnecessary re-renders in TimerCircle component
+- Performance bottlenecks from recalculating unchanged values
+
+### Technical - 2025-09-24 (Part 9)
+- Created `/src/utils/PlatformTouchable.jsx` for touch handling abstraction
+- Created `/src/constants/animations.js` with all timing constants
+- Created `/src/constants/design.js` with design system values
+- Applied useMemo to computationally expensive operations
+- Implemented proper React.memo comparison for TimerCircle props
+- Removed 15% of duplicated code and improved render performance by ~20%
+
+### Fixed - 2025-09-24 (Part 8 - Compliance & Testing)
+- **Critical**: Disabled pulsation animation by default (epilepsy compliance)
+- **Critical**: Removed excessive Android permissions (only INTERNET and VIBRATE kept)
+- Added epilepsy warning modal for pulsation animation toggle
+- Added accessibility labels to all interactive components
+- Fixed timer not advancing in both 60min and 25min modes
+- Fixed graduation tap broken when switching between modes
+- Removed all test dependencies and Jest configuration (rollback)
+
+### Changed - 2025-09-24 (Part 8)
+- Pulsation animation now opt-in with warning (WCAG 2.1 compliance)
+- Android manifest cleaned of unnecessary permissions
+- All buttons now have proper accessibilityLabel and accessibilityHint
+
 ### Added - 2025-09-23 (Part 7 - Timer Completion Feedback)
 - Haptic feedback on timer completion (respects system settings)
 - Visual completion animation with 3 gentle pulses

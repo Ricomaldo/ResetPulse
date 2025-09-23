@@ -1,11 +1,13 @@
 // src/components/TimerCircle.jsx
-import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, Animated, TouchableOpacity, PanResponder } from 'react-native';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
+import { View, Text, Animated, PanResponder } from 'react-native';
 import Svg, { Circle, Path, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
+import { PULSE_ANIMATION, COMPLETION_ANIMATION } from '../constants/animations';
+import { TIMER_SVG, TIMER_PROPORTIONS, TIMER_VISUAL, ACTIVITY_DISPLAY, COLORS } from '../constants/design';
 
-export default function TimerCircle({
+function TimerCircle({
   progress = 1,
   color,
   size = null,
@@ -28,11 +30,10 @@ export default function TimerCircle({
   
   // Calculate responsive size if not provided
   const circleSize = size || rs(280, 'min');
-  const svgSize = circleSize + 50; // Extra space for numbers outside with more padding
-  const radius = (circleSize / 2) - 25; // Adjusted for new SVG size
-  const strokeWidth = 4.5; // Trait plus épais pour meilleure visibilité
-  const maxMinutes = 60;
-  const svgOffset = 25; // Offset for centering in larger SVG
+  const svgSize = circleSize + TIMER_SVG.PADDING; // Extra space for numbers outside with more padding
+  const radius = (circleSize / 2) - TIMER_SVG.RADIUS_OFFSET; // Adjusted for new SVG size
+  const strokeWidth = TIMER_SVG.STROKE_WIDTH; // Trait plus épais pour meilleure visibilité
+  const svgOffset = TIMER_SVG.SVG_OFFSET; // Offset for centering in larger SVG
 
   // Pulse animation for activity emoji or pulse effect
   useEffect(() => {
@@ -40,13 +41,13 @@ export default function TimerCircle({
       const pulseAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
-            toValue: 1.15,
-            duration: 800, // ~72 bpm
+            toValue: PULSE_ANIMATION.SCALE_MAX,
+            duration: PULSE_ANIMATION.DURATION, // ~72 bpm
             useNativeDriver: true,
           }),
           Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 800,
+            toValue: PULSE_ANIMATION.SCALE_MIN,
+            duration: PULSE_ANIMATION.DURATION,
             useNativeDriver: true,
           }),
         ])
@@ -55,13 +56,13 @@ export default function TimerCircle({
       const glowAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(glowAnim, {
-            toValue: 0.6,
-            duration: 800,
+            toValue: PULSE_ANIMATION.GLOW_MAX,
+            duration: PULSE_ANIMATION.DURATION,
             useNativeDriver: true,
           }),
           Animated.timing(glowAnim, {
-            toValue: 0.3,
-            duration: 800,
+            toValue: PULSE_ANIMATION.GLOW_MIN,
+            duration: PULSE_ANIMATION.DURATION,
             useNativeDriver: true,
           }),
         ])
@@ -73,8 +74,8 @@ export default function TimerCircle({
       return () => {
         pulseAnimation.stop();
         glowAnimation.stop();
-        pulseAnim.setValue(1);
-        glowAnim.setValue(0.3);
+        pulseAnim.setValue(PULSE_ANIMATION.SCALE_MIN);
+        glowAnim.setValue(PULSE_ANIMATION.GLOW_MIN);
       };
     }
   }, [isRunning, shouldPulse]);
@@ -85,7 +86,7 @@ export default function TimerCircle({
       // Animate color transition to green
       Animated.timing(completionColorAnim, {
         toValue: 1,
-        duration: 300,
+        duration: COMPLETION_ANIMATION.COLOR_DURATION,
         useNativeDriver: false, // Can't use native driver for color interpolation
       }).start();
 
@@ -147,7 +148,7 @@ export default function TimerCircle({
   const graduationMarks = Array.from({ length: graduationCount }, (_, i) => {
     const angle = (i * (360 / graduationCount)) - 90; // Distribute evenly, -90 to start at top
     const isHour = scaleMode === '60min' ? (i % 5 === 0) : (i % 5 === 0); // Every 5 minutes in both modes
-    const tickLength = isHour ? radius * 0.08 : radius * 0.04;
+    const tickLength = isHour ? radius * TIMER_PROPORTIONS.TICK_LONG : radius * TIMER_PROPORTIONS.TICK_SHORT;
     const innerRadius = radius - tickLength;
     
     const x1 = svgSize / 2 + innerRadius * Math.cos((angle * Math.PI) / 180);
@@ -161,8 +162,8 @@ export default function TimerCircle({
       y1,
       x2,
       y2,
-      strokeWidth: isHour ? 2.5 : 1.5,
-      opacity: isHour ? 0.9 : 0.5
+      strokeWidth: isHour ? TIMER_VISUAL.TICK_WIDTH_MAJOR : TIMER_VISUAL.TICK_WIDTH_MINOR,
+      opacity: isHour ? TIMER_VISUAL.TICK_OPACITY_MAJOR : TIMER_VISUAL.TICK_OPACITY_MINOR
     };
   });
   
@@ -199,9 +200,10 @@ export default function TimerCircle({
     }
   };
 
-  const minuteNumbers = createNumbers().map((num) => {
+  // Memoize number creation to avoid recalculation on every render
+  const minuteNumbers = useMemo(() => createNumbers().map((num) => {
     const angle = num.angle;
-    const numberRadius = radius + 18; // More space from the dial
+    const numberRadius = radius + TIMER_PROPORTIONS.NUMBER_RADIUS; // More space from the dial
 
     const x = svgSize / 2 + numberRadius * Math.cos((angle * Math.PI) / 180);
     const y = svgSize / 2 + numberRadius * Math.sin((angle * Math.PI) / 180);
@@ -211,9 +213,9 @@ export default function TimerCircle({
       x,
       y,
       minute: num.value,
-      fontSize: Math.max(13, circleSize * 0.045)
+      fontSize: Math.max(TIMER_PROPORTIONS.MIN_NUMBER_FONT, circleSize * TIMER_PROPORTIONS.NUMBER_FONT_RATIO)
     };
-  });
+  }), [scaleMode, clockwise, radius, circleSize]); // Dependencies for memoization
   
   // Create progress arc path
   const createProgressArc = () => {
@@ -249,12 +251,13 @@ export default function TimerCircle({
     }
   };
   
-  const progressPath = createProgressArc();
+  // Memoize progress arc calculation to avoid recalculation on every render
+  const progressPath = useMemo(() => createProgressArc(), [progress, progressAngle, clockwise, svgSize, radius, strokeWidth]);
 
   // Animated color for completion
   const animatedColor = completionColorAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [color || theme.colors.energy, '#48BB78'] // Green color for completion
+    outputRange: [color || theme.colors.energy, COLORS.COMPLETION_GREEN] // Green color for completion
   });
 
   const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -409,14 +412,14 @@ export default function TimerCircle({
         <Circle
           cx={svgSize / 2}
           cy={svgSize / 2}
-          r={radius * 0.12}
+          r={radius * TIMER_PROPORTIONS.CENTER_DOT_OUTER}
           fill={theme.colors.neutral}
           opacity={0.8}
         />
         <Circle
           cx={svgSize / 2}
           cy={svgSize / 2}
-          r={radius * 0.08}
+          r={radius * TIMER_PROPORTIONS.CENTER_DOT_INNER}
           fill={theme.colors.text}
           opacity={0.4}
         />
@@ -447,9 +450,9 @@ export default function TimerCircle({
               <Animated.View
                 style={{
                   position: 'absolute',
-                  width: circleSize * 0.35,
-                  height: circleSize * 0.35,
-                  borderRadius: (circleSize * 0.35) / 2,
+                  width: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO,
+                  height: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO,
+                  borderRadius: (circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO) / 2,
                   backgroundColor: theme.colors.brand.primary,
                   opacity: glowAnim,
                 }}
@@ -457,8 +460,8 @@ export default function TimerCircle({
             )}
             <Text
               style={{
-                fontSize: circleSize * 0.2,
-                opacity: 0.9,
+                fontSize: circleSize * ACTIVITY_DISPLAY.EMOJI_SIZE_RATIO,
+                opacity: ACTIVITY_DISPLAY.EMOJI_OPACITY,
                 textAlign: 'center',
               }}
             >
@@ -539,3 +542,21 @@ export default function TimerCircle({
     </Animated.View>
   );
 }
+
+// Memoized version to prevent unnecessary re-renders
+export default React.memo(TimerCircle, (prevProps, nextProps) => {
+  // Only re-render if these specific props change
+  return (
+    prevProps.progress === nextProps.progress &&
+    prevProps.color === nextProps.color &&
+    prevProps.size === nextProps.size &&
+    prevProps.clockwise === nextProps.clockwise &&
+    prevProps.scaleMode === nextProps.scaleMode &&
+    prevProps.duration === nextProps.duration &&
+    prevProps.activityEmoji === nextProps.activityEmoji &&
+    prevProps.isRunning === nextProps.isRunning &&
+    prevProps.shouldPulse === nextProps.shouldPulse &&
+    prevProps.isCompleted === nextProps.isCompleted &&
+    prevProps.currentActivity === nextProps.currentActivity
+  );
+});

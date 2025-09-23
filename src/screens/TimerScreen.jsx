@@ -1,5 +1,5 @@
 // src/screens/TimerScreen.jsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { View, StyleSheet, TouchableOpacity, PanResponder, Animated } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
@@ -9,7 +9,68 @@ import PaletteCarousel from '../components/PaletteCarousel';
 import TimeTimer from '../components/TimeTimer';
 import SettingsModal from '../components/SettingsModal';
 import { SettingsIcon } from '../components/Icons';
-import { rs, getLayout, getDeviceInfo } from '../styles/responsive';
+import { rs, getDeviceInfo } from '../styles/responsive';
+import { ENTRANCE_ANIMATION, SPRING } from '../constants/animations';
+
+// Move StyleSheet outside component to avoid recreation on every render
+const createStyles = (theme) => StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: rs(20),
+  },
+
+  header: {
+    height: rs(50, 'height'),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingHorizontal: rs(10),
+    zIndex: 100,
+  },
+
+  settingsButton: {
+    width: rs(44),
+    height: rs(44),
+    borderRadius: rs(22),
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...theme.shadows.md,
+  },
+
+  activitySection: {
+    height: rs(65, 'height'),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 0,
+    overflow: 'visible',
+  },
+
+  timerSection: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+  },
+
+  paletteSection: {
+    height: rs(65, 'height'),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 0,
+    marginBottom: rs(10, 'height'),
+  },
+
+  paletteContainer: {
+    backgroundColor: theme.isDark ? theme.colors.brand.deep : theme.colors.brand.neutral,
+    paddingVertical: rs(8),
+    paddingHorizontal: rs(20),
+    borderRadius: rs(35),
+    borderWidth: 1,
+    borderColor: theme.colors.brand.primary,
+    ...theme.shadows.lg,
+  },
+});
 
 function TimerScreenContent() {
   const theme = useTheme();
@@ -17,8 +78,9 @@ function TimerScreenContent() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerRef = useRef(null);
-  const { isLandscape } = getDeviceInfo();
-  const layout = getLayout();
+
+  // Get styles with memoization to prevent recreation
+  const styles = useMemo(() => createStyles(theme), [theme]);
 
   // Animation values for staggered entrance
   const headerAnim = useRef(new Animated.Value(0)).current;
@@ -33,38 +95,38 @@ function TimerScreenContent() {
       // Header slides down
       Animated.timing(headerAnim, {
         toValue: 1,
-        duration: 400,
-        delay: 200,
+        duration: ENTRANCE_ANIMATION.HEADER_DURATION,
+        delay: ENTRANCE_ANIMATION.HEADER_DELAY,
         useNativeDriver: true,
       }),
       // Activities slide in from left
       Animated.timing(activityAnim, {
         toValue: 1,
-        duration: 400,
-        delay: 400,
+        duration: ENTRANCE_ANIMATION.ACTIVITY_DURATION,
+        delay: ENTRANCE_ANIMATION.ACTIVITY_DELAY,
         useNativeDriver: true,
       }),
       // Timer fades and scales in
       Animated.parallel([
         Animated.timing(timerAnim, {
           toValue: 1,
-          duration: 600,
-          delay: 600,
+          duration: ENTRANCE_ANIMATION.TIMER_DURATION,
+          delay: ENTRANCE_ANIMATION.TIMER_DELAY,
           useNativeDriver: true,
         }),
         Animated.spring(timerScaleAnim, {
           toValue: 1,
-          tension: 40,
-          friction: 7,
-          delay: 600,
+          tension: SPRING.TENSION,
+          friction: SPRING.FRICTION,
+          delay: ENTRANCE_ANIMATION.TIMER_DELAY,
           useNativeDriver: true,
         }),
       ]),
       // Palette slides up
       Animated.timing(paletteAnim, {
         toValue: 1,
-        duration: 400,
-        delay: 800,
+        duration: ENTRANCE_ANIMATION.PALETTE_DURATION,
+        delay: ENTRANCE_ANIMATION.PALETTE_DELAY,
         useNativeDriver: true,
       }),
     ];
@@ -89,65 +151,6 @@ function TimerScreenContent() {
     })
   ).current;
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: rs(20),
-    },
-
-    header: {
-      height: rs(50, 'height'),
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      paddingHorizontal: rs(10),
-      zIndex: 100,
-    },
-
-    settingsButton: {
-      width: rs(44),
-      height: rs(44),
-      borderRadius: rs(22),
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...theme.shadows.md,
-    },
-
-    activitySection: {
-      height: rs(65, 'height'),
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 0,
-      overflow: 'visible', // Permet le d\u00e9bordement si n\u00e9cessaire
-    },
-
-    timerSection: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginVertical: theme.spacing.sm,
-      paddingHorizontal: theme.spacing.md,
-    },
-
-    paletteSection: {
-      height: rs(65, 'height'),
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: 0,
-      marginBottom: rs(10, 'height'),
-    },
-
-    paletteContainer: {
-      backgroundColor: theme.isDark ? theme.colors.brand.deep : theme.colors.brand.neutral,
-      paddingVertical: rs(8),
-      paddingHorizontal: rs(20),
-      borderRadius: rs(35),
-      borderWidth: 1,
-      borderColor: theme.colors.brand.primary,
-      ...theme.shadows.lg,
-    },
-  });
-
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -169,6 +172,10 @@ function TimerScreenContent() {
         ]}>
         <View style={{ flex: 1 }} />
         <TouchableOpacity
+          accessible={true}
+          accessibilityLabel="Paramètres"
+          accessibilityHint="Ouvrir les paramètres de l'application"
+          accessibilityRole="button"
           style={[styles.settingsButton, {
             backgroundColor: theme.colors.brand.neutral,
             borderWidth: 1,
