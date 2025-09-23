@@ -23,7 +23,7 @@ export default function TimerCircle({
   // Calculate responsive size if not provided
   const circleSize = size || rs(280, 'min');
   const radius = (circleSize / 2) - 20;
-  const strokeWidth = 2.5;
+  const strokeWidth = 4.5; // Trait plus épais pour meilleure visibilité
   const maxMinutes = 60;
 
   // Pulse animation for activity emoji or pulse effect
@@ -98,8 +98,8 @@ export default function TimerCircle({
       y1,
       x2,
       y2,
-      strokeWidth: isHour ? 1.5 : 0.8,
-      opacity: isHour ? 0.8 : 0.4
+      strokeWidth: isHour ? 2.5 : 1.5,
+      opacity: isHour ? 0.9 : 0.5
     };
   });
   
@@ -164,7 +164,7 @@ export default function TimerCircle({
       x,
       y,
       minute: num.value,
-      fontSize: Math.max(9, circleSize * 0.035)
+      fontSize: Math.max(13, circleSize * 0.045)
     };
   });
   

@@ -6,7 +6,7 @@ import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs } from '../styles/responsive';
 import { TIMER_PALETTES } from '../config/timerPalettes';
 
-export default function PaletteCarousel() {
+export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
   const {
     currentPalette,

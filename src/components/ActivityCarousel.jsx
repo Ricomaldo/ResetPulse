@@ -8,7 +8,7 @@ import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities } from '../config/activities';
 import haptics from '../utils/haptics';
 
-export default function ActivityCarousel() {
+export default function ActivityCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
   const { currentActivity, setCurrentActivity, setCurrentDuration, favoriteActivities = [] } = useTimerOptions();
   const { setColorByType, currentColor } = useTimerPalette();
@@ -126,6 +126,8 @@ export default function ActivityCarousel() {
       alignItems: 'center',
       justifyContent: 'center',
       height: '100%',
+      opacity: isTimerRunning ? 0.3 : 1,
+      transform: [{ scale: isTimerRunning ? 0.8 : 1 }],
     },
 
     scrollView: {
@@ -138,12 +140,12 @@ export default function ActivityCarousel() {
     },
 
     activityButton: {
-      width: getComponentSizes().activityButton,
-      height: getComponentSizes().activityButton,
-      marginHorizontal: rs(4, 'min'),
+      width: rs(58, 'min'), // R\u00e9duit pour \u00e9viter la coupure
+      height: rs(58, 'min'),
+      marginHorizontal: rs(3, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: getComponentSizes().activityButton / 2,
+      borderRadius: rs(29, 'min'),
       backgroundColor: theme.colors.surface,
       padding: theme.spacing.xs,
       ...theme.shadow('sm'),

@@ -11,7 +11,7 @@ import TimerCircle from './TimerCircle';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 
-export default function TimeTimer() {
+export default function TimeTimer({ onRunningChange }) {
   const theme = useTheme();
   const { clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
   const { currentColor } = useTimerPalette();
@@ -26,9 +26,16 @@ export default function TimeTimer() {
     }
   }, [currentDuration]);
 
-  // Get responsive dimensions
+  // Notify parent of running state changes
+  useEffect(() => {
+    if (onRunningChange) {
+      onRunningChange(timer.running);
+    }
+  }, [timer.running, onRunningChange]);
+
+  // Get responsive dimensions avec proportions dorées
   const { timerCircle } = getComponentSizes();
-  const circleSize = timerCircle;
+  const circleSize = Math.min(timerCircle, rs(320, 'min')); // Grand mais avec limite max
   const { width: buttonWidth, height: buttonHeight } = getGoldenDimensions(
     rs(50, 'min'),
     'rectangle'
@@ -36,12 +43,10 @@ export default function TimeTimer() {
   
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.xl,
-      padding: rs(20, 'min'),
+      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      ...theme.shadows.lg,
+      paddingVertical: 0,
     },
 
     timerWrapper: {
@@ -50,7 +55,8 @@ export default function TimeTimer() {
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
-      marginBottom: theme.spacing.md,
+      marginBottom: rs(5, 'height'),
+      marginTop: -rs(10, 'height'), // Remonter le timer
     },
 
     messageOverlay: {
@@ -73,12 +79,13 @@ export default function TimeTimer() {
     },
     
     controlsContainer: {
+      position: 'absolute',
+      bottom: rs(40, 'height'),
       flexDirection: 'row',
-      width: '100%',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      marginTop: theme.spacing.md,
-      paddingHorizontal: theme.spacing.xs,
+      justifyContent: 'center',
+      gap: theme.spacing.lg,
+      width: '100%',
     },
 
     presetsGrid: {
@@ -88,7 +95,6 @@ export default function TimeTimer() {
     presetsRow: {
       flexDirection: 'row',
       gap: theme.spacing.xs,
-      marginBottom: theme.spacing.xs,
     },
 
     controlsButtons: {
@@ -99,14 +105,15 @@ export default function TimeTimer() {
     presetButton: {
       backgroundColor: theme.colors.surface,
       paddingVertical: theme.spacing.xs,
-      paddingHorizontal: theme.spacing.sm,
-      borderRadius: theme.borderRadius.md,
-      width: rs(48, 'min'),
-      height: rs(36, 'min'),
+      paddingHorizontal: theme.spacing.md,
+      borderRadius: theme.borderRadius.lg,
+      minWidth: rs(50, 'min'),
+      height: rs(38, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,
       borderColor: theme.colors.border,
+      ...theme.shadow('sm'),
     },
 
     presetButtonActive: {
@@ -129,46 +136,13 @@ export default function TimeTimer() {
 
     controlButton: {
       backgroundColor: theme.colors.brand.primary,
-      width: rs(56, 'min'),
-      height: rs(56, 'min'),
-      borderRadius: rs(28, 'min'),
+      width: rs(60, 'min'),
+      height: rs(60, 'min'),
+      borderRadius: rs(30, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
-      ...theme.shadows.md,
-    },
-
-    incrementControls: {
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: theme.spacing.xs,
       marginHorizontal: theme.spacing.sm,
-    },
-
-    incrementButton: {
-      backgroundColor: theme.colors.surface,
-      width: rs(36, 'min'),
-      height: rs(36, 'min'),
-      borderRadius: rs(18, 'min'),
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      ...theme.shadow('sm'),
-    },
-
-    incrementButtonText: {
-      fontSize: rs(20, 'min'),
-      fontWeight: '600',
-      color: theme.colors.text,
-      lineHeight: rs(20, 'min'),
-    },
-
-    durationDisplay: {
-      fontSize: rs(13, 'min'),
-      color: theme.colors.text,
-      fontWeight: '500',
-      marginVertical: 2,
+      ...theme.shadow('lg'),
     },
   });
   
@@ -205,104 +179,9 @@ export default function TimeTimer() {
         )}
       </View>
 
-      {/* Controls Container with Presets on left, Play/Reset on right */}
+      {/* Centered Control Buttons */}
       <View style={styles.controlsContainer}>
-        {/* Preset Buttons in 2x2 Grid */}
-        <View style={styles.presetsGrid}>
-          <View style={styles.presetsRow}>
-            <TouchableOpacity
-              style={[
-                styles.presetButton,
-                timer.duration === 300 && styles.presetButtonActive
-              ]}
-              onPress={() => timer.setPresetDuration(5)}
-            activeOpacity={0.7}
-            >
-              <Text style={[
-                styles.presetButtonText,
-                timer.duration === 300 && styles.presetButtonTextActive
-              ]}>
-                5m
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.presetButton,
-                timer.duration === 900 && styles.presetButtonActive
-              ]}
-              onPress={() => timer.setPresetDuration(15)}
-            activeOpacity={0.7}
-            >
-              <Text style={[
-                styles.presetButtonText,
-                timer.duration === 900 && styles.presetButtonTextActive
-              ]}>
-                15m
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.presetsRow}>
-            <TouchableOpacity
-              style={[
-                styles.presetButton,
-                timer.duration === 1800 && styles.presetButtonActive
-              ]}
-              onPress={() => timer.setPresetDuration(30)}
-            activeOpacity={0.7}
-            >
-              <Text style={[
-                styles.presetButtonText,
-                timer.duration === 1800 && styles.presetButtonTextActive
-              ]}>
-                30m
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.presetButton,
-                timer.duration === 2700 && styles.presetButtonActive
-              ]}
-              onPress={() => timer.setPresetDuration(45)}
-            activeOpacity={0.7}
-            >
-              <Text style={[
-                styles.presetButtonText,
-                timer.duration === 2700 && styles.presetButtonTextActive
-              ]}>
-                45m
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Duration Increment/Decrement Controls */}
-        <View style={styles.incrementControls}>
-          <TouchableOpacity
-            style={styles.incrementButton}
-            onPress={() => adjustDuration(1)}
-            activeOpacity={0.7}
-            disabled={timer.running}
-          >
-            <Text style={styles.incrementButtonText}>+</Text>
-          </TouchableOpacity>
-          <Text style={styles.durationDisplay}>
-            {Math.floor(timer.duration / 60)}m
-          </Text>
-          <TouchableOpacity
-            style={styles.incrementButton}
-            onPress={() => adjustDuration(-1)}
-            activeOpacity={0.7}
-            disabled={timer.running}
-          >
-            <Text style={styles.incrementButtonText}>−</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Control Buttons */}
-        <View style={styles.controlsButtons}>
+        {/* Main Control Buttons */}
           <TouchableOpacity
             style={[styles.controlButton, { opacity: timer.running ? 1 : 0.9 }]}
             onPress={timer.toggleRunning}
@@ -318,7 +197,6 @@ export default function TimeTimer() {
           >
             <ResetIcon size={22} color="white" />
           </TouchableOpacity>
-        </View>
       </View>
     </View>
   );

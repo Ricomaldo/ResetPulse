@@ -14,6 +14,7 @@ import { rs, getLayout, getDeviceInfo } from '../styles/responsive';
 function TimerScreenContent() {
   const theme = useTheme();
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const { isLandscape } = getDeviceInfo();
   const layout = getLayout();
 
@@ -42,25 +43,27 @@ function TimerScreenContent() {
     },
 
     activitySection: {
-      height: rs(80, 'height'),
+      height: rs(65, 'height'),
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: rs(10, 'height'),
+      marginBottom: 0,
+      overflow: 'visible', // Permet le d\u00e9bordement si n\u00e9cessaire
     },
 
     timerSection: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      marginVertical: rs(10, 'height'),
+      marginVertical: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.md,
     },
 
     paletteSection: {
-      height: rs(80, 'height'),
+      height: rs(65, 'height'),
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: rs(10, 'height'),
-      marginBottom: rs(20, 'height'),
+      marginTop: 0,
+      marginBottom: rs(10, 'height'),
     },
 
     paletteContainer: {
@@ -93,19 +96,22 @@ function TimerScreenContent() {
       </View>
 
       {/* Activities Section */}
-      <View style={styles.activitySection}>
-        <ActivityCarousel />
+      <View style={[styles.activitySection, { opacity: isTimerRunning ? 0.2 : 1 }]}>
+        <ActivityCarousel isTimerRunning={isTimerRunning} />
       </View>
 
       {/* Timer Section - Flex to take available space */}
       <View style={styles.timerSection}>
-        <TimeTimer />
+        <TimeTimer onRunningChange={setIsTimerRunning} />
       </View>
 
       {/* Palette Section */}
-      <View style={styles.paletteSection}>
+      <View style={[styles.paletteSection, {
+        opacity: isTimerRunning ? 0 : 1,
+        transform: [{ translateY: isTimerRunning ? 50 : 0 }]
+      }]}>
         <View style={styles.paletteContainer}>
-          <PaletteCarousel />
+          <PaletteCarousel isTimerRunning={isTimerRunning} />
         </View>
       </View>
 
