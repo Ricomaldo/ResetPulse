@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2025-09-25 (Part 12 - Android Platform Fixes & UI Improvements)
+- Timer icon (timer.png) for "Basique" activity replacing missing emoji
+- Static background disc for activity emojis when animations are disabled (accessibility)
+- Improved cross-platform button handling with Pressable component
+
+### Changed - 2025-09-25 (Part 12)
+- Activity carousel buttons now use TouchableOpacity for better Android stability
+- Removed tintColor from timer icon to preserve original design colors
+- Default activity set to "Basique" (none) on app launch
+- Pulse animations disabled by default for epilepsy safety compliance
+
+### Fixed - 2025-09-25 (Part 12)
+- React.Children.only error on Android with TouchableNativeFeedback
+- Square artifacts appearing after selecting activity buttons on Android
+- Octagonal shape rendering issue for activity buttons on Android
+- Activity carousel proper circular button shapes on all platforms
+- Index calculation bug in activity carousel preventing proper default selection
+
 ### Added - 2025-09-24 (Part 11 - Freemium Strategy & Final Polish)
 - Test mode configuration for unlocking all premium content during testing
 - 12 new premium activities (Pause, Sport, Yoga, Marche, Lecture, Étude, Créativité, Cuisine, Jeux, Devoirs, Musique, Ménage)

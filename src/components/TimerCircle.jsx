@@ -458,8 +458,9 @@ function TimerCircle({
               transform: isRunning && shouldPulse ? [{ scale: pulseAnim }] : [{ scale: 1 }],
             }}
           >
-            {/* Glow/Halo effect - only show when running and pulse enabled */}
-            {isRunning && shouldPulse && (
+            {/* Background disc - always visible when animations are off, animated when on */}
+            {isRunning && shouldPulse ? (
+              // Animated glow when pulse is enabled
               <Animated.View
                 style={{
                   position: 'absolute',
@@ -468,6 +469,18 @@ function TimerCircle({
                   borderRadius: (circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO) / 2,
                   backgroundColor: theme.colors.brand.primary,
                   opacity: glowAnim,
+                }}
+              />
+            ) : (
+              // Static background disc when pulse is disabled
+              <View
+                style={{
+                  position: 'absolute',
+                  width: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8,
+                  height: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8,
+                  borderRadius: (circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8) / 2,
+                  backgroundColor: theme.colors.brand.primary,
+                  opacity: 0.2,
                 }}
               />
             )}

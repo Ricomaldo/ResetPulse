@@ -18,12 +18,13 @@ export default function PlatformTouchable({
   onLongPress,
   disabled,
   activeOpacity = 0.7,
-  background = TouchableNativeFeedback.Ripple('rgba(0,0,0,0.1)', false),
+  background = TouchableNativeFeedback.Ripple('rgba(0,0,0,0.1)', true), // Changed to bounded ripple
   style,
   accessible,
   accessibilityLabel,
   accessibilityHint,
   accessibilityRole,
+  accessibilityState,
   ...props
 }) {
   if (Platform.OS === 'android' && Platform.Version >= 21) {
@@ -37,9 +38,10 @@ export default function PlatformTouchable({
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={accessibilityHint}
         accessibilityRole={accessibilityRole}
+        accessibilityState={accessibilityState}
         {...props}
       >
-        <View style={style}>
+        <View style={[style, { overflow: 'hidden' }]}>
           {children}
         </View>
       </TouchableNativeFeedback>
@@ -57,6 +59,7 @@ export default function PlatformTouchable({
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       accessibilityRole={accessibilityRole}
+      accessibilityState={accessibilityState}
       {...props}
     >
       {children}

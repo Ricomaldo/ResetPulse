@@ -10,7 +10,8 @@ import {
   Switch,
   Platform,
   TouchableNativeFeedback,
-  Alert
+  Alert,
+  Image
 } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
@@ -287,6 +288,13 @@ export default function SettingsModal({ visible, onClose }) {
       marginBottom: 2,
     },
 
+    activityIcon: {
+      width: rs(24, 'min'),
+      height: rs(24, 'min'),
+      marginBottom: 2,
+      // Pas de tintColor pour garder les couleurs originales de l'icône
+    },
+
     activityItemLabel: {
       fontSize: rs(9, 'min'),
       color: theme.colors.textLight,
@@ -442,7 +450,15 @@ export default function SettingsModal({ visible, onClose }) {
                       }}
                       activeOpacity={isLocked ? 1 : 0.7}
                     >
-                      <Text style={styles.activityEmoji}>{activity.emoji}</Text>
+                      {activity.id === 'none' ? (
+                        <Image
+                          source={require('../../assets/icons/timer.png')}
+                          style={styles.activityIcon}
+                          resizeMode="contain"
+                        />
+                      ) : (
+                        <Text style={styles.activityEmoji}>{activity.emoji}</Text>
+                      )}
                       <Text style={[
                         styles.activityItemLabel,
                         isFavorite && styles.activityItemLabelFavorite

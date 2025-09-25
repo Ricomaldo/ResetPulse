@@ -1,6 +1,6 @@
 // src/components/ActivityCarousel.jsx
 import React, { useRef, useEffect } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated, Platform, TouchableNativeFeedback } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform, Image } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
@@ -43,14 +43,15 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     return 0;
   });
 
-  // Find current activity index
-  const currentIndex = activities.findIndex(a => a.id === currentActivity?.id) || 0;
+  // Find current activity index (default to 0 if not found, which is 'none')
+  const currentIndex = activities.findIndex(a => a.id === currentActivity?.id);
+  const validIndex = currentIndex >= 0 ? currentIndex : 0;
 
   // Scroll to current activity on mount
   useEffect(() => {
-    if (scrollViewRef.current && currentIndex >= 0) {
+    if (scrollViewRef.current && validIndex >= 0) {
       setTimeout(() => {
-        const offsetX = currentIndex * rs(80, 'width');
+        const offsetX = validIndex * rs(80, 'width');
         scrollViewRef.current?.scrollTo({ x: offsetX, animated: false });
       }, 100);
     }
@@ -110,17 +111,6 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     showActivityName();
   };
 
-  // Platform-specific touchable
-  const Touchable = Platform.OS === 'android' && TouchableNativeFeedback?.canUseNativeForeground?.()
-    ? TouchableNativeFeedback
-    : TouchableOpacity;
-
-  const touchableProps = Platform.OS === 'android' && TouchableNativeFeedback?.Ripple ? {
-    background: TouchableNativeFeedback.Ripple(theme.colors.brand.primary + '30', true)
-  } : {
-    activeOpacity: 0.8
-  };
-
   const styles = StyleSheet.create({
     container: {
       position: 'relative',
@@ -140,30 +130,49 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
       alignItems: 'center',
     },
 
-    activityButton: {
+    activityWrapper: {
       width: rs(60, 'min'),
       height: rs(60, 'min'),
       marginHorizontal: rs(4, 'min'),
+      borderRadius: rs(30, 'min'),
+      overflow: 'hidden',
+      backgroundColor: 'transparent',
+    },
+
+    activityButtonInner: {
+      width: '100%',
+      height: '100%',
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: rs(30, 'min'),
       backgroundColor: theme.colors.surface,
-      padding: theme.spacing.xs,
-      ...theme.shadow('sm'),
+      ...(Platform.OS === 'ios' ? theme.shadow('sm') : {}),
     },
 
     activityButtonActive: {
       backgroundColor: theme.colors.brand.primary,
       borderWidth: 2,
       borderColor: theme.colors.brand.secondary,
-      ...theme.shadow('md'),
-      transform: [{ scale: 1.1 }],
+      ...(Platform.OS === 'ios' ? theme.shadow('md') : {}),
+    },
+
+    activityInner: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      height: '100%',
     },
 
     activityEmoji: {
       fontSize: rs(34, 'min'),
       lineHeight: rs(36, 'min'),
       textAlign: 'center',
+    },
+
+    activityIcon: {
+      width: rs(34, 'min'),
+      height: rs(34, 'min'),
+      // Pas de tintColor pour garder les couleurs originales de l'icône
     },
 
     activityLabel: {
@@ -251,38 +260,50 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
           const isLocked = activity.isPremium && !isPremiumUser;
 
           return (
-            <Touchable
-              key={activity.id}
-              accessible={true}
-              accessibilityLabel={`Activité ${activity.label}`}
-              accessibilityRole="button"
-              accessibilityState={{selected: isActive, disabled: isLocked}}
-              accessibilityHint={isLocked ? "Activité premium verrouillée" : `Sélectionner ${activity.label}`}
-              style={[
-                styles.activityButton,
-                isActive && styles.activityButtonActive,
-                { opacity: isLocked ? 0.5 : 1 }
-              ]}
-              onPress={() => handleActivityPress(activity)}
-              {...touchableProps}
-            >
-              <Animated.View
+            <View key={activity.id} style={[
+              styles.activityWrapper,
+              { opacity: isLocked ? 0.5 : 1 }
+            ]}>
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel={`Activité ${activity.label}`}
+                accessibilityRole="button"
+                accessibilityState={{selected: isActive, disabled: isLocked}}
+                accessibilityHint={isLocked ? "Activité premium verrouillée" : `Sélectionner ${activity.label}`}
                 style={[
-                  { alignItems: 'center', justifyContent: 'center', width: '100%' },
-                  isActive ? { transform: [{ scale: scaleAnim }] } : {}
+                  styles.activityButtonInner,
+                  isActive && styles.activityButtonActive
                 ]}
+                onPress={() => handleActivityPress(activity)}
+                activeOpacity={0.7}
+                disabled={false}
               >
-                <Text style={styles.activityEmoji}>
-                  {activity.emoji}
-                </Text>
-              </Animated.View>
+                <Animated.View
+                  style={[
+                    styles.activityInner,
+                    isActive ? { transform: [{ scale: scaleAnim }] } : {}
+                  ]}
+                >
+                  {activity.id === 'none' ? (
+                    <Image
+                      source={require('../../assets/icons/timer.png')}
+                      style={styles.activityIcon}
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <Text style={styles.activityEmoji}>
+                      {activity.emoji}
+                    </Text>
+                  )}
+                </Animated.View>
 
-              {isLocked && (
-                <View style={styles.premiumBadge}>
-                  <Text style={styles.lockIcon}>🔒</Text>
-                </View>
-              )}
-            </Touchable>
+                {isLocked && (
+                  <View style={styles.premiumBadge}>
+                    <Text style={styles.lockIcon}>🔒</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
           );
         })}
       </ScrollView>
