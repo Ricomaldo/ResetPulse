@@ -12,16 +12,16 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "2.1.2",
-    "expo": "~53.0.0",
-    "expo-haptics": "~14.1.4",
-    "expo-status-bar": "~2.2.3",
-    "react": "19.0.0",
-    "react-native": "0.79.5",
-    "react-native-gesture-handler": "~2.24.0",
-    "react-native-reanimated": "~3.17.4",
-    "react-native-safe-area-context": "5.4.0",
-    "react-native-svg": "15.11.2"
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "expo": "~51.0.0",
+    "expo-haptics": "~13.0.1",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-gesture-handler": "~2.16.2",
+    "react-native-reanimated": "~3.10.1",
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-svg": "15.2.0"
   },
   "private": true
 }

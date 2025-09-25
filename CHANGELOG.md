@@ -5,7 +5,45 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-09-26
+
+### Fixed - 2025-09-26 (Critical Android Build Fix)
+- **CRITICAL**: Resolved ExpoAsset crash on Android production builds
+- Downgraded from Expo SDK 53 to SDK 51 for stability
+- Reverted React from 19.0.0 to 18.2.0 to fix compatibility issues
+- Disabled New Architecture to prevent runtime crashes
+- Fixed keystore configuration for Google Play Store signing
+
+### Changed - 2025-09-26 (Build Configuration)
+- Updated all dependencies to SDK 51 compatible versions
+- Configured proper Android build with correct keystore credentials
+- Incremented versionCode to 9 for Play Store release
+- Created comprehensive Android build documentation (ANDROID_BUILD_CONFIG.md)
+
+### Added - 2025-09-26 (Documentation)
+- Complete Android build configuration guide with working setup
+- Keystore management instructions and SHA1 verification steps
+- Troubleshooting guide for common build issues
+
 ## [Unreleased]
+
+### Changed - 2025-09-25 (Part 13 - Documentation Organization)
+- Reorganized documentation structure with dedicated subdirectories
+- Moved all documentation files from root to organized `/docs` folders
+- Created specialized folders: `audits/`, `fixes/`, `deployment/`, `legal/`
+- Added deployment information document with iOS/Android build details
+- Enhanced `.gitignore` with better coverage for sensitive and temporary files
+
+### Fixed - 2025-09-25 (Part 13)
+- Root directory clutter with 10+ documentation files
+- Missing deployment configuration documentation
+- Backup files and sensitive keystore files in repository
+
+### Removed - 2025-09-25 (Part 13)
+- `package.json.backup` unnecessary backup file
+- Documentation files from root (moved to `/docs`)
+
+## [1.0.2] - 2025-09-25
 
 ### Added - 2025-09-25 (Part 12 - Android Platform Fixes & UI Improvements)
 - Timer icon (timer.png) for "Basique" activity replacing missing emoji
@@ -72,6 +110,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TimerScreen syntax error from incomplete StyleSheet removal
 - Unnecessary re-renders in TimerCircle component
 - Performance bottlenecks from recalculating unchanged values
+
+## [1.0.1] - 2025-09-24
 
 ### Technical - 2025-09-24 (Part 9)
 - Created `/src/utils/PlatformTouchable.jsx` for touch handling abstraction
@@ -203,6 +243,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings modal using outdated palette imports
 - Visual regression where selected activities lost palette harmony
 
+## [1.0.0] - 2025-09-23
+
 ### Removed - 2025-09-23 (Part 3)
 - Old monolithic `src/styles/theme.js` file
 - Obsolete `src/styles/palette.json` file
@@ -285,9 +327,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color selector for timer visualization (4 laser colors)
 - Dynamic preset button styling (colored background matching selected color)
 
+## [0.1.0] - 2025-09-20
+
 ### Technical
-- React Native 0.81.4
-- Expo SDK 54
+- React Native 0.79.5
+- Expo SDK 52
 - React Native SVG for circular timer graphics
 - Folder structure: components, screens, styles, hooks, utils
 - Theme system with colors, spacing, borders, shadows

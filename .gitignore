@@ -17,6 +17,7 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+*.keystore
 
 # Metro
 .metro-health-check*
@@ -39,3 +40,17 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Backup files
+*.backup
+*~
+*.swp
+*.swo
+
+# IDE folders
+.idea/
+.vscode/
+
+# Temporary folders
+/TEMP
+/tmp
