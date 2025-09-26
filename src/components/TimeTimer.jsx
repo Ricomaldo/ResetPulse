@@ -7,7 +7,8 @@ import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getGoldenDimensions } from '../styles/layout';
 import useTimer from '../hooks/useTimer';
-import TimerCircle from './TimerCircle';
+// import TimerCircle from './TimerCircle'; // OLD - replaced by modular TimerDial
+import TimerDial from './timer/TimerDial';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 
@@ -164,13 +165,13 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
         activeOpacity={1}
         onPress={handleDoubleTap}
         style={styles.timerWrapper}>
-        <TimerCircle
+        <TimerDial
           progress={timer.progress}
+          duration={timer.duration}
           color={currentColor}
           size={circleSize}
           clockwise={clockwise}
           scaleMode={scaleMode}
-          duration={timer.duration}
           activityEmoji={currentActivity?.id === "none" ? null : currentActivity?.emoji}
           isRunning={timer.running}
           shouldPulse={shouldPulse}
