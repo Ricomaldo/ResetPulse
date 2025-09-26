@@ -93,14 +93,13 @@ export default function useTimer(initialDuration = 240, onComplete) {
     };
   }, [running, startTime, updateTimer]);
 
-  // Reset when duration changes
+  // Reset remaining when duration changes (only if not running)
   useEffect(() => {
-    setRemaining(duration);
-    setRunning(false);
-    setStartTime(null);
-    setIsPaused(false);
-    setShowParti(false);
-    setShowReparti(false);
+    if (!running) {
+      setRemaining(duration);
+      setStartTime(null);
+      setIsPaused(false);
+    }
   }, [duration]);
 
   // Cleanup on unmount

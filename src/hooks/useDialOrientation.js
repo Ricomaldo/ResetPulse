@@ -126,12 +126,12 @@ export function useDialOrientation(isClockwise, scaleMode) {
    */
   const getNumberPositions = useCallback((radius, centerX, centerY) => {
     const numbers = [];
-    const count = scaleMode === '25min' ? 5 : 12; // 0,5,10,15,20,25 or 0,5,10...60
-    const interval = scaleMode === '25min' ? 5 : 5;
+    const count = scaleMode === '25min' ? 5 : 12; // 0,5,10,15,20,25 or 0,5,10...55
+    const interval = 5;
 
-    for (let i = 0; i <= count; i++) {
+    for (let i = 0; i < count; i++) { // Changed to < instead of <= to avoid 60
       const minute = i * interval;
-      if (minute > config.maxMinutes) break;
+      if (minute >= config.maxMinutes) break; // >= instead of > to stop at 60
 
       const angle = minutesToAngle(minute) - 90; // -90 to start from top
       const x = centerX + radius * Math.cos((angle * Math.PI) / 180);
