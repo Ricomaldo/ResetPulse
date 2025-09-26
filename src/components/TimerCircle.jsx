@@ -287,10 +287,8 @@ function TimerCircle({
         minutes = Math.round((360 - normalizedAngle) / degreesPerMinute);
       }
 
-      // Wrap around: 0 should be 60
-      if (minutes === 0) minutes = 60;
-      // Ensure we stay within 1-60 range
-      if (minutes > 60) minutes = 60;
+      // Allow 0 for reset state, but clamp at max
+      minutes = Math.max(0, Math.min(60, minutes));
 
     } else {
       // 25min mode: 360° = 25 minutes, so 14.4° per minute
@@ -302,14 +300,16 @@ function TimerCircle({
         minutes = Math.round((360 - normalizedAngle) / degreesPerMinute);
       }
 
-      // Wrap around: 0 should be 25
-      if (minutes === 0) minutes = 25;
-      // Ensure we stay within 1-25 range
-      if (minutes > 25) minutes = 25;
+      // Allow 0 for reset state, but clamp at max
+      minutes = Math.max(0, Math.min(25, minutes));
     }
 
     return minutes;
   };
+
+  // Track previous angle to prevent unwanted wrap-around
+  const lastAngleRef = useRef(null);
+  const lastMinutesRef = useRef(null);
 
   // Pan responder for drag gesture - recreate when scaleMode changes
   const panResponder = useMemo(() =>
@@ -321,17 +321,46 @@ function TimerCircle({
         if (isRunning) return;
         setIsDragging(true);
         const minutes = angleToMinutes(evt.nativeEvent.locationX, evt.nativeEvent.locationY);
+        lastMinutesRef.current = minutes;
         onGraduationTap(minutes);
       },
 
       onPanResponderMove: (evt) => {
         if (isRunning) return;
-        const minutes = angleToMinutes(evt.nativeEvent.locationX, evt.nativeEvent.locationY);
-        onGraduationTap(minutes);
+        const newMinutes = angleToMinutes(evt.nativeEvent.locationX, evt.nativeEvent.locationY);
+
+        // Prevent wrap-around: if we're near 0 and try to go negative, stay at 0
+        // If we're near max and try to go over, stay at max
+        if (lastMinutesRef.current !== null) {
+          const delta = newMinutes - lastMinutesRef.current;
+          const maxMinutes = scaleMode === '60min' ? 60 : 25;
+
+          // Detect wrap-around attempt (large jump in value)
+          if (Math.abs(delta) > maxMinutes / 2) {
+            // Trying to wrap around - prevent it
+            if (delta > 0) {
+              // Trying to wrap from near 0 to max - keep at 0
+              onGraduationTap(0);
+              lastMinutesRef.current = 0;
+            } else {
+              // Trying to wrap from near max to 0 - keep at max
+              onGraduationTap(maxMinutes);
+              lastMinutesRef.current = maxMinutes;
+            }
+          } else {
+            // Normal drag
+            onGraduationTap(newMinutes);
+            lastMinutesRef.current = newMinutes;
+          }
+        } else {
+          onGraduationTap(newMinutes);
+          lastMinutesRef.current = newMinutes;
+        }
       },
 
       onPanResponderRelease: () => {
         setIsDragging(false);
+        lastMinutesRef.current = null;
       },
     }),
     [scaleMode, clockwise, isRunning, onGraduationTap] // Recreate when these change

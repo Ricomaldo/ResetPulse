@@ -115,8 +115,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Display message logic
   const displayTime = () => {
-    if (remaining === 0 && duration > 0) {
-      return "C'est fini";
+    if (remaining === 0) {
+      if (hasTriggeredCompletion.current && duration > 0) {
+        return "C'est fini";
+      }
+      // If at zero without having completed, show ready state
+      return "";
     }
     if (!running && isPaused) {
       return "Pause";
@@ -133,8 +137,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Controls
   const toggleRunning = useCallback(() => {
     if (remaining === 0) {
-      // Restart after completion - reset everything first
-      setRemaining(duration);
+      // Start from zero - use last duration or default
+      const durationToUse = duration > 0 ? duration : 5 * 60; // Default 5 min if no duration set
+      setRemaining(durationToUse);
+      setDuration(durationToUse); // Update duration for future use
       setStartTime(null);
       setIsPaused(false);
       setShowParti(true);
@@ -166,13 +172,13 @@ export default function useTimer(initialDuration = 240, onComplete) {
   }, [remaining, duration, isPaused, running]);
 
   const resetTimer = useCallback(() => {
-    setRemaining(duration);
+    setRemaining(0); // Reset to ZERO, not duration
     setRunning(false);
     setStartTime(null);
     setIsPaused(false);
     setShowParti(false);
     setShowReparti(false);
-  }, [duration]);
+  }, []);
 
   const setPresetDuration = useCallback((minutes) => {
     const newDuration = minutes * 60;

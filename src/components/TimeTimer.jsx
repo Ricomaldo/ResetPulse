@@ -112,17 +112,26 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const handleGraduationTap = (minutes) => {
     if (timer.running) return;
 
-    haptics.selection().catch(() => {});
+    // Magnetic snap to 0 if very close (within 2 minutes)
+    if (minutes <= 2) {
+      minutes = 0;
+      haptics.impact('light').catch(() => {}); // Light feedback for snap
+    } else {
+      haptics.selection().catch(() => {});
+    }
 
-    // Convert minutes to seconds and apply limits based on mode
+    // Convert minutes to seconds and handle 0 specially
     let newDuration;
-    if (scaleMode === '25min') {
-      // Mode 25min: strict limit to 25 minutes max
-      const clampedMinutes = Math.max(1, Math.min(25, minutes));
+    if (minutes === 0) {
+      // Setting to 0 means reset state
+      newDuration = 0;
+    } else if (scaleMode === '25min') {
+      // Mode 25min: limit to 25 minutes max
+      const clampedMinutes = Math.min(25, minutes);
       newDuration = clampedMinutes * 60;
     } else {
       // Mode 60min: allow up to 60 minutes
-      const clampedMinutes = Math.max(1, Math.min(60, minutes));
+      const clampedMinutes = Math.min(60, minutes);
       newDuration = clampedMinutes * 60;
     }
 
