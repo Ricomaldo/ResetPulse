@@ -4,8 +4,10 @@ import { View, Text, Animated, PanResponder } from 'react-native';
 import Svg, { Circle, Path, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
+import { useDialOrientation } from '../hooks/useDialOrientation';
 import { PULSE_ANIMATION, COMPLETION_ANIMATION } from '../constants/animations';
 import { TIMER_SVG, TIMER_PROPORTIONS, TIMER_VISUAL, ACTIVITY_DISPLAY, COLORS } from '../constants/design';
+import { DIAL_INTERACTION } from '../constants/dialModes';
 
 function TimerCircle({
   progress = 1,
@@ -27,13 +29,18 @@ function TimerCircle({
   const completionAnim = useRef(new Animated.Value(1)).current;
   const completionColorAnim = useRef(new Animated.Value(0)).current;
   const [isDragging, setIsDragging] = useState(false);
-  
+
+  // Use centralized dial orientation logic
+  const dial = useDialOrientation(clockwise, scaleMode);
+
   // Calculate responsive size if not provided
   const circleSize = size || rs(280, 'min');
   const svgSize = circleSize + TIMER_SVG.PADDING; // Extra space for numbers outside with more padding
   const radius = (circleSize / 2) - TIMER_SVG.RADIUS_OFFSET; // Adjusted for new SVG size
   const strokeWidth = TIMER_SVG.STROKE_WIDTH; // Trait plus épais pour meilleure visibilité
   const svgOffset = TIMER_SVG.SVG_OFFSET; // Offset for centering in larger SVG
+  const centerX = svgSize / 2;
+  const centerY = svgSize / 2;
 
   // Pulse animation for activity emoji or pulse effect
   useEffect(() => {
@@ -143,116 +150,41 @@ function TimerCircle({
     : Math.min(360, (duration / 1500) * 360); // 25min mode: scale to 25 minutes (1500s)
   const progressAngle = maxAngle * progress;
   
-  // Create graduation marks based on scale mode
-  const graduationCount = scaleMode === '60min' ? 60 : 25; // 25 marks for 25min mode
-  const graduationMarks = Array.from({ length: graduationCount }, (_, i) => {
-    const angle = (i * (360 / graduationCount)) - 90; // Distribute evenly, -90 to start at top
-    const isHour = scaleMode === '60min' ? (i % 5 === 0) : (i % 5 === 0); // Every 5 minutes in both modes
-    const tickLength = isHour ? radius * TIMER_PROPORTIONS.TICK_LONG : radius * TIMER_PROPORTIONS.TICK_SHORT;
-    const innerRadius = radius - tickLength;
-    
-    const x1 = svgSize / 2 + innerRadius * Math.cos((angle * Math.PI) / 180);
-    const y1 = svgSize / 2 + innerRadius * Math.sin((angle * Math.PI) / 180);
-    const x2 = svgSize / 2 + radius * Math.cos((angle * Math.PI) / 180);
-    const y2 = svgSize / 2 + radius * Math.sin((angle * Math.PI) / 180);
-    
-    return {
-      key: i,
-      x1,
-      y1,
-      x2,
-      y2,
-      strokeWidth: isHour ? TIMER_VISUAL.TICK_WIDTH_MAJOR : TIMER_VISUAL.TICK_WIDTH_MINOR,
-      opacity: isHour ? TIMER_VISUAL.TICK_OPACITY_MAJOR : TIMER_VISUAL.TICK_OPACITY_MINOR
-    };
-  });
+  // Get graduation marks from centralized logic
+  const graduationMarks = useMemo(() => {
+    const marks = dial.getGraduationMarks(radius, centerX, centerY);
+    return marks.map(mark => ({
+      ...mark,
+      strokeWidth: mark.isMajor ? TIMER_VISUAL.TICK_WIDTH_MAJOR : TIMER_VISUAL.TICK_WIDTH_MINOR,
+      opacity: mark.isMajor ? TIMER_VISUAL.TICK_OPACITY_MAJOR : TIMER_VISUAL.TICK_OPACITY_MINOR
+    }));
+  }, [dial, radius, centerX, centerY]);
   
-  // Create numbers based on scale mode
-  const createNumbers = () => {
-    if (scaleMode === '60min') {
-      // Classic 60-minute scale - position changes based on clockwise
-      return Array.from({ length: 12 }, (_, i) => {
-        const minute = (i * 5) % 60;
-        let angle;
-        if (clockwise) {
-          // Clockwise: 0 at top, 15 at right, 30 at bottom, 45 at left
-          angle = (minute * 6) - 90; // 6 degrees per minute
-        } else {
-          // Anti-clockwise: 0 at top, 15 at left, 30 at bottom, 45 at right
-          angle = -(minute * 6) - 90;
-        }
-        return { index: i, value: minute, angle };
-      });
-    } else {
-      // 25min Pomodoro scale - show 0, 5, 10, 15, 20 distributed like 60min mode
-      return Array.from({ length: 5 }, (_, i) => {
-        const minute = i * 5;
-        let angle;
-        if (clockwise) {
-          // Clockwise: same formula as 60min but scaled to 25
-          angle = (minute * (360/25)) - 90; // 14.4 degrees per minute
-        } else {
-          // Anti-clockwise: same as 60min but scaled to 25
-          angle = -(minute * (360/25)) - 90;
-        }
-        return { index: i, value: minute, angle };
-      });
-    }
-  };
+  // Get number positions from centralized logic
+  const minuteNumbers = useMemo(() => {
+    const numberRadius = radius + TIMER_PROPORTIONS.NUMBER_RADIUS;
+    const positions = dial.getNumberPositions(numberRadius, centerX, centerY);
 
-  // Memoize number creation to avoid recalculation on every render
-  const minuteNumbers = useMemo(() => createNumbers().map((num) => {
-    const angle = num.angle;
-    const numberRadius = radius + TIMER_PROPORTIONS.NUMBER_RADIUS; // More space from the dial
-
-    const x = svgSize / 2 + numberRadius * Math.cos((angle * Math.PI) / 180);
-    const y = svgSize / 2 + numberRadius * Math.sin((angle * Math.PI) / 180);
-
-    return {
-      key: `num-${num.index}`,
-      x,
-      y,
-      minute: num.value,
+    return positions.map((pos, index) => ({
+      key: `num-${index}`,
+      x: pos.x,
+      y: pos.y,
+      minute: pos.value,
       fontSize: Math.max(TIMER_PROPORTIONS.MIN_NUMBER_FONT, circleSize * TIMER_PROPORTIONS.NUMBER_FONT_RATIO)
-    };
-  }), [scaleMode, clockwise, radius, circleSize]); // Dependencies for memoization
+    }));
+  }, [dial, radius, centerX, centerY, circleSize]);
   
-  // Create progress arc path
-  const createProgressArc = () => {
+  // Get progress path from centralized logic
+  const progressPath = useMemo(() => {
     if (progress <= 0) return '';
-    if (progressAngle >= 359.9) {
-      // Full circle
-      return null; // Will render as full circle instead
-    }
-    
-    const centerX = svgSize / 2;
-    const centerY = svgSize / 2;
-    // Use full radius to fill up to the border
-    const progressRadius = radius - strokeWidth / 2; // Fill right up to the border
-    
-    if (clockwise) {
-      return `
-        M ${centerX} ${centerY}
-        L ${centerX} ${centerY - progressRadius}
-        A ${progressRadius} ${progressRadius} 0 ${progressAngle > 180 ? 1 : 0} 1
-          ${centerX + progressRadius * Math.sin((progressAngle * Math.PI) / 180)}
-          ${centerY - progressRadius * Math.cos((progressAngle * Math.PI) / 180)}
-        Z
-      `;
-    } else {
-      return `
-        M ${centerX} ${centerY}
-        L ${centerX} ${centerY - progressRadius}
-        A ${progressRadius} ${progressRadius} 0 ${progressAngle > 180 ? 1 : 0} 0
-          ${centerX - progressRadius * Math.sin((progressAngle * Math.PI) / 180)}
-          ${centerY - progressRadius * Math.cos((progressAngle * Math.PI) / 180)}
-        Z
-      `;
-    }
-  };
-  
-  // Memoize progress arc calculation to avoid recalculation on every render
-  const progressPath = useMemo(() => createProgressArc(), [progress, progressAngle, clockwise, svgSize, radius, strokeWidth]);
+    if (progress >= 0.9999) return null; // Full circle
+
+    // Calculate actual progress based on duration and max angle
+    const actualProgress = (progressAngle / 360);
+    const progressRadius = radius - strokeWidth / 2;
+
+    return dial.getProgressPath(actualProgress, centerX, centerY, progressRadius);
+  }, [progress, progressAngle, dial, centerX, centerY, radius, strokeWidth]);
 
   // Animated color for completion
   const animatedColor = completionColorAnim.interpolate({
@@ -263,48 +195,9 @@ function TimerCircle({
   const AnimatedCircle = Animated.createAnimatedComponent(Circle);
   const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-  // Calculate minutes from angle
+  // Use centralized angle to minutes conversion
   const angleToMinutes = (locationX, locationY) => {
-    const centerX = svgSize / 2;
-    const centerY = svgSize / 2;
-
-    // Calculate angle from center
-    const dx = locationX - centerX;
-    const dy = locationY - centerY;
-    const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90; // +90 to start from top
-    const normalizedAngle = angle < 0 ? angle + 360 : angle;
-
-    // Convert angle to minutes based on scale mode with correct angular distribution
-    let minutes;
-
-    if (scaleMode === '60min') {
-      // 60min mode: 360° = 60 minutes, so 6° per minute
-      const degreesPerMinute = 6;
-
-      if (clockwise) {
-        minutes = Math.round(normalizedAngle / degreesPerMinute);
-      } else {
-        minutes = Math.round((360 - normalizedAngle) / degreesPerMinute);
-      }
-
-      // Allow 0 for reset state, but clamp at max
-      minutes = Math.max(0, Math.min(60, minutes));
-
-    } else {
-      // 25min mode: 360° = 25 minutes, so 14.4° per minute
-      const degreesPerMinute = 360 / 25; // 14.4
-
-      if (clockwise) {
-        minutes = Math.round(normalizedAngle / degreesPerMinute);
-      } else {
-        minutes = Math.round((360 - normalizedAngle) / degreesPerMinute);
-      }
-
-      // Allow 0 for reset state, but clamp at max
-      minutes = Math.max(0, Math.min(25, minutes));
-    }
-
-    return minutes;
+    return dial.coordinatesToMinutes(locationX, locationY, centerX, centerY);
   };
 
   // Track previous angle to prevent unwanted wrap-around
@@ -333,10 +226,10 @@ function TimerCircle({
         // If we're near max and try to go over, stay at max
         if (lastMinutesRef.current !== null) {
           const delta = newMinutes - lastMinutesRef.current;
-          const maxMinutes = scaleMode === '60min' ? 60 : 25;
+          const maxMinutes = dial.maxMinutes;
 
           // Detect wrap-around attempt (large jump in value)
-          if (Math.abs(delta) > maxMinutes / 2) {
+          if (Math.abs(delta) > maxMinutes * DIAL_INTERACTION.WRAP_THRESHOLD) {
             // Trying to wrap around - prevent it
             if (delta > 0) {
               // Trying to wrap from near 0 to max - keep at 0
