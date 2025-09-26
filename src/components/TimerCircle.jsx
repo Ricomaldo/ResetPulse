@@ -142,14 +142,6 @@ function TimerCircle({
     }
   }, [isCompleted]);
   
-  // Progress angle calculation
-  // In 60min mode: duration scales to portion of circle (20min = 120°)
-  // In 25min mode: always show full 25 minutes scale
-  const maxAngle = scaleMode === '60min'
-    ? Math.min(360, (duration / 3600) * 360) // duration in seconds: 1200s = 120°, 3600s = 360°
-    : Math.min(360, (duration / 1500) * 360); // 25min mode: scale to 25 minutes (1500s)
-  const progressAngle = maxAngle * progress;
-  
   // Get graduation marks from centralized logic
   const graduationMarks = useMemo(() => {
     const marks = dial.getGraduationMarks(radius, centerX, centerY);
@@ -159,7 +151,7 @@ function TimerCircle({
       opacity: mark.isMajor ? TIMER_VISUAL.TICK_OPACITY_MAJOR : TIMER_VISUAL.TICK_OPACITY_MINOR
     }));
   }, [dial, radius, centerX, centerY]);
-  
+
   // Get number positions from centralized logic
   const minuteNumbers = useMemo(() => {
     const numberRadius = radius + TIMER_PROPORTIONS.NUMBER_RADIUS;
@@ -173,18 +165,15 @@ function TimerCircle({
       fontSize: Math.max(TIMER_PROPORTIONS.MIN_NUMBER_FONT, circleSize * TIMER_PROPORTIONS.NUMBER_FONT_RATIO)
     }));
   }, [dial, radius, centerX, centerY, circleSize]);
-  
+
   // Get progress path from centralized logic
   const progressPath = useMemo(() => {
     if (progress <= 0) return '';
     if (progress >= 0.9999) return null; // Full circle
 
-    // Calculate actual progress based on duration and max angle
-    const actualProgress = (progressAngle / 360);
     const progressRadius = radius - strokeWidth / 2;
-
-    return dial.getProgressPath(actualProgress, centerX, centerY, progressRadius);
-  }, [progress, progressAngle, dial, centerX, centerY, radius, strokeWidth]);
+    return dial.getProgressPath(progress, centerX, centerY, progressRadius);
+  }, [progress, dial, centerX, centerY, radius, strokeWidth]);
 
   // Animated color for completion
   const animatedColor = completionColorAnim.interpolate({
@@ -284,7 +273,7 @@ function TimerCircle({
         
         {/* Progress arc - BEFORE graduations so they appear on top */}
         {progress > 0 && (
-          progressAngle >= 359.9 ? (
+          progress >= 0.9999 ? (
             <AnimatedCircle
               cx={svgSize / 2}
               cy={svgSize / 2}
@@ -292,13 +281,13 @@ function TimerCircle({
               fill={animatedColor}
               opacity={1}
             />
-          ) : (
+          ) : progressPath ? (
             <AnimatedPath
               d={progressPath}
               fill={animatedColor}
               opacity={1}
             />
-          )
+          ) : null
         )}
 
         {/* Graduation marks - AFTER progress so they appear on top */}
