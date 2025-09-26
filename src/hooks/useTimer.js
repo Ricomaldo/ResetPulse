@@ -93,14 +93,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
     };
   }, [running, startTime, updateTimer]);
 
-  // Reset remaining when duration changes (only if not running)
+  // Update remaining when duration changes (only if not running and not paused)
   useEffect(() => {
-    if (!running) {
+    if (!running && !isPaused) {
       setRemaining(duration);
-      setStartTime(null);
-      setIsPaused(false);
     }
-  }, [duration]);
+  }, [duration, running, isPaused]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -187,6 +185,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Progress calculation (1 = full at start, 0 = empty at end)
   const progress = duration > 0 ? remaining / duration : 0;
 
+  // Override setDuration to sync remaining
+  const setDurationSync = useCallback((newDuration) => {
+    setDuration(newDuration);
+    if (!running && !isPaused) {
+      setRemaining(newDuration);
+    }
+  }, [running, isPaused]);
+
   return {
     // State
     duration,
@@ -199,7 +205,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     // Controls
     toggleRunning,
     resetTimer,
-    setDuration,
+    setDuration: setDurationSync,
     setPresetDuration
   };
 }
