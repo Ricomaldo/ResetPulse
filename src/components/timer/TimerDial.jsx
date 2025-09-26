@@ -158,18 +158,29 @@ function TimerDial({
       />
 
       {/* Progress layer: animated arc */}
-      <DialProgress
-        svgSize={svgSize}
-        centerX={centerX}
-        centerY={centerY}
-        radius={radius}
-        strokeWidth={strokeWidth}
-        progress={progress}
-        color={color}
-        isClockwise={clockwise}
-        scaleMode={scaleMode}
-        animatedColor={animatedColor}
-      />
+      {/* IMPORTANT: Scale progress based on dial mode */}
+      {(() => {
+        // Calculate scaled progress based on dial maximum
+        const maxMinutes = scaleMode === '25min' ? 25 : 60;
+        const currentMinutes = duration / 60; // Convert seconds to minutes
+        const scaledProgress = Math.min(1, currentMinutes / maxMinutes) * progress;
+
+
+        return (
+          <DialProgress
+            svgSize={svgSize}
+            centerX={centerX}
+            centerY={centerY}
+            radius={radius}
+            strokeWidth={strokeWidth}
+            progress={scaledProgress}
+            color={color}
+            isClockwise={clockwise}
+            scaleMode={scaleMode}
+            animatedColor={animatedColor}
+          />
+        );
+      })()}
 
       {/* Center layer: emoji and pulse */}
       <DialCenter

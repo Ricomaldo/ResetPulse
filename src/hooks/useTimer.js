@@ -182,7 +182,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
     setDuration(newDuration);
   }, []);
 
-  // Progress calculation (1 = full at start, 0 = empty at end)
+  // Progress calculation (0 = empty at start, 1 = full when set)
+  // For display: we want to show how much time is SET, not how much is REMAINING
+  // When timer is running, progress decreases from 1 to 0
   const progress = duration > 0 ? remaining / duration : 0;
 
   // Override setDuration to sync remaining
