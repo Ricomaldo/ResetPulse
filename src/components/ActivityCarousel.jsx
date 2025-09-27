@@ -15,7 +15,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const { currentActivity, setCurrentActivity, setCurrentDuration, favoriteActivities = [] } = useTimerOptions();
   const { setColorByType, currentColor } = useTimerPalette();
   const scrollViewRef = useRef(null);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnims = useRef({}).current; // Store animation values for each activity
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Check premium status (test mode or actual premium)
@@ -58,15 +58,24 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     }
   }, []);
 
-  // Animate selection
-  const animateSelection = () => {
+  // Get or create animation value for an activity
+  const getScaleAnim = (activityId) => {
+    if (!scaleAnims[activityId]) {
+      scaleAnims[activityId] = new Animated.Value(1);
+    }
+    return scaleAnims[activityId];
+  };
+
+  // Animate selection for specific activity
+  const animateSelection = (activityId) => {
+    const anim = getScaleAnim(activityId);
     Animated.sequence([
-      Animated.timing(scaleAnim, {
+      Animated.timing(anim, {
         toValue: 1.2,
         duration: 150,
         useNativeDriver: true,
       }),
-      Animated.timing(scaleAnim, {
+      Animated.timing(anim, {
         toValue: 1,
         duration: 150,
         useNativeDriver: true,
@@ -108,7 +117,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
     // Don't change color - let user choose their own color
 
-    animateSelection();
+    animateSelection(activity.id);
     showActivityName();
   };
 
@@ -282,7 +291,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                 <Animated.View
                   style={[
                     styles.activityInner,
-                    isActive ? { transform: [{ scale: scaleAnim }] } : {}
+                    { transform: [{ scale: getScaleAnim(activity.id) }] }
                   ]}
                 >
                   {activity.id === 'none' ? (
@@ -292,14 +301,14 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                         cy="12"
                         r="10"
                         fill={theme.colors.text}
-                        opacity={0.3}
+                        opacity={0.8}
                       />
                       <Circle
                         cx="12"
                         cy="12"
                         r="5"
                         fill={theme.colors.text}
-                        opacity={0.5}
+                        opacity={0.4}
                       />
                     </Svg>
                   ) : (
