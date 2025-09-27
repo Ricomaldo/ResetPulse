@@ -1,72 +1,43 @@
 // src/hooks/useAudio.js
-import { useEffect, useRef, useCallback } from 'react';
-import { Audio } from 'expo-av';
+import { useEffect, useCallback } from 'react';
+import { useAudioPlayer } from 'expo-audio';
 
 export default function useAudio() {
-  const soundRef = useRef(null);
-  const isLoadedRef = useRef(false);
+  // Utilisation du nouveau hook expo-audio
+  const player = useAudioPlayer(require('../../assets/sounds/407342__forthehorde68__fx_bell_short.wav'));
 
-  // Préchargement du son au mount
+  // Configuration audio au mount
   useEffect(() => {
-    let mounted = true;
-
-    const loadSound = async () => {
+    const configureAudio = async () => {
       try {
-        // Configuration audio pour iOS/Android
-        await Audio.setAudioModeAsync({
-          playsInSilentModeIOS: false, // Respecte le mode silencieux
-          staysActiveInBackground: false,
-          shouldDuckAndroid: true, // Baisse le volume des autres apps
-        });
-
-        // Chargement du son système
-        const { sound } = await Audio.Sound.createAsync(
-          require('../../assets/sounds/407342__forthehorde68__fx_bell_short.wav'),
-          { shouldPlay: false }
-        );
-
-        if (mounted) {
-          soundRef.current = sound;
-          isLoadedRef.current = true;
+        // La configuration audio n'est plus nécessaire avec expo-audio
+        // Il respecte automatiquement les paramètres système
+        if (__DEV__) {
+          console.log('Audio system initialized with expo-audio');
         }
       } catch (error) {
-        // Erreur silencieuse - pas de crash si le son ne charge pas
         if (__DEV__) {
-          console.log('Audio loading failed (silent fallback):', error.message);
+          console.log('Audio config error (silent fallback):', error.message);
         }
       }
     };
 
-    loadSound();
-
-    // Cleanup
-    return () => {
-      mounted = false;
-      if (soundRef.current) {
-        soundRef.current.unloadAsync().catch(() => {});
-        soundRef.current = null;
-        isLoadedRef.current = false;
-      }
-    };
+    configureAudio();
   }, []);
 
   // Fonction pour jouer le son
   const playSound = useCallback(async () => {
-    if (!isLoadedRef.current || !soundRef.current) {
-      return; // Fallback silencieux si pas de son chargé
-    }
-
     try {
-      // Reset position et jouer
-      await soundRef.current.setPositionAsync(0);
-      await soundRef.current.playAsync();
+      // Reset position au début et jouer
+      await player.seekTo(0);
+      await player.play();
     } catch (error) {
       // Erreur silencieuse - pas de popup/crash
       if (__DEV__) {
         console.log('Audio playback failed (silent fallback):', error.message);
       }
     }
-  }, []);
+  }, [player]);
 
   return { playSound };
 }
