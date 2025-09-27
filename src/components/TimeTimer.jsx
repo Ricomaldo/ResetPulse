@@ -16,7 +16,6 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const theme = useTheme();
   const { shouldPulse, clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
   const { currentColor } = useTimerPalette();
-  const lastTap = React.useRef(null);
 
   // Initialize timer with current duration or 5 minutes default
   const timer = useTimer(currentDuration || 5 * 60);
@@ -113,6 +112,9 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const handleGraduationTap = (minutes) => {
     if (timer.running) return;
 
+    // Round to nearest minute for perfect alignment with graduations
+    minutes = Math.round(minutes);
+
     // Magnetic snap to 0 if very close (within 2 minutes)
     if (minutes <= 2) {
       minutes = 0;
@@ -139,32 +141,11 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
     timer.setDuration(newDuration);
   };
 
-  // Handle double tap for play/pause
-  const handleDoubleTap = () => {
-    const now = Date.now();
-    const DOUBLE_TAP_DELAY = 300;
-
-    if (lastTap.current && (now - lastTap.current) < DOUBLE_TAP_DELAY) {
-      // Double tap detected
-      timer.toggleRunning();
-      haptics.impact('light').catch(() => {});
-      lastTap.current = null;
-    } else {
-      lastTap.current = now;
-    }
-  };
 
   return (
     <View style={styles.container}>
       {/* Timer Circle */}
-      <TouchableOpacity
-        accessible={true}
-        accessibilityLabel={`Timer: ${Math.floor(timer.remaining / 60)} minutes ${timer.remaining % 60} secondes`}
-        accessibilityHint="Double-tap pour démarrer ou arrêter le timer"
-        accessibilityRole="button"
-        activeOpacity={1}
-        onPress={handleDoubleTap}
-        style={styles.timerWrapper}>
+      <View style={styles.timerWrapper}>
         <TimerDial
           progress={timer.progress}
           duration={timer.duration}
@@ -194,7 +175,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
             </Text>
           </View>
         )}
-      </TouchableOpacity>
+      </View>
 
       {/* Centered Control Buttons */}
       <View style={styles.controlsContainer}>

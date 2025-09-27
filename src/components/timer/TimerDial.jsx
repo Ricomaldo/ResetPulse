@@ -8,6 +8,13 @@ import { TIMER_SVG, TIMER_PROPORTIONS, TIMER_VISUAL } from '../../constants/desi
 import { DIAL_INTERACTION } from '../../constants/dialModes';
 import { COLORS } from '../../constants/design';
 
+// Drag resistance settings
+const BASE_RESISTANCE = 0.85; // Base resistance (85% of movement)
+const VELOCITY_THRESHOLD = 50; // Speed threshold for dynamic resistance
+
+// Ease-out function for smooth deceleration (quadratic)
+const easeOut = (t) => t * (2 - t);
+
 // Import modular components
 import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
@@ -48,6 +55,12 @@ function TimerDial({
 
   // Track previous minutes for wrap-around prevention
   const lastMinutesRef = useRef(null);
+  // Track the offset between touch position and actual timer value
+  const dragOffsetRef = useRef(0);
+  // Track the last touch position to detect wrap-around
+  const lastTouchMinutesRef = useRef(null);
+  // Track timestamp for velocity calculation
+  const lastMoveTimeRef = useRef(null);
 
   // Get graduation marks and numbers from centralized logic
   const graduationMarks = useMemo(() => {
@@ -74,60 +87,107 @@ function TimerDial({
   // Pan responder for drag interaction
   const panResponder = useMemo(() =>
     PanResponder.create({
-      onStartShouldSetPanResponder: () => !isRunning && !!onGraduationTap,
-      onMoveShouldSetPanResponder: () => !isRunning && !!onGraduationTap,
+      onStartShouldSetPanResponder: () => false, // Don't capture on tap
+      onMoveShouldSetPanResponder: () => !isRunning && !!onGraduationTap, // Only capture on move
 
       onPanResponderGrant: (evt) => {
         if (isRunning) return;
         setIsDragging(true);
-        const minutes = dial.coordinatesToMinutes(
+
+        // Calculate where the user touched
+        const touchMinutes = dial.coordinatesToMinutes(
           evt.nativeEvent.locationX,
           evt.nativeEvent.locationY,
           centerX,
           centerY
         );
-        lastMinutesRef.current = minutes;
-        onGraduationTap(minutes);
+
+        // Calculate current timer value in minutes
+        const currentMinutes = duration / 60;
+
+        // Store the offset between touch position and current value
+        dragOffsetRef.current = currentMinutes - touchMinutes;
+
+        // Store references for wrap-around detection
+        lastMinutesRef.current = currentMinutes;
+        lastTouchMinutesRef.current = touchMinutes;
+        lastMoveTimeRef.current = Date.now();
       },
 
       onPanResponderMove: (evt) => {
         if (isRunning) return;
-        const newMinutes = dial.coordinatesToMinutes(
+
+        // Calculate where the user is touching now
+        const touchMinutes = dial.coordinatesToMinutes(
           evt.nativeEvent.locationX,
           evt.nativeEvent.locationY,
           centerX,
           centerY
         );
 
-        // Prevent wrap-around
-        if (lastMinutesRef.current !== null) {
-          const delta = newMinutes - lastMinutesRef.current;
-          const maxMinutes = dial.maxMinutes;
+        const maxMinutes = dial.maxMinutes;
 
-          if (Math.abs(delta) > maxMinutes * DIAL_INTERACTION.WRAP_THRESHOLD) {
-            if (delta > 0) {
-              onGraduationTap(0);
-              lastMinutesRef.current = 0;
+        // Check if touch position wrapped around
+        let touchDelta = 0;
+        if (lastTouchMinutesRef.current !== null) {
+          touchDelta = touchMinutes - lastTouchMinutesRef.current;
+
+          // If touch jumped more than half the dial, it wrapped
+          if (Math.abs(touchDelta) > maxMinutes / 2) {
+            // Adjust the delta to represent the actual movement
+            if (touchDelta > 0) {
+              // Wrapped counter-clockwise (60→0)
+              touchDelta = touchDelta - maxMinutes;
             } else {
-              onGraduationTap(maxMinutes);
-              lastMinutesRef.current = maxMinutes;
+              // Wrapped clockwise (0→60)
+              touchDelta = touchDelta + maxMinutes;
             }
-          } else {
-            onGraduationTap(newMinutes);
-            lastMinutesRef.current = newMinutes;
           }
-        } else {
-          onGraduationTap(newMinutes);
-          lastMinutesRef.current = newMinutes;
         }
+
+        // Calculate velocity for dynamic resistance
+        const now = Date.now();
+        const deltaTime = Math.max(1, now - (lastMoveTimeRef.current || now));
+        const velocity = Math.abs(touchDelta) / (deltaTime / 1000); // minutes per second
+
+        // Apply dynamic resistance based on velocity
+        // Faster movements get more resistance for smoother control
+        const velocityFactor = Math.min(1, velocity / VELOCITY_THRESHOLD);
+        const dynamicResistance = BASE_RESISTANCE - (velocityFactor * 0.3); // Reduce resistance up to 30% at high speed
+
+        // Apply ease-out curve for natural deceleration
+        const easedResistance = BASE_RESISTANCE * easeOut(dynamicResistance / BASE_RESISTANCE);
+        const resistedDelta = touchDelta * easedResistance;
+
+        // Update time reference
+        lastMoveTimeRef.current = now;
+
+        // Calculate new value based on last value plus resisted delta
+        let newMinutes = lastMinutesRef.current + resistedDelta;
+
+        // Critical: Clamp to valid range to prevent any jumps
+        newMinutes = Math.max(0, Math.min(maxMinutes, newMinutes));
+
+        // Update the timer
+        onGraduationTap(newMinutes);
+
+        // Update references
+        lastMinutesRef.current = newMinutes;
+        lastTouchMinutesRef.current = touchMinutes;
+
+        // Adjust offset to maintain the drag relationship
+        dragOffsetRef.current = newMinutes - touchMinutes;
       },
 
       onPanResponderRelease: () => {
         setIsDragging(false);
         lastMinutesRef.current = null;
+        lastTouchMinutesRef.current = null;
+        lastMoveTimeRef.current = null;
+        dragOffsetRef.current = 0;
       },
     }),
-    [dial, isRunning, onGraduationTap, centerX, centerY]
+    [dial, isRunning, onGraduationTap, centerX, centerY, isDragging, duration]
   );
 
   // Animated color for completion
