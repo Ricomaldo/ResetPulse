@@ -1,6 +1,7 @@
 // src/hooks/useTimer.js
 import { useState, useEffect, useRef, useCallback } from 'react';
 import haptics from '../utils/haptics';
+import { TIMER } from '../constants/uiConstants';
 
 export default function useTimer(initialDuration = 240, onComplete) {
   // Core timer states
@@ -57,7 +58,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
             setHasCompleted(false);
             hasTriggeredCompletion.current = false;
           }
-        }, 2000);
+        }, TIMER.MESSAGE_DISPLAY_DURATION);
       }
       console.log('⏰ Timer terminé!');
     }
@@ -93,15 +94,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
     };
   }, [running, startTime, updateTimer]);
 
-  // Reset when duration changes
+  // Update remaining when duration changes (only if not running and not paused)
   useEffect(() => {
-    setRemaining(duration);
-    setRunning(false);
-    setStartTime(null);
-    setIsPaused(false);
-    setShowParti(false);
-    setShowReparti(false);
-  }, [duration]);
+    if (!running && !isPaused) {
+      setRemaining(duration);
+    }
+  }, [duration, running, isPaused]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -115,8 +113,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Display message logic
   const displayTime = () => {
-    if (remaining === 0 && duration > 0) {
-      return "C'est fini";
+    if (remaining === 0) {
+      if (hasTriggeredCompletion.current && duration > 0) {
+        return "C'est fini";
+      }
+      // If at zero without having completed, show ready state
+      return "";
     }
     if (!running && isPaused) {
       return "Pause";
@@ -133,13 +135,15 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Controls
   const toggleRunning = useCallback(() => {
     if (remaining === 0) {
-      // Restart after completion - reset everything first
-      setRemaining(duration);
+      // Start from zero - use last duration or default
+      const durationToUse = duration > 0 ? duration : TIMER.DEFAULT_DURATION; // Default if no duration set
+      setRemaining(durationToUse);
+      setDuration(durationToUse); // Update duration for future use
       setStartTime(null);
       setIsPaused(false);
       setShowParti(true);
       setShowReparti(false);
-      setTimeout(() => setShowParti(false), 2000);
+      setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
       setRunning(true);
     } else if (!running) {
       // Start or resume
@@ -147,12 +151,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
         // Resume after pause
         setShowReparti(true);
         setShowParti(false);
-        setTimeout(() => setShowReparti(false), 2000);
+        setTimeout(() => setShowReparti(false), TIMER.MESSAGE_DISPLAY_DURATION);
       } else {
         // First start
         setShowParti(true);
         setShowReparti(false);
-        setTimeout(() => setShowParti(false), 2000);
+        setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
       }
       setIsPaused(false);
       setRunning(true);
@@ -166,21 +170,32 @@ export default function useTimer(initialDuration = 240, onComplete) {
   }, [remaining, duration, isPaused, running]);
 
   const resetTimer = useCallback(() => {
-    setRemaining(duration);
+    setRemaining(0); // Reset to ZERO, not duration
     setRunning(false);
     setStartTime(null);
     setIsPaused(false);
     setShowParti(false);
     setShowReparti(false);
-  }, [duration]);
+  }, []);
 
   const setPresetDuration = useCallback((minutes) => {
     const newDuration = minutes * 60;
     setDuration(newDuration);
   }, []);
 
-  // Progress calculation (1 = full at start, 0 = empty at end)
+  // Progress calculation (0 = empty at start, 1 = full when set)
+  // For display: we want to show how much time is SET, not how much is REMAINING
+  // When timer is running, progress decreases from 1 to 0
   const progress = duration > 0 ? remaining / duration : 0;
+
+  // Override setDuration to sync remaining
+  const setDurationSync = useCallback((newDuration) => {
+    setDuration(newDuration);
+    if (!running) {
+      // Allow updating remaining when paused or stopped
+      setRemaining(newDuration);
+    }
+  }, [running]);
 
   return {
     // State
@@ -194,7 +209,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     // Controls
     toggleRunning,
     resetTimer,
-    setDuration,
+    setDuration: setDurationSync,
     setPresetDuration
   };
 }

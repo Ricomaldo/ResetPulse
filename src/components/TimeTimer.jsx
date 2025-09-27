@@ -5,20 +5,19 @@ import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
-import { getGoldenDimensions } from '../styles/layout';
 import useTimer from '../hooks/useTimer';
-import TimerCircle from './TimerCircle';
+import TimerDial from './timer/TimerDial';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
+import { TIMER, BUTTON, TEXT, TOUCH } from '../constants/uiConstants';
 
 export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const theme = useTheme();
   const { shouldPulse, clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
   const { currentColor } = useTimerPalette();
-  const lastTap = React.useRef(null);
 
-  // Initialize timer with current duration or 5 minutes default
-  const timer = useTimer(currentDuration || 5 * 60);
+  // Initialize timer with current duration or default
+  const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
 
   // Pass timer ref to parent if needed
   useEffect(() => {
@@ -44,10 +43,6 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
   // Get responsive dimensions avec proportions dorées
   const { timerCircle } = getComponentSizes();
   const circleSize = Math.min(timerCircle, rs(320, 'min')); // Grand mais avec limite max
-  const { width: buttonWidth, height: buttonHeight } = getGoldenDimensions(
-    rs(50, 'min'),
-    'rectangle'
-  );
   
   const styles = StyleSheet.create({
     container: {
@@ -83,7 +78,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
       fontWeight: '700',
       color: theme.colors.brand.primary,
       textAlign: 'center',
-      letterSpacing: 0.5,
+      letterSpacing: TEXT.LETTER_SPACING,
     },
     
     controlsContainer: {
@@ -112,56 +107,47 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const handleGraduationTap = (minutes) => {
     if (timer.running) return;
 
-    haptics.selection().catch(() => {});
+    // Round to nearest minute for perfect alignment with graduations
+    minutes = Math.round(minutes);
 
-    // Convert minutes to seconds and apply limits based on mode
+    // Magnetic snap to 0 if very close
+    if (minutes <= TIMER.GRADUATION_SNAP_THRESHOLD) {
+      minutes = 0;
+      haptics.impact('light').catch(() => {}); // Light feedback for snap
+    } else {
+      haptics.selection().catch(() => {});
+    }
+
+    // Convert minutes to seconds and handle 0 specially
     let newDuration;
-    if (scaleMode === '25min') {
-      // Mode 25min: strict limit to 25 minutes max
-      const clampedMinutes = Math.max(1, Math.min(25, minutes));
+    if (minutes === 0) {
+      // Setting to 0 means reset state
+      newDuration = 0;
+    } else if (scaleMode === '25min') {
+      // Mode 25min: limit to Pomodoro duration
+      const clampedMinutes = Math.min(TIMER.MODES.POMODORO, minutes);
       newDuration = clampedMinutes * 60;
     } else {
-      // Mode 60min: allow up to 60 minutes
-      const clampedMinutes = Math.max(1, Math.min(60, minutes));
+      // Mode 60min: allow up to standard duration
+      const clampedMinutes = Math.min(TIMER.MODES.STANDARD, minutes);
       newDuration = clampedMinutes * 60;
     }
 
     timer.setDuration(newDuration);
   };
 
-  // Handle double tap for play/pause
-  const handleDoubleTap = () => {
-    const now = Date.now();
-    const DOUBLE_TAP_DELAY = 300;
-
-    if (lastTap.current && (now - lastTap.current) < DOUBLE_TAP_DELAY) {
-      // Double tap detected
-      timer.toggleRunning();
-      haptics.impact('light').catch(() => {});
-      lastTap.current = null;
-    } else {
-      lastTap.current = now;
-    }
-  };
 
   return (
     <View style={styles.container}>
       {/* Timer Circle */}
-      <TouchableOpacity
-        accessible={true}
-        accessibilityLabel={`Timer: ${Math.floor(timer.remaining / 60)} minutes ${timer.remaining % 60} secondes`}
-        accessibilityHint="Double-tap pour démarrer ou arrêter le timer"
-        accessibilityRole="button"
-        activeOpacity={1}
-        onPress={handleDoubleTap}
-        style={styles.timerWrapper}>
-        <TimerCircle
+      <View style={styles.timerWrapper}>
+        <TimerDial
           progress={timer.progress}
+          duration={timer.duration}
           color={currentColor}
           size={circleSize}
           clockwise={clockwise}
           scaleMode={scaleMode}
-          duration={timer.duration}
           activityEmoji={currentActivity?.id === "none" ? null : currentActivity?.emoji}
           isRunning={timer.running}
           shouldPulse={shouldPulse}
@@ -184,23 +170,23 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
             </Text>
           </View>
         )}
-      </TouchableOpacity>
+      </View>
 
       {/* Centered Control Buttons */}
       <View style={styles.controlsContainer}>
         {/* Main Control Buttons */}
           <TouchableOpacity
-            style={[styles.controlButton, { opacity: timer.running ? 1 : 0.9 }]}
+            style={[styles.controlButton, { opacity: timer.running ? BUTTON.RUNNING_OPACITY : BUTTON.IDLE_OPACITY }]}
             onPress={timer.toggleRunning}
-            activeOpacity={0.7}
+            activeOpacity={TOUCH.ACTIVE_OPACITY}
           >
             {timer.running ? <PauseIcon size={24} color="white" /> : <PlayIcon size={24} color="white" />}
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.controlButton, { backgroundColor: theme.colors.neutral, transform: [{ scale: 0.9 }] }]}
+            style={[styles.controlButton, { backgroundColor: theme.colors.neutral, transform: [{ scale: BUTTON.RESET_SCALE }] }]}
             onPress={timer.resetTimer}
-            activeOpacity={0.7}
+            activeOpacity={TOUCH.ACTIVE_OPACITY}
           >
             <ResetIcon size={22} color="white" />
           </TouchableOpacity>
