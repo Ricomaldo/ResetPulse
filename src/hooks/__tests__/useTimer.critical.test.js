@@ -10,6 +10,14 @@ jest.mock('../../utils/haptics', () => ({
   }
 }));
 
+// Mock audio
+jest.mock('../useAudio', () => ({
+  __esModule: true,
+  default: () => ({
+    playSound: jest.fn(() => Promise.resolve())
+  })
+}));
+
 /**
  * CRITICAL PATH TESTS
  * Tests essentiels sans mocks temporels

@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import haptics from '../utils/haptics';
 import { TIMER } from '../constants/uiConstants';
+import useAudio from './useAudio';
 
 export default function useTimer(initialDuration = 240, onComplete) {
   // Core timer states
@@ -15,6 +16,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const [showParti, setShowParti] = useState(false);
   const [showReparti, setShowReparti] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
+
+  // Audio
+  const { playSound } = useAudio();
 
   // Refs
   const intervalRef = useRef(null);
@@ -46,6 +50,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
         // Haptic feedback
         haptics.notification('success').catch(() => {});
+
+        // Audio feedback
+        playSound();
 
         // Call completion callback if provided
         if (onComplete) {

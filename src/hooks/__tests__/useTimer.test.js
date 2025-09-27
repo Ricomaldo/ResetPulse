@@ -10,6 +10,14 @@ jest.mock('../../utils/haptics', () => ({
   }
 }));
 
+// Mock audio to avoid hardware dependencies
+jest.mock('../useAudio', () => ({
+  __esModule: true,
+  default: () => ({
+    playSound: jest.fn(() => Promise.resolve())
+  })
+}));
+
 describe('useTimer - State Logic Tests', () => {
   describe('Initial state', () => {
     it('should initialize with default duration', () => {
