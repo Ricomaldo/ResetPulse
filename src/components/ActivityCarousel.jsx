@@ -14,7 +14,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const { currentActivity, setCurrentActivity, setCurrentDuration, favoriteActivities = [] } = useTimerOptions();
   const { setColorByType, currentColor } = useTimerPalette();
   const scrollViewRef = useRef(null);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnims = useRef({}).current; // Store animation values for each activity
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Check premium status (test mode or actual premium)
@@ -57,15 +57,24 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     }
   }, []);
 
-  // Animate selection
-  const animateSelection = () => {
+  // Get or create animation value for an activity
+  const getScaleAnim = (activityId) => {
+    if (!scaleAnims[activityId]) {
+      scaleAnims[activityId] = new Animated.Value(1);
+    }
+    return scaleAnims[activityId];
+  };
+
+  // Animate selection for specific activity
+  const animateSelection = (activityId) => {
+    const anim = getScaleAnim(activityId);
     Animated.sequence([
-      Animated.timing(scaleAnim, {
+      Animated.timing(anim, {
         toValue: 1.2,
         duration: 150,
         useNativeDriver: true,
       }),
-      Animated.timing(scaleAnim, {
+      Animated.timing(anim, {
         toValue: 1,
         duration: 150,
         useNativeDriver: true,
@@ -107,7 +116,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
     // Don't change color - let user choose their own color
 
-    animateSelection();
+    animateSelection(activity.id);
     showActivityName();
   };
 
@@ -150,9 +159,9 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     },
 
     activityButtonActive: {
-      backgroundColor: theme.colors.brand.primary,
+      backgroundColor: currentColor || theme.colors.brand.primary,
       borderWidth: 2,
-      borderColor: theme.colors.brand.secondary,
+      borderColor: currentColor || theme.colors.brand.secondary,
       ...(Platform.OS === 'ios' ? theme.shadow('md') : {}),
     },
 
@@ -281,15 +290,34 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                 <Animated.View
                   style={[
                     styles.activityInner,
-                    isActive ? { transform: [{ scale: scaleAnim }] } : {}
+                    { transform: [{ scale: getScaleAnim(activity.id) }] }
                   ]}
                 >
                   {activity.id === 'none' ? (
-                    <Image
-                      source={require('../../assets/icons/timer.png')}
-                      style={styles.activityIcon}
-                      resizeMode="contain"
-                    />
+                    <View style={{ position: 'relative', width: rs(34, 'min'), height: rs(34, 'min'), alignItems: 'center', justifyContent: 'center' }}>
+                      {/* Outer circle - using same proportions as timer (0.35 of container) */}
+                      <View
+                        style={{
+                          position: 'absolute',
+                          width: rs(34, 'min') * 0.35,
+                          height: rs(34, 'min') * 0.35,
+                          borderRadius: (rs(34, 'min') * 0.35) / 2,
+                          backgroundColor: '#999999',
+                          opacity: 0.8,
+                        }}
+                      />
+                      {/* Inner circle - using same proportions as timer (0.2 of container) */}
+                      <View
+                        style={{
+                          position: 'absolute',
+                          width: rs(34, 'min') * 0.2,
+                          height: rs(34, 'min') * 0.2,
+                          borderRadius: (rs(34, 'min') * 0.2) / 2,
+                          backgroundColor: '#999999',
+                          opacity: 1,
+                        }}
+                      />
+                    </View>
                   ) : (
                     <Text style={styles.activityEmoji}>
                       {activity.emoji}

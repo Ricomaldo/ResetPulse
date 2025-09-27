@@ -87,7 +87,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       position: 'relative',
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100%',
+      // Remove fixed height to let content define height
     },
 
     scrollView: {
