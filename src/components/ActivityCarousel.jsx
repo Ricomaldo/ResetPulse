@@ -150,9 +150,9 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     },
 
     activityButtonActive: {
-      backgroundColor: theme.colors.brand.primary,
+      backgroundColor: currentColor || theme.colors.brand.primary,
       borderWidth: 2,
-      borderColor: theme.colors.brand.secondary,
+      borderColor: currentColor || theme.colors.brand.secondary,
       ...(Platform.OS === 'ios' ? theme.shadow('md') : {}),
     },
 

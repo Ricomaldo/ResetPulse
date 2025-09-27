@@ -81,7 +81,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
     messageText: {
       fontSize: rs(18, 'min'),
       fontWeight: '700',
-      color: theme.colors.brand.primary,
+      color: currentColor || theme.colors.brand.primary,
       textAlign: 'center',
       letterSpacing: 0.5,
     },
@@ -97,7 +97,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
     },
 
     controlButton: {
-      backgroundColor: theme.colors.brand.primary,
+      backgroundColor: currentColor || theme.colors.brand.primary,
       width: rs(60, 'min'),
       height: rs(60, 'min'),
       borderRadius: rs(30, 'min'),
