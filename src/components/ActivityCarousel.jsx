@@ -1,7 +1,6 @@
 // src/components/ActivityCarousel.jsx
 import React, { useRef, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform, Image } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
@@ -295,22 +294,30 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                   ]}
                 >
                   {activity.id === 'none' ? (
-                    <Svg width={rs(24, 'min')} height={rs(24, 'min')} viewBox="0 0 24 24">
-                      <Circle
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        fill={theme.colors.text}
-                        opacity={0.8}
+                    <View style={{ position: 'relative', width: rs(34, 'min'), height: rs(34, 'min'), alignItems: 'center', justifyContent: 'center' }}>
+                      {/* Outer circle - using same proportions as timer (0.35 of container) */}
+                      <View
+                        style={{
+                          position: 'absolute',
+                          width: rs(34, 'min') * 0.35,
+                          height: rs(34, 'min') * 0.35,
+                          borderRadius: (rs(34, 'min') * 0.35) / 2,
+                          backgroundColor: '#999999',
+                          opacity: 0.8,
+                        }}
                       />
-                      <Circle
-                        cx="12"
-                        cy="12"
-                        r="5"
-                        fill={theme.colors.text}
-                        opacity={0.4}
+                      {/* Inner circle - using same proportions as timer (0.2 of container) */}
+                      <View
+                        style={{
+                          position: 'absolute',
+                          width: rs(34, 'min') * 0.2,
+                          height: rs(34, 'min') * 0.2,
+                          borderRadius: (rs(34, 'min') * 0.2) / 2,
+                          backgroundColor: '#999999',
+                          opacity: 1,
+                        }}
                       />
-                    </Svg>
+                    </View>
                   ) : (
                     <Text style={styles.activityEmoji}>
                       {activity.emoji}
