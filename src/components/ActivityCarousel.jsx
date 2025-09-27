@@ -1,6 +1,7 @@
 // src/components/ActivityCarousel.jsx
 import React, { useRef, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform, Image } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
@@ -285,11 +286,22 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                   ]}
                 >
                   {activity.id === 'none' ? (
-                    <Image
-                      source={require('../../assets/icons/timer.png')}
-                      style={styles.activityIcon}
-                      resizeMode="contain"
-                    />
+                    <Svg width={rs(24, 'min')} height={rs(24, 'min')} viewBox="0 0 24 24">
+                      <Circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        fill={theme.colors.text}
+                        opacity={0.3}
+                      />
+                      <Circle
+                        cx="12"
+                        cy="12"
+                        r="5"
+                        fill={theme.colors.text}
+                        opacity={0.5}
+                      />
+                    </Svg>
                   ) : (
                     <Text style={styles.activityEmoji}>
                       {activity.emoji}
