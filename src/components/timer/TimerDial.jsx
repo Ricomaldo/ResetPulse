@@ -7,10 +7,7 @@ import { rs } from '../../styles/responsive';
 import { TIMER_SVG, TIMER_PROPORTIONS, TIMER_VISUAL } from '../../constants/design';
 import { DIAL_INTERACTION } from '../../constants/dialModes';
 import { COLORS } from '../../constants/design';
-
-// Drag resistance settings
-const BASE_RESISTANCE = 0.85; // Base resistance (85% of movement)
-const VELOCITY_THRESHOLD = 50; // Speed threshold for dynamic resistance
+import { DRAG, VISUAL } from '../../constants/uiConstants';
 
 // Ease-out function for smooth deceleration (quadratic)
 const easeOut = (t) => t * (2 - t);
@@ -152,11 +149,11 @@ function TimerDial({
 
         // Apply dynamic resistance based on velocity
         // Faster movements get more resistance for smoother control
-        const velocityFactor = Math.min(1, velocity / VELOCITY_THRESHOLD);
-        const dynamicResistance = BASE_RESISTANCE - (velocityFactor * 0.3); // Reduce resistance up to 30% at high speed
+        const velocityFactor = Math.min(1, velocity / DRAG.VELOCITY_THRESHOLD);
+        const dynamicResistance = DRAG.BASE_RESISTANCE - (velocityFactor * DRAG.VELOCITY_REDUCTION);
 
         // Apply ease-out curve for natural deceleration
-        const easedResistance = BASE_RESISTANCE * easeOut(dynamicResistance / BASE_RESISTANCE);
+        const easedResistance = DRAG.BASE_RESISTANCE * easeOut(dynamicResistance / DRAG.BASE_RESISTANCE);
         const resistedDelta = touchDelta * easedResistance;
 
         // Update time reference

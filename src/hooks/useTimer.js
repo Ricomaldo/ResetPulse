@@ -1,6 +1,7 @@
 // src/hooks/useTimer.js
 import { useState, useEffect, useRef, useCallback } from 'react';
 import haptics from '../utils/haptics';
+import { TIMER } from '../constants/uiConstants';
 
 export default function useTimer(initialDuration = 240, onComplete) {
   // Core timer states
@@ -57,7 +58,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
             setHasCompleted(false);
             hasTriggeredCompletion.current = false;
           }
-        }, 2000);
+        }, TIMER.MESSAGE_DISPLAY_DURATION);
       }
       console.log('⏰ Timer terminé!');
     }
@@ -135,14 +136,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const toggleRunning = useCallback(() => {
     if (remaining === 0) {
       // Start from zero - use last duration or default
-      const durationToUse = duration > 0 ? duration : 5 * 60; // Default 5 min if no duration set
+      const durationToUse = duration > 0 ? duration : TIMER.DEFAULT_DURATION; // Default if no duration set
       setRemaining(durationToUse);
       setDuration(durationToUse); // Update duration for future use
       setStartTime(null);
       setIsPaused(false);
       setShowParti(true);
       setShowReparti(false);
-      setTimeout(() => setShowParti(false), 2000);
+      setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
       setRunning(true);
     } else if (!running) {
       // Start or resume
@@ -150,12 +151,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
         // Resume after pause
         setShowReparti(true);
         setShowParti(false);
-        setTimeout(() => setShowReparti(false), 2000);
+        setTimeout(() => setShowReparti(false), TIMER.MESSAGE_DISPLAY_DURATION);
       } else {
         // First start
         setShowParti(true);
         setShowReparti(false);
-        setTimeout(() => setShowParti(false), 2000);
+        setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
       }
       setIsPaused(false);
       setRunning(true);
