@@ -5,6 +5,62 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - In Development
+
+### Foundation Technique
+#### Phase 1: Test Infrastructure ✅
+- **Test Foundation**: Comprehensive testing for critical paths
+  - Jest configuration with dynamic transform patterns
+  - 64 automated tests covering hooks functionality (89% pass rate)
+  - Test utilities for deterministic time-based testing without mocks
+  - Automatic ES module detection script (`scripts/detect-transform-needs.js`)
+- **Testing Metrics**:
+  - useDialOrientation: 100% pass rate (27/27 tests)
+  - useTimer: 81% pass rate (30/37 tests)
+  - Critical Path coverage established
+- **Development Tooling**:
+  - Granular npm scripts: `test:critical`, `test:hooks`, `test:timer`, `test:dial`
+  - Testing patterns documentation for reusability
+
+#### Phase 2: Error Management ✅
+- **Error Boundary**: Single boundary at app root for crash recovery
+- **Logger Utility**: Minimal logging (console in dev, AsyncStorage for critical errors in prod)
+- **Crash Recovery**: Simple restart mechanism with expo-updates
+- **Implementation**: < 200 lines of code, no over-engineering
+
+### Added
+- **Timer Refactoring**: Complete modularization of timer dial into separate components
+  - DialBase: Static SVG elements (graduations, numbers)
+  - DialProgress: Animated arc display
+  - DialCenter: Activity emoji and pulse animations
+- **Drag Interaction**: Support for adjusting timer when paused
+- **UI Constants**: Extracted all magic numbers into organized constant files
+- **Clickable Graduations**: Started implementation for tap-to-set time values (rolled back due to UX issues)
+
+### Changed
+- **Timer Architecture**: Replaced monolithic TimerCircle with modular TimerDial system
+- **Code Organization**: Better separation of concerns with specialized hooks
+  - useDialOrientation: Centralized angle/minute conversion logic
+  - useTimer: Enhanced with pause state management
+- **UI Improvements**:
+  - Applied currentColor from palette to activity buttons and play button
+  - Basic activity icon now uses proportional gray circles instead of image
+  - Individual animation states for each activity in carousel
+
+### Fixed
+- **Critical Bug**: NaN opacity error in animations (using Animated.multiply instead of direct multiplication)
+- **Timer Drag**: Now works correctly when timer is paused
+- **Arc Alignment**: Perfect alignment between arc progress and graduation marks
+- **Carousel Animation**: Each activity now has its own animation state
+- **Responsive Layout**: Removed fixed height from color carousel for better responsiveness
+- **Version Sync**: Aligned app.json version with Android build.gradle
+
+### Technical Debt Addressed
+- Removed code duplication in dial rendering
+- Extracted constants for better maintainability
+- Improved drag physics with resistance and easing
+- Fixed wrap-around prevention at midnight (0↔60 transitions)
+
 ## [1.0.3] - 2025-09-26
 
 ### Fixed - 2025-09-26 (Critical Android Build Fix)

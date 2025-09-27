@@ -4,6 +4,7 @@ import { StyleSheet, StatusBar, Animated } from 'react-native';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
 import TimerScreen from './src/screens/TimerScreen';
+import ErrorBoundary from './src/components/ErrorBoundary';
 
 function AppContent() {
   const theme = useTheme();
@@ -37,8 +38,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }

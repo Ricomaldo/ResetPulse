@@ -60,7 +60,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
           }
         }, TIMER.MESSAGE_DISPLAY_DURATION);
       }
-      console.log('⏰ Timer terminé!');
+      // Log timer completion
+      if (__DEV__) {
+        console.log('⏰ Timer terminé!');
+      }
     }
   }, [startTime, duration, running]);
 
