@@ -191,10 +191,11 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Override setDuration to sync remaining
   const setDurationSync = useCallback((newDuration) => {
     setDuration(newDuration);
-    if (!running && !isPaused) {
+    if (!running) {
+      // Allow updating remaining when paused or stopped
       setRemaining(newDuration);
     }
-  }, [running, isPaused]);
+  }, [running]);
 
   return {
     // State
