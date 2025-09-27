@@ -525,7 +525,7 @@ function TimerCircle({
                 height: circleSize * 0.35,
                 borderRadius: (circleSize * 0.35) / 2,
                 backgroundColor: color || theme.colors.brand.primary,
-                opacity: glowAnim * 0.8, // More visible opacity
+                opacity: Animated.multiply(glowAnim, 0.8), // More visible opacity
               }}
             />
             {/* Additional inner pulse circle */}
@@ -536,7 +536,7 @@ function TimerCircle({
                 height: circleSize * 0.2,
                 borderRadius: (circleSize * 0.2) / 2,
                 backgroundColor: color || theme.colors.brand.primary,
-                opacity: glowAnim * 1.2, // Even more visible for the center
+                opacity: Animated.multiply(glowAnim, 1.2), // Even more visible for the center
               }}
             />
           </Animated.View>
