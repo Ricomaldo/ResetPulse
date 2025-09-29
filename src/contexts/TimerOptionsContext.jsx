@@ -17,6 +17,8 @@ export const TimerOptionsProvider = ({ children }) => {
       currentActivity: getDefaultActivity(),
       currentDuration: 300, // 5 minutes par défaut
       favoriteActivities: ['breathing', 'meditation', 'reading', 'work'], // Default favorites
+      selectedSoundId: 'bell_classic', // Son par défaut
+      activityDurations: {}, // { activityId: duration } - Mémorise la durée préférée par activité
     }
   );
 
@@ -29,6 +31,8 @@ export const TimerOptionsProvider = ({ children }) => {
     currentActivity: values.currentActivity,
     currentDuration: values.currentDuration,
     favoriteActivities: values.favoriteActivities,
+    selectedSoundId: values.selectedSoundId,
+    activityDurations: values.activityDurations,
 
     // Actions
     setShouldPulse: (val) => updateValue('shouldPulse', val),
@@ -38,6 +42,14 @@ export const TimerOptionsProvider = ({ children }) => {
     setCurrentActivity: (val) => updateValue('currentActivity', val),
     setCurrentDuration: (val) => updateValue('currentDuration', val),
     setFavoriteActivities: (val) => updateValue('favoriteActivities', val),
+    setSelectedSoundId: (val) => updateValue('selectedSoundId', val),
+    setActivityDurations: (val) => updateValue('activityDurations', val),
+
+    // Helper pour sauvegarder la durée d'une activité spécifique
+    saveActivityDuration: (activityId, duration) => {
+      const updated = { ...values.activityDurations, [activityId]: duration };
+      updateValue('activityDurations', updated);
+    },
 
     // Loading state
     isLoading

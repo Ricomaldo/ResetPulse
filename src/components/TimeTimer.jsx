@@ -13,7 +13,14 @@ import { TIMER, BUTTON, TEXT, TOUCH } from '../constants/uiConstants';
 
 export default function TimeTimer({ onRunningChange, onTimerRef }) {
   const theme = useTheme();
-  const { shouldPulse, clockwise, scaleMode, currentActivity, currentDuration } = useTimerOptions();
+  const {
+    shouldPulse,
+    clockwise,
+    scaleMode,
+    currentActivity,
+    currentDuration,
+    saveActivityDuration
+  } = useTimerOptions();
   const { currentColor } = useTimerPalette();
 
   // Initialize timer with current duration or default
@@ -134,6 +141,11 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
     }
 
     timer.setDuration(newDuration);
+
+    // Save activity duration when user changes it
+    if (currentActivity?.id && newDuration > 0) {
+      saveActivityDuration(currentActivity.id, newDuration);
+    }
   };
 
 

@@ -1,8 +1,11 @@
 // src/hooks/useTimer.js
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { AppState } from 'react-native';
 import haptics from '../utils/haptics';
 import { TIMER } from '../constants/uiConstants';
-import useAudio from './useAudio';
+import useTimerAudio from './useTimerAudio';
+import useNotificationTimer from './useNotificationTimer';
+import { useTimerOptions } from '../contexts/TimerOptionsContext';
 
 export default function useTimer(initialDuration = 240, onComplete) {
   // Core timer states
@@ -17,15 +20,25 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const [showReparti, setShowReparti] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
 
-  // Audio
-  const { playSound } = useAudio();
+  // Get selected sound and activity durations from context
+  const { selectedSoundId, activityDurations, saveActivityDuration, currentActivity } = useTimerOptions();
+
+  // Audio with selected sound
+  const { playSound } = useTimerAudio(selectedSoundId);
+  const playSoundRef = useRef(playSound);
+  useEffect(() => {
+    playSoundRef.current = playSound;
+  }, [playSound]);
+
+  // Notifications pour background
+  const { scheduleTimerNotification, cancelTimerNotification } = useNotificationTimer();
 
   // Refs
   const intervalRef = useRef(null);
   const isMountedRef = useRef(true);
   const hasTriggeredCompletion = useRef(false);
 
-  // Timer update function with bug fix
+  // Timer update function with background support
   const updateTimer = useCallback(() => {
     if (!isMountedRef.current || !running || !startTime) return;
 
@@ -36,7 +49,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
     setRemaining(newRemaining);
 
     if (newRemaining > 0 && running) {
-      intervalRef.current = requestAnimationFrame(updateTimer);
+      // Use setTimeout for background support instead of requestAnimationFrame
+      intervalRef.current = setTimeout(updateTimer, 100); // Update every 100ms
     } else if (newRemaining === 0) {
       // Timer finished - reset states properly
       setRunning(false);
@@ -48,11 +62,26 @@ export default function useTimer(initialDuration = 240, onComplete) {
         hasTriggeredCompletion.current = true;
         setHasCompleted(true);
 
-        // Haptic feedback
-        haptics.notification('success').catch(() => {});
+        // Feedback synchronisé : Audio + Haptic en parallèle
+        // Priorité à l'audio (CRITICAL PATH) mais haptic améliore l'UX
+        const feedbackPromises = [];
 
-        // Audio feedback
-        playSound();
+        // Audio feedback - PRIORITÉ ABSOLUE
+        if (playSoundRef.current) {
+          feedbackPromises.push(playSoundRef.current());
+        }
+
+        // Haptic feedback - Enhancement
+        feedbackPromises.push(
+          haptics.notification('success').catch(() => {
+            // Silently fail - haptic is nice to have
+          })
+        );
+
+        // Exécuter en parallèle pour synchronisation parfaite
+        Promise.all(feedbackPromises).catch(() => {
+          // Au moins un feedback a fonctionné, on continue
+        });
 
         // Call completion callback if provided
         if (onComplete) {
@@ -67,12 +96,15 @@ export default function useTimer(initialDuration = 240, onComplete) {
           }
         }, TIMER.MESSAGE_DISPLAY_DURATION);
       }
-      // Log timer completion
+      // Log timer completion avec timecode
       if (__DEV__) {
-        console.log('⏰ Timer terminé!');
+        const now = new Date();
+        const minutes = Math.floor(duration / 60);
+        const secs = duration % 60;
+        console.log(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé!`);
       }
     }
-  }, [startTime, duration, running]);
+  }, [startTime, duration, running, onComplete]);
 
   // Effect 1: Initialize startTime when starting
   useEffect(() => {
@@ -83,13 +115,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
   }, [running, startTime, remaining, duration]);
 
-  // Effect 2: Start/stop animation loop
+  // Effect 2: Start/stop timer loop (with background support)
   useEffect(() => {
     if (running && startTime) {
-      intervalRef.current = requestAnimationFrame(updateTimer);
+      // Use setTimeout instead of requestAnimationFrame for background support
+      intervalRef.current = setTimeout(updateTimer, 100);
     } else {
       if (intervalRef.current) {
-        cancelAnimationFrame(intervalRef.current);
+        clearTimeout(intervalRef.current);
         intervalRef.current = null;
       }
       if (!running) {
@@ -99,7 +132,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
     return () => {
       if (intervalRef.current) {
-        cancelAnimationFrame(intervalRef.current);
+        clearTimeout(intervalRef.current);
       }
     };
   }, [running, startTime, updateTimer]);
@@ -116,7 +149,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     return () => {
       isMountedRef.current = false;
       if (intervalRef.current) {
-        cancelAnimationFrame(intervalRef.current);
+        clearTimeout(intervalRef.current);
       }
     };
   }, []);
@@ -155,6 +188,22 @@ export default function useTimer(initialDuration = 240, onComplete) {
       setShowReparti(false);
       setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
       setRunning(true);
+
+      // Programmer notification pour la fin (solution background)
+      scheduleTimerNotification(durationToUse);
+
+      // Sauvegarder la durée pour cette activité si elle a changé
+      if (currentActivity?.id && durationToUse > 0 &&
+          activityDurations[currentActivity.id] !== durationToUse) {
+        saveActivityDuration(currentActivity.id, durationToUse);
+      }
+
+      if (__DEV__) {
+        const now = new Date();
+        const minutes = Math.floor(durationToUse / 60);
+        const secs = durationToUse % 60;
+        console.log(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
+      }
     } else if (!running) {
       // Start or resume
       if (isPaused) {
@@ -162,11 +211,30 @@ export default function useTimer(initialDuration = 240, onComplete) {
         setShowReparti(true);
         setShowParti(false);
         setTimeout(() => setShowReparti(false), TIMER.MESSAGE_DISPLAY_DURATION);
+
+        // Re-programmer notification avec temps restant
+        scheduleTimerNotification(remaining);
       } else {
         // First start
         setShowParti(true);
         setShowReparti(false);
         setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
+
+        // Programmer notification pour la fin
+        scheduleTimerNotification(remaining);
+
+        // Sauvegarder la durée initiale si elle a changé
+        if (currentActivity?.id && duration > 0 &&
+            activityDurations[currentActivity.id] !== duration) {
+          saveActivityDuration(currentActivity.id, duration);
+        }
+
+        if (__DEV__) {
+          const now = new Date();
+          const minutes = Math.floor(remaining / 60);
+          const secs = remaining % 60;
+          console.log(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
+        }
       }
       setIsPaused(false);
       setRunning(true);
@@ -176,8 +244,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
       setIsPaused(true);
       setShowParti(false);
       setShowReparti(false);
+
+      // Annuler la notification
+      cancelTimerNotification();
     }
-  }, [remaining, duration, isPaused, running]);
+  }, [remaining, duration, isPaused, running, scheduleTimerNotification, cancelTimerNotification,
+      currentActivity, activityDurations, saveActivityDuration]);
 
   const resetTimer = useCallback(() => {
     setRemaining(0); // Reset to ZERO, not duration
@@ -186,7 +258,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
     setIsPaused(false);
     setShowParti(false);
     setShowReparti(false);
-  }, []);
+
+    // Annuler notification si programmée
+    cancelTimerNotification();
+  }, [cancelTimerNotification]);
 
   const setPresetDuration = useCallback((minutes) => {
     const newDuration = minutes * 60;

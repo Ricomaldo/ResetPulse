@@ -28,10 +28,14 @@ export function useDialOrientation(isClockwise, scaleMode) {
    * @returns {number} Minutes (0 to maxMinutes)
    */
   const angleToMinutes = useCallback((angle) => {
+    // Handle invalid inputs - protect against NaN
+    const numAngle = Number(angle);
+    if (!isFinite(numAngle)) return 0;
+
     let minutes;
 
     // Normalize angle to 0-360 range
-    const normalizedAngle = ((angle + 360) % 360);
+    const normalizedAngle = ((numAngle + 360) % 360);
 
     if (isClockwise) {
       minutes = Math.round(normalizedAngle / config.degreesPerMinute);
@@ -49,7 +53,18 @@ export function useDialOrientation(isClockwise, scaleMode) {
    * @returns {number} Angle in degrees (0 = top)
    */
   const minutesToAngle = useCallback((minutes) => {
-    const baseAngle = minutes * config.degreesPerMinute;
+    // Handle invalid inputs - protect against NaN
+    const numMinutes = Number(minutes);
+    if (!isFinite(numMinutes)) {
+      // Special case for Infinity: clamp to max
+      if (numMinutes === Infinity) return isClockwise ? 360 : 0;
+      if (numMinutes === -Infinity) return isClockwise ? 0 : 360;
+      return 0; // For NaN and other invalid values
+    }
+
+    // Clamp minutes to valid range
+    const clampedMinutes = Math.max(0, Math.min(config.maxMinutes, numMinutes));
+    const baseAngle = clampedMinutes * config.degreesPerMinute;
 
     if (isClockwise) {
       return baseAngle;

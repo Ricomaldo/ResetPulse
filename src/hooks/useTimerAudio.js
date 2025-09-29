@@ -1,11 +1,13 @@
-// src/hooks/useAudio.js
+// src/hooks/useTimerAudio.js
+// Hook audio spécifique pour le timer avec son sélectionné
 import { useEffect, useCallback, useRef } from 'react';
 import { useAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import { Platform } from 'react-native';
+import { getSoundById } from '../config/sounds';
 
-export default function useAudio() {
-  // Utilisation du nouveau hook expo-audio
-  const player = useAudioPlayer(require('../../assets/sounds/407342__forthehorde68__fx_bell_short.wav'));
+export default function useTimerAudio(selectedSoundId) {
+  const selectedSound = getSoundById(selectedSoundId);
+  const player = useAudioPlayer(selectedSound.file);
   const isConfigured = useRef(false);
 
   // Configuration audio robuste au mount
@@ -34,11 +36,7 @@ export default function useAudio() {
         isConfigured.current = true;
 
         if (__DEV__) {
-          console.log('✅ Audio System configuré:', {
-            silentMode: 'ENABLED',
-            background: 'ENABLED',
-            interruption: 'DUCK_OTHERS'
-          });
+          console.log('✅ Timer Audio configuré pour:', selectedSoundId);
         }
       } catch (error) {
         // Fallback silencieux mais log pour debug
@@ -54,7 +52,7 @@ export default function useAudio() {
     return () => {
       isConfigured.current = false;
     };
-  }, []);
+  }, [selectedSoundId]);
 
   // Fonction pour jouer le son avec gestion d'erreur robuste
   const playSound = useCallback(async () => {
@@ -70,7 +68,7 @@ export default function useAudio() {
       await player.play();
 
       if (__DEV__) {
-        console.log('🔊 Son joué avec succès');
+        console.log('🔊 Son timer joué:', selectedSoundId);
       }
     } catch (error) {
       // Erreur silencieuse - pas de popup/crash pour l'utilisateur
@@ -78,7 +76,7 @@ export default function useAudio() {
         console.log('🔇 Audio playback fallback:', error.message);
       }
     }
-  }, [player]);
+  }, [player, selectedSoundId]);
 
   return {
     playSound,

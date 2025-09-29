@@ -1,14 +1,13 @@
-// Minimal setup - add mocks only when needed
-import '@testing-library/react-native/extend-expect';
+// Minimal setup for SDK 54 - only essential mocks
 
-// Mock expo-haptics since it's hardware dependent
+// Mock expo-haptics (hardware dependent)
 jest.mock('expo-haptics', () => ({
   notificationAsync: jest.fn(() => Promise.resolve()),
   impactAsync: jest.fn(() => Promise.resolve()),
   selectionAsync: jest.fn(() => Promise.resolve()),
 }));
 
-// Mock AsyncStorage for any storage-related tests
+// Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
