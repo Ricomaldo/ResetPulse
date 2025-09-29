@@ -12,22 +12,27 @@ import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
 import { TIMER_SOUNDS, getSoundById } from '../config/sounds';
 import haptics from '../utils/haptics';
-import useAudioWithSound from '../hooks/useAudioWithSound';
+import useSimpleAudio from '../hooks/useSimpleAudio';
+import { PlayIcon, PauseIcon } from './Icons';
 
 export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
   const theme = useTheme();
-  const { playSound, isLoading: isAudioLoading } = useAudioWithSound('preview');
+  const { playSound, stopSound, isPlaying } = useSimpleAudio('preview');
   const [playingId, setPlayingId] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const handleSoundPress = useCallback(async (soundId) => {
     haptics.selection().catch(() => {});
 
     // Si on appuie sur le son actuellement en lecture, on l'arrête
     if (playingId === soundId && isPlaying) {
-      setIsPlaying(false);
+      await stopSound();
       setPlayingId(null);
       return;
+    }
+
+    // Arrêter tout son en cours
+    if (isPlaying) {
+      await stopSound();
     }
 
     // Sélectionner le son
@@ -35,24 +40,22 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
 
     // Jouer l'aperçu
     setPlayingId(soundId);
-    setIsPlaying(true);
 
     try {
       const sound = getSoundById(soundId);
-      // Passer le fichier son directement pour preview
       await playSound(sound.file);
 
-      // Reset après lecture estimée
+      // Auto-reset après 3 secondes max (preview)
       setTimeout(() => {
-        setIsPlaying(false);
-        setPlayingId(null);
-      }, 3000); // Maximum 3s de preview
+        if (playingId === soundId) {
+          setPlayingId(null);
+        }
+      }, 3000);
     } catch (error) {
       console.log('Error playing sound preview:', error);
-      setIsPlaying(false);
       setPlayingId(null);
     }
-  }, [playingId, isPlaying, onSoundSelect, playSound]);
+  }, [playingId, isPlaying, onSoundSelect, playSound, stopSound]);
 
   const styles = StyleSheet.create({
     container: {
@@ -121,16 +124,7 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
     },
   });
 
-  if (isAudioLoading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="small" color={theme.colors.brand.primary} />
-        <Text style={[styles.soundDuration, { marginTop: theme.spacing.sm }]}>
-          Chargement audio...
-        </Text>
-      </View>
-    );
-  }
+  // Plus besoin de loader, le hook est synchrone
 
   return (
     <View style={styles.container}>
@@ -165,11 +159,11 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
 
               <View style={styles.playIndicator}>
                 {isCurrentlyPlaying ? (
-                  <Text style={styles.playIcon}>⏸</Text>
+                  <PauseIcon size={16} color={theme.colors.brand.primary} />
                 ) : isActive ? (
                   <Text style={styles.playIcon}>✓</Text>
                 ) : (
-                  <Text style={[styles.playIcon, { opacity: 0.3 }]}>▶</Text>
+                  <PlayIcon size={16} color={theme.colors.brand.primary + '30'} />
                 )}
               </View>
             </TouchableOpacity>

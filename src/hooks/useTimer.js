@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { AppState } from 'react-native';
 import haptics from '../utils/haptics';
 import { TIMER } from '../constants/uiConstants';
-import useTimerAudio from './useTimerAudio';
+import useSimpleAudio from './useSimpleAudio';
 import useNotificationTimer from './useNotificationTimer';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 
@@ -23,8 +23,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Get selected sound and activity durations from context
   const { selectedSoundId, activityDurations, saveActivityDuration, currentActivity } = useTimerOptions();
 
-  // Audio with selected sound
-  const { playSound } = useTimerAudio(selectedSoundId);
+  // Audio with selected sound - using simple audio hook
+  const { playSound } = useSimpleAudio(selectedSoundId);
   const playSoundRef = useRef(playSound);
   useEffect(() => {
     playSoundRef.current = playSound;
@@ -68,7 +68,11 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
         // Audio feedback - PRIORITÉ ABSOLUE
         if (playSoundRef.current) {
-          feedbackPromises.push(playSoundRef.current());
+          feedbackPromises.push(
+            playSoundRef.current(selectedSoundId).catch(() => {
+              // Silent fail for audio
+            })
+          );
         }
 
         // Haptic feedback - Enhancement

@@ -5,49 +5,58 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.4] - In Development
+## [1.0.4] - 2025-09-29
 
-### Foundation Technique
-#### Phase 1: Test Infrastructure ✅
-- **Test Foundation**: Comprehensive testing for critical paths
-  - Jest configuration with dynamic transform patterns
-  - 64 automated tests covering hooks functionality (89% pass rate)
-  - Test utilities for deterministic time-based testing without mocks
-  - Automatic ES module detection script (`scripts/detect-transform-needs.js`)
-- **Testing Metrics**:
-  - useDialOrientation: 100% pass rate (27/27 tests)
-  - useTimer: 81% pass rate (30/37 tests)
-  - Critical Path coverage established
-- **Development Tooling**:
-  - Granular npm scripts: `test:critical`, `test:hooks`, `test:timer`, `test:dial`
-  - Testing patterns documentation for reusability
+### 🎯 Foundation v1.0.4 - SDK 54 Migration + Audio System Complet
 
-#### Phase 2: Error Management ✅
-- **Error Boundary**: Single boundary at app root for crash recovery
-- **Logger Utility**: Minimal logging (console in dev, AsyncStorage for critical errors in prod)
-- **Crash Recovery**: Simple restart mechanism with expo-updates
-- **Implementation**: < 200 lines of code, no over-engineering
+#### SDK 54 & New Architecture ✅
+- **Migration complète**: Expo SDK 54 + React Native 0.81.4 + React 19.1.0
+- **New Architecture**: Fabric + Turbo Modules activés et fonctionnels
+- **Performance**: Build times optimisés de 120s → 10s avec XCFrameworks
+- **Dependencies**: Package-lock réduit de 12k → 4k lignes (dépendances optimisées)
 
-#### Phase 3: New Architecture Migration ✅
-- **React Native New Architecture**: Enabled Fabric + Turbo Modules
-  - Set `newArchEnabled: true` in app.json
-  - Complete iOS rebuild with all Fabric components
-  - Performance improvements for animations and native interactions
-- **Audio System Modernization**: Migration from expo-av to expo-audio
-  - Replaced `Audio.Sound.createAsync` with modern `useAudioPlayer` hook
-  - Automatic system integration respecting iOS silent mode
-  - Simplified error handling with built-in silent fallbacks
-  - Cleaner API aligned with React hooks patterns
-- **SDK 54 Upgrade**: Complete migration from SDK 51
-  - React 19.1.0 + React Native 0.81.4
-  - All Expo modules updated to latest versions
-  - Clean dependency resolution without `--legacy-peer-deps`
-  - Node.js 20.19.4+ requirement (compatible with Node 24.9.0)
-- **Build Infrastructure**: Enhanced native compilation
-  - ReactCodegen for Fabric component generation
-  - RNReanimated optimized for New Architecture
-  - All native modules (RNSVG, RNGestureHandler) recompiled
-  - CocoaPods fully reinstalled with New Architecture support
+#### Audio System (CRITICAL PATH - 100% consensus famille) ✅
+- **Mode silencieux**: `playsInSilentMode: true` pour iOS
+- **Background audio**: UIBackgroundModes + notifications programmées
+- **Sound Picker**: 10 sons configurables avec interface élégante
+  - Cloche classique, Cloche mélodique
+  - Micro-ondes vintage, Ping micro-ondes
+  - Minuteur cuisine, Minuteur mécanique
+  - Minuteur à œuf, Grille-pain
+  - Ding simple, Timer complet
+- **Architecture audio SIMPLIFIÉE** (29 sept. soir):
+  - **UN SEUL HOOK**: `useSimpleAudio.js` remplace 5 hooks audio
+  - Utilise uniquement expo-audio SDK 54 (pas de conflits d'API)
+  - Configuration audio globale (une seule fois)
+  - Preview sons fonctionnels sur simulateur et device
+  - Code réduit de 70% (plus maintenable)
+  - Solution hybride: foreground (expo-audio) + background (notifications)
+
+#### Tests & Qualité ✅
+- **Jest SDK 54**: Configuration minimaliste compatible
+  - `react-test-renderer` au lieu de `@testing-library/react-native`
+  - Tests archivés dans `archive-sdk51/` pour référence
+  - Coverage: useTimer 74.57%, useDialOrientation 41.17%
+- **Bug fixes**:
+  - Bug historique NaN dans useDialOrientation corrigé avec `isFinite()`
+  - Timer continue en background avec `setTimeout` (pas RAF)
+  - Notifications trigger bug fixé avec `type: 'timeInterval'`
+
+#### Notifications Background ✅
+- **Timer background**: Continue même app fermée
+- **Screen wake-up**: Écran s'allume automatiquement à la fin
+- **Son système**: Notifications jouent le son par défaut iOS
+- **Durée limite**: 8h Dynamic Island, 12h Lock Screen
+
+#### UX & Persistence ✅
+- **Pattern learning**: Sauvegarde durée par activité
+  - Association activité → durée mémorisée
+  - Pré-remplissage automatique au prochain usage
+  - Optimisation AsyncStorage (écriture conditionnelle)
+- **Settings améliorés**:
+  - Organisation en 5 sections claires
+  - Badge "NOUVEAU" pour Sound Picker
+  - Section Sons du Timer en priorité
 
 ### Added
 - **Migration Documentation**: Comprehensive documentation suite
