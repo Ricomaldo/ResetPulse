@@ -1,11 +1,26 @@
-// src/hooks/useAudio.js
+// src/hooks/useEnhancedAudio.js
+// Version améliorée avec sons multiples (optionnel pour v1.0.4+)
+
 import { useEffect, useCallback, useRef } from 'react';
 import { useAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import { Platform } from 'react-native';
 
-export default function useAudio() {
-  // Utilisation du nouveau hook expo-audio
-  const player = useAudioPlayer(require('../../assets/sounds/407342__forthehorde68__fx_bell_short.wav'));
+// Sons disponibles
+const SOUNDS = {
+  complete: require('../../assets/sounds/407342__forthehorde68__fx_bell_short.wav'),
+  // Pour v1.0.5+ : ajouter d'autres sons
+  // start: require('../../assets/sounds/start.wav'),
+  // pause: require('../../assets/sounds/pause.wav'),
+};
+
+export default function useEnhancedAudio() {
+  // Players pour chaque son
+  const players = {
+    complete: useAudioPlayer(SOUNDS.complete),
+    // start: useAudioPlayer(SOUNDS.start),
+    // pause: useAudioPlayer(SOUNDS.pause),
+  };
+
   const isConfigured = useRef(false);
 
   // Configuration audio robuste au mount
@@ -34,14 +49,14 @@ export default function useAudio() {
         isConfigured.current = true;
 
         if (__DEV__) {
-          console.log('✅ Audio System configuré:', {
+          console.log('✅ Enhanced Audio System configuré:', {
             silentMode: 'ENABLED',
             background: 'ENABLED',
-            interruption: 'DUCK_OTHERS'
+            interruption: 'DUCK_OTHERS',
+            multipleSounds: Object.keys(SOUNDS).length
           });
         }
       } catch (error) {
-        // Fallback silencieux mais log pour debug
         if (__DEV__) {
           console.warn('⚠️ Audio config fallback:', error.message);
         }
@@ -50,39 +65,46 @@ export default function useAudio() {
 
     configureAudioMode();
 
-    // Cleanup
     return () => {
       isConfigured.current = false;
     };
   }, []);
 
-  // Fonction pour jouer le son avec gestion d'erreur robuste
-  const playSound = useCallback(async () => {
+  // Fonction générique pour jouer un son spécifique
+  const playSound = useCallback(async (soundType = 'complete') => {
     try {
-      // Vérifier que le player est prêt
+      const player = players[soundType];
+
       if (!player) {
-        if (__DEV__) console.log('Player not ready');
+        if (__DEV__) console.log(`Player ${soundType} not ready`);
         return;
       }
 
-      // Reset position au début et jouer
+      // Reset position et jouer
       await player.seekTo(0);
       await player.play();
 
       if (__DEV__) {
-        console.log('🔊 Son joué avec succès');
+        console.log(`🔊 Son ${soundType} joué avec succès`);
       }
     } catch (error) {
-      // Erreur silencieuse - pas de popup/crash pour l'utilisateur
       if (__DEV__) {
-        console.log('🔇 Audio playback fallback:', error.message);
+        console.log(`🔇 Audio ${soundType} fallback:`, error.message);
       }
     }
-  }, [player]);
+  }, [players]);
+
+  // Fonctions spécifiques pour chaque son
+  const playCompleteSound = useCallback(() => playSound('complete'), [playSound]);
+  // const playStartSound = useCallback(() => playSound('start'), [playSound]);
+  // const playPauseSound = useCallback(() => playSound('pause'), [playSound]);
 
   return {
     playSound,
-    // Exposer le player pour contrôle avancé si besoin
-    player
+    playCompleteSound,
+    // Pour v1.0.5+
+    // playStartSound,
+    // playPauseSound,
+    players
   };
 }

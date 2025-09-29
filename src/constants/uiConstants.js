@@ -12,7 +12,7 @@ export const TOUCH = {
 
 // Timer specific
 export const TIMER = {
-  GRADUATION_SNAP_THRESHOLD: 2, // Snap to 0 when within 2 minutes
+  GRADUATION_SNAP_THRESHOLD: 0.5, // Snap to 0 when within 0.5 minutes (30 seconds)
   MESSAGE_DISPLAY_DURATION: 2000, // ms
   DEFAULT_DURATION: 5 * 60, // 5 minutes in seconds
   MODES: {

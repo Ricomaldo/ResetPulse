@@ -11,7 +11,13 @@ import { isTestPremium } from '../config/testMode';
 
 export default function ActivityCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
-  const { currentActivity, setCurrentActivity, setCurrentDuration, favoriteActivities = [] } = useTimerOptions();
+  const {
+    currentActivity,
+    setCurrentActivity,
+    setCurrentDuration,
+    favoriteActivities = [],
+    activityDurations = {}
+  } = useTimerOptions();
   const { setColorByType, currentColor } = useTimerPalette();
   const scrollViewRef = useRef(null);
   const scaleAnims = useRef({}).current; // Store animation values for each activity
@@ -109,8 +115,11 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     haptics.selection().catch(() => {});
     setCurrentActivity(activity);
 
-    // Update duration based on activity default
-    if (activity.defaultDuration) {
+    // Use saved duration if available, otherwise use activity default
+    const savedDuration = activityDurations[activity.id];
+    if (savedDuration) {
+      setCurrentDuration(savedDuration);
+    } else if (activity.defaultDuration) {
       setCurrentDuration(activity.defaultDuration);
     }
 

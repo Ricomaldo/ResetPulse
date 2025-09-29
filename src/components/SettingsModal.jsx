@@ -18,6 +18,7 @@ import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs } from '../styles/responsive';
 import PalettePreview from './PalettePreview';
+import SoundPicker from './SoundPicker';
 import { getAllActivities } from '../config/activities';
 import { TIMER_PALETTES, isPalettePremium } from '../config/timerPalettes';
 import haptics from '../utils/haptics';
@@ -38,7 +39,9 @@ export default function SettingsModal({ visible, onClose }) {
     scaleMode,
     setScaleMode,
     favoriteActivities,
-    setFavoriteActivities
+    setFavoriteActivities,
+    selectedSoundId,
+    setSelectedSoundId
   } = useTimerOptions();
 
   const allActivities = getAllActivities();
@@ -321,6 +324,26 @@ export default function SettingsModal({ visible, onClose }) {
     lockMini: {
       fontSize: 10,
     },
+
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: theme.spacing.sm,
+    },
+
+    sectionBadge: {
+      backgroundColor: theme.colors.brand.primary + '15',
+      paddingHorizontal: theme.spacing.xs,
+      paddingVertical: 2,
+      borderRadius: theme.borderRadius.sm,
+    },
+
+    sectionBadgeText: {
+      fontSize: rs(10, 'min'),
+      color: theme.colors.brand.primary,
+      fontWeight: '600',
+    },
   });
 
   return (
@@ -349,7 +372,24 @@ export default function SettingsModal({ visible, onClose }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            {/* Favorites Section - NOW FIRST */}
+            {/* Audio Section - PRIORITÉ CRITIQUE */}
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Sons du Timer</Text>
+                <View style={styles.sectionBadge}>
+                  <Text style={styles.sectionBadgeText}>NOUVEAU</Text>
+                </View>
+              </View>
+              <Text style={styles.optionDescription}>
+                Choisissez le son qui sera joué à la fin du timer
+              </Text>
+              <SoundPicker
+                selectedSoundId={selectedSoundId}
+                onSoundSelect={setSelectedSoundId}
+              />
+            </View>
+
+            {/* Favorites Section - NOW SECOND */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Activités favorites</Text>
               
@@ -478,7 +518,7 @@ export default function SettingsModal({ visible, onClose }) {
               )}
             </View>
 
-            {/* Color Palettes - SECOND */}
+            {/* Color Palettes - THIRD */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Palettes de Couleurs</Text>
               <Text style={styles.optionDescription}>
@@ -523,7 +563,7 @@ export default function SettingsModal({ visible, onClose }) {
               </View>
             </View>
 
-            {/* Timer Options - THIRD */}
+            {/* Timer Options - FOURTH */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Options du Timer</Text>
 
@@ -598,7 +638,7 @@ export default function SettingsModal({ visible, onClose }) {
               </View>
             </View>
 
-            {/* Appearance - NOW FOURTH */}
+            {/* Appearance - NOW FIFTH */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Apparence</Text>
 
