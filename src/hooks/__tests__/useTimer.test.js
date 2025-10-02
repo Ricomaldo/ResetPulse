@@ -3,6 +3,14 @@ import { renderHook, act } from './test-utils';
 import useTimer from '../useTimer';
 import { TIMER } from '../../constants/uiConstants';
 
+// Mock TimerOptionsContext
+jest.mock('../../contexts/TimerOptionsContext', () => ({
+  useTimerOptions: () => ({
+    selectedSoundId: 'bell_classic',
+    shouldPulse: false,
+  })
+}));
+
 // Mock haptics
 jest.mock('../../utils/haptics', () => ({
   __esModule: true,
@@ -12,7 +20,7 @@ jest.mock('../../utils/haptics', () => ({
 }));
 
 // Mock audio
-jest.mock('../useAudio', () => ({
+jest.mock('../useSimpleAudio', () => ({
   __esModule: true,
   default: () => ({
     playSound: jest.fn()
