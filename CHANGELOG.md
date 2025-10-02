@@ -8,14 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2025-10-02
 
 ### Added
-- **🎯 Onboarding System v2.0** - Professional tooltip spotlight implementation
-  - Sequential tooltips guiding users through app features (Activities → Dial → Palette → Controls)
-  - SVG Mask-based spotlight highlighting (inspired by react-native-copilot)
-  - Smart tooltip positioning algorithm (never hides highlighted element)
-  - Precise bounds measurement using `measure()` API
+- **🎯 Onboarding System v2.0** - Professional interactive tooltip spotlight
+  - Sequential tooltips: Activities → Dial → Palette → Controls (optimized flow)
+  - **Fully interactive**: Users can try features while tooltips guide them
+  - SVG Mask spotlight with rounded corners (dial: circular, others: theme.borderRadius.xl)
+  - Smart tooltip positioning: auto-detects space and positions above/below without hiding elements
+  - Precise bounds measurement using `measure()` API with timing optimizations
+  - Auto-completion when user starts timer on final tooltip
   - "Skip all" button with persistent completion state
-  - Accessible via "Relancer le guide" in Settings modal
-  - Interactive onboarding: users can try features as tooltips guide them
+  - Accessible via "Relancer le guide" in Settings modal (dev mode)
+  - No entrance animations during first launch for instant onboarding start
+  - Consistent highlight padding: horizontal `lg`, vertical `sm` (dial top: `lg` for duration indicator)
 
 ### Changed
 - **🎨 Settings Modal Redesign** - Card-based UI with visual hierarchy (iOS 15+ style):
@@ -46,6 +49,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed complex manual calculations in favor of dynamic measurement
 
 ### Fixed
+- **🔧 Haptic Feedback Configuration**:
+  - Added `expo-haptics` plugin to app.json for proper native haptic support
+  - Fixes potential vibration issues in production builds (iOS/Android)
+  - Haptics now properly configured for builds outside Expo Go
 - **🐛 Theme System Critical Bugs**:
   - Fixed `toggleTheme()` not respecting "auto" mode (was stuck cycling only between light/dark)
   - Now properly cycles through: light → dark → auto → light
@@ -60,9 +67,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Changed from `rs(44)` to `rs(44, 'min')` for width/height/borderRadius
   - Settings icon size now responsive with `rs(24, 'min')`
   - Tooltip positioning made responsive with `rs()` function
-- **Onboarding Highlights**: Eliminated visual gaps using SVG Mask technique
-  - Previous 4-rectangle approach had positioning bugs
-  - SVG Mask ensures pixel-perfect spotlight cutouts
+- **Onboarding UX Polish**:
+  - SVG Mask spotlight with perfect rounded corners (no visual gaps)
+  - Render order optimized: overlay with `pointerEvents="none"` allows full interactivity
+  - Entrance animations disabled during first launch to prevent measurement errors
+  - Highlight widths consistent across all elements (content + padding lg)
+  - Tooltip arrow directions: Activities (up), Dial (down), Palette (down), Controls (down)
+  - Fade-in animation only on first tooltip, instant transitions between tooltips
 - **Timer Visual Hierarchy**: Fixed z-index layering of physical fixation dots
   - Moved center fixation dots to render after dial progress arc
   - Dots now properly visible above dial but below activity emoji

@@ -21,6 +21,7 @@
       }
     },
     "plugins": [
+      "expo-haptics",
       [
         "expo-notifications",
         {
