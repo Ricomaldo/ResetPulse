@@ -37,7 +37,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     if (scrollViewRef.current && currentPaletteIndex >= 0) {
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
-          x: currentPaletteIndex * rs(220, "width"),
+          x: currentPaletteIndex * rs(232, "width"),
           animated: false,
         });
       }, 100);
@@ -64,7 +64,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   // Handle scroll end to detect palette change
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const containerWidth = rs(220, "width");
+    const containerWidth = rs(232, "width");
     const newIndex = Math.round(offsetX / containerWidth);
 
     if (
@@ -81,7 +81,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       } else {
         // Scroll back to current palette if trying to select premium
         scrollViewRef.current?.scrollTo({
-          x: currentPaletteIndex * rs(220, "width"),
+          x: currentPaletteIndex * rs(232, "width"),
           animated: true,
         });
       }
@@ -101,7 +101,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     scrollView: {
-      maxWidth: rs(220, "width"),
+      maxWidth: rs(232, "width"),
     },
 
     scrollContent: {
@@ -109,14 +109,13 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     paletteContainer: {
-      width: rs(220, "width"),
+      width: rs(232, "width"),
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
       gap: theme.spacing.md,
       paddingVertical: theme.spacing.xs,
-      // Extra padding to accommodate scaled active button (scale: 1.2)
-      paddingHorizontal: theme.spacing.sm,
+      paddingHorizontal: rs(6, "width"),
     },
 
     colorButton: {
@@ -204,7 +203,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         onMomentumScrollEnd={handleScrollEnd}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
-        snapToInterval={rs(220, "width")}
+        snapToInterval={rs(232, "width")}
         decelerationRate="fast"
       >
         {PALETTE_NAMES.map((paletteName, paletteIndex) => {
