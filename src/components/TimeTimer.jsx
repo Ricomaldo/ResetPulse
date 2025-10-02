@@ -1,5 +1,5 @@
 // src/components/TimeTimer.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
@@ -11,7 +11,7 @@ import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 import { TIMER, BUTTON, TEXT, TOUCH } from '../constants/uiConstants';
 
-export default function TimeTimer({ onRunningChange, onTimerRef }) {
+export default function TimeTimer({ onRunningChange, onTimerRef, onControlsRef }) {
   const theme = useTheme();
   const {
     shouldPulse,
@@ -26,12 +26,22 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
 
+  // Ref for controls container
+  const controlsRef = useRef(null);
+
   // Pass timer ref to parent if needed
   useEffect(() => {
     if (onTimerRef) {
       onTimerRef(timer);
     }
   }, [timer, onTimerRef]);
+
+  // Pass controls ref to parent if needed
+  useEffect(() => {
+    if (onControlsRef) {
+      onControlsRef(controlsRef);
+    }
+  }, [onControlsRef]);
 
   // Update timer duration when currentDuration changes
   useEffect(() => {
@@ -185,7 +195,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef }) {
       </View>
 
       {/* Centered Control Buttons */}
-      <View style={styles.controlsContainer}>
+      <View ref={controlsRef} style={styles.controlsContainer}>
         {/* Main Control Buttons */}
           <TouchableOpacity
             style={[styles.controlButton, { opacity: timer.running ? BUTTON.RUNNING_OPACITY : BUTTON.IDLE_OPACITY }]}

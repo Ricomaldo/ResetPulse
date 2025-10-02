@@ -140,18 +140,18 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     },
 
     scrollView: {
-      // Remove fixed height
+      flexGrow: 0,
     },
 
     scrollContent: {
-      paddingHorizontal: theme.spacing.md,
+      paddingHorizontal: rs(30, 'width'), // Show peek of adjacent items
       alignItems: 'center',
+      gap: theme.spacing.md,
     },
 
     activityWrapper: {
       width: rs(60, 'min'),
       height: rs(60, 'min'),
-      marginHorizontal: rs(4, 'min'),
       borderRadius: rs(30, 'min'),
       overflow: 'hidden',
       backgroundColor: 'transparent',

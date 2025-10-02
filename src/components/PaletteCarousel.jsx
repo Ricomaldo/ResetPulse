@@ -87,7 +87,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       position: 'relative',
       alignItems: 'center',
       justifyContent: 'center',
-      // Remove fixed height to let content define height
     },
 
     scrollView: {
@@ -242,7 +241,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
           );
         })}
       </ScrollView>
-
     </View>
   );
 }

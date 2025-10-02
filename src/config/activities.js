@@ -12,7 +12,7 @@ export const ACTIVITIES = [
     description: "Timer simple sans activité",
   },
 
-  // Free activities - limited to create desire for premium
+  // Free activities - Pomodoro cycle complet + diversité
   {
     id: "work",
     emoji: "💻",
@@ -23,34 +23,16 @@ export const ACTIVITIES = [
     description: "Sessions de travail concentré",
   },
   {
-    id: "breathing",
-    emoji: "🌬️",
-    label: "Respiration",
-    defaultDuration: 240, // 4 minutes
-    isPremium: false,
-    suggestedColor: "energy",
-    description: "Exercices de respiration",
-  },
-  {
-    id: "meditation",
-    emoji: "🧘",
-    label: "Méditation",
-    defaultDuration: 1200, // 20 minutes
-    isPremium: false,
-    suggestedColor: "calm",
-    description: "Sessions de méditation guidée",
-  },
-
-  // Premium activities - everything else users want!
-  {
     id: "break",
     emoji: "☕",
     label: "Pause",
     defaultDuration: 900, // 15 minutes
-    isPremium: true, // Frustrating not to have with Work!
+    isPremium: false, // Complète le Pomodoro
     suggestedColor: "calm",
     description: "Vraie déconnexion",
   },
+
+  // Premium - Bien-être physique
   {
     id: "sport",
     emoji: "💪",
@@ -61,6 +43,28 @@ export const ACTIVITIES = [
     description: "Étirements et exercices courts",
   },
   {
+    id: "study",
+    emoji: "📚",
+    label: "Étude",
+    defaultDuration: 2700, // 45 minutes
+    isPremium: true,
+    suggestedColor: "focus",
+    description: "Sessions d'apprentissage",
+  },
+
+  // Free - Autre verticale utile
+  {
+    id: "reading",
+    emoji: "📖",
+    label: "Lecture",
+    defaultDuration: 1800, // 30 minutes
+    isPremium: false, // Montre la diversité
+    suggestedColor: "focus",
+    description: "Focus lecture profonde",
+  },
+
+  // Premium - Mindfulness verticale bloquée
+  {
     id: "yoga",
     emoji: "🧘‍♀️",
     label: "Yoga",
@@ -68,6 +72,24 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "calm",
     description: "Étirements et postures",
+  },
+  {
+    id: "meditation",
+    emoji: "🧘",
+    label: "Méditation",
+    defaultDuration: 1200, // 20 minutes
+    isPremium: true, // Toute la verticale mindfulness devient premium
+    suggestedColor: "calm",
+    description: "Sessions de méditation guidée",
+  },
+  {
+    id: "breathing",
+    emoji: "🌬️",
+    label: "Respiration",
+    defaultDuration: 240, // 4 minutes
+    isPremium: true, // Toute la verticale mindfulness devient premium
+    suggestedColor: "energy",
+    description: "Exercices de respiration",
   },
   {
     id: "walking",
@@ -78,24 +100,8 @@ export const ACTIVITIES = [
     suggestedColor: "deep",
     description: "Mouvement conscient",
   },
-  {
-    id: "reading",
-    emoji: "📖",
-    label: "Lecture",
-    defaultDuration: 1800, // 30 minutes
-    isPremium: true,
-    suggestedColor: "focus",
-    description: "Focus lecture profonde",
-  },
-  {
-    id: "study",
-    emoji: "📚",
-    label: "Étude",
-    defaultDuration: 2700, // 45 minutes
-    isPremium: true,
-    suggestedColor: "focus",
-    description: "Sessions d'apprentissage",
-  },
+
+  // Premium - Autres activités
   {
     id: "creativity",
     emoji: "🎨",

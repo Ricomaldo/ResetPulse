@@ -16,6 +16,7 @@ import {
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { useOnboarding } from './onboarding/OnboardingController';
 import { rs } from '../styles/responsive';
 import PalettePreview from './PalettePreview';
 import SoundPicker from './SoundPicker';
@@ -27,6 +28,7 @@ import { isTestPremium } from '../config/testMode';
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
   const { currentPalette, setPalette } = useTimerPalette();
+  const { resetOnboarding, startTooltips } = useOnboarding();
   const {
     shouldPulse,
     setShouldPulse,
@@ -724,7 +726,69 @@ export default function SettingsModal({ visible, onClose }) {
                   </Text>
                 </View>
               </View>
+
+              {/* Relancer le guide - Available for all users */}
+              <TouchableOpacity
+                style={styles.optionRow}
+                onPress={() => {
+                  haptics.selection().catch(() => {});
+                  onClose();
+                  setTimeout(() => {
+                    startTooltips();
+                  }, 300);
+                }}
+                activeOpacity={0.7}
+              >
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Relancer le guide</Text>
+                  <Text style={styles.optionDescription}>
+                    Afficher à nouveau les conseils de démarrage
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
+
+            {/* Dev Section - Only visible in development */}
+            {__DEV__ && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>🔧 Développement</Text>
+                <TouchableOpacity
+                  style={styles.optionRow}
+                  onPress={() => {
+                    Alert.alert(
+                      'Réinitialiser l\'onboarding',
+                      'L\'écran de bienvenue et les tooltips seront affichés au prochain lancement de l\'application.',
+                      [
+                        {
+                          text: 'Annuler',
+                          style: 'cancel',
+                          onPress: () => {
+                            haptics.selection().catch(() => {});
+                          }
+                        },
+                        {
+                          text: 'Réinitialiser',
+                          onPress: () => {
+                            resetOnboarding();
+                            haptics.success().catch(() => {});
+                            onClose();
+                          },
+                          style: 'destructive'
+                        }
+                      ]
+                    );
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.optionLabel}>Réinitialiser l'onboarding</Text>
+                    <Text style={styles.optionDescription}>
+                      Afficher à nouveau l'écran de bienvenue
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
           </ScrollView>
         </View>
       </View>
