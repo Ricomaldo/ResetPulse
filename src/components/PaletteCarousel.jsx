@@ -1,11 +1,18 @@
 // src/components/PaletteCarousel.jsx
-import React, { useRef, useEffect } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet, Text, Animated } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { rs } from '../styles/responsive';
-import { TIMER_PALETTES } from '../config/timerPalettes';
-import { isTestPremium } from '../config/testMode';
+import React, { useRef, useEffect } from "react";
+import {
+  View,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  Animated,
+} from "react-native";
+import { useTheme } from "../theme/ThemeProvider";
+import { useTimerPalette } from "../contexts/TimerPaletteContext";
+import { rs } from "../styles/responsive";
+import { TIMER_PALETTES } from "../config/timerPalettes";
+import { isTestPremium } from "../config/testMode";
 
 export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -16,7 +23,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     currentColor,
     selectedColorIndex,
     setColorIndex,
-    getAvailablePalettes
+    getAvailablePalettes,
   } = useTimerPalette();
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -30,8 +37,8 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     if (scrollViewRef.current && currentPaletteIndex >= 0) {
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
-          x: currentPaletteIndex * rs(220, 'width'),
-          animated: false
+          x: currentPaletteIndex * rs(220, "width"),
+          animated: false,
         });
       }, 100);
     }
@@ -57,10 +64,14 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   // Handle scroll end to detect palette change
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const containerWidth = rs(220, 'width');
+    const containerWidth = rs(220, "width");
     const newIndex = Math.round(offsetX / containerWidth);
 
-    if (newIndex !== currentPaletteIndex && newIndex >= 0 && newIndex < PALETTE_NAMES.length) {
+    if (
+      newIndex !== currentPaletteIndex &&
+      newIndex >= 0 &&
+      newIndex < PALETTE_NAMES.length
+    ) {
       const newPaletteName = PALETTE_NAMES[newIndex];
       const paletteInfo = TIMER_PALETTES[newPaletteName];
       // Only change palette if it's not premium or user is premium
@@ -70,8 +81,8 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       } else {
         // Scroll back to current palette if trying to select premium
         scrollViewRef.current?.scrollTo({
-          x: currentPaletteIndex * rs(220, 'width'),
-          animated: true
+          x: currentPaletteIndex * rs(220, "width"),
+          animated: true,
         });
       }
     }
@@ -84,13 +95,13 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
   const styles = StyleSheet.create({
     outerContainer: {
-      position: 'relative',
-      alignItems: 'center',
-      justifyContent: 'center',
+      position: "relative",
+      alignItems: "center",
+      justifyContent: "center",
     },
 
     scrollView: {
-      maxWidth: rs(220, 'width'),
+      maxWidth: rs(220, "width"),
     },
 
     scrollContent: {
@@ -98,20 +109,22 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     paletteContainer: {
-      width: rs(220, 'width'),
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      width: rs(220, "width"),
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       gap: theme.spacing.md,
       paddingVertical: theme.spacing.xs,
+      // Extra padding to accommodate scaled active button (scale: 1.2)
+      paddingHorizontal: theme.spacing.sm,
     },
 
     colorButton: {
-      width: rs(44, 'min'),
-      height: rs(44, 'min'),
-      borderRadius: rs(22, 'min'),
+      width: rs(44, "min"),
+      height: rs(44, "min"),
+      borderRadius: rs(22, "min"),
       borderWidth: 3,
-      borderColor: 'transparent',
+      borderColor: "transparent",
       ...theme.shadows.md,
     },
 
@@ -123,7 +136,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     paletteLabel: {
-      position: 'absolute',
+      position: "absolute",
       top: -30,
       backgroundColor: theme.colors.background,
       paddingHorizontal: theme.spacing.lg,
@@ -133,26 +146,26 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     paletteLabelText: {
-      fontSize: rs(13, 'min'),
-      fontWeight: '600',
+      fontSize: rs(13, "min"),
+      fontWeight: "600",
       color: theme.colors.text,
       letterSpacing: 0.5,
     },
 
     lockOverlay: {
-      position: 'absolute',
+      position: "absolute",
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.6)',
-      borderRadius: rs(22, 'min'),
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(255, 255, 255, 0.6)",
+      borderRadius: rs(22, "min"),
     },
 
     lockIcon: {
-      fontSize: rs(20, 'min'),
+      fontSize: rs(20, "min"),
     },
   });
 
@@ -164,13 +177,15 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
           styles.paletteLabel,
           {
             opacity: fadeAnim,
-            transform: [{
-              translateY: fadeAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [5, 0]
-              })
-            }]
-          }
+            transform: [
+              {
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [5, 0],
+                }),
+              },
+            ],
+          },
         ]}
         pointerEvents="none"
       >
@@ -189,7 +204,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         onMomentumScrollEnd={handleScrollEnd}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
-        snapToInterval={rs(220, 'width')}
+        snapToInterval={rs(220, "width")}
         decelerationRate="fast"
       >
         {PALETTE_NAMES.map((paletteName, paletteIndex) => {
@@ -202,19 +217,28 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
           return (
             <View key={paletteName} style={styles.paletteContainer}>
               {colors.map((color, colorIndex) => (
-                <View key={`${paletteName}-${colorIndex}`} style={{ position: 'relative' }}>
+                <View
+                  key={`${paletteName}-${colorIndex}`}
+                  style={{ position: "relative" }}
+                >
                   <TouchableOpacity
                     accessible={true}
-                    accessibilityLabel={`Couleur ${colorIndex + 1} de la palette ${paletteInfo.name}`}
+                    accessibilityLabel={`Couleur ${
+                      colorIndex + 1
+                    } de la palette ${paletteInfo.name}`}
                     accessibilityRole="button"
-                    accessibilityState={{selected: isCurrentPalette && currentColor === color}}
+                    accessibilityState={{
+                      selected: isCurrentPalette && currentColor === color,
+                    }}
                     style={[
                       styles.colorButton,
                       {
                         backgroundColor: color,
-                        opacity: isLocked ? 0.4 : (isCurrentPalette ? 1 : 0.5)
+                        opacity: isLocked ? 0.4 : isCurrentPalette ? 1 : 0.5,
                       },
-                      isCurrentPalette && currentColor === color && styles.colorButtonActive
+                      isCurrentPalette &&
+                        currentColor === color &&
+                        styles.colorButtonActive,
                     ]}
                     onPress={() => {
                       if (!isLocked) {

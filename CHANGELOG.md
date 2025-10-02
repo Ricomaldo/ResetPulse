@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Consistent highlight padding: horizontal `lg`, vertical `sm` (dial top: `lg` for duration indicator)
 
 ### Changed
+- **⚙️ Default Values for Production** - Optimized first-launch experience:
+  - Default timer duration: 5min → 45min (2700 seconds)
+  - Default activity: Basique (none)
+  - Default palette: Terre with blue color (index 1)
+  - Better initial setup for typical Pomodoro/work sessions
 - **🎨 Settings Modal Redesign** - Card-based UI with visual hierarchy (iOS 15+ style):
   - Sections organized in 3 levels: Core Experience → Configuration → Informations
   - Level 1 (Primary Cards): 🎯 Expérience Timer, 🎨 Personnalisation, ⭐ Activités
