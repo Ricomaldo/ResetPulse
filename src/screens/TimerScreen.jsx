@@ -115,7 +115,6 @@ function TimerScreenContent() {
   const dialRef = useRef(null);
   const controlsRef = useRef(null);
   const paletteRef = useRef(null);
-  const paletteContainerRef = useRef(null);
 
   // Get styles with memoization to prevent recreation
   const styles = useMemo(() => createStyles(theme), [theme]);
@@ -240,12 +239,12 @@ function TimerScreenContent() {
           styles.header,
           {
             opacity: headerAnim,
-            transform: [{
+            transform: onboardingCompleted ? [{
               translateY: headerAnim.interpolate({
                 inputRange: [0, 1],
                 outputRange: [-20, 0]
               })
-            }]
+            }] : []
           }
         ]}>
         <View style={{ flex: 1 }} />
@@ -271,8 +270,9 @@ function TimerScreenContent() {
         <Animated.View
           ref={activitiesRef}
           onLayout={() => {
-            // If onboarding not completed, no entrance animations so measure immediately
-            const delay = onboardingCompleted ? 900 : 100;
+            // If onboarding not completed, measure after welcome screen closes
+            // Need longer delay to ensure all layout shifts are complete
+            const delay = onboardingCompleted ? 900 : 500;
             setTimeout(() => {
               activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
                 const bounds = { top: pageY, left: pageX, width, height };
@@ -286,12 +286,12 @@ function TimerScreenContent() {
             styles.activitySection,
             {
               opacity: Animated.multiply(activityAnim, isTimerRunning ? 0.2 : 1),
-              transform: [{
+              transform: onboardingCompleted ? [{
                 translateX: activityAnim.interpolate({
                   inputRange: [0, 1],
                   outputRange: [-30, 0]
                 })
-              }]
+              }] : []
             }
           ]}>
           <ActivityCarousel isTimerRunning={isTimerRunning} />
@@ -304,9 +304,9 @@ function TimerScreenContent() {
           styles.timerSection,
           {
             opacity: timerAnim,
-            transform: [{
+            transform: onboardingCompleted ? [{
               scale: timerScaleAnim
-            }]
+            }] : []
           }
         ]}>
         <TimeTimer
@@ -320,9 +320,22 @@ function TimerScreenContent() {
       {/* Palette Section */}
       <Animated.View
         ref={paletteRef}
+        onLayout={() => {
+          // Measure the parent Animated.View instead of inner container
+          // Increased delay for physical devices (slower than simulator)
+          const delay = onboardingCompleted ? 1300 : 400;
+          setTimeout(() => {
+            paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
+              const bounds = { top: pageY, left: pageX, width, height };
+              console.log('Palette bounds (parent):', bounds);
+              const position = calculateTooltipPosition(bounds);
+              registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
+            });
+          }, delay);
+        }}
         style={[styles.paletteSection, {
           opacity: Animated.multiply(paletteAnim, isTimerRunning ? 0 : 1),
-          transform: [
+          transform: onboardingCompleted ? [
             {
               translateY: Animated.add(
                 paletteAnim.interpolate({
@@ -332,24 +345,9 @@ function TimerScreenContent() {
                 isTimerRunning ? 50 : 0
               )
             }
-          ]
+          ] : []
         }]}>
-        <View
-          ref={paletteContainerRef}
-          onLayout={() => {
-            // If onboarding not completed, no entrance animations so measure immediately
-            const delay = onboardingCompleted ? 1300 : 100;
-            setTimeout(() => {
-              paletteContainerRef.current?.measure((x, y, width, height, pageX, pageY) => {
-                const bounds = { top: pageY, left: pageX, width, height };
-                console.log('Palette bounds:', bounds);
-                const position = calculateTooltipPosition(bounds);
-                registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
-              });
-            }, delay);
-          }}
-          style={styles.paletteContainer}
-        >
+        <View style={styles.paletteContainer}>
           <PaletteCarousel isTimerRunning={isTimerRunning} />
         </View>
       </Animated.View>
