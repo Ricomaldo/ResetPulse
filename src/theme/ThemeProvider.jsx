@@ -85,7 +85,16 @@ export const ThemeProvider = ({ children }) => {
 
     // Actions
     setTheme: (mode) => setThemeMode(mode), // 'light', 'dark', ou 'auto'
-    toggleTheme: () => setThemeMode(isDark ? 'light' : 'dark'),
+    toggleTheme: () => {
+      // Cycle à travers les modes : light → dark → auto → light
+      if (themeMode === 'light') {
+        setThemeMode('dark');
+      } else if (themeMode === 'dark') {
+        setThemeMode('auto');
+      } else {
+        setThemeMode('light');
+      }
+    },
   };
 
   // Log du changement de thème (dev only)

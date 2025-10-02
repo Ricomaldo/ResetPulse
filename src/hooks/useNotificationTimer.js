@@ -1,17 +1,22 @@
 // src/hooks/useNotificationTimer.js
 import { useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 
 // Configuration pour les notifications (SDK 54+)
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,  // Bannière en haut
-    shouldShowList: true,    // Dans le centre de notifications
-    shouldPlaySound: true,   // Son système par défaut
-    shouldSetBadge: false,
-  }),
-});
+// Protection contre les modules natifs manquants
+try {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,  // Bannière en haut
+      shouldShowList: true,    // Dans le centre de notifications
+      shouldPlaySound: true,   // Son système par défaut
+      shouldSetBadge: false,
+    }),
+  });
+} catch (error) {
+  console.warn('⚠️ Notifications configuration failed (native module missing):', error.message);
+}
 
 export default function useNotificationTimer() {
   const notificationIdRef = useRef(null);
@@ -20,9 +25,13 @@ export default function useNotificationTimer() {
   // Demander permission au mount
   useEffect(() => {
     const requestPermissions = async () => {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Notification permissions not granted');
+      try {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status !== 'granted') {
+          console.log('Notification permissions not granted');
+        }
+      } catch (error) {
+        console.warn('⚠️ Failed to request notification permissions:', error.message);
       }
     };
 
@@ -79,20 +88,26 @@ export default function useNotificationTimer() {
 
       return id;
     } catch (error) {
-      console.log('Error scheduling notification:', error);
+      console.warn('⚠️ Error scheduling notification:', error.message);
+      // Fail silently - don't crash the app
       return null;
     }
   };
 
   // Annuler la notification
   const cancelTimerNotification = async () => {
-    if (notificationIdRef.current) {
-      await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
-      notificationIdRef.current = null;
+    try {
+      if (notificationIdRef.current) {
+        await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
+        notificationIdRef.current = null;
 
-      if (__DEV__) {
-        console.log('📱 Notification annulée');
+        if (__DEV__) {
+          console.log('📱 Notification annulée');
+        }
       }
+    } catch (error) {
+      console.warn('⚠️ Error canceling notification:', error.message);
+      // Fail silently
     }
   };
 

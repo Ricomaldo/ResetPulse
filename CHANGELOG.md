@@ -9,14 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **🎯 Onboarding System v2.0** - Professional tooltip spotlight implementation
-  - Sequential tooltips guiding users through app features (Activities → Dial → Controls → Palette)
+  - Sequential tooltips guiding users through app features (Activities → Dial → Palette → Controls)
   - SVG Mask-based spotlight highlighting (inspired by react-native-copilot)
   - Smart tooltip positioning algorithm (never hides highlighted element)
   - Precise bounds measurement using `measure()` API
   - "Skip all" button with persistent completion state
   - Accessible via "Relancer le guide" in Settings modal
+  - Interactive onboarding: users can try features as tooltips guide them
 
 ### Changed
+- **🎨 Sound Picker UX Enhancement**:
+  - Enlarged tap area for close button in SettingsModal (44x44px iOS minimum)
+  - Added iOS-style circular progress loader during sound preview playback
+  - Loader animates for exact duration of sound (1-3s depending on sound)
+  - Removed static duration text ("Durée: Xs") for cleaner interface
+  - Progress loader provides visual feedback replacing text duration
+  - Icon size adjusted: PauseIcon reduced to 12px to fit within 24px loader circle
 - **Freemium Strategy Refined**: Reorganized activity order and premium tiers
   - Pause activity moved to free tier (completes Pomodoro cycle with Work)
   - Meditation and Breathing moved to premium tier (entire mindfulness vertical now premium)
@@ -29,6 +37,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed complex manual calculations in favor of dynamic measurement
 
 ### Fixed
+- **🐛 Theme System Critical Bugs**:
+  - Fixed `toggleTheme()` not respecting "auto" mode (was stuck cycling only between light/dark)
+  - Now properly cycles through: light → dark → auto → light
+  - Added missing `textLight` color property to both light and dark themes
+  - Fixed `theme.colors.primary` reference error in SettingsModal (should be `theme.colors.brand.primary`)
+- **🔴 Notification Crash Fix** (Critical):
+  - Fixed app crash on timer completion due to missing `ExpoPushTokenManager` native module
+  - Added try-catch protection around all notification API calls to prevent total app crashes
+  - Configured `expo-notifications` plugin in app.json with proper settings
+  - Notifications now fail gracefully if native modules are unavailable
 - **Responsive Design**: Settings button now properly adapts to all device sizes
   - Changed from `rs(44)` to `rs(44, 'min')` for width/height/borderRadius
   - Settings icon size now responsive with `rs(24, 'min')`

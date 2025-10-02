@@ -123,7 +123,12 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     closeButton: {
-      padding: theme.spacing.xs,
+      padding: theme.spacing.md,
+      margin: -theme.spacing.sm, // Extend tap area outside visible bounds
+      minWidth: 44, // iOS minimum tap target
+      minHeight: 44,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
 
     closeText: {
@@ -315,7 +320,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     activityItemLabelFavorite: {
-      color: theme.colors.primary,
+      color: theme.colors.brand.primary,
       fontWeight: "600",
     },
 

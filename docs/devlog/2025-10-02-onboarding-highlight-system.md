@@ -346,3 +346,30 @@ const calculateTooltipPosition = (bounds, tooltipHeight = 120) => {
 ---
 
 **Status final:** ✅ Système 100% fonctionnel. Architecture professionnelle. Tooltips intelligents. Highlights parfaits. Code maintenable.
+
+---
+
+## 🔄 Amélioration UX - Onboarding Interactif (Soir)
+
+### 🎯 Problème identifié
+L'ordre initial (Activities → Dial → Controls → Palette) créait une frustration :
+- Les controls étaient en 3ème position
+- Si l'utilisateur lance le timer, l'onboarding ne va pas jusqu'au bout
+- Dernière étape (palette) devient inaccessible pendant le timer
+
+### ✅ Solution implémentée
+**Inversion tooltips 3 ↔ 4** : Activities → Dial → **Palette** → **Controls**
+
+**Avantages** :
+1. ✅ Découverte passive d'abord (voir, configurer)
+2. ✅ Action de lancement en dernier (play/pause)
+3. ✅ Utilisateur peut interagir avec chaque élément pendant le tooltip
+4. ✅ Pas de blocage : `pointerEvents="none"` sur overlay uniquement
+5. ✅ Flow complet garanti : pas de risque d'interruption par le timer
+
+**Changements techniques** :
+- Inversion ordre dans `TOOLTIPS_CONFIG` (OnboardingController.jsx)
+- Texte palette amélioré : "Changez les couleurs à votre guise"
+- Aucun impact sur architecture (système déclaratif)
+
+**Résultat** : Onboarding plus fluide et engageant, zéro frustration.

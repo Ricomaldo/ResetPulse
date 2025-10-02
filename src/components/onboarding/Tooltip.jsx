@@ -25,23 +25,15 @@ export default function Tooltip({
   onSkipAll
 }) {
   const theme = useTheme();
-  const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        tension: 80,
-        friction: 10,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: TRANSITION.SHORT,
-        useNativeDriver: true,
-      })
-    ]).start();
+    // Simple fade-in without scale to avoid perceived movement
+    Animated.timing(opacityAnim, {
+      toValue: 1,
+      duration: TRANSITION.MEDIUM,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
   const handleNext = async () => {
@@ -182,7 +174,6 @@ export default function Tooltip({
           styles.tooltipContainer,
           {
             opacity: opacityAnim,
-            transform: [{ scale: scaleAnim }]
           }
         ]}
         pointerEvents="box-none"

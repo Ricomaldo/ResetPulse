@@ -1,13 +1,14 @@
 // src/components/SoundPicker.jsx
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  ActivityIndicator
+  Animated
 } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
 import { TIMER_SOUNDS, getSoundById } from '../config/sounds';
@@ -15,10 +16,65 @@ import haptics from '../utils/haptics';
 import useSimpleAudio from '../hooks/useSimpleAudio';
 import { PlayIcon, PauseIcon } from './Icons';
 
+// Composant de loader circulaire style iOS
+const CircularProgress = ({ duration, size = 24, strokeWidth = 2, color }) => {
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+
+  useEffect(() => {
+    // Reset et redémarrer l'animation
+    animatedValue.setValue(0);
+    Animated.timing(animatedValue, {
+      toValue: 1,
+      duration: duration * 1000, // Convertir en ms
+      useNativeDriver: true,
+    }).start();
+  }, [duration]);
+
+  const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+  return (
+    <Svg width={size} height={size} style={{ transform: [{ rotate: '-90deg' }] }}>
+      {/* Cercle de fond */}
+      <Circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        stroke={color + '20'}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      {/* Cercle animé */}
+      <AnimatedCircle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeDasharray={circumference}
+        strokeDashoffset={animatedValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [circumference, 0],
+        })}
+        strokeLinecap="round"
+        fill="none"
+      />
+    </Svg>
+  );
+};
+
 export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
   const theme = useTheme();
   const { playSound, stopSound, isPlaying } = useSimpleAudio('preview');
   const [playingId, setPlayingId] = useState(null);
+  const timeoutRef = useRef(null);
+
+  // Helper pour convertir la durée en millisecondes
+  const parseDuration = (durationStr) => {
+    const match = durationStr.match(/(\d+)s/);
+    return match ? parseInt(match[1]) : 2; // Default 2s
+  };
 
   const handleSoundPress = useCallback(async (soundId) => {
     haptics.selection().catch(() => {});
@@ -27,12 +83,19 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
     if (playingId === soundId && isPlaying) {
       await stopSound();
       setPlayingId(null);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
       return;
     }
 
     // Arrêter tout son en cours
     if (isPlaying) {
       await stopSound();
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
 
     // Sélectionner le son
@@ -45,17 +108,25 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
       const sound = getSoundById(soundId);
       await playSound(sound.file);
 
-      // Auto-reset après 3 secondes max (preview)
-      setTimeout(() => {
-        if (playingId === soundId) {
-          setPlayingId(null);
-        }
-      }, 3000);
+      // Auto-reset après la durée réelle du son
+      const duration = parseDuration(sound.duration);
+      timeoutRef.current = setTimeout(() => {
+        setPlayingId(null);
+      }, duration * 1000);
     } catch (error) {
       console.log('Error playing sound preview:', error);
       setPlayingId(null);
     }
   }, [playingId, isPlaying, onSoundSelect, playSound, stopSound]);
+
+  // Cleanup au démontage
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const styles = StyleSheet.create({
     container: {
@@ -101,16 +172,25 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
       fontSize: rs(13, 'min'),
       fontWeight: '500',
       color: theme.colors.text,
-      marginBottom: 2,
-    },
-
-    soundDuration: {
-      fontSize: rs(11, 'min'),
-      color: theme.colors.textLight,
     },
 
     playIndicator: {
       marginLeft: theme.spacing.sm,
+      width: 24,
+      height: 24,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+    },
+
+    playIndicatorInner: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
 
     playIcon: {
@@ -136,6 +216,7 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
         {TIMER_SOUNDS.map((sound) => {
           const isActive = selectedSoundId === sound.id;
           const isCurrentlyPlaying = playingId === sound.id && isPlaying;
+          const soundDuration = parseDuration(sound.duration);
 
           return (
             <TouchableOpacity
@@ -152,14 +233,23 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
 
               <View style={styles.soundInfo}>
                 <Text style={styles.soundName}>{sound.name}</Text>
-                <Text style={styles.soundDuration}>
-                  Durée: {sound.duration}
-                </Text>
               </View>
 
               <View style={styles.playIndicator}>
                 {isCurrentlyPlaying ? (
-                  <PauseIcon size={16} color={theme.colors.brand.primary} />
+                  <>
+                    {/* Loader circulaire en arrière-plan */}
+                    <CircularProgress
+                      duration={soundDuration}
+                      size={24}
+                      strokeWidth={2.5}
+                      color={theme.colors.brand.primary}
+                    />
+                    {/* Icône pause au centre */}
+                    <View style={styles.playIndicatorInner}>
+                      <PauseIcon size={12} color={theme.colors.brand.primary} />
+                    </View>
+                  </>
                 ) : isActive ? (
                   <Text style={styles.playIcon}>✓</Text>
                 ) : (

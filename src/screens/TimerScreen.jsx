@@ -115,6 +115,7 @@ function TimerScreenContent() {
   const dialRef = useRef(null);
   const controlsRef = useRef(null);
   const paletteRef = useRef(null);
+  const paletteContainerRef = useRef(null);
 
   // Get styles with memoization to prevent recreation
   const styles = useMemo(() => createStyles(theme), [theme]);
@@ -257,14 +258,16 @@ function TimerScreenContent() {
         <Animated.View
           ref={activitiesRef}
           onLayout={() => {
-            // Measure after layout
+            // Wait for entrance animation to complete before measuring
+            // ACTIVITY_DELAY (400ms) + ACTIVITY_DURATION (400ms) = 800ms
             setTimeout(() => {
               activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
                 const bounds = { top: pageY, left: pageX, width, height };
+                console.log('Activities bounds:', bounds);
                 const position = calculateTooltipPosition(bounds);
                 registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
               });
-            }, 100);
+            }, 900); // Wait until animation completes
           }}
           style={[
             styles.activitySection,
@@ -304,15 +307,6 @@ function TimerScreenContent() {
       {/* Palette Section */}
       <Animated.View
         ref={paletteRef}
-        onLayout={() => {
-          setTimeout(() => {
-            paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
-              const bounds = { top: pageY, left: pageX, width, height };
-              const position = calculateTooltipPosition(bounds);
-              registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
-            });
-          }, 100);
-        }}
         style={[styles.paletteSection, {
           opacity: Animated.multiply(paletteAnim, isTimerRunning ? 0 : 1),
           transform: [
@@ -327,7 +321,22 @@ function TimerScreenContent() {
             }
           ]
         }]}>
-        <View style={styles.paletteContainer}>
+        <View
+          ref={paletteContainerRef}
+          onLayout={() => {
+            // Wait for entrance animation to complete before measuring
+            // PALETTE_DELAY (800ms) + PALETTE_DURATION (400ms) = 1200ms
+            setTimeout(() => {
+              paletteContainerRef.current?.measure((x, y, width, height, pageX, pageY) => {
+                const bounds = { top: pageY, left: pageX, width, height };
+                console.log('Palette bounds:', bounds);
+                const position = calculateTooltipPosition(bounds);
+                registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
+              });
+            }, 1300); // Wait until animation completes
+          }}
+          style={styles.paletteContainer}
+        >
           <PaletteCarousel isTimerRunning={isTimerRunning} />
         </View>
       </Animated.View>

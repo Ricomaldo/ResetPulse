@@ -7,7 +7,8 @@ import HighlightOverlay from './HighlightOverlay';
 // Context pour l'onboarding
 const OnboardingContext = createContext(null);
 
-// Tooltips configuration - Séquence: 1→2→3→4 (de haut en bas)
+// Tooltips configuration - Séquence: 1→2→3→4 (découverte progressive)
+// Ordre optimisé pour permettre l'interaction pendant l'onboarding
 const TOOLTIPS_CONFIG = [
   {
     id: 'activities',
@@ -20,14 +21,14 @@ const TOOLTIPS_CONFIG = [
     arrowDirection: 'down',
   },
   {
+    id: 'palette',
+    text: 'Changez les couleurs à votre guise',
+    arrowDirection: 'down',
+  },
+  {
     id: 'controls',
     text: 'Démarrez, mettez en pause, ou réinitialisez',
     subtext: 'Le timer continue en arrière-plan',
-    arrowDirection: 'up',
-  },
-  {
-    id: 'palette',
-    text: 'Vous pouvez aussi changer les couleurs',
     arrowDirection: 'down',
   },
 ];

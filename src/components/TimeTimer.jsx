@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { useOnboarding } from './onboarding/OnboardingController';
 import { rs, getComponentSizes } from '../styles/responsive';
 import useTimer from '../hooks/useTimer';
 import TimerDial from './timer/TimerDial';
@@ -22,6 +23,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
     saveActivityDuration
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
+  const { highlightedElement, completeOnboarding } = useOnboarding();
 
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
@@ -120,10 +122,8 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
     controlsContainer: {
       position: 'absolute',
       bottom: rs(40, 'height'),
-      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: theme.spacing.lg,
       width: '100%',
     },
 
@@ -214,11 +214,18 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
       </View>
 
       {/* Centered Control Buttons */}
-      <View ref={controlsContainerRef} style={styles.controlsContainer}>
-        {/* Main Control Buttons */}
+      <View style={styles.controlsContainer}>
+        {/* Wrapper for onboarding bounds - only wraps the buttons */}
+        <View ref={controlsContainerRef} style={{ flexDirection: 'row', gap: theme.spacing.lg }}>
           <TouchableOpacity
             style={[styles.controlButton, { opacity: timer.running ? BUTTON.RUNNING_OPACITY : BUTTON.IDLE_OPACITY }]}
-            onPress={timer.toggleRunning}
+            onPress={() => {
+              timer.toggleRunning();
+              // If user starts timer during onboarding on controls, complete onboarding
+              if (highlightedElement === 'controls' && !timer.running) {
+                completeOnboarding();
+              }
+            }}
             activeOpacity={TOUCH.ACTIVE_OPACITY}
           >
             {timer.running ? <PauseIcon size={24} color="white" /> : <PlayIcon size={24} color="white" />}
@@ -231,6 +238,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
           >
             <ResetIcon size={22} color="white" />
           </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

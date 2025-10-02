@@ -20,6 +20,22 @@
         "UIBackgroundModes": ["audio"]
       }
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#4A5568",
+          "sounds": []
+        }
+      ]
+    ],
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#4A5568",
+      "androidMode": "default",
+      "androidCollapsedTitle": "ResetPulse"
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

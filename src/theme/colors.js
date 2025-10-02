@@ -44,6 +44,7 @@ export const lightTheme = {
 
   text: '#1F2937',               // Texte principal plus contrasté
   textSecondary: '#6B7280',      // Texte secondaire
+  textLight: '#9CA3AF',          // Texte léger/tertiaire
   textOnPrimary: '#FFFFFF',      // Texte sur couleur primaire
   textOnDark: '#FFFFFF',         // Texte sur fond sombre
 
@@ -77,6 +78,7 @@ export const darkTheme = {
 
   text: '#FEFEFE',                // Texte principal
   textSecondary: '#B8B8B8',       // Texte secondaire
+  textLight: '#8A8A8A',           // Texte léger/tertiaire
   textOnPrimary: '#FFFFFF',       // Texte sur couleur primaire
   textOnDark: '#FFFFFF',          // Texte sur fond sombre
 
