@@ -10,87 +10,141 @@ import PaletteCarousel from '../components/PaletteCarousel';
 import TimeTimer from '../components/TimeTimer';
 import SettingsModal from '../components/SettingsModal';
 import { SettingsIcon } from '../components/Icons';
-import { rs, getDeviceInfo } from '../styles/responsive';
+import { rs } from '../styles/responsive';
 import { ENTRANCE_ANIMATION, SPRING } from '../constants/animations';
+import { getGridHeights } from '../constants/gridLayout';
 
-// Move StyleSheet outside component to avoid recreation on every render
-const createStyles = (theme) => StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: rs(20),
-  },
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-  header: {
-    height: rs(50, 'height'),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingHorizontal: rs(10),
-    zIndex: 100,
-  },
+// Grid-based styles with Golden Ratio
+const createStyles = (theme) => {
+  const heights = getGridHeights();
 
-  settingsButton: {
-    width: rs(44, 'min'),
-    height: rs(44, 'min'),
-    borderRadius: rs(22, 'min'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...theme.shadows.md,
-  },
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: rs(20),
+    },
 
-  activitySection: {
-    height: rs(65, 'height'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 0,
-    overflow: 'visible',
-  },
+    header: {
+      height: heights.header,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      paddingHorizontal: rs(10),
+      zIndex: 100,
+    },
 
-  timerSection: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
-  },
+    settingsButton: {
+      width: rs(44, 'min'),
+      height: rs(44, 'min'),
+      borderRadius: rs(22, 'min'),
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...theme.shadows.md,
+    },
 
-  paletteSection: {
-    height: rs(65, 'height'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 0,
-    marginBottom: rs(10, 'height'),
-  },
+    activitySection: {
+      height: heights.activities,
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'visible',
+    },
 
-  paletteContainer: {
-    backgroundColor: theme.isDark ? theme.colors.brand.deep : theme.colors.brand.neutral,
-    paddingVertical: rs(8),
-    paddingHorizontal: rs(20),
-    borderRadius: rs(35),
-    borderWidth: 1,
-    borderColor: theme.colors.brand.primary,
-    ...theme.shadows.lg,
-  },
-});
+    timerSection: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    paletteSection: {
+      height: heights.palette,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: rs(10, 'height'),
+    },
+
+    paletteContainer: {
+      backgroundColor: theme.isDark ? theme.colors.brand.deep : theme.colors.brand.neutral,
+      paddingVertical: rs(8),
+      paddingHorizontal: rs(20),
+      borderRadius: rs(35),
+      borderWidth: 1,
+      borderColor: theme.colors.brand.primary,
+      ...theme.shadows.lg,
+    },
+  });
+};
+
+// Helper: Calculate smart tooltip position
+const calculateTooltipPosition = (bounds, tooltipHeight = 120) => {
+  const spacing = rs(20, 'height');
+  const spaceAbove = bounds.top;
+  const spaceBelow = SCREEN_HEIGHT - (bounds.top + bounds.height);
+
+  // Try to place above first
+  if (spaceAbove >= tooltipHeight + spacing) {
+    return {
+      top: bounds.top - tooltipHeight - spacing,
+    };
+  }
+  // Then try below
+  else if (spaceBelow >= tooltipHeight + spacing) {
+    return {
+      top: bounds.top + bounds.height + spacing,
+    };
+  }
+  // Fallback: center vertically
+  else {
+    return {
+      top: SCREEN_HEIGHT / 2 - tooltipHeight / 2,
+    };
+  }
+};
 
 function TimerScreenContent() {
   const theme = useTheme();
   const { showActivities } = useTimerOptions();
-  const { registerTooltipTarget, highlightedElement } = useOnboarding();
+  const { registerTooltipTarget } = useOnboarding();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerRef = useRef(null);
-  const tooltip1Position = useRef(null);
 
-  // Refs for tooltip targets
+  // Refs for measuring actual elements
   const activitiesRef = useRef(null);
   const dialRef = useRef(null);
-  const paletteRef = useRef(null);
   const controlsRef = useRef(null);
-  const registeredTooltips = useRef({});
+  const paletteRef = useRef(null);
 
   // Get styles with memoization to prevent recreation
   const styles = useMemo(() => createStyles(theme), [theme]);
+
+  // Measure dial and controls after they're mounted
+  useEffect(() => {
+    const measureTimerElements = () => {
+      // Dial - dialRef.current is the element directly
+      if (dialRef.current && dialRef.current.measure) {
+        dialRef.current.measure((x, y, width, height, pageX, pageY) => {
+          const bounds = { top: pageY, left: pageX, width, height };
+          const position = calculateTooltipPosition(bounds);
+          registerTooltipTarget(TOOLTIP_IDS.DIAL, position, bounds);
+        });
+      }
+
+      // Controls - controlsRef.current is the element directly
+      if (controlsRef.current && controlsRef.current.measure) {
+        controlsRef.current.measure((x, y, width, height, pageX, pageY) => {
+          const bounds = { top: pageY, left: pageX, width, height };
+          const position = calculateTooltipPosition(bounds);
+          registerTooltipTarget(TOOLTIP_IDS.CONTROLS, position, bounds);
+        });
+      }
+    };
+
+    // Delay to ensure elements are rendered
+    const timer = setTimeout(measureTimerElements, 600);
+    return () => clearTimeout(timer);
+  }, [registerTooltipTarget]);
 
   // Animation values for staggered entrance
   const headerAnim = useRef(new Animated.Value(0)).current;
@@ -202,38 +256,20 @@ function TimerScreenContent() {
       {showActivities && (
         <Animated.View
           ref={activitiesRef}
-          onLayout={(event) => {
-            if (tooltip1Position.current) return;
-
-            const { x, y, width, height } = event.nativeEvent.layout;
-            const { width: screenWidth } = Dimensions.get('window');
-            const position = {
-              top: rs(180, 'height'),
-              left: screenWidth / 2 - rs(110),
-            };
-            tooltip1Position.current = position;
-
-            // Get absolute position for bounds
-            activitiesRef.current?.measure((fx, fy, w, h, pageX, pageY) => {
-              const bounds = {
-                top: pageY,
-                left: pageX,
-                width: w,
-                height: h,
-              };
-              registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
-            });
+          onLayout={() => {
+            // Measure after layout
+            setTimeout(() => {
+              activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
+                const bounds = { top: pageY, left: pageX, width, height };
+                const position = calculateTooltipPosition(bounds);
+                registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
+              });
+            }, 100);
           }}
           style={[
             styles.activitySection,
             {
-              opacity: Animated.multiply(activityAnim, isTimerRunning ? 0.2 : 1),
-              transform: [{
-                translateX: activityAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [-30, 0]
-                })
-              }]
+              opacity: isTimerRunning ? 0.2 : activityAnim,
             }
           ]}>
           <ActivityCarousel isTimerRunning={isTimerRunning} />
@@ -242,22 +278,6 @@ function TimerScreenContent() {
 
       {/* Timer Section - Flex to take available space */}
       <Animated.View
-        ref={dialRef}
-        onLayout={(event) => {
-          // Reuse EXACT same position as tooltip #1
-          if (!tooltip1Position.current) return;
-
-          // Measure dial section for bounds
-          dialRef.current?.measure((fx, fy, w, h, pageX, pageY) => {
-            const bounds = {
-              top: pageY,
-              left: pageX,
-              width: w,
-              height: h,
-            };
-            registerTooltipTarget(TOOLTIP_IDS.DIAL, tooltip1Position.current, bounds);
-          });
-        }}
         style={[
           styles.timerSection,
           {
@@ -270,54 +290,28 @@ function TimerScreenContent() {
         <TimeTimer
           onRunningChange={setIsTimerRunning}
           onTimerRef={(ref) => { timerRef.current = ref; }}
-          onControlsRef={(ref) => {
-            if (registeredTooltips.current[TOOLTIP_IDS.CONTROLS]) return;
-            registeredTooltips.current[TOOLTIP_IDS.CONTROLS] = true;
-            controlsRef.current = ref;
-
-            // Measure controls for bounds and position
-            if (ref) {
-              setTimeout(() => {
-                ref.measure((fx, fy, w, h, pageX, pageY) => {
-                  const { width: screenWidth } = Dimensions.get('window');
-                  const bounds = {
-                    top: pageY,
-                    left: pageX,
-                    width: w,
-                    height: h,
-                  };
-                  const position = {
-                    top: pageY - rs(100, 'height'),
-                    left: screenWidth / 2 - rs(110),
-                  };
-                  registerTooltipTarget(TOOLTIP_IDS.CONTROLS, position, bounds);
-                });
-              }, 200);
-            }
-          }}
+          onDialRef={(element) => { dialRef.current = element; }}
+          onControlsRef={(element) => { controlsRef.current = element; }}
         />
       </Animated.View>
 
       {/* Palette Section */}
       <Animated.View
         ref={paletteRef}
-        onLayout={(event) => {
-          if (registeredTooltips.current[TOOLTIP_IDS.PALETTE]) return;
-          registeredTooltips.current[TOOLTIP_IDS.PALETTE] = true;
-          paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
-            const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-            const bounds = {
-              top: pageY,
-              left: pageX,
-              width: width,
-              height: height,
-            };
-            const position = {
-              top: screenHeight - rs(120, 'height'),
-              left: screenWidth / 2 - rs(110),
-            };
-            registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
-          });
+        onLayout={() => {
+          setTimeout(() => {
+            paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
+              // Expand height slightly for better highlight visibility
+              const expandedBounds = {
+                top: pageY - rs(5, 'height'),
+                left: pageX,
+                width,
+                height: height + rs(10, 'height')
+              };
+              const position = calculateTooltipPosition(expandedBounds);
+              registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, expandedBounds);
+            });
+          }, 100);
         }}
         style={[styles.paletteSection, {
           opacity: Animated.multiply(paletteAnim, isTimerRunning ? 0 : 1),

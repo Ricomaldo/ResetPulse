@@ -1,43 +1,62 @@
 // src/components/onboarding/HighlightOverlay.jsx
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { useTheme } from '../../theme/ThemeProvider';
+import { StyleSheet, Dimensions } from 'react-native';
+import Svg, { Rect, Defs, Mask } from 'react-native-svg';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
+/**
+ * HighlightOverlay using SVG Mask for perfect spotlight effect
+ *
+ * Technique: Mask with white background + black cutout
+ * - White areas = overlay visible (dark)
+ * - Black areas = overlay transparent (spotlight)
+ */
 export default function HighlightOverlay({ highlightedElement, targetBounds }) {
-  const theme = useTheme();
-
   if (!highlightedElement || !targetBounds) return null;
 
-  const { top, height } = targetBounds;
-  const bottom = top + height;
-
-  const styles = StyleSheet.create({
-    topOverlay: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: top,
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-      pointerEvents: 'none',
-    },
-    bottomOverlay: {
-      position: 'absolute',
-      top: bottom,
-      left: 0,
-      right: 0,
-      height: SCREEN_HEIGHT - bottom,
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-      pointerEvents: 'none',
-    },
-  });
+  const { top, left, width, height } = targetBounds;
+  const borderRadius = 12; // Rounded corners for spotlight
 
   return (
-    <>
-      <View style={styles.topOverlay} />
-      <View style={styles.bottomOverlay} />
-    </>
+    <Svg
+      width={SCREEN_WIDTH}
+      height={SCREEN_HEIGHT}
+      style={StyleSheet.absoluteFillObject}
+      pointerEvents="none"
+    >
+      <Defs>
+        <Mask id="spotlight-mask">
+          {/* White = overlay visible */}
+          <Rect
+            x="0"
+            y="0"
+            width={SCREEN_WIDTH}
+            height={SCREEN_HEIGHT}
+            fill="white"
+          />
+          {/* Black = cutout (transparent spotlight) */}
+          <Rect
+            x={left}
+            y={top}
+            width={width}
+            height={height}
+            rx={borderRadius}
+            ry={borderRadius}
+            fill="black"
+          />
+        </Mask>
+      </Defs>
+
+      {/* Semi-transparent overlay with mask applied */}
+      <Rect
+        x="0"
+        y="0"
+        width={SCREEN_WIDTH}
+        height={SCREEN_HEIGHT}
+        fill="rgba(0, 0, 0, 0.75)"
+        mask="url(#spotlight-mask)"
+      />
+    </Svg>
   );
 }

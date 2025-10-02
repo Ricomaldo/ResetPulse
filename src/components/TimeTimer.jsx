@@ -11,7 +11,7 @@ import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 import { TIMER, BUTTON, TEXT, TOUCH } from '../constants/uiConstants';
 
-export default function TimeTimer({ onRunningChange, onTimerRef, onControlsRef }) {
+export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onControlsRef }) {
   const theme = useTheme();
   const {
     shouldPulse,
@@ -26,8 +26,9 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onControlsRef }
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
 
-  // Ref for controls container
-  const controlsRef = useRef(null);
+  // Refs for onboarding
+  const dialWrapperRef = useRef(null);
+  const controlsContainerRef = useRef(null);
 
   // Pass timer ref to parent if needed
   useEffect(() => {
@@ -36,10 +37,28 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onControlsRef }
     }
   }, [timer, onTimerRef]);
 
-  // Pass controls ref to parent if needed
+  // Pass dial ref to parent (pass .current directly)
+  useEffect(() => {
+    if (onDialRef) {
+      // Use a small delay to ensure ref is attached
+      const timer = setTimeout(() => {
+        if (dialWrapperRef.current) {
+          onDialRef(dialWrapperRef.current);
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [onDialRef]);
+
+  // Pass controls ref to parent (pass .current directly)
   useEffect(() => {
     if (onControlsRef) {
-      onControlsRef(controlsRef);
+      const timer = setTimeout(() => {
+        if (controlsContainerRef.current) {
+          onControlsRef(controlsContainerRef.current);
+        }
+      }, 50);
+      return () => clearTimeout(timer);
     }
   }, [onControlsRef]);
 
@@ -162,7 +181,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onControlsRef }
   return (
     <View style={styles.container}>
       {/* Timer Circle */}
-      <View style={styles.timerWrapper}>
+      <View ref={dialWrapperRef} style={styles.timerWrapper}>
         <TimerDial
           progress={timer.progress}
           duration={timer.duration}
@@ -195,7 +214,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onControlsRef }
       </View>
 
       {/* Centered Control Buttons */}
-      <View ref={controlsRef} style={styles.controlsContainer}>
+      <View ref={controlsContainerRef} style={styles.controlsContainer}>
         {/* Main Control Buttons */}
           <TouchableOpacity
             style={[styles.controlButton, { opacity: timer.running ? BUTTON.RUNNING_OPACITY : BUTTON.IDLE_OPACITY }]}

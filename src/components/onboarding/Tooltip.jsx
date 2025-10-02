@@ -72,13 +72,6 @@ export default function Tooltip({
   };
 
   const styles = StyleSheet.create({
-    overlay: {
-      ...StyleSheet.absoluteFillObject,
-      backgroundColor: theme.colors.overlay,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-
     skipAllButton: {
       position: 'absolute',
       top: theme.spacing.xl + 40,
@@ -173,7 +166,7 @@ export default function Tooltip({
   }
 
   return (
-    <View style={styles.overlay} pointerEvents="box-none">
+    <>
       {/* Skip all button */}
       <TouchableOpacity
         style={styles.skipAllButton}
@@ -192,6 +185,7 @@ export default function Tooltip({
             transform: [{ scale: scaleAnim }]
           }
         ]}
+        pointerEvents="box-none"
       >
         <View style={styles.tooltipBubble}>
           {/* Arrow */}
@@ -224,6 +218,6 @@ export default function Tooltip({
           </View>
         </View>
       </Animated.View>
-    </View>
+    </>
   );
 }
