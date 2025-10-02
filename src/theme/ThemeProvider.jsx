@@ -1,8 +1,8 @@
 // src/theme/ThemeProvider.jsx
 // Provider simplifié pour la gestion light/dark mode avec support platform-adaptive
 
-import React, { createContext, useContext, useEffect } from 'react';
-import { useColorScheme, Platform } from 'react-native';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Appearance, Platform } from 'react-native';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { lightTheme, darkTheme } from './colors';
 import { spacing, borderRadius, shadows, typography, layout, animation, zIndex } from './tokens';
@@ -22,11 +22,34 @@ import {
 const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({ children }) => {
-  // Détection du thème système
-  const systemColorScheme = useColorScheme();
+  // Détection du thème système avec Appearance API (plus fiable que useColorScheme)
+  const initialScheme = Appearance.getColorScheme();
+  console.log('🔍 Appearance.getColorScheme() returns:', initialScheme);
+
+  const [systemColorScheme, setSystemColorScheme] = useState(
+    initialScheme || 'light'
+  );
 
   // État persisté : 'light', 'dark', ou 'auto'
   const [themeMode, setThemeMode] = usePersistedState('@ResetPulse:themeMode', 'auto');
+
+  // Écouter les changements du thème système avec Appearance API
+  useEffect(() => {
+    // Listener pour les changements de thème système
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setSystemColorScheme(colorScheme || 'light');
+      if (__DEV__) {
+        console.log(`📱 System color scheme changed to: ${colorScheme}`);
+      }
+    });
+
+    // Log initial
+    if (__DEV__) {
+      console.log(`📱 Initial system color scheme: ${systemColorScheme}`);
+    }
+
+    return () => subscription.remove();
+  }, []);
 
   // Déterminer le thème actif
   const isDark = themeMode === 'auto'

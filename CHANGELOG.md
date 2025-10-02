@@ -56,10 +56,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **🌓 System Theme Detection Fixed** (Critical):
+  - Replaced `useColorScheme()` hook with `Appearance` API for reliable system theme detection
+  - `useColorScheme()` was returning 'light' even when device was in dark mode
+  - Added `Appearance.addChangeListener()` to track system theme changes in real-time
   - Changed `userInterfaceStyle` from "light" to "automatic" in app.json
-  - Fixes auto mode stuck on light theme regardless of system setting
-  - `useColorScheme()` now properly detects system dark/light mode
-  - Auto mode now correctly follows device appearance settings
+  - Auto mode now correctly follows device appearance settings immediately
 - **🔧 Haptic Feedback Configuration**:
   - Added `expo-haptics` plugin to app.json for proper native haptic support
   - Fixes potential vibration issues in production builds (iOS/Android)
