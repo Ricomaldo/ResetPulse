@@ -1,5 +1,5 @@
 // src/components/SettingsModal.jsx
-import React from 'react';
+import React from "react";
 import {
   Modal,
   View,
@@ -11,19 +11,19 @@ import {
   Platform,
   TouchableNativeFeedback,
   Alert,
-  Image
-} from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { useOnboarding } from './onboarding/OnboardingController';
-import { rs } from '../styles/responsive';
-import PalettePreview from './PalettePreview';
-import SoundPicker from './SoundPicker';
-import { getAllActivities } from '../config/activities';
-import { TIMER_PALETTES, isPalettePremium } from '../config/timerPalettes';
-import haptics from '../utils/haptics';
-import { isTestPremium } from '../config/testMode';
+  Image,
+} from "react-native";
+import { useTheme } from "../theme/ThemeProvider";
+import { useTimerOptions } from "../contexts/TimerOptionsContext";
+import { useTimerPalette } from "../contexts/TimerPaletteContext";
+import { useOnboarding } from "./onboarding/OnboardingController";
+import { rs } from "../styles/responsive";
+import PalettePreview from "./PalettePreview";
+import SoundPicker from "./SoundPicker";
+import { getAllActivities } from "../config/activities";
+import { TIMER_PALETTES, isPalettePremium } from "../config/timerPalettes";
+import haptics from "../utils/haptics";
+import { isTestPremium } from "../config/testMode";
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
@@ -43,7 +43,7 @@ export default function SettingsModal({ visible, onClose }) {
     favoriteActivities,
     setFavoriteActivities,
     selectedSoundId,
-    setSelectedSoundId
+    setSelectedSoundId,
   } = useTimerOptions();
 
   const allActivities = getAllActivities();
@@ -52,31 +52,39 @@ export default function SettingsModal({ visible, onClose }) {
   const toggleFavorite = (activityId) => {
     haptics.selection().catch(() => {});
     const newFavorites = favoriteActivities.includes(activityId)
-      ? favoriteActivities.filter(id => id !== activityId)
+      ? favoriteActivities.filter((id) => id !== activityId)
       : [...favoriteActivities, activityId];
     setFavoriteActivities(newFavorites);
   };
 
   // Platform-specific touchable component
-  const Touchable = Platform.OS === 'android' && TouchableNativeFeedback?.canUseNativeForeground?.()
-    ? TouchableNativeFeedback
-    : TouchableOpacity;
+  const Touchable =
+    Platform.OS === "android" &&
+    TouchableNativeFeedback?.canUseNativeForeground?.()
+      ? TouchableNativeFeedback
+      : TouchableOpacity;
 
-  const touchableProps = Platform.OS === 'android' && TouchableNativeFeedback?.Ripple ? {
-    background: TouchableNativeFeedback.Ripple(theme.colors.brand.primary + '20', false)
-  } : {
-    activeOpacity: 0.7
-  };
+  const touchableProps =
+    Platform.OS === "android" && TouchableNativeFeedback?.Ripple
+      ? {
+          background: TouchableNativeFeedback.Ripple(
+            theme.colors.brand.primary + "20",
+            false
+          ),
+        }
+      : {
+          activeOpacity: 0.7,
+        };
 
   const styles = StyleSheet.create({
     overlay: {
       flex: 1,
       backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
+        ios: "rgba(0, 0, 0, 0.4)",
+        android: "rgba(0, 0, 0, 0.5)",
       }),
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
 
     modalContainer: {
@@ -85,23 +93,23 @@ export default function SettingsModal({ visible, onClose }) {
         ios: 16,
         android: 12,
       }),
-      width: '90%',
-      maxHeight: '80%',
+      width: "90%",
+      maxHeight: "80%",
       padding: theme.spacing.lg,
-      ...theme.shadow('xl'),
+      ...theme.shadow("xl"),
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + '30',
+          borderColor: theme.colors.border + "30",
         },
         android: {},
       }),
     },
 
     header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: theme.spacing.lg,
       paddingBottom: theme.spacing.sm,
       borderBottomWidth: 1,
@@ -109,8 +117,8 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     title: {
-      fontSize: rs(24, 'min'),
-      fontWeight: 'bold',
+      fontSize: rs(24, "min"),
+      fontWeight: "bold",
       color: theme.colors.text,
     },
 
@@ -119,7 +127,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     closeText: {
-      fontSize: rs(20, 'min'),
+      fontSize: rs(20, "min"),
       color: theme.colors.text,
     },
 
@@ -132,35 +140,35 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     sectionTitle: {
-      fontSize: rs(16, 'min'),
-      fontWeight: '600',
+      fontSize: rs(16, "min"),
+      fontWeight: "600",
       color: theme.colors.text,
       marginBottom: theme.spacing.sm,
     },
 
     optionRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       paddingVertical: theme.spacing.sm,
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: theme.colors.border,
     },
 
     optionLabel: {
-      fontSize: rs(14, 'min'),
+      fontSize: rs(14, "min"),
       color: theme.colors.text,
       flex: 1,
     },
 
     optionDescription: {
-      fontSize: rs(11, 'min'),
+      fontSize: rs(11, "min"),
       color: theme.colors.textLight,
       marginTop: theme.spacing.xs / 2,
     },
 
     segmentedControl: {
-      flexDirection: 'row',
+      flexDirection: "row",
       backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadius.md,
       padding: 2,
@@ -171,7 +179,7 @@ export default function SettingsModal({ visible, onClose }) {
       paddingVertical: theme.spacing.xs,
       paddingHorizontal: theme.spacing.xs,
       borderRadius: theme.borderRadius.md - 2,
-      alignItems: 'center',
+      alignItems: "center",
       minWidth: 60,
     },
 
@@ -180,10 +188,10 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     segmentText: {
-      fontSize: rs(11, 'min'),
+      fontSize: rs(11, "min"),
       color: theme.colors.text,
-      fontWeight: '500',
-      textAlign: 'center',
+      fontWeight: "500",
+      textAlign: "center",
     },
 
     segmentTextActive: {
@@ -191,28 +199,28 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     paletteGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: theme.spacing.sm,
       marginTop: theme.spacing.sm,
     },
 
     paletteItem: {
-      width: '30%',
+      width: "30%",
       aspectRatio: 1.5,
       borderRadius: theme.borderRadius.md,
       padding: theme.spacing.xs,
       borderWidth: 2,
-      borderColor: 'transparent',
+      borderColor: "transparent",
       backgroundColor: theme.colors.surface,
       marginBottom: theme.spacing.sm,
-      ...theme.shadow('sm'),
+      ...theme.shadow("sm"),
     },
 
     paletteItemActive: {
       borderColor: theme.colors.brand.primary,
       backgroundColor: theme.colors.background,
-      ...theme.shadow('md'),
+      ...theme.shadow("md"),
     },
 
     paletteItemLocked: {
@@ -220,28 +228,28 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     paletteName: {
-      fontSize: rs(10, 'min'),
+      fontSize: rs(10, "min"),
       color: theme.colors.text,
-      textAlign: 'center',
+      textAlign: "center",
       marginTop: theme.spacing.xs / 2,
-      fontWeight: '500',
+      fontWeight: "500",
     },
 
     paletteNameActive: {
       color: theme.colors.brand.primary,
-      fontWeight: '600',
+      fontWeight: "600",
     },
 
     paletteLockBadge: {
-      position: 'absolute',
+      position: "absolute",
       top: 4,
       right: 4,
       backgroundColor: theme.colors.semantic.warning,
       width: 18,
       height: 18,
       borderRadius: 9,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
 
     lockIcon: {
@@ -249,10 +257,10 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     colorRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       height: 16,
       borderRadius: theme.borderRadius.sm,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
 
     colorSegment: {
@@ -264,63 +272,63 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     favoritesGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: theme.spacing.sm,
       marginTop: theme.spacing.sm,
     },
 
     activityItem: {
-      width: '22%',
+      width: "22%",
       aspectRatio: 1,
       borderRadius: theme.borderRadius.md,
       backgroundColor: theme.colors.surface,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       borderWidth: 2,
-      borderColor: 'transparent',
-      ...theme.shadow('sm'),
+      borderColor: "transparent",
+      ...theme.shadow("sm"),
     },
 
     activityItemFavorite: {
       borderColor: theme.colors.brand.primary,
       backgroundColor: theme.colors.background,
-      ...theme.shadow('md'),
+      ...theme.shadow("md"),
     },
 
     activityEmoji: {
-      fontSize: rs(24, 'min'),
+      fontSize: rs(24, "min"),
       marginBottom: 2,
     },
 
     activityIcon: {
-      width: rs(24, 'min'),
-      height: rs(24, 'min'),
+      width: rs(24, "min"),
+      height: rs(24, "min"),
       marginBottom: 2,
       // Pas de tintColor pour garder les couleurs originales de l'icône
     },
 
     activityItemLabel: {
-      fontSize: rs(9, 'min'),
+      fontSize: rs(9, "min"),
       color: theme.colors.textLight,
-      fontWeight: '500',
+      fontWeight: "500",
     },
 
     activityItemLabelFavorite: {
       color: theme.colors.primary,
-      fontWeight: '600',
+      fontWeight: "600",
     },
 
     premiumBadge: {
-      position: 'absolute',
+      position: "absolute",
       top: 2,
       right: 2,
       backgroundColor: theme.colors.semantic.warning,
       width: 16,
       height: 16,
       borderRadius: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
 
     lockMini: {
@@ -328,23 +336,23 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: theme.spacing.sm,
     },
 
     sectionBadge: {
-      backgroundColor: theme.colors.brand.primary + '15',
+      backgroundColor: theme.colors.brand.primary + "15",
       paddingHorizontal: theme.spacing.xs,
       paddingVertical: 2,
       borderRadius: theme.borderRadius.sm,
     },
 
     sectionBadgeText: {
-      fontSize: rs(10, 'min'),
+      fontSize: rs(10, "min"),
       color: theme.colors.brand.primary,
-      fontWeight: '600',
+      fontWeight: "600",
     },
   });
 
@@ -365,7 +373,8 @@ export default function SettingsModal({ visible, onClose }) {
               accessibilityLabel="Fermer les paramètres"
               accessibilityRole="button"
               onPress={onClose}
-              style={styles.closeButton}>
+              style={styles.closeButton}
+            >
               <Text style={styles.closeText}>✕</Text>
             </TouchableOpacity>
           </View>
@@ -394,20 +403,22 @@ export default function SettingsModal({ visible, onClose }) {
             {/* Favorites Section - NOW SECOND */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Activités favorites</Text>
-              
+
               {/* Afficher les activités - EN HAUT */}
               <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Afficher les activités</Text>
                   <Text style={styles.optionDescription}>
-                    {showActivities ? 'Activités visibles dans l\'interface' : 'Activités masquées'}
+                    {showActivities
+                      ? "Activités visibles dans l'interface"
+                      : "Activités masquées"}
                   </Text>
                 </View>
                 <Switch
                   accessible={true}
                   accessibilityLabel="Afficher les activités"
                   accessibilityRole="switch"
-                  accessibilityState={{checked: showActivities}}
+                  accessibilityState={{ checked: showActivities }}
                   value={showActivities}
                   onValueChange={(value) => {
                     haptics.switchToggle().catch(() => {});
@@ -415,7 +426,9 @@ export default function SettingsModal({ visible, onClose }) {
 
                     // Si on masque les activités, remettre à "none" (Basique)
                     if (!value) {
-                      const noneActivity = allActivities.find(activity => activity.id === 'none');
+                      const noneActivity = allActivities.find(
+                        (activity) => activity.id === "none"
+                      );
                       if (noneActivity) {
                         setCurrentActivity(noneActivity);
                       }
@@ -430,7 +443,9 @@ export default function SettingsModal({ visible, onClose }) {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Animation Pulse</Text>
                   <Text style={styles.optionDescription}>
-                    {shouldPulse ? 'Animation activée pendant le timer' : 'Animation désactivée'}
+                    {shouldPulse
+                      ? "Animation activée pendant le timer"
+                      : "Animation désactivée"}
                   </Text>
                 </View>
                 <Switch
@@ -447,15 +462,15 @@ export default function SettingsModal({ visible, onClose }) {
                             style: "cancel",
                             onPress: () => {
                               haptics.selection().catch(() => {});
-                            }
+                            },
                           },
                           {
                             text: "Activer",
                             onPress: () => {
                               haptics.switchToggle().catch(() => {});
                               setShouldPulse(true);
-                            }
-                          }
+                            },
+                          },
                         ],
                         { cancelable: true }
                       );
@@ -474,47 +489,45 @@ export default function SettingsModal({ visible, onClose }) {
                     Sélectionnez vos favoris pour les voir en premier
                   </Text>
                   <View style={styles.favoritesGrid}>
-                {allActivities.map((activity) => {
-                  const isFavorite = favoriteActivities.includes(activity.id);
-                  const isLocked = activity.isPremium && !isPremiumUser;
-                  return (
-                    <TouchableOpacity
-                      key={activity.id}
-                      style={[
-                        styles.activityItem,
-                        isFavorite && styles.activityItemFavorite,
-                        isLocked && styles.activityItemLocked
-                      ]}
-                      onPress={() => {
-                        if (!isLocked) {
-                          toggleFavorite(activity.id)
-                        }
-                      }}
-                      activeOpacity={isLocked ? 1 : 0.7}
-                    >
-                      {activity.id === 'none' ? (
-                        <Image
-                          source={require('../../assets/icons/timer.png')}
-                          style={styles.activityIcon}
-                          resizeMode="contain"
-                        />
-                      ) : (
-                        <Text style={styles.activityEmoji}>{activity.emoji}</Text>
-                      )}
-                      <Text style={[
-                        styles.activityItemLabel,
-                        isFavorite && styles.activityItemLabelFavorite
-                      ]}>
-                        {activity.label}
-                      </Text>
-                      {isLocked && (
-                        <View style={styles.premiumBadge}>
-                          <Text style={styles.lockMini}>🔒</Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  );
-                })}
+                    {allActivities.map((activity) => {
+                      const isFavorite = favoriteActivities.includes(
+                        activity.id
+                      );
+                      const isLocked = activity.isPremium && !isPremiumUser;
+                      return (
+                        <TouchableOpacity
+                          key={activity.id}
+                          style={[
+                            styles.activityItem,
+                            isFavorite && styles.activityItemFavorite,
+                            isLocked && styles.activityItemLocked,
+                          ]}
+                          onPress={() => {
+                            if (!isLocked) {
+                              toggleFavorite(activity.id);
+                            }
+                          }}
+                          activeOpacity={isLocked ? 1 : 0.7}
+                        >
+                          <Text style={styles.activityEmoji}>
+                            {activity.id === "none" ? "⏱️" : activity.emoji}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.activityItemLabel,
+                              isFavorite && styles.activityItemLabelFavorite,
+                            ]}
+                          >
+                            {activity.label}
+                          </Text>
+                          {isLocked && (
+                            <View style={styles.premiumBadge}>
+                              <Text style={styles.lockMini}>🔒</Text>
+                            </View>
+                          )}
+                        </TouchableOpacity>
+                      );
+                    })}
                   </View>
                 </>
               )}
@@ -528,7 +541,8 @@ export default function SettingsModal({ visible, onClose }) {
               </Text>
               <View style={styles.paletteGrid}>
                 {Object.keys(TIMER_PALETTES).map((paletteName) => {
-                  const isLocked = isPalettePremium(paletteName) && !isPremiumUser;
+                  const isLocked =
+                    isPalettePremium(paletteName) && !isPremiumUser;
                   const isActive = currentPalette === paletteName;
                   const paletteInfo = TIMER_PALETTES[paletteName];
 
@@ -538,7 +552,7 @@ export default function SettingsModal({ visible, onClose }) {
                       style={[
                         styles.paletteItem,
                         isActive && styles.paletteItemActive,
-                        isLocked && styles.paletteItemLocked
+                        isLocked && styles.paletteItemLocked,
                       ]}
                       onPress={() => {
                         if (!isLocked) {
@@ -548,10 +562,12 @@ export default function SettingsModal({ visible, onClose }) {
                       activeOpacity={isLocked ? 1 : 0.7}
                     >
                       <PalettePreview paletteName={paletteName} />
-                      <Text style={[
-                        styles.paletteName,
-                        isActive && styles.paletteNameActive
-                      ]}>
+                      <Text
+                        style={[
+                          styles.paletteName,
+                          isActive && styles.paletteNameActive,
+                        ]}
+                      >
                         {paletteInfo?.name || paletteName}
                       </Text>
                       {isLocked && (
@@ -574,43 +590,49 @@ export default function SettingsModal({ visible, onClose }) {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Mode Cadran</Text>
                   <Text style={styles.optionDescription}>
-                    {scaleMode === '60min' ? 'Échelle 60 minutes' : '25 minutes Pomodoro'}
+                    {scaleMode === "60min"
+                      ? "Échelle 60 minutes"
+                      : "25 minutes Pomodoro"}
                   </Text>
                 </View>
                 <View style={styles.segmentedControl}>
                   <Touchable
                     style={[
                       styles.segmentButton,
-                      scaleMode === '60min' && styles.segmentButtonActive
+                      scaleMode === "60min" && styles.segmentButtonActive,
                     ]}
                     onPress={() => {
                       haptics.selection().catch(() => {});
-                      setScaleMode('60min');
+                      setScaleMode("60min");
                     }}
                     {...touchableProps}
                   >
-                    <Text style={[
-                      styles.segmentText,
-                      scaleMode === '60min' && styles.segmentTextActive
-                    ]}>
+                    <Text
+                      style={[
+                        styles.segmentText,
+                        scaleMode === "60min" && styles.segmentTextActive,
+                      ]}
+                    >
                       60min
                     </Text>
                   </Touchable>
                   <Touchable
                     style={[
                       styles.segmentButton,
-                      scaleMode === '25min' && styles.segmentButtonActive
+                      scaleMode === "25min" && styles.segmentButtonActive,
                     ]}
                     onPress={() => {
                       haptics.selection().catch(() => {});
-                      setScaleMode('25min');
+                      setScaleMode("25min");
                     }}
                     {...touchableProps}
                   >
-                    <Text style={[
-                      styles.segmentText,
-                      scaleMode === '25min' && styles.segmentTextActive
-                    ]}>
+                    <Text
+                      style={[
+                        styles.segmentText,
+                        scaleMode === "25min" && styles.segmentTextActive,
+                      ]}
+                    >
                       25min
                     </Text>
                   </Touchable>
@@ -622,14 +644,14 @@ export default function SettingsModal({ visible, onClose }) {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Sens de Rotation</Text>
                   <Text style={styles.optionDescription}>
-                    {clockwise ? 'Sens horaire' : 'Sens anti-horaire'}
+                    {clockwise ? "Sens horaire" : "Sens anti-horaire"}
                   </Text>
                 </View>
                 <Switch
                   accessible={true}
                   accessibilityLabel="Sens de rotation"
                   accessibilityRole="switch"
-                  accessibilityState={{checked: clockwise}}
+                  accessibilityState={{ checked: clockwise }}
                   value={clockwise}
                   onValueChange={(value) => {
                     haptics.switchToggle().catch(() => {});
@@ -649,62 +671,71 @@ export default function SettingsModal({ visible, onClose }) {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Thème</Text>
                   <Text style={styles.optionDescription}>
-                    {theme.mode === 'auto' ? 'Automatique (système)' :
-                     theme.mode === 'dark' ? 'Sombre' : 'Clair'}
+                    {theme.mode === "auto"
+                      ? "Automatique (système)"
+                      : theme.mode === "dark"
+                      ? "Sombre"
+                      : "Clair"}
                   </Text>
                 </View>
                 <View style={styles.segmentedControl}>
                   <Touchable
                     style={[
                       styles.segmentButton,
-                      theme.mode === 'light' && styles.segmentButtonActive
+                      theme.mode === "light" && styles.segmentButtonActive,
                     ]}
                     onPress={() => {
                       haptics.selection().catch(() => {});
-                      theme.setTheme('light');
+                      theme.setTheme("light");
                     }}
                     {...touchableProps}
                   >
-                    <Text style={[
-                      styles.segmentText,
-                      theme.mode === 'light' && styles.segmentTextActive
-                    ]}>
+                    <Text
+                      style={[
+                        styles.segmentText,
+                        theme.mode === "light" && styles.segmentTextActive,
+                      ]}
+                    >
                       ☀️ Clair
                     </Text>
                   </Touchable>
                   <Touchable
                     style={[
                       styles.segmentButton,
-                      theme.mode === 'dark' && styles.segmentButtonActive
+                      theme.mode === "dark" && styles.segmentButtonActive,
                     ]}
                     onPress={() => {
                       haptics.selection().catch(() => {});
-                      theme.setTheme('dark');
+                      theme.setTheme("dark");
                     }}
                     {...touchableProps}
                   >
-                    <Text style={[
-                      styles.segmentText,
-                      theme.mode === 'dark' && styles.segmentTextActive
-                    ]}>
+                    <Text
+                      style={[
+                        styles.segmentText,
+                        theme.mode === "dark" && styles.segmentTextActive,
+                      ]}
+                    >
                       🌙 Sombre
                     </Text>
                   </Touchable>
                   <Touchable
                     style={[
                       styles.segmentButton,
-                      theme.mode === 'auto' && styles.segmentButtonActive
+                      theme.mode === "auto" && styles.segmentButtonActive,
                     ]}
                     onPress={() => {
                       haptics.selection().catch(() => {});
-                      theme.setTheme('auto');
+                      theme.setTheme("auto");
                     }}
                     {...touchableProps}
                   >
-                    <Text style={[
-                      styles.segmentText,
-                      theme.mode === 'auto' && styles.segmentTextActive
-                    ]}>
+                    <Text
+                      style={[
+                        styles.segmentText,
+                        theme.mode === "auto" && styles.segmentTextActive,
+                      ]}
+                    >
                       📱 Auto
                     </Text>
                   </Touchable>
@@ -719,9 +750,14 @@ export default function SettingsModal({ visible, onClose }) {
                 <View>
                   <Text style={styles.optionLabel}>ResetPulse</Text>
                   <Text style={styles.optionDescription}>
-                    Timer visuel pour utilisateurs neuroatypiques
+                    Timer visuel personalisable
                   </Text>
-                  <Text style={[styles.optionDescription, { marginTop: theme.spacing.xs }]}>
+                  <Text
+                    style={[
+                      styles.optionDescription,
+                      { marginTop: theme.spacing.xs },
+                    ]}
+                  >
                     Version 1.0.0
                   </Text>
                 </View>
@@ -756,32 +792,34 @@ export default function SettingsModal({ visible, onClose }) {
                   style={styles.optionRow}
                   onPress={() => {
                     Alert.alert(
-                      'Réinitialiser l\'onboarding',
-                      'L\'écran de bienvenue et les tooltips seront affichés au prochain lancement de l\'application.',
+                      "Réinitialiser l'onboarding",
+                      "L'écran de bienvenue et les tooltips seront affichés au prochain lancement de l'application.",
                       [
                         {
-                          text: 'Annuler',
-                          style: 'cancel',
+                          text: "Annuler",
+                          style: "cancel",
                           onPress: () => {
                             haptics.selection().catch(() => {});
-                          }
+                          },
                         },
                         {
-                          text: 'Réinitialiser',
+                          text: "Réinitialiser",
                           onPress: () => {
                             resetOnboarding();
                             haptics.success().catch(() => {});
                             onClose();
                           },
-                          style: 'destructive'
-                        }
+                          style: "destructive",
+                        },
                       ]
                     );
                   }}
                   activeOpacity={0.7}
                 >
                   <View style={{ flex: 1 }}>
-                    <Text style={styles.optionLabel}>Réinitialiser l'onboarding</Text>
+                    <Text style={styles.optionLabel}>
+                      Réinitialiser l'onboarding
+                    </Text>
                     <Text style={styles.optionDescription}>
                       Afficher à nouveau l'écran de bienvenue
                     </Text>

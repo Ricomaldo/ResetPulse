@@ -16,6 +16,7 @@ const easeOut = (t) => t * (2 - t);
 import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialCenter from './dial/DialCenter';
+import Svg, { Circle } from 'react-native-svg';
 
 /**
  * TimerDial - Main timer dial component
@@ -238,6 +239,24 @@ function TimerDial({
           />
         );
       })()}
+
+      {/* Physical fixation dots - rendered on top of dial */}
+      <Svg width={svgSize} height={svgSize} style={{ position: 'absolute' }} pointerEvents="none">
+        <Circle
+          cx={centerX}
+          cy={centerY}
+          r={radius * 0.08}
+          fill={theme.colors.neutral}
+          opacity={0.8}
+        />
+        <Circle
+          cx={centerX}
+          cy={centerY}
+          r={radius * 0.04}
+          fill={theme.colors.text}
+          opacity={0.4}
+        />
+      </Svg>
 
       {/* Center layer: emoji and pulse */}
       <DialCenter

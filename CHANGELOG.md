@@ -36,6 +36,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Onboarding Highlights**: Eliminated visual gaps using SVG Mask technique
   - Previous 4-rectangle approach had positioning bugs
   - SVG Mask ensures pixel-perfect spotlight cutouts
+- **Timer Visual Hierarchy**: Fixed z-index layering of physical fixation dots
+  - Moved center fixation dots to render after dial progress arc
+  - Dots now properly visible above dial but below activity emoji
+  - Represents physical mounting fixture more accurately
+- **Activity Icons**: Replaced dual circles with ⏱️ emoji for "Basique" activity
+  - Simplified icon in ActivityCarousel and SettingsModal
+  - More consistent and recognizable as a timer
+  - Removed dependency on timer.png asset
 
 ### Technical
 - **Architecture Improvement**: Hybrid Grid + measure() approach

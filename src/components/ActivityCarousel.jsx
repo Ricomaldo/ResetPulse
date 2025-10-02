@@ -302,36 +302,9 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                     { transform: [{ scale: getScaleAnim(activity.id) }] }
                   ]}
                 >
-                  {activity.id === 'none' ? (
-                    <View style={{ position: 'relative', width: rs(34, 'min'), height: rs(34, 'min'), alignItems: 'center', justifyContent: 'center' }}>
-                      {/* Outer circle - using same proportions as timer (0.35 of container) */}
-                      <View
-                        style={{
-                          position: 'absolute',
-                          width: rs(34, 'min') * 0.35,
-                          height: rs(34, 'min') * 0.35,
-                          borderRadius: (rs(34, 'min') * 0.35) / 2,
-                          backgroundColor: '#999999',
-                          opacity: 0.8,
-                        }}
-                      />
-                      {/* Inner circle - using same proportions as timer (0.2 of container) */}
-                      <View
-                        style={{
-                          position: 'absolute',
-                          width: rs(34, 'min') * 0.2,
-                          height: rs(34, 'min') * 0.2,
-                          borderRadius: (rs(34, 'min') * 0.2) / 2,
-                          backgroundColor: '#999999',
-                          opacity: 1,
-                        }}
-                      />
-                    </View>
-                  ) : (
-                    <Text style={styles.activityEmoji}>
-                      {activity.emoji}
-                    </Text>
-                  )}
+                  <Text style={styles.activityEmoji}>
+                    {activity.id === 'none' ? '⏱️' : activity.emoji}
+                  </Text>
                 </Animated.View>
 
                 {isLocked && (

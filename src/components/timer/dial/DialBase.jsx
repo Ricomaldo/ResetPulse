@@ -72,22 +72,6 @@ const DialBase = React.memo(({
         strokeWidth={strokeWidth}
         fill="none"
       />
-
-      {/* Center dot */}
-      <Circle
-        cx={centerX}
-        cy={centerY}
-        r={radius * 0.08}
-        fill={theme.colors.neutral}
-        opacity={0.8}
-      />
-      <Circle
-        cx={centerX}
-        cy={centerY}
-        r={radius * 0.04}
-        fill={theme.colors.text}
-        opacity={0.4}
-      />
     </Svg>
   );
 }, (prevProps, nextProps) => {
