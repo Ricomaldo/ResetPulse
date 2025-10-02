@@ -55,6 +55,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed complex manual calculations in favor of dynamic measurement
 
 ### Fixed
+- **🌓 System Theme Detection Fixed** (Critical):
+  - Changed `userInterfaceStyle` from "light" to "automatic" in app.json
+  - Fixes auto mode stuck on light theme regardless of system setting
+  - `useColorScheme()` now properly detects system dark/light mode
+  - Auto mode now correctly follows device appearance settings
 - **🔧 Haptic Feedback Configuration**:
   - Added `expo-haptics` plugin to app.json for proper native haptic support
   - Fixes potential vibration issues in production builds (iOS/Android)

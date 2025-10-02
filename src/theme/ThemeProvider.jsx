@@ -99,8 +99,8 @@ export const ThemeProvider = ({ children }) => {
 
   // Log du changement de thème (dev only)
   useEffect(() => {
-    console.log(`🎨 Theme mode: ${themeMode} (isDark: ${isDark})`);
-  }, [themeMode, isDark]);
+    console.log(`🎨 Theme mode: ${themeMode} | System: ${systemColorScheme} | isDark: ${isDark}`);
+  }, [themeMode, isDark, systemColorScheme]);
 
   return (
     <ThemeContext.Provider value={theme}>
