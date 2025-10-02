@@ -105,7 +105,7 @@ const calculateTooltipPosition = (bounds, tooltipHeight = 120) => {
 function TimerScreenContent() {
   const theme = useTheme();
   const { showActivities } = useTimerOptions();
-  const { registerTooltipTarget } = useOnboarding();
+  const { registerTooltipTarget, onboardingCompleted } = useOnboarding();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerRef = useRef(null);
@@ -147,15 +147,28 @@ function TimerScreenContent() {
     return () => clearTimeout(timer);
   }, [registerTooltipTarget]);
 
-  // Animation values for staggered entrance
-  const headerAnim = useRef(new Animated.Value(0)).current;
-  const activityAnim = useRef(new Animated.Value(0)).current;
-  const timerAnim = useRef(new Animated.Value(0)).current;
-  const timerScaleAnim = useRef(new Animated.Value(0.8)).current;
-  const paletteAnim = useRef(new Animated.Value(0)).current;
+  // Animation values for staggered entrance - start at 1 if onboarding not completed
+  const initialValue = onboardingCompleted ? 0 : 1;
+  const initialScale = onboardingCompleted ? 0.8 : 1;
+  const headerAnim = useRef(new Animated.Value(initialValue)).current;
+  const activityAnim = useRef(new Animated.Value(initialValue)).current;
+  const timerAnim = useRef(new Animated.Value(initialValue)).current;
+  const timerScaleAnim = useRef(new Animated.Value(initialScale)).current;
+  const paletteAnim = useRef(new Animated.Value(initialValue)).current;
 
-  // Staggered entrance animations
+  // Staggered entrance animations - skip if onboarding is not completed
   useEffect(() => {
+    // If onboarding not completed, instantly set all anims to 1 (no entrance animation)
+    if (!onboardingCompleted) {
+      headerAnim.setValue(1);
+      activityAnim.setValue(1);
+      timerAnim.setValue(1);
+      timerScaleAnim.setValue(1);
+      paletteAnim.setValue(1);
+      return;
+    }
+
+    // Normal entrance animations for returning users
     const animations = [
       // Header slides down
       Animated.timing(headerAnim, {
@@ -197,7 +210,7 @@ function TimerScreenContent() {
     ];
 
     Animated.stagger(0, animations).start();
-  }, []);
+  }, [onboardingCompleted]);
 
   // Swipe to exit zen mode (when timer is running)
   const panResponder = useRef(
@@ -258,8 +271,8 @@ function TimerScreenContent() {
         <Animated.View
           ref={activitiesRef}
           onLayout={() => {
-            // Wait for entrance animation to complete before measuring
-            // ACTIVITY_DELAY (400ms) + ACTIVITY_DURATION (400ms) = 800ms
+            // If onboarding not completed, no entrance animations so measure immediately
+            const delay = onboardingCompleted ? 900 : 100;
             setTimeout(() => {
               activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
                 const bounds = { top: pageY, left: pageX, width, height };
@@ -267,7 +280,7 @@ function TimerScreenContent() {
                 const position = calculateTooltipPosition(bounds);
                 registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
               });
-            }, 900); // Wait until animation completes
+            }, delay);
           }}
           style={[
             styles.activitySection,
@@ -324,8 +337,8 @@ function TimerScreenContent() {
         <View
           ref={paletteContainerRef}
           onLayout={() => {
-            // Wait for entrance animation to complete before measuring
-            // PALETTE_DELAY (800ms) + PALETTE_DURATION (400ms) = 1200ms
+            // If onboarding not completed, no entrance animations so measure immediately
+            const delay = onboardingCompleted ? 1300 : 100;
             setTimeout(() => {
               paletteContainerRef.current?.measure((x, y, width, height, pageX, pageY) => {
                 const bounds = { top: pageY, left: pageX, width, height };
@@ -333,7 +346,7 @@ function TimerScreenContent() {
                 const position = calculateTooltipPosition(bounds);
                 registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
               });
-            }, 1300); // Wait until animation completes
+            }, delay);
           }}
           style={styles.paletteContainer}
         >

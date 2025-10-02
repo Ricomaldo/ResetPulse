@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2025-10-02
 
 ### Added
+- **✨ Timer Start Glow Effect** - Subtle visual feedback when timer starts:
+  - Arc opacity animates from 85% to 100% over 600ms
+  - Smooth "ignition" effect independent of shouldPulse setting
+  - Works even when pulse animation is disabled
+  - Natural fade-in that signals timer activation clearly
+  - Non-invasive and respects app's zen aesthetic
 - **🎯 Onboarding System v2.0** - Professional interactive tooltip spotlight
   - Sequential tooltips: Activities → Dial → Palette → Controls (optimized flow)
   - **Fully interactive**: Users can try features while tooltips guide them

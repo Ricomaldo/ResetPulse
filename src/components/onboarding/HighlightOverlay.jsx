@@ -62,107 +62,49 @@ export default function HighlightOverlay({ highlightedElement, targetBounds }) {
   const borderRadius = highlightedElement === 'dial' ? paddedWidth / 2 : theme.borderRadius.xl;
 
   return (
-    <View
-      style={StyleSheet.absoluteFillObject}
-      pointerEvents="box-none"
+    <Animated.View
+      style={[StyleSheet.absoluteFillObject, { opacity: opacityAnim }]}
+      pointerEvents="none"
     >
-      {/* Visual overlay with SVG Mask - rounded corners */}
-      <Animated.View style={{ ...StyleSheet.absoluteFillObject, opacity: opacityAnim }}>
-        <Svg
+      <Svg
+        width={SCREEN_WIDTH}
+        height={SCREEN_HEIGHT}
+        style={StyleSheet.absoluteFillObject}
+        pointerEvents="none"
+      >
+        <Defs>
+          <Mask id="spotlight-mask">
+            {/* White = overlay visible */}
+            <Rect
+              x="0"
+              y="0"
+              width={SCREEN_WIDTH}
+              height={SCREEN_HEIGHT}
+              fill="white"
+            />
+            {/* Black = cutout (transparent spotlight) with rounded corners */}
+            <Rect
+              x={paddedLeft}
+              y={paddedTop}
+              width={paddedWidth}
+              height={paddedHeight}
+              rx={borderRadius}
+              ry={borderRadius}
+              fill="black"
+            />
+          </Mask>
+        </Defs>
+
+        {/* Semi-transparent overlay with mask applied */}
+        <Rect
+          x="0"
+          y="0"
           width={SCREEN_WIDTH}
           height={SCREEN_HEIGHT}
-          style={StyleSheet.absoluteFillObject}
-          pointerEvents="none"
-        >
-          <Defs>
-            <Mask id="spotlight-mask">
-              {/* White = overlay visible */}
-              <Rect
-                x="0"
-                y="0"
-                width={SCREEN_WIDTH}
-                height={SCREEN_HEIGHT}
-                fill="white"
-              />
-              {/* Black = cutout (transparent spotlight) with rounded corners */}
-              <Rect
-                x={paddedLeft}
-                y={paddedTop}
-                width={paddedWidth}
-                height={paddedHeight}
-                rx={borderRadius}
-                ry={borderRadius}
-                fill="black"
-              />
-            </Mask>
-          </Defs>
-
-          {/* Semi-transparent overlay with mask applied */}
-          <Rect
-            x="0"
-            y="0"
-            width={SCREEN_WIDTH}
-            height={SCREEN_HEIGHT}
-            fill="rgba(0, 0, 0, 0.75)"
-            mask="url(#spotlight-mask)"
-          />
-        </Svg>
-      </Animated.View>
-
-      {/* Invisible blocking Views - prevent touches in dark areas */}
-      <Animated.View style={{ opacity: opacityAnim }}>
-        {/* Top blocker */}
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: paddedTop,
-            backgroundColor: 'transparent',
-          }}
-          pointerEvents="auto"
+          fill="rgba(0, 0, 0, 0.75)"
+          mask="url(#spotlight-mask)"
         />
-
-        {/* Left blocker */}
-        <View
-          style={{
-            position: 'absolute',
-            top: paddedTop,
-            left: 0,
-            width: paddedLeft,
-            height: paddedHeight,
-            backgroundColor: 'transparent',
-          }}
-          pointerEvents="auto"
-        />
-
-        {/* Right blocker */}
-        <View
-          style={{
-            position: 'absolute',
-            top: paddedTop,
-            left: right,
-            right: 0,
-            height: paddedHeight,
-            backgroundColor: 'transparent',
-          }}
-          pointerEvents="auto"
-        />
-
-        {/* Bottom blocker */}
-        <View
-          style={{
-            position: 'absolute',
-            top: bottom,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'transparent',
-          }}
-          pointerEvents="auto"
-        />
-      </Animated.View>
-    </View>
+      </Svg>
+    </Animated.View>
   );
 }

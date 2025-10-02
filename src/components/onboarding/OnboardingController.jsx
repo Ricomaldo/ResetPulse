@@ -1,5 +1,6 @@
 // src/components/onboarding/OnboardingController.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { usePersistedState } from '../../hooks/usePersistedState';
 import Tooltip from './Tooltip';
 import HighlightOverlay from './HighlightOverlay';
@@ -116,15 +117,16 @@ export function OnboardingProvider({ children }) {
 
   return (
     <OnboardingContext.Provider value={value}>
+      {/* App content - base layer */}
       {children}
 
-      {/* Highlight overlay */}
+      {/* Highlight overlay - visual only, no touch blocking */}
       <HighlightOverlay
         highlightedElement={highlightedElement}
         targetBounds={currentBounds}
       />
 
-      {/* Render current tooltip */}
+      {/* Tooltip - on top of everything */}
       {currentTooltipConfig && currentPosition && (
         <Tooltip
           text={currentTooltipConfig.text}

@@ -236,6 +236,7 @@ function TimerDial({
             isClockwise={clockwise}
             scaleMode={scaleMode}
             animatedColor={animatedColor}
+            isRunning={isRunning}
           />
         );
       })()}
