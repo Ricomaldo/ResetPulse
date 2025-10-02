@@ -1,13 +1,15 @@
 # TODO: Émancipation d'EAS pour les builds Apple
 
-## 📅 À faire demain (27/09/2025)
+## 📅 Status: EN COURS (Mis à jour: 02/10/2025)
+> **Note:** Ce document était initialement prévu pour le 27/09/2025. Le projet a évolué avec la migration SDK 54 réussie.
 
 ### Objectif principal
 **S'émanciper d'EAS pour les builds iOS comme on l'a fait pour Android**
 
-### Contexte
-- ✅ Android : Build local réussi avec SDK 51, sans dépendance à EAS
-- ⏳ iOS : Encore dépendant d'EAS (build en cours cette nuit)
+### Contexte (Mis à jour)
+- ✅ Android : Build local réussi avec SDK 54, sans dépendance à EAS
+- ✅ Migration SDK 54 : New Architecture + React 19.1.0 opérationnels
+- ⏳ iOS : Encore dépendant d'EAS mais migration technique réussie
 - 💰 Motivation : Éviter les coûts EAS et avoir le contrôle total
 
 ### Plan d'action
@@ -48,16 +50,16 @@ xcodebuild -workspace ResetPulse.xcworkspace -scheme ResetPulse -configuration R
 - 🚀 Build plus rapide en local
 - 🔧 Debugging plus facile
 
-### Notes importantes
-- Le build Android a été résolu avec SDK 51
-- Vérifier la compatibilité SDK 51 avec iOS
+### Notes importantes (Mises à jour)
+- Le build Android a été résolu avec SDK 54 + New Architecture
+- ✅ SDK 54 compatible avec iOS - Migration réussie
 - Documenter chaque étape comme pour Android
 
 ### Références
 - Documentation Android réussie : `ANDROID_BUILD_CONFIG.md`
-- Configuration actuelle : SDK 51, React 18.2.0
-- Version en cours : 1.0.3
+- Configuration actuelle : SDK 54, React 19.1.0, New Architecture ✅
+- Version en cours : 1.0.4
 
 ---
 
-**Rappel :** Commencer par cette tâche demain matin avant tout autre développement.
+**Status :** Tâche en cours - Migration technique SDK 54 réussie, reste l'émancipation d'EAS pour les builds locaux.

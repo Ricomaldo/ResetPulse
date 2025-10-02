@@ -53,7 +53,9 @@ setAudioModeAsync({
 
 | Test | Date | Résultat | Notes |
 |------|------|----------|-------|
-| Mode silencieux | - | ⏳ | À tester |
-| Arrière-plan | - | ⏳ | À tester |
-| Silencieux + BG | - | ⏳ | À tester |
-| Ducking | - | ⏳ | À tester |
+| Mode silencieux | 2025-09-29 | ✅ | Son joue correctement |
+| Arrière-plan | 2025-09-29 | ✅ | Son joue même app fermée |
+| Silencieux + BG | 2025-09-29 | ✅ | Combinaison fonctionnelle |
+| Ducking | 2025-09-29 | ✅ | Musique baisse et reprend |
+
+**Status Audio System v1.0.4 :** ✅ **VALIDÉ - 100% consensus famille**
