@@ -18,6 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Interactive onboarding: users can try features as tooltips guide them
 
 ### Changed
+- **🎨 Settings Modal Redesign** - Card-based UI with visual hierarchy (iOS 15+ style):
+  - Sections organized in 3 levels: Core Experience → Configuration → Informations
+  - Level 1 (Primary Cards): 🎯 Expérience Timer, 🎨 Personnalisation, ⭐ Activités
+  - Level 2 (Standard Card): ⚙️ Réglages du Cadran
+  - Level 3 (Flat): ℹ️ À propos
+  - Card styling: surface background, rounded corners, subtle borders & shadows
+  - Logical grouping: Sons + Animation Pulse | Palettes + Thème
+  - Level dividers for clear visual separation
+  - Improved spacing and visual breathing room
 - **🎨 Sound Picker UX Enhancement**:
   - Enlarged tap area for close button in SettingsModal (44x44px iOS minimum)
   - Added iOS-style circular progress loader during sound preview playback
