@@ -1,21 +1,23 @@
 # Configuration Android Build - ResetPulse
 
-## ✅ Configuration FONCTIONNELLE avec SDK 51
+## ✅ Configuration FONCTIONNELLE avec SDK 54 (New Architecture)
 
-### Package.json (SDK 51 - STABLE)
+### Package.json (SDK 54 - NEW ARCHITECTURE)
 ```json
 {
   "dependencies": {
-    "@react-native-async-storage/async-storage": "1.23.1",
-    "expo": "~51.0.0",
-    "expo-haptics": "~13.0.1",
-    "expo-status-bar": "~1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.5",
-    "react-native-gesture-handler": "~2.16.2",
-    "react-native-reanimated": "~3.10.1",
-    "react-native-safe-area-context": "4.10.5",
-    "react-native-svg": "15.2.0"
+    "@react-native-async-storage/async-storage": "~2.2.3",
+    "expo": "~54.0.5",
+    "expo-audio": "~1.0.13",
+    "expo-haptics": "~15.0.7",
+    "expo-notifications": "~0.32.11",
+    "expo-status-bar": "~2.0.8",
+    "react": "19.0.0",
+    "react-native": "0.81.5",
+    "react-native-gesture-handler": "~2.22.2",
+    "react-native-reanimated": "~4.0.1",
+    "react-native-safe-area-context": "~5.4.0",
+    "react-native-svg": "16.0.9"
   }
 }
 ```
@@ -24,7 +26,7 @@
 ```json
 {
   "expo": {
-    "newArchEnabled": false  // IMPORTANT: Désactiver New Architecture
+    "newArchEnabled": true  // ✅ New Architecture ACTIVÉE
   }
 }
 ```
@@ -35,16 +37,16 @@
 
 ```gradle
 android {
-    compileSdk 35
-    buildToolsVersion "35.0.0"
+    compileSdk 36
+    buildToolsVersion "36.0.0"
 
     namespace 'com.irimwebforge.resetpulse'
     defaultConfig {
         applicationId 'com.irimwebforge.resetpulse'
         minSdkVersion 24
-        targetSdkVersion 35
-        versionCode 9  // Version actuelle sur Play Store
-        versionName "1.0.3"
+        targetSdkVersion 36
+        versionCode 10  // Version actuelle sur Play Store
+        versionName "1.0.4"
     }
 
     signingConfigs {
@@ -113,6 +115,16 @@ android {
 sdk.dir=/Users/irimwebforge/Library/Android/sdk
 ```
 
+## Fichier android/gradle.properties (Memory Settings)
+
+```properties
+# Increased memory for New Architecture builds
+org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m
+
+# New Architecture enabled
+newArchEnabled=true
+```
+
 ## Process de Build après Prebuild
 
 ### 1. Prérequis IMPORTANTS
@@ -179,8 +191,11 @@ npx eas credentials
 4. Test sur émulateur via Play Store
 5. Fix → Incrément versionCode → Rebuild
 
-## 🎉 SUCCÈS CONFIRMÉ
-- **SDK 51** : Stable, pas de crash ExpoAsset
-- **Version déployée** : 1.0.3 (versionCode 9)
+## 🎉 SUCCÈS CONFIRMÉ - SDK 54 NEW ARCHITECTURE
+- **SDK 54** : React Native 0.81 + New Architecture activée ✅
+- **Version déployée** : 1.0.4 (versionCode 10)
+- **React 19** : Migration réussie vers React 19.0.0
 - **Keystore correct** : SHA1 vérifié et fonctionnel
-- **AAB accepté** par Google Play Store ✅
+- **AAB size** : 61MB (includes native libs for all architectures)
+- **Build time** : ~5-7 minutes avec 4GB heap / 1GB metaspace
+- **Compatibilité** : minSdk 24, targetSdk 36, compileSdk 36
