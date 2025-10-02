@@ -20,16 +20,7 @@
         "UIBackgroundModes": ["audio"]
       }
     },
-    "plugins": [
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/icon.png",
-          "color": "#4A5568",
-          "sounds": []
-        }
-      ]
-    ],
+    "plugins": [],
     "notification": {
       "icon": "./assets/icon.png",
       "color": "#4A5568",
