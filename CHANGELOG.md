@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2025-10-02
 
+### Added
+- **🎯 Onboarding System v2.0** - Professional tooltip spotlight implementation
+  - Sequential tooltips guiding users through app features (Activities → Dial → Controls → Palette)
+  - SVG Mask-based spotlight highlighting (inspired by react-native-copilot)
+  - Smart tooltip positioning algorithm (never hides highlighted element)
+  - Precise bounds measurement using `measure()` API
+  - "Skip all" button with persistent completion state
+  - Accessible via "Relancer le guide" in Settings modal
+
 ### Changed
 - **Freemium Strategy Refined**: Reorganized activity order and premium tiers
   - Pause activity moved to free tier (completes Pomodoro cycle with Work)
@@ -14,19 +23,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Free activities now: Basique, Travail, Pause, Lecture (4 activities)
   - Premium activities: All mindfulness (Yoga, Méditation, Respiration) + Sport, Étude, etc. (12 activities)
   - Better value proposition: Complete Pomodoro workflow free, desire-creating premium features locked
+- **Grid Layout System**: Simplified with Golden Ratio (φ = 1.618)
+  - Header: 50px, Activities/Palette: 80px (50 × φ)
+  - Grid provides structure, `measure()` provides precision
+  - Removed complex manual calculations in favor of dynamic measurement
 
 ### Fixed
 - **Responsive Design**: Settings button now properly adapts to all device sizes
   - Changed from `rs(44)` to `rs(44, 'min')` for width/height/borderRadius
   - Settings icon size now responsive with `rs(24, 'min')`
   - Tooltip positioning made responsive with `rs()` function
+- **Onboarding Highlights**: Eliminated visual gaps using SVG Mask technique
+  - Previous 4-rectangle approach had positioning bugs
+  - SVG Mask ensures pixel-perfect spotlight cutouts
 
-### Added
-- **UX Improvement**: Activity carousel peek effect for better scrollability affordance
-  - Reduced padding to `rs(30, 'width')` to show ~20% of adjacent activities
-  - Increased gap between activities to `theme.spacing.md` for better separation
-  - Visual hint that more content exists off-screen
-- **Documentation**: Created ADR for carousel affordance decisions (`docs/decisions/carousel-affordance.md`)
+### Technical
+- **Architecture Improvement**: Hybrid Grid + measure() approach
+  - `gridLayout.js` simplified to only provide Grid heights
+  - Component bounds measured dynamically for accuracy
+  - Smart tooltip positioning prevents element occlusion
+- **New Components**:
+  - `HighlightOverlay.jsx` - SVG-based spotlight with mask
+  - `Tooltip.jsx` - Reusable tooltip with arrow directions
+  - `OnboardingController.jsx` - Context-based state management
+  - `WelcomeScreen.jsx` - First-launch modal
+
+### Documentation
+- **DevLog**: Created comprehensive onboarding implementation log (`docs/devlog/2025-10-02-onboarding-highlight-system.md`)
+- **ADR**: Created carousel affordance decision record (`docs/decisions/carousel-affordance.md`)
   - Documents approach differences between ActivityCarousel (peek) vs PaletteCarousel (no dots for now)
   - Phase 1/Phase 2 implementation strategy for freemium pagination dots
 

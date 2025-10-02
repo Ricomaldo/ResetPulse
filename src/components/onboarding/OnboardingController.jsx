@@ -23,7 +23,7 @@ const TOOLTIPS_CONFIG = [
     id: 'controls',
     text: 'Démarrez, mettez en pause, ou réinitialisez',
     subtext: 'Le timer continue en arrière-plan',
-    arrowDirection: 'down',
+    arrowDirection: 'up',
   },
   {
     id: 'palette',

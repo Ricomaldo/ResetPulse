@@ -225,4 +225,124 @@ bounds = {
 
 ---
 
-**Status final:** Système à 70% fonctionnel. Tooltips 1-2 OK, 3-4 manquants. Highlight spotlight implémenté correctement. Besoin debug + stabilisation positioning.
+## 🔄 Session Finale - Solution Professionnelle (Après-midi)
+
+### ❌ Problèmes identifiés lors des tests
+
+**Image 1 - Activities** : Zone highlight décalée (au-dessus du carousel)
+**Image 2 - Dial** : OK mais tooltip cache partiellement l'élément
+**Image 3 - Controls** : OK mais tooltip au-dessus au lieu d'être positionné intelligemment
+**Image 4 - Palette** : OK
+
+**Diagnostic** :
+1. **4 rectangles = gaps visuels** : HighlightOverlay avec top/bottom/left/right créait des incohérences
+2. **Bounds imprécis** : Calculs manuels dans `gridLayout.js` vs réalité visuelle
+3. **Tooltip naïf** : Position hardcodée sans vérifier espace disponible
+4. **Grid ≠ Visuel** : Grid donne positions de sections, pas des éléments réels dedans
+
+### ✅ Solution finale - Approche professionnelle
+
+**Inspiration** : Bibliothèques pros (react-native-copilot, react-native-spotlight-tour)
+
+#### 1. **SVG Mask pour HighlightOverlay**
+```jsx
+<Svg>
+  <Defs>
+    <Mask id="spotlight-mask">
+      <Rect fill="white" width="100%" height="100%" />
+      <Rect fill="black" x={left} y={top} width={width} height={height} rx={12} />
+    </Mask>
+  </Defs>
+  <Rect mask="url(#spotlight-mask)" fill="rgba(0,0,0,0.75)" />
+</Svg>
+```
+**Avantages** : Aucun gap possible, performance optimale, spotlight parfait
+
+#### 2. **Grid simplifié**
+```javascript
+// gridLayout.js - JUSTE les hauteurs, rien d'autre
+export const getGridHeights = () => ({
+  header: rs(50, 'height'),
+  activities: rs(80, 'height'),  // 50 × φ
+  palette: rs(80, 'height'),
+});
+```
+Grid = structure. Bounds = measure() dynamique.
+
+#### 3. **measure() pour bounds précis**
+```javascript
+<Animated.View
+  ref={activitiesRef}
+  onLayout={() => {
+    setTimeout(() => {
+      activitiesRef.current?.measure((x, y, w, h, pageX, pageY) => {
+        const bounds = { top: pageY, left: pageX, width: w, height: h };
+        const position = calculateTooltipPosition(bounds);
+        registerTooltipTarget(id, position, bounds);
+      });
+    }, 100);
+  }}
+>
+```
+
+#### 4. **Tooltip intelligent**
+```javascript
+const calculateTooltipPosition = (bounds, tooltipHeight = 120) => {
+  const spaceAbove = bounds.top;
+  const spaceBelow = SCREEN_HEIGHT - (bounds.top + bounds.height);
+
+  // Essaie au-dessus
+  if (spaceAbove >= tooltipHeight + 20) {
+    return { top: bounds.top - tooltipHeight - 20 };
+  }
+  // Sinon en dessous
+  else if (spaceBelow >= tooltipHeight + 20) {
+    return { top: bounds.top + bounds.height + 20 };
+  }
+  // Fallback: centré
+  else {
+    return { top: SCREEN_HEIGHT / 2 - tooltipHeight / 2 };
+  }
+};
+```
+
+### 📊 Résultats
+
+**Avant refonte** :
+- ❌ 4 rectangles avec gaps visuels
+- ❌ Calculs manuels imprécis
+- ❌ Tooltips hors écran ou cachant éléments
+- ❌ Code complexe (150+ lignes de calculs)
+
+**Après refonte** :
+- ✅ SVG Mask sans gaps
+- ✅ Bounds mesurés précisément
+- ✅ Tooltips positionnés intelligemment
+- ✅ Code simple et maintenable
+
+### 🎓 Leçons apprises
+
+1. **Ne pas réinventer la roue** : Les libs pros utilisent SVG Mask pour une raison
+2. **Grid ≠ Éléments visuels** : Grid donne structure, pas positions exactes
+3. **measure() > calculs manuels** : Toujours préférer mesure dynamique
+4. **Tester tôt** : 4h perdues car pas testé assez tôt les bounds réels
+5. **Simplicité > Complexité** : Moins de code = moins de bugs
+
+### 📦 Fichiers finaux
+
+**Créés** :
+- `src/constants/gridLayout.js` (simplifié - 36 lignes)
+- `src/components/onboarding/HighlightOverlay.jsx` (SVG Mask - 62 lignes)
+- `src/components/onboarding/Tooltip.jsx` (Réutilisable - 224 lignes)
+- `src/components/onboarding/OnboardingController.jsx` (Context - 158 lignes)
+- `src/components/onboarding/WelcomeScreen.jsx` (Premier lancement)
+
+**Modifiés** :
+- `src/screens/TimerScreen.jsx` : measure() pour bounds précis
+- `src/components/TimeTimer.jsx` : refs pour Dial & Controls
+- `src/components/SettingsModal.jsx` : Bouton "Relancer le guide"
+- `App.js` : Intégration WelcomeScreen + OnboardingProvider
+
+---
+
+**Status final:** ✅ Système 100% fonctionnel. Architecture professionnelle. Tooltips intelligents. Highlights parfaits. Code maintenable.

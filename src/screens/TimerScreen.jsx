@@ -269,7 +269,13 @@ function TimerScreenContent() {
           style={[
             styles.activitySection,
             {
-              opacity: isTimerRunning ? 0.2 : activityAnim,
+              opacity: Animated.multiply(activityAnim, isTimerRunning ? 0.2 : 1),
+              transform: [{
+                translateX: activityAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [-30, 0]
+                })
+              }]
             }
           ]}>
           <ActivityCarousel isTimerRunning={isTimerRunning} />
@@ -301,15 +307,9 @@ function TimerScreenContent() {
         onLayout={() => {
           setTimeout(() => {
             paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
-              // Expand height slightly for better highlight visibility
-              const expandedBounds = {
-                top: pageY - rs(5, 'height'),
-                left: pageX,
-                width,
-                height: height + rs(10, 'height')
-              };
-              const position = calculateTooltipPosition(expandedBounds);
-              registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, expandedBounds);
+              const bounds = { top: pageY, left: pageX, width, height };
+              const position = calculateTooltipPosition(bounds);
+              registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
             });
           }, 100);
         }}
