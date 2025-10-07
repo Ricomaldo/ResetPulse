@@ -6,8 +6,9 @@
 
 **ResetPulse** est une application de time timer iOS spécialement conçue pour les personnes neuroatypiques (TDAH/TSA). L'app offre une interface épurée pour la méditation (20min) et l'ancrage mental (4min) sans surcharge cognitive.
 
-**Version actuelle :** 1.0.4 (SDK 54, New Architecture)
-**Status :** Production active
+**Version actuelle :** 1.0.5 (SDK 54, New Architecture)
+**Status :** 🚧 En développement - Android Notifications Fix
+**Platforms :** [Android](https://play.google.com/apps/internaltest/4701499537445297168) | [iOS TestFlight](https://appstoreconnect.apple.com/apps/6752913010/testflight/ios)
 
 ---
 
@@ -39,7 +40,9 @@
 
 ### Pour Développer
 1. **[Testing Strategy](development/testing/README.md)** - Stratégie de tests unifiée
-2. **[Build Configuration](development/builds/README.md)** - Configuration iOS/Android
+2. **[Build Configuration](development/builds/)** - Configuration iOS/Android
+   - [Android Build Config](development/builds/ANDROID_BUILD_CONFIG.md) - SDK 54 + New Architecture
+   - [iOS Build Config](development/builds/IOS_BUILD_CONFIG.md) - EAS Build + TestFlight
 3. **[Audio System](development/audio-system.md)** - Système audio complet
 
 ### Pour Déployer
@@ -55,16 +58,20 @@
 - **M2 - Timer Core Fonctionnel** - Timer avec build iOS stable
 - **M3 - Interface Minimale** - Interface utilisateur complète et polie
 
-### Version Actuelle (v1.0.4)
-- **✅ SDK 54 Migration** - Expo SDK 54 + React 19.1.0 + New Architecture
+### Version Actuelle (v1.0.5) - [📋 Changelog](releases/v1.0.5-changelog.md)
+- **🚧 Android Notifications Fix** - Permission SCHEDULE_EXACT_ALARM + Notification Channels
+- **✅ SDK 54 Migration** - Expo SDK 54 + React 19.0.0 + New Architecture
 - **✅ Audio System** - Son fonctionne même en mode silencieux + arrière-plan
-- **✅ Testing Foundation** - Jest SDK 54 + tests critiques
-- **✅ Architecture Modulaire** - TimerDial refactorisé en composants spécialisés
+- **✅ Onboarding v2.0** - Système interactif avec tooltips guidés
+- **✅ Testing Foundation** - 29/29 tests passent
 
-### Prochaines Étapes
-- **Lock Screen Display** - Timer visible écran verrouillé
-- **Onboarding Wizard** - Guide utilisateur initial
-- **Premium Features** - Activités et palettes premium
+### Version Précédente (v1.0.4) - [📋 Changelog](releases/v1.0.4-changelog.md)
+- **✅ Builds Déployés** - Android (versionCode 10) + iOS (buildNumber 13)
+
+### Prochaines Étapes (v1.1.0) - [🎯 Matrice de Priorisation](decisions/time_timer_priority_matrix.md)
+- **Lock Screen Display** (Score 4.3) - Timer visible écran verrouillé
+- **RevenueCat Setup** (Score 4.5) - Monétisation + Learning pour MoodCycle
+- **Internationalisation** (Score 5.0) - 15 langues pour scalabilité globale
 
 ---
 
@@ -88,15 +95,22 @@ docs/
 
 ## 🔄 Dernières Mises à Jour
 
-### 2025-10-02
-- **Documentation refactoring** - Restructuration complète avec navigation
-- **Audit approfondi** - Identification et résolution des redondances
-- **Index unifiés** - Navigation fluide entre tous les documents
+### 2025-10-07 (v1.0.5 - EN DÉVELOPPEMENT)
+- **🔔 Android Notifications Fix** - Permission SCHEDULE_EXACT_ALARM + Channels
+- **📋 Changelog v1.0.5** - [Documentation complète](releases/v1.0.5-changelog.md)
+- **📝 Fix Report** - [Rapport détaillé](archive/fixes/NOTIFICATION_FIX_ANDROID_2025.md)
 
-### 2025-09-29 (v1.0.4)
-- **Audio System complet** - Son garanti même en mode silencieux
-- **SDK 54 Migration** - New Architecture + React 19.1.0
-- **Testing Foundation** - Jest SDK 54 + couverture critique
+### 2025-10-03 (v1.0.4 - DÉPLOYÉE)
+- **🚀 Builds Déployés** - Android Internal Testing + iOS TestFlight
+- **📱 Android Build** - versionCode 10, AAB 61MB, SDK 54 + New Architecture
+- **🍎 iOS Build** - buildNumber 13, EAS Build + TestFlight
+- **📋 Changelog v1.0.4** - [Documentation complète](releases/v1.0.4-changelog.md)
+
+### 2025-10-02
+- **🎨 Onboarding System v2.0** - Tooltips interactifs avec spotlight SVG
+- **⚙️ Settings Modal Redesign** - Hiérarchie visuelle iOS 15+
+- **🌓 System Theme Fix** - Détection fiable avec Appearance API
+- **✅ Tests Passent** - 29/29 tests validés SDK 54
 
 ---
 

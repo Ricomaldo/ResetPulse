@@ -28,10 +28,12 @@ function AppContent() {
   }, []);
 
   const handleDiscover = () => {
-    // Start tooltips BEFORE hiding welcome to avoid flash
-    startTooltips();
-    // Hide welcome immediately after
+    // Hide welcome first
     setShowWelcome(false);
+    // Wait for layout to stabilize after welcome disappears, then start tooltips
+    setTimeout(() => {
+      startTooltips();
+    }, 300);
   };
 
   const handleSkipWelcome = () => {

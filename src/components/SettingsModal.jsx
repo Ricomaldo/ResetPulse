@@ -34,6 +34,8 @@ export default function SettingsModal({ visible, onClose }) {
     setShouldPulse,
     showActivities,
     setShowActivities,
+    showDigitalTimer,
+    setShowDigitalTimer,
     currentActivity,
     setCurrentActivity,
     clockwise,
@@ -160,7 +162,7 @@ export default function SettingsModal({ visible, onClose }) {
       backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadius.lg,
       padding: theme.spacing.md,
-      marginBottom: theme.spacing.md,
+      marginBottom: theme.spacing.sm, // Réduit de md à sm
       borderWidth: 1,
       borderColor: theme.colors.brand.primary + '15',
       ...theme.shadow('md'),
@@ -339,6 +341,7 @@ export default function SettingsModal({ visible, onClose }) {
       borderWidth: 2,
       borderColor: "transparent",
       ...theme.shadow("sm"),
+      padding: theme.spacing.xs,
     },
 
     activityItemFavorite: {
@@ -349,13 +352,14 @@ export default function SettingsModal({ visible, onClose }) {
 
     activityEmoji: {
       fontSize: rs(24, "min"),
-      marginBottom: 2,
+      marginBottom: theme.spacing.xs / 2,
+      textAlign: "center",
     },
 
     activityIcon: {
       width: rs(24, "min"),
       height: rs(24, "min"),
-      marginBottom: 2,
+      marginBottom: theme.spacing.xs / 2,
       // Pas de tintColor pour garder les couleurs originales de l'icône
     },
 
@@ -363,6 +367,8 @@ export default function SettingsModal({ visible, onClose }) {
       fontSize: rs(9, "min"),
       color: theme.colors.textLight,
       fontWeight: "500",
+      textAlign: "center",
+      width: "100%",
     },
 
     activityItemLabelFavorite: {
@@ -454,8 +460,28 @@ export default function SettingsModal({ visible, onClose }) {
                 onSoundSelect={setSelectedSoundId}
               />
 
+              {/* Chrono Numérique */}
+              <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Chrono Numérique</Text>
+                  <Text style={styles.optionDescription}>
+                    {showDigitalTimer
+                      ? "Affiche le temps restant en MM:SS"
+                      : "Chrono numérique désactivé"}
+                  </Text>
+                </View>
+                <Switch
+                  value={showDigitalTimer}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setShowDigitalTimer(value);
+                  }}
+                  {...theme.styles.switch(showDigitalTimer)}
+                />
+              </View>
+
               {/* Animation Pulse */}
-              <View style={[styles.optionRow, { marginTop: theme.spacing.md, borderBottomWidth: 0 }]}>
+              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Animation Pulse</Text>
                   <Text style={styles.optionDescription}>
@@ -816,7 +842,7 @@ export default function SettingsModal({ visible, onClose }) {
                       { marginTop: theme.spacing.xs },
                     ]}
                   >
-                    Version 1.0.0
+                    Version 1.0.5
                   </Text>
                 </View>
               </View>

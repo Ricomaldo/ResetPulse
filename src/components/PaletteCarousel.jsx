@@ -98,6 +98,28 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       position: "relative",
       alignItems: "center",
       justifyContent: "center",
+      flexDirection: "row",
+    },
+
+    chevronButton: {
+      width: rs(32, "min"),
+      height: rs(32, "min"),
+      borderRadius: rs(16, "min"),
+      backgroundColor: theme.colors.surface,
+      alignItems: "center",
+      justifyContent: "center",
+      marginHorizontal: theme.spacing.xs,
+      ...theme.shadows.sm,
+    },
+
+    chevronDisabled: {
+      opacity: 0.3,
+    },
+
+    chevronText: {
+      fontSize: rs(18, "min"),
+      color: theme.colors.text,
+      fontWeight: "600",
     },
 
     scrollView: {
@@ -168,10 +190,58 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
   });
 
+  // Navigation functions
+  const scrollToPrevious = () => {
+    if (currentPaletteIndex > 0) {
+      const newIndex = currentPaletteIndex - 1;
+      scrollViewRef.current?.scrollTo({
+        x: newIndex * rs(232, "width"),
+        animated: true,
+      });
+      const newPaletteName = PALETTE_NAMES[newIndex];
+      const paletteInfo = TIMER_PALETTES[newPaletteName];
+      if (!paletteInfo.isPremium || isPremiumUser) {
+        setPalette(newPaletteName);
+        showPaletteName();
+      }
+    }
+  };
+
+  const scrollToNext = () => {
+    if (currentPaletteIndex < PALETTE_NAMES.length - 1) {
+      const newIndex = currentPaletteIndex + 1;
+      scrollViewRef.current?.scrollTo({
+        x: newIndex * rs(232, "width"),
+        animated: true,
+      });
+      const newPaletteName = PALETTE_NAMES[newIndex];
+      const paletteInfo = TIMER_PALETTES[newPaletteName];
+      if (!paletteInfo.isPremium || isPremiumUser) {
+        setPalette(newPaletteName);
+        showPaletteName();
+      }
+    }
+  };
+
   return (
     <View style={styles.outerContainer}>
-      {/* Palette name label */}
-      <Animated.View
+      {/* Left chevron */}
+      <TouchableOpacity
+        style={[
+          styles.chevronButton,
+          currentPaletteIndex === 0 && styles.chevronDisabled,
+        ]}
+        onPress={scrollToPrevious}
+        disabled={currentPaletteIndex === 0}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.chevronText}>‹</Text>
+      </TouchableOpacity>
+
+      {/* Palette carousel */}
+      <View>
+        {/* Palette name label */}
+        <Animated.View
         style={[
           styles.paletteLabel,
           {
@@ -264,6 +334,21 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
           );
         })}
       </ScrollView>
+      </View>
+
+      {/* Right chevron */}
+      <TouchableOpacity
+        style={[
+          styles.chevronButton,
+          currentPaletteIndex === PALETTE_NAMES.length - 1 &&
+            styles.chevronDisabled,
+        ]}
+        onPress={scrollToNext}
+        disabled={currentPaletteIndex === PALETTE_NAMES.length - 1}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.chevronText}>›</Text>
+      </TouchableOpacity>
     </View>
   );
 }

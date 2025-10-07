@@ -10,6 +10,7 @@ export const ACTIVITIES = [
     isPremium: false,
     suggestedColor: "calm",
     description: "Timer simple sans activité",
+    pulseDuration: 800, // Vitesse normale
   },
 
   // Free activities - Pomodoro cycle complet + diversité
@@ -21,6 +22,7 @@ export const ACTIVITIES = [
     isPremium: false,
     suggestedColor: "deep",
     description: "Sessions de travail concentré",
+    pulseDuration: 600, // Rapide - focus intense
   },
   {
     id: "break",
@@ -30,6 +32,7 @@ export const ACTIVITIES = [
     isPremium: false, // Complète le Pomodoro
     suggestedColor: "calm",
     description: "Vraie déconnexion",
+    pulseDuration: 1000, // Plus lent - repos
   },
 
   // Premium - Bien-être physique
@@ -41,6 +44,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "energy",
     description: "Étirements et exercices courts",
+    pulseDuration: 500, // Très rapide - énergie
   },
   {
     id: "study",
@@ -48,6 +52,7 @@ export const ACTIVITIES = [
     label: "Étude",
     defaultDuration: 2700, // 45 minutes
     isPremium: true,
+    pulseDuration: 700, // Modéré-rapide
     suggestedColor: "focus",
     description: "Sessions d'apprentissage",
   },
@@ -61,6 +66,7 @@ export const ACTIVITIES = [
     isPremium: false, // Montre la diversité
     suggestedColor: "focus",
     description: "Focus lecture profonde",
+    pulseDuration: 900, // Lent - concentration calme
   },
 
   // Premium - Mindfulness verticale bloquée
@@ -72,6 +78,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "calm",
     description: "Étirements et postures",
+    pulseDuration: 1100, // Très lent - flow
   },
   {
     id: "meditation",
@@ -81,6 +88,7 @@ export const ACTIVITIES = [
     isPremium: true, // Toute la verticale mindfulness devient premium
     suggestedColor: "calm",
     description: "Sessions de méditation guidée",
+    pulseDuration: 1200, // Très lent - calme profond
   },
   {
     id: "breathing",
@@ -90,6 +98,7 @@ export const ACTIVITIES = [
     isPremium: true, // Toute la verticale mindfulness devient premium
     suggestedColor: "energy",
     description: "Exercices de respiration",
+    pulseDuration: 900, // Lent - respiration contrôlée
   },
   {
     id: "walking",
@@ -99,6 +108,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "deep",
     description: "Mouvement conscient",
+    pulseDuration: 800, // Normal - rythme naturel
   },
 
   // Premium - Autres activités
@@ -110,6 +120,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "focus",
     description: "Dessin, écriture libre",
+    pulseDuration: 750, // Modéré - flow créatif
   },
   {
     id: "cooking",
@@ -119,6 +130,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "energy",
     description: "Préparation de repas",
+    pulseDuration: 700, // Modéré-rapide - activité
   },
   {
     id: "gaming",
@@ -128,6 +140,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "energy",
     description: "Temps d'écran contrôlé",
+    pulseDuration: 550, // Rapide - attention soutenue
   },
   {
     id: "homework",
@@ -137,6 +150,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "focus",
     description: "Aide aux devoirs",
+    pulseDuration: 650, // Rapide - concentration
   },
   {
     id: "music",
@@ -146,6 +160,7 @@ export const ACTIVITIES = [
     isPremium: true,
     suggestedColor: "calm",
     description: "Pratique instrumentale",
+    pulseDuration: 850, // Lent - flow musical
   },
   {
     id: "cleaning",
@@ -153,6 +168,7 @@ export const ACTIVITIES = [
     label: "Ménage",
     defaultDuration: 900, // 15 minutes
     isPremium: true,
+    pulseDuration: 700, // Modéré-rapide - activité physique
     suggestedColor: "energy",
     description: "Tâches ménagères",
   },

@@ -8,6 +8,7 @@ import { useOnboarding } from './onboarding/OnboardingController';
 import { rs, getComponentSizes } from '../styles/responsive';
 import useTimer from '../hooks/useTimer';
 import TimerDial from './timer/TimerDial';
+import DigitalTimer from './timer/DigitalTimer';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 import { TIMER, BUTTON, TEXT, TOUCH } from '../constants/uiConstants';
@@ -20,10 +21,11 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
     scaleMode,
     currentActivity,
     currentDuration,
-    saveActivityDuration
+    saveActivityDuration,
+    showDigitalTimer
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
-  const { highlightedElement, completeOnboarding } = useOnboarding();
+  const { highlightedElement, showZenModeCompletion } = useOnboarding();
 
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
@@ -88,6 +90,14 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: 0,
+      position: 'relative',
+    },
+
+    digitalTimerWrapper: {
+      position: 'absolute',
+      top: rs(20, 'height'),
+      alignSelf: 'center',
+      zIndex: 10,
     },
 
     timerWrapper: {
@@ -180,6 +190,17 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
 
   return (
     <View style={styles.container}>
+      {/* Digital Timer - Absolute position above */}
+      {showDigitalTimer && (
+        <View style={styles.digitalTimerWrapper}>
+          <DigitalTimer
+            remaining={timer.remaining}
+            isRunning={timer.running}
+            color={currentColor}
+          />
+        </View>
+      )}
+
       {/* Timer Circle */}
       <View ref={dialWrapperRef} style={styles.timerWrapper}>
         <TimerDial
@@ -221,9 +242,9 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
             style={[styles.controlButton, { opacity: timer.running ? BUTTON.RUNNING_OPACITY : BUTTON.IDLE_OPACITY }]}
             onPress={() => {
               timer.toggleRunning();
-              // If user starts timer during onboarding on controls, complete onboarding
+              // If user starts timer during onboarding on controls, show zen mode completion
               if (highlightedElement === 'controls' && !timer.running) {
-                completeOnboarding();
+                showZenModeCompletion();
               }
             }}
             activeOpacity={TOUCH.ACTIVE_OPACITY}

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useOnboarding } from './OnboardingController';
 import { TRANSITION } from '../../constants/animations';
 import haptics from '../../utils/haptics';
 
@@ -19,12 +20,13 @@ export default function Tooltip({
   text,
   subtext,
   position,
-  arrowDirection = 'down', // 'up', 'down', 'left', 'right'
+  arrowDirection = 'down', // 'up', 'down', 'left', 'right', null (centered)
   isLast = false,
   onNext,
   onSkipAll
 }) {
   const theme = useTheme();
+  const { isZenModeCompletion } = useOnboarding();
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -63,6 +65,9 @@ export default function Tooltip({
     }
   };
 
+  // Centered tooltip (no arrow, no position)
+  const isCentered = arrowDirection === null || !position;
+
   const styles = StyleSheet.create({
     skipAllButton: {
       position: 'absolute',
@@ -80,9 +85,16 @@ export default function Tooltip({
 
     tooltipContainer: {
       position: 'absolute',
-      top: position.top,
-      left: 0,
-      right: 0,
+      ...(isCentered ? {
+        // If zen mode completion, position at top; otherwise center
+        top: isZenModeCompletion ? 100 : SCREEN_HEIGHT / 2 - 100,
+        left: 0,
+        right: 0,
+      } : {
+        top: position.top,
+        left: 0,
+        right: 0,
+      }),
       alignItems: 'center',
       zIndex: 100,
     },
@@ -179,15 +191,17 @@ export default function Tooltip({
         pointerEvents="box-none"
       >
         <View style={styles.tooltipBubble}>
-          {/* Arrow */}
-          <View style={styles.arrowContainer}>
-            <Svg width="20" height="10">
-              <Polygon
-                points={getArrowPoints()}
-                fill={theme.colors.surface}
-              />
-            </Svg>
-          </View>
+          {/* Arrow - Only if not centered */}
+          {!isCentered && (
+            <View style={styles.arrowContainer}>
+              <Svg width="20" height="10">
+                <Polygon
+                  points={getArrowPoints()}
+                  fill={theme.colors.surface}
+                />
+              </Svg>
+            </View>
+          )}
 
           {/* Text */}
           <Text style={styles.tooltipText}>{text}</Text>
@@ -203,7 +217,7 @@ export default function Tooltip({
               activeOpacity={0.8}
             >
               <Text style={styles.nextButtonText}>
-                {isLast ? 'Terminer' : 'Suivant'}
+                {isLast ? 'Commencer' : 'Suivant'}
               </Text>
             </TouchableOpacity>
           </View>

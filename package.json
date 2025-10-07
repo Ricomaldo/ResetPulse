@@ -1,6 +1,6 @@
 {
   "name": "resetpulse",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "main": "index.js",
   "scripts": {
     "start": "expo start",
@@ -14,7 +14,11 @@
     "test:hooks": "jest src/hooks/__tests__ --no-coverage",
     "test:timer": "jest useTimer --no-coverage",
     "test:dial": "jest useDialOrientation --no-coverage",
-    "detect:transforms": "node scripts/detect-transform-needs.js"
+    "detect:transforms": "node scripts/detect-transform-needs.js",
+    "version:patch": "node scripts/version-bump.js patch",
+    "version:minor": "node scripts/version-bump.js minor",
+    "version:major": "node scripts/version-bump.js major",
+    "version:set": "node scripts/version-bump.js set"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

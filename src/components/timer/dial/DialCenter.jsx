@@ -15,24 +15,25 @@ const DialCenter = React.memo(({
   isRunning,
   shouldPulse,
   color,
+  pulseDuration = PULSE_ANIMATION.DURATION, // Default from constants
 }) => {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const glowAnim = useRef(new Animated.Value(0.3)).current;
 
-  // Pulse animation effect
+  // Pulse animation effect with contextual duration
   useEffect(() => {
     if (isRunning && shouldPulse) {
       const pulseAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
             toValue: PULSE_ANIMATION.SCALE_MAX,
-            duration: PULSE_ANIMATION.DURATION,
+            duration: pulseDuration,
             useNativeDriver: true,
           }),
           Animated.timing(pulseAnim, {
             toValue: PULSE_ANIMATION.SCALE_MIN,
-            duration: PULSE_ANIMATION.DURATION,
+            duration: pulseDuration,
             useNativeDriver: true,
           }),
         ])
@@ -42,12 +43,12 @@ const DialCenter = React.memo(({
         Animated.sequence([
           Animated.timing(glowAnim, {
             toValue: PULSE_ANIMATION.GLOW_MAX,
-            duration: PULSE_ANIMATION.DURATION,
+            duration: pulseDuration,
             useNativeDriver: true,
           }),
           Animated.timing(glowAnim, {
             toValue: PULSE_ANIMATION.GLOW_MIN,
-            duration: PULSE_ANIMATION.DURATION,
+            duration: pulseDuration,
             useNativeDriver: true,
           }),
         ])
@@ -63,7 +64,7 @@ const DialCenter = React.memo(({
         glowAnim.setValue(0.3);
       };
     }
-  }, [isRunning, shouldPulse, pulseAnim, glowAnim]);
+  }, [isRunning, shouldPulse, pulseAnim, glowAnim, pulseDuration]);
 
   // Show emoji if provided
   if (activityEmoji) {

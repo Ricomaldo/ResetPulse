@@ -29,6 +29,7 @@ Briefings et spécifications des nouvelles features
 ### 🚀 Deployment & Stores
 - **[Deployment Info](DEPLOYMENT_INFO.md)** - Configuration déploiement iOS/Android
 - **[Store Submission Checklist](STORE_SUBMISSION_CHECKLIST.md)** - Checklist App Store/Google Play
+- **[Versioning System](VERSIONING.md)** - 🔢 Automatisation des versions (SemVer)
 
 ## ⚡ Quick Start
 

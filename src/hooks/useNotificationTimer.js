@@ -18,6 +18,35 @@ try {
   console.warn('⚠️ Notifications configuration failed (native module missing):', error.message);
 }
 
+// Créer le channel Android pour les notifications du timer
+// REQUIS pour Android 8.0+ (API 26+)
+const setupAndroidChannel = async () => {
+  if (Platform.OS !== 'android') return;
+
+  try {
+    await Notifications.setNotificationChannelAsync('timer', {
+      name: 'Timer Notifications',
+      description: 'Notifications when timer completes',
+      importance: Notifications.AndroidImportance.HIGH, // Bannière + son
+      sound: '407342__forthehorde68__fx_bell_short.wav', // Son par défaut (bell_classic)
+      vibrationPattern: [0, 250, 250, 250], // Vibration courte
+      enableLights: true,
+      lightColor: '#4A5568', // Couleur thème app
+      enableVibrate: true,
+      showBadge: true,
+    });
+
+    if (__DEV__) {
+      console.log('✅ Android notification channel "timer" created');
+    }
+  } catch (error) {
+    console.warn('⚠️ Failed to create Android notification channel:', error.message);
+  }
+};
+
+// Initialiser le channel au chargement du module
+setupAndroidChannel();
+
 export default function useNotificationTimer() {
   const notificationIdRef = useRef(null);
   const appStateRef = useRef(AppState.currentState);
@@ -69,12 +98,13 @@ export default function useNotificationTimer() {
         content: {
           title: "⏰ Timer terminé !",
           body: `Votre timer de ${Math.floor(seconds/60)}min ${seconds%60}s est terminé`,
-          sound: true, // Utilise le son système par défaut
-          // Pour un son custom, il faut configurer dans app.json
+          sound: '407342__forthehorde68__fx_bell_short.wav', // Son bell_classic
+          // Pour Android 8+ le son du channel est utilisé
         },
         trigger: {
-          type: 'timeInterval', // IMPORTANT : spécifier le type !
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, // Enum correct SDK 54
           seconds: Math.max(1, seconds), // Au minimum 1 seconde
+          channelId: 'timer', // Android : utilise le channel créé
         },
       });
 

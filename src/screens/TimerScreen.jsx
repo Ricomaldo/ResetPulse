@@ -270,9 +270,9 @@ function TimerScreenContent() {
         <Animated.View
           ref={activitiesRef}
           onLayout={() => {
-            // If onboarding not completed, measure after welcome screen closes
-            // Need longer delay to ensure all layout shifts are complete
-            const delay = onboardingCompleted ? 900 : 500;
+            // Measure immediately since startTooltips() already waits for animations
+            // Only add small delay for onboardingCompleted case (relaunched from settings)
+            const delay = onboardingCompleted ? 900 : 100;
             setTimeout(() => {
               activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
                 const bounds = { top: pageY, left: pageX, width, height };
@@ -334,16 +334,13 @@ function TimerScreenContent() {
           }, delay);
         }}
         style={[styles.paletteSection, {
-          opacity: Animated.multiply(paletteAnim, isTimerRunning ? 0 : 1),
+          opacity: paletteAnim, // Toujours visible, pas de mode zen
           transform: onboardingCompleted ? [
             {
-              translateY: Animated.add(
-                paletteAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [30, 0]
-                }),
-                isTimerRunning ? 50 : 0
-              )
+              translateY: paletteAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [30, 0]
+              })
             }
           ] : []
         }]}>

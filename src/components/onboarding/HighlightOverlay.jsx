@@ -40,6 +40,23 @@ export default function HighlightOverlay({ highlightedElement, targetBounds }) {
     }
   }, [highlightedElement, targetBounds]);
 
+  // Special case: completion tooltip shows full overlay without cutout
+  if (highlightedElement === 'completion') {
+    return (
+      <Animated.View
+        style={[StyleSheet.absoluteFillObject, { opacity: opacityAnim }]}
+        pointerEvents="none"
+      >
+        <View
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          }}
+        />
+      </Animated.View>
+    );
+  }
+
   if (!highlightedElement || !targetBounds) return null;
 
   // Add padding around spotlight for breathing room

@@ -12,6 +12,7 @@ export const TimerOptionsProvider = ({ children }) => {
     {
       shouldPulse: false, // Animation de pulsation désactivée par défaut (conformité épilepsie)
       showActivities: true, // Affichage des activités activé par défaut
+      showDigitalTimer: false, // Chrono numérique désactivé par défaut
       clockwise: false,
       scaleMode: '60min',
       currentActivity: getDefaultActivity(),
@@ -26,6 +27,7 @@ export const TimerOptionsProvider = ({ children }) => {
     // States
     shouldPulse: values.shouldPulse,
     showActivities: values.showActivities,
+    showDigitalTimer: values.showDigitalTimer,
     clockwise: values.clockwise,
     scaleMode: values.scaleMode,
     currentActivity: values.currentActivity,
@@ -37,6 +39,7 @@ export const TimerOptionsProvider = ({ children }) => {
     // Actions
     setShouldPulse: (val) => updateValue('shouldPulse', val),
     setShowActivities: (val) => updateValue('showActivities', val),
+    setShowDigitalTimer: (val) => updateValue('showDigitalTimer', val),
     setClockwise: (val) => updateValue('clockwise', val),
     setScaleMode: (val) => updateValue('scaleMode', val),
     setCurrentActivity: (val) => updateValue('currentActivity', val),

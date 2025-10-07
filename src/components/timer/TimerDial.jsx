@@ -266,6 +266,7 @@ function TimerDial({
         isRunning={isRunning}
         shouldPulse={shouldPulse}
         color={color}
+        pulseDuration={currentActivity?.pulseDuration}
       />
 
       {/* Dragging indicator */}

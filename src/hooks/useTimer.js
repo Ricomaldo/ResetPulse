@@ -142,11 +142,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
   }, [running, startTime, updateTimer]);
 
   // Update remaining when duration changes (only if not running and not paused)
+  // BUT: Don't reset if timer just completed (remaining is already at 0)
   useEffect(() => {
-    if (!running && !isPaused) {
+    if (!running && !isPaused && remaining !== 0) {
       setRemaining(duration);
     }
-  }, [duration, running, isPaused]);
+  }, [duration, running, isPaused, remaining]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -181,33 +182,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Controls
   const toggleRunning = useCallback(() => {
-    if (remaining === 0) {
-      // Start from zero - use last duration or default
-      const durationToUse = duration > 0 ? duration : TIMER.DEFAULT_DURATION; // Default if no duration set
-      setRemaining(durationToUse);
-      setDuration(durationToUse); // Update duration for future use
-      setStartTime(null);
-      setIsPaused(false);
-      setShowParti(true);
-      setShowReparti(false);
-      setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
-      setRunning(true);
-
-      // Programmer notification pour la fin (solution background)
-      scheduleTimerNotification(durationToUse);
-
-      // Sauvegarder la durée pour cette activité si elle a changé
-      if (currentActivity?.id && durationToUse > 0 &&
-          activityDurations[currentActivity.id] !== durationToUse) {
-        saveActivityDuration(currentActivity.id, durationToUse);
-      }
-
-      if (__DEV__) {
-        const now = new Date();
-        const minutes = Math.floor(durationToUse / 60);
-        const secs = durationToUse % 60;
-        console.log(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
-      }
+    if (remaining === 0 && duration === 0) {
+      // Timer at zero with no duration set - do nothing (user must use Reset or set duration)
+      return;
     } else if (!running) {
       // Start or resume
       if (isPaused) {

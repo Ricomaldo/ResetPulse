@@ -8,7 +8,7 @@ import HighlightOverlay from './HighlightOverlay';
 // Context pour l'onboarding
 const OnboardingContext = createContext(null);
 
-// Tooltips configuration - Séquence: 1→2→3→4 (découverte progressive)
+// Tooltips configuration - Séquence: 1→2→3→4→5 (découverte progressive)
 // Ordre optimisé pour permettre l'interaction pendant l'onboarding
 const TOOLTIPS_CONFIG = [
   {
@@ -32,6 +32,12 @@ const TOOLTIPS_CONFIG = [
     subtext: 'Le timer continue en arrière-plan',
     arrowDirection: 'down',
   },
+  {
+    id: 'completion',
+    text: 'Profitez bien de ResetPulse !',
+    subtext: null,
+    arrowDirection: null, // Centered message, no target
+  },
 ];
 
 export function OnboardingProvider({ children }) {
@@ -44,6 +50,7 @@ export function OnboardingProvider({ children }) {
   const [tooltipPositions, setTooltipPositions] = useState({});
   const [tooltipBounds, setTooltipBounds] = useState({});
   const [highlightedElement, setHighlightedElement] = useState(null);
+  const [isZenModeCompletion, setIsZenModeCompletion] = useState(false);
 
   // Register tooltip target positions and bounds
   const registerTooltipTarget = (id, position, bounds = null) => {
@@ -62,8 +69,13 @@ export function OnboardingProvider({ children }) {
   // Start onboarding tooltips
   const startTooltips = () => {
     if (!onboardingCompleted || __DEV__) {
-      setCurrentTooltip(0);
-      setHighlightedElement(TOOLTIPS_CONFIG[0].id);
+      // Wait for entrance animations to complete before showing tooltips
+      // Animation timeline: ACTIVITY_DELAY (400ms) + ACTIVITY_DURATION (400ms) = 800ms
+      // Add buffer: 800ms + 400ms = 1200ms
+      setTimeout(() => {
+        setCurrentTooltip(0);
+        setHighlightedElement(TOOLTIPS_CONFIG[0].id);
+      }, 1200);
     }
   };
 
@@ -76,6 +88,13 @@ export function OnboardingProvider({ children }) {
     } else {
       completeOnboarding();
     }
+  };
+
+  // Show completion tooltip in zen mode (when user clicks Play during onboarding)
+  const showZenModeCompletion = () => {
+    setCurrentTooltip(TOOLTIPS_CONFIG.length - 1); // Last tooltip (completion)
+    setHighlightedElement('completion');
+    setIsZenModeCompletion(true);
   };
 
   // Skip all tooltips
@@ -102,9 +121,11 @@ export function OnboardingProvider({ children }) {
     tooltipPositions,
     tooltipBounds,
     highlightedElement,
+    isZenModeCompletion,
     registerTooltipTarget,
     startTooltips,
     nextTooltip,
+    showZenModeCompletion,
     skipAll,
     completeOnboarding,
     resetOnboarding,
@@ -127,7 +148,7 @@ export function OnboardingProvider({ children }) {
       />
 
       {/* Tooltip - on top of everything */}
-      {currentTooltipConfig && currentPosition && (
+      {currentTooltipConfig && (currentPosition || currentTooltipConfig.arrowDirection === null) && (
         <Tooltip
           text={currentTooltipConfig.text}
           subtext={currentTooltipConfig.subtext}

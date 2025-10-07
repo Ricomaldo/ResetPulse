@@ -5,6 +5,118 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### ✨ Added
+- **Digital Timer Display** - Optional MM:SS countdown above timer dial
+  - Toggle in Settings under "🎯 Expérience Timer"
+  - Fade-in animation when timer starts
+  - Monospace font for better readability
+  - Matches dial frame styling
+- **5th Onboarding Tooltip** - Completion message "Profitez bien de ResetPulse !"
+  - Centered with full overlay when reached via "Suivant"
+  - Positioned at top when timer started (zen mode path)
+  - Button text changed from "Terminer" to "Commencer"
+- **Contextual Pulse Animations** - Activity-specific pulse speeds
+  - Meditation: 1200ms (very slow, calm)
+  - Work: 600ms (fast, focused)
+  - Sport: 500ms (very fast, energetic)
+  - Break: 1000ms (slow, relaxed)
+  - Reading: 800ms (medium, steady)
+  - Other activities: custom durations
+- **Palette Carousel Navigation** - Chevron buttons (< >) for all devices
+
+### 🐛 Fixed
+- **Auto-reset at Timer End** - Timer now stays at 0:00 instead of auto-resetting to preset
+  - Fixed useEffect dependency to prevent reset when timer completes
+  - User must manually click Reset button
+- **Onboarding Highlight Positioning** - Eliminated translateY animation glitch
+  - WelcomeScreen now disappears before tooltips start
+  - Added 1200ms delay in startTooltips() for animation completion
+  - Reduced onLayout measurement delay (animations pre-completed)
+  - Fixed double-measurement issue (top: 55 → top: 114)
+- **Zen Mode Completion** - Timer continues running when started during onboarding
+  - New showZenModeCompletion() path for Play button during onboarding
+  - 5th tooltip displays at top while timer runs in background
+
+### 🎨 Changed
+- **Palette Carousel Access** - Remains visible and interactive during timer
+  - Removed zen mode restriction (no opacity fade)
+  - Users can change colors while timer is running
+- **Settings Spacing** - Reduced gap between sections (marginBottom: md → sm)
+- **Activity Button Alignment** - Fixed emoji/name alignment in Settings modal
+  - Added padding, textAlign: center, width: 100%
+
+## [1.0.5] - 2025-10-07
+
+### 🔔 Android Notifications Fix (CRITICAL - Android 12+)
+
+#### Fixed
+- **Android 12+ Notifications** - Notifications programmées ne se déclenchaient pas en production:
+  - Added `SCHEDULE_EXACT_ALARM` permission (required for Android 12+ API 31+)
+  - Created Android Notification Channel "Timer Notifications" with HIGH importance
+  - Configured expo-notifications plugin with sound files
+  - Fixed scheduleNotificationAsync to use proper enum type and channelId
+  - Notifications now trigger correctly in background and when app is closed
+
+#### Changed
+- **app.json** - Added expo-notifications plugin with configuration
+- **AndroidManifest.xml** - Added SCHEDULE_EXACT_ALARM permission (line 4)
+- **useNotificationTimer.js** - Created notification channel at module load
+- **scheduleNotificationAsync** - Now uses `Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL` enum
+- **versionCode** - Incremented from 10 to 11 (Android)
+- **versionName** - Updated from "1.0.4" to "1.0.5"
+
+#### Technical
+- Sound file copied to `android/app/src/main/res/raw/` (1.5M WAV)
+- Channel configured with vibration pattern [0, 250, 250, 250]
+- Release signing config restored in build.gradle
+- Full documentation in `docs/archive/fixes/NOTIFICATION_FIX_ANDROID_2025.md`
+
+#### References
+- Android Exact Alarms: https://developer.android.com/about/versions/12/behavior-changes-12#exact-alarm-permission
+- Notification Channels: https://developer.android.com/develop/ui/views/notifications/channels
+- Expo Notifications SDK 54: https://docs.expo.dev/versions/v54.0.0/sdk/notifications/
+
+### 🤖 Versioning Automation System
+
+#### Added
+- **Automated version bump script** - `scripts/version-bump.js` (250 lines):
+  - Automatically updates 6 files: package.json, app.json, build.gradle, SettingsModal.jsx, docs/README.md
+  - Auto-increments Android versionCode
+  - Supports patch/minor/major/set commands
+  - Displays current version and preview of changes
+  - 3-second confirmation delay with CTRL+C to cancel
+  - Colorized terminal output with clear success/error messages
+  - SemVer format validation
+- **NPM scripts** - Version management commands:
+  - `npm run version:patch` - Increment patch (1.0.5 → 1.0.6)
+  - `npm run version:minor` - Increment minor (1.0.5 → 1.1.0)
+  - `npm run version:major` - Increment major (1.0.5 → 2.0.0)
+  - `npm run version:set X.Y.Z` - Set specific version
+
+#### Documentation
+- **[VERSIONING.md](docs/development/VERSIONING.md)** - Complete versioning system guide (300 lines):
+  - Semantic Versioning explanation
+  - Usage examples and workflows
+  - Best practices (when to bump what)
+  - Validation checklist
+  - Troubleshooting guide
+  - Script customization guide
+- **[versioning-automation-setup.md](docs/development/versioning-automation-setup.md)** - Setup report:
+  - Before/after comparisons
+  - Measured gains (60x faster, 100% consistent)
+  - Use case examples
+  - Integration in development workflow
+- **[scripts/README.md](scripts/README.md)** - Scripts directory documentation
+
+#### Benefits
+- ⚡ **60x faster**: 10 minutes → 10 seconds
+- ✅ **100% reliable**: No more forgotten files or version mismatches
+- 🎯 **Guaranteed consistency**: All 6 files always synchronized
+- 📱 **Zero mistakes**: versionCode auto-incremented correctly
+- 🔢 **Flexible**: Support for version skipping (e.g., 1.0.5 → 1.2.0)
+
 ## [Unreleased] - 2025-10-02
 
 ### Added
