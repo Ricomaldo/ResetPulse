@@ -95,7 +95,7 @@ export const ACTIVITIES = [
     emoji: "🌬️",
     label: "Respiration",
     defaultDuration: 240, // 4 minutes
-    isPremium: true, // Toute la verticale mindfulness devient premium
+    isPremium: false, // Gratuit - ancrage neuroatypique baseline
     suggestedColor: "energy",
     description: "Exercices de respiration",
     pulseDuration: 900, // Lent - respiration contrôlée

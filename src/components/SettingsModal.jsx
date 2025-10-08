@@ -23,7 +23,7 @@ import SoundPicker from "./SoundPicker";
 import { getAllActivities } from "../config/activities";
 import { TIMER_PALETTES, isPalettePremium } from "../config/timerPalettes";
 import haptics from "../utils/haptics";
-import { isTestPremium } from "../config/testMode";
+import { usePremiumStatus } from "../hooks/usePremiumStatus";
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
@@ -49,7 +49,7 @@ export default function SettingsModal({ visible, onClose }) {
   } = useTimerOptions();
 
   const allActivities = getAllActivities();
-  const isPremiumUser = isTestPremium(); // Check premium status for test mode
+  const { isPremium: isPremiumUser } = usePremiumStatus(); // Check premium status for test mode
 
   const toggleFavorite = (activityId) => {
     haptics.selection().catch(() => {});

@@ -1,5 +1,5 @@
 // src/components/PaletteCarousel.jsx
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -12,7 +12,9 @@ import { useTheme } from "../theme/ThemeProvider";
 import { useTimerPalette } from "../contexts/TimerPaletteContext";
 import { rs } from "../styles/responsive";
 import { TIMER_PALETTES } from "../config/timerPalettes";
-import { isTestPremium } from "../config/testMode";
+import { usePremiumStatus } from "../hooks/usePremiumStatus";
+import haptics from "../utils/haptics";
+import PremiumModal from "./PremiumModal";
 
 export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -27,8 +29,9 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   } = useTimerPalette();
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
-  const isPremiumUser = isTestPremium(); // Check premium status
+  const { isPremium: isPremiumUser } = usePremiumStatus(); // Check premium status
   const PALETTE_NAMES = Object.keys(TIMER_PALETTES);
   const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
 
@@ -80,6 +83,8 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         showPaletteName();
       } else {
         // Scroll back to current palette if trying to select premium
+        haptics.warning().catch(() => {});
+        setShowPremiumModal(true);
         scrollViewRef.current?.scrollTo({
           x: currentPaletteIndex * rs(232, "width"),
           animated: true,
@@ -349,6 +354,13 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       >
         <Text style={styles.chevronText}>›</Text>
       </TouchableOpacity>
+
+      {/* Premium Modal */}
+      <PremiumModal
+        visible={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        highlightedFeature="palettes premium"
+      />
     </View>
   );
 }
