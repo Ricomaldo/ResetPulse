@@ -1,5 +1,5 @@
 // src/components/ActivityCarousel.jsx
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform, Image } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
@@ -7,7 +7,8 @@ import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities } from '../config/activities';
 import haptics from '../utils/haptics';
-import { isTestPremium } from '../config/testMode';
+import { usePremiumStatus } from '../hooks/usePremiumStatus';
+import PremiumModal from './PremiumModal';
 
 export default function ActivityCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -22,9 +23,10 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const scrollViewRef = useRef(null);
   const scaleAnims = useRef({}).current; // Store animation values for each activity
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   // Check premium status (test mode or actual premium)
-  const isPremiumUser = isTestPremium();
+  const { isPremium: isPremiumUser } = usePremiumStatus();
 
   // Get all activities and sort by favorites
   const allActivities = getAllActivities();
@@ -108,7 +110,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const handleActivityPress = (activity) => {
     if (activity.isPremium && !isPremiumUser) {
       haptics.warning().catch(() => {});
-      // TODO: Show premium modal
+      setShowPremiumModal(true);
       return;
     }
 
@@ -317,6 +319,13 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
           );
         })}
       </ScrollView>
+
+      {/* Premium Modal */}
+      <PremiumModal
+        visible={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        highlightedFeature="activités premium"
+      />
     </View>
   );
 }

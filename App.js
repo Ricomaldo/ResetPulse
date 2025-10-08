@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, StatusBar, Animated } from 'react-native';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
+import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
 import { OnboardingProvider, useOnboarding } from './src/components/onboarding/OnboardingController';
 import TimerScreen from './src/screens/TimerScreen';
@@ -68,9 +69,11 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <OnboardingProvider>
-          <AppContent />
-        </OnboardingProvider>
+        <PurchaseProvider>
+          <OnboardingProvider>
+            <AppContent />
+          </OnboardingProvider>
+        </PurchaseProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

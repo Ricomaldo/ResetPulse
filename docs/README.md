@@ -6,8 +6,8 @@
 
 **ResetPulse** est une application de time timer iOS spécialement conçue pour les personnes neuroatypiques (TDAH/TSA). L'app offre une interface épurée pour la méditation (20min) et l'ancrage mental (4min) sans surcharge cognitive.
 
-**Version actuelle :** 1.0.5 (SDK 54, New Architecture)
-**Status :** 🚧 En développement - Android Notifications Fix
+**Version actuelle :** 1.1.0 (SDK 54, New Architecture)
+**Status :** 🚧 En développement - RevenueCat Integration Testing
 **Platforms :** [Android](https://play.google.com/apps/internaltest/4701499537445297168) | [iOS TestFlight](https://appstoreconnect.apple.com/apps/6752913010/testflight/ios)
 
 ---
@@ -58,19 +58,22 @@
 - **M2 - Timer Core Fonctionnel** - Timer avec build iOS stable
 - **M3 - Interface Minimale** - Interface utilisateur complète et polie
 
-### Version Actuelle (v1.0.5) - [📋 Changelog](releases/v1.0.5-changelog.md)
-- **🚧 Android Notifications Fix** - Permission SCHEDULE_EXACT_ALARM + Notification Channels
+### Version Actuelle (v1.1.0) - 🚧 En Test
+- **💰 RevenueCat Integration** - SDK intégré, freemium (2 palettes + 4 activités)
+- **🛒 Purchase Flow** - Paywall UI, trial 7 jours, lifetime 4.99€
+- **🔄 Restore Logic** - Gestion robuste restore + edge cases réseau
+- **📊 Dashboard Setup** - iOS/Android entitlements configurés
+
+### Version Précédente (v1.0.5) - [📋 Changelog](releases/v1.0.5-changelog.md)
+- **✅ Android Notifications Fix** - Permission SCHEDULE_EXACT_ALARM + Notification Channels
 - **✅ SDK 54 Migration** - Expo SDK 54 + React 19.0.0 + New Architecture
 - **✅ Audio System** - Son fonctionne même en mode silencieux + arrière-plan
-- **✅ Onboarding v2.0** - Système interactif avec tooltips guidés
-- **✅ Testing Foundation** - 29/29 tests passent
 
-### Version Précédente (v1.0.4) - [📋 Changelog](releases/v1.0.4-changelog.md)
+### Version Antérieure (v1.0.4) - [📋 Changelog](releases/v1.0.4-changelog.md)
 - **✅ Builds Déployés** - Android (versionCode 10) + iOS (buildNumber 13)
 
-### Prochaines Étapes (v1.1.0) - [🎯 Matrice de Priorisation](decisions/time_timer_priority_matrix.md)
+### Prochaines Étapes (v1.2.0) - [🎯 Matrice de Priorisation](decisions/time_timer_priority_matrix.md)
 - **Lock Screen Display** (Score 4.3) - Timer visible écran verrouillé
-- **RevenueCat Setup** (Score 4.5) - Monétisation + Learning pour MoodCycle
 - **Internationalisation** (Score 5.0) - 15 langues pour scalabilité globale
 
 ---
@@ -95,7 +98,14 @@ docs/
 
 ## 🔄 Dernières Mises à Jour
 
-### 2025-10-07 (v1.0.5 - EN DÉVELOPPEMENT)
+### 2025-10-08 (v1.1.0 - EN TEST)
+- **💰 RevenueCat SDK** - Integration complète avec react-native-purchases@9.5.3
+- **🎯 Freemium Config** - 2 palettes (softLaser, terre) + 4 activités gratuites
+- **🛒 Premium Modal** - Paywall UI avec messaging ADR-validé
+- **📋 Test Checklist** - [TODO.md](../TODO.md) pour tests dev build
+- **📄 ADR Documentation** - [ADR Monétisation v1.1.0](decisions/adr-monetization-v11.md)
+
+### 2025-10-07 (v1.0.5 - DÉPLOYÉE)
 - **🔔 Android Notifications Fix** - Permission SCHEDULE_EXACT_ALARM + Channels
 - **📋 Changelog v1.0.5** - [Documentation complète](releases/v1.0.5-changelog.md)
 - **📝 Fix Report** - [Rapport détaillé](archive/fixes/NOTIFICATION_FIX_ANDROID_2025.md)
@@ -122,4 +132,4 @@ docs/
 
 ---
 
-*Documentation maintenue à jour avec le code. Dernière révision : 2025-10-02*
+*Documentation maintenue à jour avec le code. Dernière révision : 2025-10-08*

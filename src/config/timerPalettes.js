@@ -5,7 +5,7 @@ export const TIMER_PALETTES = {
   classique: {
     colors: ["#2E5090", "#D94040", "#E8B93C", "#5AAA50"],
     name: "Classique",
-    isPremium: false,
+    isPremium: true,
     description: "Palette traditionnelle harmonieuse",
   },
   softLaser: {

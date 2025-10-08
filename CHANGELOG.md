@@ -7,45 +7,99 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### ✨ Added
-- **Digital Timer Display** - Optional MM:SS countdown above timer dial
-  - Toggle in Settings under "🎯 Expérience Timer"
-  - Fade-in animation when timer starts
-  - Monospace font for better readability
-  - Matches dial frame styling
-- **5th Onboarding Tooltip** - Completion message "Profitez bien de ResetPulse !"
-  - Centered with full overlay when reached via "Suivant"
-  - Positioned at top when timer started (zen mode path)
-  - Button text changed from "Terminer" to "Commencer"
-- **Contextual Pulse Animations** - Activity-specific pulse speeds
-  - Meditation: 1200ms (very slow, calm)
-  - Work: 600ms (fast, focused)
-  - Sport: 500ms (very fast, energetic)
-  - Break: 1000ms (slow, relaxed)
-  - Reading: 800ms (medium, steady)
-  - Other activities: custom durations
-- **Palette Carousel Navigation** - Chevron buttons (< >) for all devices
+## [1.1.0] - 2025-10-08
 
-### 🐛 Fixed
-- **Auto-reset at Timer End** - Timer now stays at 0:00 instead of auto-resetting to preset
-  - Fixed useEffect dependency to prevent reset when timer completes
-  - User must manually click Reset button
-- **Onboarding Highlight Positioning** - Eliminated translateY animation glitch
-  - WelcomeScreen now disappears before tooltips start
-  - Added 1200ms delay in startTooltips() for animation completion
-  - Reduced onLayout measurement delay (animations pre-completed)
-  - Fixed double-measurement issue (top: 55 → top: 114)
-- **Zen Mode Completion** - Timer continues running when started during onboarding
-  - New showZenModeCompletion() path for Play button during onboarding
-  - 5th tooltip displays at top while timer runs in background
+### 💰 Monétisation - RevenueCat Integration (MAJOR)
 
-### 🎨 Changed
-- **Palette Carousel Access** - Remains visible and interactive during timer
-  - Removed zen mode restriction (no opacity fade)
-  - Users can change colors while timer is running
-- **Settings Spacing** - Reduced gap between sections (marginBottom: md → sm)
-- **Activity Button Alignment** - Fixed emoji/name alignment in Settings modal
-  - Added padding, textAlign: center, width: 100%
+#### Added
+- **RevenueCat SDK Integration** - Complete in-app purchase system
+  - SDK `react-native-purchases@9.5.3` installed and configured
+  - iOS API Key: `***REMOVED***`
+  - Android API Key: `goog_OemWJnBmzLuWoAGmEfDJKFBEAYc`
+  - Product: `com.irimwebforge.resetpulse.premium` (non-consumable)
+  - Entitlement: `premium_access`
+  - One-time purchase: 4,99€ avec trial 7 jours
+
+- **Freemium Configuration** - Config stricte 2 palettes + 4 activités gratuites
+  - Palettes gratuites: `softLaser` (cool), `terre` (warm)
+  - Palettes premium: 13 (total 15)
+  - Activités gratuites: `none`, `work`, `break`, `breathing`
+  - Activités premium: 12 (total 16)
+  - Documentation: `docs/decisions/adr-monetization-v11.md`
+
+- **PurchaseContext** - Context API pour gestion premium (`src/contexts/PurchaseContext.jsx`)
+  - SDK initialization avec Platform detection (iOS/Android)
+  - Real-time listener `addCustomerInfoUpdateListener`
+  - Methods: `purchaseProduct()`, `restorePurchases()`, `getOfferings()`
+  - State: `isPremium`, `isLoading`, `isPurchasing`, `customerInfo`
+  - TEST_MODE override pour développement (désactivé en build)
+
+- **usePremiumStatus Hook** - Migration de `isTestPremium()` (`src/hooks/usePremiumStatus.js`)
+  - API: `const { isPremium, isLoading } = usePremiumStatus()`
+  - Remplace les appels directs à `testMode.js`
+  - Intégré dans 3 composants (ActivityCarousel, PaletteCarousel, SettingsModal)
+
+- **PremiumModal Component** - UI paywall complète (`src/components/PremiumModal.jsx`)
+  - Messaging ADR validé: "ResetPulse est gratuit et fonctionnel..."
+  - Features box: "15 palettes + 16 activités - 4,99€ - Une fois, pour toujours"
+  - Trial badge: "Trial gratuit 7 jours"
+  - Boutons: "Commencer l'essai gratuit" / "Peut-être plus tard"
+  - "Restaurer mes achats" avec loading states
+  - Design cohérent avec SettingsModal (theme tokens, responsive)
+
+- **Edge Cases Handling** - Robustesse production-ready
+  - Offline/network errors: Messages user-friendly ("Pas de connexion")
+  - Race conditions: Double-purchase prevention via `isPurchasing` lock
+  - Restore logic: Force refresh + entitlement verification (`hasPremium`)
+  - Store errors: `STORE_PROBLEM_ERROR`, `PAYMENT_PENDING_ERROR` handled
+  - Button states: Tous les boutons disabled pendant operations
+  - Modal close prevention pendant purchase
+
+#### Changed
+- **ActivityCarousel** - Integration PremiumModal
+  - Haptic warning sur clic activité premium
+  - Modal trigger ligne 113 (remplace TODO)
+  - State `showPremiumModal` + props `highlightedFeature="activités premium"`
+
+- **PaletteCarousel** - Integration PremiumModal
+  - Haptic warning + modal sur scroll palette premium
+  - Scroll-back animation préservée (ligne 88-91)
+  - State `showPremiumModal` + props `highlightedFeature="palettes premium"`
+
+- **SettingsModal** - Migration usePremiumStatus
+  - Remplace `isTestPremium()` par `usePremiumStatus()` hook
+  - Logique premium check préservée
+
+- **App.js** - Provider injection
+  - Hiérarchie: ErrorBoundary → Theme → **Purchase** → Onboarding → AppContent
+  - PurchaseProvider après ThemeProvider (modal utilise `useTheme()`)
+
+- **testMode.js** - TEST_MODE désactivé pour build dev
+  - `TEST_MODE = false` (ligne 10)
+  - Permet tests freemium réels avec RevenueCat sandbox
+
+- **timerPalettes.js** - Palette `classique` passée premium
+  - `classique.isPremium: true` (ligne 8)
+  - Config freemium finale: 2 gratuites (softLaser, terre)
+
+- **activities.js** - Activité `breathing` passée gratuite
+  - `breathing.isPremium: false` (ligne 98)
+  - Rationale: Ancrage neuroatypique baseline (ADR)
+
+#### Technical
+- **Dependencies**: `react-native-purchases@9.5.3`, `expo-dev-client@6.0.13`
+- **Architecture**: 5 phases implémentées (Setup, Core, Migration, UI, Edge Cases)
+- **Files Created**: 4 (PurchaseContext, usePremiumStatus, PremiumModal, revenuecat.js)
+- **Files Modified**: 7 (App.js, ActivityCarousel, PaletteCarousel, SettingsModal, testMode, timerPalettes, activities)
+- **Lines Added**: ~650 (Context 120, Modal 354, Hook 25, Config 52, integrations ~100)
+- **Documentation**: ADR complet + analyse triangulaire + decisions monetization
+
+#### References
+- ADR: `docs/decisions/adr-monetization-v11.md`
+- Analysis: `docs/audits/revenuecat-analysis.md`
+- Decisions: `docs/decisions/monetization-decisions.md`
+- Dashboard RevenueCat: https://app.revenuecat.com/
+- Build EAS: Profile `development` configured
 
 ## [1.0.5] - 2025-10-08
 
