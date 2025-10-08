@@ -6,7 +6,7 @@
 // Valeur = require() du fichier audio
 export const SOUND_FILES = {
   // Sons de cloche
-  'bell_classic': require('../../assets/sounds/407342__forthehorde68__fx_bell_short.wav'),
+  'bell_classic': require('../../assets/sounds/bell_short.wav'),
   'bell_melodic': require('../../assets/sounds/815533__mihacappy__bell01.wav'),
 
   // Sons de minuteur cuisine

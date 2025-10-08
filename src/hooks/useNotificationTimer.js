@@ -28,7 +28,7 @@ const setupAndroidChannel = async () => {
       name: 'Timer Notifications',
       description: 'Notifications when timer completes',
       importance: Notifications.AndroidImportance.HIGH, // Bannière + son
-      sound: '407342__forthehorde68__fx_bell_short.wav', // Son par défaut (bell_classic)
+      sound: 'bell_short.wav', // Son par défaut (bell_classic)
       vibrationPattern: [0, 250, 250, 250], // Vibration courte
       enableLights: true,
       lightColor: '#4A5568', // Couleur thème app
@@ -98,7 +98,7 @@ export default function useNotificationTimer() {
         content: {
           title: "⏰ Timer terminé !",
           body: `Votre timer de ${Math.floor(seconds/60)}min ${seconds%60}s est terminé`,
-          sound: '407342__forthehorde68__fx_bell_short.wav', // Son bell_classic
+          sound: 'bell_short.wav', // Son bell_classic
           // Pour Android 8+ le son du channel est utilisé
         },
         trigger: {

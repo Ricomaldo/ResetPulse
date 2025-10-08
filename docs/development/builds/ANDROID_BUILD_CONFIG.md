@@ -1,5 +1,15 @@
 # Configuration Android Build - ResetPulse
 
+## 🎯 Stratégie : Builds LOCAUX (SANS EAS)
+
+**Pour Android, nous utilisons des builds Gradle locaux :**
+- ✅ Build avec `./gradlew bundleRelease` en local
+- ✅ Upload manuel sur Google Play Console
+- ✅ Contrôle total sur le versionCode et signing
+- ❌ **Pas de EAS Build** (réservé pour iOS uniquement)
+
+---
+
 ## ✅ Configuration FONCTIONNELLE avec SDK 54 (New Architecture)
 
 ### Package.json (SDK 54 - NEW ARCHITECTURE)
@@ -125,26 +135,60 @@ org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m
 newArchEnabled=true
 ```
 
-## Process de Build après Prebuild
+## Process de Build Local (sans EAS)
 
 ### 1. Prérequis IMPORTANTS
+
+#### Android SDK
+- [ ] **Android SDK installé** (via Android Studio ou command-line tools)
+- [ ] **Vérifier installation** : `ls $ANDROID_HOME` ou `ls $HOME/Library/Android/sdk`
+
+#### Créer `android/local.properties`
+```bash
+# Méthode 1 : Si Android SDK est au path standard
+echo "sdk.dir=$HOME/Library/Android/sdk" > android/local.properties
+
+# Méthode 2 : Si ANDROID_HOME est défini
+echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+
+# Méthode 3 : Path personnalisé
+echo "sdk.dir=/path/to/your/android/sdk" > android/local.properties
+
+# Vérifier que le fichier existe
+cat android/local.properties
+```
+
+⚠️ **IMPORTANT** : `local.properties` est dans `.gitignore` et doit être créé **après chaque prebuild**
+
+#### Keystore et signing
 - [ ] **Utiliser le VRAI keystore du projet racine** : `@irim__resetPulse.jks`
 - [ ] **Vérifier le SHA1** : `DB:51:C1:76:49:DB:2E:34:0B:6A:AE:0D:03:2A:DB:0A:05:25:E4:58`
-- [ ] `android/local.properties` - SDK path
 - [ ] `android/app/build.gradle` - configuration complète avec credentials
 
 ### 2. Commandes build
 ```bash
-# Copier le bon keystore
+# 1. Copier le bon keystore
 cp @irim__resetPulse.jks android/app/
 
-# Build
+# 2. Créer local.properties (si pas déjà fait)
+echo "sdk.dir=$HOME/Library/Android/sdk" > android/local.properties
+
+# 3. Build
 cd android
 ./gradlew clean
 ./gradlew bundleRelease
 ```
 
-### 3. Diagnostic crash
+### 3. Vérification du build
+```bash
+# Le bundle AAB se trouve dans :
+ls -lh app/build/outputs/bundle/release/app-release.aab
+
+# Afficher la taille
+du -h app/build/outputs/bundle/release/app-release.aab
+```
+
+### 4. Diagnostic crash
 ```bash
 # Test debug d'abord
 npx expo run:android
@@ -152,6 +196,23 @@ npx expo run:android
 # Logs crash (dans Android Studio Logcat)
 # Chercher "ExpoAsset" ou "JavascriptException"
 ```
+
+---
+
+## ⚠️ Pourquoi pas EAS Build pour Android ?
+
+**EAS Build est réservé pour iOS uniquement dans ce projet.**
+
+Raisons de préférer les builds locaux pour Android :
+- ✅ Autonomie totale (pas de quotas EAS)
+- ✅ Contrôle précis du versionCode
+- ✅ Signature avec notre keystore local
+- ✅ Workflow déjà validé et opérationnel (1.0.4 déployé avec succès)
+- ✅ Déploiement manuel sur Google Play Console maîtrisé
+
+**Note :** Si vous n'avez pas Android SDK installé, suivez la section "Android SDK Installation" ci-dessous.
+
+---
 
 ## Problèmes Courants (RÉSOLUS ✅)
 
@@ -163,9 +224,29 @@ npx expo run:android
 **Cause :** Keystore config perdue après prebuild
 **Solution :** Restore signingConfigs + copy keystore file
 
-### SDK not found
-**Cause :** local.properties manquant
-**Solution :** `echo "sdk.dir=/path/to/sdk" > android/local.properties`
+### SDK not found (CRITICAL)
+**Erreur** :
+```
+SDK location not found. Define a valid SDK location with an ANDROID_HOME
+environment variable or by setting the sdk.dir path in your project's
+local properties file at 'android/local.properties'.
+```
+
+**Cause** : `android/local.properties` manquant ou path SDK incorrect
+
+**Solution** :
+```bash
+# Créer local.properties avec le bon path
+echo "sdk.dir=$HOME/Library/Android/sdk" > android/local.properties
+
+# OU si Android SDK ailleurs
+echo "sdk.dir=/path/to/your/android/sdk" > android/local.properties
+
+# Vérifier que le SDK existe
+ls $(cat android/local.properties | cut -d'=' -f2)
+```
+
+⚠️ **Note** : Ce fichier est dans `.gitignore` et doit être recréé après chaque `prebuild`
 
 ### Missing mapping file warning
 **Cause :** postprocessing config manquante

@@ -1,5 +1,16 @@
 # Configuration iOS Build - ResetPulse
 
+## 🎯 Stratégie : Builds avec EAS (OBLIGATOIRE)
+
+**Pour iOS, nous utilisons exclusivement EAS Build :**
+- ✅ Build cloud avec `eas build --platform ios`
+- ✅ Submit automatique vers TestFlight avec `eas submit`
+- ✅ Credentials Apple gérés par EAS (certificats, provisioning)
+- ✅ Auto-increment du buildNumber
+- ❌ **Pas de build Xcode local** (pas configuré pour l'instant)
+
+---
+
 ## ✅ Configuration FONCTIONNELLE avec SDK 54 (New Architecture)
 
 ### Package.json (SDK 54 - NEW ARCHITECTURE)
