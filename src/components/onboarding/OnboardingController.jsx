@@ -1,44 +1,10 @@
 // src/components/onboarding/OnboardingController.jsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { usePersistedState } from '../../hooks/usePersistedState';
+import { OnboardingContext, TOOLTIPS_CONFIG } from './OnboardingContext';
 import Tooltip from './Tooltip';
 import HighlightOverlay from './HighlightOverlay';
-
-// Context pour l'onboarding
-const OnboardingContext = createContext(null);
-
-// Tooltips configuration - Séquence: 1→2→3→4→5 (découverte progressive)
-// Ordre optimisé pour permettre l'interaction pendant l'onboarding
-const TOOLTIPS_CONFIG = [
-  {
-    id: 'activities',
-    text: 'Sélectionnez votre activité',
-    arrowDirection: 'up',
-  },
-  {
-    id: 'dial',
-    text: 'Ajustez la durée du timer',
-    arrowDirection: 'down',
-  },
-  {
-    id: 'palette',
-    text: 'Changez les couleurs à votre guise',
-    arrowDirection: 'down',
-  },
-  {
-    id: 'controls',
-    text: 'Démarrez, mettez en pause, ou réinitialisez',
-    subtext: 'Le timer continue en arrière-plan',
-    arrowDirection: 'down',
-  },
-  {
-    id: 'completion',
-    text: 'Profitez bien de ResetPulse !',
-    subtext: null,
-    arrowDirection: null, // Centered message, no target
-  },
-];
 
 export function OnboardingProvider({ children }) {
   const [onboardingCompleted, setOnboardingCompleted] = usePersistedState(
@@ -163,14 +129,8 @@ export function OnboardingProvider({ children }) {
   );
 }
 
-// Hook to use onboarding
-export function useOnboarding() {
-  const context = useContext(OnboardingContext);
-  if (!context) {
-    throw new Error('useOnboarding must be used within OnboardingProvider');
-  }
-  return context;
-}
+// Re-export useOnboarding from context for backward compatibility
+export { useOnboarding } from './OnboardingContext';
 
 // Export tooltip IDs for easy reference
 export const TOOLTIP_IDS = {

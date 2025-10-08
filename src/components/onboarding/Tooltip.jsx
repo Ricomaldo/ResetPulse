@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useOnboarding } from './OnboardingController';
+import { useOnboarding } from './OnboardingContext';
 import { TRANSITION } from '../../constants/animations';
 import haptics from '../../utils/haptics';
 

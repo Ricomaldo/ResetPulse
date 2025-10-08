@@ -37,6 +37,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const intervalRef = useRef(null);
   const isMountedRef = useRef(true);
   const hasTriggeredCompletion = useRef(false);
+  const appStateRef = useRef(AppState.currentState);
+  const wasInBackgroundRef = useRef(false);
 
   // Timer update function with background support
   const updateTimer = useCallback(() => {
@@ -62,12 +64,19 @@ export default function useTimer(initialDuration = 240, onComplete) {
         hasTriggeredCompletion.current = true;
         setHasCompleted(true);
 
+        // Vérifier si l'app était en background (notification a déjà sonné)
+        const skipSound = wasInBackgroundRef.current;
+
+        if (__DEV__) {
+          console.log(`🔔 Timer terminé. App était en background: ${skipSound}`);
+        }
+
         // Feedback synchronisé : Audio + Haptic en parallèle
-        // Priorité à l'audio (CRITICAL PATH) mais haptic améliore l'UX
+        // IMPORTANT: Skip audio si l'app était en background (notification a déjà sonné)
         const feedbackPromises = [];
 
-        // Audio feedback - PRIORITÉ ABSOLUE
-        if (playSoundRef.current) {
+        // Audio feedback - PRIORITÉ ABSOLUE (skip si notification a déjà sonné)
+        if (!skipSound && playSoundRef.current) {
           feedbackPromises.push(
             playSoundRef.current(selectedSoundId).catch(() => {
               // Silent fail for audio
@@ -86,6 +95,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
         Promise.all(feedbackPromises).catch(() => {
           // Au moins un feedback a fonctionné, on continue
         });
+
+        // Reset flag
+        wasInBackgroundRef.current = false;
 
         // Call completion callback if provided
         if (onComplete) {
@@ -158,6 +170,35 @@ export default function useTimer(initialDuration = 240, onComplete) {
       }
     };
   }, []);
+
+  // Track app state to detect background/foreground transitions
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      if (
+        appStateRef.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        // App est revenue au foreground
+        // Si le timer était running, on suppose qu'il a pu se terminer en background
+        if (running && remaining <= 1) {
+          wasInBackgroundRef.current = true;
+        }
+      } else if (nextAppState.match(/inactive|background/)) {
+        // App passe en background pendant que le timer tourne
+        if (running && remaining > 0) {
+          wasInBackgroundRef.current = true;
+        }
+      }
+
+      appStateRef.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [running, remaining]);
 
   // Display message logic
   const displayTime = () => {

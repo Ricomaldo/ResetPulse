@@ -4,7 +4,8 @@ import * as Notifications from 'expo-notifications';
 import { AppState, Platform } from 'react-native';
 
 // Configuration pour les notifications (SDK 54+)
-// Protection contre les modules natifs manquants
+// Protection contre les modules natifs manquants (iOS Simulator notamment)
+let notificationsAvailable = false;
 try {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -14,8 +15,12 @@ try {
       shouldSetBadge: false,
     }),
   });
+  notificationsAvailable = true;
 } catch (error) {
-  console.warn('⚠️ Notifications configuration failed (native module missing):', error.message);
+  // Silent fail sur iOS Simulator - les notifications ne sont pas disponibles
+  if (__DEV__) {
+    console.log('ℹ️ Notifications not available (iOS Simulator or missing module)');
+  }
 }
 
 // Créer le channel Android pour les notifications du timer
@@ -78,6 +83,11 @@ export default function useNotificationTimer() {
 
   // Programmer une notification pour la fin du timer
   const scheduleTimerNotification = async (seconds) => {
+    // Skip si notifications non disponibles (iOS Simulator)
+    if (!notificationsAvailable) {
+      return null;
+    }
+
     try {
       // Annuler notification existante
       if (notificationIdRef.current) {
@@ -126,6 +136,11 @@ export default function useNotificationTimer() {
 
   // Annuler la notification
   const cancelTimerNotification = async () => {
+    // Skip si notifications non disponibles
+    if (!notificationsAvailable) {
+      return;
+    }
+
     try {
       if (notificationIdRef.current) {
         await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
