@@ -17,7 +17,7 @@ export const TimerOptionsProvider = ({ children }) => {
       scaleMode: '60min',
       currentActivity: getDefaultActivity(),
       currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
-      favoriteActivities: ['breathing', 'meditation', 'reading', 'work'], // Default favorites
+      favoriteActivities: ['work', 'break', 'breathing'], // Free activities as default favorites (excluding 'none')
       selectedSoundId: 'bell_classic', // Son par défaut
       activityDurations: {}, // { activityId: duration } - Mémorise la durée préférée par activité
     }

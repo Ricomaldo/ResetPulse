@@ -2,11 +2,11 @@
 // Palettes de couleurs pour le timer (séparées du système de thème)
 
 export const TIMER_PALETTES = {
-  classique: {
-    colors: ["#2E5090", "#D94040", "#E8B93C", "#5AAA50"],
-    name: "Classique",
-    isPremium: true,
-    description: "Palette traditionnelle harmonieuse",
+  terre: {
+    colors: ["#68752C", "#4A5568", "#8B3A3A", "#FFD700"],
+    name: "Terre",
+    isPremium: false,
+    description: "Couleurs naturelles et apaisantes",
   },
   softLaser: {
     colors: ["#00D17A", "#00B8D9", "#D14AB8", "#E6D500"],
@@ -14,11 +14,11 @@ export const TIMER_PALETTES = {
     isPremium: false,
     description: "Palette laser adoucie, plus douce pour les yeux",
   },
-  terre: {
-    colors: ["#68752C", "#4A5568", "#8B3A3A", "#FFD700"],
-    name: "Terre",
-    isPremium: false,
-    description: "Couleurs naturelles et apaisantes",
+  classique: {
+    colors: ["#2E5090", "#D94040", "#E8B93C", "#5AAA50"],
+    name: "Classique",
+    isPremium: true,
+    description: "Palette traditionnelle harmonieuse",
   },
   tropical: {
     colors: ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA500"],

@@ -78,18 +78,12 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       const newPaletteName = PALETTE_NAMES[newIndex];
       const paletteInfo = TIMER_PALETTES[newPaletteName];
       // Only change palette if it's not premium or user is premium
+      // Allow scrolling through premium palettes (don't block or trigger modal)
       if (!paletteInfo.isPremium || isPremiumUser) {
         setPalette(newPaletteName);
         showPaletteName();
-      } else {
-        // Scroll back to current palette if trying to select premium
-        haptics.warning().catch(() => {});
-        setShowPremiumModal(true);
-        scrollViewRef.current?.scrollTo({
-          x: currentPaletteIndex * rs(232, "width"),
-          animated: true,
-        });
       }
+      // No action for premium palettes - user can browse but not select
     }
   };
 
@@ -178,20 +172,23 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       letterSpacing: 0.5,
     },
 
-    lockOverlay: {
+    unlockBadge: {
       position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "rgba(255, 255, 255, 0.6)",
-      borderRadius: rs(22, "min"),
+      top: "50%",
+      left: "50%",
+      transform: [{ translateX: -45 }, { translateY: -12 }],
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.borderRadius.md,
+      zIndex: 20,
     },
 
-    lockIcon: {
-      fontSize: rs(20, "min"),
+    unlockText: {
+      fontSize: rs(11, "min"),
+      fontWeight: "600",
+      color: "#FFFFFF",
+      letterSpacing: 0.3,
     },
   });
 
@@ -199,12 +196,15 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const scrollToPrevious = () => {
     if (currentPaletteIndex > 0) {
       const newIndex = currentPaletteIndex - 1;
+      const newPaletteName = PALETTE_NAMES[newIndex];
+      const paletteInfo = TIMER_PALETTES[newPaletteName];
+
       scrollViewRef.current?.scrollTo({
         x: newIndex * rs(232, "width"),
         animated: true,
       });
-      const newPaletteName = PALETTE_NAMES[newIndex];
-      const paletteInfo = TIMER_PALETTES[newPaletteName];
+
+      // Change palette if it's free, just scroll if premium (user must tap to unlock)
       if (!paletteInfo.isPremium || isPremiumUser) {
         setPalette(newPaletteName);
         showPaletteName();
@@ -215,12 +215,15 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const scrollToNext = () => {
     if (currentPaletteIndex < PALETTE_NAMES.length - 1) {
       const newIndex = currentPaletteIndex + 1;
+      const newPaletteName = PALETTE_NAMES[newIndex];
+      const paletteInfo = TIMER_PALETTES[newPaletteName];
+
       scrollViewRef.current?.scrollTo({
         x: newIndex * rs(232, "width"),
         animated: true,
       });
-      const newPaletteName = PALETTE_NAMES[newIndex];
-      const paletteInfo = TIMER_PALETTES[newPaletteName];
+
+      // Change palette if it's free, just scroll if premium (user must tap to unlock)
       if (!paletteInfo.isPremium || isPremiumUser) {
         setPalette(newPaletteName);
         showPaletteName();
@@ -291,50 +294,62 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
           return (
             <View key={paletteName} style={styles.paletteContainer}>
               {colors.map((color, colorIndex) => (
-                <View
+                <TouchableOpacity
                   key={`${paletteName}-${colorIndex}`}
-                  style={{ position: "relative" }}
-                >
-                  <TouchableOpacity
-                    accessible={true}
-                    accessibilityLabel={`Couleur ${
-                      colorIndex + 1
-                    } de la palette ${paletteInfo.name}`}
-                    accessibilityRole="button"
-                    accessibilityState={{
-                      selected: isCurrentPalette && currentColor === color,
-                    }}
-                    style={[
-                      styles.colorButton,
-                      {
-                        backgroundColor: color,
-                        opacity: isLocked ? 0.4 : isCurrentPalette ? 1 : 0.5,
-                      },
-                      isCurrentPalette &&
-                        currentColor === color &&
-                        styles.colorButtonActive,
-                    ]}
-                    onPress={() => {
-                      if (!isLocked) {
-                        if (isCurrentPalette) {
-                          setColorIndex(colorIndex);
-                        } else {
-                          // Switch to that palette
-                          setPalette(paletteName);
-                          setColorIndex(colorIndex);
-                          showPaletteName();
-                        }
+                  accessible={true}
+                  accessibilityLabel={`Couleur ${
+                    colorIndex + 1
+                  } de la palette ${paletteInfo.name}`}
+                  accessibilityRole="button"
+                  accessibilityState={{
+                    selected: isCurrentPalette && currentColor === color,
+                  }}
+                  style={[
+                    styles.colorButton,
+                    {
+                      backgroundColor: color,
+                      opacity: isLocked ? 0.4 : isCurrentPalette ? 1 : 0.5,
+                    },
+                    isCurrentPalette &&
+                      currentColor === color &&
+                      styles.colorButtonActive,
+                  ]}
+                  onPress={() => {
+                    if (isLocked) {
+                      // Trigger premium modal on tap
+                      haptics.warning().catch(() => {});
+                      setShowPremiumModal(true);
+                    } else {
+                      if (isCurrentPalette) {
+                        setColorIndex(colorIndex);
+                      } else {
+                        // Switch to that palette
+                        setPalette(paletteName);
+                        setColorIndex(colorIndex);
+                        showPaletteName();
                       }
-                    }}
-                    activeOpacity={isLocked ? 1 : 0.7}
-                  />
-                  {isLocked && colorIndex === 1 && (
-                    <View style={styles.lockOverlay} pointerEvents="none">
-                      <Text style={styles.lockIcon}>🔒</Text>
-                    </View>
-                  )}
-                </View>
+                    }
+                  }}
+                  activeOpacity={0.7}
+                />
               ))}
+
+              {/* Premium unlock badge */}
+              {isLocked && (
+                <TouchableOpacity
+                  style={styles.unlockBadge}
+                  onPress={() => {
+                    haptics.warning().catch(() => {});
+                    setShowPremiumModal(true);
+                  }}
+                  activeOpacity={0.8}
+                  accessible={true}
+                  accessibilityLabel="Débloquer cette palette premium"
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.unlockText}>Débloquer ✨</Text>
+                </TouchableOpacity>
+              )}
             </View>
           );
         })}

@@ -155,7 +155,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
       width: rs(60, 'min'),
       height: rs(60, 'min'),
       borderRadius: rs(30, 'min'),
-      overflow: 'hidden',
+      overflow: 'visible',
       backgroundColor: 'transparent',
     },
 
@@ -210,18 +210,19 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
     premiumBadge: {
       position: 'absolute',
-      top: 0,
-      right: 0,
-      backgroundColor: theme.colors.semantic.warning,
-      width: rs(20, 'min'),
-      height: rs(20, 'min'),
-      borderRadius: rs(10, 'min'),
+      top: -2,
+      right: -2,
+      backgroundColor: 'transparent',
       alignItems: 'center',
       justifyContent: 'center',
     },
 
     lockIcon: {
-      fontSize: rs(12, 'min'),
+      fontSize: rs(16, 'min'),
+      opacity: 0.75,
+      textShadowColor: 'rgba(0, 0, 0, 0.3)',
+      textShadowOffset: { width: 0, height: 1 },
+      textShadowRadius: 2,
     },
 
     activityNameBadge: {
@@ -311,7 +312,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
                 {isLocked && (
                   <View style={styles.premiumBadge}>
-                    <Text style={styles.lockIcon}>🔒</Text>
+                    <Text style={styles.lockIcon}>✨</Text>
                   </View>
                 )}
               </TouchableOpacity>
