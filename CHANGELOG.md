@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Activity Button Alignment** - Fixed emoji/name alignment in Settings modal
   - Added padding, textAlign: center, width: 100%
 
-## [1.0.5] - 2025-10-07
+## [1.0.5] - 2025-10-08
 
 ### 🔔 Android Notifications Fix (CRITICAL - Android 12+)
 
@@ -58,6 +58,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Configured expo-notifications plugin with sound files
   - Fixed scheduleNotificationAsync to use proper enum type and channelId
   - Notifications now trigger correctly in background and when app is closed
+- **Android Resource Naming** - Fixed sound file naming for Android compatibility:
+  - Renamed `407342__forthehorde68__fx_bell_short.wav` → `bell_short.wav`
+  - Android resources must start with a letter (not digit)
+  - Fixes build error: "Resource name must start with a letter"
 
 #### Changed
 - **app.json** - Added expo-notifications plugin with configuration
@@ -103,6 +107,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Validation checklist
   - Troubleshooting guide
   - Script customization guide
+
+### 📚 Build Documentation Improvements
+
+#### Added
+- **[BUILDS_OVERVIEW.md](docs/development/builds/BUILDS_OVERVIEW.md)** - Comprehensive build strategy guide:
+  - Dual workflow explanation (Android local, iOS EAS)
+  - Platform comparison table (method, rationale, upload process)
+  - Quick command reference for both platforms
+  - Complete release cycle documentation
+  - Pre-build checklists for Android and iOS
+  - Troubleshooting common issues
+  - Version history tracking table
+
+#### Changed
+- **[ANDROID_BUILD_CONFIG.md](docs/development/builds/ANDROID_BUILD_CONFIG.md)** - Clarified local build strategy:
+  - Added "🎯 Stratégie : Builds LOCAUX (SANS EAS)" section at top
+  - Explained rationale: autonomy, no quotas, full versionCode control
+  - Replaced "Alternative: Build avec EAS (Recommandé)" with "Pourquoi pas EAS Build pour Android?"
+  - Emphasized proven local workflow (v1.0.4 deployed successfully)
+- **[IOS_BUILD_CONFIG.md](docs/development/builds/IOS_BUILD_CONFIG.md)** - Clarified EAS requirement:
+  - Added "🎯 Stratégie : Builds avec EAS (OBLIGATOIRE)" section at top
+  - Explained why EAS is mandatory for iOS (credentials, no local Xcode)
+  - Clear workflow: build → submit → TestFlight
+
+#### Technical
+- Build completed successfully: `android/app/build/outputs/bundle/release/app-release.aab` (63 MB)
+- versionCode: 11
+- Signature verified with jarsigner
+- Sound file integrated in raw resources
 - **[versioning-automation-setup.md](docs/development/versioning-automation-setup.md)** - Setup report:
   - Before/after comparisons
   - Measured gains (60x faster, 100% consistent)
