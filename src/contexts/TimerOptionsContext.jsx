@@ -12,7 +12,7 @@ export const TimerOptionsProvider = ({ children }) => {
     {
       shouldPulse: false, // Animation de pulsation désactivée par défaut (conformité épilepsie)
       showActivities: true, // Affichage des activités activé par défaut
-      showDigitalTimer: false, // Chrono numérique désactivé par défaut
+      showDigitalTimer: true, // Chrono numérique activé par défaut
       clockwise: false,
       scaleMode: '60min',
       currentActivity: getDefaultActivity(),
