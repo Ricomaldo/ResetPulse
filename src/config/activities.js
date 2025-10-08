@@ -13,7 +13,7 @@ export const ACTIVITIES = [
     pulseDuration: 800, // Vitesse normale
   },
 
-  // Free activities - Pomodoro cycle complet + diversité
+  // ===== FREE ACTIVITIES (4 total) =====
   {
     id: "work",
     emoji: "💻",
@@ -34,17 +34,27 @@ export const ACTIVITIES = [
     description: "Vraie déconnexion",
     pulseDuration: 1000, // Plus lent - repos
   },
-
-  // Premium - Bien-être physique
   {
-    id: "sport",
-    emoji: "💪",
-    label: "Sport",
-    defaultDuration: 600, // 10 minutes
-    isPremium: true,
+    id: "breathing",
+    emoji: "🌬️",
+    label: "Respiration",
+    defaultDuration: 240, // 4 minutes
+    isPremium: false, // Gratuit - ancrage neuroatypique baseline
     suggestedColor: "energy",
-    description: "Étirements et exercices courts",
-    pulseDuration: 500, // Très rapide - énergie
+    description: "Exercices de respiration",
+    pulseDuration: 900, // Lent - respiration contrôlée
+  },
+
+  // ===== PREMIUM ACTIVITIES (12 total) =====
+  {
+    id: "reading",
+    emoji: "📖",
+    label: "Lecture",
+    defaultDuration: 1800, // 30 minutes
+    isPremium: true,
+    suggestedColor: "focus",
+    description: "Focus lecture profonde",
+    pulseDuration: 900, // Lent - concentration calme
   },
   {
     id: "study",
@@ -56,20 +66,16 @@ export const ACTIVITIES = [
     suggestedColor: "focus",
     description: "Sessions d'apprentissage",
   },
-
-  // Free - Autre verticale utile
   {
-    id: "reading",
-    emoji: "📖",
-    label: "Lecture",
-    defaultDuration: 1800, // 30 minutes
-    isPremium: false, // Montre la diversité
-    suggestedColor: "focus",
-    description: "Focus lecture profonde",
-    pulseDuration: 900, // Lent - concentration calme
+    id: "meditation",
+    emoji: "🧘",
+    label: "Méditation",
+    defaultDuration: 1200, // 20 minutes
+    isPremium: true,
+    suggestedColor: "calm",
+    description: "Sessions de méditation guidée",
+    pulseDuration: 1200, // Très lent - calme profond
   },
-
-  // Premium - Mindfulness verticale bloquée
   {
     id: "yoga",
     emoji: "🧘‍♀️",
@@ -81,24 +87,14 @@ export const ACTIVITIES = [
     pulseDuration: 1100, // Très lent - flow
   },
   {
-    id: "meditation",
-    emoji: "🧘",
-    label: "Méditation",
-    defaultDuration: 1200, // 20 minutes
-    isPremium: true, // Toute la verticale mindfulness devient premium
-    suggestedColor: "calm",
-    description: "Sessions de méditation guidée",
-    pulseDuration: 1200, // Très lent - calme profond
-  },
-  {
-    id: "breathing",
-    emoji: "🌬️",
-    label: "Respiration",
-    defaultDuration: 240, // 4 minutes
-    isPremium: false, // Gratuit - ancrage neuroatypique baseline
+    id: "sport",
+    emoji: "💪",
+    label: "Sport",
+    defaultDuration: 600, // 10 minutes
+    isPremium: true,
     suggestedColor: "energy",
-    description: "Exercices de respiration",
-    pulseDuration: 900, // Lent - respiration contrôlée
+    description: "Étirements et exercices courts",
+    pulseDuration: 500, // Très rapide - énergie
   },
   {
     id: "walking",

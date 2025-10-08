@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🎨 UX/Freemium Improvements
+
+#### Changed
+- **Palette par défaut** - App ouvre sur palette "Terre" avec couleur bleue sélectionnée
+  - `TimerPaletteContext.jsx`: defaultPalette = 'terre', defaultColorIndex = 1 (bleu)
+  - Meilleure cohérence visuelle à l'ouverture
+
+- **Ordre des palettes** - Palettes gratuites en premier pour meilleure discovery
+  - `timerPalettes.js`: "terre" repositionnée avant "softLaser"
+  - Palettes free d'abord, puis premium
+
+- **Premium Modal trigger** - Modale se déclenche uniquement au tap (pas au scroll)
+  - `PaletteCarousel.jsx`: Suppression du trigger dans `handleScrollEnd`
+  - Permet de browse les palettes premium sans friction
+  - Tap sur couleur ou badge "Débloquer" → modale
+
+- **Badge "Débloquer"** - Affordance claire pour palettes premium
+  - Badge semi-transparent noir (rgba(0,0,0,0.7)) centré sur palette
+  - Texte: "Débloquer ✨" (call-to-action explicite)
+  - Tappable avec haptic feedback
+  - Remplace sparkle subtile peu visible
+
+- **Navigation chevrons** - Réparée pour permettre browsing fluide
+  - Chevrons permettent de naviguer entre toutes les palettes
+  - Auto-switch pour palettes gratuites
+  - Scroll uniquement pour premium (preview sans bloquer)
+
+- **Activités gratuites** - Ordre optimisé et favoris par défaut cohérents
+  - `activities.js`: "none", puis activités gratuites, puis premium
+  - Activité "reading" corrigée en premium (était free par erreur)
+  - Favoris par défaut: ['work', 'break', 'breathing'] (uniquement free)
+
+- **Sparkles** - Réduction de l'oppression visuelle (48 cadenas → sparkles)
+  - Tous les 🔒 remplacés par ✨ dans ActivityCarousel, PaletteCarousel, SettingsModal
+  - Background transparent au lieu de badges colorés
+  - Opacity réduite (0.7-0.85) avec text-shadow subtil
+  - Overflow: visible sur ActivityCarousel pour éviter coupure
+
+#### Technical
+- **Files Modified**: 5 (TimerPaletteContext, timerPalettes, PaletteCarousel, activities, TimerOptionsContext)
+- **Design Philosophy**: Freemium non-oppressif - browse premium sans friction, CTA clair au tap
+
 ## [1.1.0] - 2025-10-08
 
 ### 💰 Monétisation - RevenueCat Integration (MAJOR)

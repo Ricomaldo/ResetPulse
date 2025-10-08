@@ -297,16 +297,14 @@ export default function SettingsModal({ visible, onClose }) {
       position: "absolute",
       top: 4,
       right: 4,
-      backgroundColor: theme.colors.semantic.warning,
-      width: 18,
-      height: 18,
-      borderRadius: 9,
+      backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
     },
 
     lockIcon: {
-      fontSize: 11,
+      fontSize: 14,
+      opacity: 0.75,
     },
 
     colorRow: {
@@ -380,16 +378,14 @@ export default function SettingsModal({ visible, onClose }) {
       position: "absolute",
       top: 2,
       right: 2,
-      backgroundColor: theme.colors.semantic.warning,
-      width: 16,
-      height: 16,
-      borderRadius: 8,
+      backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
     },
 
     lockMini: {
-      fontSize: 10,
+      fontSize: 12,
+      opacity: 0.7,
     },
 
     sectionHeader: {
@@ -567,7 +563,7 @@ export default function SettingsModal({ visible, onClose }) {
                       </Text>
                       {isLocked && (
                         <View style={styles.paletteLockBadge}>
-                          <Text style={styles.lockIcon}>🔒</Text>
+                          <Text style={styles.lockIcon}>✨</Text>
                         </View>
                       )}
                     </TouchableOpacity>
@@ -729,7 +725,7 @@ export default function SettingsModal({ visible, onClose }) {
                           </Text>
                           {isLocked && (
                             <View style={styles.premiumBadge}>
-                              <Text style={styles.lockMini}>🔒</Text>
+                              <Text style={styles.lockMini}>✨</Text>
                             </View>
                           )}
                         </TouchableOpacity>
