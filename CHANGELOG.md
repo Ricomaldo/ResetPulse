@@ -5,7 +5,55 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] - 2025-10-09
+
+### 🐛 Fixed - Interface Minimaliste & Settings UX
+
+#### Fixed
+- **Timer à zéro** - Le bouton play ne peut plus lancer un timer de 0 seconde
+  - `useTimer.js:226`: Correction de la condition de démarrage
+  - Avant : `if (remaining === 0 && duration === 0)` (permettait le lancement si duration > 0)
+  - Après : `if (remaining === 0)` (bloque tout démarrage à zéro)
+  - L'utilisateur doit maintenant régler une durée ou utiliser Reset avant de démarrer
+
+- **Enregistrement durée activité** - La durée ne s'enregistre plus à chaque changement mais uniquement au play
+  - `TimeTimer.jsx:184`: Suppression de l'enregistrement automatique lors du changement via graduations
+  - `useTimer.js:248-252`: L'enregistrement se fait uniquement au premier démarrage (utilisation réelle)
+  - Flux corrigé : Changement d'activité → restaure durée sauvegardée → ajustement via graduations (pas de sauvegarde) → play → sauvegarde
+  - Évite la pollution des données avec des durées non utilisées
+- **Mode zen activités** - Activités encore visibles avec taille réduite en mode minimaliste
+  - `ActivityCarousel.jsx`: Retrait des styles hardcodés `opacity: 0.3` et `scale: 0.8` dans container
+  - Contrôle désormais géré uniquement par le parent `TimerScreen`
+  - Mode zen fonctionne parfaitement : masquage complet quand timer actif
+
+- **Switchs afficher/masquer** - Les toggles "Afficher les palettes" et "Afficher les activités" ne fonctionnaient pas correctement
+  - `TimerScreen.jsx`: Correction des valeurs d'opacity (lignes 288, 344)
+  - Avant : `opacity: showActivities ? activityAnim : 0` (valeur d'animation fixe)
+  - Après : `opacity: showActivities ? 1 : 0` (réactivité immédiate)
+  - Les sections disparaissent instantanément lors du toggle dans les settings
+  - Animations d'entrée préservées (translateX, translateY, scale au démarrage)
+
+#### Changed
+- **Réorganisation des settings** - Ordre optimisé : Fonction → Technique → Forme
+  - `SettingsModal.jsx`: Architecture repensée avec priorités claires pour UX neuroatypique
+  - **Avant** : 5 sections (Expérience Timer, Personnalisation, Activités, Réglages Cadran, À propos)
+  - **Après** : 4 sections logiques (Fonction → Technique → Forme)
+    - 🪄 **Interface** (Card Primary) : Interface minimaliste + Chrono numérique + Animation Pulse
+    - ⚙️ **Timer** (Card) : Son de fin + Mode Cadran + Sens de rotation
+    - 🎨 **Apparence** (Card) : Thème + Palettes + Activités favorites
+    - ℹ️ **À propos** (Flat) : Version + Relancer le guide
+  - Badge "NOUVEAU" retiré (plus pertinent après plusieurs versions)
+  - Emoji 🪄 pour Interface : Plus doux et évocateur que la cible 🎯
+  - Ordre intuitif : Comment on travaille → Réglages techniques → Personnalisation visuelle
+  - Philosophie : L'essentiel (comportement) avant le cosmétique (apparence)
+
+#### Technical
+- **Files Modified**: 3 (TimeTimer, useTimer, ActivityCarousel, TimerScreen, SettingsModal)
+- **State Management**: Confirmé que `showActivities` et `showPalettes` fonctionnent correctement via `TimerOptionsContext`
+- **Design Philosophy**: Séparation des responsabilités - le parent contrôle la visibilité, pas les enfants
+- **Timer Logic**: Amélioration de la fiabilité du démarrage et de la persistance des données utilisateur
+
+## [Unreleased] - 2025-10-08
 
 ### 🎨 UX/Freemium Improvements
 

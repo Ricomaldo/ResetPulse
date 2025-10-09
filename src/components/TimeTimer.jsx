@@ -21,7 +21,6 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
     scaleMode,
     currentActivity,
     currentDuration,
-    saveActivityDuration,
     showDigitalTimer
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
@@ -181,10 +180,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
 
     timer.setDuration(newDuration);
 
-    // Save activity duration when user changes it
-    if (currentActivity?.id && newDuration > 0) {
-      saveActivityDuration(currentActivity.id, newDuration);
-    }
+    // Duration will be saved when user presses play (useTimer.js handles this)
   };
 
 

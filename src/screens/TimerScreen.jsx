@@ -104,7 +104,7 @@ const calculateTooltipPosition = (bounds, tooltipHeight = 120) => {
 
 function TimerScreenContent() {
   const theme = useTheme();
-  const { showActivities } = useTimerOptions();
+  const { showActivities, showPalettes, useMinimalInterface } = useTimerOptions();
   const { registerTooltipTarget, onboardingCompleted } = useOnboarding();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -265,39 +265,44 @@ function TimerScreenContent() {
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Activities Section - Conditionnel */}
-      {showActivities && (
-        <Animated.View
-          ref={activitiesRef}
-          onLayout={() => {
-            // Wait for entrance animations to complete before measuring
-            // First launch (no animations): short delay
-            // Returning users (with animations): longer delay to wait for animations
-            const delay = onboardingCompleted ? 100 : 900;
-            setTimeout(() => {
-              activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
-                const bounds = { top: pageY, left: pageX, width, height };
-                console.log('Activities bounds:', bounds);
-                const position = calculateTooltipPosition(bounds);
-                registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
-              });
-            }, delay);
-          }}
-          style={[
-            styles.activitySection,
-            {
-              opacity: Animated.multiply(activityAnim, isTimerRunning ? 0.2 : 1),
-              transform: onboardingCompleted ? [{
+      {/* Activities Section - Garde sa place pour stabilité du timer */}
+      <Animated.View
+        ref={activitiesRef}
+        onLayout={() => {
+          // Wait for entrance animations to complete before measuring
+          // First launch (no animations): short delay
+          // Returning users (with animations): longer delay to wait for animations
+          const delay = onboardingCompleted ? 100 : 900;
+          setTimeout(() => {
+            activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
+              const bounds = { top: pageY, left: pageX, width, height };
+              console.log('Activities bounds:', bounds);
+              const position = calculateTooltipPosition(bounds);
+              registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
+            });
+          }, delay);
+        }}
+        style={[
+          styles.activitySection,
+          {
+            opacity: (showActivities && !(useMinimalInterface && isTimerRunning)) ? 1 : 0,
+            transform: onboardingCompleted ? [
+              {
                 translateX: activityAnim.interpolate({
                   inputRange: [0, 1],
                   outputRange: [-30, 0]
                 })
-              }] : []
-            }
-          ]}>
-          <ActivityCarousel isTimerRunning={isTimerRunning} />
-        </Animated.View>
-      )}
+              },
+              {
+                scale: activityAnim
+              }
+            ] : []
+          }
+        ]}
+        pointerEvents={(showActivities && !(useMinimalInterface && isTimerRunning)) ? 'auto' : 'none'}
+      >
+        <ActivityCarousel isTimerRunning={isTimerRunning} />
+      </Animated.View>
 
       {/* Timer Section - Flex to take available space */}
       <Animated.View
@@ -318,7 +323,7 @@ function TimerScreenContent() {
         />
       </Animated.View>
 
-      {/* Palette Section */}
+      {/* Palette Section - Garde sa place pour stabilité du timer */}
       <Animated.View
         ref={paletteRef}
         onLayout={() => {
@@ -336,16 +341,21 @@ function TimerScreenContent() {
           }, delay);
         }}
         style={[styles.paletteSection, {
-          opacity: paletteAnim, // Toujours visible, pas de mode zen
+          opacity: (showPalettes && !(useMinimalInterface && isTimerRunning)) ? 1 : 0,
           transform: onboardingCompleted ? [
             {
               translateY: paletteAnim.interpolate({
                 inputRange: [0, 1],
                 outputRange: [30, 0]
               })
+            },
+            {
+              scale: paletteAnim
             }
           ] : []
-        }]}>
+        }]}
+        pointerEvents={(showPalettes && !(useMinimalInterface && isTimerRunning)) ? 'auto' : 'none'}
+      >
         <View style={styles.paletteContainer}>
           <PaletteCarousel isTimerRunning={isTimerRunning} />
         </View>

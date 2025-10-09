@@ -12,6 +12,8 @@ export const TimerOptionsProvider = ({ children }) => {
     {
       shouldPulse: false, // Animation de pulsation désactivée par défaut (conformité épilepsie)
       showActivities: true, // Affichage des activités activé par défaut
+      showPalettes: true, // Affichage des palettes activé par défaut
+      useMinimalInterface: true, // Interface minimaliste activée par défaut (masque activités + palettes quand timer tourne)
       showDigitalTimer: true, // Chrono numérique activé par défaut
       clockwise: false,
       scaleMode: '60min',
@@ -27,6 +29,8 @@ export const TimerOptionsProvider = ({ children }) => {
     // States
     shouldPulse: values.shouldPulse,
     showActivities: values.showActivities,
+    showPalettes: values.showPalettes,
+    useMinimalInterface: values.useMinimalInterface,
     showDigitalTimer: values.showDigitalTimer,
     clockwise: values.clockwise,
     scaleMode: values.scaleMode,
@@ -39,6 +43,8 @@ export const TimerOptionsProvider = ({ children }) => {
     // Actions
     setShouldPulse: (val) => updateValue('shouldPulse', val),
     setShowActivities: (val) => updateValue('showActivities', val),
+    setShowPalettes: (val) => updateValue('showPalettes', val),
+    setUseMinimalInterface: (val) => updateValue('useMinimalInterface', val),
     setShowDigitalTimer: (val) => updateValue('showDigitalTimer', val),
     setClockwise: (val) => updateValue('clockwise', val),
     setScaleMode: (val) => updateValue('scaleMode', val),
