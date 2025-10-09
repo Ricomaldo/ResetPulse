@@ -270,9 +270,10 @@ function TimerScreenContent() {
         <Animated.View
           ref={activitiesRef}
           onLayout={() => {
-            // Measure immediately since startTooltips() already waits for animations
-            // Only add small delay for onboardingCompleted case (relaunched from settings)
-            const delay = onboardingCompleted ? 900 : 100;
+            // Wait for entrance animations to complete before measuring
+            // First launch (no animations): short delay
+            // Returning users (with animations): longer delay to wait for animations
+            const delay = onboardingCompleted ? 100 : 900;
             setTimeout(() => {
               activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
                 const bounds = { top: pageY, left: pageX, width, height };
@@ -322,8 +323,9 @@ function TimerScreenContent() {
         ref={paletteRef}
         onLayout={() => {
           // Measure the parent Animated.View instead of inner container
-          // Increased delay for physical devices (slower than simulator)
-          const delay = onboardingCompleted ? 1300 : 400;
+          // First launch (no animations): short delay
+          // Returning users (with animations): longer delay for physical devices
+          const delay = onboardingCompleted ? 400 : 1300;
           setTimeout(() => {
             paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
               const bounds = { top: pageY, left: pageX, width, height };

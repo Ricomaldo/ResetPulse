@@ -41,7 +41,7 @@ const TOOLTIPS_CONFIG = [
 ];
 
 export function OnboardingProvider({ children }) {
-  const [onboardingCompleted, setOnboardingCompleted] = usePersistedState(
+  const [onboardingCompleted, setOnboardingCompleted, isLoadingOnboarding] = usePersistedState(
     '@ResetPulse:onboardingCompleted',
     false
   );
@@ -117,6 +117,7 @@ export function OnboardingProvider({ children }) {
 
   const value = {
     onboardingCompleted,
+    isLoadingOnboarding,
     currentTooltip,
     tooltipPositions,
     tooltipBounds,
