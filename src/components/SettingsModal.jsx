@@ -1,5 +1,5 @@
 // src/components/SettingsModal.jsx
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   View,
@@ -20,12 +20,14 @@ import { useOnboarding } from "./onboarding/OnboardingController";
 import { rs } from "../styles/responsive";
 import PalettePreview from "./PalettePreview";
 import SoundPicker from "./SoundPicker";
+import PremiumModal from "./PremiumModal";
 import { getAllActivities } from "../config/activities";
 import { TIMER_PALETTES, isPalettePremium } from "../config/timerPalettes";
 import haptics from "../utils/haptics";
-import { isTestPremium } from "../config/testMode";
+import { usePremiumStatus } from "../hooks/usePremiumStatus";
 
 export default function SettingsModal({ visible, onClose }) {
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const theme = useTheme();
   const { currentPalette, setPalette } = useTimerPalette();
   const { resetOnboarding, startTooltips } = useOnboarding();
@@ -49,7 +51,7 @@ export default function SettingsModal({ visible, onClose }) {
   } = useTimerOptions();
 
   const allActivities = getAllActivities();
-  const isPremiumUser = isTestPremium(); // Check premium status for test mode
+  const { isPremium: isPremiumUser } = usePremiumStatus(); // Check premium status for test mode
 
   const toggleFavorite = (activityId) => {
     haptics.selection().catch(() => {});
@@ -297,16 +299,14 @@ export default function SettingsModal({ visible, onClose }) {
       position: "absolute",
       top: 4,
       right: 4,
-      backgroundColor: theme.colors.semantic.warning,
-      width: 18,
-      height: 18,
-      borderRadius: 9,
+      backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
     },
 
     lockIcon: {
-      fontSize: 11,
+      fontSize: 14,
+      opacity: 0.75,
     },
 
     colorRow: {
@@ -380,16 +380,14 @@ export default function SettingsModal({ visible, onClose }) {
       position: "absolute",
       top: 2,
       right: 2,
-      backgroundColor: theme.colors.semantic.warning,
-      width: 16,
-      height: 16,
-      borderRadius: 8,
+      backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
     },
 
     lockMini: {
-      fontSize: 10,
+      fontSize: 12,
+      opacity: 0.7,
     },
 
     sectionHeader: {
@@ -550,11 +548,14 @@ export default function SettingsModal({ visible, onClose }) {
                         isLocked && styles.paletteItemLocked,
                       ]}
                       onPress={() => {
-                        if (!isLocked) {
+                        if (isLocked) {
+                          haptics.warning().catch(() => {});
+                          setShowPremiumModal(true);
+                        } else {
                           setPalette(paletteName);
                         }
                       }}
-                      activeOpacity={isLocked ? 1 : 0.7}
+                      activeOpacity={0.7}
                     >
                       <PalettePreview paletteName={paletteName} />
                       <Text
@@ -567,7 +568,7 @@ export default function SettingsModal({ visible, onClose }) {
                       </Text>
                       {isLocked && (
                         <View style={styles.paletteLockBadge}>
-                          <Text style={styles.lockIcon}>🔒</Text>
+                          <Text style={styles.lockIcon}>✨</Text>
                         </View>
                       )}
                     </TouchableOpacity>
@@ -710,11 +711,14 @@ export default function SettingsModal({ visible, onClose }) {
                             isLocked && styles.activityItemLocked,
                           ]}
                           onPress={() => {
-                            if (!isLocked) {
+                            if (isLocked) {
+                              haptics.warning().catch(() => {});
+                              setShowPremiumModal(true);
+                            } else {
                               toggleFavorite(activity.id);
                             }
                           }}
-                          activeOpacity={isLocked ? 1 : 0.7}
+                          activeOpacity={0.7}
                         >
                           <Text style={styles.activityEmoji}>
                             {activity.id === "none" ? "⏱️" : activity.emoji}
@@ -729,7 +733,7 @@ export default function SettingsModal({ visible, onClose }) {
                           </Text>
                           {isLocked && (
                             <View style={styles.premiumBadge}>
-                              <Text style={styles.lockMini}>🔒</Text>
+                              <Text style={styles.lockMini}>✨</Text>
                             </View>
                           )}
                         </TouchableOpacity>
@@ -842,7 +846,7 @@ export default function SettingsModal({ visible, onClose }) {
                       { marginTop: theme.spacing.xs },
                     ]}
                   >
-                    Version 1.0.5
+                    Version 1.1.1
                   </Text>
                 </View>
               </View>
@@ -914,6 +918,13 @@ export default function SettingsModal({ visible, onClose }) {
           </ScrollView>
         </View>
       </View>
+
+      {/* Premium Modal */}
+      <PremiumModal
+        visible={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        highlightedFeature="contenu premium"
+      />
     </Modal>
   );
 }
