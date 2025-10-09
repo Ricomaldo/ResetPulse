@@ -223,8 +223,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Controls
   const toggleRunning = useCallback(() => {
-    if (remaining === 0 && duration === 0) {
-      // Timer at zero with no duration set - do nothing (user must use Reset or set duration)
+    if (remaining === 0) {
+      // Timer at zero - do nothing (user must use Reset or set duration)
       return;
     } else if (!running) {
       // Start or resume

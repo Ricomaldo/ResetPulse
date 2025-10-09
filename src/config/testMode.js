@@ -7,7 +7,7 @@
 
 // Active le mode test pour débloquer tout le contenu premium
 // Mettre à false pour tester le freemium réel
-export const TEST_MODE = false;
+export const TEST_MODE = true;
 
 // Simule l'état premium pour les tests
 export const isTestPremium = () => {
@@ -16,5 +16,5 @@ export const isTestPremium = () => {
 
 export default {
   TEST_MODE,
-  isTestPremium
+  isTestPremium,
 };

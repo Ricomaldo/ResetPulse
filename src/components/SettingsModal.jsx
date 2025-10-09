@@ -36,6 +36,10 @@ export default function SettingsModal({ visible, onClose }) {
     setShouldPulse,
     showActivities,
     setShowActivities,
+    showPalettes,
+    setShowPalettes,
+    useMinimalInterface,
+    setUseMinimalInterface,
     showDigitalTimer,
     setShowDigitalTimer,
     currentActivity,
@@ -438,30 +442,38 @@ export default function SettingsModal({ visible, onClose }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            {/* ========== NIVEAU 1 - CORE EXPERIENCE ========== */}
-
-            {/* 1. 🎯 Expérience Timer (Card Primary) */}
+            {/* 1. 🪄 Interface (Card Primary) - Comment je veux utiliser l'app */}
             <View style={styles.sectionCardPrimary}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>🎯 Expérience Timer</Text>
-                <View style={styles.sectionBadge}>
-                  <Text style={styles.sectionBadgeText}>NOUVEAU</Text>
+              <Text style={styles.sectionTitle}>🪄 Interface</Text>
+
+              {/* Interface minimaliste */}
+              <View style={styles.optionRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Interface minimaliste</Text>
+                  <Text style={styles.optionDescription}>
+                    {useMinimalInterface
+                      ? "Masque activités et couleurs quand le timer tourne"
+                      : "Interface complète même pendant le timer"}
+                  </Text>
                 </View>
+                <Switch
+                  accessible={true}
+                  accessibilityLabel="Interface minimaliste"
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: useMinimalInterface }}
+                  value={useMinimalInterface}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setUseMinimalInterface(value);
+                  }}
+                  {...theme.styles.switch(useMinimalInterface)}
+                />
               </View>
 
-              {/* Sons du Timer */}
-              <Text style={styles.optionDescription}>
-                Choisissez le son qui sera joué à la fin du timer
-              </Text>
-              <SoundPicker
-                selectedSoundId={selectedSoundId}
-                onSoundSelect={setSelectedSoundId}
-              />
-
               {/* Chrono Numérique */}
-              <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
+              <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Chrono Numérique</Text>
+                  <Text style={styles.optionLabel}>Chrono numérique</Text>
                   <Text style={styles.optionDescription}>
                     {showDigitalTimer
                       ? "Affiche le temps restant en MM:SS"
@@ -524,60 +536,102 @@ export default function SettingsModal({ visible, onClose }) {
               </View>
             </View>
 
-            {/* 2. 🎨 Personnalisation (Card Primary) */}
-            <View style={styles.sectionCardPrimary}>
-              <Text style={styles.sectionTitle}>🎨 Personnalisation</Text>
+            {/* 2. ⚙️ Timer (Card) - Réglages techniques du minuteur */}
+            <View style={styles.sectionCard}>
+              <Text style={styles.sectionTitle}>⚙️ Timer</Text>
 
-              {/* Palettes de Couleurs */}
+              {/* Sons du Timer */}
               <Text style={styles.optionDescription}>
-                Version gratuite : Terre et Laser disponibles
+                Choisissez le son qui sera joué à la fin du timer
               </Text>
-              <View style={styles.paletteGrid}>
-                {Object.keys(TIMER_PALETTES).map((paletteName) => {
-                  const isLocked =
-                    isPalettePremium(paletteName) && !isPremiumUser;
-                  const isActive = currentPalette === paletteName;
-                  const paletteInfo = TIMER_PALETTES[paletteName];
+              <SoundPicker
+                selectedSoundId={selectedSoundId}
+                onSoundSelect={setSelectedSoundId}
+              />
 
-                  return (
-                    <TouchableOpacity
-                      key={paletteName}
+              {/* Mode Cadran */}
+              <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Mode Cadran</Text>
+                  <Text style={styles.optionDescription}>
+                    {scaleMode === "60min"
+                      ? "Échelle 60 minutes"
+                      : "25 minutes Pomodoro"}
+                  </Text>
+                </View>
+                <View style={styles.segmentedControl}>
+                  <Touchable
+                    style={[
+                      styles.segmentButton,
+                      scaleMode === "60min" && styles.segmentButtonActive,
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setScaleMode("60min");
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text
                       style={[
-                        styles.paletteItem,
-                        isActive && styles.paletteItemActive,
-                        isLocked && styles.paletteItemLocked,
+                        styles.segmentText,
+                        scaleMode === "60min" && styles.segmentTextActive,
                       ]}
-                      onPress={() => {
-                        if (isLocked) {
-                          haptics.warning().catch(() => {});
-                          setShowPremiumModal(true);
-                        } else {
-                          setPalette(paletteName);
-                        }
-                      }}
-                      activeOpacity={0.7}
                     >
-                      <PalettePreview paletteName={paletteName} />
-                      <Text
-                        style={[
-                          styles.paletteName,
-                          isActive && styles.paletteNameActive,
-                        ]}
-                      >
-                        {paletteInfo?.name || paletteName}
-                      </Text>
-                      {isLocked && (
-                        <View style={styles.paletteLockBadge}>
-                          <Text style={styles.lockIcon}>✨</Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  );
-                })}
+                      60min
+                    </Text>
+                  </Touchable>
+                  <Touchable
+                    style={[
+                      styles.segmentButton,
+                      scaleMode === "25min" && styles.segmentButtonActive,
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setScaleMode("25min");
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text
+                      style={[
+                        styles.segmentText,
+                        scaleMode === "25min" && styles.segmentTextActive,
+                      ]}
+                    >
+                      25min
+                    </Text>
+                  </Touchable>
+                </View>
               </View>
 
+              {/* Sens de Rotation */}
+              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Sens de rotation</Text>
+                  <Text style={styles.optionDescription}>
+                    {clockwise ? "Sens horaire" : "Sens anti-horaire"}
+                  </Text>
+                </View>
+                <Switch
+                  accessible={true}
+                  accessibilityLabel="Sens de rotation"
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: clockwise }}
+                  value={clockwise}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setClockwise(value);
+                  }}
+                  {...theme.styles.switch(clockwise)}
+                />
+              </View>
+            </View>
+
+            {/* 3. 🎨 Apparence (Card) - Personnalisation visuelle */}
+            <View style={styles.sectionCard}>
+              <Text style={styles.sectionTitle}>🎨 Apparence</Text>
+
               {/* Thème */}
-              <View style={[styles.optionRow, { marginTop: theme.spacing.md, borderBottomWidth: 0 }]}>
+              <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Thème</Text>
                   <Text style={styles.optionDescription}>
@@ -651,14 +705,84 @@ export default function SettingsModal({ visible, onClose }) {
                   </Touchable>
                 </View>
               </View>
-            </View>
 
-            {/* 3. ⭐ Activités (Card) */}
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>⭐ Activités</Text>
+              {/* Palettes de couleurs */}
+              <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>Afficher les palettes</Text>
+                  <Text style={styles.optionDescription}>
+                    {showPalettes
+                      ? "Palettes visibles dans l'interface"
+                      : "Palettes masquées"}
+                  </Text>
+                </View>
+                <Switch
+                  accessible={true}
+                  accessibilityLabel="Afficher les palettes"
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: showPalettes }}
+                  value={showPalettes}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setShowPalettes(value);
+                  }}
+                  {...theme.styles.switch(showPalettes)}
+                />
+              </View>
 
-              {/* Afficher les activités */}
-              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
+              {showPalettes && (
+                <>
+                  <Text style={[styles.optionDescription, { marginTop: theme.spacing.sm }]}>
+                    Version gratuite : Terre et Laser disponibles
+                  </Text>
+                  <View style={styles.paletteGrid}>
+                    {Object.keys(TIMER_PALETTES).map((paletteName) => {
+                      const isLocked =
+                        isPalettePremium(paletteName) && !isPremiumUser;
+                      const isActive = currentPalette === paletteName;
+                      const paletteInfo = TIMER_PALETTES[paletteName];
+
+                      return (
+                        <TouchableOpacity
+                          key={paletteName}
+                          style={[
+                            styles.paletteItem,
+                            isActive && styles.paletteItemActive,
+                            isLocked && styles.paletteItemLocked,
+                          ]}
+                          onPress={() => {
+                            if (isLocked) {
+                              haptics.warning().catch(() => {});
+                              setShowPremiumModal(true);
+                            } else {
+                              setPalette(paletteName);
+                            }
+                          }}
+                          activeOpacity={0.7}
+                        >
+                          <PalettePreview paletteName={paletteName} />
+                          <Text
+                            style={[
+                              styles.paletteName,
+                              isActive && styles.paletteNameActive,
+                            ]}
+                          >
+                            {paletteInfo?.name || paletteName}
+                          </Text>
+                          {isLocked && (
+                            <View style={styles.paletteLockBadge}>
+                              <Text style={styles.lockIcon}>✨</Text>
+                            </View>
+                          )}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </>
+              )}
+
+              {/* Activités favorites */}
+              <View style={[styles.optionRow, { marginTop: theme.spacing.md, borderBottomWidth: 0 }]}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Afficher les activités</Text>
                   <Text style={styles.optionDescription}>
@@ -693,7 +817,7 @@ export default function SettingsModal({ visible, onClose }) {
 
               {showActivities && (
                 <>
-                  <Text style={[styles.optionDescription, { marginTop: theme.spacing.md }]}>
+                  <Text style={[styles.optionDescription, { marginTop: theme.spacing.sm }]}>
                     Sélectionnez vos favoris pour les voir en premier
                   </Text>
                   <View style={styles.favoritesGrid}>
@@ -744,94 +868,10 @@ export default function SettingsModal({ visible, onClose }) {
               )}
             </View>
 
-            {/* ========== NIVEAU 2 - CONFIGURATION ========== */}
+            {/* Divider avant À propos */}
             <View style={styles.levelDivider} />
 
-            {/* 4. ⚙️ Réglages du Cadran (Card) */}
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>⚙️ Réglages du Cadran</Text>
-
-              {/* Scale Mode */}
-              <View style={styles.optionRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Mode Cadran</Text>
-                  <Text style={styles.optionDescription}>
-                    {scaleMode === "60min"
-                      ? "Échelle 60 minutes"
-                      : "25 minutes Pomodoro"}
-                  </Text>
-                </View>
-                <View style={styles.segmentedControl}>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      scaleMode === "60min" && styles.segmentButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setScaleMode("60min");
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text
-                      style={[
-                        styles.segmentText,
-                        scaleMode === "60min" && styles.segmentTextActive,
-                      ]}
-                    >
-                      60min
-                    </Text>
-                  </Touchable>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      scaleMode === "25min" && styles.segmentButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setScaleMode("25min");
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text
-                      style={[
-                        styles.segmentText,
-                        scaleMode === "25min" && styles.segmentTextActive,
-                      ]}
-                    >
-                      25min
-                    </Text>
-                  </Touchable>
-                </View>
-              </View>
-
-              {/* Direction */}
-              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Sens de Rotation</Text>
-                  <Text style={styles.optionDescription}>
-                    {clockwise ? "Sens horaire" : "Sens anti-horaire"}
-                  </Text>
-                </View>
-                <Switch
-                  accessible={true}
-                  accessibilityLabel="Sens de rotation"
-                  accessibilityRole="switch"
-                  accessibilityState={{ checked: clockwise }}
-                  value={clockwise}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setClockwise(value);
-                  }}
-                  {...theme.styles.switch(clockwise)}
-                />
-              </View>
-            </View>
-
-            {/* ========== NIVEAU 3 - INFORMATIONS ========== */}
-            <View style={styles.levelDivider} />
-
-            {/* 5. ℹ️ À propos (Flat) */}
+            {/* 4. ℹ️ À propos (Flat) */}
             <View style={styles.sectionFlat}>
               <Text style={styles.sectionTitle}>ℹ️ À propos</Text>
               <View style={styles.optionRow}>
