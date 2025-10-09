@@ -12,8 +12,17 @@ import ErrorBoundary from './src/components/ErrorBoundary';
 function AppContent() {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const { onboardingCompleted, startTooltips, completeOnboarding } = useOnboarding();
-  const [showWelcome, setShowWelcome] = useState(!onboardingCompleted);
+  const { onboardingCompleted, isLoadingOnboarding, startTooltips, completeOnboarding } = useOnboarding();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  // Update showWelcome only after onboardingCompleted has loaded from AsyncStorage
+  useEffect(() => {
+    // Wait for onboarding state to load from AsyncStorage
+    if (!isLoadingOnboarding) {
+      // Only show welcome if onboarding was never completed
+      setShowWelcome(!onboardingCompleted);
+    }
+  }, [onboardingCompleted, isLoadingOnboarding]);
 
   useEffect(() => {
     // Start fade in animation after a brief delay
