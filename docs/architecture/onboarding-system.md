@@ -1,7 +1,7 @@
 # Système d'Onboarding - Documentation Technique
 
-**Version** : 2.0
-**Date** : 2025-10-02
+**Version** : 2.1
+**Date** : 2025-10-09
 **Status** : Production Ready
 
 ---
@@ -10,7 +10,7 @@
 
 Système d'onboarding interactif avec tooltips séquentiels et spotlight highlighting pour guider les nouveaux utilisateurs à travers les fonctionnalités de l'app.
 
-**Flow** : Welcome Screen → Activities → Dial → Controls → Palette → Completion
+**Flow** : Welcome Screen → Activities → Dial → Palette → Controls → Completion
 
 ---
 
@@ -19,7 +19,7 @@ Système d'onboarding interactif avec tooltips séquentiels et spotlight highlig
 ### Composants
 
 ```
-OnboardingProvider (Context)
+OnboardingController (Context Provider)
 ├── WelcomeScreen (Modal premier lancement)
 ├── HighlightOverlay (SVG Mask spotlight)
 └── Tooltip (Bulle + flèche + boutons)
@@ -140,15 +140,21 @@ const TOOLTIPS_CONFIG = [
     arrowDirection: 'down',
   },
   {
+    id: 'palette',
+    text: 'Changez les couleurs à votre guise',
+    arrowDirection: 'down',
+  },
+  {
     id: 'controls',
     text: 'Démarrez, mettez en pause, ou réinitialisez',
     subtext: 'Le timer continue en arrière-plan',
-    arrowDirection: 'up',
+    arrowDirection: 'down',
   },
   {
-    id: 'palette',
-    text: 'Vous pouvez aussi changer les couleurs',
-    arrowDirection: 'down',
+    id: 'completion',
+    text: 'Profitez bien de ResetPulse !',
+    subtext: null,
+    arrowDirection: null, // Centered message, no target
   },
 ];
 ```
@@ -156,18 +162,22 @@ const TOOLTIPS_CONFIG = [
 ### État persistant
 
 ```javascript
-// usePersistedState via AsyncStorage
-const [onboardingCompleted, setOnboardingCompleted] = usePersistedState(
+// usePersistedState via AsyncStorage - retourne [value, setValue, isLoading]
+const [onboardingCompleted, setOnboardingCompleted, isLoadingOnboarding] = usePersistedState(
   '@ResetPulse:onboardingCompleted',
   false
 );
 ```
 
+**Important** : Le flag `isLoadingOnboarding` est essentiel pour éviter d'afficher le WelcomeScreen pendant le chargement initial.
+
 ### Actions
 
-- `startTooltips()` - Démarre le guide
+- `startTooltips()` - Démarre le guide (attend 1200ms pour les animations)
 - `nextTooltip()` - Passe au tooltip suivant
+- `showZenModeCompletion()` - Affiche le message de completion en mode zen (quand l'utilisateur démarre le timer pendant l'onboarding)
 - `skipAll()` - Saute tous les tooltips
+- `completeOnboarding()` - Marque l'onboarding comme terminé
 - `resetOnboarding()` - Relance le guide (via Settings)
 
 ---
@@ -178,11 +188,32 @@ const [onboardingCompleted, setOnboardingCompleted] = usePersistedState(
 
 ```jsx
 <OnboardingProvider>
-  <NavigationContainer>
-    {/* ... */}
-  </NavigationContainer>
-  <WelcomeScreen />
+  {/* ... */}
+
+  {/* WelcomeScreen avec gestion du loading */}
+  {showWelcome && (
+    <WelcomeScreen
+      visible={showWelcome}
+      onDiscover={handleDiscover}
+      onSkip={handleSkipWelcome}
+    />
+  )}
 </OnboardingProvider>
+```
+
+**Important** : Le `showWelcome` doit attendre que `isLoadingOnboarding` soit `false` :
+
+```jsx
+const { onboardingCompleted, isLoadingOnboarding, startTooltips, completeOnboarding } = useOnboarding();
+const [showWelcome, setShowWelcome] = useState(false);
+
+useEffect(() => {
+  // Wait for onboarding state to load from AsyncStorage
+  if (!isLoadingOnboarding) {
+    // Only show welcome if onboarding was never completed
+    setShowWelcome(!onboardingCompleted);
+  }
+}, [onboardingCompleted, isLoadingOnboarding]);
 ```
 
 ### 2. TimerScreen.jsx
@@ -191,14 +222,17 @@ const [onboardingCompleted, setOnboardingCompleted] = usePersistedState(
 // Mesure des bounds
 const activitiesRef = useRef(null);
 
-<View ref={activitiesRef} onLayout={() => {
+<Animated.View ref={activitiesRef} onLayout={() => {
+  // First launch (no animations): short delay
+  // Returning users (with animations): longer delay to wait for animations
+  const delay = onboardingCompleted ? 100 : 900;
   setTimeout(() => {
     activitiesRef.current?.measure((x, y, w, h, pageX, pageY) => {
       const bounds = { top: pageY, left: pageX, width: w, height: h };
       const position = calculateTooltipPosition(bounds);
       registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
     });
-  }, 100);
+  }, delay);
 }}>
 ```
 
@@ -238,15 +272,22 @@ useEffect(() => {
 
 ## 🔧 Dépannage
 
+### WelcomeScreen s'affiche à chaque lancement
+
+**Cause** : `showWelcome` initialisé avant que `onboardingCompleted` soit chargé depuis AsyncStorage
+**Solution** : Utiliser `isLoadingOnboarding` pour attendre que l'état soit chargé
+
+### Tooltips ne se positionnent pas correctement
+
+**Cause** : Délais inversés - courte attente pour premier lancement (avec animations d'entrance), longue attente pour relance (sans animations)
+**Solution** : Inverser la logique des délais :
+- Premier lancement (`onboardingCompleted = false`) : délais longs (900-1300ms) pour attendre les animations
+- Relance depuis settings (`onboardingCompleted = true`) : délais courts (100-400ms) car pas d'animations
+
 ### Tooltip hors écran
 
 **Cause** : Position calculée avant layout complet
-**Solution** : Augmenter timeout dans `setTimeout()` (100 → 200ms)
-
-### Bounds décalés
-
-**Cause** : measure() appelé pendant animation
-**Solution** : Mesurer après animations (délai 500-600ms)
+**Solution** : Augmenter timeout dans `setTimeout()`
 
 ### Highlight avec gaps
 
@@ -274,5 +315,17 @@ useEffect(() => {
 
 ---
 
+## 🐛 Bugs Corrigés (v2.1)
+
+### 1. WelcomeScreen s'affichait à chaque lancement
+- **Problème** : Le `showWelcome` était initialisé avec `!onboardingCompleted` avant le chargement depuis AsyncStorage
+- **Solution** : Ajout de `isLoadingOnboarding` pour attendre que l'état persiste soit chargé
+
+### 2. Tooltips mal positionnés lors de la relance
+- **Problème** : Délais inversés entre premier lancement et relance depuis settings
+- **Solution** : Correction de la logique conditionnelle (premier lancement = longs délais, relance = courts délais)
+
+---
+
 **Maintenu par** : Équipe ResetPulse
-**Dernière mise à jour** : 2025-10-02
+**Dernière mise à jour** : 2025-10-09

@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, StatusBar, Animated } from 'react-native';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
+import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
 import { OnboardingProvider, useOnboarding } from './src/components/onboarding/OnboardingController';
 import TimerScreen from './src/screens/TimerScreen';
@@ -11,8 +12,17 @@ import ErrorBoundary from './src/components/ErrorBoundary';
 function AppContent() {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const { onboardingCompleted, startTooltips, completeOnboarding } = useOnboarding();
-  const [showWelcome, setShowWelcome] = useState(!onboardingCompleted);
+  const { onboardingCompleted, isLoadingOnboarding, startTooltips, completeOnboarding } = useOnboarding();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  // Update showWelcome only after onboardingCompleted has loaded from AsyncStorage
+  useEffect(() => {
+    // Wait for onboarding state to load from AsyncStorage
+    if (!isLoadingOnboarding) {
+      // Only show welcome if onboarding was never completed
+      setShowWelcome(!onboardingCompleted);
+    }
+  }, [onboardingCompleted, isLoadingOnboarding]);
 
   useEffect(() => {
     // Start fade in animation after a brief delay
@@ -68,9 +78,11 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <OnboardingProvider>
-          <AppContent />
-        </OnboardingProvider>
+        <PurchaseProvider>
+          <OnboardingProvider>
+            <AppContent />
+          </OnboardingProvider>
+        </PurchaseProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
