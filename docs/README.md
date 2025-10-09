@@ -6,7 +6,7 @@
 
 **ResetPulse** est une application de time timer iOS spécialement conçue pour les personnes neuroatypiques (TDAH/TSA). L'app offre une interface épurée pour la méditation (20min) et l'ancrage mental (4min) sans surcharge cognitive.
 
-**Version actuelle :** 1.1.0 (SDK 54, New Architecture)
+**Version actuelle :** 1.1.1 (SDK 54, New Architecture)
 **Status :** 🚧 En développement - RevenueCat Integration Testing
 **Platforms :** [Android](https://play.google.com/apps/internaltest/4701499537445297168) | [iOS TestFlight](https://appstoreconnect.apple.com/apps/6752913010/testflight/ios)
 
