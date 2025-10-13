@@ -1,13 +1,32 @@
 # Configuration iOS Build - ResetPulse
 
-## 🎯 Stratégie : Builds avec EAS (OBLIGATOIRE)
+## 🎯 Stratégie : Build Natif Xcode (depuis v1.1.0)
 
-**Pour iOS, nous utilisons exclusivement EAS Build :**
-- ✅ Build cloud avec `eas build --platform ios`
-- ✅ Submit automatique vers TestFlight avec `eas submit`
-- ✅ Credentials Apple gérés par EAS (certificats, provisioning)
-- ✅ Auto-increment du buildNumber
-- ❌ **Pas de build Xcode local** (pas configuré pour l'instant)
+**Pour iOS, nous utilisons désormais des builds natifs via Xcode :**
+- ✅ Build local via Xcode (Product > Archive)
+- ✅ Contrôle total sur capabilities et entitlements
+- ✅ Upload manuel TestFlight via Xcode Organizer
+- ✅ Cohérence avec Android (builds natifs sur les deux plateformes)
+- ❌ **EAS Build abandonné** (voir ADR 002: `docs/decisions/eas-to-native-ios-build.md`)
+
+**Raison:** Blocage IAP avec EAS Build - l'entitlement `com.apple.developer.in-app-purchases` n'était pas correctement injecté dans les builds EAS, bloquant l'intégration RevenueCat pour la monétisation.
+
+---
+
+## 📘 Documentation Complète
+
+**Guide détaillé setup build natif:** `docs/devlog/ios-native-build-setup.md`
+
+Ce document couvre:
+- Génération workspace Xcode via `expo prebuild`
+- Configuration capabilities (In-App Purchase, Background Audio)
+- Process build & archive
+- Upload vers TestFlight
+- Troubleshooting complet
+
+**Voir également:**
+- ADR 002: `docs/decisions/eas-to-native-ios-build.md` (décision architecturale)
+- Build overview: `docs/development/builds/BUILDS_OVERVIEW.md`
 
 ---
 
@@ -54,27 +73,37 @@
 
 **⚠️ Important:** `plugins: []` - Pas besoin du plugin `expo-notifications` pour les notifications locales. Le plugin active les Push Notifications remote qui nécessitent un provisioning profile spécifique.
 
-### eas.json
-```json
-{
-  "cli": {
-    "version": ">= 16.13.4",
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "production": {
-      "autoIncrement": true
-    }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "ascAppId": "6752913010"
-      }
-    }
-  }
-}
+---
+
+## 🏗️ Workflow Build Natif (v1.1.0+)
+
+### Vue d'ensemble rapide
+
+```bash
+# 1. Générer workspace Xcode
+npx expo prebuild --platform ios
+cd ios/ && pod install && cd ..
+
+# 2. Ouvrir dans Xcode
+open ios/ResetPulse.xcworkspace
+
+# 3. Configuration Xcode (première fois)
+# - Signing & Capabilities > Team: YNG7STJX5U
+# - + Capability > In-App Purchase
+# - Vérifier Background Modes > Audio
+
+# 4. Build & Archive
+# - Xcode: Product > Archive (⌘⇧B)
+# - Organizer: Distribute App > App Store Connect
+# - Upload vers TestFlight
+
+# 5. Processing Apple (5-15 minutes)
+# - App Store Connect: https://appstoreconnect.apple.com/apps/6752913010/testflight/ios
 ```
+
+**Guide complet:** `docs/devlog/ios-native-build-setup.md`
+
+---
 
 ## Credentials & Identifiants
 
@@ -91,79 +120,85 @@
 - **Developer Portal ID**: UVK2S43525
 - **Status**: Active
 - **Expiration**: 05/07/2026
-- **Capabilities**: Push Notifications (pour expo-notifications)
+- **Capabilities**: In-App Purchase, Background Modes (Audio)
 
-## Process de Build avec EAS
+---
 
-### 1. Build Production
+## 🎉 Versions Déployées
 
-```bash
-eas build --platform ios --profile production
-```
-
-**Étapes clés:**
-1. Auto-increment buildNumber (géré par EAS)
-2. Utilise les credentials remote (EAS servers)
-3. Génère l'IPA signé
-
-### 2. Questions Importantes lors du Build
-
-#### Push Notifications Setup
-```
-? Would you like to set up Push Notifications for your project? › No
-```
-**Répondre: No** - On utilise uniquement des notifications locales, pas de push serveur.
-
-#### Push Notifications Service Key
-```
-? Generate a new Apple Push Notifications service key? › No
-```
-**Répondre: No** - Pas besoin de P8 key pour notifications locales.
-
-### 3. Submit vers TestFlight
-
-```bash
-eas submit --platform ios --latest
-```
-
-Ou en non-interactif (nécessite ascAppId dans eas.json):
-```bash
-eas submit --platform ios --latest --non-interactive
-```
-
-## 🎉 SUCCÈS CONFIRMÉ - SDK 54 NEW ARCHITECTURE
-
-- **Version déployée**: 1.0.4 (buildNumber 13)
+### v1.0.4 - Build EAS (Dernier avant migration)
+- **BuildNumber**: 13
 - **SDK 54**: React Native 0.81.5 + New Architecture activée ✅
 - **React 19**: Migration complète
-- **Build time**: ~10-15 minutes (EAS cloud)
-- **TestFlight**: Traitement Apple 5-10 minutes après submit
+- **Method**: EAS Build cloud
+- **TestFlight**: Distribué avec succès
 
-### Liens TestFlight
-- **URL**: https://appstoreconnect.apple.com/apps/6752913010/testflight/ios
-- **Submission Details**: https://expo.dev/accounts/irim/projects/resetPulse/submissions
+### v1.1.0+ - Build Natif Xcode
+- **Method**: Build local Xcode
+- **Raison migration**: Support In-App Purchase (entitlement manquant avec EAS)
+- **Documentation**: `docs/devlog/ios-native-build-setup.md`
 
-## Problèmes Courants (RÉSOLUS ✅)
+### Liens Utiles
+- **App Store Connect**: https://appstoreconnect.apple.com/apps/6752913010/testflight/ios
+- **Developer Portal**: https://developer.apple.com/account
+- **Xcode Organizer**: ⌘⇧O dans Xcode
 
-### Provisioning Profile doesn't support Push Notifications
-**Cause**: Plugin `expo-notifications` active automatiquement Push Notifications capability même pour notifications locales.
+---
 
-**Solution**:
-1. Supprimer le provisioning profile ancien sur expo.dev/credentials
-2. Relancer le build → EAS génère nouveau profile avec Push Notifications
-3. Répondre "No" aux questions sur Push Notifications setup (pas de remote push)
+## ⚠️ Migration EAS → Build Natif (Historique)
 
-### expo-notifications nécessite Push Notifications capability
-**Comprendre**:
-- La **librairie** `expo-notifications` dans package.json active automatiquement la capability
-- Même pour notifications **locales uniquement**
-- Le provisioning profile **doit inclure** Push Notifications capability
-- Mais on n'a **pas besoin** de Push Notifications service key (P8)
+### Problème Rencontré (v1.1.0)
+**Symptôme:** Tests RevenueCat IAP échouent avec "Purchases are disabled for this app"
 
-### Duplicate dependencies warnings (expo doctor)
-**Impact**: Non bloquant pour le build
-- `react` duplicates via `jest-expo` → Dev dependencies uniquement
-- Patch versions mineures → Fonctionnel, juste pas dernières patches
+**Root cause:** L'entitlement `com.apple.developer.in-app-purchases` n'était pas injecté dans les IPA générés par EAS Build.
+
+**Vérification:**
+```bash
+codesign -d --entitlements - ResetPulse.ipa
+# Entitlement IAP absent ❌
+```
+
+**Temps perdu:** 3 jours de debugging, multiples rebuilds.
+
+### Solution : Build Natif Xcode
+**Contrôle total sur capabilities/entitlements via Xcode UI**
+- Signing & Capabilities tab
+- + Capability > In-App Purchase
+- Entitlement garanti présent dans IPA final
+
+**Décision documentée:** ADR 002 (`docs/decisions/eas-to-native-ios-build.md`)
+
+**Guide complet setup:** `docs/devlog/ios-native-build-setup.md`
+
+---
+
+## Troubleshooting Courants
+
+### Build Natif : "No such module 'ExpoModulesCore'"
+**Solution:**
+```bash
+cd ios/
+rm -rf Pods/ Podfile.lock
+pod install
+cd ..
+```
+
+### Build Natif : "Provisioning profile doesn't match entitlements"
+**Solution:**
+- Xcode Preferences > Accounts > Download Manual Profiles
+- Ou: Automatic signing (Xcode gère)
+- Ou: Developer Portal > Regenerate profile avec capabilities à jour
+
+### RevenueCat : "Purchases disabled" malgré entitlement présent
+**Vérifier:**
+1. App Store Connect: Agreements, Tax, Banking complets
+2. RevenueCat Dashboard: Bundle ID + Shared secret OK
+3. Device: Sandbox account logged in (Settings > App Store)
+4. Clean install: Delete app + rebuild
+
+**Voir guide troubleshooting complet:** `docs/devlog/ios-native-build-setup.md`
+
+---
 
 ## Architecture Technique
 
@@ -183,35 +218,76 @@ eas submit --platform ios --latest --non-interactive
 - Son joue même app en arrière-plan
 - Essentiel pour timer avec son de fin
 
-### Build Auto-Increment
+### BuildNumber Management (Build Natif)
+**Manual increment dans app.json:**
 ```json
-"autoIncrement": true
+{
+  "expo": {
+    "version": "1.1.0",
+    "ios": {
+      "buildNumber": "15"  // Incrementer manuellement à chaque build
+    }
+  }
+}
 ```
-- EAS incrémente automatiquement le buildNumber
-- Évite les erreurs de version duplicate sur App Store Connect
 
-## Cycle de Test
+**Automation optionnelle:**
+```bash
+# Script increment-build.js
+node scripts/increment-build.js
+```
 
-1. **Build EAS** : `eas build --platform ios --profile production`
-2. **Submit TestFlight** : `eas submit --platform ios --latest`
-3. **Apple Processing** : 5-10 minutes
-4. **Internal Testing** : Testeurs externes via TestFlight
-5. **Feedback** → Fix → Rebuild
+Voir `docs/devlog/ios-native-build-setup.md` pour script complet.
+
+---
+
+## Cycle de Build & Test (v1.1.0+)
+
+### Workflow Build Natif
+
+1. **Increment buildNumber** : Éditer `app.json`
+2. **Prebuild** : `npx expo prebuild --platform ios` (si modifications natives)
+3. **Build & Archive** : Xcode > Product > Archive (⌘⇧B)
+4. **Upload TestFlight** : Xcode Organizer > Distribute App
+5. **Apple Processing** : 5-15 minutes
+6. **Distribute** : TestFlight > Add build to test group
+7. **Feedback** → Fix → Rebuild
+
+### Quand regenerer workspace (prebuild)
+- ✅ Après ajout plugin expo dans app.json
+- ✅ Après modification capabilities/entitlements
+- ✅ Après update SDK Expo majeur
+- ❌ PAS pour modifications code JS uniquement (src/)
+- ❌ PAS pour modifications assets (images, fonts)
+
+---
 
 ## Commandes Utiles
 
+### Build Natif
 ```bash
-# Voir les builds
-eas build:list --platform ios
+# Générer workspace Xcode
+npx expo prebuild --platform ios
 
-# Voir les submissions
-eas submit:list --platform ios
+# Installer pods
+cd ios/ && pod install && cd ..
 
-# Gérer les credentials (interactif)
-eas credentials --platform ios
+# Ouvrir Xcode
+open ios/ResetPulse.xcworkspace
 
-# Upgrade EAS CLI
-npm install -g eas-cli@latest
+# Clean build artifacts
+cd ios/ && rm -rf build/ Pods/ Podfile.lock && cd ..
+
+# Vérifier entitlements dans IPA
+codesign -d --entitlements - path/to/ResetPulse.ipa
+```
+
+### Historique EAS (référence v1.0.4)
+```bash
+# Builds EAS (plus utilisé v1.1.0+)
+# eas build --platform ios --profile production
+# eas submit --platform ios --latest
+# eas credentials --platform ios
 ```
 
 ## Notes SDK 54
