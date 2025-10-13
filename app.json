@@ -2,7 +2,7 @@
   "expo": {
     "name": "ResetPulse",
     "slug": "resetPulse",
-    "version": "1.1.2",
+    "version": "1.1.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -15,6 +15,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.irimwebforge.resetpulse",
+      "entitlements": {
+        "com.apple.developer.in-app-purchases": []
+      },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "UIBackgroundModes": [
