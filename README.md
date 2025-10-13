@@ -50,6 +50,31 @@ open ios/ResetPulse.xcworkspace
 
 ---
 
+## ⚠️ Known Issues
+
+### 🔴 iOS Builds Bloqués (13/10/2025)
+
+**Status:** BLOCKED - Attente Apple Developer Support
+
+**Problème:** Impossible de builder iOS (Xcode + EAS). Les provisioning profiles générés par Apple ne contiennent pas l'entitlement `com.apple.developer.in-app-purchases` malgré configuration complète:
+- ✓ App ID capability "In-App Purchase" activée
+- ✓ Paid Apps Agreement signé
+- ✓ IAP product créé (Ready to Submit)
+
+**Impact:**
+- v1.1.0 monétisation bloquée sur iOS
+- Android builds fonctionnels
+
+**Actions en cours:**
+- Ticket Apple Developer Support ouvert (ETA 48-72h)
+- Documentation complète: ADR 003
+
+**Détails:** `docs/decisions/apple-provisioning-profile-iap-failure.md`
+
+**Timeline troubleshooting:** `docs/devlog/ios-iap-entitlement-troubleshooting.md`
+
+---
+
 ## Documentation
 
 - **Builds:** `docs/development/builds/` - Configuration Android/iOS
