@@ -19,7 +19,7 @@ export const REVENUECAT_CONFIG = {
 
 // Produit unique: one-time purchase
 export const PRODUCT_IDS = {
-  premium_lifetime: "com.irimwebforge.resetpulse.premium",
+  premium_lifetime: "com.irimwebforge.resetpulse.premium_lifetime",
 };
 
 // Entitlement unique
