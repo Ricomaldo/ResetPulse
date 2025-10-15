@@ -33,6 +33,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Les sections disparaissent instantanément lors du toggle dans les settings
   - Animations d'entrée préservées (translateX, translateY, scale au démarrage)
 
+- **Bouton "Relancer le guide"** - Le bouton dans les settings ne relançait pas l'écran de bienvenue
+  - `SettingsModal.jsx:900`: Appelle maintenant `resetOnboarding()` au lieu de `startTooltips()`
+  - Comportement corrigé: Affiche l'écran de bienvenue complet puis les tooltips
+  - Avant: Relançait seulement les tooltips (sans WelcomeScreen)
+  - Après: Réinitialise complètement l'onboarding (WelcomeScreen + tooltips)
+  - Description mise à jour: "Afficher à nouveau l'écran de bienvenue et les conseils"
+
 #### Changed
 - **Réorganisation des settings** - Ordre optimisé : Fonction → Technique → Forme
   - `SettingsModal.jsx`: Architecture repensée avec priorités claires pour UX neuroatypique
