@@ -886,7 +886,7 @@ export default function SettingsModal({ visible, onClose }) {
                       { marginTop: theme.spacing.xs },
                     ]}
                   >
-                    Version 1.1.4
+                    Version 1.1.5
                   </Text>
                 </View>
               </View>

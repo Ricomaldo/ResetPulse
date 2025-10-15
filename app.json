@@ -2,7 +2,7 @@
   "expo": {
     "name": "ResetPulse",
     "slug": "resetPulse",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -17,7 +17,9 @@
       "bundleIdentifier": "com.irimwebforge.resetpulse",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "plugins": [
@@ -26,7 +28,9 @@
         {
           "icon": "./assets/icon.png",
           "color": "#4A5568",
-          "sounds": ["./assets/sounds/bell_short.wav"]
+          "sounds": [
+            "./assets/sounds/bell_short.wav"
+          ]
         }
       ]
     ],
@@ -42,7 +46,9 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.irimwebforge.resetpulse",
-      "permissions": ["android.permission.SCHEDULE_EXACT_ALARM"]
+      "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
