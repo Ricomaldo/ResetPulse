@@ -896,17 +896,17 @@ export default function SettingsModal({ visible, onClose }) {
                 style={styles.optionRow}
                 onPress={() => {
                   haptics.selection().catch(() => {});
+                  // Reset l'onboarding complet (WelcomeScreen + tooltips)
+                  resetOnboarding();
+                  // Fermer le modal pour laisser le WelcomeScreen apparaître
                   onClose();
-                  setTimeout(() => {
-                    startTooltips();
-                  }, 300);
                 }}
                 activeOpacity={0.7}
               >
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optionLabel}>Relancer le guide</Text>
                   <Text style={styles.optionDescription}>
-                    Afficher à nouveau les conseils de démarrage
+                    Afficher à nouveau l'écran de bienvenue et les conseils
                   </Text>
                 </View>
               </TouchableOpacity>
