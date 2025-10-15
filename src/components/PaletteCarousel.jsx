@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { useTimerPalette } from "../contexts/TimerPaletteContext";
-import { useOnboarding } from "./onboarding/OnboardingController";
 import { rs } from "../styles/responsive";
 import { TIMER_PALETTES } from "../config/timerPalettes";
 import { usePremiumStatus } from "../hooks/usePremiumStatus";
@@ -28,7 +27,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     setColorIndex,
     getAvailablePalettes,
   } = useTimerPalette();
-  const { onboardingCompleted, currentTooltip, highlightedElement } = useOnboarding();
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
@@ -36,9 +34,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const { isPremium: isPremiumUser } = usePremiumStatus(); // Check premium status
   const PALETTE_NAMES = Object.keys(TIMER_PALETTES);
   const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
-
-  // Mode DEMO : Pendant l'onboarding, pas de modal premium (user peut tout essayer)
-  const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
   // Scroll to current palette on mount
   useEffect(() => {
@@ -320,21 +315,19 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                       styles.colorButtonActive,
                   ]}
                   onPress={() => {
-                    // Mode DEMO : Pendant onboarding, permettre sélection premium sans modal
-                    if (isLocked && !isOnboardingActive) {
+                    if (isLocked) {
+                      // Trigger premium modal on tap
                       haptics.warning().catch(() => {});
                       setShowPremiumModal(true);
-                      return;
-                    }
-
-                    // Sélection normale (premium ou pas)
-                    if (isCurrentPalette) {
-                      setColorIndex(colorIndex);
                     } else {
-                      // Switch to that palette
-                      setPalette(paletteName);
-                      setColorIndex(colorIndex);
-                      showPaletteName();
+                      if (isCurrentPalette) {
+                        setColorIndex(colorIndex);
+                      } else {
+                        // Switch to that palette
+                        setPalette(paletteName);
+                        setColorIndex(colorIndex);
+                        showPaletteName();
+                      }
                     }
                   }}
                   activeOpacity={0.7}
@@ -347,10 +340,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                   style={styles.unlockBadge}
                   onPress={() => {
                     haptics.warning().catch(() => {});
-                    // Mode DEMO : Pas de modal pendant onboarding
-                    if (!isOnboardingActive) {
-                      setShowPremiumModal(true);
-                    }
+                    setShowPremiumModal(true);
                   }}
                   activeOpacity={0.8}
                   accessible={true}
