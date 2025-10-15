@@ -701,6 +701,66 @@ security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovisi
 
 ---
 
-**Dernière mise à jour:** 13 Octobre 2025 16:00
-**Status:** 🔴 BLOCKED - Attente Apple Developer Support
-**Prochain update:** Après réponse Apple ou découverte workaround
+## ✅ RÉSOLUTION FINALE - 15 Octobre 2025
+
+**Status:** ✅ RÉSOLU - IAP sandbox opérationnel
+
+### TL;DR: DEUX Bugs Indépendants
+
+1. **Bug #1 (Bloquant):** Entitlement fantôme `com.apple.developer.in-app-purchases`
+   - **Problème:** Présent dans `app.json`, mais cet entitlement **N'EXISTE PAS** (confirmé DTS Apple)
+   - **Fix:** Supprimé de `app.json` ios.entitlements
+   - **Impact:** Builds iOS maintenant fonctionnels
+
+2. **Bug #2 (Code):** Incorrect product identifier path dans `PremiumModal.jsx:72`
+   - **Problème:** Utilisait `premiumPackage.identifier` au lieu de `premiumPackage.product.identifier`
+   - **Fix:** Changé vers `.product.identifier`
+   - **Impact:** RevenueCat trouve maintenant le product App Store
+
+### Réponse Apple Developer Support (DTS)
+
+> "The `com.apple.developer.in-app-purchases` entitlement does not exist.
+> In-App Purchases use StoreKit framework without requiring entitlements.
+> Only the capability on App ID is needed, not an entitlement in code."
+
+**Explication:**
+- ✅ **Capability** "In-App Purchase" sur App ID (Developer Portal) = REQUIS
+- ❌ **Entitlement** dans code/app.json = N'EXISTE PAS pour IAP
+- Documentation obsolète/tiers-party sources de confusion
+
+### Validation Sandbox (15 Octobre)
+
+**Tests réussis iPhone physique:**
+```
+✅ Product ID found: com.irimwebforge.resetpulse.premium_lifetime
+✅ StoreKit sheet: 4,99€ avec trial 7 jours
+✅ Purchase successful
+✅ Entitlement "premium_access" actif
+✅ Premium content débloqué
+```
+
+### Timeline Résolution
+
+**10-13 Oct:** Debugging Bug #1 (entitlement blocker)
+- Migration Xcode, analyse profiles, escalade Apple
+
+**14 Oct:** Bug #1 résolu
+- Suppression entitlement → Builds fonctionnels
+
+**15 Oct:** Bug #2 découvert et résolu
+- Sandbox testing révèle `.identifier` incorrect
+- Fix vers `.product.identifier` → IAP opérationnel
+
+### Documentation Complète
+
+**Résolution détaillée:** `docs/devlog/iap-resolution-final.md`
+- Timeline complète des deux bugs
+- Troubleshooting guide "Product not found"
+- Configuration finale opérationnelle
+- Learnings critiques
+
+---
+
+**Dernière mise à jour:** 15 Octobre 2025
+**Status:** ✅ RÉSOLU - IAP fonctionnel
+**Prochain step:** Deploy TestFlight v1.1.4+

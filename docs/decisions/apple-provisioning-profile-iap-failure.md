@@ -1,9 +1,11 @@
 # ADR 003 - Blocage Apple: Provisioning Profile sans Entitlement IAP
 
-**Status:** BLOCKED - Attente réponse Apple Developer Support
-**Date:** 13 Octobre 2025
-**Décideurs:** Eric (dev) + Apple Developer Support
+**Status:** ✅ RESOLVED - Entitlement fantôme supprimé + Code fix
+**Date initiale:** 13 Octobre 2025
+**Date résolution:** 15 Octobre 2025
+**Décideurs:** Eric (dev) + Apple DTS Engineer
 **Context:** Impossible de builder iOS - Provisioning profiles ne contiennent pas l'entitlement IAP
+**Résolution:** Entitlement n'existe pas (fantôme) + Bug code product identifier
 
 ---
 
@@ -401,6 +403,109 @@ security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovisi
 
 ---
 
-**Version:** 1.0
-**Statut:** BLOCKED - Attente Apple
-**Prochain update:** Après réponse Apple Support (ETA 48-72h)
+## ✅ RÉSOLUTION - 15 Octobre 2025
+
+### Root Cause Confirmée: Entitlement Fantôme
+
+**Réponse Apple Developer Technical Support:**
+
+> "The `com.apple.developer.in-app-purchases` entitlement **does not exist**.
+> In-App Purchases use StoreKit framework without requiring entitlements in code.
+> Only the App ID capability is needed on Developer Portal."
+
+**Explication:**
+- Cet entitlement était dans `app.json` suite à documentation obsolète/tiers-party
+- Apple ne génère JAMAIS cet entitlement car il n'existe pas dans leur système
+- Confusion entre:
+  - **Capability** "In-App Purchase" (Developer Portal) → ✅ Requis
+  - **Entitlement** code/plist → ❌ N'existe pas pour IAP
+
+### Solution Appliquée
+
+**Fix #1 - Suppression Entitlement:**
+```json
+// app.json - AVANT (INCORRECT)
+"ios": {
+  "entitlements": {
+    "com.apple.developer.in-app-purchases": []
+  }
+}
+
+// app.json - APRÈS (CORRECT)
+"ios": {
+  // PAS d'entitlements IAP nécessaires
+  "infoPlist": {
+    "UIBackgroundModes": ["audio"]
+  }
+}
+```
+
+**Résultat:** Builds iOS fonctionnels (Xcode + EAS) ✅
+
+**Fix #2 - Bug Code Révélé:**
+
+Après Fix #1, sandbox testing révèle deuxième bug indépendant:
+
+```javascript
+// PremiumModal.jsx:72
+// ❌ AVANT
+await purchaseProduct(premiumPackage.identifier);  // "premium"
+
+// ✅ APRÈS
+await purchaseProduct(premiumPackage.product.identifier);  // "com.app.premium"
+```
+
+RevenueCat Package structure:
+- `package.identifier` = Package name ("premium")
+- `package.product.identifier` = App Store Product ID
+
+### Validation Finale
+
+**Tests sandbox réussis (15 Octobre):**
+- ✅ Product ID: `com.irimwebforge.resetpulse.premium_lifetime`
+- ✅ StoreKit sheet: 4,99€ avec trial 7 jours
+- ✅ Purchase flow complet
+- ✅ Entitlement activation
+- ✅ Premium content unlock
+
+### Impact Projet
+
+**v1.1.0 Timeline:**
+- Initialement bloqué: 10-13 Octobre
+- Résolu: 15 Octobre
+- Décalage: 5 jours (acceptable)
+- Prochaine étape: TestFlight v1.1.4+
+
+### Learnings
+
+1. **Documentation Obsolète Dangereuse:**
+   - 4 jours perdus sur un entitlement qui n'existe pas
+   - Toujours vérifier avec Apple DTS en cas de doute
+
+2. **Bug Masking:**
+   - Bug #1 (entitlement) masquait Bug #2 (code)
+   - Tester sandbox immédiatement après chaque fix
+
+3. **Capability vs Entitlement:**
+   - Capability = Configuration Apple backend
+   - Entitlement = Permissions code explicites
+   - IAP nécessite seulement capability, PAS entitlement
+
+4. **RevenueCat API:**
+   - Structure Package non-intuitive
+   - Toujours utiliser `.product.identifier` pour achats
+
+### Documentation Complète
+
+**Résolution détaillée:** `docs/devlog/iap-resolution-final.md`
+- Timeline 1 semaine debugging
+- Deux bugs indépendants documentés
+- Troubleshooting guide "Product not found"
+- Configuration finale opérationnelle
+
+---
+
+**Version:** 2.0 (Resolved)
+**Statut:** ✅ RÉSOLU
+**Date résolution:** 15 Octobre 2025
+**Prochain step:** Deploy TestFlight + Monitoring conversion
