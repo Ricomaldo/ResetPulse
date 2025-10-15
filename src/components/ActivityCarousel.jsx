@@ -4,6 +4,7 @@ import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platfor
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { useOnboarding } from './onboarding/OnboardingController';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities } from '../config/activities';
 import haptics from '../utils/haptics';
@@ -20,13 +21,19 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     activityDurations = {}
   } = useTimerOptions();
   const { setColorByType, currentColor } = useTimerPalette();
+  const { onboardingCompleted, currentTooltip } = useOnboarding();
   const scrollViewRef = useRef(null);
   const scaleAnims = useRef({}).current; // Store animation values for each activity
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const toastAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // Check premium status (test mode or actual premium)
   const { isPremium: isPremiumUser } = usePremiumStatus();
+
+  // Mode DEMO: pendant l'onboarding, pas de modal premium (toast léger à la place)
+  const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
   // Get all activities and sort by favorites
   const allActivities = getAllActivities();
@@ -107,9 +114,35 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     ]).start();
   };
 
+  // Show toast message for onboarding
+  const showToast = (message) => {
+    setToastMessage(message);
+    Animated.sequence([
+      Animated.timing(toastAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.delay(2000),
+      Animated.timing(toastAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setToastMessage(''));
+  };
+
   const handleActivityPress = (activity) => {
     if (activity.isPremium && !isPremiumUser) {
       haptics.warning().catch(() => {});
+
+      // Pendant l'onboarding: toast léger au lieu de modal
+      if (isOnboardingActive) {
+        showToast('Terminez le guide pour découvrir les activités premium !');
+        return;
+      }
+
+      // Après l'onboarding: modal normale
       setShowPremiumModal(true);
       return;
     }
@@ -239,6 +272,25 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
       fontWeight: '600',
       color: theme.colors.text,
     },
+
+    onboardingToast: {
+      position: 'absolute',
+      bottom: rs(50, 'height'),
+      alignSelf: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+      borderRadius: theme.borderRadius.lg,
+      maxWidth: '80%',
+      ...theme.shadow('lg'),
+    },
+
+    onboardingToastText: {
+      fontSize: rs(13, 'min'),
+      fontWeight: '600',
+      color: '#FFFFFF',
+      textAlign: 'center',
+    },
   });
 
   return (
@@ -326,6 +378,27 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
         onClose={() => setShowPremiumModal(false)}
         highlightedFeature="activités premium"
       />
+
+      {/* Onboarding Toast */}
+      {toastMessage !== '' && (
+        <Animated.View
+          style={[
+            styles.onboardingToast,
+            {
+              opacity: toastAnim,
+              transform: [{
+                translateY: toastAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0]
+                })
+              }]
+            }
+          ]}
+          pointerEvents="none"
+        >
+          <Text style={styles.onboardingToastText}>{toastMessage}</Text>
+        </Animated.View>
+      )}
     </View>
   );
 }

@@ -5,6 +5,26 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.5] - 2025-10-15
+
+### 🎯 Fixed - Onboarding Premium UX
+
+#### Fixed
+- **Premium content pendant onboarding** - Cliquer sur du contenu premium pendant le guide ouvrait la PremiumModal et interrompait le flow
+  - `ActivityCarousel.jsx` + `PaletteCarousel.jsx`: Toast léger à la place de la modal pendant onboarding
+  - Toast message: "Terminez le guide pour découvrir les [activités/palettes] premium !"
+  - Animation slide-up douce (300ms) avec disparition automatique après 2s
+  - Haptic feedback warning préservé
+  - Après onboarding: Comportement normal (modal s'affiche)
+  - UX non-bloquante: L'utilisateur peut continuer le guide sans interruption
+
+#### Technical
+- **Files Modified**: 2 (ActivityCarousel, PaletteCarousel)
+- **New State**: `toastMessage` + `toastAnim` pour affichage toast
+- **Condition**: `isOnboardingActive = !onboardingCompleted && currentTooltip !== null`
+- **Rollback**: Mode démo complet abandonné (problèmes highlight + clics premium non fonctionnels)
+- **Design Philosophy**: UX fluide - informer sans bloquer, pas de friction pendant découverte
+
 ## [Unreleased] - 2025-10-09
 
 ### 🐛 Fixed - Interface Minimaliste & Settings UX

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { useTimerPalette } from "../contexts/TimerPaletteContext";
+import { useOnboarding } from "./onboarding/OnboardingController";
 import { rs } from "../styles/responsive";
 import { TIMER_PALETTES } from "../config/timerPalettes";
 import { usePremiumStatus } from "../hooks/usePremiumStatus";
@@ -27,13 +28,19 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     setColorIndex,
     getAvailablePalettes,
   } = useTimerPalette();
+  const { onboardingCompleted, currentTooltip } = useOnboarding();
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const toastAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const { isPremium: isPremiumUser } = usePremiumStatus(); // Check premium status
   const PALETTE_NAMES = Object.keys(TIMER_PALETTES);
   const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
+
+  // Mode DEMO: pendant l'onboarding, pas de modal premium (toast léger à la place)
+  const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
   // Scroll to current palette on mount
   useEffect(() => {
@@ -62,6 +69,24 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         useNativeDriver: true,
       }),
     ]).start();
+  };
+
+  // Show toast message for onboarding
+  const showToast = (message) => {
+    setToastMessage(message);
+    Animated.sequence([
+      Animated.timing(toastAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.delay(2000),
+      Animated.timing(toastAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setToastMessage(''));
   };
 
   // Handle scroll end to detect palette change
@@ -190,6 +215,26 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       color: "#FFFFFF",
       letterSpacing: 0.3,
     },
+
+    onboardingToast: {
+      position: 'absolute',
+      bottom: rs(50, 'height'),
+      alignSelf: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+      borderRadius: theme.borderRadius.lg,
+      maxWidth: '80%',
+      ...theme.shadows.lg,
+      zIndex: 100,
+    },
+
+    onboardingToastText: {
+      fontSize: rs(13, 'min'),
+      fontWeight: '600',
+      color: '#FFFFFF',
+      textAlign: 'center',
+    },
   });
 
   // Navigation functions
@@ -316,8 +361,15 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                   ]}
                   onPress={() => {
                     if (isLocked) {
-                      // Trigger premium modal on tap
                       haptics.warning().catch(() => {});
+
+                      // Pendant l'onboarding: toast léger au lieu de modal
+                      if (isOnboardingActive) {
+                        showToast('Terminez le guide pour découvrir les palettes premium !');
+                        return;
+                      }
+
+                      // Après l'onboarding: modal normale
                       setShowPremiumModal(true);
                     } else {
                       if (isCurrentPalette) {
@@ -340,6 +392,14 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                   style={styles.unlockBadge}
                   onPress={() => {
                     haptics.warning().catch(() => {});
+
+                    // Pendant l'onboarding: toast léger au lieu de modal
+                    if (isOnboardingActive) {
+                      showToast('Terminez le guide pour découvrir les palettes premium !');
+                      return;
+                    }
+
+                    // Après l'onboarding: modal normale
                     setShowPremiumModal(true);
                   }}
                   activeOpacity={0.8}
@@ -376,6 +436,27 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         onClose={() => setShowPremiumModal(false)}
         highlightedFeature="palettes premium"
       />
+
+      {/* Onboarding Toast */}
+      {toastMessage !== '' && (
+        <Animated.View
+          style={[
+            styles.onboardingToast,
+            {
+              opacity: toastAnim,
+              transform: [{
+                translateY: toastAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0]
+                })
+              }]
+            }
+          ]}
+          pointerEvents="none"
+        >
+          <Text style={styles.onboardingToastText}>{toastMessage}</Text>
+        </Animated.View>
+      )}
     </View>
   );
 }
