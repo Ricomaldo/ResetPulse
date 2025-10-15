@@ -15,14 +15,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.irimwebforge.resetpulse",
-      "entitlements": {
-        "com.apple.developer.in-app-purchases": []
-      },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "UIBackgroundModes": [
-          "audio"
-        ]
+        "UIBackgroundModes": ["audio"]
       }
     },
     "plugins": [
@@ -31,9 +26,7 @@
         {
           "icon": "./assets/icon.png",
           "color": "#4A5568",
-          "sounds": [
-            "./assets/sounds/bell_short.wav"
-          ]
+          "sounds": ["./assets/sounds/bell_short.wav"]
         }
       ]
     ],
@@ -49,9 +42,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.irimwebforge.resetpulse",
-      "permissions": [
-        "android.permission.SCHEDULE_EXACT_ALARM"
-      ]
+      "permissions": ["android.permission.SCHEDULE_EXACT_ALARM"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
