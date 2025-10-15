@@ -1,7 +1,7 @@
 // src/components/PremiumModal.jsx
 // Phase 4 - Premium Modal UI
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Modal,
   View,
@@ -11,20 +11,26 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
-} from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { usePurchases } from '../contexts/PurchaseContext';
-import { rs } from '../styles/responsive';
-import haptics from '../utils/haptics';
+} from "react-native";
+import { useTheme } from "../theme/ThemeProvider";
+import { usePurchases } from "../contexts/PurchaseContext";
+import { rs } from "../styles/responsive";
+import haptics from "../utils/haptics";
 
 export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   const theme = useTheme();
-  const { purchaseProduct, restorePurchases, getOfferings, isPurchasing: contextPurchasing } = usePurchases();
+  const {
+    purchaseProduct,
+    restorePurchases,
+    getOfferings,
+    isPurchasing: contextPurchasing,
+  } = usePurchases();
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
 
   // Combined loading state (local + context)
-  const isAnyOperationInProgress = isPurchasing || isRestoring || contextPurchasing;
+  const isAnyOperationInProgress =
+    isPurchasing || isRestoring || contextPurchasing;
 
   const handlePurchase = async () => {
     try {
@@ -35,22 +41,27 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       const offerings = await getOfferings();
 
       // Handle network error from getOfferings
-      if (offerings?.error === 'network') {
+      if (offerings?.error === "network") {
         Alert.alert(
-          'Pas de connexion',
-          'Impossible de charger les offres. Vérifiez votre connexion internet.',
-          [{ text: 'OK' }]
+          "Pas de connexion",
+          "Impossible de charger les offres. Vérifiez votre connexion internet.",
+          [{ text: "OK" }]
         );
         setIsPurchasing(false);
         return;
       }
 
       // Handle other errors or missing offerings
-      if (!offerings || offerings.error || !offerings.availablePackages || offerings.availablePackages.length === 0) {
+      if (
+        !offerings ||
+        offerings.error ||
+        !offerings.availablePackages ||
+        offerings.availablePackages.length === 0
+      ) {
         Alert.alert(
-          'Erreur',
-          'Impossible de récupérer les offres. Réessayez plus tard.',
-          [{ text: 'OK' }]
+          "Erreur",
+          "Impossible de récupérer les offres. Réessayez plus tard.",
+          [{ text: "OK" }]
         );
         setIsPurchasing(false);
         return;
@@ -58,46 +69,38 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
 
       // Get the first package (should be our premium_lifetime)
       const premiumPackage = offerings.availablePackages[0];
-      const result = await purchaseProduct(premiumPackage.identifier);
+      const result = await purchaseProduct(premiumPackage.product.identifier);
 
       if (result.success) {
         haptics.success().catch(() => {});
         Alert.alert(
-          'Bienvenue Premium ! 🎉',
-          'Toutes les palettes et activités sont maintenant débloquées.',
-          [{ text: 'Super !', onPress: onClose }]
+          "Bienvenue Premium ! 🎉",
+          "Toutes les palettes et activités sont maintenant débloquées.",
+          [{ text: "Super !", onPress: onClose }]
         );
       } else if (result.cancelled) {
         // User cancelled, silent
       } else if (result.isNetworkError) {
         // Network error - user-friendly message
-        Alert.alert(
-          'Pas de connexion',
-          result.error,
-          [{ text: 'OK' }]
-        );
+        Alert.alert("Pas de connexion", result.error, [{ text: "OK" }]);
       } else if (result.isPaymentPending) {
         // Payment pending - informative message
-        Alert.alert(
-          'Paiement en cours',
-          result.error,
-          [{ text: 'OK', onPress: onClose }]
-        );
+        Alert.alert("Paiement en cours", result.error, [
+          { text: "OK", onPress: onClose },
+        ]);
       } else {
         // Generic error
         Alert.alert(
-          'Erreur',
-          result.error || 'Une erreur est survenue lors de l\'achat.',
-          [{ text: 'OK' }]
+          "Erreur",
+          result.error || "Une erreur est survenue lors de l'achat.",
+          [{ text: "OK" }]
         );
       }
     } catch (error) {
-      console.error('[PremiumModal] Purchase error:', error);
-      Alert.alert(
-        'Erreur',
-        'Une erreur est survenue. Réessayez plus tard.',
-        [{ text: 'OK' }]
-      );
+      console.error("[PremiumModal] Purchase error:", error);
+      Alert.alert("Erreur", "Une erreur est survenue. Réessayez plus tard.", [
+        { text: "OK" },
+      ]);
     } finally {
       setIsPurchasing(false);
     }
@@ -114,39 +117,33 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
         if (result.hasPremium) {
           haptics.success().catch(() => {});
           Alert.alert(
-            'Restauration réussie',
-            'Vos achats ont été restaurés. Toutes les fonctionnalités premium sont débloquées.',
-            [{ text: 'Super !', onPress: onClose }]
+            "Restauration réussie",
+            "Vos achats ont été restaurés. Toutes les fonctionnalités premium sont débloquées.",
+            [{ text: "Super !", onPress: onClose }]
           );
         } else {
           Alert.alert(
-            'Aucun achat trouvé',
-            'Aucun achat précédent n\'a été trouvé pour ce compte.',
-            [{ text: 'OK' }]
+            "Aucun achat trouvé",
+            "Aucun achat précédent n'a été trouvé pour ce compte.",
+            [{ text: "OK" }]
           );
         }
       } else if (result.isNetworkError) {
         // Network error during restore
-        Alert.alert(
-          'Pas de connexion',
-          result.error,
-          [{ text: 'OK' }]
-        );
+        Alert.alert("Pas de connexion", result.error, [{ text: "OK" }]);
       } else {
         // Generic restore error
         Alert.alert(
-          'Erreur',
-          result.error || 'Impossible de restaurer vos achats.',
-          [{ text: 'OK' }]
+          "Erreur",
+          result.error || "Impossible de restaurer vos achats.",
+          [{ text: "OK" }]
         );
       }
     } catch (error) {
-      console.error('[PremiumModal] Restore error:', error);
-      Alert.alert(
-        'Erreur',
-        'Une erreur inattendue est survenue.',
-        [{ text: 'OK' }]
-      );
+      console.error("[PremiumModal] Restore error:", error);
+      Alert.alert("Erreur", "Une erreur inattendue est survenue.", [
+        { text: "OK" },
+      ]);
     } finally {
       setIsRestoring(false);
     }
@@ -165,11 +162,11 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
     overlay: {
       flex: 1,
       backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
+        ios: "rgba(0, 0, 0, 0.4)",
+        android: "rgba(0, 0, 0, 0.5)",
       }),
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
 
     modalContainer: {
@@ -178,14 +175,14 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
         ios: 16,
         android: 12,
       }),
-      width: '85%',
+      width: "85%",
       maxWidth: 400,
       padding: theme.spacing.xl,
-      ...theme.shadow('xl'),
+      ...theme.shadow("xl"),
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + '30',
+          borderColor: theme.colors.border + "30",
         },
         android: {},
       }),
@@ -196,10 +193,10 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
     },
 
     title: {
-      fontSize: rs(26, 'min'),
-      fontWeight: 'bold',
+      fontSize: rs(26, "min"),
+      fontWeight: "bold",
       color: theme.colors.text,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: theme.spacing.md,
     },
 
@@ -208,10 +205,10 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
     },
 
     bodyText: {
-      fontSize: rs(16, 'min'),
+      fontSize: rs(16, "min"),
       color: theme.colors.textSecondary,
-      textAlign: 'center',
-      lineHeight: rs(24, 'min'),
+      textAlign: "center",
+      lineHeight: rs(24, "min"),
       marginBottom: theme.spacing.lg,
     },
 
@@ -221,30 +218,30 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       padding: theme.spacing.lg,
       marginBottom: theme.spacing.lg,
       borderWidth: 2,
-      borderColor: theme.colors.brand.primary + '30',
+      borderColor: theme.colors.brand.primary + "30",
     },
 
     featuresText: {
-      fontSize: rs(18, 'min'),
-      fontWeight: '600',
+      fontSize: rs(18, "min"),
+      fontWeight: "600",
       color: theme.colors.text,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: theme.spacing.sm,
     },
 
     priceText: {
-      fontSize: rs(20, 'min'),
-      fontWeight: 'bold',
+      fontSize: rs(20, "min"),
+      fontWeight: "bold",
       color: theme.colors.brand.primary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: theme.spacing.xs,
     },
 
     trialText: {
-      fontSize: rs(14, 'min'),
+      fontSize: rs(14, "min"),
       color: theme.colors.textSecondary,
-      textAlign: 'center',
-      fontStyle: 'italic',
+      textAlign: "center",
+      fontStyle: "italic",
     },
 
     buttons: {
@@ -255,10 +252,10 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       backgroundColor: theme.colors.brand.primary,
       borderRadius: 12,
       padding: theme.spacing.lg,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       minHeight: 52,
-      ...theme.shadow('md'),
+      ...theme.shadow("md"),
     },
 
     primaryButtonDisabled: {
@@ -266,36 +263,36 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
     },
 
     primaryButtonText: {
-      fontSize: rs(17, 'min'),
-      fontWeight: '600',
-      color: '#FFFFFF',
+      fontSize: rs(17, "min"),
+      fontWeight: "600",
+      color: "#FFFFFF",
     },
 
     secondaryButton: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       borderRadius: 12,
       padding: theme.spacing.md,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       minHeight: 44,
     },
 
     secondaryButtonText: {
-      fontSize: rs(15, 'min'),
-      fontWeight: '500',
+      fontSize: rs(15, "min"),
+      fontWeight: "500",
       color: theme.colors.textSecondary,
     },
 
     restoreButton: {
       marginTop: theme.spacing.md,
       padding: theme.spacing.sm,
-      alignItems: 'center',
+      alignItems: "center",
     },
 
     restoreButtonText: {
-      fontSize: rs(13, 'min'),
+      fontSize: rs(13, "min"),
       color: theme.colors.textSecondary,
-      textDecorationLine: 'underline',
+      textDecorationLine: "underline",
     },
 
     loader: {
@@ -321,7 +318,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
           {/* Body */}
           <View style={styles.body}>
             <Text style={styles.bodyText}>
-              ResetPulse est gratuit et fonctionnel.{'\n'}
+              ResetPulse est gratuit et fonctionnel.{"\n"}
               Pour plus d'activités et de palettes, débloquez premium.
             </Text>
 
@@ -333,9 +330,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               <Text style={styles.priceText}>
                 4,99€ - Une fois, pour toujours
               </Text>
-              <Text style={styles.trialText}>
-                Trial gratuit 7 jours
-              </Text>
+              <Text style={styles.trialText}>Trial gratuit 7 jours</Text>
             </View>
           </View>
 
