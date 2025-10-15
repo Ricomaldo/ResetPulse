@@ -4,6 +4,7 @@ import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platfor
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { useOnboarding } from './onboarding/OnboardingController';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities } from '../config/activities';
 import haptics from '../utils/haptics';
@@ -20,6 +21,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     activityDurations = {}
   } = useTimerOptions();
   const { setColorByType, currentColor } = useTimerPalette();
+  const { onboardingCompleted, currentTooltip, highlightedElement } = useOnboarding();
   const scrollViewRef = useRef(null);
   const scaleAnims = useRef({}).current; // Store animation values for each activity
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -27,6 +29,9 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
   // Check premium status (test mode or actual premium)
   const { isPremium: isPremiumUser } = usePremiumStatus();
+
+  // Mode DEMO : Pendant l'onboarding, pas de modal premium (user peut tout essayer)
+  const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
   // Get all activities and sort by favorites
   const allActivities = getAllActivities();
@@ -108,7 +113,8 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   };
 
   const handleActivityPress = (activity) => {
-    if (activity.isPremium && !isPremiumUser) {
+    // Mode DEMO : Pendant onboarding, permettre sélection premium sans modal
+    if (activity.isPremium && !isPremiumUser && !isOnboardingActive) {
       haptics.warning().catch(() => {});
       setShowPremiumModal(true);
       return;
@@ -296,7 +302,6 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                 ]}
                 onPress={() => handleActivityPress(activity)}
                 activeOpacity={0.7}
-                disabled={false}
               >
                 <Animated.View
                   style={[
