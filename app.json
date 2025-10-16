@@ -16,8 +16,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.irimwebforge.resetpulse",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false,
-        "UIBackgroundModes": ["audio"]
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "plugins": [
