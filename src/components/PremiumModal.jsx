@@ -34,14 +34,25 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
 
   const handlePurchase = async () => {
     try {
+      console.log('[IAP] 🚀 Starting purchase flow...');
       setIsPurchasing(true);
       haptics.selection().catch(() => {});
 
       // Get offerings from RevenueCat
+      console.log('[IAP] 📡 Fetching offerings from RevenueCat...');
       const offerings = await getOfferings();
+
+      // Log offerings structure for debugging
+      console.log('[IAP] 📦 Offerings received:', {
+        hasOfferings: !!offerings,
+        hasError: !!offerings?.error,
+        errorType: offerings?.error || 'none',
+        packagesCount: offerings?.availablePackages?.length || 0,
+      });
 
       // Handle network error from getOfferings
       if (offerings?.error === "network") {
+        console.error('[IAP] ❌ Network error while fetching offerings');
         Alert.alert(
           "Pas de connexion",
           "Impossible de charger les offres. Vérifiez votre connexion internet.",
@@ -58,6 +69,11 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
         !offerings.availablePackages ||
         offerings.availablePackages.length === 0
       ) {
+        console.error('[IAP] ❌ No offerings available:', {
+          error: offerings?.error,
+          hasPackages: !!offerings?.availablePackages,
+          packagesLength: offerings?.availablePackages?.length
+        });
         Alert.alert(
           "Erreur",
           "Impossible de récupérer les offres. Réessayez plus tard.",
@@ -69,7 +85,26 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
 
       // Get the first package (should be our premium_lifetime)
       const premiumPackage = offerings.availablePackages[0];
+
+      // Log package details
+      console.log('[IAP] 📋 Package selected:', {
+        packageId: premiumPackage.identifier,
+        productId: premiumPackage.product.identifier,
+        price: premiumPackage.product.priceString,
+        title: premiumPackage.product.title,
+        description: premiumPackage.product.description,
+      });
+
+      console.log('[IAP] 💳 Initiating purchase for product:', premiumPackage.product.identifier);
       const result = await purchaseProduct(premiumPackage.product.identifier);
+
+      console.log('[IAP] ✅ Purchase result:', {
+        success: result.success,
+        cancelled: result.cancelled,
+        isNetworkError: result.isNetworkError,
+        isPaymentPending: result.isPaymentPending,
+        error: result.error || 'none',
+      });
 
       if (result.success) {
         haptics.success().catch(() => {});

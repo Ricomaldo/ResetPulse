@@ -5,6 +5,49 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.6] - 2025-10-16
+
+### 🛠️ Fixed - Apple Review Rejection Issues
+
+#### Fixed
+- **Audio Background Mode (Guideline 2.5.4)** - Removed unnecessary UIBackgroundModes capability
+  - `app.json:18-22`: Suppression de `UIBackgroundModes: ["audio"]` from iOS infoPlist
+  - Timer uses local notifications for background alerts (expo-notifications)
+  - Audio playback only when app is in foreground (expo-audio)
+  - Compliant with Apple Guideline 2.5.4: App does not require persistent audio session
+  - Justification: Notifications handle sound playback automatically through iOS notification system
+
+- **IAP Free Trial Button (Guideline 2.1)** - Enhanced error logging for purchase flow debugging
+  - `PremiumModal.jsx:37-107`: Added 7 detailed log points throughout purchase flow
+  - Log prefix `[IAP]` with emoji indicators for easy console filtering
+  - Logged data: offerings status, package details, product ID, price, purchase result
+  - Helps Apple reviewers and developers identify exact failure points
+  - All logs include structured objects for comprehensive debugging
+  - Error cases explicitly logged: network errors, missing offerings, store problems
+
+#### Changed
+- **Version bump**: 1.1.5 → 1.1.6
+- **Debug capability**: Production-ready logging without affecting user experience
+
+#### Technical
+- **Files Modified**: 2 (app.json, PremiumModal.jsx)
+- **iOS Configuration**: UIBackgroundModes removed from infoPlist
+- **IAP Logging**: 7 checkpoint logs added to purchase flow
+  - Start: `[IAP] 🚀 Starting purchase flow...`
+  - Fetch: `[IAP] 📡 Fetching offerings from RevenueCat...`
+  - Received: `[IAP] 📦 Offerings received:` + structure details
+  - Error: `[IAP] ❌ Network error` / `[IAP] ❌ No offerings available`
+  - Selected: `[IAP] 📋 Package selected:` + product details
+  - Initiated: `[IAP] 💳 Initiating purchase for product:`
+  - Result: `[IAP] ✅ Purchase result:` + status details
+- **Design Philosophy**: Debug visibility for Apple Review without breaking UX
+
+#### Apple Review Notes
+- Audio background removed: Timer now compliant with Guideline 2.5.4
+- IAP logging enhanced: Console logs help identify purchase flow issues
+- Product ID: `com.irimwebforge.resetpulse.premium_lifetime`
+- Free trial: 7 days (Introductory Offer configured in App Store Connect)
+
 ## [1.1.5] - 2025-10-15
 
 ### 🎯 Fixed - Onboarding Premium UX
