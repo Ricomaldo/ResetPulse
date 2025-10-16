@@ -56,16 +56,63 @@ export default function useNotificationTimer() {
   const notificationIdRef = useRef(null);
   const appStateRef = useRef(AppState.currentState);
 
+  // TEST : Notification immédiate pour vérifier permissions
+  const testNotification = async () => {
+    if (!notificationsAvailable) {
+      console.log('🧪 Test notification skipped - notifications not available');
+      return;
+    }
+
+    try {
+      const id = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "🧪 Test notification",
+          body: "Si tu vois ça, les permissions sont OK",
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 2,
+        },
+      });
+      console.log(`🧪 Test notification schedulée (ID: ${id}) - déclenchement dans 2 secondes`);
+    } catch (error) {
+      console.error("❌ Test notification failed:", error);
+    }
+  };
+
   // Demander permission au mount
   useEffect(() => {
     const requestPermissions = async () => {
       try {
-        const { status } = await Notifications.requestPermissionsAsync();
-        if (status !== 'granted') {
-          console.log('Notification permissions not granted');
+        // AVANT de demander - voir l'état réel
+        const existingStatus = await Notifications.getPermissionsAsync();
+        console.log('📱 Permissions AVANT requête:', existingStatus);
+        console.log('   Status:', existingStatus.status);
+        console.log('   Can ask again:', existingStatus.canAskAgain);
+        console.log('   Granted:', existingStatus.granted);
+
+        console.log('📱 Requesting notification permissions...');
+        const result = await Notifications.requestPermissionsAsync();
+
+        console.log('📱 Permissions APRÈS requête:', result);
+        console.log('   Status:', result.status);
+        console.log('   Can ask again:', result.canAskAgain);
+        console.log('   Granted:', result.granted);
+
+        if (result.status === 'granted' && result.granted) {
+          console.log('✅ Notification permissions granted');
+        } else {
+          console.warn('❌ Notification permissions not granted');
+          console.warn('   You may need to enable notifications in iPhone Settings > ResetPulse');
+        }
+
+        // Test notification 3s après le launch (seulement en dev)
+        if (__DEV__ && result.status === 'granted') {
+          setTimeout(testNotification, 3000);
         }
       } catch (error) {
-        console.warn('⚠️ Failed to request notification permissions:', error.message);
+        console.error('❌ Failed to request notification permissions:', error);
+        console.error('   Error message:', error.message);
       }
     };
 
@@ -85,12 +132,14 @@ export default function useNotificationTimer() {
   const scheduleTimerNotification = async (seconds) => {
     // Skip si notifications non disponibles (iOS Simulator)
     if (!notificationsAvailable) {
+      console.log('📱 Notification skipped - not available (simulator?)');
       return null;
     }
 
     try {
       // Annuler notification existante
       if (notificationIdRef.current) {
+        console.log(`📱 Cancelling previous notification (ID: ${notificationIdRef.current})`);
         await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
       }
 
@@ -102,6 +151,8 @@ export default function useNotificationTimer() {
         minute: '2-digit',
         second: '2-digit'
       });
+
+      console.log(`📱 Scheduling notification for ${seconds}s from now...`);
 
       // Programmer nouvelle notification
       const id = await Notifications.scheduleNotificationAsync({
@@ -120,15 +171,22 @@ export default function useNotificationTimer() {
 
       notificationIdRef.current = id;
 
-      if (__DEV__) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        console.log(`📱 [${now.toLocaleTimeString('fr-FR')}] Notification programmée dans ${minutes}min ${secs}s → déclenchement prévu à ${timeString}`);
-      }
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      console.log(`✅ Notification scheduled successfully!`);
+      console.log(`   ID: ${id}`);
+      console.log(`   Duration: ${minutes}min ${secs}s`);
+      console.log(`   Start: ${now.toLocaleTimeString('fr-FR')}`);
+      console.log(`   Expected trigger: ${timeString}`);
 
       return id;
     } catch (error) {
-      console.warn('⚠️ Error scheduling notification:', error.message);
+      console.error('❌ Error scheduling notification:', error);
+      console.error('   Error details:', {
+        message: error.message,
+        code: error.code,
+        stack: error.stack?.split('\n')[0]
+      });
       // Fail silently - don't crash the app
       return null;
     }
