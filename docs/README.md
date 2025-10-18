@@ -6,16 +6,16 @@
 
 **ResetPulse** est une application de time timer iOS spécialement conçue pour les personnes neuroatypiques (TDAH/TSA). L'app offre une interface épurée pour la méditation (20min) et l'ancrage mental (4min) sans surcharge cognitive.
 
-**Version actuelle :** 1.1.5 (SDK 54, New Architecture)
-**Status :** 🚧 En développement - RevenueCat Integration Testing
-**Platforms :** [Android](https://play.google.com/apps/internaltest/4701499537445297168) | [iOS TestFlight](https://appstoreconnect.apple.com/apps/6752913010/testflight/ios)
+**Version actuelle :** 1.1.7 (SDK 54, New Architecture)
+**Status :** iOS ✅ LIVE App Store | Android 🔄 Submission en cours
+**Platforms :** [iOS App Store](https://apps.apple.com/app/resetpulse/id6752913010) | [Android Internal Test](https://play.google.com/apps/internaltest/4701499537445297168)
 
 ---
 
 ## 📋 Navigation Rapide
 
 ### 🏗️ Architecture & Développement
-- **[Roadmap](ROADMAP.md)** - Planification et milestones du projet
+- **[Roadmap Stratégique](ROADMAP.md)** - Vision projet, timeline M1-M11+ et décisions go/no-go
 - **[Architecture](architecture/)** - Design system, patterns et guidelines
 - **[Development](development/)** - Configuration build, deployment et testing
 - **[Releases](releases/)** - Changelogs et rapports de version
@@ -34,7 +34,7 @@
 ## 🎯 Documents Essentiels
 
 ### Pour Commencer
-1. **[ROADMAP.md](ROADMAP.md)** - Vue d'ensemble des phases de développement
+1. **[Roadmap Stratégique](ROADMAP.md)** - Vision projet, timeline M1-M11+ (laboratoire avant MoodCycle)
 2. **[Architecture Overview](architecture/README.md)** - Comprendre la structure du projet
 3. **[Development Setup](development/README.md)** - Configuration de l'environnement
 
@@ -54,27 +54,19 @@
 ## 📊 État du Projet
 
 ### Milestones Complétés ✅
-- **M1 - Foundation & Architecture** - Architecture clean ready for integration
-- **M2 - Timer Core Fonctionnel** - Timer avec build iOS stable
-- **M3 - Interface Minimale** - Interface utilisateur complète et polie
+- **M1-M2** (29 sept - 2 oct) - Foundation technique, timer core, build iOS/Android
+- **M3-M4** (2-3 oct) - Validation terrain, onboarding v2.0, refactorisation
+- **M5** (7-9 oct) - RevenueCat integration, freemium, IAP setup
+- **M6** (13-17 oct) - iOS LIVE App Store (approval 17 oct 23:30)
 
-### Version Actuelle (v1.1.0) - 🚧 En Test
-- **💰 RevenueCat Integration** - SDK intégré, freemium (2 palettes + 4 activités)
-- **🛒 Purchase Flow** - Paywall UI, trial 7 jours, lifetime 4.99€
-- **🔄 Restore Logic** - Gestion robuste restore + edge cases réseau
-- **📊 Dashboard Setup** - iOS/Android entitlements configurés
+### Milestone en Cours 🔄
+- **M7** (18-20 oct) - Android submission (Keep awake v1.1.7 implémenté)
 
-### Version Précédente (v1.0.5) - [📋 Changelog](releases/v1.0.5-changelog.md)
-- **✅ Android Notifications Fix** - Permission SCHEDULE_EXACT_ALARM + Notification Channels
-- **✅ SDK 54 Migration** - Expo SDK 54 + React 19.0.0 + New Architecture
-- **✅ Audio System** - Son fonctionne même en mode silencieux + arrière-plan
-
-### Version Antérieure (v1.0.4) - [📋 Changelog](releases/v1.0.4-changelog.md)
-- **✅ Builds Déployés** - Android (versionCode 10) + iOS (buildNumber 13)
-
-### Prochaines Étapes (v1.2.0) - [🎯 Matrice de Priorisation](decisions/time_timer_priority_matrix.md)
-- **Lock Screen Display** (Score 4.3) - Timer visible écran verrouillé
-- **Internationalisation** (Score 5.0) - 15 langues pour scalabilité globale
+### Prochaines Étapes - [📋 Roadmap Complète](ROADMAP.md)
+- **M8** (23-25 oct) - Optimisation conversion (méthode Harry)
+- **M9** (28-30 oct) - Internationalisation 15 langues (conditionnel)
+- **M10** (Nov) - Test marketing Apple Search Ads (décision go/no-go)
+- **M11+** (Déc-Jan) - Scaling ou pivot MoodCycle selon ROI M10
 
 ---
 
@@ -98,29 +90,30 @@ docs/
 
 ## 🔄 Dernières Mises à Jour
 
-### 2025-10-08 (v1.1.0 - EN TEST)
-- **💰 RevenueCat SDK** - Integration complète avec react-native-purchases@9.5.3
-- **🎯 Freemium Config** - 2 palettes (softLaser, terre) + 4 activités gratuites
-- **🛒 Premium Modal** - Paywall UI avec messaging ADR-validé
-- **📋 Test Checklist** - [TODO.md](../TODO.md) pour tests dev build
-- **📄 ADR Documentation** - [ADR Monétisation v1.1.0](decisions/adr-monetization-v11.md)
+### 2025-10-18 (v1.1.7 - EN COURS)
+- **📱 Keep Awake Feature** - Écran reste allumé pendant timer (ON par défaut, toggle Settings)
+- **🤖 Android Submission** - Build release + Google Play Review pending
+- **📋 Roadmap Stratégique** - Documentation fusionnée M1-M11+ avec timeline réelle
+- **📊 Analytics Strategy** - Mixpanel setup documenté (M7.5 ready implementation)
 
-### 2025-10-07 (v1.0.5 - DÉPLOYÉE)
-- **🔔 Android Notifications Fix** - Permission SCHEDULE_EXACT_ALARM + Channels
-- **📋 Changelog v1.0.5** - [Documentation complète](releases/v1.0.5-changelog.md)
-- **📝 Fix Report** - [Rapport détaillé](archive/fixes/NOTIFICATION_FIX_ANDROID_2025.md)
+### 2025-10-17 (v1.1.6 - LIVE APP STORE 🎉)
+- **✅ iOS Approval** - App disponible publiquement App Store (approval 17 oct 23:30)
+- **💰 RevenueCat Production** - IAP opérationnel (lifetime 4,99€, trial 7 jours)
+- **📋 Changelog** - [v1.1.6 iOS Approval](releases/v1.1.6-ios-approval.md)
 
-### 2025-10-03 (v1.0.4 - DÉPLOYÉE)
+### 2025-10-08 (v1.1.0 - RevenueCat)
+- **💰 RevenueCat SDK** - Integration complète react-native-purchases@9.5.3
+- **🎯 Freemium Config** - 2 palettes + 4 activités gratuites
+- **🛒 Paywall UI** - Trial 7 jours + lifetime 4,99€
+- **📄 ADR** - [ADR Monétisation v1.1.0](decisions/adr-monetization-v11.md)
+
+### 2025-10-07 (v1.0.5 - Android Notifications)
+- **🔔 Android Fix** - Permission SCHEDULE_EXACT_ALARM + Notification Channels
+- **📋 Changelog** - [v1.0.5 Documentation](releases/v1.0.5-changelog.md)
+
+### 2025-10-03 (v1.0.4 - Premier Déploiement)
 - **🚀 Builds Déployés** - Android Internal Testing + iOS TestFlight
-- **📱 Android Build** - versionCode 10, AAB 61MB, SDK 54 + New Architecture
-- **🍎 iOS Build** - buildNumber 13, EAS Build + TestFlight
-- **📋 Changelog v1.0.4** - [Documentation complète](releases/v1.0.4-changelog.md)
-
-### 2025-10-02
-- **🎨 Onboarding System v2.0** - Tooltips interactifs avec spotlight SVG
-- **⚙️ Settings Modal Redesign** - Hiérarchie visuelle iOS 15+
-- **🌓 System Theme Fix** - Détection fiable avec Appearance API
-- **✅ Tests Passent** - 29/29 tests validés SDK 54
+- **📋 Changelog** - [v1.0.4 Documentation](releases/v1.0.4-changelog.md)
 
 ---
 
@@ -132,4 +125,4 @@ docs/
 
 ---
 
-*Documentation maintenue à jour avec le code. Dernière révision : 2025-10-08*
+*Documentation maintenue à jour avec le code. Dernière révision : 2025-10-18*
