@@ -1,14 +1,14 @@
 # ResetPulse - TODO Opérationnel
 
-*Dernière mise à jour : 19 Octobre 2025*
-*Focus : M7-M8 (19-30 Oct) - Horizon 11 jours*
+*Dernière mise à jour : 18 Octobre 2025*  
+*Aligné avec ROADMAP.md - Phases M7-M11+*
 
 ---
 
 ## 🚨 M7 : PRIORITÉ IMMÉDIATE - Publication Android
 
-**Timeline :** 18-21 Oct 2025 (4 jours)
-**Statut :** 🔄 EN COURS
+**Timeline :** 18-21 Oct 2025 (4 jours)  
+**Statut :** 🔄 EN COURS  
 **Version finale :** v1.2.0 (keep awake + Mixpanel + i18n bundled)
 
 ### J1 (18 oct) : Keep Awake Feature ✅
@@ -89,16 +89,14 @@
 
 ## 🎯 M8 : OPTIMISATION CONVERSION
 
-**Timeline :** 23-30 Oct 2025 (7 jours)
-**Statut :** 🎯 PLANIFIÉ
+**Timeline :** 23-30 Oct 2025 (7 jours)  
+**Statut :** 🎯 PLANIFIÉ  
 **Début :** Baseline Mixpanel active (7 jours data minimum)
 
 **KPIs cibles M8 :**
-- Onboarding completion > 65%
-- Paywall view rate > 35%
-- Trial start > 18% paywall viewers
-- Trial → Paid > 20%
-- Overall conversion > 3.5% (go/no-go pub)
+- Trial start rate > 15%
+- Trial→Paid > 5%
+- Onboarding completion > 70%
 
 ### Audit Onboarding Actuel (J1 - 23 oct)
 - [ ] Analyser baseline Mixpanel 7 jours
@@ -138,14 +136,84 @@
 
 ---
 
-### Baseline Validation (J6-J7 - 28-30 oct)
-- [ ] Observer métriques Mixpanel baseline 7j
-- [ ] Comparer benchmarks attendus vs. réels
-- [ ] Décision go/no-go Apple Search Ads (M10)
-  - Si Trial→Paid < 3% : itération onboarding requise
-  - Si Trial→Paid ≥ 3.5% : validation budget pub Harry
+### Apple Search Ads Setup (J6-J7 - 28-30 oct)
+- [ ] Valider budget avec Harry (50€ ou 200€ ?)
+- [ ] Créer compte Apple Search Ads
+- [ ] Configurer campagne test
+- [ ] Sélectionner mots-clés initiaux
+  - "timer tdah"
+  - "time timer"  
+  - "minuteur visuel"
+- [ ] Lancer campagne
+- [ ] **NE PAS TOUCHER** pendant 21 jours
 
-**Temps estimé :** Monitoring passif + analyse 2h
+**Temps estimé :** 2 heures setup
+
+---
+
+## 🌍 i18n COMPLÉTÉ (M7.6)
+
+**Status :** ✅ Intégré dans M7 (19-20 oct)  
+**Version :** v1.2.0
+
+Voir section M7 J2 ci-dessus pour checklist détaillée.
+
+---
+
+## 📊 M10 : MARKETING TEST
+
+**Timeline :** Nov 2025 (21 jours minimum stabilité)  
+**Statut :** ⏳ CONDITIONNEL - Dépend M8 conversion optimisée  
+**Budget :** En suspens validation Harry (50€ vs 200€)
+
+**Décision go/no-go basée data M8 :**
+- Si Trial→Paid < 3% : fix onboarding avant pub
+- Si Trial→Paid > 5% : go Apple Search Ads test
+
+### Apple Search Ads Test
+- [ ] Valider budget définitif avec Harry
+- [ ] Créer compte Apple Search Ads
+- [ ] Configurer campagne test (budget confirmé)
+- [ ] Mots-clés sélectionnés + bids initiaux
+- [ ] **Lancer et NE PAS TOUCHER 21 jours**
+- [ ] Tableau ROAS quotidien (revenus vs coût)
+- [ ] Analyse J21 : LTV > CAC ?
+
+**Temps estimé :** 2 heures setup + 21 jours monitoring passif
+
+---
+
+### Canaux Organiques (En Parallèle M10)
+- [ ] Post Reddit r/TDAH (français)
+  - Angle authentique vécu perso/familial
+  - Demande feedback, pas promo agressive
+- [ ] ProductHunt launch (international)
+  - Préparer assets + pitch
+  - Mobiliser upvotes famille/amis J-1
+- [ ] Discord créateurs : retours d'expérience
+  - Benchmarks conversion rates apps similaires
+  - ASO tips débutants multilingue
+
+**Temps estimé :** 2-3 heures total (actions ponctuelles)
+
+---
+
+## 🚀 M11+ : SCALING OU PIVOT
+
+**Timeline :** Déc 2025 - Jan 2026  
+**Statut :** ⏳ CONDITIONNEL - Dépend ROI M10
+
+### Si ROI Positif (LTV > CAC)
+- [ ] Budget pub progressif (50→100→200€/mois)
+- [ ] Lock Screen Display implementation
+- [ ] Apple Watch extension (watchOS learning)
+- [ ] Analytics avancés retention/churn
+- [ ] Community management actif (Reddit TDAH, Discord)
+
+### Si ROI Négatif
+- [ ] Documentation learnings complets
+- [ ] Transfert compétences MoodCycle
+- [ ] ResetPulse → maintenance mode (portfolio uniquement)
 
 ---
 
@@ -161,10 +229,17 @@
 - [ ] Retention J1, J7
 - [ ] Reviews App Store / Play Store (qualitative)
 
+**Post-M8 (Apple Search Ads Active)**
+- [ ] Coût/install par mot-clé
+- [ ] Attribution quality (Mixpanel source tracking)
+- [ ] ROAS quotidien (revenus vs coût pub)
+- [ ] LTV/CAC ratio (décision go/no-go M10)
+
 **Outils :**
 - RevenueCat dashboard (revenus, conversions)
 - Mixpanel funnels (comportement users)
-- Tableau quotidien suivi KPIs
+- Apple Search Ads console (coût/install)
+- Tableau quotidien ROAS manuel (M10)
 
 ---
 
@@ -177,7 +252,7 @@
 - [ ] Décisions architecture (ADR style)
 - [ ] Métriques marketing baseline
 
-**Fréquence :** Après chaque milestone majeur (M7, M8)
+**Fréquence :** Après chaque milestone majeur (M7, M8, M9, M10)
 
 ---
 
@@ -188,27 +263,12 @@
 - [ ] Absence validation terrain → Tests utilisateur immédiat
 - [ ] Scope creep features → Référence objectif laboratoire
 - [ ] Bug récurrent malgré fixes → Refactorisation nécessaire
-- [ ] **Burnout TDAH** → Pause requise, timeline flexible
-- [ ] **Sunk cost fallacy** → Décision data-driven uniquement (pas émotionnel)
-
----
-
-## 📚 Documentation Associée
-
-**Guides Techniques :**
-- [Mixpanel Implementation](docs/development/MIXPANEL_IMPLEMENTATION.md) - Setup 4h, code snippets
-- [RevenueCat Testing Checklist](docs/testing/REVENUECAT_TESTING_CHECKLIST.md) - Template réutilisable IAP
-
-**Stratégie :**
-- [ROADMAP.md](ROADMAP.md) - Vision complète M1-M11+ (context go/no-go)
-- [Analytics Strategy](docs/decisions/analytics-strategy.md) - Pourquoi Mixpanel, benchmarks
+- [ ] **Burnout TDAH M8+M9** → M9 devient optionnel si fatigue cognitive
+- [ ] **Sunk cost fallacy M10** → Décision data-driven uniquement (pas émotionnel)
 
 ---
 
 **Prochaine action immédiate : Mixpanel setup dimanche 19 oct matin (3h)**
 
-**TODO opérationnel M7-M8 (11 jours horizon)**
-*Planning M10+ conditionnel à validation M8 - Voir ROADMAP.md pour vision complète*
-
-*Dates indicatives, pas deadlines strictes - Timeline flexible rythme TDAH*
-*Dernière mise à jour : 19 Octobre 2025 - 9:10*
+*Aligné avec ROADMAP.md phases M7-M11+ | Timeline post-feedback seniors Discord*  
+*Dernière mise à jour : 19 Octobre 2025 - 8:50*
