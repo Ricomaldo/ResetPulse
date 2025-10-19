@@ -124,8 +124,14 @@ Google Play submission v1.2.0. Validation cross-platform complète. Phase global
 
 - J1 (18 oct) : Keep awake v1.1.7 ✅
 - J2 (19 oct) : Mixpanel (M7.5) + i18n (M7.6) integration
-- J3 (20 oct) : Assets store + metadata 15 langues
-- J4 (21 oct) : Google Play submission v1.2.0 (keep awake + Mixpanel + i18n bundled)
+- J3 (20 oct) : Assets store + metadata 15 langues iOS/Android
+- J4 (21 oct) : **Submission simultanée iOS v1.2.0 + Android v1.2.0** (keep awake + Mixpanel + i18n bundled)
+
+**Décision Apple submissions :**
+
+- ❌ **Skip v1.1.8 iOS** - Évite fragmentation versions (v1.1.6 → v1.1.8 → v1.2.0 = 3 updates/3j)
+- ✅ **v1.2.0 iOS + Android simultané (21 oct)** - Parité stores + metadata multilingue cohérent + baseline analytics synchronisé
+- **Rationale** : Délai Mixpanel 48h acceptable vs. overhead Apple Review double (v1.1.8 puis v1.2.0)
 
 ---
 
@@ -167,6 +173,12 @@ Mixpanel integration avant marketing launch. 6 events critiques trackés. Revenu
 - [Mixpanel Implementation](development/MIXPANEL_IMPLEMENTATION.md) - Comment/Quand (40 pages)
 
 **Timeline :** Dimanche 19 oct matin (3h dev selon énergie TDAH)
+
+**Déploiement :**
+
+- **iOS** : Bundled dans v1.2.0 (skip v1.1.8 standalone, submit 21 oct)
+- **Android** : Bundled dans v1.2.0 (submit 21 oct)
+- **Rationale** : Baseline analytics démarre iOS+Android simultanément post-deploy v1.2.0 (délai 48h acceptable vs. fragmentation versions)
 
 **Apprentissages acquis (post-implementation) :**
 
@@ -219,8 +231,14 @@ expo-localization + 15 langues app + metadata stores iOS/Android.
 **Timeline :**
 
 - Dimanche 19 oct après-midi : expo-localization + strings (4-6h)
-- Lundi 20 oct : Metadata stores + tests
-- Mardi 21 oct : Submit v1.2.0 production
+- Lundi 20 oct : Metadata stores 15 langues iOS/Android + tests
+- Mardi 21 oct : **Submit v1.2.0 production simultané iOS + Android**
+
+**Déploiement :**
+
+- **Submission simultanée** : iOS App Store + Google Play (21 oct)
+- **Parité stores** : Même version, mêmes features, metadata 15 langues synchronisé
+- **Avantage ASO** : Baseline multilingue opérationnelle 2 plateformes pour M8 conversion tracking
 
 **Apprentissages acquis (post-implementation) :**
 
