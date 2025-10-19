@@ -128,10 +128,11 @@ Google Play submission. Validation cross-platform complète. Assets store + test
 
 ---
 
-### M7.5 : Analytics Setup
+### M7.5 : Analytics Foundation
 
-**Dates** : 19-20 oct 2025 (4h dev)
+**Dates** : 19 oct 2025 (matin, 3h)
 **Statut** : 📋 DOCUMENTÉ - Ready Implementation
+**Version** : v1.1.8
 
 Mixpanel integration avant marketing launch. 6 events critiques trackés. RevenueCat webhooks cross-validation.
 
@@ -159,24 +160,12 @@ Mixpanel integration avant marketing launch. 6 events critiques trackés. Revenu
 - Consensus Discord (Harry/Kévin) : "Source fiable" apps freemium
 - Learning capitalisé MoodCycle : Stack analytics validé
 
-**Benchmarks attendus (baseline organique semaine 1) :**
-
-- Onboarding completion > 65% (Discord benchmark 60-80%)
-- Paywall view rate > 35% installs
-- Trial start > 18% paywall viewers
-- Trial → Paid > 20% (timer apps ≠ meditation apps)
-- Overall conversion > 3.5% (go/no-go pub)
-
 **Documentation complète :**
 
 - [Analytics Strategy](decisions/analytics-strategy.md) - Pourquoi/Quoi (35 pages)
 - [Mixpanel Implementation](development/MIXPANEL_IMPLEMENTATION.md) - Comment/Quand (40 pages)
 
-**Timeline :**
-
-- Samedi 19 oct : SDK install + 6 events code (3h)
-- Dimanche 20 oct : Webhooks + Android test + validation (1h)
-- Lundi 21 oct : Submit v1.1.8 (analytics bundled)
+**Timeline :** Dimanche 19 oct matin (3h dev selon énergie TDAH)
 
 **Apprentissages acquis (post-implementation) :**
 
@@ -185,43 +174,99 @@ Mixpanel integration avant marketing launch. 6 events critiques trackés. Revenu
 - Dashboard funnels RevenueCat-synced
 - Baseline metrics pre-marketing (M8 input)
 
-**Git milestone** : TBD (post-implémentation samedi)
+**Git milestone** : TBD (post-implémentation)
+
+---
+
+### M7.6 : Internationalisation
+
+**Dates** : 19-20 oct 2025 (4-6h)
+**Statut** : 🎯 PLANIFIÉ - Priorité Validée Seniors
+**Version** : v1.2.0
+
+expo-localization + 15 langues app + metadata stores iOS/Android.
+
+**Objectif :** Marché 10x élargi. ROI fort si ASO bien fait (consensus Discord).
+
+**Pivot stratégique :**
+
+- **Ancienne planification** : M9 (28-30 oct) conditionnel à traction FR
+- **Nouvelle décision** : M7.6 (19-20 oct) AVANT marketing launch
+- **Justification** : Feedback seniors Discord (Harry 8k€/mois + Kévin)
+  - "Traduis d'abord, après on en parle plus"
+  - Effort : demi-journée (validation terrain seniors expérimentés)
+  - Baseline multilingue opérationnelle avant Apple Search Ads (M8)
+
+**Langues cibles (15) :**
+
+- FR (source), EN, ES, DE, IT, PT, NL
+- JA, KO, ZH-Hans, ZH-Hant
+- AR, RU, SV, NO
+
+**Workload détaillé :**
+
+- expo-localization setup (1h)
+- String extraction + traduction (2-3h)
+- App Store metadata 15 langues (1-2h)
+- Tests validation iOS + Android (1h)
+
+**Documentation à créer :**
+
+- Guide i18n implementation (code snippets)
+- Checklist metadata stores 15 langues
+
+**Timeline :**
+
+- Dimanche 19 oct après-midi : expo-localization + strings (4-6h)
+- Lundi 20 oct : Metadata stores + tests
+- Mardi 21 oct : Submit v1.2.0 production
+
+**Apprentissages acquis (post-implementation) :**
+
+- expo-localization production-ready
+- ASO multilingue workflow
+- Metadata stores 15 langues process industrialisé
+- Learning capitalisé MoodCycle (cycle menstruel = public international)
+
+**Git milestone** : TBD (post-implémentation)
 
 ---
 
 ### M8 : Optimisation Conversion
 
-**Dates** : 23-25 oct 2025 (3 jours)
+**Dates** : 23-30 oct 2025 (7j baseline + itération)
 **Statut** : 🎯 PLANIFIÉ
 
-Implémentation "Méthode Harry" avant toute publicité :
-
-- Onboarding rallongé (effet IKEA + climax paywall naturel)
-- Attribution tracking propre (RevenueCat → Apple Search Ads)
-- A/B testing copy paywall si besoin
+Implémentation "Méthode Harry" avant toute publicité. Baseline multilingue déjà opérationnelle (M7.6).
 
 **Objectif :** Maximiser conversion trial→paid avant investir budget pub.
 
-**KPIs cibles :**
+**Inputs disponibles :**
 
-- Trial start rate > 15% (benchmark apps freemium)
-- Trial→Paid > 5% (baseline RevenueCat)
-- Onboarding completion > 70%
+- ✅ Analytics Mixpanel (M7.5)
+- ✅ i18n 15 langues (M7.6)
+- ✅ 7j baseline organique multilingue
 
-**Note :** Onboarding v2.0 déjà live (tooltips interactifs depuis 2 oct). M8 = rallongement stratégique uniquement.
+**Actions conditionnelles (data-driven) :**
 
----
+- Onboarding rallongé si completion < 65%
+- Paywall repositionné si view rate < 35%
+- Copy paywall optimisé si trial start < 18%
+- Attribution tracking Apple Search Ads setup
 
-### M9 : Internationalisation
+**Benchmarks attendus (baseline organique semaine 1) :**
 
-**Dates** : 28-30 oct 2025 (3 jours)
-**Statut** : 🎯 PLANIFIÉ - Conditionnel
+- Onboarding completion > 65% (Discord benchmark 60-80%)
+- Paywall view rate > 35% installs
+- Trial start > 18% paywall viewers
+- Trial → Paid > 20% (timer apps context)
+- Overall conversion > 3.5% (go/no-go pub)
 
-expo-localization + 15 langues. ASO multilingue. Décision basée validation product-market fit français d'abord.
+**Timeline flexible (rythme TDAH) :**
 
-**Objectif :** Marché 10x élargi si traction française validée.
-
-**Conditionnel :** Si traction FR > 100 users/mois organiques, go i18n. Sinon, focus M10 direct.
+- 23-30 oct : Observation baseline multilingue
+- Si métriques < benchmarks → Itération onboarding/paywall
+- Si métriques OK → Apple Search Ads test direct (M10)
 
 ---
 
@@ -312,9 +357,9 @@ Membre collectif Discord créateurs apps (seniors expérimentés, mentor Harry 8
 
 ### Opérationnel
 
-- M8+M9 = 6 jours sprint intensif → Risque burnout TDAH
-- **Mitigation** : M9 devient optionnel si fatigue cognitive détectée
+- Timeline flexible selon rythme TDAH → Dates indicatives, pas deadlines strictes
 - Google Play Review imprévisible (1-7 jours) → Buffer timeline M7
+- Séquence logique prioritaire (Mixpanel → i18n → submit) > timing exact
 
 ### Stratégique
 
@@ -351,4 +396,4 @@ Membre collectif Discord créateurs apps (seniors expérimentés, mentor Harry 8
 
 **Roadmap vivante - Actualisation selon usage réel et validation commerciale progressive**
 
-_Dernière mise à jour : 18 Octobre 2025 - v1.1.7 (Keep Awake + Android pending) + M7.5 Analytics documenté_
+_Dernière mise à jour : 19 Octobre 2025 - Timeline pivot M7.6 i18n (feedback seniors Discord) + M7.5 Analytics ready_
