@@ -106,10 +106,10 @@ Pipeline dev→store complet validé. App disponible publiquement depuis 18 oct 
 
 ### M7 : Publication Android
 
-**Dates** : 18-20 oct 2025 (3 jours)
+**Dates** : 18-21 oct 2025 (4 jours)
 **Statut** : 🔄 EN COURS
 
-Google Play submission. Validation cross-platform complète. Assets store + test monétisation Android. Keep awake feature (v1.1.7).
+Google Play submission v1.2.0. Validation cross-platform complète. Phase globale incluant M7.5 (Mixpanel) + M7.6 (i18n) avant submit production.
 
 **Objectif :** Double présence store (iOS + Android) = double apprentissage marketing.
 
@@ -122,9 +122,10 @@ Google Play submission. Validation cross-platform complète. Assets store + test
 
 **Timeline estimée :**
 
-- J1 (18 oct) : Keep awake implementation + version bump 1.1.7 ✅
-- J2 (19 oct) : Build release test + Android Internal Test upload
-- J3 (20 oct) : Google Play Review submission (délai review 1-7 jours)
+- J1 (18 oct) : Keep awake v1.1.7 ✅
+- J2 (19 oct) : Mixpanel (M7.5) + i18n (M7.6) integration
+- J3 (20 oct) : Assets store + metadata 15 langues
+- J4 (21 oct) : Google Play submission v1.2.0 (keep awake + Mixpanel + i18n bundled)
 
 ---
 
