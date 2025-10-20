@@ -63,12 +63,6 @@ class AnalyticsService {
       console.log(`   Token: ${MIXPANEL_TOKEN.substring(0, 12)}...`);
       console.log(`   Server URL: https://api-eu.mixpanel.com`);
       console.log(`   Ready to track events`);
-
-      // Test diagnostic: send test event immediately
-      if (__DEV__) {
-        console.log('🧪 [Analytics] Sending diagnostic test event...');
-        this.track('_diagnostic_test', { test: true });
-      }
     } catch (error) {
       // Graceful fallback for Expo Go (native module unavailable)
       if (error.message?.includes('initialize') && __DEV__) {
