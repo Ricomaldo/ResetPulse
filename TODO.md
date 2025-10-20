@@ -21,21 +21,23 @@
 
 ---
 
-### J2 (19 oct) : Mixpanel + i18n Integration
+### J2 (20 oct) : Mixpanel + i18n Integration
 
-**M7.5 - Mixpanel (Matin, 3h)**
-- [ ] SDK install iOS + Android
-- [ ] 6 events critiques implémentation
-  - app_opened
-  - onboarding_completed
-  - paywall_viewed
-  - trial_started
-  - purchase_completed
-  - purchase_failed
-- [ ] RevenueCat webhooks configuration
-- [ ] ProGuard rules Android
-- [ ] Tests device production
-- [ ] Version bump v1.1.8
+**M7.5 - Mixpanel (Matin, 9h-12h) ✅ VALIDÉ**
+- [x] SDK install iOS + Android (mixpanel-react-native@3.1.2)
+- [x] 6 events critiques implémentation
+  - [x] app_opened (App.js)
+  - [x] onboarding_completed (OnboardingController)
+  - [x] paywall_viewed (PremiumModal)
+  - [x] trial_started (PurchaseContext)
+  - [x] purchase_completed (PurchaseContext)
+  - [x] purchase_failed (PurchaseContext)
+- [x] Token projet corrigé (4b1bd9b9... ResetPulse)
+- [x] Server EU configured (https://api-eu.mixpanel.com)
+- [x] ProGuard rules Android
+- [x] Tests device production (events reçus dashboard)
+- [x] Version bump v1.1.8
+- [x] Debug session documented (devlog)
 
 **M7.6 - i18n (Après-midi, 4-6h)**
 - [ ] expo-localization setup
@@ -70,18 +72,19 @@
 
 ### J4 (21 oct) : Submit Production
 
-**Google Play**
+**Google Play - Première Soumission**
 - [ ] Review checklist policies
 - [ ] Questionnaire contenu app
 - [ ] Pays distribution (15 langues actives)
 - [ ] Pricing & IAP confirmés
 - [ ] Age rating questionnaire
-- [ ] **Submit v1.2.0 production**
+- [ ] **Submit v1.2.0 production** (INITIAL Android)
 - [ ] Attendre review (1-7 jours)
 
-**App Store Connect**
-- [ ] **Submit update v1.2.0 iOS** (parité stores)
+**App Store Connect - Update iOS**
+- [ ] **Submit update v1.2.0 iOS** (v1.1.6 → v1.2.0 : add keep awake + Mixpanel + i18n)
 - [ ] Review rapide attendue (~24h)
+- [ ] Objectif : Parité features iOS/Android post-reviews
 
 **Temps estimé :** 1 heure setup + attente review
 
