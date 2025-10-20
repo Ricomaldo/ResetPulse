@@ -5,6 +5,7 @@ import { usePersistedState } from '../../hooks/usePersistedState';
 import { OnboardingContext, TOOLTIPS_CONFIG } from './OnboardingContext';
 import Tooltip from './Tooltip';
 import HighlightOverlay from './HighlightOverlay';
+import Analytics from '../../services/analytics';
 
 export function OnboardingProvider({ children }) {
   const [onboardingCompleted, setOnboardingCompleted, isLoadingOnboarding] = usePersistedState(
@@ -73,6 +74,9 @@ export function OnboardingProvider({ children }) {
     setCurrentTooltip(null);
     setHighlightedElement(null);
     setOnboardingCompleted(true);
+
+    // Track onboarding completion (M7.5)
+    Analytics.trackOnboardingCompleted();
   };
 
   // Reset onboarding (for dev)
