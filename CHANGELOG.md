@@ -5,7 +5,97 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.6] - 2025-10-16
+## [1.1.8] - 2025-10-20
+
+### 📊 M7.5 - Analytics Foundation Complete
+
+**Status**: ✅ VALIDÉ - Events reçus dashboard Mixpanel
+
+#### Added
+- **Mixpanel Analytics Integration** - 6 events critiques trackés
+  - `app_opened`: Attribution baseline (is_first_launch tracking)
+  - `onboarding_completed`: Funnel top (target > 65% completion)
+  - `paywall_viewed`: Reach measurement (source tracking)
+  - `trial_started`: Intention achat (RevenueCat sync)
+  - `purchase_completed`: Revenue tracking (price + transaction_id)
+  - `purchase_failed`: Friction debug (error_code granulaire)
+
+- **Analytics Service** (`src/services/analytics.js`)
+  - Mixpanel SDK v3+ integration (mixpanel-react-native@3.1.2)
+  - EU data residency configuration (https://api-eu.mixpanel.com)
+  - Token projet: 4b1bd9b9a3be61afb7c19b40ad5a73de
+  - Super properties: platform, app_version
+  - Graceful fallback Expo Go
+  - Flush immédiat DEV (debugging feedback)
+
+- **Analytics Hook** (`src/hooks/useAnalytics.js`)
+  - React hook optimisé (singleton, pas de recréation)
+  - Usage: `const analytics = useAnalytics()`
+
+#### Fixed
+- **Token Organisation → Projet** - Events droppés silencieusement
+  - Initial: 19fef5beb302264e8e3eaf9c0ccaed91 (organisation token)
+  - Corrigé: 4b1bd9b9a3be61afb7c19b40ad5a73de (projet ResetPulse)
+
+- **EU Data Residency RGPD** - Serveurs US → EU
+  - Added: `setServerURL('https://api-eu.mixpanel.com')` après init()
+  - Compliance: Data stays in EU (projet créé avec residency EU)
+
+#### Technical
+- **ProGuard Rules Android** - Obfuscation Mixpanel configured
+  - `-keep class com.mixpanel.** { *; }`
+  - Prevents crash production release builds
+
+- **Debug Session** (1h30 token + endpoint)
+  - Pattern validé: Test 1 event avant intégrer tous
+  - Délai dashboard: 3-5 minutes (pas 30s instantané)
+  - Logs diagnostics: token + server URL visibility
+
+#### Changed
+- **Version bump**: 1.1.7 → 1.1.8
+- **App.js**: Mixpanel init au startup (Analytics.init())
+- **PremiumModal.jsx**: trackPaywallViewed(source) on visible
+- **PurchaseContext.jsx**: 3 events (trial_started, purchase_completed, purchase_failed)
+- **OnboardingController.jsx**: trackOnboardingCompleted() on complete
+
+#### Documentation
+- **Learning Session Devlog** - `docs/devlog/analytics/mixpanel-m7-5-implementation.md`
+  - Galères debug documentées (token + EU endpoint)
+  - Checklist setup Mixpanel réutilisable MoodCycle
+  - Erreurs classiques + solutions (économie 2h debug)
+
+#### Next Steps (M7.6)
+- [ ] expo-localization 15 langues (dimanche après-midi 4-6h)
+- [ ] Metadata stores iOS/Android (lundi)
+- [ ] Submit v1.2.0 production simultané (mardi)
+
+---
+
+## [1.1.7] - 2025-10-18
+
+### 🛡️ Keep Awake Feature
+
+#### Added
+- **Keep Awake Hook** (`src/hooks/useTimerKeepAwake.js`)
+  - Prevents screen lock during active timer
+  - Default: ON (user-configurable)
+  - Settings toggle: "Maintenir écran allumé"
+  - Battery hint displayed in Settings
+
+#### Changed
+- **Version bump**: 1.1.6 → 1.1.7
+
+---
+
+## [1.1.6] - 2025-10-17
+
+### 🎉 iOS APPROVED - RevenueCat Integration Complete
+
+**APPROVED**: 17.10.2025 23:30 by Apple Review Team
+
+#### Status
+- ✅ **iOS**: APPROVED and live on App Store (within 24h)
+- 🚀 **Android**: Ready for submission (ProGuard configured)
 
 ### 🛠️ Fixed - Apple Review Rejection Issues
 

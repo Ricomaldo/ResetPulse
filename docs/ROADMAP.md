@@ -125,7 +125,7 @@ Google Play submission v1.2.0. Validation cross-platform complète. Phase global
 - J1 (18 oct) : Keep awake v1.1.7 ✅
 - J2 (19 oct) : Mixpanel (M7.5) + i18n (M7.6) integration
 - J3 (20 oct) : Assets store + metadata 15 langues iOS/Android
-- J4 (21 oct) : **Submission simultanée iOS v1.2.0 + Android v1.2.0** (keep awake + Mixpanel + i18n bundled)
+- J4 (21 oct) : **Submission simultanée iOS UPDATE v1.2.0 + Android INITIAL v1.2.0** (keep awake + Mixpanel + i18n bundled)
 
 **Décision Apple submissions :**
 
@@ -133,44 +133,65 @@ Google Play submission v1.2.0. Validation cross-platform complète. Phase global
 - ✅ **v1.2.0 iOS + Android simultané (21 oct)** - Parité stores + metadata multilingue cohérent + baseline analytics synchronisé
 - **Rationale** : Délai Mixpanel 48h acceptable vs. overhead Apple Review double (v1.1.8 puis v1.2.0)
 
+**Clarification submissions J4** :
+- **iOS** : Update v1.1.6 → v1.2.0 (add keep awake + Mixpanel + i18n aux users existants)
+- **Android** : Première soumission Google Play v1.2.0 directement
+- **Objectif** : Parité features stores post-reviews (délai iOS ~24h, Android 1-7j)
+- **Analytics baseline** : Démarre quand Android live (iOS update rapide mais Android délai incertain)
+
 ---
 
 ### M7.5 : Analytics Foundation
 
-**Dates** : 19 oct 2025 (matin, 3h)
-**Statut** : 📋 DOCUMENTÉ - Ready Implementation
+**Dates** : 20 oct 2025 (9h-12h, 4h30 avec debug)
+**Statut** : ✅ VALIDÉ - Events reçus dashboard
 **Version** : v1.1.8
 
-Mixpanel integration avant marketing launch. 6 events critiques trackés. RevenueCat webhooks cross-validation.
+Mixpanel integration avant marketing launch. 6 events critiques trackés. Baseline analytics opérationnelle M8.
 
 **Objectif :** Voir ce que font les users AVANT dépenser 1€ pub.
 
-**Events implémentés :**
+**Events implémentés (6/6) :**
 
-- `app_opened` (attribution baseline + is_first_launch)
-- `onboarding_completed` (funnel top, target > 65%)
-- `paywall_viewed` (reach measurement, source tracking)
-- `trial_started` (intention achat)
-- `purchase_completed` (revenue tracking, cross-check webhook)
-- `purchase_failed` (friction debug, error_code granulaire)
+- ✅ `app_opened` (attribution baseline + is_first_launch) - App.js
+- ✅ `onboarding_completed` (funnel top, target > 65%) - OnboardingController
+- ✅ `paywall_viewed` (reach measurement, source tracking) - PremiumModal
+- ✅ `trial_started` (intention achat) - PurchaseContext
+- ✅ `purchase_completed` (revenue tracking, cross-check webhook) - PurchaseContext
+- ✅ `purchase_failed` (friction debug, error_code granulaire) - PurchaseContext
 
-**Configuration :**
+**Configuration validée :**
 
-- ✅ Mixpanel token production : `19fef...aed91`
-- ✅ RevenueCat webhooks dashboard activés
-- ✅ ProGuard rules Android documentées
-- ✅ Dashboard funnel template créé
+- ✅ SDK : mixpanel-react-native@3.1.2
+- ✅ Token projet : `4b1bd9b9a3be61afb7c19b40ad5a73de` (ResetPulse)
+- ✅ Server EU : `https://api-eu.mixpanel.com` (RGPD compliance)
+- ✅ ProGuard rules Android : Obfuscation configured
+- ✅ Flush DEV : Feedback immédiat debugging
 
-**Décision stratégique :**
+**Debug session (1h30) :**
 
-- Mixpanel vs. MMP (Tenjin/AppsFlyer) : Mixpanel suffisant pré-ROAS
-- Consensus Discord (Harry/Kévin) : "Source fiable" apps freemium
-- Learning capitalisé MoodCycle : Stack analytics validé
+- 🐛 **Galère 1** : Token organisation au lieu projet → Events droppés
+- 🐛 **Galère 2** : Serveurs US au lieu EU → RGPD non-compliant
+- ✅ **Fix** : Token + setServerURL() corrigés
+- ⏱️ **Délai dashboard** : 3-5 minutes (pas 30s comme supposé)
+
+**Pattern validé :**
+
+- ✅ Test 1 event avant intégrer tous (économie 2h debug)
+- ✅ Logs diagnostics (token + server URL visibility)
+- ✅ Flush immédiat DEV (feedback rapide M8)
+
+**Learning capitalisé MoodCycle :**
+
+- Checklist setup Mixpanel réutilisable
+- Erreurs classiques documentées (évite 2h debug)
+- Stack analytics validé terrain
 
 **Documentation complète :**
 
 - [Analytics Strategy](decisions/analytics-strategy.md) - Pourquoi/Quoi (35 pages)
 - [Mixpanel Implementation](development/MIXPANEL_IMPLEMENTATION.md) - Comment/Quand (40 pages)
+- [Implementation Devlog](devlog/analytics/mixpanel-m7-5-implementation.md) - Learning session terrain
 
 **Timeline :** Dimanche 19 oct matin (3h dev selon énergie TDAH)
 
