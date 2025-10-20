@@ -8,6 +8,7 @@ import { OnboardingProvider, useOnboarding } from './src/components/onboarding/O
 import TimerScreen from './src/screens/TimerScreen';
 import WelcomeScreen from './src/components/onboarding/WelcomeScreen';
 import ErrorBoundary from './src/components/ErrorBoundary';
+import Analytics from './src/services/analytics';
 
 function AppContent() {
   const theme = useTheme();
@@ -75,6 +76,15 @@ function AppContent() {
 }
 
 export default function App() {
+  // Initialize Mixpanel Analytics (M7.5)
+  useEffect(() => {
+    const initAnalytics = async () => {
+      await Analytics.init();
+    };
+
+    initAnalytics();
+  }, []);
+
   return (
     <ErrorBoundary>
       <ThemeProvider>

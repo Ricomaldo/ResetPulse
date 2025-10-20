@@ -1,7 +1,7 @@
 // src/components/PremiumModal.jsx
 // Phase 4 - Premium Modal UI
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   View,
@@ -14,11 +14,13 @@ import {
 } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { usePurchases } from "../contexts/PurchaseContext";
+import { useAnalytics } from "../hooks/useAnalytics";
 import { rs } from "../styles/responsive";
 import haptics from "../utils/haptics";
 
 export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   const theme = useTheme();
+  const analytics = useAnalytics();
   const {
     purchaseProduct,
     restorePurchases,
@@ -27,6 +29,15 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   } = usePurchases();
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+
+  // Track paywall viewed (M7.5)
+  useEffect(() => {
+    if (visible) {
+      // Determine source from highlightedFeature or default
+      const source = highlightedFeature || 'unknown';
+      analytics.trackPaywallViewed(source);
+    }
+  }, [visible, highlightedFeature]);
 
   // Combined loading state (local + context)
   const isAnyOperationInProgress =
