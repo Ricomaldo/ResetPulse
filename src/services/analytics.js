@@ -42,7 +42,12 @@ class AnalyticsService {
       const useNative = true; // Use native module (required for device builds)
 
       this.mixpanel = new Mixpanel(MIXPANEL_TOKEN, trackAutomaticEvents, useNative);
-      await this.mixpanel.init(); // Initialize instance
+
+      // Configure EU data residency (RGPD compliance)
+      // Ref: https://docs.mixpanel.com/docs/tracking-methods/sdks/react-native#eu-data-residency
+      await this.mixpanel.init();
+      this.mixpanel.setServerURL('https://api-eu.mixpanel.com'); // EU servers
+
       this.isInitialized = true;
 
       // Super properties (persistent toutes sessions)
