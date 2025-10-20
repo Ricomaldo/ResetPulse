@@ -6,6 +6,7 @@ import { Platform } from 'react-native';
 import Purchases from 'react-native-purchases';
 import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
 import { TEST_MODE } from '../config/testMode';
+import Analytics from '../services/analytics';
 
 const PurchaseContext = createContext();
 
@@ -29,9 +30,10 @@ export const PurchaseProvider = ({ children }) => {
       // Initialiser RevenueCat
       await Purchases.configure({ apiKey });
 
-      // Log level debug en développement
+      // Log level minimal (errors only)
+      // RevenueCat fonctionne correctement, pas besoin debug verbeux
       if (__DEV__) {
-        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
       }
 
       // Récupérer le customerInfo initial
@@ -54,11 +56,7 @@ export const PurchaseProvider = ({ children }) => {
     const hasEntitlement = info?.entitlements?.active?.[ENTITLEMENTS.premium_access] !== undefined;
     setIsPremium(hasEntitlement);
     setIsLoading(false);
-
-    if (__DEV__) {
-      console.log('[RevenueCat] Premium status:', hasEntitlement);
-      console.log('[RevenueCat] Active entitlements:', Object.keys(info?.entitlements?.active || {}));
-    }
+    // Premium status logs removed - use React DevTools if needed
   };
 
   const purchaseProduct = async (productIdentifier) => {
@@ -72,12 +70,29 @@ export const PurchaseProvider = ({ children }) => {
       setIsPurchasing(true);
       const { customerInfo: info } = await Purchases.purchaseProduct(productIdentifier);
       updateCustomerInfo(info);
+
+      // Get transaction details for analytics
+      const latestTransaction = info.nonSubscriptionTransactions?.[0] || info.latestExpirationDate;
+      const transactionId = latestTransaction?.transactionIdentifier || 'unknown';
+      const price = latestTransaction?.price || 4.99; // Default price
+
+      // Track trial started (M7.5)
+      Analytics.trackTrialStarted(productIdentifier);
+
+      // Track purchase completed (M7.5)
+      Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
+
       return { success: true };
     } catch (error) {
       // Handle user cancellation (not an error)
       if (error.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
         return { success: false, cancelled: true };
       }
+
+      // Track purchase failed (M7.5) - All error types
+      const errorCode = error.code || 'UNKNOWN';
+      const errorMessage = error.message || 'Unknown error';
+      Analytics.trackPurchaseFailed(errorCode, errorMessage, productIdentifier);
 
       // Handle network errors
       if (error.code === Purchases.PURCHASES_ERROR_CODE.NETWORK_ERROR) {
