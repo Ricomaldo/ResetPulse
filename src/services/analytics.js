@@ -60,7 +60,15 @@ class AnalyticsService {
       console.log('✅ [Analytics] Mixpanel initialized successfully');
       console.log(`   Platform: ${Platform.OS}`);
       console.log(`   App Version: ${appVersion}`);
+      console.log(`   Token: ${MIXPANEL_TOKEN.substring(0, 12)}...`);
+      console.log(`   Server URL: https://api-eu.mixpanel.com`);
       console.log(`   Ready to track events`);
+
+      // Test diagnostic: send test event immediately
+      if (__DEV__) {
+        console.log('🧪 [Analytics] Sending diagnostic test event...');
+        this.track('_diagnostic_test', { test: true });
+      }
     } catch (error) {
       // Graceful fallback for Expo Go (native module unavailable)
       if (error.message?.includes('initialize') && __DEV__) {
@@ -95,8 +103,11 @@ class AnalyticsService {
 
     this.mixpanel.track(eventName, enrichedProperties);
 
+    // Flush immediately in dev for debugging
     if (__DEV__) {
+      this.mixpanel.flush();
       console.log('📊 [Analytics]', eventName, enrichedProperties);
+      console.log('   ✈️  Event flushed to server');
     }
   }
 
