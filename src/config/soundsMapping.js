@@ -1,5 +1,6 @@
 // src/config/soundsMapping.js
 // Mapping centralisé des sons pour faciliter les changements futurs
+import i18n from '../i18n';
 
 // Mapping des fichiers audio
 // Clé = identifiant interne stable
@@ -23,63 +24,64 @@ export const SOUND_FILES = {
 };
 
 // Métadonnées des sons (nom affiché, durée, emoji)
+// Les noms utilisent des getters pour supporter i18n dynamique
 export const SOUND_METADATA = {
   'bell_classic': {
-    name: 'Cloche classique',
+    get name() { return i18n.t('sounds.bell_classic'); },
     duration: '2s',
     emoji: '🔔',
     category: 'classic'
   },
   'bell_melodic': {
-    name: 'Cloche mélodique',
+    get name() { return i18n.t('sounds.bell_melodic'); },
     duration: '2s',
     emoji: '🎵',
     category: 'classic'
   },
   'microwave_vintage': {
-    name: 'Micro-ondes vintage',
+    get name() { return i18n.t('sounds.microwave_vintage'); },
     duration: '3s',
     emoji: '📻',
     category: 'kitchen'
   },
   'microwave_ping': {
-    name: 'Ping micro-ondes',
+    get name() { return i18n.t('sounds.microwave_ping'); },
     duration: '1s',
     emoji: '🔊',
     category: 'kitchen'
   },
   'kitchen_timer': {
-    name: 'Minuteur cuisine',
+    get name() { return i18n.t('sounds.kitchen_timer'); },
     duration: '1s',
     emoji: '⏲️',
     category: 'kitchen'
   },
   'kitchen_timer_2': {
-    name: 'Minuteur mécanique',
+    get name() { return i18n.t('sounds.kitchen_timer_2'); },
     duration: '2s',
     emoji: '⏰',
     category: 'kitchen'
   },
   'egg_timer': {
-    name: 'Minuteur à œuf',
+    get name() { return i18n.t('sounds.egg_timer'); },
     duration: '1s',
     emoji: '🥚',
     category: 'kitchen'
   },
   'toaster_bell': {
-    name: 'Grille-pain',
+    get name() { return i18n.t('sounds.toaster_bell'); },
     duration: '1s',
     emoji: '🍞',
     category: 'kitchen'
   },
   'ding_effect': {
-    name: 'Ding simple',
+    get name() { return i18n.t('sounds.ding_effect'); },
     duration: '1s',
     emoji: '✨',
     category: 'modern'
   },
   'timer_complete': {
-    name: 'Timer complet',
+    get name() { return i18n.t('sounds.timer_complete'); },
     duration: '2s',
     emoji: '✅',
     category: 'modern'

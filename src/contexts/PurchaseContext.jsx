@@ -30,11 +30,9 @@ export const PurchaseProvider = ({ children }) => {
       // Initialiser RevenueCat
       await Purchases.configure({ apiKey });
 
-      // Log level minimal (errors only)
-      // RevenueCat fonctionne correctement, pas besoin debug verbeux
-      if (__DEV__) {
-        Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
-      }
+      // Log level DEBUG pour diagnostiquer
+      // TODO: Remettre ERROR après test
+      Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
 
       // Récupérer le customerInfo initial
       const info = await Purchases.getCustomerInfo();

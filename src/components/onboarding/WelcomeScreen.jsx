@@ -12,11 +12,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
 import { TRANSITION } from '../../constants/animations';
 import haptics from '../../utils/haptics';
 
 export default function WelcomeScreen({ visible, onDiscover, onSkip }) {
   const theme = useTheme();
+  const t = useTranslation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -130,7 +132,7 @@ export default function WelcomeScreen({ visible, onDiscover, onSkip }) {
             onPress={handleSkip}
             activeOpacity={0.7}
           >
-            <Text style={styles.skipText}>Passer</Text>
+            <Text style={styles.skipText}>{t('common.skip')}</Text>
           </TouchableOpacity>
 
           {/* Logo */}
@@ -142,11 +144,11 @@ export default function WelcomeScreen({ visible, onDiscover, onSkip }) {
           </View>
 
           {/* Title */}
-          <Text style={styles.title}>Bienvenue sur ResetPulse</Text>
+          <Text style={styles.title}>{t('welcome.title')}</Text>
 
           {/* Subtitle */}
           <Text style={styles.subtitle}>
-            Choisissez une activité, ajustez la durée, lancez.
+            {t('welcome.subtitle')}
           </Text>
 
           {/* Discover button */}
@@ -155,7 +157,7 @@ export default function WelcomeScreen({ visible, onDiscover, onSkip }) {
             onPress={handleDiscover}
             activeOpacity={0.8}
           >
-            <Text style={styles.discoverButtonText}>Découvrir</Text>
+            <Text style={styles.discoverButtonText}>{t('welcome.discover')}</Text>
           </TouchableOpacity>
         </Animated.View>
       </SafeAreaView>

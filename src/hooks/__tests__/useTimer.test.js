@@ -189,17 +189,17 @@ describe('useTimer - Core functionality', () => {
       unmount(); // Clean up
     });
 
-    it('starts from zero with default duration', () => {
+    it('does not start timer when remaining is zero', () => {
       const { result } = renderHook(() => useTimer(0));
 
       act(() => {
         result.current.toggleRunning();
       });
 
-      // Should use default when starting from zero (5 minutes = 300 seconds)
-      expect(result.current.duration).toBe(TIMER.DEFAULT_DURATION);
-      expect(result.current.remaining).toBe(TIMER.DEFAULT_DURATION);
-      expect(result.current.running).toBe(true);
+      // SDK 54 behavior: Timer does NOT start from zero (user must set duration first)
+      // This prevents accidental starts and matches UX expectations
+      expect(result.current.remaining).toBe(0);
+      expect(result.current.running).toBe(false);
     });
   });
 

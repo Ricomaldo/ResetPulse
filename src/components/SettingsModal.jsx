@@ -25,9 +25,11 @@ import { getAllActivities } from "../config/activities";
 import { TIMER_PALETTES, isPalettePremium } from "../config/timerPalettes";
 import haptics from "../utils/haptics";
 import { usePremiumStatus } from "../hooks/usePremiumStatus";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function SettingsModal({ visible, onClose }) {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const t = useTranslation();
   const theme = useTheme();
   const { currentPalette, setPalette } = useTimerPalette();
   const { resetOnboarding, startTooltips } = useOnboarding();
@@ -42,6 +44,8 @@ export default function SettingsModal({ visible, onClose }) {
     setUseMinimalInterface,
     showDigitalTimer,
     setShowDigitalTimer,
+    keepAwakeEnabled,
+    setKeepAwakeEnabled,
     currentActivity,
     setCurrentActivity,
     clockwise,
@@ -426,10 +430,10 @@ export default function SettingsModal({ visible, onClose }) {
         <View style={styles.modalContainer}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Paramètres</Text>
+            <Text style={styles.title}>{t('settings.title')}</Text>
             <TouchableOpacity
               accessible={true}
-              accessibilityLabel="Fermer les paramètres"
+              accessibilityLabel={t('accessibility.closeSettings')}
               accessibilityRole="button"
               onPress={onClose}
               style={styles.closeButton}
@@ -444,21 +448,21 @@ export default function SettingsModal({ visible, onClose }) {
           >
             {/* 1. 🪄 Interface (Card Primary) - Comment je veux utiliser l'app */}
             <View style={styles.sectionCardPrimary}>
-              <Text style={styles.sectionTitle}>🪄 Interface</Text>
+              <Text style={styles.sectionTitle}>{t('settings.interface.title')}</Text>
 
               {/* Interface minimaliste */}
               <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Interface minimaliste</Text>
+                  <Text style={styles.optionLabel}>{t('settings.interface.minimalInterface')}</Text>
                   <Text style={styles.optionDescription}>
                     {useMinimalInterface
-                      ? "Masque activités et couleurs quand le timer tourne"
-                      : "Interface complète même pendant le timer"}
+                      ? t('settings.interface.minimalInterfaceDescriptionOn')
+                      : t('settings.interface.minimalInterfaceDescriptionOff')}
                   </Text>
                 </View>
                 <Switch
                   accessible={true}
-                  accessibilityLabel="Interface minimaliste"
+                  accessibilityLabel={t('accessibility.minimalInterface')}
                   accessibilityRole="switch"
                   accessibilityState={{ checked: useMinimalInterface }}
                   value={useMinimalInterface}
@@ -473,11 +477,11 @@ export default function SettingsModal({ visible, onClose }) {
               {/* Chrono Numérique */}
               <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Chrono numérique</Text>
+                  <Text style={styles.optionLabel}>{t('settings.interface.digitalTimer')}</Text>
                   <Text style={styles.optionDescription}>
                     {showDigitalTimer
-                      ? "Affiche le temps restant en MM:SS"
-                      : "Chrono numérique désactivé"}
+                      ? t('settings.interface.digitalTimerDescriptionOn')
+                      : t('settings.interface.digitalTimerDescriptionOff')}
                   </Text>
                 </View>
                 <Switch
@@ -493,11 +497,11 @@ export default function SettingsModal({ visible, onClose }) {
               {/* Animation Pulse */}
               <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Animation Pulse</Text>
+                  <Text style={styles.optionLabel}>{t('settings.interface.pulseAnimation')}</Text>
                   <Text style={styles.optionDescription}>
                     {shouldPulse
-                      ? "Animation activée pendant le timer"
-                      : "Animation désactivée"}
+                      ? t('settings.interface.pulseAnimationDescriptionOn')
+                      : t('settings.interface.pulseAnimationDescriptionOff')}
                   </Text>
                 </View>
                 <Switch
@@ -506,18 +510,18 @@ export default function SettingsModal({ visible, onClose }) {
                     if (value) {
                       // Avertissement pour conformité épilepsie/photosensibilité
                       Alert.alert(
-                        "Animation de pulsation",
-                        "Cette option active une animation visuelle répétitive.\n\nÉvitez d'activer cette fonctionnalité si vous êtes sensible aux effets visuels ou si vous avez des antécédents de photosensibilité.",
+                        t('settings.interface.pulseWarningTitle'),
+                        t('settings.interface.pulseWarningMessage'),
                         [
                           {
-                            text: "Annuler",
+                            text: t('common.cancel'),
                             style: "cancel",
                             onPress: () => {
                               haptics.selection().catch(() => {});
                             },
                           },
                           {
-                            text: "Activer",
+                            text: t('settings.interface.pulseWarningEnable'),
                             onPress: () => {
                               haptics.switchToggle().catch(() => {});
                               setShouldPulse(true);
@@ -538,11 +542,11 @@ export default function SettingsModal({ visible, onClose }) {
 
             {/* 2. ⚙️ Timer (Card) - Réglages techniques du minuteur */}
             <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>⚙️ Timer</Text>
+              <Text style={styles.sectionTitle}>{t('settings.timer.title')}</Text>
 
               {/* Sons du Timer */}
               <Text style={styles.optionDescription}>
-                Choisissez le son qui sera joué à la fin du timer
+                {t('settings.timer.soundDescription')}
               </Text>
               <SoundPicker
                 selectedSoundId={selectedSoundId}
@@ -552,11 +556,11 @@ export default function SettingsModal({ visible, onClose }) {
               {/* Mode Cadran */}
               <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Mode Cadran</Text>
+                  <Text style={styles.optionLabel}>{t('settings.timer.dialMode')}</Text>
                   <Text style={styles.optionDescription}>
                     {scaleMode === "60min"
-                      ? "Échelle 60 minutes"
-                      : "25 minutes Pomodoro"}
+                      ? t('settings.timer.dialMode60')
+                      : t('settings.timer.dialMode25')}
                   </Text>
                 </View>
                 <View style={styles.segmentedControl}>
@@ -604,16 +608,16 @@ export default function SettingsModal({ visible, onClose }) {
               </View>
 
               {/* Sens de Rotation */}
-              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
+              <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Sens de rotation</Text>
+                  <Text style={styles.optionLabel}>{t('settings.timer.rotationDirection')}</Text>
                   <Text style={styles.optionDescription}>
-                    {clockwise ? "Sens horaire" : "Sens anti-horaire"}
+                    {clockwise ? t('settings.timer.rotationClockwise') : t('settings.timer.rotationCounterClockwise')}
                   </Text>
                 </View>
                 <Switch
                   accessible={true}
-                  accessibilityLabel="Sens de rotation"
+                  accessibilityLabel={t('accessibility.rotationDirection')}
                   accessibilityRole="switch"
                   accessibilityState={{ checked: clockwise }}
                   value={clockwise}
@@ -624,22 +628,46 @@ export default function SettingsModal({ visible, onClose }) {
                   {...theme.styles.switch(clockwise)}
                 />
               </View>
+
+              {/* Écran Toujours Allumé */}
+              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.optionLabel}>{t('settings.timer.keepAwake')}</Text>
+                  <Text style={styles.optionDescription}>
+                    {keepAwakeEnabled
+                      ? t('settings.timer.keepAwakeDescriptionOn')
+                      : t('settings.timer.keepAwakeDescriptionOff')}
+                  </Text>
+                </View>
+                <Switch
+                  accessible={true}
+                  accessibilityLabel={t('accessibility.keepAwake')}
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: keepAwakeEnabled }}
+                  value={keepAwakeEnabled}
+                  onValueChange={(value) => {
+                    haptics.switchToggle().catch(() => {});
+                    setKeepAwakeEnabled(value);
+                  }}
+                  {...theme.styles.switch(keepAwakeEnabled)}
+                />
+              </View>
             </View>
 
             {/* 3. 🎨 Apparence (Card) - Personnalisation visuelle */}
             <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>🎨 Apparence</Text>
+              <Text style={styles.sectionTitle}>{t('settings.appearance.title')}</Text>
 
               {/* Thème */}
               <View style={styles.optionRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Thème</Text>
+                  <Text style={styles.optionLabel}>{t('settings.appearance.theme')}</Text>
                   <Text style={styles.optionDescription}>
                     {theme.mode === "auto"
-                      ? "Automatique (système)"
+                      ? t('settings.appearance.themeDescriptionAuto')
                       : theme.mode === "dark"
-                      ? "Sombre"
-                      : "Clair"}
+                      ? t('settings.appearance.themeDescriptionDark')
+                      : t('settings.appearance.themeDescriptionLight')}
                   </Text>
                 </View>
                 <View style={styles.segmentedControl}>
@@ -660,7 +688,7 @@ export default function SettingsModal({ visible, onClose }) {
                         theme.mode === "light" && styles.segmentTextActive,
                       ]}
                     >
-                      ☀️ Clair
+                      {t('settings.appearance.themeLight')}
                     </Text>
                   </Touchable>
                   <Touchable
@@ -680,7 +708,7 @@ export default function SettingsModal({ visible, onClose }) {
                         theme.mode === "dark" && styles.segmentTextActive,
                       ]}
                     >
-                      🌙 Sombre
+                      {t('settings.appearance.themeDark')}
                     </Text>
                   </Touchable>
                   <Touchable
@@ -700,7 +728,7 @@ export default function SettingsModal({ visible, onClose }) {
                         theme.mode === "auto" && styles.segmentTextActive,
                       ]}
                     >
-                      📱 Auto
+                      {t('settings.appearance.themeAuto')}
                     </Text>
                   </Touchable>
                 </View>
@@ -709,16 +737,16 @@ export default function SettingsModal({ visible, onClose }) {
               {/* Palettes de couleurs */}
               <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Afficher les palettes</Text>
+                  <Text style={styles.optionLabel}>{t('settings.appearance.showPalettes')}</Text>
                   <Text style={styles.optionDescription}>
                     {showPalettes
-                      ? "Palettes visibles dans l'interface"
-                      : "Palettes masquées"}
+                      ? t('settings.appearance.showPalettesDescriptionOn')
+                      : t('settings.appearance.showPalettesDescriptionOff')}
                   </Text>
                 </View>
                 <Switch
                   accessible={true}
-                  accessibilityLabel="Afficher les palettes"
+                  accessibilityLabel={t('accessibility.showPalettes')}
                   accessibilityRole="switch"
                   accessibilityState={{ checked: showPalettes }}
                   value={showPalettes}
@@ -733,7 +761,7 @@ export default function SettingsModal({ visible, onClose }) {
               {showPalettes && (
                 <>
                   <Text style={[styles.optionDescription, { marginTop: theme.spacing.sm }]}>
-                    Version gratuite : Terre et Laser disponibles
+                    {t('settings.appearance.palettesDescription')}
                   </Text>
                   <View style={styles.paletteGrid}>
                     {Object.keys(TIMER_PALETTES).map((paletteName) => {
@@ -784,16 +812,16 @@ export default function SettingsModal({ visible, onClose }) {
               {/* Activités favorites */}
               <View style={[styles.optionRow, { marginTop: theme.spacing.md, borderBottomWidth: 0 }]}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Afficher les activités</Text>
+                  <Text style={styles.optionLabel}>{t('settings.appearance.showActivities')}</Text>
                   <Text style={styles.optionDescription}>
                     {showActivities
-                      ? "Activités visibles dans l'interface"
-                      : "Activités masquées"}
+                      ? t('settings.appearance.showActivitiesDescriptionOn')
+                      : t('settings.appearance.showActivitiesDescriptionOff')}
                   </Text>
                 </View>
                 <Switch
                   accessible={true}
-                  accessibilityLabel="Afficher les activités"
+                  accessibilityLabel={t('accessibility.showActivities')}
                   accessibilityRole="switch"
                   accessibilityState={{ checked: showActivities }}
                   value={showActivities}
@@ -818,7 +846,7 @@ export default function SettingsModal({ visible, onClose }) {
               {showActivities && (
                 <>
                   <Text style={[styles.optionDescription, { marginTop: theme.spacing.sm }]}>
-                    Sélectionnez vos favoris pour les voir en premier
+                    {t('settings.appearance.activitiesDescription')}
                   </Text>
                   <View style={styles.favoritesGrid}>
                     {allActivities.map((activity) => {
@@ -873,12 +901,12 @@ export default function SettingsModal({ visible, onClose }) {
 
             {/* 4. ℹ️ À propos (Flat) */}
             <View style={styles.sectionFlat}>
-              <Text style={styles.sectionTitle}>ℹ️ À propos</Text>
+              <Text style={styles.sectionTitle}>{t('settings.about.title')}</Text>
               <View style={styles.optionRow}>
                 <View>
-                  <Text style={styles.optionLabel}>ResetPulse</Text>
+                  <Text style={styles.optionLabel}>{t('settings.about.appName')}</Text>
                   <Text style={styles.optionDescription}>
-                    Timer visuel personalisable
+                    {t('settings.about.appDescription')}
                   </Text>
                   <Text
                     style={[
@@ -886,7 +914,7 @@ export default function SettingsModal({ visible, onClose }) {
                       { marginTop: theme.spacing.xs },
                     ]}
                   >
-                    Version 1.1.5
+                    {t('settings.about.version')} 1.1.7
                   </Text>
                 </View>
               </View>
@@ -904,9 +932,9 @@ export default function SettingsModal({ visible, onClose }) {
                 activeOpacity={0.7}
               >
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>Relancer le guide</Text>
+                  <Text style={styles.optionLabel}>{t('onboarding.restartGuide')}</Text>
                   <Text style={styles.optionDescription}>
-                    Afficher à nouveau l'écran de bienvenue et les conseils
+                    {t('onboarding.restartGuideDescription')}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -915,23 +943,23 @@ export default function SettingsModal({ visible, onClose }) {
             {/* Dev Section - Only visible in development */}
             {__DEV__ && (
               <View style={styles.sectionFlat}>
-                <Text style={styles.sectionTitle}>🔧 Développement</Text>
+                <Text style={styles.sectionTitle}>{t('settings.dev.title')}</Text>
                 <TouchableOpacity
                   style={styles.optionRow}
                   onPress={() => {
                     Alert.alert(
-                      "Réinitialiser l'onboarding",
-                      "L'écran de bienvenue et les tooltips seront affichés au prochain lancement de l'application.",
+                      t('settings.dev.resetOnboardingConfirmTitle'),
+                      t('settings.dev.resetOnboardingConfirmMessage'),
                       [
                         {
-                          text: "Annuler",
+                          text: t('common.cancel'),
                           style: "cancel",
                           onPress: () => {
                             haptics.selection().catch(() => {});
                           },
                         },
                         {
-                          text: "Réinitialiser",
+                          text: t('settings.dev.resetOnboardingConfirmButton'),
                           onPress: () => {
                             resetOnboarding();
                             haptics.success().catch(() => {});
@@ -946,10 +974,10 @@ export default function SettingsModal({ visible, onClose }) {
                 >
                   <View style={{ flex: 1 }}>
                     <Text style={styles.optionLabel}>
-                      Réinitialiser l'onboarding
+                      {t('settings.dev.resetOnboarding')}
                     </Text>
                     <Text style={styles.optionDescription}>
-                      Afficher à nouveau l'écran de bienvenue
+                      {t('onboarding.restartGuideDescription')}
                     </Text>
                   </View>
                 </TouchableOpacity>

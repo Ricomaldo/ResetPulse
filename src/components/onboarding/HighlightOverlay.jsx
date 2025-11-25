@@ -4,6 +4,8 @@ import { View, StyleSheet, Dimensions, Animated } from 'react-native';
 import Svg, { Rect, Defs, Mask } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeProvider';
 import { TRANSITION } from '../../constants/animations';
+import { getGridHeights } from '../../constants/gridLayout';
+import { rs } from '../../styles/responsive';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -57,19 +59,73 @@ export default function HighlightOverlay({ highlightedElement, targetBounds }) {
     );
   }
 
-  if (!highlightedElement || !targetBounds) return null;
+  if (!highlightedElement) return null;
+
+  // Use actual grid layout heights for accurate positioning
+  const heights = getGridHeights();
+  const horizontalPadding = rs(20);
+
+  // Calculate bounds based on the actual layout structure
+  let bounds = targetBounds;
+
+  if (!bounds) {
+    // Use the grid layout to calculate exact positions
+    if (highlightedElement === 'activities') {
+      // Activities is right after the header
+      bounds = {
+        top: heights.header,  // Exactly after header
+        left: horizontalPadding,
+        width: SCREEN_WIDTH - (horizontalPadding * 2),
+        height: heights.activities
+      };
+    } else if (highlightedElement === 'palette') {
+      // Palette is at the bottom, with a small margin
+      const marginBottom = rs(10, 'height');
+      bounds = {
+        top: SCREEN_HEIGHT - heights.palette - marginBottom,
+        left: horizontalPadding,
+        width: SCREEN_WIDTH - (horizontalPadding * 2),
+        height: heights.palette
+      };
+    } else if (highlightedElement === 'dial') {
+      // Timer dial is in the flex:1 center area
+      const dialSize = rs(280);
+      const timerSectionTop = heights.header + heights.activities;
+      const timerSectionBottom = SCREEN_HEIGHT - heights.palette - rs(10, 'height');
+      const timerSectionHeight = timerSectionBottom - timerSectionTop;
+
+      bounds = {
+        top: timerSectionTop + (timerSectionHeight - dialSize) / 2,
+        left: (SCREEN_WIDTH - dialSize) / 2,
+        width: dialSize,
+        height: dialSize
+      };
+    } else if (highlightedElement === 'controls') {
+      // Controls are in the timer section, below the dial
+      const controlsWidth = rs(200);
+      const controlsHeight = rs(60);
+      const timerSectionBottom = SCREEN_HEIGHT - heights.palette - rs(10, 'height');
+
+      bounds = {
+        top: timerSectionBottom - controlsHeight - rs(80, 'height'),  // Above palette with space
+        left: (SCREEN_WIDTH - controlsWidth) / 2,
+        width: controlsWidth,
+        height: controlsHeight
+      };
+    }
+  }
 
   // Add padding around spotlight for breathing room
   // Use larger padding on top for dial to accommodate duration indicator
   const verticalPadding = theme.spacing.sm;
-  const horizontalPadding = theme.spacing.lg; // Uniform horizontal padding for all
+  const spotlightHorizontalPadding = theme.spacing.lg; // Uniform horizontal padding for spotlight
   const topPadding = highlightedElement === 'dial' ? theme.spacing.lg : verticalPadding;
-  const { top, left, width, height } = targetBounds;
+  const { top, left, width, height } = bounds;
 
   // Apply padding to create margin around highlighted element
   const paddedTop = top - topPadding;
-  const paddedLeft = left - horizontalPadding;
-  const paddedWidth = width + (horizontalPadding * 2);
+  const paddedLeft = left - spotlightHorizontalPadding;
+  const paddedWidth = width + (spotlightHorizontalPadding * 2);
   const paddedHeight = height + (topPadding + verticalPadding); // Top padding + bottom padding
 
   const right = paddedLeft + paddedWidth;

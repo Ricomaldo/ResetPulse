@@ -2,7 +2,7 @@
   "expo": {
     "name": "ResetPulse",
     "slug": "resetPulse",
-    "version": "1.1.8",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -29,7 +29,8 @@
             "./assets/sounds/bell_short.wav"
           ]
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "notification": {
       "icon": "./assets/icon.png",

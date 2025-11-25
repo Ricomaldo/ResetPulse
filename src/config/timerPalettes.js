@@ -1,96 +1,118 @@
 // src/config/timerPalettes.js
 // Palettes de couleurs pour le timer (séparées du système de thème)
+// Organisation : Gratuites (2) → Vives/Saturées (4) → Chauds/Terreux (2) → Pastels/Doux (4) → Nature (3)
+// Progression : Énergie → Chaleur → Douceur → Sérénité
+import i18n from '../i18n';
 
 export const TIMER_PALETTES = {
+  // ========================================
+  // 🆓 PALETTES GRATUITES (2) - Introduction accessible
+  // ========================================
   terre: {
-    colors: ["#68752C", "#4A5568", "#8B3A3A", "#FFD700"],
-    name: "Terre",
+    colors: ["#4A5568", "#68752C", "#8B3A3A", "#FFD700"], // Bleu en premier (couleur par défaut onboarding)
+    get name() { return i18n.t('palettes.terre'); },
     isPremium: false,
     description: "Couleurs naturelles et apaisantes",
   },
   softLaser: {
     colors: ["#00D17A", "#00B8D9", "#D14AB8", "#E6D500"],
-    name: "Soft Laser",
+    get name() { return i18n.t('palettes.softLaser'); },
     isPremium: false,
     description: "Palette laser adoucie, plus douce pour les yeux",
   },
+
+  // ========================================
+  // 🌈 PALETTES VIVES/SATURÉES (4) - Couleurs énergiques
+  // ========================================
   classique: {
     colors: ["#2E5090", "#D94040", "#E8B93C", "#5AAA50"],
-    name: "Classique",
+    get name() { return i18n.t('palettes.classique'); },
     isPremium: true,
     description: "Palette traditionnelle harmonieuse",
   },
   tropical: {
     colors: ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA500"],
-    name: "Tropical",
+    get name() { return i18n.t('palettes.tropical'); },
     isPremium: true,
     description: "Couleurs chaudes et exotiques",
   },
-  zen: {
-    colors: ["#9DC88D", "#A8DADC", "#E5E5E5", "#B8A9C9"],
-    name: "Zen",
-    isPremium: true,
-    description: "Tons doux pour la méditation",
-  },
-  forêt: {
-    colors: ["#2D5016", "#4A7C2E", "#6FA84A", "#9ED16F"],
-    name: "Forêt",
-    isPremium: true,
-    description: "Verts profonds et naturels",
-  },
-  océan: {
-    colors: ["#003366", "#0066CC", "#3399FF", "#66CCFF"],
-    name: "Océan",
-    isPremium: true,
-    description: "Bleus apaisants des mers",
-  },
-  aurore: {
-    colors: ["#FFB6C1", "#FFE4B5", "#E6E6FA", "#F0E68C"],
-    name: "Aurore",
-    isPremium: true,
-    description: "Couleurs douces du matin",
-  },
   crépuscule: {
     colors: ["#FF6347", "#FF8C00", "#9370DB", "#4B0082"],
-    name: "Crépuscule",
+    get name() { return i18n.t('palettes.crépuscule'); },
     isPremium: true,
     description: "Tons chauds du soir",
   },
+  darkLaser: {
+    colors: ["#00C27A", "#00A1BF", "#B0439A", "#C9B200"],
+    get name() { return i18n.t('palettes.darkLaser'); },
+    isPremium: true,
+    description: "Palette laser atténuée, idéale sur fond sombre",
+  },
+
+  // ========================================
+  // 🍁 PALETTES CHAUDS/TERREUX (2) - Tons naturels chauds
+  // ========================================
+  automne: {
+    colors: ["#D2691E", "#CD853F", "#8B4513", "#DAA520"], // Chocolat, Cuivre, Rouille, Or
+    get name() { return i18n.t('palettes.automne'); },
+    isPremium: true,
+    description: "Tons chauds d'automne",
+  },
+  aurore: {
+    colors: ["#FFB6C1", "#FFE4B5", "#E6E6FA", "#F0E68C"],
+    get name() { return i18n.t('palettes.aurore'); },
+    isPremium: true,
+    description: "Couleurs douces du matin",
+  },
+
+  // ========================================
+  // 🌸 PALETTES PASTELS/DOUX (4) - Tons apaisants
+  // ========================================
   douce: {
     colors: ["#E8B4B8", "#C5A3C0", "#A7C7E7", "#B8D4B8"],
-    name: "Douce",
+    get name() { return i18n.t('palettes.douce'); },
     isPremium: true,
     description: "Pastels délicats",
   },
   pastel_girly: {
     colors: ["#FFB3D9", "#E0BBE4", "#FFDFD3", "#C7CEEA"],
-    name: "Pastelles",
+    get name() { return i18n.t('palettes.pastel_girly'); },
     isPremium: true,
     description: "Pastels féminins tendres",
   },
-  verts: {
-    colors: ["#2D5016", "#4A7C2E", "#6FA84A", "#9ED16F"],
-    name: "Verts",
+  lavande: {
+    colors: ["#9370DB", "#BA55D3", "#DDA0DD", "#E6E6FA"], // Violet moyen, Orchidée, Prune, Lavande
+    get name() { return i18n.t('palettes.lavande'); },
     isPremium: true,
-    description: "Nuances de vert nature",
+    description: "Violets doux apaisants",
   },
-  bleus: {
-    colors: ["#003366", "#0066CC", "#3399FF", "#66CCFF"],
-    name: "Bleus",
+  zen: {
+    colors: ["#9DC88D", "#A8DADC", "#E5E5E5", "#B8A9C9"],
+    get name() { return i18n.t('palettes.zen'); },
     isPremium: true,
-    description: "Palette de bleus variés",
+    description: "Tons doux pour la méditation",
   },
+
+  // ========================================
+  // 🌊 PALETTES NATURE/BLEU-VERT (3) - Finale apaisante
+  // ========================================
   canard: {
     colors: ["#004D4D", "#008080", "#20B2AA", "#48D1CC"],
-    name: "Canard",
+    get name() { return i18n.t('palettes.canard'); },
     isPremium: true,
     description: "Bleus-verts sophistiqués",
   },
-  darkLaser: {
-    colors: ["#00C27A", "#00A1BF", "#B0439A", "#C9B200"],
-    name: "Dark Laser",
+  forêt: {
+    colors: ["#2D5016", "#4A7C2E", "#6FA84A", "#9ED16F"],
+    get name() { return i18n.t('palettes.forêt'); },
     isPremium: true,
-    description: "Palette laser atténuée, idéale sur fond sombre",
+    description: "Verts profonds et naturels",
+  },
+  océan: {
+    colors: ["#003366", "#0066CC", "#3399FF", "#66CCFF"],
+    get name() { return i18n.t('palettes.océan'); },
+    isPremium: true,
+    description: "Bleus apaisants des mers",
   },
 };
 

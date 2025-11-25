@@ -24,8 +24,6 @@ const ThemeContext = createContext(null);
 export const ThemeProvider = ({ children }) => {
   // Détection du thème système avec Appearance API (plus fiable que useColorScheme)
   const initialScheme = Appearance.getColorScheme();
-  console.log('🔍 Appearance.getColorScheme() returns:', initialScheme);
-
   const [systemColorScheme, setSystemColorScheme] = useState(
     initialScheme || 'light'
   );
@@ -38,15 +36,7 @@ export const ThemeProvider = ({ children }) => {
     // Listener pour les changements de thème système
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setSystemColorScheme(colorScheme || 'light');
-      if (__DEV__) {
-        console.log(`📱 System color scheme changed to: ${colorScheme}`);
-      }
     });
-
-    // Log initial
-    if (__DEV__) {
-      console.log(`📱 Initial system color scheme: ${systemColorScheme}`);
-    }
 
     return () => subscription.remove();
   }, []);
@@ -120,10 +110,7 @@ export const ThemeProvider = ({ children }) => {
     },
   };
 
-  // Log du changement de thème (dev only)
-  useEffect(() => {
-    console.log(`🎨 Theme mode: ${themeMode} | System: ${systemColorScheme} | isDark: ${isDark}`);
-  }, [themeMode, isDark, systemColorScheme]);
+  // Theme changes effect (dev logging removed - use React DevTools if needed)
 
   return (
     <ThemeContext.Provider value={theme}>

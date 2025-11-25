@@ -1,11 +1,12 @@
 // src/config/activities.js
+import i18n from '../i18n';
 
 export const ACTIVITIES = [
   // Basic timer - always first
   {
     id: "none",
     emoji: "",
-    label: "Basique",
+    get label() { return i18n.t('activities.none'); },
     defaultDuration: 2700, // 45 minutes
     isPremium: false,
     suggestedColor: "calm",
@@ -17,7 +18,7 @@ export const ACTIVITIES = [
   {
     id: "work",
     emoji: "💻",
-    label: "Travail",
+    get label() { return i18n.t('activities.work'); },
     defaultDuration: 1500, // 25 minutes (Pomodoro)
     isPremium: false,
     suggestedColor: "deep",
@@ -27,7 +28,7 @@ export const ACTIVITIES = [
   {
     id: "break",
     emoji: "☕",
-    label: "Pause",
+    get label() { return i18n.t('activities.break'); },
     defaultDuration: 900, // 15 minutes
     isPremium: false, // Complète le Pomodoro
     suggestedColor: "calm",
@@ -37,7 +38,7 @@ export const ACTIVITIES = [
   {
     id: "breathing",
     emoji: "🌬️",
-    label: "Respiration",
+    get label() { return i18n.t('activities.breathing'); },
     defaultDuration: 240, // 4 minutes
     isPremium: false, // Gratuit - ancrage neuroatypique baseline
     suggestedColor: "energy",
@@ -49,7 +50,7 @@ export const ACTIVITIES = [
   {
     id: "reading",
     emoji: "📖",
-    label: "Lecture",
+    get label() { return i18n.t('activities.reading'); },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "focus",
@@ -59,7 +60,7 @@ export const ACTIVITIES = [
   {
     id: "study",
     emoji: "📚",
-    label: "Étude",
+    get label() { return i18n.t('activities.study'); },
     defaultDuration: 2700, // 45 minutes
     isPremium: true,
     pulseDuration: 700, // Modéré-rapide
@@ -69,7 +70,7 @@ export const ACTIVITIES = [
   {
     id: "meditation",
     emoji: "🧘",
-    label: "Méditation",
+    get label() { return i18n.t('activities.meditation'); },
     defaultDuration: 1200, // 20 minutes
     isPremium: true,
     suggestedColor: "calm",
@@ -79,7 +80,7 @@ export const ACTIVITIES = [
   {
     id: "yoga",
     emoji: "🧘‍♀️",
-    label: "Yoga",
+    get label() { return i18n.t('activities.yoga'); },
     defaultDuration: 900, // 15 minutes
     isPremium: true,
     suggestedColor: "calm",
@@ -89,7 +90,7 @@ export const ACTIVITIES = [
   {
     id: "sport",
     emoji: "💪",
-    label: "Sport",
+    get label() { return i18n.t('activities.sport'); },
     defaultDuration: 600, // 10 minutes
     isPremium: true,
     suggestedColor: "energy",
@@ -99,7 +100,7 @@ export const ACTIVITIES = [
   {
     id: "walking",
     emoji: "🚶",
-    label: "Marche",
+    get label() { return i18n.t('activities.walking'); },
     defaultDuration: 1200, // 20 minutes
     isPremium: true,
     suggestedColor: "deep",
@@ -111,7 +112,7 @@ export const ACTIVITIES = [
   {
     id: "creativity",
     emoji: "🎨",
-    label: "Créativité",
+    get label() { return i18n.t('activities.creativity'); },
     defaultDuration: 2700, // 45 minutes
     isPremium: true,
     suggestedColor: "focus",
@@ -121,7 +122,7 @@ export const ACTIVITIES = [
   {
     id: "cooking",
     emoji: "👨‍🍳",
-    label: "Cuisine",
+    get label() { return i18n.t('activities.cooking'); },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "energy",
@@ -131,7 +132,7 @@ export const ACTIVITIES = [
   {
     id: "gaming",
     emoji: "🎮",
-    label: "Jeux",
+    get label() { return i18n.t('activities.gaming'); },
     defaultDuration: 1200, // 20 minutes
     isPremium: true,
     suggestedColor: "energy",
@@ -141,7 +142,7 @@ export const ACTIVITIES = [
   {
     id: "homework",
     emoji: "✏️",
-    label: "Devoirs",
+    get label() { return i18n.t('activities.homework'); },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "focus",
@@ -151,7 +152,7 @@ export const ACTIVITIES = [
   {
     id: "music",
     emoji: "🎵",
-    label: "Musique",
+    get label() { return i18n.t('activities.music'); },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "calm",
@@ -161,7 +162,7 @@ export const ACTIVITIES = [
   {
     id: "cleaning",
     emoji: "🧹",
-    label: "Ménage",
+    get label() { return i18n.t('activities.cleaning'); },
     defaultDuration: 900, // 15 minutes
     isPremium: true,
     pulseDuration: 700, // Modéré-rapide - activité physique

@@ -24,10 +24,6 @@ const configureAudioOnce = async () => {
     });
 
     isGloballyConfigured = true;
-
-    if (__DEV__) {
-      console.log('✅ Audio System configured (once for all)');
-    }
   } catch (error) {
     if (__DEV__) {
       console.warn('⚠️ Audio config warning:', error.message);

@@ -15,12 +15,14 @@ import {
 import { useTheme } from "../theme/ThemeProvider";
 import { usePurchases } from "../contexts/PurchaseContext";
 import { useAnalytics } from "../hooks/useAnalytics";
+import { useTranslation } from "../hooks/useTranslation";
 import { rs } from "../styles/responsive";
 import haptics from "../utils/haptics";
 
 export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   const theme = useTheme();
   const analytics = useAnalytics();
+  const t = useTranslation();
   const {
     purchaseProduct,
     restorePurchases,
@@ -65,9 +67,9 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       if (offerings?.error === "network") {
         console.error('[IAP] ❌ Network error while fetching offerings');
         Alert.alert(
-          "Pas de connexion",
-          "Impossible de charger les offres. Vérifiez votre connexion internet.",
-          [{ text: "OK" }]
+          t('premium.noConnection'),
+          t('premium.noConnectionMessage'),
+          [{ text: t('common.ok') }]
         );
         setIsPurchasing(false);
         return;
@@ -86,9 +88,9 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
           packagesLength: offerings?.availablePackages?.length
         });
         Alert.alert(
-          "Erreur",
-          "Impossible de récupérer les offres. Réessayez plus tard.",
-          [{ text: "OK" }]
+          t('premium.error'),
+          t('premium.errorOfferings'),
+          [{ text: t('common.ok') }]
         );
         setIsPurchasing(false);
         return;
@@ -120,32 +122,32 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       if (result.success) {
         haptics.success().catch(() => {});
         Alert.alert(
-          "Bienvenue Premium ! 🎉",
-          "Toutes les palettes et activités sont maintenant débloquées.",
-          [{ text: "Super !", onPress: onClose }]
+          t('premium.welcomeTitle'),
+          t('premium.welcomeMessage'),
+          [{ text: t('premium.welcomeButton'), onPress: onClose }]
         );
       } else if (result.cancelled) {
         // User cancelled, silent
       } else if (result.isNetworkError) {
         // Network error - user-friendly message
-        Alert.alert("Pas de connexion", result.error, [{ text: "OK" }]);
+        Alert.alert(t('premium.noConnection'), result.error, [{ text: t('common.ok') }]);
       } else if (result.isPaymentPending) {
         // Payment pending - informative message
-        Alert.alert("Paiement en cours", result.error, [
-          { text: "OK", onPress: onClose },
+        Alert.alert(t('premium.paymentPending'), result.error, [
+          { text: t('common.ok'), onPress: onClose },
         ]);
       } else {
         // Generic error
         Alert.alert(
-          "Erreur",
-          result.error || "Une erreur est survenue lors de l'achat.",
-          [{ text: "OK" }]
+          t('premium.error'),
+          result.error || t('premium.errorPurchase'),
+          [{ text: t('common.ok') }]
         );
       }
     } catch (error) {
       console.error("[PremiumModal] Purchase error:", error);
-      Alert.alert("Erreur", "Une erreur est survenue. Réessayez plus tard.", [
-        { text: "OK" },
+      Alert.alert(t('premium.error'), t('premium.errorOfferings'), [
+        { text: t('common.ok') },
       ]);
     } finally {
       setIsPurchasing(false);
@@ -163,32 +165,32 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
         if (result.hasPremium) {
           haptics.success().catch(() => {});
           Alert.alert(
-            "Restauration réussie",
-            "Vos achats ont été restaurés. Toutes les fonctionnalités premium sont débloquées.",
-            [{ text: "Super !", onPress: onClose }]
+            t('premium.restoreSuccess'),
+            t('premium.restoreSuccessMessage'),
+            [{ text: t('premium.welcomeButton'), onPress: onClose }]
           );
         } else {
           Alert.alert(
-            "Aucun achat trouvé",
-            "Aucun achat précédent n'a été trouvé pour ce compte.",
-            [{ text: "OK" }]
+            t('premium.restoreNone'),
+            t('premium.restoreNoneMessage'),
+            [{ text: t('common.ok') }]
           );
         }
       } else if (result.isNetworkError) {
         // Network error during restore
-        Alert.alert("Pas de connexion", result.error, [{ text: "OK" }]);
+        Alert.alert(t('premium.noConnection'), result.error, [{ text: t('common.ok') }]);
       } else {
         // Generic restore error
         Alert.alert(
-          "Erreur",
-          result.error || "Impossible de restaurer vos achats.",
-          [{ text: "OK" }]
+          t('premium.error'),
+          result.error || t('premium.restoreError'),
+          [{ text: t('common.ok') }]
         );
       }
     } catch (error) {
       console.error("[PremiumModal] Restore error:", error);
-      Alert.alert("Erreur", "Une erreur inattendue est survenue.", [
-        { text: "OK" },
+      Alert.alert(t('premium.error'), t('premium.unexpectedError'), [
+        { text: t('common.ok') },
       ]);
     } finally {
       setIsRestoring(false);
@@ -358,25 +360,24 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
         <View style={styles.modalContainer}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Débloquer Premium</Text>
+            <Text style={styles.title}>{t('premium.title')}</Text>
           </View>
 
           {/* Body */}
           <View style={styles.body}>
             <Text style={styles.bodyText}>
-              ResetPulse est gratuit et fonctionnel.{"\n"}
-              Pour plus d'activités et de palettes, débloquez premium.
+              {t('premium.description')}
             </Text>
 
             {/* Features Box */}
             <View style={styles.features}>
               <Text style={styles.featuresText}>
-                15 palettes + 16 activités
+                {t('premium.features')}
               </Text>
               <Text style={styles.priceText}>
-                4,99€ - Une fois, pour toujours
+                {t('premium.price')}
               </Text>
-              <Text style={styles.trialText}>Trial gratuit 7 jours</Text>
+              <Text style={styles.trialText}>{t('premium.trial')}</Text>
             </View>
           </View>
 
@@ -390,14 +391,14 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               onPress={handlePurchase}
               disabled={isAnyOperationInProgress}
               activeOpacity={0.8}
-              accessibilityLabel="Commencer l'essai gratuit"
+              accessibilityLabel={t('premium.startTrial')}
               accessibilityRole="button"
             >
               {isPurchasing ? (
                 <ActivityIndicator color="#FFFFFF" size="small" />
               ) : (
                 <Text style={styles.primaryButtonText}>
-                  Commencer l'essai gratuit
+                  {t('premium.startTrial')}
                 </Text>
               )}
             </TouchableOpacity>
@@ -407,11 +408,11 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               onPress={handleClose}
               disabled={isAnyOperationInProgress}
               activeOpacity={0.7}
-              accessibilityLabel="Peut-être plus tard"
+              accessibilityLabel={t('premium.maybeLater')}
               accessibilityRole="button"
             >
               <Text style={styles.secondaryButtonText}>
-                Peut-être plus tard
+                {t('premium.maybeLater')}
               </Text>
             </TouchableOpacity>
 
@@ -421,7 +422,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               onPress={handleRestore}
               disabled={isAnyOperationInProgress}
               activeOpacity={0.7}
-              accessibilityLabel="Restaurer mes achats"
+              accessibilityLabel={t('premium.restore')}
               accessibilityRole="button"
             >
               {isRestoring ? (
@@ -432,7 +433,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
                 />
               ) : (
                 <Text style={styles.restoreButtonText}>
-                  Restaurer mes achats
+                  {t('premium.restore')}
                 </Text>
               )}
             </TouchableOpacity>
