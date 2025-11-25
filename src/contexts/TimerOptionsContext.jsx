@@ -15,6 +15,7 @@ export const TimerOptionsProvider = ({ children }) => {
       showPalettes: true, // Affichage des palettes activé par défaut
       useMinimalInterface: true, // Interface minimaliste activée par défaut (masque activités + palettes quand timer tourne)
       showDigitalTimer: true, // Chrono numérique activé par défaut
+      keepAwakeEnabled: true, // Maintenir l'écran allumé pendant le timer (ON par défaut - timer visuel TDAH)
       clockwise: false,
       scaleMode: '60min',
       currentActivity: getDefaultActivity(),
@@ -32,6 +33,7 @@ export const TimerOptionsProvider = ({ children }) => {
     showPalettes: values.showPalettes,
     useMinimalInterface: values.useMinimalInterface,
     showDigitalTimer: values.showDigitalTimer,
+    keepAwakeEnabled: values.keepAwakeEnabled,
     clockwise: values.clockwise,
     scaleMode: values.scaleMode,
     currentActivity: values.currentActivity,
@@ -46,6 +48,7 @@ export const TimerOptionsProvider = ({ children }) => {
     setShowPalettes: (val) => updateValue('showPalettes', val),
     setUseMinimalInterface: (val) => updateValue('useMinimalInterface', val),
     setShowDigitalTimer: (val) => updateValue('showDigitalTimer', val),
+    setKeepAwakeEnabled: (val) => updateValue('keepAwakeEnabled', val),
     setClockwise: (val) => updateValue('clockwise', val),
     setScaleMode: (val) => updateValue('scaleMode', val),
     setCurrentActivity: (val) => updateValue('currentActivity', val),

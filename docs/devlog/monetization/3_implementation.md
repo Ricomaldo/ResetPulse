@@ -289,6 +289,71 @@ Garder testMode.js fonctionnel pour:
 const FORCE_PREMIUM = **DEV** && TEST_MODE;
 return FORCE_PREMIUM || isPremium;
 
+---
+
+## Configuration Spécifique Android
+
+### Google Play Service Account (Post-Mai 2024)
+
+**IMPORTANT**: Pour les comptes Google Play créés après Mai 2024, l'ancienne méthode "Link service account" dans API access ne fonctionne plus.
+
+**Méthode correcte**:
+
+1. **Google Play Console** → Users & Permissions
+2. **Invite User** (PAS "Link service account")
+3. **Email**: revenuecat-service-account@revenuecat-474510.iam.gserviceaccount.com
+4. **Permissions requises**:
+   - View app information and download bulk reports (read-only)
+   - View financial data, orders, and cancellation survey responses
+   - Manage orders and subscriptions
+
+**Statut**: Configuration fonctionnelle
+
+**Clé d'apprentissage**: Documentation RevenueCat ancienne référence l'ancienne API. Pour les comptes récents, inviter directement le service account comme utilisateur standard.
+
+### ProGuard Rules Android
+
+**CRITIQUE**: Ajouter les règles ProGuard suivantes pour éviter crashes en production
+
+**Fichier**: `android/app/proguard-rules.pro`
+
+```proguard
+# RevenueCat SDK
+-keep class com.revenuecat.purchases.** { *; }
+-keep interface com.revenuecat.purchases.** { *; }
+
+# Google Play Billing
+-keep class com.android.billingclient.** { *; }
+-keep interface com.android.billingclient.** { *; }
+```
+
+**Raison**: ProGuard peut obfusquer les classes billing RevenueCat et causer des crashes en production avec `minifyEnabled=true`
+
+### Test Build Android Release
+
+**Commandes**:
+```bash
+cd android
+./gradlew clean
+./gradlew bundleRelease
+
+# Vérifier que le AAB est généré
+ls -lh app/build/outputs/bundle/release/app-release.aab
+```
+
+**Important**: Tester sur device physique après l'ajout des ProGuard rules pour vérifier qu'aucun crash ne survient.
+
+---
+
+## Checklist Pré-Production Android
+
+- [ ] ProGuard rules ajoutées (RevenueCat + Billing)
+- [ ] TEST_MODE = false dans build production
+- [ ] Build release testé avec ProGuard activé
+- [ ] Purchase flow testé sur device physique Android
+- [ ] Google Play Service Account invité dans Users & Permissions
+- [ ] License testing configuré dans Play Console
+
 ```</parameter>
 </invoke>
 ```

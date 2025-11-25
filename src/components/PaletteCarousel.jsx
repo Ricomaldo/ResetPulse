@@ -11,6 +11,7 @@ import {
 import { useTheme } from "../theme/ThemeProvider";
 import { useTimerPalette } from "../contexts/TimerPaletteContext";
 import { useOnboarding } from "./onboarding/OnboardingController";
+import { useTranslation } from "../hooks/useTranslation";
 import { rs } from "../styles/responsive";
 import { TIMER_PALETTES } from "../config/timerPalettes";
 import { usePremiumStatus } from "../hooks/usePremiumStatus";
@@ -19,6 +20,7 @@ import PremiumModal from "./PremiumModal";
 
 export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
+  const t = useTranslation();
   const {
     currentPalette,
     setPalette,
@@ -365,7 +367,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
                       // Pendant l'onboarding: toast léger au lieu de modal
                       if (isOnboardingActive) {
-                        showToast('Terminez le guide pour découvrir les palettes premium !');
+                        showToast(t('premium.onboardingToast'));
                         return;
                       }
 
@@ -395,7 +397,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
                     // Pendant l'onboarding: toast léger au lieu de modal
                     if (isOnboardingActive) {
-                      showToast('Terminez le guide pour découvrir les palettes premium !');
+                      showToast(t('premium.onboardingToast'));
                       return;
                     }
 
@@ -407,7 +409,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                   accessibilityLabel="Débloquer cette palette premium"
                   accessibilityRole="button"
                 >
-                  <Text style={styles.unlockText}>Débloquer ✨</Text>
+                  <Text style={styles.unlockText}>{t('premium.unlock')}</Text>
                 </TouchableOpacity>
               )}
             </View>

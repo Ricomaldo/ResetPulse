@@ -5,6 +5,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useOnboarding, TOOLTIP_IDS } from '../components/onboarding/OnboardingController';
+import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
+import { useTranslation } from '../hooks/useTranslation';
 import ActivityCarousel from '../components/ActivityCarousel';
 import PaletteCarousel from '../components/PaletteCarousel';
 import TimeTimer from '../components/TimeTimer';
@@ -104,11 +106,15 @@ const calculateTooltipPosition = (bounds, tooltipHeight = 120) => {
 
 function TimerScreenContent() {
   const theme = useTheme();
+  const t = useTranslation();
   const { showActivities, showPalettes, useMinimalInterface } = useTimerOptions();
   const { registerTooltipTarget, onboardingCompleted } = useOnboarding();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerRef = useRef(null);
+
+  // Keep screen awake during timer (ON par défaut - timer visuel TDAH)
+  useTimerKeepAwake();
 
   // Refs for measuring actual elements
   const activitiesRef = useRef(null);
@@ -250,8 +256,8 @@ function TimerScreenContent() {
         <View style={{ flex: 1 }} />
         <TouchableOpacity
           accessible={true}
-          accessibilityLabel="Paramètres"
-          accessibilityHint="Ouvrir les paramètres de l'application"
+          accessibilityLabel={t('accessibility.settings')}
+          accessibilityHint={t('accessibility.openSettings')}
           accessibilityRole="button"
           style={[styles.settingsButton, {
             backgroundColor: theme.colors.brand.neutral,
@@ -276,7 +282,6 @@ function TimerScreenContent() {
           setTimeout(() => {
             activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
               const bounds = { top: pageY, left: pageX, width, height };
-              console.log('Activities bounds:', bounds);
               const position = calculateTooltipPosition(bounds);
               registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
             });
@@ -334,7 +339,6 @@ function TimerScreenContent() {
           setTimeout(() => {
             paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
               const bounds = { top: pageY, left: pageX, width, height };
-              console.log('Palette bounds (parent):', bounds);
               const position = calculateTooltipPosition(bounds);
               registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
             });

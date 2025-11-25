@@ -6,43 +6,37 @@ import { rs } from '../../styles/responsive';
 
 /**
  * DigitalTimer - Displays remaining time in MM:SS format
- * Only visible when timer is running and user preference is enabled
+ * Always visible when enabled in settings, updates dynamically during dial adjustment
  */
 export default function DigitalTimer({ remaining, isRunning, color }) {
   const theme = useTheme();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateYAnim = useRef(new Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current; // Start at 1 (visible)
+  const translateYAnim = useRef(new Animated.Value(0)).current; // Start at 0 (no offset)
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  // Animate entrance/exit
+  // Subtle pulse animation when timer is running
   useEffect(() => {
     if (isRunning) {
-      // Fade in + slide up
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateYAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      // Subtle scale pulse every second
+      const pulseAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(scaleAnim, {
+            toValue: 1.02,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      pulseAnimation.start();
+      return () => pulseAnimation.stop();
     } else {
-      // Fade out
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateYAnim, {
-          toValue: 20,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      // Reset scale when not running
+      scaleAnim.setValue(1);
     }
   }, [isRunning]);
 
@@ -90,12 +84,17 @@ export default function DigitalTimer({ remaining, isRunning, color }) {
         styles.container,
         {
           opacity: fadeAnim,
-          transform: [{ translateY: translateYAnim }],
+          transform: [
+            { translateY: translateYAnim },
+            { scale: scaleAnim }
+          ],
         },
       ]}
-      pointerEvents={isRunning ? 'auto' : 'none'}
+      pointerEvents="none" // Always non-interactive, just displays time
     >
-      <Text style={styles.timeText}>{formatTime(remaining)}</Text>
+      <Text style={[styles.timeText, { opacity: isRunning ? 1 : 0.7 }]}>
+        {formatTime(remaining)}
+      </Text>
     </Animated.View>
   );
 }

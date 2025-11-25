@@ -16,4 +16,14 @@
 -keep interface com.mixpanel.** { *; }
 -dontwarn com.mixpanel.**
 
+# RevenueCat SDK - In-App Purchases (CRITICAL for v1.2.0)
+-keep class com.revenuecat.purchases.** { *; }
+-keep interface com.revenuecat.purchases.** { *; }
+-dontwarn com.revenuecat.purchases.**
+
+# Google Play Billing (required for RevenueCat)
+-keep class com.android.billingclient.** { *; }
+-keep interface com.android.billingclient.** { *; }
+-dontwarn com.android.billingclient.**
+
 # Add any project specific keep options here:

@@ -1,5 +1,6 @@
 // src/components/onboarding/OnboardingContext.jsx
 import { createContext, useContext } from 'react';
+import i18n from '../../i18n';
 
 // Context pour l'onboarding
 export const OnboardingContext = createContext(null);
@@ -15,31 +16,32 @@ export function useOnboarding() {
 
 // Tooltips configuration - Séquence: 1→2→3→4→5 (découverte progressive)
 // Ordre optimisé pour permettre l'interaction pendant l'onboarding
+// Using i18n directly here since this is a constant, not a component
 export const TOOLTIPS_CONFIG = [
   {
     id: 'activities',
-    text: 'Sélectionnez votre activité',
+    get text() { return i18n.t('onboarding.activities'); },
     arrowDirection: 'up',
   },
   {
     id: 'dial',
-    text: 'Ajustez la durée du timer',
+    get text() { return i18n.t('onboarding.dial'); },
     arrowDirection: 'down',
   },
   {
     id: 'palette',
-    text: 'Changez les couleurs à votre guise',
+    get text() { return i18n.t('onboarding.palette'); },
     arrowDirection: 'down',
   },
   {
     id: 'controls',
-    text: 'Démarrez, mettez en pause, ou réinitialisez',
-    subtext: 'Le timer continue en arrière-plan',
+    get text() { return i18n.t('onboarding.controls'); },
+    get subtext() { return i18n.t('onboarding.controlsSubtext'); },
     arrowDirection: 'down',
   },
   {
     id: 'completion',
-    text: 'Profitez bien de ResetPulse !',
+    get text() { return i18n.t('onboarding.completion'); },
     subtext: null,
     arrowDirection: null, // Centered message, no target
   },

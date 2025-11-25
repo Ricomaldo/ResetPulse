@@ -5,6 +5,101 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-11-25
+
+### 🌍 International Edition - Production Release
+
+**Status**: ✅ DEPLOYED - Android Internal Testing + iOS TestFlight
+
+#### Release Information
+- **Release Name**: International Edition / Global Release
+- **Android**: v1.2.0 (versionCode 17) - Internal Testing on Google Play
+- **iOS**: v1.2.0 (buildNumber 21) - TestFlight
+- **Build Date**: 2025-11-25
+
+#### Major Features
+
+### 🌍 M7.6 - Internationalisation (Phase 5 Complete)
+
+**Status**: ✅ TESTING - 15 langues implémentées
+
+#### Added
+
+- **i18n Complete Coverage** - 15 langues supportées
+  - Langues : FR, EN, ES, DE, IT, PT, NL, JA, KO, ZH-Hans, ZH-Hant, AR, RU, SV, NO
+  - Strings : 160+ keys traduites (onboarding, settings, premium, palettes, activités, sons)
+  - Système : react-i18next avec détection automatique langue device
+
+- **Traductions manquantes ajoutées**
+  - `premium.unlock`: "Débloquer ✨" → "Unlock ✨" (15 langues)
+  - `premium.onboardingToast`: Toast onboarding palettes premium (15 langues)
+  - `sounds.*`: 10 noms de sons traduits (bell_classic, microwave_vintage, etc.)
+  - `palettes.automne`: "Automne" → "Autumn" / "Otoño" / "秋" (15 langues)
+  - `palettes.lavande`: "Lavande" → "Lavender" / "Lavanda" / "ラベンダー" (15 langues)
+
+- **Hooks i18n**
+  - `useTranslation()` : Hook custom pour accès traductions
+  - Utilisation : `const t = useTranslation(); t('settings.title')`
+
+#### Changed
+
+- **Chrono Numérique UX amélioré** (`src/components/timer/DigitalTimer.jsx`)
+  - Avant : Visible uniquement quand timer lancé
+  - Après : Visible en permanence (si activé dans settings)
+  - Réglage cadran : Opacité 70% + temps dynamique en temps réel
+  - Timer en cours : Opacité 100% + pulse subtil (échelle 1.02x)
+
+- **Palettes optimisées** (`src/config/timerPalettes.js`)
+  - **Doublons supprimés** : "verts" et "bleus" (identiques à "forêt" et "océan")
+  - **Nouvelles palettes** :
+    - `automne` : Tons chauds marron/cuivre (chocolat, cuivre, rouille, or)
+    - `lavande` : Violets doux (violet moyen, orchidée, prune, lavande)
+  - **Couleur onboarding** : Bleu (#4A5568) au lieu de vert (#68752C)
+  - **Ordre optimisé** : Progression chromatique Énergie → Chaleur → Douceur → Sérénité
+    - 🆓 Gratuites (2) : terre, softLaser
+    - 🌈 Vives/Saturées (4) : classique, tropical, crépuscule, darkLaser
+    - 🍁 Chauds/Terreux (2) : automne, aurore
+    - 🌸 Pastels/Doux (4) : douce, pastel_girly, lavande, zen
+    - 🌊 Nature/Bleu-Vert (3) : canard, forêt, océan
+
+- **Refactoring i18n dans code**
+  - `PaletteCarousel.jsx` : Badge "Débloquer ✨" utilise `t('premium.unlock')`
+  - `PaletteCarousel.jsx` : Toast onboarding utilise `t('premium.onboardingToast')`
+  - `soundsMapping.js` : Noms de sons utilisent `i18n.t('sounds.*')` avec getters
+
+#### Technical
+
+- **TEST_MODE** : Désactivé (`false`) - Mode production freemium actif
+- **Fichiers modifiés** : 19 (15 locales + 4 composants)
+- **Traductions totales** : 160+ keys × 15 langues = 2400+ strings
+- **ProGuard Rules** : Added for RevenueCat SDK and Google Play Billing
+- **Android Signing** : Fixed release configuration to use production keystore
+- **Version Bump Script** : Automated version update across 5 files
+
+#### Testing
+
+- ✅ Tests hooks : 29/29 passed
+- ✅ Compilation : OK (aucune erreur)
+- ✅ Android AAB : Built successfully (65 MB)
+- ✅ iOS Build : EAS build completed with auto-submit to TestFlight
+- ⏳ Tests manuels : Android Internal Testing + iOS TestFlight
+
+#### Deployment
+
+- **Android Build Process**:
+  - Fixed critical signing configuration issue (was using debug keystore for release)
+  - Added ProGuard rules for RevenueCat to prevent obfuscation crashes
+  - Build command: `./gradlew bundleRelease`
+  - AAB location: `app/build/outputs/bundle/release/app-release.aab`
+
+- **iOS Build Process**:
+  - EAS build with production profile
+  - Auto-submit enabled for TestFlight
+  - Provisioning profile regenerated automatically
+  - Build command: `eas build --platform ios --profile production --auto-submit`
+
+---
+
 ## [1.1.8] - 2025-10-20
 
 ### 📊 M7.5 - Analytics Foundation Complete
