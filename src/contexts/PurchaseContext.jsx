@@ -66,6 +66,40 @@ export const PurchaseProvider = ({ children }) => {
 
     try {
       setIsPurchasing(true);
+
+      // WORKAROUND for RevenueCat bug with non-consumable products
+      // Try to get the package instead of using product directly
+      console.log('[RevenueCat] 🔍 Attempting purchase with product ID:', productIdentifier);
+
+      // First try to get offerings to find the package
+      const offerings = await Purchases.getOfferings();
+      if (offerings.current && offerings.current.availablePackages.length > 0) {
+        const targetPackage = offerings.current.availablePackages.find(
+          pkg => pkg.product.identifier === productIdentifier
+        );
+
+        if (targetPackage) {
+          console.log('[RevenueCat] 📦 Found package, using purchasePackage:', targetPackage.identifier);
+          const { customerInfo: info } = await Purchases.purchasePackage(targetPackage);
+          updateCustomerInfo(info);
+
+          // Get transaction details for analytics
+          const latestTransaction = info.nonSubscriptionTransactions?.[0] || info.latestExpirationDate;
+          const transactionId = latestTransaction?.transactionIdentifier || 'unknown';
+          const price = latestTransaction?.price || 4.99;
+
+          // Track trial started (M7.5)
+          Analytics.trackTrialStarted(productIdentifier);
+
+          // Track purchase completed (M7.5)
+          Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
+
+          return { success: true };
+        }
+      }
+
+      // Fallback to purchaseProduct if package not found
+      console.log('[RevenueCat] ⚠️ Package not found, falling back to purchaseProduct');
       const { customerInfo: info } = await Purchases.purchaseProduct(productIdentifier);
       updateCustomerInfo(info);
 
@@ -161,7 +195,34 @@ export const PurchaseProvider = ({ children }) => {
 
   const getOfferings = async () => {
     try {
+      console.log('[RevenueCat] 🔍 Fetching offerings...');
       const offerings = await Purchases.getOfferings();
+
+      // DEBUG: Log complete offerings structure
+      console.log('[RevenueCat] 📦 Raw offerings object:', {
+        hasAll: !!offerings.all,
+        allKeys: offerings.all ? Object.keys(offerings.all) : [],
+        hasCurrent: !!offerings.current,
+        currentIdentifier: offerings.current?.identifier,
+        currentPackages: offerings.current?.availablePackages?.length || 0
+      });
+
+      // Log current offering details if available
+      if (offerings.current) {
+        console.log('[RevenueCat] ✅ Current offering found:', {
+          identifier: offerings.current.identifier,
+          packagesCount: offerings.current.availablePackages?.length,
+          packages: offerings.current.availablePackages?.map(pkg => ({
+            identifier: pkg.identifier,
+            productIdentifier: pkg.product?.identifier,
+            productType: pkg.product?.productType,
+            price: pkg.product?.priceString
+          }))
+        });
+      } else {
+        console.warn('[RevenueCat] ⚠️ No current offering found');
+      }
+
       return offerings.current;
     } catch (error) {
       // Handle network errors when fetching offerings

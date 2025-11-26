@@ -13,13 +13,13 @@ export const REVENUECAT_CONFIG = {
     apiKey: "appl_NJoSzWzcoJXLiNDMTGKJShISApt",
   },
   android: {
-    apiKey: "goog_OemWJnBmzLuWoAGmEfDJKFBEAYc",
+    apiKey: "goog_URjPIqpNSxbyogfdststoCOmQRg",
   },
 };
 
 // Produit unique: one-time purchase
 export const PRODUCT_IDS = {
-  premium_lifetime: "com.irimwebforge.resetpulse.premium_lifetime",
+  premium_lifetime: "com.irimwebforge.resetpulse.premium_lifetime_v2",
 };
 
 // Entitlement unique
