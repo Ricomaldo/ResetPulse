@@ -5,19 +5,32 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0] - 2025-11-25
+## [1.2.0] - 2025-11-26
 
 ### 🌍 International Edition - Production Release
 
-**Status**: ✅ DEPLOYED - Android Internal Testing + iOS TestFlight
+**Status**: ✅ READY FOR PRODUCTION - IAP Fixed!
 
 #### Release Information
 - **Release Name**: International Edition / Global Release
-- **Android**: v1.2.0 (versionCode 17) - Internal Testing on Google Play
+- **Android**: v1.2.0 (versionCode 20) - Internal Testing on Google Play
 - **iOS**: v1.2.0 (buildNumber 21) - TestFlight
-- **Build Date**: 2025-11-25
+- **Build Date**: 2025-11-26
 
 #### Major Features
+
+### 🔧 Critical IAP Fix - RevenueCat Android Bug Workaround
+
+**Status**: ✅ FIXED - Build 20 résout le bug critique
+
+#### Fixed
+
+- **Bug RevenueCat Android** - Achat Premium impossible
+  - Problème : RevenueCat cherchait un type `subscription` pour un produit `non-consumable`
+  - Symptôme : "Missing productDetails: productType='subs'" alors que Google Play retournait `type="inapp"`
+  - Solution : Workaround utilisant `purchasePackage()` au lieu de `purchaseProduct()`
+  - Nouveau produit : `com.irimwebforge.resetpulse.premium_lifetime_v2` (4,99€)
+  - Build 20 : versionCode 20 avec workaround implémenté
 
 ### 🌍 M7.6 - Internationalisation (Phase 5 Complete)
 
