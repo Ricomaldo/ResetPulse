@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.3] - 2025-12-02
 
+### 🎨 Default Color Fix
+
+#### Fixed
+
+- **Couleur par défaut changée en bleu** (`src/config/timerPalettes.js`)
+  - Avant : `#4A5568` (gris bleuté)
+  - Après : `#3B82A0` (bleu terre/océan)
+  - Première couleur vue par les nouveaux utilisateurs
+
+---
+
 ### 🎯 Paywall Copy Optimization - Version Minimaliste
 
 **Objectif:** Améliorer conversion paywall (5.71% → target >18%)
