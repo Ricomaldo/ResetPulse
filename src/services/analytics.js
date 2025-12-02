@@ -52,8 +52,9 @@ class AnalyticsService {
 
       // Super properties (persistent toutes sessions)
       const appVersion = Constants.expoConfig?.version || '1.1.7';
+      const platformName = Platform.OS === 'ios' ? 'iOS' : 'Android';
       this.setSuperProperties({
-        platform: Platform.OS,
+        platform: platformName,
         app_version: appVersion,
       });
 

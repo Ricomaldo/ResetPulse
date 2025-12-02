@@ -5,6 +5,31 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2025-12-02
+
+### 📊 Analytics Improvements
+
+#### Added
+
+- **`app_opened` event** (`App.js`)
+  - Track app opens avec `is_first_launch` boolean
+  - Utilise AsyncStorage pour détecter premier lancement
+  - Event déclenché après init Mixpanel
+
+#### Changed
+
+- **Platform casing uniformisé** (`src/services/analytics.js`)
+  - Avant : `platform: 'ios'` / `platform: 'android'` (minuscule)
+  - Après : `platform: 'iOS'` / `platform: 'Android'` (casse standard)
+  - Évite fragmentation données Mixpanel
+
+- **`paywall_viewed` dédupliqué** (`src/components/PremiumModal.jsx`)
+  - Avant : Event déclenché à chaque ouverture modal (même user = N events)
+  - Après : Event déclenché une seule fois par session
+  - Ratio paywall→trial plus fiable pour mesurer conversion
+
+---
+
 ## [1.2.1] - 2025-12-02
 
 ### 🔧 Prix dynamique RevenueCat
