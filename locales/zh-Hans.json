@@ -89,6 +89,7 @@
     "description": "ResetPulse 免费且功能完整。\n解锁高级版可获得更多活动和调色板。",
     "features": "15个调色板 + 16个活动",
     "price": "¥35 - 一次性买断",
+    "priceOnce": "一次性买断",
     "trial": "7天免费试用",
     "startTrial": "开始免费试用",
     "maybeLater": "稍后再说",
