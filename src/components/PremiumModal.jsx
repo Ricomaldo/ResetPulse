@@ -399,9 +399,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
                 {t('premium.features')}
               </Text>
               <Text style={styles.priceText}>
-                {dynamicPrice
-                  ? `${dynamicPrice} - ${t('premium.priceOnce')}`
-                  : t('premium.price')}
+                {t('premium.price', { price: dynamicPrice || '4,99€' })}
               </Text>
               <Text style={styles.trialText}>{t('premium.trial')}</Text>
             </View>
