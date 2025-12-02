@@ -1,6 +1,7 @@
 // App.js
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, StatusBar, Animated } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
@@ -80,6 +81,14 @@ export default function App() {
   useEffect(() => {
     const initAnalytics = async () => {
       await Analytics.init();
+
+      // Track app_opened event
+      const hasLaunched = await AsyncStorage.getItem('has_launched_before');
+      Analytics.trackAppOpened(!hasLaunched);
+
+      if (!hasLaunched) {
+        await AsyncStorage.setItem('has_launched_before', 'true');
+      }
     };
 
     initAnalytics();
