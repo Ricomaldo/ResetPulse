@@ -5,6 +5,28 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2025-12-02
+
+### 🎯 Paywall Copy Optimization
+
+**Objectif:** Améliorer conversion paywall (5.71% → target >18%)
+
+#### Changed
+
+- **Copy paywall optimisé** (15 langues)
+  - `premium.title`: Value prop positive ("Personnalisez votre journée")
+  - `premium.description`: Bénéfice utilisateur ("Adaptez chaque moment à votre énergie")
+  - `premium.features`: Bullets structurés avec ✓ (palettes, activités, ADHD-friendly)
+  - `premium.trial`: Highlight visible "🎁 7 JOURS GRATUITS"
+  - `premium.price`: Format "Puis {price} une fois, pour toujours" avec interpolation
+  - `premium.startTrial`: CTA actionnable "Essayer 7 jours gratuit"
+
+- **Prix dynamique avec interpolation** (`src/components/PremiumModal.jsx`)
+  - Utilise `t('premium.price', { price: dynamicPrice })` pour injection variable
+  - Fallback 4,99€ si RevenueCat non disponible
+
+---
+
 ## [1.2.2] - 2025-12-02
 
 ### 📊 Analytics Improvements
