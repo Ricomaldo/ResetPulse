@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "Personalizza la tua giornata",
-    "description": "Adatta ogni momento alla tua energia",
-    "features": "✓ 15 palette colori\n✓ 16 attività personalizzate\n✓ Timer adatto all'ADHD",
-    "price": "Poi {price} una volta, per sempre",
+    "title": "Sblocca tutto",
+    "description": "Tutti i colori.\nTutte le attività.\nIl tuo massimo comfort.",
+    "features": "🎁 7 GIORNI GRATIS",
+    "price": "Poi {price} una volta.\nTuo per sempre.",
     "priceOnce": "Una volta, per sempre",
-    "trial": "🎁 7 GIORNI GRATIS",
+    "trial": "",
     "startTrial": "Prova 7 giorni gratis",
     "maybeLater": "Forse più tardi",
     "restore": "Ripristina i miei acquisti",

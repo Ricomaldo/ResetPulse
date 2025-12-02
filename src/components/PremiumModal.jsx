@@ -309,13 +309,6 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       marginBottom: theme.spacing.xs,
     },
 
-    trialText: {
-      fontSize: rs(14, "min"),
-      color: theme.colors.textSecondary,
-      textAlign: "center",
-      fontStyle: "italic",
-    },
-
     buttons: {
       gap: theme.spacing.md,
     },
@@ -401,7 +394,6 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               <Text style={styles.priceText}>
                 {t('premium.price', { price: dynamicPrice || '4,99€' })}
               </Text>
-              <Text style={styles.trialText}>{t('premium.trial')}</Text>
             </View>
           </View>
 

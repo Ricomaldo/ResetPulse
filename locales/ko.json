@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "나만의 하루 만들기",
-    "description": "에너지에 맞춰 매 순간을 조절하세요",
-    "features": "✓ 15가지 컬러 팔레트\n✓ 16가지 맞춤 활동\n✓ ADHD 친화적 타이머",
-    "price": "이후 {price} 영구 구매",
+    "title": "모두 잠금 해제",
+    "description": "모든 색상.\n모든 활동.\n최고의 편안함.",
+    "features": "🎁 7일 무료",
+    "price": "이후 {price} 한 번만.\n영원히 당신의 것.",
     "priceOnce": "영구 구매",
-    "trial": "🎁 7일 무료",
+    "trial": "",
     "startTrial": "7일 무료 체험",
     "maybeLater": "나중에",
     "restore": "구매 복원",

@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "あなたの一日をカスタマイズ",
-    "description": "あなたのエネルギーに合わせて毎日を調整",
-    "features": "✓ 15種類のカラーパレット\n✓ 16種類のカスタムアクティビティ\n✓ ADHD対応タイマー",
-    "price": "その後 {price} で永久利用",
+    "title": "すべてを解放",
+    "description": "すべてのカラー。\nすべてのアクティビティ。\n最高の快適さ。",
+    "features": "🎁 7日間無料",
+    "price": "その後 {price} で一度だけ。\nずっとあなたのもの。",
     "priceOnce": "買い切り",
-    "trial": "🎁 7日間無料",
+    "trial": "",
     "startTrial": "7日間無料で試す",
     "maybeLater": "後で",
     "restore": "購入を復元",

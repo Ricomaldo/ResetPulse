@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "Anpassa din dag",
-    "description": "Anpassa varje ögonblick efter din energi",
-    "features": "✓ 15 färgpaletter\n✓ 16 anpassade aktiviteter\n✓ ADHD-vänlig timer",
-    "price": "Sedan {price} en gång, för alltid",
+    "title": "Lås upp allt",
+    "description": "Alla färger.\nAlla aktiviteter.\nDin maximala komfort.",
+    "features": "🎁 7 DAGAR GRATIS",
+    "price": "Sedan {price} en gång.\nDin för alltid.",
     "priceOnce": "En gång, för alltid",
-    "trial": "🎁 7 DAGAR GRATIS",
+    "trial": "",
     "startTrial": "Prova 7 dagar gratis",
     "maybeLater": "Kanske senare",
     "restore": "Återställ mina köp",

@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "Personaliseer je dag",
-    "description": "Pas elk moment aan je energie aan",
-    "features": "✓ 15 kleurenpaletten\n✓ 16 gepersonaliseerde activiteiten\n✓ ADHD-vriendelijke timer",
-    "price": "Daarna {price} eenmalig, voor altijd",
+    "title": "Ontgrendel alles",
+    "description": "Alle kleuren.\nAlle activiteiten.\nJouw maximale comfort.",
+    "features": "🎁 7 DAGEN GRATIS",
+    "price": "Daarna {price} eenmalig.\nVan jou voor altijd.",
     "priceOnce": "Eenmalig, voor altijd",
-    "trial": "🎁 7 DAGEN GRATIS",
+    "trial": "",
     "startTrial": "7 dagen gratis proberen",
     "maybeLater": "Misschien later",
     "restore": "Mijn aankopen herstellen",

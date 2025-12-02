@@ -88,12 +88,12 @@
     }
   },
   "premium": {
-    "title": "Personnalisez votre journée",
-    "description": "Adaptez chaque moment à votre énergie",
-    "features": "✓ 15 palettes couleurs\n✓ 16 activités personnalisées\n✓ Timer adapté TDAH",
-    "price": "Puis {price} une fois, pour toujours",
+    "title": "Débloque tout",
+    "description": "Toutes les couleurs.\nToutes les activités.\nTon confort maximum.",
+    "features": "🎁 7 JOURS GRATUITS",
+    "price": "Puis {price} une fois.\nÀ toi pour toujours.",
     "priceOnce": "Une fois, pour toujours",
-    "trial": "🎁 7 JOURS GRATUITS",
+    "trial": "",
     "startTrial": "Essayer 7 jours gratuit",
     "maybeLater": "Peut-être plus tard",
     "restore": "Restaurer mes achats",
