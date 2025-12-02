@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "Customize your day",
-    "description": "Adapt every moment to your energy",
-    "features": "✓ 15 color palettes\n✓ 16 custom activities\n✓ ADHD-friendly timer",
-    "price": "Then {price} once, forever",
+    "title": "Unlock everything",
+    "description": "All the colors.\nAll the activities.\nYour maximum comfort.",
+    "features": "🎁 7 DAYS FREE",
+    "price": "Then {price} once.\nYours forever.",
     "priceOnce": "Once, forever",
-    "trial": "🎁 7 DAYS FREE",
+    "trial": "",
     "startTrial": "Try 7 days free",
     "maybeLater": "Maybe later",
     "restore": "Restore my purchases",

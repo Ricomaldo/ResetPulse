@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "定制你的一天",
-    "description": "根据你的能量调整每一刻",
-    "features": "✓ 15种配色方案\n✓ 16种自定义活动\n✓ ADHD友好计时器",
-    "price": "之后 {price} 永久使用",
+    "title": "解锁全部",
+    "description": "所有颜色。\n所有活动。\n你的最大舒适。",
+    "features": "🎁 7天免费",
+    "price": "之后 {price} 一次性。\n永远属于你。",
     "priceOnce": "一次性买断",
-    "trial": "🎁 7天免费",
+    "trial": "",
     "startTrial": "免费试用7天",
     "maybeLater": "稍后再说",
     "restore": "恢复我的购买",

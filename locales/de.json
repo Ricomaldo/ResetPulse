@@ -85,12 +85,12 @@
     }
   },
   "premium": {
-    "title": "Gestalte deinen Tag",
-    "description": "Passe jeden Moment an deine Energie an",
-    "features": "✓ 15 Farbpaletten\n✓ 16 personalisierte Aktivitäten\n✓ ADHS-freundlicher Timer",
-    "price": "Dann {price} einmalig, für immer",
+    "title": "Alles freischalten",
+    "description": "Alle Farben.\nAlle Aktivitäten.\nDein maximaler Komfort.",
+    "features": "🎁 7 TAGE KOSTENLOS",
+    "price": "Dann {price} einmalig.\nDeins für immer.",
     "priceOnce": "Einmalig, für immer",
-    "trial": "🎁 7 TAGE KOSTENLOS",
+    "trial": "",
     "startTrial": "7 Tage kostenlos testen",
     "maybeLater": "Vielleicht später",
     "restore": "Käufe wiederherstellen",

@@ -7,23 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.3] - 2025-12-02
 
-### 🎯 Paywall Copy Optimization
+### 🎯 Paywall Copy Optimization - Version Minimaliste
 
 **Objectif:** Améliorer conversion paywall (5.71% → target >18%)
 
 #### Changed
 
-- **Copy paywall optimisé** (15 langues)
-  - `premium.title`: Value prop positive ("Personnalisez votre journée")
-  - `premium.description`: Bénéfice utilisateur ("Adaptez chaque moment à votre énergie")
-  - `premium.features`: Bullets structurés avec ✓ (palettes, activités, ADHD-friendly)
-  - `premium.trial`: Highlight visible "🎁 7 JOURS GRATUITS"
-  - `premium.price`: Format "Puis {price} une fois, pour toujours" avec interpolation
-  - `premium.startTrial`: CTA actionnable "Essayer 7 jours gratuit"
+- **Copy paywall "Version C - Minimaliste punch"** (15 langues)
+  - `premium.title`: "Débloque tout" (direct, action)
+  - `premium.description`: "Toutes les couleurs.\nToutes les activités.\nTon confort maximum."
+  - `premium.features`: "🎁 7 JOURS GRATUITS" (trial visible en premier)
+  - `premium.price`: "Puis {price} une fois.\nÀ toi pour toujours."
+  - `premium.trial`: Supprimé (intégré dans features)
 
-- **Prix dynamique avec interpolation** (`src/components/PremiumModal.jsx`)
-  - Utilise `t('premium.price', { price: dynamicPrice })` pour injection variable
-  - Fallback 4,99€ si RevenueCat non disponible
+- **Simplification UI** (`src/components/PremiumModal.jsx`)
+  - Suppression du texte trial séparé (maintenant dans features box)
+  - Prix dynamique avec interpolation `{price}`
 
 ---
 
