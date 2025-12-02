@@ -31,15 +31,39 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   } = usePurchases();
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [hasTrackedPaywall, setHasTrackedPaywall] = useState(false);
+  const [dynamicPrice, setDynamicPrice] = useState(null);
+  const [isLoadingPrice, setIsLoadingPrice] = useState(false);
 
-  // Track paywall viewed (M7.5)
+  // Track paywall viewed once per session (M7.5)
   useEffect(() => {
-    if (visible) {
-      // Determine source from highlightedFeature or default
+    if (visible && !hasTrackedPaywall) {
       const source = highlightedFeature || 'unknown';
       analytics.trackPaywallViewed(source);
+      setHasTrackedPaywall(true);
     }
-  }, [visible, highlightedFeature]);
+  }, [visible, hasTrackedPaywall, highlightedFeature]);
+
+  // Fetch dynamic price from RevenueCat when modal opens
+  useEffect(() => {
+    const fetchPrice = async () => {
+      if (!visible || dynamicPrice) return;
+
+      setIsLoadingPrice(true);
+      try {
+        const offerings = await getOfferings();
+        if (offerings?.availablePackages?.[0]?.product?.priceString) {
+          setDynamicPrice(offerings.availablePackages[0].product.priceString);
+        }
+      } catch (error) {
+        console.log('[PremiumModal] Could not fetch dynamic price:', error);
+      } finally {
+        setIsLoadingPrice(false);
+      }
+    };
+
+    fetchPrice();
+  }, [visible]);
 
   // Combined loading state (local + context)
   const isAnyOperationInProgress =
@@ -375,7 +399,9 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
                 {t('premium.features')}
               </Text>
               <Text style={styles.priceText}>
-                {t('premium.price')}
+                {dynamicPrice
+                  ? `${dynamicPrice} - ${t('premium.priceOnce')}`
+                  : t('premium.price')}
               </Text>
               <Text style={styles.trialText}>{t('premium.trial')}</Text>
             </View>

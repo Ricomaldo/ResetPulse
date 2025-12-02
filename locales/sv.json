@@ -89,6 +89,7 @@
     "description": "ResetPulse är gratis och funktionell.\nFör fler aktiviteter och paletter, lås upp premium.",
     "features": "15 paletter + 16 aktiviteter",
     "price": "49 kr - En gång, för alltid",
+    "priceOnce": "En gång, för alltid",
     "trial": "Gratis 7-dagars provperiod",
     "startTrial": "Starta gratis provperiod",
     "maybeLater": "Kanske senare",

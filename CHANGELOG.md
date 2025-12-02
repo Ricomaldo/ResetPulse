@@ -5,6 +5,24 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-12-02
+
+### 🔧 Prix dynamique RevenueCat
+
+#### Changed
+
+- **Prix Premium dynamique** (`src/components/PremiumModal.jsx`)
+  - Avant : Prix hardcodé dans i18n (4,99€, 49kr, ¥700, etc.)
+  - Après : Prix récupéré dynamiquement via `priceString` de RevenueCat
+  - Avantage : Le prix affiché correspond toujours au prix réel du store de l'utilisateur
+  - Fallback : Si RevenueCat échoue, affiche le prix i18n hardcodé
+
+- **Nouvelle clé i18n `premium.priceOnce`** (15 langues)
+  - Texte "Une fois, pour toujours" séparé du prix
+  - Permet l'affichage : `{priceString} - {t('premium.priceOnce')}`
+
+---
+
 ## [1.2.0] - 2025-11-26
 
 ### 🌍 International Edition - Production Release
