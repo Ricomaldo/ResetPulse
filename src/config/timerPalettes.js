@@ -9,7 +9,7 @@ export const TIMER_PALETTES = {
   // 🆓 PALETTES GRATUITES (2) - Introduction accessible
   // ========================================
   terre: {
-    colors: ["#4A5568", "#68752C", "#8B3A3A", "#FFD700"], // Bleu en premier (couleur par défaut onboarding)
+    colors: ["#3B82A0", "#68752C", "#8B3A3A", "#FFD700"], // Bleu terre en premier (couleur par défaut onboarding)
     get name() { return i18n.t('palettes.terre'); },
     isPremium: false,
     description: "Couleurs naturelles et apaisantes",
