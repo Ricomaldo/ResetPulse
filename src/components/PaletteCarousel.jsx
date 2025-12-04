@@ -13,10 +13,10 @@ import { useTimerPalette } from "../contexts/TimerPaletteContext";
 import { useOnboarding } from "./onboarding/OnboardingController";
 import { useTranslation } from "../hooks/useTranslation";
 import { rs } from "../styles/responsive";
-import { TIMER_PALETTES } from "../config/timerPalettes";
+import { TIMER_PALETTES, getFreePalettes } from "../config/timerPalettes";
 import { usePremiumStatus } from "../hooks/usePremiumStatus";
 import haptics from "../utils/haptics";
-import PremiumModal from "./PremiumModal";
+import { PremiumModal, MoreColorsModal } from "./modals";
 
 export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -35,21 +35,29 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const toastAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showColorsModal, setShowColorsModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  const { isPremium: isPremiumUser } = usePremiumStatus(); // Check premium status
-  const PALETTE_NAMES = Object.keys(TIMER_PALETTES);
-  const currentPaletteIndex = PALETTE_NAMES.indexOf(currentPalette);
+  const { isPremium: isPremiumUser } = usePremiumStatus();
+
+  // En freemium : seulement les palettes gratuites + bouton "+"
+  // En premium : toutes les palettes
+  const FREE_PALETTE_NAMES = getFreePalettes();
+  const ALL_PALETTE_NAMES = Object.keys(TIMER_PALETTES);
+  const DISPLAY_PALETTES = isPremiumUser ? ALL_PALETTE_NAMES : FREE_PALETTE_NAMES;
+
+  const currentPaletteIndex = DISPLAY_PALETTES.indexOf(currentPalette);
+  const effectiveIndex = currentPaletteIndex >= 0 ? currentPaletteIndex : 0;
 
   // Mode DEMO: pendant l'onboarding, pas de modal premium (toast léger à la place)
   const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
   // Scroll to current palette on mount
   useEffect(() => {
-    if (scrollViewRef.current && currentPaletteIndex >= 0) {
+    if (scrollViewRef.current && effectiveIndex >= 0) {
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
-          x: currentPaletteIndex * rs(232, "width"),
+          x: effectiveIndex * rs(232, "width"),
           animated: false,
         });
       }, 100);
@@ -91,26 +99,28 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     ]).start(() => setToastMessage(''));
   };
 
+  // Calcul de la largeur totale (palettes + bouton "+" en freemium)
+  const totalSlides = isPremiumUser ? DISPLAY_PALETTES.length : DISPLAY_PALETTES.length + 1;
+
   // Handle scroll end to detect palette change
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const containerWidth = rs(232, "width");
     const newIndex = Math.round(offsetX / containerWidth);
 
+    // Si on est sur le bouton "+" (dernière slide en freemium), ne rien faire
+    if (!isPremiumUser && newIndex >= DISPLAY_PALETTES.length) {
+      return;
+    }
+
     if (
-      newIndex !== currentPaletteIndex &&
+      newIndex !== effectiveIndex &&
       newIndex >= 0 &&
-      newIndex < PALETTE_NAMES.length
+      newIndex < DISPLAY_PALETTES.length
     ) {
-      const newPaletteName = PALETTE_NAMES[newIndex];
-      const paletteInfo = TIMER_PALETTES[newPaletteName];
-      // Only change palette if it's not premium or user is premium
-      // Allow scrolling through premium palettes (don't block or trigger modal)
-      if (!paletteInfo.isPremium || isPremiumUser) {
-        setPalette(newPaletteName);
-        showPaletteName();
-      }
-      // No action for premium palettes - user can browse but not select
+      const newPaletteName = DISPLAY_PALETTES[newIndex];
+      setPalette(newPaletteName);
+      showPaletteName();
     }
   };
 
@@ -199,23 +209,33 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       letterSpacing: 0.5,
     },
 
-    unlockBadge: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: [{ translateX: -45 }, { translateY: -12 }],
-      backgroundColor: "rgba(0, 0, 0, 0.7)",
-      paddingHorizontal: theme.spacing.sm,
+    // Bouton "+" pour découvrir plus de palettes
+    moreButtonContainer: {
+      width: rs(232, "width"),
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       paddingVertical: theme.spacing.xs,
-      borderRadius: theme.borderRadius.md,
-      zIndex: 20,
+      paddingHorizontal: rs(6, "width"),
     },
 
-    unlockText: {
-      fontSize: rs(11, "min"),
-      fontWeight: "600",
-      color: "#FFFFFF",
-      letterSpacing: 0.3,
+    moreButton: {
+      width: rs(44, "min"),
+      height: rs(44, "min"),
+      borderRadius: rs(22, "min"),
+      backgroundColor: theme.colors.surface,
+      borderWidth: 2,
+      borderColor: theme.colors.border,
+      borderStyle: "dashed",
+      alignItems: "center",
+      justifyContent: "center",
+      ...theme.shadows.sm,
+    },
+
+    moreButtonText: {
+      fontSize: rs(24, "min"),
+      color: theme.colors.textSecondary,
+      fontWeight: "300",
     },
 
     onboardingToast: {
@@ -241,41 +261,51 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
   // Navigation functions
   const scrollToPrevious = () => {
-    if (currentPaletteIndex > 0) {
-      const newIndex = currentPaletteIndex - 1;
-      const newPaletteName = PALETTE_NAMES[newIndex];
-      const paletteInfo = TIMER_PALETTES[newPaletteName];
+    if (effectiveIndex > 0) {
+      const newIndex = effectiveIndex - 1;
+      const newPaletteName = DISPLAY_PALETTES[newIndex];
 
       scrollViewRef.current?.scrollTo({
         x: newIndex * rs(232, "width"),
         animated: true,
       });
 
-      // Change palette if it's free, just scroll if premium (user must tap to unlock)
-      if (!paletteInfo.isPremium || isPremiumUser) {
+      setPalette(newPaletteName);
+      showPaletteName();
+    }
+  };
+
+  const scrollToNext = () => {
+    // Permettre de scroller vers le bouton "+" en freemium
+    const maxIndex = isPremiumUser ? DISPLAY_PALETTES.length - 1 : DISPLAY_PALETTES.length;
+
+    if (effectiveIndex < maxIndex) {
+      const newIndex = effectiveIndex + 1;
+
+      scrollViewRef.current?.scrollTo({
+        x: newIndex * rs(232, "width"),
+        animated: true,
+      });
+
+      // Si on arrive sur une vraie palette, la sélectionner
+      if (newIndex < DISPLAY_PALETTES.length) {
+        const newPaletteName = DISPLAY_PALETTES[newIndex];
         setPalette(newPaletteName);
         showPaletteName();
       }
     }
   };
 
-  const scrollToNext = () => {
-    if (currentPaletteIndex < PALETTE_NAMES.length - 1) {
-      const newIndex = currentPaletteIndex + 1;
-      const newPaletteName = PALETTE_NAMES[newIndex];
-      const paletteInfo = TIMER_PALETTES[newPaletteName];
+  const handleMorePress = () => {
+    haptics.selection().catch(() => {});
 
-      scrollViewRef.current?.scrollTo({
-        x: newIndex * rs(232, "width"),
-        animated: true,
-      });
-
-      // Change palette if it's free, just scroll if premium (user must tap to unlock)
-      if (!paletteInfo.isPremium || isPremiumUser) {
-        setPalette(newPaletteName);
-        showPaletteName();
-      }
+    // Pendant l'onboarding: toast léger au lieu de modal
+    if (isOnboardingActive) {
+      showToast(t('premium.onboardingToast'));
+      return;
     }
+
+    setShowColorsModal(true);
   };
 
   return (
@@ -284,10 +314,10 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       <TouchableOpacity
         style={[
           styles.chevronButton,
-          currentPaletteIndex === 0 && styles.chevronDisabled,
+          effectiveIndex === 0 && styles.chevronDisabled,
         ]}
         onPress={scrollToPrevious}
-        disabled={currentPaletteIndex === 0}
+        disabled={effectiveIndex === 0}
         activeOpacity={0.7}
       >
         <Text style={styles.chevronText}>‹</Text>
@@ -331,12 +361,10 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         snapToInterval={rs(232, "width")}
         decelerationRate="fast"
       >
-        {PALETTE_NAMES.map((paletteName, paletteIndex) => {
-          // Get colors for this palette
+        {DISPLAY_PALETTES.map((paletteName, paletteIndex) => {
           const paletteInfo = TIMER_PALETTES[paletteName];
           const colors = paletteInfo.colors;
           const isCurrentPalette = paletteName === currentPalette;
-          const isLocked = paletteInfo.isPremium && !isPremiumUser;
 
           return (
             <View key={paletteName} style={styles.paletteContainer}>
@@ -355,66 +383,43 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                     styles.colorButton,
                     {
                       backgroundColor: color,
-                      opacity: isLocked ? 0.4 : isCurrentPalette ? 1 : 0.5,
+                      opacity: isCurrentPalette ? 1 : 0.5,
                     },
                     isCurrentPalette &&
                       currentColor === color &&
                       styles.colorButtonActive,
                   ]}
                   onPress={() => {
-                    if (isLocked) {
-                      haptics.warning().catch(() => {});
-
-                      // Pendant l'onboarding: toast léger au lieu de modal
-                      if (isOnboardingActive) {
-                        showToast(t('premium.onboardingToast'));
-                        return;
-                      }
-
-                      // Après l'onboarding: modal normale
-                      setShowPremiumModal(true);
+                    if (isCurrentPalette) {
+                      setColorIndex(colorIndex);
                     } else {
-                      if (isCurrentPalette) {
-                        setColorIndex(colorIndex);
-                      } else {
-                        // Switch to that palette
-                        setPalette(paletteName);
-                        setColorIndex(colorIndex);
-                        showPaletteName();
-                      }
+                      setPalette(paletteName);
+                      setColorIndex(colorIndex);
+                      showPaletteName();
                     }
                   }}
                   activeOpacity={0.7}
                 />
               ))}
-
-              {/* Premium unlock badge */}
-              {isLocked && (
-                <TouchableOpacity
-                  style={styles.unlockBadge}
-                  onPress={() => {
-                    haptics.warning().catch(() => {});
-
-                    // Pendant l'onboarding: toast léger au lieu de modal
-                    if (isOnboardingActive) {
-                      showToast(t('premium.onboardingToast'));
-                      return;
-                    }
-
-                    // Après l'onboarding: modal normale
-                    setShowPremiumModal(true);
-                  }}
-                  activeOpacity={0.8}
-                  accessible={true}
-                  accessibilityLabel="Débloquer cette palette premium"
-                  accessibilityRole="button"
-                >
-                  <Text style={styles.unlockText}>{t('premium.unlock')}</Text>
-                </TouchableOpacity>
-              )}
             </View>
           );
         })}
+
+        {/* Bouton "+" en freemium pour découvrir plus de palettes */}
+        {!isPremiumUser && (
+          <View style={styles.moreButtonContainer}>
+            <TouchableOpacity
+              style={styles.moreButton}
+              onPress={handleMorePress}
+              activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel="Découvrir plus de palettes"
+              accessibilityRole="button"
+            >
+              <Text style={styles.moreButtonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
       </View>
 
@@ -422,21 +427,27 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       <TouchableOpacity
         style={[
           styles.chevronButton,
-          currentPaletteIndex === PALETTE_NAMES.length - 1 &&
-            styles.chevronDisabled,
+          effectiveIndex >= totalSlides - 1 && styles.chevronDisabled,
         ]}
         onPress={scrollToNext}
-        disabled={currentPaletteIndex === PALETTE_NAMES.length - 1}
+        disabled={effectiveIndex >= totalSlides - 1}
         activeOpacity={0.7}
       >
         <Text style={styles.chevronText}>›</Text>
       </TouchableOpacity>
 
-      {/* Premium Modal */}
+      {/* Premium Modal (pour achat direct) */}
       <PremiumModal
         visible={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
         highlightedFeature="palettes premium"
+      />
+
+      {/* More Colors Modal (découverte) */}
+      <MoreColorsModal
+        visible={showColorsModal}
+        onClose={() => setShowColorsModal(false)}
+        onOpenPaywall={() => setShowPremiumModal(true)}
       />
 
       {/* Onboarding Toast */}

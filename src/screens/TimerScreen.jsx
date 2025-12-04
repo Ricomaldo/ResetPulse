@@ -10,7 +10,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import ActivityCarousel from '../components/ActivityCarousel';
 import PaletteCarousel from '../components/PaletteCarousel';
 import TimeTimer from '../components/TimeTimer';
-import SettingsModal from '../components/SettingsModal';
+import { SettingsModal } from '../components/modals';
 import { SettingsIcon } from '../components/Icons';
 import { rs } from '../styles/responsive';
 import { ENTRANCE_ANIMATION, SPRING } from '../constants/animations';

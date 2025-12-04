@@ -1,12 +1,14 @@
 // src/config/activities.js
-import i18n from '../i18n';
+import i18n from "../i18n";
 
 export const ACTIVITIES = [
   // Basic timer - always first
   {
     id: "none",
     emoji: "",
-    get label() { return i18n.t('activities.none'); },
+    get label() {
+      return i18n.t("activities.none");
+    },
     defaultDuration: 2700, // 45 minutes
     isPremium: false,
     suggestedColor: "calm",
@@ -18,7 +20,9 @@ export const ACTIVITIES = [
   {
     id: "work",
     emoji: "💻",
-    get label() { return i18n.t('activities.work'); },
+    get label() {
+      return i18n.t("activities.work");
+    },
     defaultDuration: 1500, // 25 minutes (Pomodoro)
     isPremium: false,
     suggestedColor: "deep",
@@ -28,7 +32,9 @@ export const ACTIVITIES = [
   {
     id: "break",
     emoji: "☕",
-    get label() { return i18n.t('activities.break'); },
+    get label() {
+      return i18n.t("activities.break");
+    },
     defaultDuration: 900, // 15 minutes
     isPremium: false, // Complète le Pomodoro
     suggestedColor: "calm",
@@ -36,21 +42,37 @@ export const ACTIVITIES = [
     pulseDuration: 1000, // Plus lent - repos
   },
   {
-    id: "breathing",
-    emoji: "🌬️",
-    get label() { return i18n.t('activities.breathing'); },
-    defaultDuration: 240, // 4 minutes
-    isPremium: false, // Gratuit - ancrage neuroatypique baseline
-    suggestedColor: "energy",
-    description: "Exercices de respiration",
-    pulseDuration: 900, // Lent - respiration contrôlée
+    id: "meditation",
+    emoji: "🧘",
+    get label() {
+      return i18n.t("activities.meditation");
+    },
+    defaultDuration: 1200, // 20 minutes
+    isPremium: false, // FREE - ancrage bien-être
+    suggestedColor: "calm",
+    description: "Sessions de méditation guidée",
+    pulseDuration: 1200, // Très lent - calme profond
+  },
+  {
+    id: "creativity",
+    emoji: "🎨",
+    get label() {
+      return i18n.t("activities.creativity");
+    },
+    defaultDuration: 2700, // 45 minutes
+    isPremium: false, // FREE - activité créative de base
+    suggestedColor: "focus",
+    description: "Dessin, écriture libre",
+    pulseDuration: 750, // Modéré - flow créatif
   },
 
-  // ===== PREMIUM ACTIVITIES (12 total) =====
+  // ===== PREMIUM ACTIVITIES (14 total) =====
   {
     id: "reading",
     emoji: "📖",
-    get label() { return i18n.t('activities.reading'); },
+    get label() {
+      return i18n.t("activities.reading");
+    },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "focus",
@@ -60,7 +82,9 @@ export const ACTIVITIES = [
   {
     id: "study",
     emoji: "📚",
-    get label() { return i18n.t('activities.study'); },
+    get label() {
+      return i18n.t("activities.study");
+    },
     defaultDuration: 2700, // 45 minutes
     isPremium: true,
     pulseDuration: 700, // Modéré-rapide
@@ -68,19 +92,11 @@ export const ACTIVITIES = [
     description: "Sessions d'apprentissage",
   },
   {
-    id: "meditation",
-    emoji: "🧘",
-    get label() { return i18n.t('activities.meditation'); },
-    defaultDuration: 1200, // 20 minutes
-    isPremium: true,
-    suggestedColor: "calm",
-    description: "Sessions de méditation guidée",
-    pulseDuration: 1200, // Très lent - calme profond
-  },
-  {
     id: "yoga",
     emoji: "🧘‍♀️",
-    get label() { return i18n.t('activities.yoga'); },
+    get label() {
+      return i18n.t("activities.yoga");
+    },
     defaultDuration: 900, // 15 minutes
     isPremium: true,
     suggestedColor: "calm",
@@ -90,7 +106,9 @@ export const ACTIVITIES = [
   {
     id: "sport",
     emoji: "💪",
-    get label() { return i18n.t('activities.sport'); },
+    get label() {
+      return i18n.t("activities.sport");
+    },
     defaultDuration: 600, // 10 minutes
     isPremium: true,
     suggestedColor: "energy",
@@ -100,7 +118,9 @@ export const ACTIVITIES = [
   {
     id: "walking",
     emoji: "🚶",
-    get label() { return i18n.t('activities.walking'); },
+    get label() {
+      return i18n.t("activities.walking");
+    },
     defaultDuration: 1200, // 20 minutes
     isPremium: true,
     suggestedColor: "deep",
@@ -110,19 +130,11 @@ export const ACTIVITIES = [
 
   // Premium - Autres activités
   {
-    id: "creativity",
-    emoji: "🎨",
-    get label() { return i18n.t('activities.creativity'); },
-    defaultDuration: 2700, // 45 minutes
-    isPremium: true,
-    suggestedColor: "focus",
-    description: "Dessin, écriture libre",
-    pulseDuration: 750, // Modéré - flow créatif
-  },
-  {
     id: "cooking",
     emoji: "👨‍🍳",
-    get label() { return i18n.t('activities.cooking'); },
+    get label() {
+      return i18n.t("activities.cooking");
+    },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "energy",
@@ -132,7 +144,9 @@ export const ACTIVITIES = [
   {
     id: "gaming",
     emoji: "🎮",
-    get label() { return i18n.t('activities.gaming'); },
+    get label() {
+      return i18n.t("activities.gaming");
+    },
     defaultDuration: 1200, // 20 minutes
     isPremium: true,
     suggestedColor: "energy",
@@ -142,7 +156,9 @@ export const ACTIVITIES = [
   {
     id: "homework",
     emoji: "✏️",
-    get label() { return i18n.t('activities.homework'); },
+    get label() {
+      return i18n.t("activities.homework");
+    },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "focus",
@@ -152,7 +168,9 @@ export const ACTIVITIES = [
   {
     id: "music",
     emoji: "🎵",
-    get label() { return i18n.t('activities.music'); },
+    get label() {
+      return i18n.t("activities.music");
+    },
     defaultDuration: 1800, // 30 minutes
     isPremium: true,
     suggestedColor: "calm",
@@ -162,12 +180,38 @@ export const ACTIVITIES = [
   {
     id: "cleaning",
     emoji: "🧹",
-    get label() { return i18n.t('activities.cleaning'); },
+    get label() {
+      return i18n.t("activities.cleaning");
+    },
     defaultDuration: 900, // 15 minutes
     isPremium: true,
     pulseDuration: 700, // Modéré-rapide - activité physique
     suggestedColor: "energy",
     description: "Tâches ménagères",
+  },
+  {
+    id: "nap",
+    emoji: "😴",
+    get label() {
+      return i18n.t("activities.nap");
+    },
+    defaultDuration: 1200, // 20 minutes - cycle sieste optimal
+    isPremium: true,
+    suggestedColor: "calm",
+    description: "Power nap récupérateur",
+    pulseDuration: 1300, // Très lent - sommeil léger
+  },
+  {
+    id: "writing",
+    emoji: "✍️",
+    get label() {
+      return i18n.t("activities.writing");
+    },
+    defaultDuration: 1200, // 20 minutes - morning pages
+    isPremium: true,
+    suggestedColor: "focus",
+    description: "Journaling, écriture libre",
+    pulseDuration: 850, // Lent - introspection fluide
   },
 ];
 

@@ -1,7 +1,14 @@
 // App.js
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, StatusBar, Animated } from 'react-native';
+import { StyleSheet, StatusBar, Animated, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// ========== DEV MODE ==========
+import { DEV_MODE, DEFAULT_PREMIUM, DEFAULT_SCREEN } from './src/config/testMode';
+import OnboardingV2Prototype from './src/prototypes/OnboardingV2Prototype';
+import DevFab from './src/dev/components/DevFab';
+import { DevPremiumContext } from './src/dev/DevPremiumContext';
+// ==============================
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
@@ -77,6 +84,10 @@ function AppContent() {
 }
 
 export default function App() {
+  // ========== DEV MODE STATE ==========
+  const [currentScreen, setCurrentScreen] = useState(DEFAULT_SCREEN); // 'app' | 'onboarding'
+  const [isPremiumMode, setIsPremiumMode] = useState(DEFAULT_PREMIUM);
+
   // Initialize Mixpanel Analytics (M7.5)
   useEffect(() => {
     const initAnalytics = async () => {
@@ -94,6 +105,43 @@ export default function App() {
     initAnalytics();
   }, []);
 
+  // Contenu principal avec DevFab
+  const renderContent = () => {
+    if (currentScreen === 'onboarding') {
+      return <OnboardingV2Prototype />;
+    }
+
+    return (
+      <ErrorBoundary>
+        <ThemeProvider>
+          <PurchaseProvider>
+            <OnboardingProvider>
+              <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
+                <AppContent />
+              </DevPremiumContext.Provider>
+            </OnboardingProvider>
+          </PurchaseProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
+  };
+
+  // En mode dev, afficher le FAB + contenu
+  if (DEV_MODE) {
+    return (
+      <View style={{ flex: 1 }}>
+        {renderContent()}
+        <DevFab
+          currentScreen={currentScreen}
+          onScreenChange={setCurrentScreen}
+          isPremiumMode={isPremiumMode}
+          onPremiumChange={setIsPremiumMode}
+        />
+      </View>
+    );
+  }
+
+  // Production: app normale sans DevFab
   return (
     <ErrorBoundary>
       <ThemeProvider>

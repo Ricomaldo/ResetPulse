@@ -1,4 +1,5 @@
 // src/components/ActivityCarousel.jsx
+// TODO i18n: Toast messages
 import React, { useRef, useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform, Image } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
@@ -6,10 +7,10 @@ import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useOnboarding } from './onboarding/OnboardingController';
 import { rs, getComponentSizes } from '../styles/responsive';
-import { getAllActivities } from '../config/activities';
+import { getAllActivities, getFreeActivities } from '../config/activities';
 import haptics from '../utils/haptics';
 import { usePremiumStatus } from '../hooks/usePremiumStatus';
-import PremiumModal from './PremiumModal';
+import { PremiumModal, MoreActivitiesModal } from './modals';
 
 export default function ActivityCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -27,6 +28,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const toastAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
   // Check premium status (test mode or actual premium)
@@ -35,28 +37,32 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   // Mode DEMO: pendant l'onboarding, pas de modal premium (toast léger à la place)
   const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
-  // Get all activities and sort by favorites
+  // Get activities based on premium status
   const allActivities = getAllActivities();
+  const freeActivities = getFreeActivities();
 
-  // Sort activities: 'none' first, then favorites, then others
-  const activities = [...allActivities].sort((a, b) => {
-    // 'none' (Basique) always comes first
-    if (a.id === 'none') return -1;
-    if (b.id === 'none') return 1;
+  // En mode freemium: none + 4 activités gratuites + bouton "+"
+  // En mode premium: toutes les activités triées par favoris
+  const activities = isPremiumUser
+    ? [...allActivities].sort((a, b) => {
+        // 'none' (Basique) always comes first
+        if (a.id === 'none') return -1;
+        if (b.id === 'none') return 1;
 
-    const aIsFavorite = favoriteActivities.includes(a.id);
-    const bIsFavorite = favoriteActivities.includes(b.id);
+        const aIsFavorite = favoriteActivities.includes(a.id);
+        const bIsFavorite = favoriteActivities.includes(b.id);
 
-    if (aIsFavorite && !bIsFavorite) return -1;
-    if (!aIsFavorite && bIsFavorite) return 1;
+        if (aIsFavorite && !bIsFavorite) return -1;
+        if (!aIsFavorite && bIsFavorite) return 1;
 
-    // If both are favorites, maintain their order in favoriteActivities
-    if (aIsFavorite && bIsFavorite) {
-      return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);
-    }
+        // If both are favorites, maintain their order in favoriteActivities
+        if (aIsFavorite && bIsFavorite) {
+          return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);
+        }
 
-    return 0;
-  });
+        return 0;
+      })
+    : freeActivities; // Mode freemium: uniquement les activités gratuites (inclut 'none')
 
   // Find current activity index (default to 0 if not found, which is 'none')
   const currentIndex = activities.findIndex(a => a.id === currentActivity?.id);
@@ -164,6 +170,12 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     showActivityName();
   };
 
+  // Handler pour le bouton "+" (mode freemium)
+  const handleMorePress = () => {
+    haptics.selection().catch(() => {});
+    setShowMoreActivitiesModal(true);
+  };
+
   const styles = StyleSheet.create({
     container: {
       position: 'relative',
@@ -255,6 +267,26 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
       textShadowColor: 'rgba(0, 0, 0, 0.3)',
       textShadowOffset: { width: 0, height: 1 },
       textShadowRadius: 2,
+    },
+
+    // Bouton "+" pour mode freemium
+    moreButton: {
+      width: rs(60, 'min'),
+      height: rs(60, 'min'),
+      borderRadius: rs(30, 'min'),
+      backgroundColor: theme.colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 2,
+      borderColor: theme.colors.border,
+      borderStyle: 'dashed',
+      ...(Platform.OS === 'ios' ? theme.shadow('sm') : {}),
+    },
+
+    moreButtonText: {
+      fontSize: rs(28, 'min'),
+      color: theme.colors.textSecondary,
+      fontWeight: '300',
     },
 
     activityNameBadge: {
@@ -370,6 +402,20 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
             </View>
           );
         })}
+
+        {/* Bouton "+" en mode freemium */}
+        {!isPremiumUser && (
+          <TouchableOpacity
+            style={styles.moreButton}
+            onPress={handleMorePress}
+            activeOpacity={0.7}
+            accessible={true}
+            accessibilityLabel="Plus d'activités"
+            accessibilityHint="Découvrir les activités premium"
+          >
+            <Text style={styles.moreButtonText}>+</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
 
       {/* Premium Modal */}
@@ -377,6 +423,13 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
         visible={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
         highlightedFeature="activités premium"
+      />
+
+      {/* More Activities Modal (freemium discovery) */}
+      <MoreActivitiesModal
+        visible={showMoreActivitiesModal}
+        onClose={() => setShowMoreActivitiesModal(false)}
+        onOpenPaywall={() => setShowPremiumModal(true)}
       />
 
       {/* Onboarding Toast */}

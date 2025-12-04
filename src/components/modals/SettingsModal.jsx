@@ -1,4 +1,4 @@
-// src/components/SettingsModal.jsx
+// src/components/modals/SettingsModal.jsx
 import React, { useState } from "react";
 import {
   Modal,
@@ -13,19 +13,19 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { useTheme } from "../theme/ThemeProvider";
-import { useTimerOptions } from "../contexts/TimerOptionsContext";
-import { useTimerPalette } from "../contexts/TimerPaletteContext";
-import { useOnboarding } from "./onboarding/OnboardingController";
-import { rs } from "../styles/responsive";
-import PalettePreview from "./PalettePreview";
-import SoundPicker from "./SoundPicker";
+import { useTheme } from "../../theme/ThemeProvider";
+import { useTimerOptions } from "../../contexts/TimerOptionsContext";
+import { useTimerPalette } from "../../contexts/TimerPaletteContext";
+import { useOnboarding } from "../onboarding/OnboardingController";
+import { rs } from "../../styles/responsive";
+import PalettePreview from "../PalettePreview";
+import SoundPicker from "../SoundPicker";
 import PremiumModal from "./PremiumModal";
-import { getAllActivities } from "../config/activities";
-import { TIMER_PALETTES, isPalettePremium } from "../config/timerPalettes";
-import haptics from "../utils/haptics";
-import { usePremiumStatus } from "../hooks/usePremiumStatus";
-import { useTranslation } from "../hooks/useTranslation";
+import { getAllActivities } from "../../config/activities";
+import { TIMER_PALETTES, isPalettePremium } from "../../config/timerPalettes";
+import haptics from "../../utils/haptics";
+import { usePremiumStatus } from "../../hooks/usePremiumStatus";
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function SettingsModal({ visible, onClose }) {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
