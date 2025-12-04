@@ -5,6 +5,21 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.4] - 2025-12-04
+
+### 📊 Interactive Tracking Dashboard
+
+#### Added
+
+- **Tableau de tracking interactif** (`analytics-dashboard/resetpulse-tracking.html`)
+  - Édition inline des cellules (double-clic)
+  - Ajout/suppression de lignes
+  - Persistance localStorage automatique
+  - Export JSON pour backup
+  - Summary cards auto-calculées
+
+---
+
 ## [1.2.3] - 2025-12-02
 
 ### 🎨 Default Color Fix
