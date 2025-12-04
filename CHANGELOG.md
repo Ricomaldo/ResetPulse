@@ -7,16 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.4] - 2025-12-04
 
-### 📊 Interactive Tracking Dashboard
+### 📊 Analytics Tracking Dashboard
 
 #### Added
 
-- **Tableau de tracking interactif** (`analytics-dashboard/resetpulse-tracking.html`)
-  - Édition inline des cellules (double-clic)
-  - Ajout/suppression de lignes
-  - Persistance localStorage automatique
-  - Export JSON pour backup
-  - Summary cards auto-calculées
+- **Tableau de tracking simplifié** (`analytics-dashboard/tracking.html`)
+  - **Hebdo** : App Store + Google Play (vues, DL, stars) - S40 à S1
+  - **Quotidien** : Mixpanel + RevenueCat (opens, onboard, PW views, trials, achats, revenue) - 31 jours déc
+  - Édition inline (double-clic), localStorage auto, export JSON
+  - Lignes TOTAL auto (sommes + moyennes)
+  - Sections collapsibles
+  - Calcul auto PW→Trial %
+
+- **Historique données** (`analytics-dashboard/DATA-HISTORY.md`)
+  - Données Oct/Nov/Déc extraites des captures
+  - Sources : App Store Connect, Google Play Console, Mixpanel, RevenueCat
+
+#### Removed
+
+- `resetpulse-tracking.html` (remplacé par version simplifiée)
+- `resetpulse-tracking-guide.html` (consolidé)
 
 ---
 

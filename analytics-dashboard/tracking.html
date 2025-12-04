@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResetPulse - Tracking</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      padding: 24px;
+      line-height: 1.6;
+    }
+    h1 { color: #00d9ff; margin-bottom: 4px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 12px; margin-bottom: 32px; }
+    h2 {
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    h2:hover { color: #00d9ff; }
+    h2 span { font-size: 18px; }
+    h2 .toggle {
+      margin-left: auto;
+      font-size: 12px;
+      color: #666;
+      transition: transform 0.2s;
+    }
+    h2.collapsed .toggle { transform: rotate(-90deg); }
+    .section.collapsed .table-container,
+    .section.collapsed .toolbar,
+    .section.collapsed .tip { display: none; }
+    .section { margin-bottom: 40px; }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .toolbar button {
+      background: #2d3a5a;
+      border: none;
+      color: #00d9ff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .toolbar button:hover { background: #3d4a6a; }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: 10px;
+      background: #1a1a2e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th {
+      padding: 12px 10px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 2px solid #ffffff11;
+      position: sticky;
+      top: 0;
+    }
+    td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ffffff08;
+    }
+    tbody tr:hover { background: #ffffff05; }
+
+    .date {
+      text-align: left !important;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Platform colors */
+    th.ios { background: #2a1f3d; color: #bf5af2; }
+    th.android { background: #1f3d2a; color: #30d158; }
+    th.mixpanel { background: #3d2a1f; color: #ff9500; }
+    th.revenuecat { background: #1f2a3d; color: #00d9ff; }
+
+    td.ios { background: #bf5af208; }
+    td.android { background: #30d15808; }
+    td.mixpanel { background: #ff950008; }
+    td.revenuecat { background: #00d9ff08; }
+
+    .good { color: #30d158; }
+    .warning { color: #ffd60a; }
+    .bad { color: #ff453a; }
+    .neutral { color: #666; }
+
+    /* Summary row */
+    tr.summary {
+      background: #252540 !important;
+      font-weight: 600;
+    }
+    tr.summary td {
+      border-top: 2px solid #00d9ff33;
+      color: #00d9ff;
+    }
+
+    /* Editable */
+    tbody td {
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    tbody td:hover { background: #ffffff15 !important; }
+    tbody td input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid #00d9ff;
+      border-radius: 4px;
+      color: inherit;
+      text-align: center;
+      font-size: inherit;
+      padding: 4px;
+      outline: none;
+    }
+    tbody td.date input { text-align: left; }
+
+    .actions {
+      opacity: 0;
+      transition: opacity 0.2s;
+      width: 30px;
+    }
+    tr:hover .actions { opacity: 1; }
+    tr.summary .actions { opacity: 0 !important; }
+    .actions button {
+      background: #ff453a;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 2px 8px;
+      font-size: 12px;
+    }
+    th.actions-header { background: transparent; width: 30px; }
+
+    .tip {
+      background: #1a2a1f;
+      border-left: 3px solid #30d158;
+      padding: 10px 14px;
+      margin-top: 12px;
+      border-radius: 0 8px 8px 0;
+      font-size: 12px;
+      color: #888;
+    }
+    .tip strong { color: #30d158; }
+  </style>
+</head>
+<body>
+
+<h1>ResetPulse Tracking</h1>
+<p class="subtitle">Hebdo: App Store + Google Play | Quotidien: Mixpanel + RevenueCat</p>
+
+<!-- HEBDO -->
+<div class="section">
+  <h2 onclick="toggleSection(this)"><span>📅</span> Hebdomadaire — Stores (App Store + Google Play)<span class="toggle">▼</span></h2>
+  <div class="toolbar">
+    <button onclick="addWeeklyRow()">+ Semaine</button>
+    <button onclick="exportJSON('weekly')">Export</button>
+  </div>
+  <div class="table-container">
+    <table id="weekly-table">
+      <thead>
+        <tr>
+          <th>Semaine</th>
+          <th class="ios">iOS Vues</th>
+          <th class="ios">iOS DL</th>
+          <th class="ios">iOS ⭐</th>
+          <th class="android">Android Vues</th>
+          <th class="android">Android DL</th>
+          <th class="android">Android ⭐</th>
+          <th class="actions-header"></th>
+        </tr>
+      </thead>
+      <tbody id="weekly-body"></tbody>
+    </table>
+  </div>
+  <div class="tip">
+    <strong>Quand ?</strong> Dimanche, avec les données de J-9 à J-2 (délai Apple/Google)
+  </div>
+</div>
+
+<!-- QUOTIDIEN -->
+<div class="section">
+  <h2 onclick="toggleSection(this)"><span>📊</span> Quotidien — Mixpanel + RevenueCat<span class="toggle">▼</span></h2>
+  <div class="toolbar">
+    <button onclick="addDailyRow()">+ Jour</button>
+    <button onclick="exportJSON('daily')">Export</button>
+  </div>
+  <div class="table-container" style="max-height: 600px; overflow-y: auto;">
+    <table id="daily-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th class="mixpanel">Opens</th>
+          <th class="mixpanel">Onboard</th>
+          <th class="mixpanel">PW Views</th>
+          <th class="mixpanel">Trials</th>
+          <th class="mixpanel">PW→Trial</th>
+          <th class="revenuecat">Achats</th>
+          <th class="revenuecat">Revenue</th>
+          <th class="actions-header"></th>
+        </tr>
+      </thead>
+      <tbody id="daily-body"></tbody>
+    </table>
+  </div>
+  <div class="tip">
+    <strong>Quand ?</strong> Chaque soir, 2 min — Mixpanel: Insights > app_opened, onboarding_completed, paywall_viewed, trial_started | RevenueCat: Overview
+  </div>
+</div>
+
+<script>
+// === STORAGE ===
+const WEEKLY_KEY = 'rp-weekly-v2';
+const DAILY_KEY = 'rp-daily-v2';
+
+// === DEFAULT DATA ===
+const defaultWeeklyData = [
+  // Octobre 2025
+  { week: 'S40 (29/9-5/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
+  { week: 'S41 (6-12/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
+  { week: 'S42 (13-19/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
+  { week: 'S43 (20-26/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
+  { week: 'S44 (27/10-2/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
+  // Novembre 2025
+  { week: 'S45 (3-9/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S46 (10-16/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S47 (17-23/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S48 (24-30/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  // Décembre 2025
+  { week: 'S49 (1-7/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S50 (8-14/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S51 (15-21/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S52 (22-28/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S1 (29/12-4/1)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+];
+
+const defaultDailyData = [
+  // Décembre 2025 - 31 jours
+  { date: 'Lun 01/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mar 02/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mer 03/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Jeu 04/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Ven 05/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Sam 06/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Dim 07/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Lun 08/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mar 09/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mer 10/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Jeu 11/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Ven 12/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Sam 13/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Dim 14/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Lun 15/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mar 16/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mer 17/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Jeu 18/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Ven 19/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Sam 20/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Dim 21/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Lun 22/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mar 23/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mer 24/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Jeu 25/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Ven 26/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Sam 27/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Dim 28/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Lun 29/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mar 30/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mer 31/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+];
+
+// === DATA ===
+let weeklyData = loadData(WEEKLY_KEY) || defaultWeeklyData;
+let dailyData = loadData(DAILY_KEY) || defaultDailyData;
+
+// === COLUMNS ===
+const WEEKLY_COLS = [
+  { key: 'week', class: 'date', sum: false },
+  { key: 'ios_vues', class: 'ios', sum: true },
+  { key: 'ios_dl', class: 'ios', sum: true },
+  { key: 'ios_stars', class: 'ios', sum: true },
+  { key: 'android_vues', class: 'android', sum: true },
+  { key: 'android_dl', class: 'android', sum: true },
+  { key: 'android_stars', class: 'android', sum: true },
+];
+
+const DAILY_COLS = [
+  { key: 'date', class: 'date', sum: false },
+  { key: 'opens', class: 'mixpanel', sum: true },
+  { key: 'onboard', class: 'mixpanel', sum: true },
+  { key: 'pw_views', class: 'mixpanel', sum: true },
+  { key: 'trials', class: 'mixpanel', sum: true },
+  { key: 'pw_trial_pct', class: 'mixpanel', sum: false, avg: true },
+  { key: 'achats', class: 'revenuecat', sum: true },
+  { key: 'revenue', class: 'revenuecat', sum: true, currency: true },
+];
+
+// === RENDER ===
+function render(tableId, bodyId, data, cols, deleteFunc) {
+  const tbody = document.getElementById(bodyId);
+
+  // Data rows
+  let html = data.map((row, i) => `
+    <tr>
+      ${cols.map(col => `<td class="${col.class}" data-table="${tableId}" data-row="${i}" data-col="${col.key}">${row[col.key]}</td>`).join('')}
+      <td class="actions"><button onclick="${deleteFunc}(${i})">×</button></td>
+    </tr>
+  `).join('');
+
+  // Summary row
+  html += `<tr class="summary">
+    ${cols.map(col => {
+      if (col.key === 'date' || col.key === 'week') {
+        return `<td class="${col.class}">TOTAL</td>`;
+      }
+      const value = calculateSummary(data, col);
+      return `<td class="${col.class}">${value}</td>`;
+    }).join('')}
+    <td class="actions"></td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+}
+
+function calculateSummary(data, col) {
+  if (!col.sum && !col.avg) return '-';
+
+  let values = data.map(row => {
+    let val = row[col.key];
+    if (val === '?' || val === '-' || val === '') return null;
+    if (col.currency) val = val.replace('$', '').replace('€', '');
+    return parseFloat(val) || 0;
+  }).filter(v => v !== null);
+
+  if (values.length === 0) return '-';
+
+  if (col.avg) {
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    return avg.toFixed(1) + '%';
+  }
+
+  const sum = values.reduce((a, b) => a + b, 0);
+  if (col.currency) return '$' + sum.toFixed(2);
+  return sum;
+}
+
+function renderAll() {
+  render('weekly', 'weekly-body', weeklyData, WEEKLY_COLS, 'deleteWeeklyRow');
+  render('daily', 'daily-body', dailyData, DAILY_COLS, 'deleteDailyRow');
+}
+
+// === EDIT ===
+document.addEventListener('dblclick', e => {
+  const td = e.target.closest('td');
+  if (td && td.dataset.col && !td.querySelector('input') && !td.closest('tr').classList.contains('summary')) {
+    startEdit(td);
+  }
+});
+
+function startEdit(td) {
+  const value = td.textContent;
+  const input = document.createElement('input');
+  input.value = value;
+  td.textContent = '';
+  td.appendChild(input);
+  input.focus();
+  input.select();
+
+  input.onblur = () => saveEdit(td, input);
+  input.onkeydown = e => {
+    if (e.key === 'Enter') input.blur();
+    if (e.key === 'Escape') { td.textContent = value; }
+  };
+}
+
+function saveEdit(td, input) {
+  const { table, row, col } = td.dataset;
+  const data = table === 'weekly' ? weeklyData : dailyData;
+  data[row][col] = input.value;
+
+  // Auto-calculate PW→Trial % if pw_views and trials are filled
+  if (table === 'daily' && (col === 'pw_views' || col === 'trials')) {
+    const pwViews = parseFloat(data[row].pw_views) || 0;
+    const trials = parseFloat(data[row].trials) || 0;
+    if (pwViews > 0) {
+      data[row].pw_trial_pct = ((trials / pwViews) * 100).toFixed(1) + '%';
+    }
+  }
+
+  save(table === 'weekly' ? WEEKLY_KEY : DAILY_KEY, data);
+  renderAll();
+}
+
+// === CRUD ===
+function addWeeklyRow() {
+  weeklyData.push({
+    week: 'S? (??-??)',
+    ios_vues: '?', ios_dl: '?', ios_stars: '0',
+    android_vues: '?', android_dl: '?', android_stars: '0'
+  });
+  save(WEEKLY_KEY, weeklyData);
+  renderAll();
+}
+
+function addDailyRow() {
+  const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  const now = new Date();
+  const dateStr = `${days[now.getDay()]} ${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}`;
+
+  dailyData.push({
+    date: dateStr,
+    opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-',
+    achats: '0', revenue: '$0'
+  });
+  save(DAILY_KEY, dailyData);
+  renderAll();
+}
+
+function deleteWeeklyRow(i) {
+  if (confirm('Supprimer cette semaine ?')) {
+    weeklyData.splice(i, 1);
+    save(WEEKLY_KEY, weeklyData);
+    renderAll();
+  }
+}
+
+function deleteDailyRow(i) {
+  if (confirm('Supprimer ce jour ?')) {
+    dailyData.splice(i, 1);
+    save(DAILY_KEY, dailyData);
+    renderAll();
+  }
+}
+
+// === PERSISTENCE ===
+function save(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function loadData(key) {
+  const stored = localStorage.getItem(key);
+  return stored ? JSON.parse(stored) : null;
+}
+
+// === EXPORT ===
+function exportJSON(type) {
+  const data = type === 'weekly' ? weeklyData : dailyData;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `resetpulse-${type}-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// === COLLAPSE ===
+function toggleSection(h2) {
+  h2.classList.toggle('collapsed');
+  h2.closest('.section').classList.toggle('collapsed');
+}
+
+// === INIT ===
+renderAll();
+</script>
+</body>
+</html>
