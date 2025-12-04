@@ -64,6 +64,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
+      table-layout: fixed;
     }
     th {
       padding: 12px 10px;
@@ -77,6 +78,7 @@
       padding: 10px;
       text-align: center;
       border-bottom: 1px solid #ffffff08;
+      height: 42px;
     }
     tbody tr:hover { background: #ffffff05; }
 
@@ -84,6 +86,12 @@
       text-align: left !important;
       font-weight: 600;
       color: #fff;
+      width: 120px;
+    }
+    td, th {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* Platform colors */
@@ -120,14 +128,19 @@
     tbody td:hover { background: #ffffff15 !important; }
     tbody td input {
       width: 100%;
+      max-width: 100%;
       background: transparent;
-      border: 1px solid #00d9ff;
+      border: none;
+      outline: 1px solid #00d9ff;
+      outline-offset: -1px;
       border-radius: 4px;
       color: inherit;
       text-align: center;
       font-size: inherit;
-      padding: 4px;
-      outline: none;
+      padding: 0;
+      height: 22px;
+      line-height: 22px;
+      box-sizing: border-box;
     }
     tbody td.date input { text-align: left; }
 
@@ -178,6 +191,7 @@
       <thead>
         <tr>
           <th>Semaine</th>
+          <th class="ios">iOS Impr</th>
           <th class="ios">iOS Vues</th>
           <th class="ios">iOS DL</th>
           <th class="ios">iOS ⭐</th>
@@ -227,63 +241,20 @@
 
 <script>
 // === STORAGE ===
-const WEEKLY_KEY = 'rp-weekly-v2';
-const DAILY_KEY = 'rp-daily-v2';
+const WEEKLY_KEY = 'rp-weekly-v5';
+const DAILY_KEY = 'rp-daily-v4';
 
 // === DEFAULT DATA ===
 const defaultWeeklyData = [
-  // Octobre 2025
-  { week: 'S40 (29/9-5/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
-  { week: 'S41 (6-12/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
-  { week: 'S42 (13-19/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
-  { week: 'S43 (20-26/10)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
-  { week: 'S44 (27/10-2/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '-', android_dl: '-', android_stars: '-' },
-  // Novembre 2025
-  { week: 'S45 (3-9/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  { week: 'S46 (10-16/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  { week: 'S47 (17-23/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  { week: 'S48 (24-30/11)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  // Décembre 2025
-  { week: 'S49 (1-7/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  { week: 'S50 (8-14/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  { week: 'S51 (15-21/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  { week: 'S52 (22-28/12)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
-  { week: 'S1 (29/12-4/1)', ios_vues: '?', ios_dl: '?', ios_stars: '0', android_vues: '?', android_dl: '?', android_stars: '0' },
+  { week: 'S40', ios_impr: '0', ios_vues: '0', ios_dl: '0', ios_stars: '0', android_vues: '0', android_dl: '0', android_stars: '0' },
+  { week: 'S41', ios_impr: '0', ios_vues: '0', ios_dl: '0', ios_stars: '0', android_vues: '0', android_dl: '0', android_stars: '0' },
+  { week: 'S42', ios_impr: '0', ios_vues: '0', ios_dl: '0', ios_stars: '0', android_vues: '0', android_dl: '0', android_stars: '0' },
 ];
 
 const defaultDailyData = [
-  // Décembre 2025 - 31 jours
-  { date: 'Lun 01/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mar 02/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mer 03/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Jeu 04/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Ven 05/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Sam 06/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Dim 07/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Lun 08/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mar 09/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mer 10/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Jeu 11/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Ven 12/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Sam 13/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Dim 14/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Lun 15/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mar 16/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mer 17/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Jeu 18/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Ven 19/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Sam 20/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Dim 21/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Lun 22/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mar 23/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mer 24/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Jeu 25/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Ven 26/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Sam 27/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Dim 28/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Lun 29/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mar 30/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
-  { date: 'Mer 31/12', opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Lun 01/12', opens: '0', onboard: '0', pw_views: '0', trials: '0', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mar 02/12', opens: '0', onboard: '0', pw_views: '0', trials: '0', pw_trial_pct: '-', achats: '0', revenue: '$0' },
+  { date: 'Mer 03/12', opens: '0', onboard: '0', pw_views: '0', trials: '0', pw_trial_pct: '-', achats: '0', revenue: '$0' },
 ];
 
 // === DATA ===
@@ -293,6 +264,7 @@ let dailyData = loadData(DAILY_KEY) || defaultDailyData;
 // === COLUMNS ===
 const WEEKLY_COLS = [
   { key: 'week', class: 'date', sum: false },
+  { key: 'ios_impr', class: 'ios', sum: true },
   { key: 'ios_vues', class: 'ios', sum: true },
   { key: 'ios_dl', class: 'ios', sum: true },
   { key: 'ios_stars', class: 'ios', sum: true },
@@ -367,7 +339,7 @@ function renderAll() {
 }
 
 // === EDIT ===
-document.addEventListener('dblclick', e => {
+document.addEventListener('click', e => {
   const td = e.target.closest('td');
   if (td && td.dataset.col && !td.querySelector('input') && !td.closest('tr').classList.contains('summary')) {
     startEdit(td);
@@ -385,9 +357,32 @@ function startEdit(td) {
 
   input.onblur = () => saveEdit(td, input);
   input.onkeydown = e => {
-    if (e.key === 'Enter') input.blur();
+    if (e.key === 'Enter' || e.key === 'Tab') {
+      e.preventDefault();
+      const next = e.shiftKey ? getPrevCell(td) : getNextCell(td);
+      input.blur();
+      if (next) startEdit(next);
+    }
     if (e.key === 'Escape') { td.textContent = value; }
   };
+}
+
+function getNextCell(td) {
+  const allCells = getAllEditableCells(td);
+  const idx = allCells.indexOf(td);
+  return allCells[idx + 1] || null;
+}
+
+function getPrevCell(td) {
+  const allCells = getAllEditableCells(td);
+  const idx = allCells.indexOf(td);
+  return allCells[idx - 1] || null;
+}
+
+function getAllEditableCells(td) {
+  const table = td.closest('table');
+  return Array.from(table.querySelectorAll('tbody td[data-col]'))
+    .filter(cell => !cell.closest('tr').classList.contains('summary'));
 }
 
 function saveEdit(td, input) {
@@ -410,10 +405,19 @@ function saveEdit(td, input) {
 
 // === CRUD ===
 function addWeeklyRow() {
+  let nextWeek = 1;
+  if (weeklyData.length > 0) {
+    const lastWeek = weeklyData[weeklyData.length - 1].week;
+    const match = lastWeek.match(/S(\d+)/);
+    if (match) {
+      nextWeek = parseInt(match[1]) + 1;
+      if (nextWeek > 52) nextWeek = 1;
+    }
+  }
   weeklyData.push({
-    week: 'S? (??-??)',
-    ios_vues: '?', ios_dl: '?', ios_stars: '0',
-    android_vues: '?', android_dl: '?', android_stars: '0'
+    week: `S${nextWeek}`,
+    ios_impr: '0', ios_vues: '0', ios_dl: '0', ios_stars: '0',
+    android_vues: '0', android_dl: '0', android_stars: '0'
   });
   save(WEEKLY_KEY, weeklyData);
   renderAll();
@@ -421,12 +425,34 @@ function addWeeklyRow() {
 
 function addDailyRow() {
   const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-  const now = new Date();
-  const dateStr = `${days[now.getDay()]} ${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}`;
+  let dateStr;
+
+  if (dailyData.length > 0) {
+    const lastDate = dailyData[dailyData.length - 1].date;
+    const match = lastDate.match(/(\d+)\/(\d+)/);
+    if (match) {
+      let day = parseInt(match[1]);
+      let month = parseInt(match[2]);
+      const lastDayIdx = days.indexOf(lastDate.substring(0, 3));
+      const nextDayIdx = (lastDayIdx + 1) % 7;
+
+      day++;
+      const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      if (day > daysInMonth[month - 1]) {
+        day = 1;
+        month++;
+        if (month > 12) month = 1;
+      }
+      dateStr = `${days[nextDayIdx]} ${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}`;
+    }
+  } else {
+    const now = new Date();
+    dateStr = `${days[now.getDay()]} ${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}`;
+  }
 
   dailyData.push({
     date: dateStr,
-    opens: '?', onboard: '?', pw_views: '?', trials: '?', pw_trial_pct: '-',
+    opens: '0', onboard: '0', pw_views: '0', trials: '0', pw_trial_pct: '-',
     achats: '0', revenue: '$0'
   });
   save(DAILY_KEY, dailyData);
