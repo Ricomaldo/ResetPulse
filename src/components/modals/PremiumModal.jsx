@@ -1,4 +1,4 @@
-// src/components/PremiumModal.jsx
+// src/components/modals/PremiumModal.jsx
 // Phase 4 - Premium Modal UI
 
 import React, { useState, useEffect } from "react";
@@ -12,12 +12,12 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { useTheme } from "../theme/ThemeProvider";
-import { usePurchases } from "../contexts/PurchaseContext";
-import { useAnalytics } from "../hooks/useAnalytics";
-import { useTranslation } from "../hooks/useTranslation";
-import { rs } from "../styles/responsive";
-import haptics from "../utils/haptics";
+import { useTheme } from "../../theme/ThemeProvider";
+import { usePurchases } from "../../contexts/PurchaseContext";
+import { useAnalytics } from "../../hooks/useAnalytics";
+import { useTranslation } from "../../hooks/useTranslation";
+import { rs } from "../../styles/responsive";
+import haptics from "../../utils/haptics";
 
 export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   const theme = useTheme();

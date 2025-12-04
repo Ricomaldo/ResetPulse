@@ -5,6 +5,71 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.5] - 2025-12-05
+
+### 🎨 Freemium UX Overhaul - Discovery Modals & Carousels
+
+**Objectif:** Améliorer l'expérience freemium avec découverte progressive du contenu premium
+
+#### Added
+
+- **Dossier modals/** (`src/components/modals/`)
+  - Architecture centralisée pour toutes les modales
+  - Export unifié via `index.js`
+
+- **DiscoveryModal.jsx** - Modale générique de découverte premium
+  - Props configurables: title, subtitle, tagline, children, ctaText, dismissText
+  - CTA "Débloquer tout - 7 jours gratuits" → ouvre paywall
+  - Réutilisable pour activités, couleurs, etc.
+
+- **MoreActivitiesModal.jsx** - Découverte activités premium
+  - Grille de 12 emojis premium
+  - "Encore plus de moments" / "Sieste, écriture, lecture, yoga..."
+  - Utilise DiscoveryModal comme base
+
+- **MoreColorsModal.jsx** - Découverte palettes premium
+  - Grille de 13 palettes avec aperçu 4 couleurs + nom
+  - "Encore plus de couleurs" / "Océan, forêt, lavande, canard..."
+
+- **Nouvelles activités premium**
+  - `nap` (😴 Sieste) - 20min par défaut
+  - `writing` (✍️ Écriture) - 30min par défaut
+
+- **DevFab repositionné** en haut à gauche
+  - Menu s'ouvre vers le bas
+  - Meilleure ergonomie
+
+#### Changed
+
+- **ActivityCarousel** - Mode freemium
+  - 4 activités gratuites + bouton "+"
+  - Activités free: Travail 💻, Pause ☕, Méditation 🧘, Créativité 🎨
+  - Bouton "+" ouvre MoreActivitiesModal
+  - Méditation passée gratuite (était premium)
+  - Créativité passée gratuite (était premium)
+
+- **PaletteCarousel** - Mode freemium
+  - 2 palettes gratuites (Terre, Soft Laser) + bouton "+"
+  - Bouton "+" ouvre MoreColorsModal
+  - Badge "Débloquer" supprimé (remplacé par Discovery modal)
+
+- **activities.js** - Nouveau quatuor gratuit
+  - FREE: work, break, meditation, creativity (4)
+  - PREMIUM: nap, writing, reading, study, yoga, sport, walk, cooking, gaming, homework, music, cleaning (14 dont 2 nouvelles)
+  - Activité `breathing` supprimée
+
+- **Modales déplacées** vers `src/components/modals/`
+  - PremiumModal, SettingsModal, DiscoveryModal, MoreActivitiesModal, MoreColorsModal
+  - Imports mis à jour dans TimerScreen, ActivityCarousel, PaletteCarousel
+
+#### Technical
+
+- **Files Created**: 6 (DiscoveryModal, MoreActivitiesModal, MoreColorsModal, modals/index.js, MoreColorsModal)
+- **Files Modified**: 8 (ActivityCarousel, PaletteCarousel, activities.js, DevFab, i18n fr/en, TimerScreen, SettingsModal)
+- **i18n TODO** mis à jour avec nouveaux composants à traduire
+
+---
+
 ## [1.2.4] - 2025-12-04
 
 ### 📊 Analytics Tracking Dashboard

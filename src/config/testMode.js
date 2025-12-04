@@ -1,20 +1,36 @@
 // src/config/testMode.js
 
 /**
- * Configuration pour le mode test
- * Active toutes les fonctionnalités premium pour les testeurs
+ * Configuration pour le mode développement/test
  */
 
-// Active le mode test pour débloquer tout le contenu premium
-// Mettre à false pour tester le freemium réel
-export const TEST_MODE = false; // ⚠️ MODE PRODUCTION - Freemium actif
+// ========== CONFIGS SÉPARÉES ==========
 
-// Simule l'état premium pour les tests
+// Affiche le FAB wrench pour switcher les modes dans l'app
+// true = FAB visible, false = FAB caché (production)
+export const DEV_MODE = true;
+
+// État premium par défaut au lancement
+// true = premium (tout débloqué), false = freemium (4 activités + bouton +)
+export const DEFAULT_PREMIUM = false;
+
+// Écran par défaut au lancement
+// 'app' = écran principal, 'onboarding' = prototype onboarding
+export const DEFAULT_SCREEN = 'app';
+
+// ======================================
+
+// Legacy export pour compatibilité
+export const TEST_MODE = DEV_MODE;
+
 export const isTestPremium = () => {
-  return TEST_MODE;
+  return DEFAULT_PREMIUM;
 };
 
 export default {
+  DEV_MODE,
+  DEFAULT_PREMIUM,
+  DEFAULT_SCREEN,
   TEST_MODE,
   isTestPremium,
 };

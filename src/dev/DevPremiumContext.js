@@ -1,0 +1,30 @@
+// src/dev/DevPremiumContext.js
+// Contexte pour override le mode premium en dev
+
+import React, { createContext, useContext, useState } from 'react';
+import { DEFAULT_PREMIUM, DEV_MODE } from '../config/testMode';
+
+const DevPremiumContext = createContext(null);
+
+export function DevPremiumProvider({ children }) {
+  const [devPremiumOverride, setDevPremiumOverride] = useState(
+    DEV_MODE ? DEFAULT_PREMIUM : null
+  );
+
+  return (
+    <DevPremiumContext.Provider value={{ devPremiumOverride, setDevPremiumOverride }}>
+      {children}
+    </DevPremiumContext.Provider>
+  );
+}
+
+export function useDevPremium() {
+  const context = useContext(DevPremiumContext);
+  // Si pas de contexte (production), retourner null
+  if (!context) {
+    return { devPremiumOverride: null, setDevPremiumOverride: () => {} };
+  }
+  return context;
+}
+
+export { DevPremiumContext };
