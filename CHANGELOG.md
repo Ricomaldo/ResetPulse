@@ -7,6 +7,95 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.5] - 2025-12-05
 
+### 🚀 Production Release - App Stores Live
+
+**Status**: ✅ LIVE - Disponible sur App Store et Google Play
+
+#### Release Information
+- **Release Date**: 2025-12-04
+- **iOS**: Disponible sur [App Store](https://apps.apple.com/fr/app/resetpulse/id6752913010)
+- **Android**: Disponible sur [Google Play](https://play.google.com/store/apps/details?id=com.irimwebforge.resetpulse&pcampaignid=web_share)
+- **Version**: 1.2.5
+- **Screenshots**: Mis à jour pour v1.3 (iPhone, iPad, Android)
+
+#### Store Links
+- **App Store**: https://apps.apple.com/fr/app/resetpulse/id6752913010
+- **Google Play**: https://play.google.com/store/apps/details?id=com.irimwebforge.resetpulse&pcampaignid=web_share
+
+---
+
+### 🌐 Site Web - Optimisation Copy & UX
+
+**Status**: ✅ DÉPLOYÉ - http://resetpulse.irimwebforge.com
+
+#### Added
+
+- **Multilingue FR/EN complet** avec toggle de langue
+  - Toutes les traductions selon framework satisfacteurs Max-Neef
+  - Badges stores adaptés selon la langue
+  - Meta tags SEO dynamiques
+
+- **Toggle device iOS/Android** avec détection automatique
+  - Détection user agent au chargement
+  - Screenshots adaptatifs (4 combinaisons : FR/iOS, FR/Android, EN/iOS, EN/Android)
+  - 20 screenshots organisés dans `assets/{lang}/{device}/`
+
+- **Structure assets réorganisée**
+  - Organisation par langue et device : `assets/fr/ios/`, `assets/fr/android/`, `assets/en/ios/`, `assets/en/android/`
+  - Suppression des anciens fichiers à la racine
+
+- **CTA secondaire** après section pricing
+  - Badges stores répétés pour meilleure conversion
+  - Synchronisation automatique avec la langue
+
+- **Lazy loading** sur toutes les images screenshots
+  - Performance améliorée au chargement
+
+#### Changed
+
+- **Copy optimisé selon framework satisfacteurs Max-Neef**
+  - Hero : "Reprends le contrôle de ton attention" (satisfacteur Liberté)
+  - Tutoiement uniforme (cohérence stores/app)
+  - Authenticité TDA/H assumée ("Conçu pour cerveaux TDA/H")
+  - Triple "Zéro" : surcharge visuelle, culpabilité, abonnement piège
+  - Taglines mémorables : "Ton temps. Tes couleurs. Ton rythme."
+
+- **Structure narrative améliorée**
+  - Screenshots déplacés après section différenciation
+  - Flux : Différenciation → Simplicité → Personnalisation → Screenshots → Pricing → CTA
+
+- **Section Pricing améliorée**
+  - Badge "POPULAIRE" sur carte Premium
+  - Carte Premium agrandie (scale 1.05)
+  - Meilleure hiérarchie visuelle
+
+- **Hero section optimisée**
+  - `min-height` réduit de 100vh à 85vh (meilleur ratio desktop)
+  - Pricing hint visible : "Gratuit • 4,99€ version complète • Sans abonnement"
+
+- **Toggles améliorés**
+  - z-index augmenté à 10000
+  - Fond plus opaque (0.98) pour meilleure lisibilité
+
+- **Footer corrigé**
+  - Copyright complet : "© 2025 IRIM WebForge • Eric Zuber" (FR et EN)
+
+#### Technical
+
+- **JavaScript vanilla** (aucune dépendance)
+- **localStorage** pour préférences langue + device
+- **Responsive design** optimisé mobile/tablette/desktop
+- **SEO** : Meta tags dynamiques, Open Graph, Twitter Cards
+- **Performance** : Lazy loading images, animations CSS optimisées
+
+#### Deployment
+
+- **Déployé sur** : http://resetpulse.irimwebforge.com
+- **Méthode** : `scp -r` vers VPS (`/srv/www/internal/resetpulse.irimwebforge.com/`)
+- **Date** : 2025-12-06
+
+---
+
 ### 🎨 Freemium UX Overhaul - Discovery Modals & Carousels
 
 **Objectif:** Améliorer l'expérience freemium avec découverte progressive du contenu premium
