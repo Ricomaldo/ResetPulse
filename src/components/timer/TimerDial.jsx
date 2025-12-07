@@ -5,7 +5,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useDialOrientation } from '../../hooks/useDialOrientation';
 import { rs } from '../../styles/responsive';
 import { TIMER_SVG, TIMER_PROPORTIONS, TIMER_VISUAL } from '../../constants/design';
-import { DIAL_INTERACTION } from '../../constants/dialModes';
+import { DIAL_INTERACTION, getDialMode } from '../../constants/dialModes';
 import { COLORS } from '../../constants/design';
 import { DRAG, VISUAL } from '../../constants/uiConstants';
 
@@ -219,7 +219,7 @@ function TimerDial({
       {/* IMPORTANT: Scale progress based on dial mode */}
       {(() => {
         // Calculate scaled progress based on dial maximum
-        const maxMinutes = scaleMode === '25min' ? 25 : 60;
+        const maxMinutes = getDialMode(scaleMode).maxMinutes;
         const currentMinutes = duration / 60; // Convert seconds to minutes
         const scaledProgress = Math.min(1, currentMinutes / maxMinutes) * progress;
 

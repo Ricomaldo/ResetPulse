@@ -12,6 +12,7 @@ import DigitalTimer from './timer/DigitalTimer';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 import { TIMER, BUTTON, TEXT, TOUCH } from '../constants/uiConstants';
+import { getDialMode } from '../constants/dialModes';
 
 export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onControlsRef }) {
   const theme = useTheme();
@@ -168,13 +169,10 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
     if (minutes === 0) {
       // Setting to 0 means reset state
       newDuration = 0;
-    } else if (scaleMode === '25min') {
-      // Mode 25min: limit to Pomodoro duration
-      const clampedMinutes = Math.min(TIMER.MODES.POMODORO, minutes);
-      newDuration = clampedMinutes * 60;
     } else {
-      // Mode 60min: allow up to standard duration
-      const clampedMinutes = Math.min(TIMER.MODES.STANDARD, minutes);
+      // Clamp to current scale mode's max
+      const maxMinutes = getDialMode(scaleMode).maxMinutes;
+      const clampedMinutes = Math.min(maxMinutes, minutes);
       newDuration = clampedMinutes * 60;
     }
 

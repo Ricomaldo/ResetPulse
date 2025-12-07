@@ -1,24 +1,28 @@
 // src/hooks/useDialOrientation.js
 import { useMemo, useCallback } from 'react';
+import { getDialMode } from '../constants/dialModes';
 
 /**
  * Hook centralisant toute la logique d'orientation et de calcul du cadran
  * @param {boolean} isClockwise - Direction de rotation
- * @param {string} scaleMode - Mode '25min' ou '60min'
+ * @param {string} scaleMode - Mode '1min', '5min', '10min', '25min' ou '60min'
  * @returns {Object} Fonctions de calcul et de rendu
  */
 export function useDialOrientation(isClockwise, scaleMode) {
   // Configuration based on scale mode
   const config = useMemo(() => {
-    const maxMinutes = scaleMode === '25min' ? 25 : 60;
+    const modeConfig = getDialMode(scaleMode);
+    const maxMinutes = modeConfig.maxMinutes;
     const degreesPerMinute = 360 / maxMinutes;
 
     return {
       maxMinutes,
       degreesPerMinute,
-      // Graduation marks configuration
-      majorTickInterval: 5, // Every 5 minutes
+      // Graduation marks configuration from mode
+      majorTickInterval: modeConfig.majorTickInterval,
+      numberInterval: modeConfig.numberInterval,
       totalMarks: maxMinutes,
+      useSeconds: modeConfig.useSeconds || false,
     };
   }, [scaleMode]);
 
@@ -141,22 +145,24 @@ export function useDialOrientation(isClockwise, scaleMode) {
    */
   const getNumberPositions = useCallback((radius, centerX, centerY) => {
     const numbers = [];
-    const count = scaleMode === '25min' ? 5 : 12; // 0,5,10,15,20,25 or 0,5,10...55
-    const interval = 5;
+    const interval = config.numberInterval;
+    const count = Math.floor(config.maxMinutes / interval) + 1;
 
-    for (let i = 0; i < count; i++) { // Changed to < instead of <= to avoid 60
+    for (let i = 0; i < count; i++) {
       const minute = i * interval;
-      if (minute >= config.maxMinutes) break; // >= instead of > to stop at 60
+      if (minute > config.maxMinutes) break;
 
       const angle = minutesToAngle(minute) - 90; // -90 to start from top
       const x = centerX + radius * Math.cos((angle * Math.PI) / 180);
       const y = centerY + radius * Math.sin((angle * Math.PI) / 180);
 
-      numbers.push({ value: minute, x, y });
+      // For 1min mode with useSeconds, display as seconds (0, 10, 20, 30, 40, 50)
+      const displayValue = config.useSeconds ? minute * 60 : minute;
+      numbers.push({ value: displayValue, x, y });
     }
 
     return numbers;
-  }, [scaleMode, config.maxMinutes, minutesToAngle]);
+  }, [config.maxMinutes, config.numberInterval, config.useSeconds, minutesToAngle]);
 
   /**
    * Get graduation marks for the dial
@@ -170,10 +176,10 @@ export function useDialOrientation(isClockwise, scaleMode) {
     const totalMarks = config.totalMarks;
 
     for (let i = 0; i < totalMarks; i++) {
-      const isHour = i % 5 === 0; // Major mark every 5 minutes
+      const isMajor = i % config.majorTickInterval === 0;
       const angle = (i * (360 / totalMarks)) - 90; // -90 to start at top
 
-      const tickLength = isHour ? radius * 0.08 : radius * 0.04;
+      const tickLength = isMajor ? radius * 0.08 : radius * 0.04;
       const innerRadius = radius - tickLength;
 
       const x1 = centerX + innerRadius * Math.cos((angle * Math.PI) / 180);
@@ -184,12 +190,12 @@ export function useDialOrientation(isClockwise, scaleMode) {
       marks.push({
         key: `mark-${i}`,
         x1, y1, x2, y2,
-        isMajor: isHour
+        isMajor
       });
     }
 
     return marks;
-  }, [config.totalMarks]);
+  }, [config.totalMarks, config.majorTickInterval]);
 
   return {
     // Configuration
