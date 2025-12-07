@@ -1,7 +1,7 @@
 // src/prototypes/OnboardingV2Prototype.jsx
 // Prototype standalone - Funnel OnboardingV2 en 6 filtres
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -12,9 +12,10 @@ import {
   Animated,
   Dimensions,
   Vibration,
-} from 'react-native';
+} from "react-native";
+import TimerDial from "../components/timer/TimerDial";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 // ============================================
 // RESPONSIVE SIZING (from app)
@@ -45,16 +46,16 @@ const RADIUS = {
 // THÈME APP (dark mode)
 // ============================================
 const THEME = {
-  background: '#1A1A1A',
-  surface: '#2D2D2D',
-  surfaceAlt: '#383838',
-  text: '#FEFEFE',
-  textSecondary: '#B8B8B8',
-  textLight: '#8A8A8A',
-  border: '#4A4A4A',
-  primary: '#6B7A8A',      // Gris-bleu (brand.primary dark)
-  accent: '#B85A5A',       // Rouge brique (brand.accent dark)
-  success: '#48BB78',
+  background: "#1A1A1A",
+  surface: "#2D2D2D",
+  surfaceAlt: "#383838",
+  text: "#FEFEFE",
+  textSecondary: "#B8B8B8",
+  textLight: "#8A8A8A",
+  border: "#4A4A4A",
+  primary: "#6B7A8A", // Gris-bleu (brand.primary dark)
+  accent: "#B85A5A", // Rouge brique (brand.accent dark)
+  success: "#48BB78",
 };
 
 // ============================================
@@ -62,12 +63,12 @@ const THEME = {
 // ============================================
 const PALETTES = {
   terre: {
-    name: 'Terre',
-    colors: ['#8B7355', '#A0522D', '#6B8E23', '#CD853F'],
+    name: "Terre",
+    colors: ["#8B7355", "#A0522D", "#6B8E23", "#CD853F"],
   },
   softLaser: {
-    name: 'Soft Laser',
-    colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'],
+    name: "Soft Laser",
+    colors: ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"],
   },
 };
 
@@ -75,22 +76,22 @@ const PALETTES = {
 // SMART DEFAULTS selon needs
 // ============================================
 const getSmartDefaults = (needs) => {
-  if (needs.includes('meditation')) {
-    return { duration: 20, palette: 'terre', colorIndex: 2 };
+  if (needs.includes("meditation")) {
+    return { duration: 20, palette: "terre", colorIndex: 2 };
   }
-  if (needs.includes('work')) {
-    return { duration: 25, palette: 'softLaser', colorIndex: 0 };
+  if (needs.includes("work")) {
+    return { duration: 25, palette: "softLaser", colorIndex: 0 };
   }
-  if (needs.includes('creativity')) {
-    return { duration: 45, palette: 'softLaser', colorIndex: 1 };
+  if (needs.includes("creativity")) {
+    return { duration: 45, palette: "softLaser", colorIndex: 1 };
   }
-  if (needs.includes('time')) {
-    return { duration: 15, palette: 'terre', colorIndex: 0 };
+  if (needs.includes("time")) {
+    return { duration: 15, palette: "terre", colorIndex: 0 };
   }
-  if (needs.includes('neurodivergent')) {
-    return { duration: 25, palette: 'softLaser', colorIndex: 0 };
+  if (needs.includes("neurodivergent")) {
+    return { duration: 25, palette: "softLaser", colorIndex: 0 };
   }
-  return { duration: 15, palette: 'terre', colorIndex: 0 };
+  return { duration: 15, palette: "terre", colorIndex: 0 };
 };
 
 // ============================================
@@ -140,7 +141,7 @@ function Filter0Opening({ onContinue }) {
           ]}
         />
         <Text style={styles.breathingText}>
-          Respire.{'\n'}Ton temps t'appartient.
+          Respire.{"\n"}Ton temps t'appartient.
         </Text>
         <Text style={styles.tapHint}>Touche pour continuer</Text>
       </View>
@@ -155,11 +156,15 @@ function Filter1Needs({ onContinue }) {
   const [selected, setSelected] = useState([]);
 
   const needs = [
-    { id: 'meditation', emoji: '🧘', label: 'Méditation & Bien-être' },
-    { id: 'work', emoji: '💼', label: 'Travail & Étude' },
-    { id: 'creativity', emoji: '🎨', label: 'Créativité & Flow' },
-    { id: 'time', emoji: '⏱️', label: 'Gestion du temps quotidien' },
-    { id: 'neurodivergent', emoji: '🧠', label: 'Mon cerveau fonctionne différemment' },
+    { id: "meditation", emoji: "🧘", label: "Méditation & Bien-être" },
+    { id: "work", emoji: "💼", label: "Travail & Étude" },
+    { id: "creativity", emoji: "🎨", label: "Créativité & Flow" },
+    { id: "time", emoji: "⏱️", label: "Gestion du temps quotidien" },
+    {
+      id: "neurodivergent",
+      emoji: "🧠",
+      label: "Mon cerveau fonctionne différemment",
+    },
   ];
 
   const toggleNeed = (id) => {
@@ -169,8 +174,8 @@ function Filter1Needs({ onContinue }) {
   };
 
   const handleContinue = () => {
-    console.log('[OnboardingV2] Filter 1 → 2');
-    console.log('[OnboardingV2] Selected needs:', selected);
+    console.log("[OnboardingV2] Filter 1 → 2");
+    console.log("[OnboardingV2] Selected needs:", selected);
     onContinue(selected);
   };
 
@@ -195,7 +200,10 @@ function Filter1Needs({ onContinue }) {
             >
               <Text style={styles.needEmoji}>{need.emoji}</Text>
               <Text
-                style={[styles.needLabel, isSelected && styles.needLabelSelected]}
+                style={[
+                  styles.needLabel,
+                  isSelected && styles.needLabelSelected,
+                ]}
               >
                 {need.label}
               </Text>
@@ -213,7 +221,12 @@ function Filter1Needs({ onContinue }) {
           onPress={handleContinue}
           disabled={!canContinue}
         >
-          <Text style={[styles.buttonText, !canContinue && styles.buttonTextDisabled]}>
+          <Text
+            style={[
+              styles.buttonText,
+              !canContinue && styles.buttonTextDisabled,
+            ]}
+          >
             Continuer
           </Text>
         </TouchableOpacity>
@@ -226,10 +239,10 @@ function Filter1Needs({ onContinue }) {
 // FREE ACTIVITIES pour onboarding
 // ============================================
 const FREE_ACTIVITIES = [
-  { id: 'work', emoji: '💻', label: 'Travail', defaultDuration: 25 },
-  { id: 'break', emoji: '☕', label: 'Pause', defaultDuration: 15 },
-  { id: 'meditation', emoji: '🧘', label: 'Méditation', defaultDuration: 20 },
-  { id: 'creativity', emoji: '🎨', label: 'Créativité', defaultDuration: 45 },
+  { id: "work", emoji: "💻", label: "Travail", defaultDuration: 25 },
+  { id: "break", emoji: "☕", label: "Pause", defaultDuration: 15 },
+  { id: "meditation", emoji: "🧘", label: "Méditation", defaultDuration: 20 },
+  { id: "creativity", emoji: "🎨", label: "Créativité", defaultDuration: 45 },
 ];
 
 // ============================================
@@ -261,10 +274,10 @@ function Filter2Creation({ needs, onContinue }) {
       duration,
       palette,
       colorIndex,
-      color: currentColor
+      color: currentColor,
     };
-    console.log('[OnboardingV2] Filter 2 → 3');
-    console.log('[OnboardingV2] Timer config:', config);
+    console.log("[OnboardingV2] Filter 2 → 3");
+    console.log("[OnboardingV2] Timer config:", config);
     onContinue(config);
   };
 
@@ -276,12 +289,18 @@ function Filter2Creation({ needs, onContinue }) {
       >
         <Text style={styles.title}>Crée ton premier moment</Text>
 
-        {/* Preview cercle avec emoji */}
+        {/* Preview avec TimerDial réel */}
         <View style={styles.previewContainer}>
-          <View style={[styles.previewCircle, { borderColor: currentColor }]}>
-            <Text style={styles.previewEmoji}>{selectedActivity.emoji}</Text>
-            <Text style={styles.previewTime}>{duration}:00</Text>
-          </View>
+          <TimerDial
+            progress={1}
+            duration={duration * 60}
+            color={currentColor}
+            size={rs(200)}
+            scaleMode={duration > 25 ? "60min" : "25min"}
+            activityEmoji={selectedActivity.emoji}
+            isRunning={false}
+            shouldPulse={false}
+          />
         </View>
 
         {/* Activité */}
@@ -294,16 +313,21 @@ function Filter2Creation({ needs, onContinue }) {
                 key={activity.id}
                 style={[
                   styles.activityPill,
-                  isSelected && [styles.activityPillSelected, { backgroundColor: currentColor }],
+                  isSelected && [
+                    styles.activityPillSelected,
+                    { backgroundColor: currentColor },
+                  ],
                 ]}
                 onPress={() => handleActivitySelect(activity)}
                 activeOpacity={0.7}
               >
                 <Text style={styles.activityPillEmoji}>{activity.emoji}</Text>
-                <Text style={[
-                  styles.activityPillLabel,
-                  isSelected && styles.activityPillLabelSelected,
-                ]}>
+                <Text
+                  style={[
+                    styles.activityPillLabel,
+                    isSelected && styles.activityPillLabelSelected,
+                  ]}
+                >
                   {activity.label}
                 </Text>
               </TouchableOpacity>
@@ -321,7 +345,10 @@ function Filter2Creation({ needs, onContinue }) {
           {durations.map((d) => (
             <TouchableOpacity
               key={d}
-              style={[styles.durationChip, duration === d && styles.durationChipSelected]}
+              style={[
+                styles.durationChip,
+                duration === d && styles.durationChipSelected,
+              ]}
               onPress={() => setDuration(d)}
             >
               <Text
@@ -342,7 +369,10 @@ function Filter2Creation({ needs, onContinue }) {
           {Object.entries(PALETTES).map(([key, pal]) => (
             <TouchableOpacity
               key={key}
-              style={[styles.paletteButton, palette === key && styles.paletteSelected]}
+              style={[
+                styles.paletteButton,
+                palette === key && styles.paletteSelected,
+              ]}
               onPress={() => {
                 setPalette(key);
                 setColorIndex(0);
@@ -350,7 +380,10 @@ function Filter2Creation({ needs, onContinue }) {
             >
               <View style={styles.palettePreview}>
                 {pal.colors.map((c, i) => (
-                  <View key={i} style={[styles.paletteDot, { backgroundColor: c }]} />
+                  <View
+                    key={i}
+                    style={[styles.paletteDot, { backgroundColor: c }]}
+                  />
                 ))}
               </View>
               <Text
@@ -395,8 +428,11 @@ function Filter2Creation({ needs, onContinue }) {
 // FILTRE 3 - Test expérience (60 sec)
 // ============================================
 function Filter3Test({ timerConfig, onContinue }) {
+  const [progress, setProgress] = useState(1);
   const [secondsLeft, setSecondsLeft] = useState(60);
   const [started, setStarted] = useState(false);
+  const startTime = useRef(null);
+  const vibrated30 = useRef(false);
 
   useEffect(() => {
     // Auto-start
@@ -405,45 +441,59 @@ function Filter3Test({ timerConfig, onContinue }) {
 
   useEffect(() => {
     if (!started) return;
+    startTime.current = Date.now();
 
     const interval = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          console.log('[OnboardingV2] Vibration fin');
-          Vibration.vibrate(500);
-          setTimeout(() => {
-            console.log('[OnboardingV2] Filter 3 → 4');
-            onContinue();
-          }, 1000);
-          return 0;
-        }
-        if (prev === 31) {
-          console.log('[OnboardingV2] Vibration 30 sec');
-          Vibration.vibrate(200);
-        }
-        return prev - 1;
-      });
-    }, 1000);
+      const elapsed = (Date.now() - startTime.current) / 1000;
+      const remaining = Math.max(0, 60 - elapsed);
+      const currentSecond = Math.ceil(remaining);
+
+      setProgress(remaining / 60);
+      setSecondsLeft(currentSecond);
+
+      // Vibration à 30 sec (une seule fois)
+      if (currentSecond <= 30 && !vibrated30.current) {
+        vibrated30.current = true;
+        Vibration.vibrate(200);
+      }
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        Vibration.vibrate(500);
+        setTimeout(() => onContinue(), 1000);
+      }
+    }, 50); // 20 fps = fluide
 
     return () => clearInterval(interval);
-  }, [started]);
+  }, [started, onContinue]);
 
-  const color = timerConfig?.color || '#4ECDC4';
+  const color = timerConfig?.color || "#4ECDC4";
+  const emoji = timerConfig?.activity?.emoji || "🧘";
 
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.centerContent}>
         <Text style={styles.title}>Teste ton moment</Text>
-        <Text style={styles.subtitle}>60 secondes pour découvrir l'expérience</Text>
+        <Text style={styles.subtitle}>
+          60 secondes pour découvrir l'expérience
+        </Text>
 
-        <View style={[styles.testCircle, { borderColor: color }]}>
-          <Text style={[styles.testTime, { color }]}>{secondsLeft}</Text>
-          <Text style={styles.testSeconds}>secondes</Text>
+        <View style={styles.testDialContainer}>
+          <TimerDial
+            progress={progress}
+            duration={60}
+            color={color}
+            size={rs(240)}
+            scaleMode="1min"
+            activityEmoji={emoji}
+            isRunning={started}
+            shouldPulse={true}
+            currentActivity={timerConfig?.activity}
+          />
         </View>
 
         <Text style={styles.testHint}>
-          {secondsLeft > 30 ? 'Respire...' : 'Tu y es presque...'}
+          {secondsLeft > 30 ? "Respire..." : "Tu y es presque..."}
         </Text>
       </View>
     </SafeAreaView>
@@ -453,16 +503,46 @@ function Filter3Test({ timerConfig, onContinue }) {
 // ============================================
 // FILTRE 4 - Vision aspirationnelle
 // ============================================
-function Filter4Vision({ onContinue }) {
-  const scenarios = [
-    { emoji: '🌅', label: 'Matin', sublabel: 'Méditation 20min', color: '#6B8E23' },
-    { emoji: '💼', label: 'Travail', sublabel: 'Focus 45min', color: '#FF6B6B' },
-    { emoji: '🍵', label: 'Pause', sublabel: 'Infusion 4min', color: '#CD853F' },
-    { emoji: '🎨', label: 'Soir', sublabel: 'Créativité 30min', color: '#4ECDC4' },
+const getJourneyScenarios = (needs = []) => {
+  // Journée type en 4 moments, adaptée selon les needs
+  const hasMeditation = needs.includes("meditation");
+  const hasWork = needs.includes("work");
+  const hasCreativity = needs.includes("creativity");
+  const hasNeuro = needs.includes("neurodivergent");
+
+  return [
+    {
+      emoji: "🌅",
+      label: "Matin",
+      sublabel: hasMeditation ? "Méditation 20min" : hasNeuro ? "Ancrage 5min" : "Réveil en douceur 10min",
+      color: "#6B8E23",
+    },
+    {
+      emoji: "💼",
+      label: "Journée",
+      sublabel: hasWork ? "Focus Pomodoro 25min" : hasNeuro ? "Sprints courts 15min" : "Concentration 30min",
+      color: "#FF6B6B",
+    },
+    {
+      emoji: "☕",
+      label: "Pause",
+      sublabel: hasNeuro ? "Reset sensoriel 5min" : "Déconnexion 15min",
+      color: "#8B7355",
+    },
+    {
+      emoji: "🌙",
+      label: "Soir",
+      sublabel: hasCreativity ? "Créativité libre 45min" : hasMeditation ? "Relaxation 15min" : "Décompression 20min",
+      color: "#4ECDC4",
+    },
   ];
+};
+
+function Filter4Vision({ needs = [], onContinue }) {
+  const scenarios = getJourneyScenarios(needs);
 
   const handleContinue = () => {
-    console.log('[OnboardingV2] Filter 4 → 5');
+    console.log("[OnboardingV2] Filter 4 → 5");
     onContinue();
   };
 
@@ -486,7 +566,7 @@ function Filter4Vision({ onContinue }) {
         ))}
 
         <Text style={styles.tagline}>
-          Chaque moment, sa couleur.{'\n'}Chaque activité, son rythme.
+          Chaque moment, sa couleur.{"\n"}Chaque activité, son rythme.
         </Text>
       </ScrollView>
 
@@ -504,15 +584,15 @@ function Filter4Vision({ onContinue }) {
 // ============================================
 function Filter5Paywall({ onComplete }) {
   const handleTrial = () => {
-    console.log('[OnboardingV2] Trial started');
-    console.log('[OnboardingV2] ONBOARDING COMPLETE');
-    onComplete('trial');
+    console.log("[OnboardingV2] Trial started");
+    console.log("[OnboardingV2] ONBOARDING COMPLETE");
+    onComplete("trial");
   };
 
   const handleSkip = () => {
-    console.log('[OnboardingV2] Paywall skipped');
-    console.log('[OnboardingV2] ONBOARDING COMPLETE');
-    onComplete('skipped');
+    console.log("[OnboardingV2] Paywall skipped");
+    console.log("[OnboardingV2] ONBOARDING COMPLETE");
+    onComplete("skipped");
   };
 
   return (
@@ -555,7 +635,7 @@ function PrototypeComplete({ result, onReset }) {
         <Text style={styles.completeEmoji}>🎉</Text>
         <Text style={styles.title}>Prototype terminé !</Text>
         <Text style={styles.completeResult}>
-          Résultat: {result === 'trial' ? 'Trial démarré' : 'Paywall skip'}
+          Résultat: {result === "trial" ? "Trial démarré" : "Paywall skip"}
         </Text>
 
         <TouchableOpacity style={styles.button} onPress={onReset}>
@@ -576,7 +656,9 @@ export default function OnboardingV2Prototype() {
   const [paywallResult, setPaywallResult] = useState(null);
 
   const goToNextFilter = () => {
-    console.log(`[OnboardingV2] Filter ${currentFilter} → ${currentFilter + 1}`);
+    console.log(
+      `[OnboardingV2] Filter ${currentFilter} → ${currentFilter + 1}`
+    );
     setCurrentFilter((prev) => prev + 1);
   };
 
@@ -586,7 +668,7 @@ export default function OnboardingV2Prototype() {
   };
 
   const reset = () => {
-    console.log('[OnboardingV2] RESET');
+    console.log("[OnboardingV2] RESET");
     setCurrentFilter(0);
     setNeeds([]);
     setTimerConfig({});
@@ -600,7 +682,10 @@ export default function OnboardingV2Prototype() {
         {[0, 1, 2, 3, 4, 5].map((n) => (
           <TouchableOpacity
             key={n}
-            style={[styles.devButton, currentFilter === n && styles.devButtonActive]}
+            style={[
+              styles.devButton,
+              currentFilter === n && styles.devButtonActive,
+            ]}
             onPress={() => jumpToFilter(n)}
           >
             <Text style={styles.devButtonText}>{n}</Text>
@@ -610,9 +695,6 @@ export default function OnboardingV2Prototype() {
           <Text style={styles.devButtonText}>↺</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.devInfo}>
-        Filter: {currentFilter} | Needs: {needs.join(', ') || 'none'}
-      </Text>
     </View>
   );
 
@@ -640,9 +722,11 @@ export default function OnboardingV2Prototype() {
           />
         );
       case 3:
-        return <Filter3Test timerConfig={timerConfig} onContinue={goToNextFilter} />;
+        return (
+          <Filter3Test timerConfig={timerConfig} onContinue={goToNextFilter} />
+        );
       case 4:
-        return <Filter4Vision onContinue={goToNextFilter} />;
+        return <Filter4Vision needs={needs} onContinue={goToNextFilter} />;
       case 5:
         return (
           <Filter5Paywall
@@ -685,8 +769,8 @@ const styles = StyleSheet.create({
   },
   centerContent: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: rs(SPACING.lg),
   },
   scrollView: {
@@ -706,8 +790,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: rs(SPACING.md),
   },
   devRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: rs(SPACING.sm),
   },
   devButton: {
@@ -715,8 +799,8 @@ const styles = StyleSheet.create({
     height: rs(36),
     borderRadius: rs(18),
     backgroundColor: THEME.surfaceAlt,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   devButtonActive: {
     backgroundColor: THEME.primary,
@@ -726,19 +810,19 @@ const styles = StyleSheet.create({
     height: rs(36),
     borderRadius: rs(18),
     backgroundColor: THEME.accent,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: rs(SPACING.md),
   },
   devButtonText: {
     color: THEME.text,
     fontSize: rs(14),
-    fontWeight: '600',
+    fontWeight: "600",
   },
   devInfo: {
     color: THEME.textLight,
     fontSize: rs(11),
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: rs(SPACING.xs),
   },
 
@@ -753,12 +837,12 @@ const styles = StyleSheet.create({
   breathingText: {
     fontSize: rs(26),
     color: THEME.text,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: rs(38),
-    fontWeight: '300',
+    fontWeight: "300",
   },
   tapHint: {
-    position: 'absolute',
+    position: "absolute",
     bottom: rs(100),
     color: THEME.textLight,
     fontSize: rs(14),
@@ -767,15 +851,15 @@ const styles = StyleSheet.create({
   // Common
   title: {
     fontSize: rs(28),
-    fontWeight: '600',
+    fontWeight: "600",
     color: THEME.text,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: rs(SPACING.lg),
   },
   subtitle: {
     fontSize: rs(16),
     color: THEME.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: rs(SPACING.xl),
   },
   sectionLabel: {
@@ -783,19 +867,19 @@ const styles = StyleSheet.create({
     color: THEME.textSecondary,
     marginTop: rs(SPACING.lg),
     marginBottom: rs(SPACING.md),
-    fontWeight: '500',
+    fontWeight: "500",
   },
   helperText: {
     fontSize: rs(14),
     color: THEME.textLight,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: rs(SPACING.lg),
   },
 
   // Filter 1 - Needs
   needOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: rs(SPACING.md),
     borderRadius: RADIUS.xl,
     borderWidth: 2,
@@ -818,17 +902,17 @@ const styles = StyleSheet.create({
   },
   needLabelSelected: {
     color: THEME.text,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   checkmark: {
     fontSize: rs(20),
     color: THEME.success,
-    fontWeight: '700',
+    fontWeight: "700",
   },
 
   // Filter 2 - Creation
   previewContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: rs(SPACING.md),
   },
   previewCircle: {
@@ -836,8 +920,8 @@ const styles = StyleSheet.create({
     height: rs(180),
     borderRadius: rs(90),
     borderWidth: rs(10),
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: THEME.surface,
   },
   previewEmoji: {
@@ -847,18 +931,18 @@ const styles = StyleSheet.create({
   previewTime: {
     fontSize: rs(28),
     color: THEME.text,
-    fontWeight: '300',
+    fontWeight: "300",
   },
   activityRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: rs(SPACING.md),
     gap: rs(SPACING.sm),
   },
   activityPill: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: rs(SPACING.md),
     paddingHorizontal: rs(SPACING.sm),
     borderRadius: RADIUS.xl,
@@ -867,7 +951,7 @@ const styles = StyleSheet.create({
     borderColor: THEME.border,
   },
   activityPillSelected: {
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   activityPillEmoji: {
     fontSize: rs(28),
@@ -876,12 +960,12 @@ const styles = StyleSheet.create({
   activityPillLabel: {
     fontSize: rs(11),
     color: THEME.textSecondary,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   activityPillLabelSelected: {
     color: THEME.background,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   horizontalScroll: {
     marginBottom: rs(SPACING.sm),
@@ -899,14 +983,14 @@ const styles = StyleSheet.create({
   durationText: {
     color: THEME.textSecondary,
     fontSize: rs(15),
-    fontWeight: '500',
+    fontWeight: "500",
   },
   durationTextSelected: {
     color: THEME.text,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   paletteRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: rs(SPACING.md),
   },
   paletteButton: {
@@ -915,14 +999,14 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.xl,
     borderWidth: 2,
     borderColor: THEME.border,
-    alignItems: 'center',
+    alignItems: "center",
   },
   paletteSelected: {
     borderColor: THEME.primary,
     backgroundColor: THEME.surfaceAlt,
   },
   palettePreview: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: rs(SPACING.xs),
     marginBottom: rs(SPACING.sm),
   },
@@ -937,11 +1021,11 @@ const styles = StyleSheet.create({
   },
   paletteNameSelected: {
     color: THEME.text,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   colorRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: rs(SPACING.lg),
   },
   colorDot: {
@@ -955,35 +1039,23 @@ const styles = StyleSheet.create({
   },
 
   // Filter 3 - Test
-  testCircle: {
-    width: rs(220),
-    height: rs(220),
-    borderRadius: rs(110),
-    borderWidth: rs(12),
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: THEME.surface,
+  testDialContainer: {
     marginVertical: rs(SPACING.xl),
+    alignItems: "center",
   },
-  testTime: {
-    fontSize: rs(64),
-    fontWeight: '300',
-  },
-  testSeconds: {
-    fontSize: rs(16),
-    color: THEME.textSecondary,
-    marginTop: rs(SPACING.xs),
+  digitalTimerWrapper: {
+    marginBottom: rs(SPACING.lg),
   },
   testHint: {
     fontSize: rs(18),
     color: THEME.textSecondary,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
 
   // Filter 4 - Vision
   scenarioCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: rs(SPACING.md),
     backgroundColor: THEME.surface,
     borderRadius: RADIUS.xl,
@@ -999,7 +1071,7 @@ const styles = StyleSheet.create({
   scenarioLabel: {
     fontSize: rs(17),
     color: THEME.text,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   scenarioSublabel: {
     fontSize: rs(14),
@@ -1016,8 +1088,8 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: rs(17),
     color: THEME.textSecondary,
-    textAlign: 'center',
-    fontStyle: 'italic',
+    textAlign: "center",
+    fontStyle: "italic",
     marginTop: rs(SPACING.xl),
     lineHeight: rs(26),
   },
@@ -1029,7 +1101,7 @@ const styles = StyleSheet.create({
   paywallFeature: {
     fontSize: rs(20),
     color: THEME.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: rs(SPACING.md),
   },
   paywallBox: {
@@ -1039,18 +1111,18 @@ const styles = StyleSheet.create({
     marginBottom: rs(SPACING.xl),
     borderWidth: 2,
     borderColor: THEME.primary,
-    alignItems: 'center',
+    alignItems: "center",
   },
   paywallGift: {
     fontSize: rs(22),
     color: THEME.success,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: rs(SPACING.sm),
   },
   paywallPrice: {
     fontSize: rs(15),
     color: THEME.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
   skipButton: {
     marginTop: rs(SPACING.lg),
@@ -1074,7 +1146,7 @@ const styles = StyleSheet.create({
 
   // Footer & Button
   footer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
@@ -1087,7 +1159,7 @@ const styles = StyleSheet.create({
     paddingVertical: rs(SPACING.md),
     paddingHorizontal: rs(SPACING.xl),
     borderRadius: RADIUS.xl,
-    alignItems: 'center',
+    alignItems: "center",
     minWidth: rs(200),
   },
   buttonDisabled: {
@@ -1096,7 +1168,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: THEME.text,
     fontSize: rs(18),
-    fontWeight: '600',
+    fontWeight: "600",
   },
   buttonTextDisabled: {
     color: THEME.textLight,

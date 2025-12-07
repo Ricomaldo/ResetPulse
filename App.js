@@ -108,7 +108,15 @@ export default function App() {
   // Contenu principal avec DevFab
   const renderContent = () => {
     if (currentScreen === 'onboarding') {
-      return <OnboardingV2Prototype />;
+      return (
+        <ThemeProvider>
+          <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
+            <TimerPaletteProvider>
+              <OnboardingV2Prototype />
+            </TimerPaletteProvider>
+          </DevPremiumContext.Provider>
+        </ThemeProvider>
+      );
     }
 
     return (

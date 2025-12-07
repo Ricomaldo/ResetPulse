@@ -4,6 +4,34 @@
  * Dial mode configurations
  */
 export const DIAL_MODES = {
+  '1min': {
+    maxMinutes: 1,
+    label: '1 minute',
+    description: 'Quick timer',
+    graduationInterval: 1,
+    majorTickInterval: 1,
+    numberInterval: 1,
+    defaultDuration: 60,
+    useSeconds: true,
+  },
+  '5min': {
+    maxMinutes: 5,
+    label: '5 minutes',
+    description: 'Short timer',
+    graduationInterval: 1,
+    majorTickInterval: 1,
+    numberInterval: 1,
+    defaultDuration: 5 * 60,
+  },
+  '10min': {
+    maxMinutes: 10,
+    label: '10 minutes',
+    description: 'Medium timer',
+    graduationInterval: 1,
+    majorTickInterval: 2,
+    numberInterval: 2,
+    defaultDuration: 10 * 60,
+  },
   '25min': {
     maxMinutes: 25,
     label: 'Pomodoro',
