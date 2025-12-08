@@ -13,8 +13,8 @@ import TimeTimer from '../components/TimeTimer';
 import { SettingsModal } from '../components/modals';
 import { SettingsIcon } from '../components/Icons';
 import { rs } from '../styles/responsive';
-import { ENTRANCE_ANIMATION, SPRING } from '../constants/animations';
-import { getGridHeights } from '../constants/gridLayout';
+import { ENTRANCE_ANIMATION, SPRING } from '../components/timer/timerConstants';
+import { getGridHeights } from '../styles/gridLayout';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 

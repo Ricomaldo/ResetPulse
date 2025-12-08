@@ -1,6 +1,6 @@
 // src/hooks/useDialOrientation.js
 import { useMemo, useCallback } from 'react';
-import { getDialMode } from '../constants/dialModes';
+import { getDialMode } from '../components/timer/timerConstants';
 
 /**
  * Hook centralisant toute la logique d'orientation et de calcul du cadran

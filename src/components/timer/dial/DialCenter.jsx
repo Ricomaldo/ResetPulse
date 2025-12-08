@@ -2,8 +2,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Animated } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { PULSE_ANIMATION } from '../../../constants/animations';
-import { ACTIVITY_DISPLAY } from '../../../constants/design';
+import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
 
 /**
  * DialCenter - Activity emoji and pulse animations

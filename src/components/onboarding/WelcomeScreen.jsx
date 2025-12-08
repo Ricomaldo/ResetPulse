@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
-import { TRANSITION } from '../../constants/animations';
+import { TRANSITION } from '../timer/timerConstants';
 import haptics from '../../utils/haptics';
 
 export default function WelcomeScreen({ visible, onDiscover, onSkip }) {

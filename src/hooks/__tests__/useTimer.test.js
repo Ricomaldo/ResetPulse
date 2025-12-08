@@ -1,7 +1,7 @@
 // Minimaliste useTimer tests for SDK 54
 import { renderHook, act } from './test-utils';
 import useTimer from '../useTimer';
-import { TIMER } from '../../constants/uiConstants';
+import { TIMER } from '../../components/timer/timerConstants';
 
 // Mock TimerOptionsContext
 jest.mock('../../contexts/TimerOptionsContext', () => ({

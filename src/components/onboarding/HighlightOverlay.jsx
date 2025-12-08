@@ -3,8 +3,8 @@ import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, Animated } from 'react-native';
 import Svg, { Rect, Defs, Mask } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeProvider';
-import { TRANSITION } from '../../constants/animations';
-import { getGridHeights } from '../../constants/gridLayout';
+import { TRANSITION } from '../timer/timerConstants';
+import { getGridHeights } from '../../styles/gridLayout';
 import { rs } from '../../styles/responsive';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
