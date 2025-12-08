@@ -11,7 +11,7 @@ import {
 import Svg, { Polygon } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useOnboarding } from './OnboardingContext';
-import { TRANSITION } from '../../constants/animations';
+import { TRANSITION } from '../timer/timerConstants';
 import haptics from '../../utils/haptics';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { AppState } from 'react-native';
 import haptics from '../utils/haptics';
-import { TIMER } from '../constants/uiConstants';
+import { TIMER } from '../components/timer/timerConstants';
 import useSimpleAudio from './useSimpleAudio';
 import useNotificationTimer from './useNotificationTimer';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';

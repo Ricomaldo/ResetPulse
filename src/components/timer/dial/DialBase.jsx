@@ -2,7 +2,7 @@
 import React from 'react';
 import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { TIMER_VISUAL } from '../../../constants/design';
+import { TIMER_VISUAL } from '../timerConstants';
 
 /**
  * DialBase - Static SVG elements (circles, graduations, numbers)

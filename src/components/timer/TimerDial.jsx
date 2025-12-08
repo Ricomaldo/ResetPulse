@@ -4,10 +4,16 @@ import { View, Animated, PanResponder, Text } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useDialOrientation } from '../../hooks/useDialOrientation';
 import { rs } from '../../styles/responsive';
-import { TIMER_SVG, TIMER_PROPORTIONS, TIMER_VISUAL } from '../../constants/design';
-import { DIAL_INTERACTION, getDialMode } from '../../constants/dialModes';
-import { COLORS } from '../../constants/design';
-import { DRAG, VISUAL } from '../../constants/uiConstants';
+import {
+  TIMER_SVG,
+  TIMER_PROPORTIONS,
+  TIMER_VISUAL,
+  COLORS,
+  DIAL_INTERACTION,
+  getDialMode,
+  DRAG,
+  VISUAL,
+} from './timerConstants';
 
 // Ease-out function for smooth deceleration (quadratic)
 const easeOut = (t) => t * (2 - t);

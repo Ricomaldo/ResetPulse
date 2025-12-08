@@ -11,8 +11,7 @@ import TimerDial from './timer/TimerDial';
 import DigitalTimer from './timer/DigitalTimer';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
-import { TIMER, BUTTON, TEXT, TOUCH } from '../constants/uiConstants';
-import { getDialMode } from '../constants/dialModes';
+import { TIMER, BUTTON, TEXT, TOUCH, getDialMode } from './timer/timerConstants';
 
 export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onControlsRef }) {
   const theme = useTheme();
