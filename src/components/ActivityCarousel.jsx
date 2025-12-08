@@ -1,11 +1,9 @@
 // src/components/ActivityCarousel.jsx
-// TODO i18n: Toast messages
 import React, { useRef, useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { useOnboarding } from './onboarding/OnboardingController';
 import { rs, getComponentSizes } from '../styles/responsive';
 import { getAllActivities, getFreeActivities } from '../config/activities';
 import haptics from '../utils/haptics';
@@ -21,8 +19,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     favoriteActivities = [],
     activityDurations = {}
   } = useTimerOptions();
-  const { setColorByType, currentColor } = useTimerPalette();
-  const { onboardingCompleted, currentTooltip } = useOnboarding();
+  const { currentColor } = useTimerPalette();
   const scrollViewRef = useRef(null);
   const scaleAnims = useRef({}).current; // Store animation values for each activity
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -33,9 +30,6 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
   // Check premium status (test mode or actual premium)
   const { isPremium: isPremiumUser } = usePremiumStatus();
-
-  // Mode DEMO: pendant l'onboarding, pas de modal premium (toast léger à la place)
-  const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
   // Get activities based on premium status
   const allActivities = getAllActivities();
@@ -141,14 +135,6 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const handleActivityPress = (activity) => {
     if (activity.isPremium && !isPremiumUser) {
       haptics.warning().catch(() => {});
-
-      // Pendant l'onboarding: toast léger au lieu de modal
-      if (isOnboardingActive) {
-        showToast('Terminez le guide pour découvrir les activités premium !');
-        return;
-      }
-
-      // Après l'onboarding: modal normale
       setShowPremiumModal(true);
       return;
     }

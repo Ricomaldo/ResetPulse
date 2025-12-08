@@ -1,5 +1,5 @@
 // src/dev/components/DevFab.jsx
-// FAB wrench avec mini-menu pour switcher les modes dev
+// FAB wrench avec mini-menu pour switcher le mode premium (dev only)
 
 import React, { useState } from 'react';
 import {
@@ -8,15 +8,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
-  Dimensions,
 } from 'react-native';
 import { DEV_MODE } from '../../config/testMode';
 
-const { width } = Dimensions.get('window');
-
 export default function DevFab({
-  currentScreen,
-  onScreenChange,
   isPremiumMode,
   onPremiumChange,
 }) {
@@ -73,45 +68,6 @@ export default function DevFab({
         ]}
         pointerEvents={isOpen ? 'auto' : 'none'}
       >
-        {/* Screen toggle */}
-        <View style={styles.menuSection}>
-          <Text style={styles.menuLabel}>Écran</Text>
-          <View style={styles.toggleRow}>
-            <TouchableOpacity
-              style={[
-                styles.toggleButton,
-                currentScreen === 'app' && styles.toggleButtonActive,
-              ]}
-              onPress={() => handleOptionPress(() => onScreenChange('app'))}
-            >
-              <Text
-                style={[
-                  styles.toggleText,
-                  currentScreen === 'app' && styles.toggleTextActive,
-                ]}
-              >
-                App
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.toggleButton,
-                currentScreen === 'onboarding' && styles.toggleButtonActive,
-              ]}
-              onPress={() => handleOptionPress(() => onScreenChange('onboarding'))}
-            >
-              <Text
-                style={[
-                  styles.toggleText,
-                  currentScreen === 'onboarding' && styles.toggleTextActive,
-                ]}
-              >
-                Onboarding
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
         {/* Premium toggle */}
         <View style={styles.menuSection}>
           <Text style={styles.menuLabel}>Mode</Text>
@@ -154,7 +110,7 @@ export default function DevFab({
         {/* Status */}
         <View style={styles.statusRow}>
           <Text style={styles.statusText}>
-            {currentScreen === 'app' ? '📱' : '🎯'} {isPremiumMode ? '⭐' : '🆓'}
+            {isPremiumMode ? '⭐ Premium' : '🆓 Free'}
           </Text>
         </View>
       </Animated.View>
@@ -261,6 +217,7 @@ const styles = StyleSheet.create({
   },
 
   statusText: {
-    fontSize: 16,
+    fontSize: 14,
+    color: '#ccc',
   },
 });

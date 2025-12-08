@@ -1,40 +1,46 @@
 // App.js
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, StatusBar, Animated, View } from 'react-native';
+import { StatusBar, Animated, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ========== DEV MODE ==========
-import { DEV_MODE, DEFAULT_PREMIUM, DEFAULT_SCREEN } from './src/config/testMode';
-import OnboardingV2Prototype from './src/prototypes/OnboardingV2Prototype';
+import { DEV_MODE, DEFAULT_PREMIUM } from './src/config/testMode';
 import DevFab from './src/dev/components/DevFab';
 import { DevPremiumContext } from './src/dev/DevPremiumContext';
 // ==============================
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
-import { OnboardingProvider, useOnboarding } from './src/components/onboarding/OnboardingController';
 import TimerScreen from './src/screens/TimerScreen';
-import WelcomeScreen from './src/components/onboarding/WelcomeScreen';
+import OnboardingFlow from './src/screens/onboarding';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import Analytics from './src/services/analytics';
+
+// Storage key pour onboarding V2
+const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
 
 function AppContent() {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const { onboardingCompleted, isLoadingOnboarding, startTooltips, completeOnboarding } = useOnboarding();
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(null); // null = loading
+  const [onboardingResult, setOnboardingResult] = useState(null);
 
-  // Update showWelcome only after onboardingCompleted has loaded from AsyncStorage
+  // Charger l'état onboarding depuis AsyncStorage
   useEffect(() => {
-    // Wait for onboarding state to load from AsyncStorage
-    if (!isLoadingOnboarding) {
-      // Only show welcome if onboarding was never completed
-      setShowWelcome(!onboardingCompleted);
-    }
-  }, [onboardingCompleted, isLoadingOnboarding]);
+    const loadOnboardingState = async () => {
+      try {
+        const completed = await AsyncStorage.getItem(ONBOARDING_COMPLETED_KEY);
+        setOnboardingCompleted(completed === 'true');
+      } catch (error) {
+        console.warn('[App] Failed to load onboarding state:', error);
+        setOnboardingCompleted(false);
+      }
+    };
+    loadOnboardingState();
+  }, []);
 
+  // Animation fade in
   useEffect(() => {
-    // Start fade in animation after a brief delay
     const timer = setTimeout(() => {
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -42,23 +48,32 @@ function AppContent() {
         useNativeDriver: true,
       }).start();
     }, 100);
-
     return () => clearTimeout(timer);
   }, []);
 
-  const handleDiscover = () => {
-    // Hide welcome first
-    setShowWelcome(false);
-    // Wait for layout to stabilize after welcome disappears, then start tooltips
-    setTimeout(() => {
-      startTooltips();
-    }, 300);
+  // Callback quand l'onboarding V2 est terminé
+  const handleOnboardingComplete = async (data) => {
+    setOnboardingResult(data);
+    setOnboardingCompleted(true);
+
+    // Persister
+    try {
+      await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, 'true');
+      // Optionnel: sauvegarder la config timer choisie
+      if (data.timerConfig) {
+        await AsyncStorage.setItem('user_timer_config', JSON.stringify(data.timerConfig));
+      }
+    } catch (error) {
+      console.warn('[App] Failed to save onboarding state:', error);
+    }
   };
 
-  const handleSkipWelcome = () => {
-    setShowWelcome(false);
-    completeOnboarding();
-  };
+  // Loading state
+  if (onboardingCompleted === null) {
+    return (
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }} />
+    );
+  }
 
   return (
     <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
@@ -68,16 +83,12 @@ function AppContent() {
           backgroundColor={theme.colors.background}
         />
 
-        {/* Welcome Screen for first launch */}
-        {showWelcome && (
-          <WelcomeScreen
-            visible={showWelcome}
-            onDiscover={handleDiscover}
-            onSkip={handleSkipWelcome}
-          />
+        {/* Onboarding V2 pour premier lancement */}
+        {!onboardingCompleted ? (
+          <OnboardingFlow onComplete={handleOnboardingComplete} />
+        ) : (
+          <TimerScreen />
         )}
-
-        <TimerScreen />
       </TimerPaletteProvider>
     </Animated.View>
   );
@@ -85,7 +96,6 @@ function AppContent() {
 
 export default function App() {
   // ========== DEV MODE STATE ==========
-  const [currentScreen, setCurrentScreen] = useState(DEFAULT_SCREEN); // 'app' | 'onboarding'
   const [isPremiumMode, setIsPremiumMode] = useState(DEFAULT_PREMIUM);
 
   // Initialize Mixpanel Analytics (M7.5)
@@ -105,34 +115,18 @@ export default function App() {
     initAnalytics();
   }, []);
 
-  // Contenu principal avec DevFab
-  const renderContent = () => {
-    if (currentScreen === 'onboarding') {
-      return (
-        <ThemeProvider>
+  // Contenu principal
+  const renderContent = () => (
+    <ErrorBoundary>
+      <ThemeProvider>
+        <PurchaseProvider>
           <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
-            <TimerPaletteProvider>
-              <OnboardingV2Prototype />
-            </TimerPaletteProvider>
+            <AppContent />
           </DevPremiumContext.Provider>
-        </ThemeProvider>
-      );
-    }
-
-    return (
-      <ErrorBoundary>
-        <ThemeProvider>
-          <PurchaseProvider>
-            <OnboardingProvider>
-              <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
-                <AppContent />
-              </DevPremiumContext.Provider>
-            </OnboardingProvider>
-          </PurchaseProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    );
-  };
+        </PurchaseProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
 
   // En mode dev, afficher le FAB + contenu
   if (DEV_MODE) {
@@ -140,8 +134,6 @@ export default function App() {
       <View style={{ flex: 1 }}>
         {renderContent()}
         <DevFab
-          currentScreen={currentScreen}
-          onScreenChange={setCurrentScreen}
           isPremiumMode={isPremiumMode}
           onPremiumChange={setIsPremiumMode}
         />
@@ -150,15 +142,5 @@ export default function App() {
   }
 
   // Production: app normale sans DevFab
-  return (
-    <ErrorBoundary>
-      <ThemeProvider>
-        <PurchaseProvider>
-          <OnboardingProvider>
-            <AppContent />
-          </OnboardingProvider>
-        </PurchaseProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
+  return renderContent();
 }

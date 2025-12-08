@@ -4,21 +4,13 @@
  * Configuration pour le mode développement/test
  */
 
-// ========== CONFIGS SÉPARÉES ==========
-
-// Affiche le FAB wrench pour switcher les modes dans l'app
+// Affiche le FAB wrench pour switcher Free/Premium dans l'app
 // true = FAB visible, false = FAB caché (production)
 export const DEV_MODE = true;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
 export const DEFAULT_PREMIUM = false;
-
-// Écran par défaut au lancement
-// 'app' = écran principal, 'onboarding' = prototype onboarding
-export const DEFAULT_SCREEN = 'app';
-
-// ======================================
 
 // Legacy export pour compatibilité
 export const TEST_MODE = DEV_MODE;
@@ -30,7 +22,6 @@ export const isTestPremium = () => {
 export default {
   DEV_MODE,
   DEFAULT_PREMIUM,
-  DEFAULT_SCREEN,
   TEST_MODE,
   isTestPremium,
 };
