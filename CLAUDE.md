@@ -1,3 +1,9 @@
+---
+created: '2025-12-07'
+updated: '2025-12-07'
+status: active
+---
+
 # CLAUDE.md - ResetPulse
 
 ## Vue d'ensemble
@@ -121,3 +127,39 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 - iOS build nécessite Xcode (pas EAS Build) pour support IAP
 - Le hook `useTimer` est critique - bien testé dans `__tests__/`
 - Les palettes utilisent un système séparé du thème global (voir `timerPalettes.js`)
+
+---
+
+## Références Système
+
+Ce projet suit l'Architecture V2. Sources de vérité :
+
+| Document | Emplacement |
+|----------|-------------|
+| Index Références | `~/dev/_ref/LINKS.md` |
+| ADR-01 Architecture | `~/dev/_ref/standards/ADR-01-architecture-v2.md` |
+| ADR-02 Conventions | `~/dev/_ref/standards/ADR-02-conventions-nommage.md` |
+| ADR-03 Linking | `~/dev/_ref/standards/ADR-03-strategie-linking.md` |
+| Framework Cockpit | `~/dev/_ref/frameworks/cockpit.md` |
+| Framework Documentation | `~/dev/_ref/frameworks/documentation.md` |
+
+### Conventions Appliquées (ADR-02)
+
+| Contexte | Convention | Exemple |
+|----------|------------|---------|
+| Fichiers/dossiers | kebab-case | `user-profile.tsx` |
+| Composants | PascalCase | `UserProfile` |
+| Variables/fonctions | camelCase | `getUserData` |
+| Constantes | SCREAMING_SNAKE | `MAX_RETRIES` |
+
+### Frontmatter Obligatoire
+
+Tous les fichiers `.md` :
+
+```yaml
+---
+created: 'YYYY-MM-DD'
+updated: 'YYYY-MM-DD'
+status: draft | active | archived
+---
+```
