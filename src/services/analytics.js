@@ -130,7 +130,7 @@ class AnalyticsService {
   }
 
   // ============================================
-  // 6 EVENTS CRITIQUES - M7.5
+  // EVENTS CRITIQUES - M7.5 + M8 Onboarding V2
   // ============================================
 
   /**
@@ -147,11 +147,96 @@ class AnalyticsService {
 
   /**
    * Event 2: Onboarding Completed
-   * Trigger: OnboardingScreen.jsx - dernière étape validée
+   * Trigger: OnboardingFlow.jsx - Filter5Paywall terminé
    * KPI target: > 65% completion rate
+   *
+   * @param {string} result - 'trial_started' | 'skipped'
+   * @param {Array} needs - Besoins sélectionnés
    */
-  trackOnboardingCompleted() {
-    this.track('onboarding_completed', {});
+  trackOnboardingCompleted(result = 'unknown', needs = []) {
+    this.track('onboarding_completed', {
+      result,
+      needs_selected: needs,
+      needs_count: needs.length,
+    });
+  }
+
+  // ============================================
+  // ONBOARDING V2 FUNNEL - M8
+  // ============================================
+
+  /**
+   * Onboarding Started
+   * Trigger: Filter0Opening mount
+   * Baseline pour calcul drop-off
+   */
+  trackOnboardingStarted() {
+    this.track('onboarding_started', {});
+  }
+
+  /**
+   * Onboarding Step Viewed
+   * Trigger: Chaque filtre mount
+   * Mesure où les users décrochent
+   *
+   * @param {number} step - Index du filtre (0-5)
+   * @param {string} stepName - Nom du filtre
+   */
+  trackOnboardingStepViewed(step, stepName) {
+    this.track('onboarding_step_viewed', {
+      step,
+      step_name: stepName,
+    });
+  }
+
+  /**
+   * Onboarding Step Completed
+   * Trigger: Transition vers filtre suivant
+   * Mesure progression effective
+   *
+   * @param {number} step - Index du filtre complété (0-5)
+   * @param {string} stepName - Nom du filtre
+   * @param {Object} data - Données optionnelles (needs, config, etc.)
+   */
+  trackOnboardingStepCompleted(step, stepName, data = {}) {
+    this.track('onboarding_step_completed', {
+      step,
+      step_name: stepName,
+      ...data,
+    });
+  }
+
+  /**
+   * Onboarding Abandoned
+   * Trigger: App close pendant onboarding (via AppState listener)
+   * Friction critique à identifier
+   *
+   * @param {number} step - Dernier filtre vu
+   * @param {string} stepName - Nom du dernier filtre
+   */
+  trackOnboardingAbandoned(step, stepName) {
+    this.track('onboarding_abandoned', {
+      step,
+      step_name: stepName,
+    });
+  }
+
+  /**
+   * Timer Config Saved
+   * Trigger: Fin Filter2Creation (config choisie)
+   * Analyse des choix populaires
+   *
+   * @param {Object} config - Configuration timer
+   * @param {string} config.activity - Activité sélectionnée
+   * @param {string} config.palette - Palette sélectionnée
+   * @param {number} config.duration - Durée en minutes
+   */
+  trackTimerConfigSaved(config) {
+    this.track('timer_config_saved', {
+      activity: config.activity,
+      palette: config.palette,
+      duration_minutes: config.duration,
+    });
   }
 
   /**

@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { useTimerPalette } from "../contexts/TimerPaletteContext";
-import { useOnboarding } from "./onboarding/OnboardingController";
 import { useTranslation } from "../hooks/useTranslation";
 import { rs } from "../styles/responsive";
 import { TIMER_PALETTES, getFreePalettes } from "../config/timerPalettes";
@@ -30,7 +29,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     setColorIndex,
     getAvailablePalettes,
   } = useTimerPalette();
-  const { onboardingCompleted, currentTooltip } = useOnboarding();
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const toastAnim = useRef(new Animated.Value(0)).current;
@@ -48,9 +46,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
   const currentPaletteIndex = DISPLAY_PALETTES.indexOf(currentPalette);
   const effectiveIndex = currentPaletteIndex >= 0 ? currentPaletteIndex : 0;
-
-  // Mode DEMO: pendant l'onboarding, pas de modal premium (toast léger à la place)
-  const isOnboardingActive = !onboardingCompleted && currentTooltip !== null;
 
   // Scroll to current palette on mount
   useEffect(() => {
@@ -298,13 +293,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
   const handleMorePress = () => {
     haptics.selection().catch(() => {});
-
-    // Pendant l'onboarding: toast léger au lieu de modal
-    if (isOnboardingActive) {
-      showToast(t('premium.onboardingToast'));
-      return;
-    }
-
     setShowColorsModal(true);
   };
 

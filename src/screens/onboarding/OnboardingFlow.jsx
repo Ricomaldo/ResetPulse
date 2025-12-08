@@ -1,10 +1,11 @@
 // src/screens/onboarding/OnboardingFlow.jsx
 // Orchestrateur du funnel onboarding V2
 
-import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, AppState } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { rs } from './onboardingConstants';
+import { rs, STEP_NAMES } from './onboardingConstants';
+import analytics from '../../services/analytics';
 
 import {
   Filter0Opening,
@@ -22,8 +23,43 @@ export default function OnboardingFlow({ onComplete }) {
   const [currentFilter, setCurrentFilter] = useState(0);
   const [needs, setNeeds] = useState([]);
   const [timerConfig, setTimerConfig] = useState({});
+  const appStateRef = useRef(AppState.currentState);
+  const hasTrackedStart = useRef(false);
+
+  // Track onboarding_started au premier mount
+  useEffect(() => {
+    if (!hasTrackedStart.current) {
+      analytics.trackOnboardingStarted();
+      analytics.trackOnboardingStepViewed(0, STEP_NAMES[0]);
+      hasTrackedStart.current = true;
+    }
+  }, []);
+
+  // Track step_viewed quand currentFilter change
+  useEffect(() => {
+    if (currentFilter > 0) {
+      analytics.trackOnboardingStepViewed(currentFilter, STEP_NAMES[currentFilter]);
+    }
+  }, [currentFilter]);
+
+  // Track onboarding_abandoned si l'app passe en background
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (
+        appStateRef.current === 'active' &&
+        (nextAppState === 'background' || nextAppState === 'inactive')
+      ) {
+        analytics.trackOnboardingAbandoned(currentFilter, STEP_NAMES[currentFilter]);
+      }
+      appStateRef.current = nextAppState;
+    });
+
+    return () => subscription.remove();
+  }, [currentFilter]);
 
   const goToNextFilter = () => {
+    // Track step_completed avant transition
+    analytics.trackOnboardingStepCompleted(currentFilter, STEP_NAMES[currentFilter]);
     setCurrentFilter((prev) => prev + 1);
   };
 
@@ -35,9 +71,14 @@ export default function OnboardingFlow({ onComplete }) {
     setCurrentFilter(0);
     setNeeds([]);
     setTimerConfig({});
+    hasTrackedStart.current = false;
   };
 
   const handleComplete = (result) => {
+    // Track final step completed
+    analytics.trackOnboardingStepCompleted(currentFilter, STEP_NAMES[currentFilter], { result });
+    // Track onboarding completed avec résultat
+    analytics.trackOnboardingCompleted(result, needs);
     // Transmet le résultat final (trial/skipped) et la config
     onComplete({
       result,
@@ -83,7 +124,12 @@ export default function OnboardingFlow({ onComplete }) {
           <Filter1Needs
             onContinue={(selectedNeeds) => {
               setNeeds(selectedNeeds);
-              goToNextFilter();
+              // Track step completed avec les needs sélectionnés
+              analytics.trackOnboardingStepCompleted(1, STEP_NAMES[1], {
+                needs_selected: selectedNeeds,
+                needs_count: selectedNeeds.length,
+              });
+              setCurrentFilter((prev) => prev + 1);
             }}
           />
         );
@@ -93,7 +139,15 @@ export default function OnboardingFlow({ onComplete }) {
             needs={needs}
             onContinue={(config) => {
               setTimerConfig(config);
-              goToNextFilter();
+              // Track timer config saved avec les choix utilisateur
+              analytics.trackTimerConfigSaved(config);
+              // Track step completed avec la config
+              analytics.trackOnboardingStepCompleted(2, STEP_NAMES[2], {
+                activity: config.activity,
+                palette: config.palette,
+                duration: config.duration,
+              });
+              setCurrentFilter((prev) => prev + 1);
             }}
           />
         );
