@@ -4,7 +4,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { useOnboarding } from './onboarding/OnboardingController';
 import { rs, getComponentSizes } from '../styles/responsive';
 import useTimer from '../hooks/useTimer';
 import TimerDial from './timer/TimerDial';
@@ -24,7 +23,6 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
     showDigitalTimer
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
-  const { highlightedElement, showZenModeCompletion } = useOnboarding();
 
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
@@ -235,10 +233,6 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
             style={[styles.controlButton, { opacity: timer.running ? BUTTON.RUNNING_OPACITY : BUTTON.IDLE_OPACITY }]}
             onPress={() => {
               timer.toggleRunning();
-              // If user starts timer during onboarding on controls, show zen mode completion
-              if (highlightedElement === 'controls' && !timer.running) {
-                showZenModeCompletion();
-              }
             }}
             activeOpacity={TOUCH.ACTIVE_OPACITY}
           >

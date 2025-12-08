@@ -1,10 +1,9 @@
 // src/screens/TimerScreen.jsx
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { View, StyleSheet, TouchableOpacity, PanResponder, Animated, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, PanResponder, Animated } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
-import { useOnboarding, TOOLTIP_IDS } from '../components/onboarding/OnboardingController';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { useTranslation } from '../hooks/useTranslation';
 import ActivityCarousel from '../components/ActivityCarousel';
@@ -15,8 +14,6 @@ import { SettingsIcon } from '../components/Icons';
 import { rs } from '../styles/responsive';
 import { ENTRANCE_ANIMATION, SPRING } from '../components/timer/timerConstants';
 import { getGridHeights } from '../styles/gridLayout';
-
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // Grid-based styles with Golden Ratio
 const createStyles = (theme) => {
@@ -78,37 +75,10 @@ const createStyles = (theme) => {
   });
 };
 
-// Helper: Calculate smart tooltip position
-const calculateTooltipPosition = (bounds, tooltipHeight = 120) => {
-  const spacing = rs(20, 'height');
-  const spaceAbove = bounds.top;
-  const spaceBelow = SCREEN_HEIGHT - (bounds.top + bounds.height);
-
-  // Try to place above first
-  if (spaceAbove >= tooltipHeight + spacing) {
-    return {
-      top: bounds.top - tooltipHeight - spacing,
-    };
-  }
-  // Then try below
-  else if (spaceBelow >= tooltipHeight + spacing) {
-    return {
-      top: bounds.top + bounds.height + spacing,
-    };
-  }
-  // Fallback: center vertically
-  else {
-    return {
-      top: SCREEN_HEIGHT / 2 - tooltipHeight / 2,
-    };
-  }
-};
-
 function TimerScreenContent() {
   const theme = useTheme();
   const t = useTranslation();
   const { showActivities, showPalettes, useMinimalInterface } = useTimerOptions();
-  const { registerTooltipTarget, onboardingCompleted } = useOnboarding();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerRef = useRef(null);
@@ -116,64 +86,18 @@ function TimerScreenContent() {
   // Keep screen awake during timer (ON par défaut - timer visuel TDAH)
   useTimerKeepAwake();
 
-  // Refs for measuring actual elements
-  const activitiesRef = useRef(null);
-  const dialRef = useRef(null);
-  const controlsRef = useRef(null);
-  const paletteRef = useRef(null);
-
   // Get styles with memoization to prevent recreation
   const styles = useMemo(() => createStyles(theme), [theme]);
 
-  // Measure dial and controls after they're mounted
+  // Animation values for staggered entrance
+  const headerAnim = useRef(new Animated.Value(0)).current;
+  const activityAnim = useRef(new Animated.Value(0)).current;
+  const timerAnim = useRef(new Animated.Value(0)).current;
+  const timerScaleAnim = useRef(new Animated.Value(0.8)).current;
+  const paletteAnim = useRef(new Animated.Value(0)).current;
+
+  // Staggered entrance animations
   useEffect(() => {
-    const measureTimerElements = () => {
-      // Dial - dialRef.current is the element directly
-      if (dialRef.current && dialRef.current.measure) {
-        dialRef.current.measure((x, y, width, height, pageX, pageY) => {
-          const bounds = { top: pageY, left: pageX, width, height };
-          const position = calculateTooltipPosition(bounds);
-          registerTooltipTarget(TOOLTIP_IDS.DIAL, position, bounds);
-        });
-      }
-
-      // Controls - controlsRef.current is the element directly
-      if (controlsRef.current && controlsRef.current.measure) {
-        controlsRef.current.measure((x, y, width, height, pageX, pageY) => {
-          const bounds = { top: pageY, left: pageX, width, height };
-          const position = calculateTooltipPosition(bounds);
-          registerTooltipTarget(TOOLTIP_IDS.CONTROLS, position, bounds);
-        });
-      }
-    };
-
-    // Delay to ensure elements are rendered
-    const timer = setTimeout(measureTimerElements, 600);
-    return () => clearTimeout(timer);
-  }, [registerTooltipTarget]);
-
-  // Animation values for staggered entrance - start at 1 if onboarding not completed
-  const initialValue = onboardingCompleted ? 0 : 1;
-  const initialScale = onboardingCompleted ? 0.8 : 1;
-  const headerAnim = useRef(new Animated.Value(initialValue)).current;
-  const activityAnim = useRef(new Animated.Value(initialValue)).current;
-  const timerAnim = useRef(new Animated.Value(initialValue)).current;
-  const timerScaleAnim = useRef(new Animated.Value(initialScale)).current;
-  const paletteAnim = useRef(new Animated.Value(initialValue)).current;
-
-  // Staggered entrance animations - skip if onboarding is not completed
-  useEffect(() => {
-    // If onboarding not completed, instantly set all anims to 1 (no entrance animation)
-    if (!onboardingCompleted) {
-      headerAnim.setValue(1);
-      activityAnim.setValue(1);
-      timerAnim.setValue(1);
-      timerScaleAnim.setValue(1);
-      paletteAnim.setValue(1);
-      return;
-    }
-
-    // Normal entrance animations for returning users
     const animations = [
       // Header slides down
       Animated.timing(headerAnim, {
@@ -215,7 +139,7 @@ function TimerScreenContent() {
     ];
 
     Animated.stagger(0, animations).start();
-  }, [onboardingCompleted]);
+  }, []);
 
   // Swipe to exit zen mode (when timer is running)
   const panResponder = useRef(
@@ -245,12 +169,12 @@ function TimerScreenContent() {
           styles.header,
           {
             opacity: headerAnim,
-            transform: onboardingCompleted ? [{
+            transform: [{
               translateY: headerAnim.interpolate({
                 inputRange: [0, 1],
                 outputRange: [-20, 0]
               })
-            }] : []
+            }]
           }
         ]}>
         <View style={{ flex: 1 }} />
@@ -271,27 +195,13 @@ function TimerScreenContent() {
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Activities Section - Garde sa place pour stabilité du timer */}
+      {/* Activities Section */}
       <Animated.View
-        ref={activitiesRef}
-        onLayout={() => {
-          // Wait for entrance animations to complete before measuring
-          // First launch (no animations): short delay
-          // Returning users (with animations): longer delay to wait for animations
-          const delay = onboardingCompleted ? 100 : 900;
-          setTimeout(() => {
-            activitiesRef.current?.measure((x, y, width, height, pageX, pageY) => {
-              const bounds = { top: pageY, left: pageX, width, height };
-              const position = calculateTooltipPosition(bounds);
-              registerTooltipTarget(TOOLTIP_IDS.ACTIVITIES, position, bounds);
-            });
-          }, delay);
-        }}
         style={[
           styles.activitySection,
           {
             opacity: (showActivities && !(useMinimalInterface && isTimerRunning)) ? 1 : 0,
-            transform: onboardingCompleted ? [
+            transform: [
               {
                 translateX: activityAnim.interpolate({
                   inputRange: [0, 1],
@@ -301,7 +211,7 @@ function TimerScreenContent() {
               {
                 scale: activityAnim
               }
-            ] : []
+            ]
           }
         ]}
         pointerEvents={(showActivities && !(useMinimalInterface && isTimerRunning)) ? 'auto' : 'none'}
@@ -315,38 +225,22 @@ function TimerScreenContent() {
           styles.timerSection,
           {
             opacity: timerAnim,
-            transform: onboardingCompleted ? [{
+            transform: [{
               scale: timerScaleAnim
-            }] : []
+            }]
           }
         ]}>
         <TimeTimer
           onRunningChange={setIsTimerRunning}
           onTimerRef={(ref) => { timerRef.current = ref; }}
-          onDialRef={(element) => { dialRef.current = element; }}
-          onControlsRef={(element) => { controlsRef.current = element; }}
         />
       </Animated.View>
 
-      {/* Palette Section - Garde sa place pour stabilité du timer */}
+      {/* Palette Section */}
       <Animated.View
-        ref={paletteRef}
-        onLayout={() => {
-          // Measure the parent Animated.View instead of inner container
-          // First launch (no animations): short delay
-          // Returning users (with animations): longer delay for physical devices
-          const delay = onboardingCompleted ? 400 : 1300;
-          setTimeout(() => {
-            paletteRef.current?.measure((x, y, width, height, pageX, pageY) => {
-              const bounds = { top: pageY, left: pageX, width, height };
-              const position = calculateTooltipPosition(bounds);
-              registerTooltipTarget(TOOLTIP_IDS.PALETTE, position, bounds);
-            });
-          }, delay);
-        }}
         style={[styles.paletteSection, {
           opacity: (showPalettes && !(useMinimalInterface && isTimerRunning)) ? 1 : 0,
-          transform: onboardingCompleted ? [
+          transform: [
             {
               translateY: paletteAnim.interpolate({
                 inputRange: [0, 1],
@@ -356,7 +250,7 @@ function TimerScreenContent() {
             {
               scale: paletteAnim
             }
-          ] : []
+          ]
         }]}
         pointerEvents={(showPalettes && !(useMinimalInterface && isTimerRunning)) ? 'auto' : 'none'}
       >
