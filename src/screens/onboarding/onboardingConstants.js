@@ -85,3 +85,13 @@ export const getJourneyScenarios = (needs = [], colors) => {
 
 // Durées disponibles
 export const DURATION_OPTIONS = [5, 10, 15, 20, 25, 30, 45, 60];
+
+// Step names pour analytics
+export const STEP_NAMES = [
+  'opening',
+  'needs',
+  'creation',
+  'test',
+  'vision',
+  'paywall',
+];
