@@ -11,19 +11,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, NEEDS_OPTIONS } from '../onboardingConstants';
-
-// Labels temporaires (à migrer vers i18n)
-const NEEDS_LABELS = {
-  meditation: 'Méditation & Bien-être',
-  work: 'Travail & Étude',
-  creativity: 'Créativité & Flow',
-  time: 'Gestion du temps quotidien',
-  neurodivergent: 'Mon cerveau fonctionne différemment',
-};
 
 export default function Filter1Needs({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
+  const t = useTranslation();
   const [selected, setSelected] = useState([]);
 
   const toggleNeed = (id) => {
@@ -45,7 +38,7 @@ export default function Filter1Needs({ onContinue }) {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
-        <Text style={styles.title}>Pour quoi utiliser ResetPulse ?</Text>
+        <Text style={styles.title}>{t('onboarding.v2.filter1.title')}</Text>
 
         {NEEDS_OPTIONS.map((need) => {
           const isSelected = selected.includes(need.id);
@@ -63,14 +56,14 @@ export default function Filter1Needs({ onContinue }) {
                   isSelected && styles.needLabelSelected,
                 ]}
               >
-                {NEEDS_LABELS[need.id]}
+                {t(`onboarding.v2.filter1.${need.id}`)}
               </Text>
               {isSelected && <Text style={styles.checkmark}>✓</Text>}
             </TouchableOpacity>
           );
         })}
 
-        <Text style={styles.helperText}>Sélectionne au moins une option</Text>
+        <Text style={styles.helperText}>{t('onboarding.v2.filter1.helper')}</Text>
       </ScrollView>
 
       <View style={styles.footer}>
@@ -85,7 +78,7 @@ export default function Filter1Needs({ onContinue }) {
               !canContinue && styles.buttonTextDisabled,
             ]}
           >
-            Continuer
+            {t('onboarding.v2.filter1.continue')}
           </Text>
         </TouchableOpacity>
       </View>
