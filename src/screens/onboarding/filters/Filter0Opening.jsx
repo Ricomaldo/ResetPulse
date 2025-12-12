@@ -81,7 +81,8 @@ const createStyles = (colors, spacing) =>
       width: rs(160),
       height: rs(160),
       borderRadius: rs(80),
-      backgroundColor: colors.primary,
+      backgroundColor: colors.brand.primary,
+      opacity: 0.8,
       marginBottom: rs(spacing.xl),
     },
     breathingText: {
