@@ -23,7 +23,68 @@
     "restartGuideDescription": "Afficher à nouveau l'écran de bienvenue et les conseils",
     "skipAll": "Passer tout",
     "next": "Suivant",
-    "start": "Commencer"
+    "start": "Commencer",
+    "v2": {
+      "filter0": {
+        "breathe": "Respire.\nTon temps t'appartient.",
+        "tapToContinue": "Touche pour continuer"
+      },
+      "filter1": {
+        "title": "Pour quoi utiliser ResetPulse ?",
+        "meditation": "Méditation & Bien-être",
+        "work": "Travail & Étude",
+        "creativity": "Créativité & Flow",
+        "time": "Gestion du temps quotidien",
+        "neurodivergent": "Mon cerveau fonctionne différemment",
+        "helper": "Sélectionne au moins une option",
+        "continue": "Continuer"
+      },
+      "filter2": {
+        "title": "Crée ton premier moment",
+        "activity": "Activité",
+        "duration": "Durée",
+        "palette": "Palette",
+        "color": "Couleur",
+        "cta": "Créer mon moment",
+        "minutes": "min"
+      },
+      "filter3": {
+        "title": "Teste ton moment",
+        "subtitle": "60 secondes pour découvrir l'expérience",
+        "breathe": "Respire...",
+        "almostDone": "Tu y es presque..."
+      },
+      "filter4": {
+        "title": "Imagine tes journées avec ResetPulse",
+        "tagline": "Chaque moment, sa couleur.\nChaque activité, son rythme.",
+        "cta": "Créer plus de moments",
+        "morning": "Matin",
+        "day": "Journée",
+        "break": "Pause",
+        "evening": "Soir",
+        "morningMeditation": "Méditation 20min",
+        "morningNeuro": "Ancrage 5min",
+        "morningGentle": "Réveil en douceur 10min",
+        "dayWork": "Focus Pomodoro 25min",
+        "dayNeuro": "Sprints courts 15min",
+        "dayFocus": "Concentration 30min",
+        "breakNeuro": "Reset sensoriel 5min",
+        "breakRelax": "Déconnexion 15min",
+        "eveningCreative": "Créativité libre 45min",
+        "eveningMeditation": "Relaxation 15min",
+        "eveningRelax": "Décompression 20min"
+      },
+      "filter5": {
+        "title": "Débloque tout",
+        "featureColors": "Toutes les couleurs.",
+        "featureActivities": "Toutes les activités.",
+        "featureComfort": "Ton confort maximum.",
+        "gift": "7 JOURS GRATUITS",
+        "price": "Puis 4,99€ une fois — à toi pour toujours.",
+        "trialCta": "Essayer 7 jours gratuits",
+        "skipCta": "Peut-être plus tard"
+      }
+    }
   },
   "timer": {
     "durationPopover": {
@@ -182,6 +243,14 @@
     "rotationDirection": "Sens de rotation",
     "startTrial": "Commencer l'essai gratuit",
     "maybeLater": "Peut-être plus tard",
-    "restore": "Restaurer mes achats"
+    "restore": "Restaurer mes achats",
+    "activity": "Activité {name}",
+    "activityLocked": "Activité premium verrouillée",
+    "moreActivities": "Plus d'activités",
+    "discoverPremium": "Découvrir les activités premium"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard"
   }
 }

@@ -4,6 +4,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 
 const BREATH_CYCLES = 5;
@@ -11,6 +12,7 @@ const BREATH_DURATION = 1500;
 
 export default function Filter0Opening({ onContinue }) {
   const { colors, spacing } = useTheme();
+  const t = useTranslation();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const cycleCount = useRef(0);
 
@@ -55,9 +57,9 @@ export default function Filter0Opening({ onContinue }) {
           ]}
         />
         <Text style={styles.breathingText}>
-          Respire.{'\n'}Ton temps t'appartient.
+          {t('onboarding.v2.filter0.breathe')}
         </Text>
-        <Text style={styles.tapHint}>Touche pour continuer</Text>
+        <Text style={styles.tapHint}>{t('onboarding.v2.filter0.tapToContinue')}</Text>
       </View>
     </TouchableOpacity>
   );
