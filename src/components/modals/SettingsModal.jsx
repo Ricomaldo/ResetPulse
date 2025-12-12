@@ -13,10 +13,10 @@ import {
   Alert,
   Image,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTimerOptions } from "../../contexts/TimerOptionsContext";
 import { useTimerPalette } from "../../contexts/TimerPaletteContext";
-import { useOnboarding } from "../onboarding/OnboardingController";
 import { rs } from "../../styles/responsive";
 import PalettePreview from "../PalettePreview";
 import SoundPicker from "../SoundPicker";
@@ -27,12 +27,14 @@ import haptics from "../../utils/haptics";
 import { usePremiumStatus } from "../../hooks/usePremiumStatus";
 import { useTranslation } from "../../hooks/useTranslation";
 
+// Storage key pour onboarding V2 (same as App.js)
+const ONBOARDING_COMPLETED_KEY = "onboarding_v2_completed";
+
 export default function SettingsModal({ visible, onClose }) {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const t = useTranslation();
   const theme = useTheme();
   const { currentPalette, setPalette } = useTimerPalette();
-  const { resetOnboarding, startTooltips } = useOnboarding();
   const {
     shouldPulse,
     setShouldPulse,
@@ -67,6 +69,17 @@ export default function SettingsModal({ visible, onClose }) {
       ? favoriteActivities.filter((id) => id !== activityId)
       : [...favoriteActivities, activityId];
     setFavoriteActivities(newFavorites);
+  };
+
+  // Reset onboarding V2 - reloads app to show onboarding flow
+  const resetOnboarding = async () => {
+    try {
+      await AsyncStorage.removeItem(ONBOARDING_COMPLETED_KEY);
+      // Note: App needs to reload to detect onboarding state change
+      // User will need to force quit and reopen the app
+    } catch (error) {
+      console.warn("[SettingsModal] Failed to reset onboarding:", error);
+    }
   };
 
   // Platform-specific touchable component
