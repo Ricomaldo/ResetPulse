@@ -12,7 +12,7 @@ import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
 import TimerScreen from './src/screens/TimerScreen';
-import OnboardingFlow from './src/screens/onboarding';
+import { OnboardingFlow } from './src/screens/onboarding';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import Analytics from './src/services/analytics';
 
