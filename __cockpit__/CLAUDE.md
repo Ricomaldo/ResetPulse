@@ -55,7 +55,6 @@ cockpit/
 | Fichier | Type | Description |
 |---------|------|-------------|
 | [m8-overview.md](active/m8-overview.md) | milestone | M8 Optimisation Conversion |
-| [mission-duration-popover.md](active/mission-duration-popover.md) | mission | Popover preset durée TimerScreen |
 
 ### Backlog (`backlog/`)
 
@@ -68,6 +67,7 @@ cockpit/
 | Fichier | Date | Description |
 |---------|------|-------------|
 | [mission-onboarding-v2.md](done/mission-onboarding-v2.md) | 2025-12-12 | Onboarding V2 (6 filtres) ✅ Merged to main |
+| [mission-duration-popover.md](done/mission-duration-popover.md) | 2025-12-12 | Popover preset durée TimerScreen ✅ |
 
 ---
 
