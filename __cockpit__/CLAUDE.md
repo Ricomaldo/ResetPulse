@@ -1,6 +1,6 @@
 ---
 created: '2025-11-30'
-updated: '2025-12-08'
+updated: '2025-12-12'
 status: active
 type: cockpit-index
 ---
@@ -55,15 +55,19 @@ cockpit/
 | Fichier | Type | Description |
 |---------|------|-------------|
 | [m8-overview.md](active/m8-overview.md) | milestone | M8 Optimisation Conversion |
-| [mission-onboarding-v2.md](active/mission-onboarding-v2.md) | mission | Onboarding V2 (6 filtres) |
+| [mission-duration-popover.md](active/mission-duration-popover.md) | mission | Popover preset durée TimerScreen |
 
 ### Backlog (`backlog/`)
 
-*Vide*
+| Fichier | Type | Description |
+|---------|------|-------------|
+| [mission-micro-celebrations.md](backlog/mission-micro-celebrations.md) | mission | Micro-célébrations fin timer |
 
 ### Done (`done/`)
 
-*Aucune mission terminée*
+| Fichier | Date | Description |
+|---------|------|-------------|
+| [mission-onboarding-v2.md](done/mission-onboarding-v2.md) | 2025-12-12 | Onboarding V2 (6 filtres) ✅ Merged to main |
 
 ---
 
