@@ -1,5 +1,5 @@
 // src/components/TimeTimer.jsx
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
@@ -8,6 +8,7 @@ import { rs, getComponentSizes } from '../styles/responsive';
 import useTimer from '../hooks/useTimer';
 import TimerDial from './timer/TimerDial';
 import DigitalTimer from './timer/DigitalTimer';
+import DurationPopover from './DurationPopover';
 import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
 import haptics from '../utils/haptics';
 import { TIMER, BUTTON, TEXT, TOUCH, getDialMode } from './timer/timerConstants';
@@ -26,6 +27,9 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
 
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
+
+  // State for duration popover
+  const [popoverVisible, setPopoverVisible] = useState(false);
 
   // Refs for onboarding
   const dialWrapperRef = useRef(null);
@@ -178,18 +182,35 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
     // Duration will be saved when user presses play (useTimer.js handles this)
   };
 
+  // Handle duration selection from popover
+  const handleSelectDuration = (seconds) => {
+    timer.setDuration(seconds);
+  };
+
+  // Handle tap on digital timer to open popover
+  const handleDigitalTimerPress = () => {
+    if (timer.running) return; // Don't open popover when timer is running
+    haptics.selection().catch(() => {});
+    setPopoverVisible(true);
+  };
+
 
   return (
     <View style={styles.container}>
-      {/* Digital Timer - Absolute position above */}
+      {/* Digital Timer - Absolute position above, tappable to open popover */}
       {showDigitalTimer && (
-        <View style={styles.digitalTimerWrapper}>
+        <TouchableOpacity
+          style={styles.digitalTimerWrapper}
+          onPress={handleDigitalTimerPress}
+          activeOpacity={timer.running ? 1 : 0.7}
+          disabled={timer.running}
+        >
           <DigitalTimer
             remaining={timer.remaining}
             isRunning={timer.running}
             color={currentColor}
           />
-        </View>
+        </TouchableOpacity>
       )}
 
       {/* Timer Circle */}
@@ -248,6 +269,14 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Duration Popover */}
+      <DurationPopover
+        visible={popoverVisible}
+        onClose={() => setPopoverVisible(false)}
+        onSelectDuration={handleSelectDuration}
+        currentColor={currentColor}
+      />
     </View>
   );
 }

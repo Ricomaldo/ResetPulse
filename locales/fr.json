@@ -25,6 +25,13 @@
     "next": "Suivant",
     "start": "Commencer"
   },
+  "timer": {
+    "durationPopover": {
+      "title": "Choisir une durée",
+      "minutes": "min",
+      "close": "Fermer"
+    }
+  },
   "settings": {
     "title": "Paramètres",
     "interface": {
