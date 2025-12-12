@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
+import { useTranslation } from '../hooks/useTranslation';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { rs, getComponentSizes } from '../styles/responsive';
@@ -12,6 +13,7 @@ import { PremiumModal, MoreActivitiesModal } from './modals';
 
 export default function ActivityCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
+  const t = useTranslation();
   const {
     currentActivity,
     setCurrentActivity,
@@ -356,10 +358,10 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
             ]}>
               <TouchableOpacity
                 accessible={true}
-                accessibilityLabel={`Activité ${activity.label}`}
+                accessibilityLabel={t('accessibility.activity', { name: activity.label })}
                 accessibilityRole="button"
                 accessibilityState={{selected: isActive, disabled: isLocked}}
-                accessibilityHint={isLocked ? "Activité premium verrouillée" : `Sélectionner ${activity.label}`}
+                accessibilityHint={isLocked ? t('accessibility.activityLocked') : t('accessibility.activity', { name: activity.label })}
                 style={[
                   styles.activityButtonInner,
                   isActive && styles.activityButtonActive
@@ -396,8 +398,8 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
             onPress={handleMorePress}
             activeOpacity={0.7}
             accessible={true}
-            accessibilityLabel="Plus d'activités"
-            accessibilityHint="Découvrir les activités premium"
+            accessibilityLabel={t('accessibility.moreActivities')}
+            accessibilityHint={t('accessibility.discoverPremium')}
           >
             <Text style={styles.moreButtonText}>+</Text>
           </TouchableOpacity>
