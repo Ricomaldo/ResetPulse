@@ -16,6 +16,7 @@ const DialBase = React.memo(({
   strokeWidth,
   graduationMarks,
   minuteNumbers,
+  showNumbers = true,
 }) => {
   const theme = useTheme();
 
@@ -46,7 +47,7 @@ const DialBase = React.memo(({
       ))}
 
       {/* Minute numbers */}
-      {minuteNumbers.map(num => (
+      {showNumbers && minuteNumbers.map(num => (
         <SvgText
           key={num.key}
           x={num.x}

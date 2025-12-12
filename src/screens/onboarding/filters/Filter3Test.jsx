@@ -77,6 +77,7 @@ export default function Filter3Test({ timerConfig, onContinue }) {
             isRunning={started}
             shouldPulse={true}
             currentActivity={timerConfig?.activity}
+            showNumbers={false}
           />
         </View>
 

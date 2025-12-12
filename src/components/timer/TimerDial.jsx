@@ -41,6 +41,7 @@ function TimerDial({
   onGraduationTap = null,
   isCompleted = false,
   currentActivity = null,
+  showNumbers = true,
 }) {
   const theme = useTheme();
   const [isDragging, setIsDragging] = useState(false);
@@ -219,6 +220,7 @@ function TimerDial({
         strokeWidth={strokeWidth}
         graduationMarks={graduationMarks}
         minuteNumbers={minuteNumbers}
+        showNumbers={showNumbers}
       />
 
       {/* Progress layer: animated arc */}
