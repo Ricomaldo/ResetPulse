@@ -6,6 +6,8 @@ import { TIMER } from '../components/timer/timerConstants';
 import useSimpleAudio from './useSimpleAudio';
 import useNotificationTimer from './useNotificationTimer';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import analytics from '../services/analytics';
 
 export default function useTimer(initialDuration = 240, onComplete) {
   // Core timer states
@@ -22,6 +24,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Get selected sound and activity durations from context
   const { selectedSoundId, activityDurations, saveActivityDuration, currentActivity } = useTimerOptions();
+
+  // Get palette info for analytics
+  const { currentPalette, currentColor } = useTimerPalette();
 
   // Audio with selected sound - using simple audio hook
   const { playSound } = useSimpleAudio(selectedSoundId);
@@ -63,6 +68,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
       if (!hasTriggeredCompletion.current) {
         hasTriggeredCompletion.current = true;
         setHasCompleted(true);
+
+        // Track timer completion
+        analytics.trackTimerCompleted(duration, currentActivity, 100);
 
         // Vérifier si l'app était en background (notification a déjà sonné)
         const skipSound = wasInBackgroundRef.current;
@@ -120,7 +128,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         console.log(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé!`);
       }
     }
-  }, [startTime, duration, running, onComplete]);
+  }, [startTime, duration, running, onComplete, currentActivity]);
 
   // Effect 1: Initialize startTime when starting
   useEffect(() => {
@@ -251,6 +259,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
           saveActivityDuration(currentActivity.id, duration);
         }
 
+        // Track timer start
+        analytics.trackTimerStarted(duration, currentActivity, currentColor, currentPalette);
+
         if (__DEV__) {
           const now = new Date();
           const minutes = Math.floor(remaining / 60);
@@ -267,13 +278,25 @@ export default function useTimer(initialDuration = 240, onComplete) {
       setShowParti(false);
       setShowReparti(false);
 
+      // Track timer paused (only if timer was actually running)
+      if (startTime) {
+        const elapsed = duration - remaining;
+        analytics.trackTimerAbandoned(duration, elapsed, 'paused', currentActivity);
+      }
+
       // Annuler la notification
       cancelTimerNotification();
     }
   }, [remaining, duration, isPaused, running, scheduleTimerNotification, cancelTimerNotification,
-      currentActivity, activityDurations, saveActivityDuration]);
+      currentActivity, activityDurations, saveActivityDuration, currentColor, currentPalette, startTime]);
 
   const resetTimer = useCallback(() => {
+    // Track timer reset (only if timer had started and not completed)
+    if (running || isPaused) {
+      const elapsed = duration - remaining;
+      analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivity);
+    }
+
     setRemaining(0); // Reset to ZERO, not duration
     setRunning(false);
     setStartTime(null);
@@ -283,7 +306,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
     // Annuler notification si programmée
     cancelTimerNotification();
-  }, [cancelTimerNotification]);
+  }, [cancelTimerNotification, running, isPaused, duration, remaining, currentActivity]);
 
   const setPresetDuration = useCallback((minutes) => {
     const newDuration = minutes * 60;
