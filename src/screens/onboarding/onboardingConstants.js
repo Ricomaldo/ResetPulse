@@ -49,7 +49,7 @@ export const getSmartDefaults = (needs, freePalettes) => {
 };
 
 // Journey scenarios pour Filter4 (adaptés selon needs)
-export const getJourneyScenarios = (needs = [], colors) => {
+export const getJourneyScenarios = (needs = [], colors, t) => {
   const hasMeditation = needs.includes('meditation');
   const hasWork = needs.includes('work');
   const hasCreativity = needs.includes('creativity');
@@ -58,26 +58,40 @@ export const getJourneyScenarios = (needs = [], colors) => {
   return [
     {
       emoji: '\u{1F305}',
-      label: 'Matin',
-      sublabel: hasMeditation ? 'Méditation 20min' : hasNeuro ? 'Ancrage 5min' : 'Réveil en douceur 10min',
+      label: t('onboarding.v2.filter4.morning'),
+      sublabel: hasMeditation
+        ? t('onboarding.v2.filter4.morningMeditation')
+        : hasNeuro
+        ? t('onboarding.v2.filter4.morningNeuro')
+        : t('onboarding.v2.filter4.morningGentle'),
       color: colors?.success || '#6B8E23',
     },
     {
       emoji: '\u{1F4BC}',
-      label: 'Journée',
-      sublabel: hasWork ? 'Focus Pomodoro 25min' : hasNeuro ? 'Sprints courts 15min' : 'Concentration 30min',
+      label: t('onboarding.v2.filter4.day'),
+      sublabel: hasWork
+        ? t('onboarding.v2.filter4.dayWork')
+        : hasNeuro
+        ? t('onboarding.v2.filter4.dayNeuro')
+        : t('onboarding.v2.filter4.dayFocus'),
       color: colors?.accent || '#FF6B6B',
     },
     {
       emoji: '\u2615',
-      label: 'Pause',
-      sublabel: hasNeuro ? 'Reset sensoriel 5min' : 'Déconnexion 15min',
+      label: t('onboarding.v2.filter4.break'),
+      sublabel: hasNeuro
+        ? t('onboarding.v2.filter4.breakNeuro')
+        : t('onboarding.v2.filter4.breakRelax'),
       color: colors?.primary || '#8B7355',
     },
     {
       emoji: '\u{1F319}',
-      label: 'Soir',
-      sublabel: hasCreativity ? 'Créativité libre 45min' : hasMeditation ? 'Relaxation 15min' : 'Décompression 20min',
+      label: t('onboarding.v2.filter4.evening'),
+      sublabel: hasCreativity
+        ? t('onboarding.v2.filter4.eveningCreative')
+        : hasMeditation
+        ? t('onboarding.v2.filter4.eveningMeditation')
+        : t('onboarding.v2.filter4.eveningRelax'),
       color: colors?.info || '#4ECDC4',
     },
   ];
