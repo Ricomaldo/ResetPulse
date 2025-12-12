@@ -21,6 +21,8 @@ import { rs } from "../../styles/responsive";
 import PalettePreview from "../PalettePreview";
 import SoundPicker from "../SoundPicker";
 import PremiumModal from "./PremiumModal";
+import MoreColorsModal from "./MoreColorsModal";
+import MoreActivitiesModal from "./MoreActivitiesModal";
 import { getAllActivities } from "../../config/activities";
 import { TIMER_PALETTES, isPalettePremium } from "../../config/timerPalettes";
 import haptics from "../../utils/haptics";
@@ -32,6 +34,8 @@ const ONBOARDING_COMPLETED_KEY = "onboarding_v2_completed";
 
 export default function SettingsModal({ visible, onClose }) {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showMoreColorsModal, setShowMoreColorsModal] = useState(false);
+  const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
   const t = useTranslation();
   const theme = useTheme();
   const { currentPalette, setPalette } = useTimerPalette();
@@ -328,6 +332,74 @@ export default function SettingsModal({ visible, onClose }) {
     lockIcon: {
       fontSize: 14,
       opacity: 0.75,
+    },
+
+    // Discovery button for palettes
+    discoverButton: {
+      width: "30%",
+      aspectRatio: 1.5,
+      borderRadius: theme.borderRadius.md,
+      padding: theme.spacing.xs,
+      borderWidth: 2,
+      borderColor: theme.colors.brand.primary + "40",
+      borderStyle: "dashed",
+      backgroundColor: theme.colors.surface,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: theme.spacing.sm,
+      gap: theme.spacing.xs,
+    },
+
+    discoverIconContainer: {
+      width: rs(32),
+      height: rs(32),
+      borderRadius: rs(16),
+      backgroundColor: theme.colors.brand.primary + "20",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    discoverIcon: {
+      fontSize: rs(20),
+      fontWeight: "600",
+      color: theme.colors.brand.primary,
+    },
+
+    discoverText: {
+      fontSize: rs(9, "min"),
+      color: theme.colors.brand.primary,
+      textAlign: "center",
+      fontWeight: "600",
+      lineHeight: rs(11),
+    },
+
+    // Discovery button for activities (22% width to match activity grid)
+    discoverActivityButton: {
+      width: "22%",
+      aspectRatio: 1,
+      borderRadius: theme.borderRadius.md,
+      padding: theme.spacing.xs,
+      borderWidth: 2,
+      borderColor: theme.colors.brand.primary + "40",
+      borderStyle: "dashed",
+      backgroundColor: theme.colors.surface,
+      alignItems: "center",
+      justifyContent: "center",
+      gap: theme.spacing.xs / 2,
+    },
+
+    discoverActivityIcon: {
+      fontSize: rs(24),
+      fontWeight: "600",
+      color: theme.colors.brand.primary,
+    },
+
+    discoverActivityText: {
+      fontSize: rs(8, "min"),
+      color: theme.colors.brand.primary,
+      textAlign: "center",
+      fontWeight: "600",
+      lineHeight: rs(10),
     },
 
     colorRow: {
@@ -777,47 +849,52 @@ export default function SettingsModal({ visible, onClose }) {
                     {t('settings.appearance.palettesDescription')}
                   </Text>
                   <View style={styles.paletteGrid}>
-                    {Object.keys(TIMER_PALETTES).map((paletteName) => {
-                      const isLocked =
-                        isPalettePremium(paletteName) && !isPremiumUser;
-                      const isActive = currentPalette === paletteName;
-                      const paletteInfo = TIMER_PALETTES[paletteName];
+                    {/* Show only free palettes if user is not premium */}
+                    {Object.keys(TIMER_PALETTES)
+                      .filter(paletteName => isPremiumUser || !isPalettePremium(paletteName))
+                      .map((paletteName) => {
+                        const isActive = currentPalette === paletteName;
+                        const paletteInfo = TIMER_PALETTES[paletteName];
 
-                      return (
-                        <TouchableOpacity
-                          key={paletteName}
-                          style={[
-                            styles.paletteItem,
-                            isActive && styles.paletteItemActive,
-                            isLocked && styles.paletteItemLocked,
-                          ]}
-                          onPress={() => {
-                            if (isLocked) {
-                              haptics.warning().catch(() => {});
-                              setShowPremiumModal(true);
-                            } else {
-                              setPalette(paletteName);
-                            }
-                          }}
-                          activeOpacity={0.7}
-                        >
-                          <PalettePreview paletteName={paletteName} />
-                          <Text
+                        return (
+                          <TouchableOpacity
+                            key={paletteName}
                             style={[
-                              styles.paletteName,
-                              isActive && styles.paletteNameActive,
+                              styles.paletteItem,
+                              isActive && styles.paletteItemActive,
                             ]}
+                            onPress={() => setPalette(paletteName)}
+                            activeOpacity={0.7}
                           >
-                            {paletteInfo?.name || paletteName}
-                          </Text>
-                          {isLocked && (
-                            <View style={styles.paletteLockBadge}>
-                              <Text style={styles.lockIcon}>✨</Text>
-                            </View>
-                          )}
-                        </TouchableOpacity>
-                      );
-                    })}
+                            <PalettePreview paletteName={paletteName} />
+                            <Text
+                              style={[
+                                styles.paletteName,
+                                isActive && styles.paletteNameActive,
+                              ]}
+                            >
+                              {paletteInfo?.name || paletteName}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+
+                    {/* Discovery button for free users */}
+                    {!isPremiumUser && (
+                      <TouchableOpacity
+                        style={styles.discoverButton}
+                        onPress={() => {
+                          haptics.selection().catch(() => {});
+                          setShowMoreColorsModal(true);
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <View style={styles.discoverIconContainer}>
+                          <Text style={styles.discoverIcon}>+</Text>
+                        </View>
+                        <Text style={styles.discoverText}>Plus de{'\n'}palettes</Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </>
               )}
@@ -862,48 +939,52 @@ export default function SettingsModal({ visible, onClose }) {
                     {t('settings.appearance.activitiesDescription')}
                   </Text>
                   <View style={styles.favoritesGrid}>
-                    {allActivities.map((activity) => {
-                      const isFavorite = favoriteActivities.includes(
-                        activity.id
-                      );
-                      const isLocked = activity.isPremium && !isPremiumUser;
-                      return (
-                        <TouchableOpacity
-                          key={activity.id}
-                          style={[
-                            styles.activityItem,
-                            isFavorite && styles.activityItemFavorite,
-                            isLocked && styles.activityItemLocked,
-                          ]}
-                          onPress={() => {
-                            if (isLocked) {
-                              haptics.warning().catch(() => {});
-                              setShowPremiumModal(true);
-                            } else {
-                              toggleFavorite(activity.id);
-                            }
-                          }}
-                          activeOpacity={0.7}
-                        >
-                          <Text style={styles.activityEmoji}>
-                            {activity.id === "none" ? "⏱️" : activity.emoji}
-                          </Text>
-                          <Text
+                    {/* Show only free activities if user is not premium */}
+                    {allActivities
+                      .filter(activity => isPremiumUser || !activity.isPremium)
+                      .map((activity) => {
+                        const isFavorite = favoriteActivities.includes(
+                          activity.id
+                        );
+                        return (
+                          <TouchableOpacity
+                            key={activity.id}
                             style={[
-                              styles.activityItemLabel,
-                              isFavorite && styles.activityItemLabelFavorite,
+                              styles.activityItem,
+                              isFavorite && styles.activityItemFavorite,
                             ]}
+                            onPress={() => toggleFavorite(activity.id)}
+                            activeOpacity={0.7}
                           >
-                            {activity.label}
-                          </Text>
-                          {isLocked && (
-                            <View style={styles.premiumBadge}>
-                              <Text style={styles.lockMini}>✨</Text>
-                            </View>
-                          )}
-                        </TouchableOpacity>
-                      );
-                    })}
+                            <Text style={styles.activityEmoji}>
+                              {activity.id === "none" ? "⏱️" : activity.emoji}
+                            </Text>
+                            <Text
+                              style={[
+                                styles.activityItemLabel,
+                                isFavorite && styles.activityItemLabelFavorite,
+                              ]}
+                            >
+                              {activity.label}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+
+                    {/* Discovery button for free users */}
+                    {!isPremiumUser && (
+                      <TouchableOpacity
+                        style={styles.discoverActivityButton}
+                        onPress={() => {
+                          haptics.selection().catch(() => {});
+                          setShowMoreActivitiesModal(true);
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Text style={styles.discoverActivityIcon}>+</Text>
+                        <Text style={styles.discoverActivityText}>Plus{'\n'}d'activités</Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </>
               )}
@@ -1005,6 +1086,17 @@ export default function SettingsModal({ visible, onClose }) {
         visible={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
         highlightedFeature="contenu premium"
+      />
+
+      {/* Discovery Modals */}
+      <MoreColorsModal
+        visible={showMoreColorsModal}
+        onClose={() => setShowMoreColorsModal(false)}
+      />
+
+      <MoreActivitiesModal
+        visible={showMoreActivitiesModal}
+        onClose={() => setShowMoreActivitiesModal(false)}
       />
     </Modal>
   );
