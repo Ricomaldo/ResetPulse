@@ -44,7 +44,7 @@ export default function Filter5Paywall({ onComplete }) {
           <Text style={styles.buttonText}>{t('onboarding.v2.filter5.trialCta')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+        <TouchableOpacity style={styles.skipButton} onPress={handleSkip} activeOpacity={0.7}>
           <Text style={styles.skipText}>{t('onboarding.v2.filter5.skipCta')}</Text>
         </TouchableOpacity>
       </View>
@@ -115,10 +115,18 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     skipButton: {
       marginTop: rs(spacing.lg),
-      padding: rs(spacing.md),
+      paddingVertical: rs(spacing.md),
+      paddingHorizontal: rs(spacing.xl),
+      borderRadius: borderRadius.xl,
+      borderWidth: 2,
+      borderColor: colors.border,
+      alignItems: 'center',
+      minWidth: rs(200),
+      backgroundColor: colors.surface,
     },
     skipText: {
-      color: colors.textTertiary,
-      fontSize: rs(15),
+      color: colors.text,
+      fontSize: rs(16),
+      fontWeight: '600',
     },
   });
