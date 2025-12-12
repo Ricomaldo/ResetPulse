@@ -5,11 +5,13 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, getJourneyScenarios } from '../onboardingConstants';
 
 export default function Filter4Vision({ needs = [], onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
-  const scenarios = getJourneyScenarios(needs, colors);
+  const t = useTranslation();
+  const scenarios = getJourneyScenarios(needs, colors, t);
 
   const styles = createStyles(colors, spacing, borderRadius);
 
@@ -19,7 +21,7 @@ export default function Filter4Vision({ needs = [], onContinue }) {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
-        <Text style={styles.title}>Imagine tes journées avec ResetPulse</Text>
+        <Text style={styles.title}>{t('onboarding.v2.filter4.title')}</Text>
 
         {scenarios.map((s, i) => (
           <View key={i} style={styles.scenarioCard}>
@@ -33,13 +35,13 @@ export default function Filter4Vision({ needs = [], onContinue }) {
         ))}
 
         <Text style={styles.tagline}>
-          Chaque moment, sa couleur.{'\n'}Chaque activité, son rythme.
+          {t('onboarding.v2.filter4.tagline')}
         </Text>
       </ScrollView>
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.button} onPress={onContinue}>
-          <Text style={styles.buttonText}>Créer plus de moments</Text>
+          <Text style={styles.buttonText}>{t('onboarding.v2.filter4.cta')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

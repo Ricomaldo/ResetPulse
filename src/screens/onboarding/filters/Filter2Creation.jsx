@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
 import TimerDial from '../../../components/timer/TimerDial';
 import { TIMER_PALETTES, getFreePalettes } from '../../../config/timerPalettes';
 import {
@@ -23,6 +24,7 @@ import {
 
 export default function Filter2Creation({ needs, onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
+  const t = useTranslation();
   const freePalettes = getFreePalettes();
   const defaults = getSmartDefaults(needs, freePalettes);
 
@@ -60,7 +62,7 @@ export default function Filter2Creation({ needs, onContinue }) {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
-        <Text style={styles.title}>Crée ton premier moment</Text>
+        <Text style={styles.title}>{t('onboarding.v2.filter2.title')}</Text>
 
         {/* Preview avec TimerDial réel */}
         <View style={styles.previewContainer}>
@@ -77,7 +79,7 @@ export default function Filter2Creation({ needs, onContinue }) {
         </View>
 
         {/* Activité */}
-        <Text style={styles.sectionLabel}>Activité</Text>
+        <Text style={styles.sectionLabel}>{t('onboarding.v2.filter2.activity')}</Text>
         <View style={styles.activityRow}>
           {FREE_ACTIVITIES.map((activity) => {
             const isSelected = selectedActivity.id === activity.id;
@@ -109,7 +111,7 @@ export default function Filter2Creation({ needs, onContinue }) {
         </View>
 
         {/* Durée */}
-        <Text style={styles.sectionLabel}>Durée</Text>
+        <Text style={styles.sectionLabel}>{t('onboarding.v2.filter2.duration')}</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -130,14 +132,14 @@ export default function Filter2Creation({ needs, onContinue }) {
                   duration === d && styles.durationTextSelected,
                 ]}
               >
-                {d} min
+                {d} {t('onboarding.v2.filter2.minutes')}
               </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
 
         {/* Palette */}
-        <Text style={styles.sectionLabel}>Palette</Text>
+        <Text style={styles.sectionLabel}>{t('onboarding.v2.filter2.palette')}</Text>
         <View style={styles.paletteRow}>
           {freePalettes.map((key) => {
             const pal = TIMER_PALETTES[key];
@@ -175,7 +177,7 @@ export default function Filter2Creation({ needs, onContinue }) {
         </View>
 
         {/* Couleur */}
-        <Text style={styles.sectionLabel}>Couleur</Text>
+        <Text style={styles.sectionLabel}>{t('onboarding.v2.filter2.color')}</Text>
         <View style={styles.colorRow}>
           {currentColors.map((c, i) => (
             <TouchableOpacity
@@ -193,7 +195,7 @@ export default function Filter2Creation({ needs, onContinue }) {
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.button} onPress={handleContinue}>
-          <Text style={styles.buttonText}>Créer mon moment</Text>
+          <Text style={styles.buttonText}>{t('onboarding.v2.filter2.cta')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

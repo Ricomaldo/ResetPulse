@@ -1,6 +1,5 @@
 // src/components/modals/DiscoveryModal.jsx
 // Modale générique de découverte premium (activités, couleurs, etc.)
-// TODO i18n: ctaText, dismissText
 
 import React from "react";
 import {
@@ -12,6 +11,7 @@ import {
   Platform,
 } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
+import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
 import haptics from "../../utils/haptics";
 
@@ -23,10 +23,15 @@ export default function DiscoveryModal({
   subtitle,
   tagline,
   children,
-  ctaText = "Débloquer tout - 7 jours gratuits",
-  dismissText = "Peut-être plus tard",
+  ctaText,
+  dismissText,
 }) {
   const theme = useTheme();
+  const t = useTranslation();
+
+  // Use i18n defaults if not provided
+  const ctaTextFinal = ctaText || t('discovery.defaultCta');
+  const dismissTextFinal = dismissText || t('discovery.defaultDismiss');
 
   const handleUnlock = () => {
     haptics.selection().catch(() => {});
@@ -169,7 +174,7 @@ export default function DiscoveryModal({
                 onPress={handleUnlock}
                 activeOpacity={0.8}
               >
-                <Text style={styles.primaryButtonText}>{ctaText}</Text>
+                <Text style={styles.primaryButtonText}>{ctaTextFinal}</Text>
               </TouchableOpacity>
 
               {/* Secondary Button */}
@@ -178,7 +183,7 @@ export default function DiscoveryModal({
                 onPress={handleClose}
                 activeOpacity={0.7}
               >
-                <Text style={styles.secondaryButtonText}>{dismissText}</Text>
+                <Text style={styles.secondaryButtonText}>{dismissTextFinal}</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
