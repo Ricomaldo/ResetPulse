@@ -228,6 +228,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
           onGraduationTap={handleGraduationTap}
           isCompleted={timer.isCompleted}
           currentActivity={currentActivity}
+          showNumbers={false}
         />
 
         {/* Message Overlay */}
