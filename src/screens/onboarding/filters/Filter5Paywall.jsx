@@ -5,10 +5,12 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 
 export default function Filter5Paywall({ onComplete }) {
   const { colors, spacing, borderRadius } = useTheme();
+  const t = useTranslation();
 
   const handleTrial = () => {
     onComplete('trial');
@@ -23,27 +25,27 @@ export default function Filter5Paywall({ onComplete }) {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <View style={styles.centerContent}>
-        <Text style={styles.title}>Débloque tout</Text>
+        <Text style={styles.title}>{t('onboarding.v2.filter5.title')}</Text>
 
         <View style={styles.paywallFeatures}>
-          <Text style={styles.paywallFeature}>Toutes les couleurs.</Text>
-          <Text style={styles.paywallFeature}>Toutes les activités.</Text>
-          <Text style={styles.paywallFeature}>Ton confort maximum.</Text>
+          <Text style={styles.paywallFeature}>{t('onboarding.v2.filter5.featureColors')}</Text>
+          <Text style={styles.paywallFeature}>{t('onboarding.v2.filter5.featureActivities')}</Text>
+          <Text style={styles.paywallFeature}>{t('onboarding.v2.filter5.featureComfort')}</Text>
         </View>
 
         <View style={styles.paywallBox}>
-          <Text style={styles.paywallGift}>{'\u{1F381}'} 7 JOURS GRATUITS</Text>
+          <Text style={styles.paywallGift}>{'\u{1F381}'} {t('onboarding.v2.filter5.gift')}</Text>
           <Text style={styles.paywallPrice}>
-            Puis 4,99€ une fois — à toi pour toujours.
+            {t('onboarding.v2.filter5.price')}
           </Text>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleTrial}>
-          <Text style={styles.buttonText}>Essayer 7 jours gratuits</Text>
+          <Text style={styles.buttonText}>{t('onboarding.v2.filter5.trialCta')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-          <Text style={styles.skipText}>Peut-être plus tard</Text>
+          <Text style={styles.skipText}>{t('onboarding.v2.filter5.skipCta')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

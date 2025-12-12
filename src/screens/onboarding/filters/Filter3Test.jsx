@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
 import TimerDial from '../../../components/timer/TimerDial';
 import { rs } from '../onboardingConstants';
 
@@ -13,6 +14,7 @@ const UPDATE_INTERVAL = 50; // ms (20 fps)
 
 export default function Filter3Test({ timerConfig, onContinue }) {
   const { colors, spacing } = useTheme();
+  const t = useTranslation();
   const [progress, setProgress] = useState(1);
   const [secondsLeft, setSecondsLeft] = useState(TEST_DURATION);
   const [started, setStarted] = useState(false);
@@ -59,9 +61,9 @@ export default function Filter3Test({ timerConfig, onContinue }) {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <View style={styles.centerContent}>
-        <Text style={styles.title}>Teste ton moment</Text>
+        <Text style={styles.title}>{t('onboarding.v2.filter3.title')}</Text>
         <Text style={styles.subtitle}>
-          60 secondes pour découvrir l'expérience
+          {t('onboarding.v2.filter3.subtitle')}
         </Text>
 
         <View style={styles.testDialContainer}>
@@ -79,7 +81,7 @@ export default function Filter3Test({ timerConfig, onContinue }) {
         </View>
 
         <Text style={styles.testHint}>
-          {secondsLeft > 30 ? 'Respire...' : 'Tu y es presque...'}
+          {secondsLeft > 30 ? t('onboarding.v2.filter3.breathe') : t('onboarding.v2.filter3.almostDone')}
         </Text>
       </View>
     </SafeAreaView>
