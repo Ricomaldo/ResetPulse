@@ -127,13 +127,35 @@ describe('onboardingConstants', () => {
       info: '#4ECDC4',
     };
 
+    // Mock translation function that returns a mapped value
+    const mockT = (key) => {
+      const translations = {
+        'onboarding.v2.filter4.morning': 'Matin',
+        'onboarding.v2.filter4.day': 'Journée',
+        'onboarding.v2.filter4.break': 'Pause',
+        'onboarding.v2.filter4.evening': 'Soir',
+        'onboarding.v2.filter4.morningMeditation': 'Méditation matinale',
+        'onboarding.v2.filter4.morningNeuro': 'Réveil en douceur',
+        'onboarding.v2.filter4.morningGentle': 'Démarrage progressif',
+        'onboarding.v2.filter4.dayWork': 'Pomodoro focus',
+        'onboarding.v2.filter4.dayNeuro': 'Blocs avec breaks',
+        'onboarding.v2.filter4.dayFocus': 'Concentration profonde',
+        'onboarding.v2.filter4.breakNeuro': 'Reset sensoriel',
+        'onboarding.v2.filter4.breakRelax': 'Pause détente',
+        'onboarding.v2.filter4.eveningCreative': 'Création libre',
+        'onboarding.v2.filter4.eveningMeditation': 'Retour au calme',
+        'onboarding.v2.filter4.eveningRelax': 'Transition douce',
+      };
+      return translations[key] || key;
+    };
+
     it('should return exactly 4 scenarios', () => {
-      const scenarios = getJourneyScenarios([], mockColors);
+      const scenarios = getJourneyScenarios([], mockColors, mockT);
       expect(scenarios).toHaveLength(4);
     });
 
     it('each scenario should have emoji, label, sublabel, color', () => {
-      const scenarios = getJourneyScenarios([], mockColors);
+      const scenarios = getJourneyScenarios([], mockColors, mockT);
       scenarios.forEach(scenario => {
         expect(scenario).toHaveProperty('emoji');
         expect(scenario).toHaveProperty('label');
@@ -143,7 +165,7 @@ describe('onboardingConstants', () => {
     });
 
     it('should include Matin, Journée, Pause, Soir labels', () => {
-      const scenarios = getJourneyScenarios([], mockColors);
+      const scenarios = getJourneyScenarios([], mockColors, mockT);
       const labels = scenarios.map(s => s.label);
       expect(labels).toContain('Matin');
       expect(labels).toContain('Journée');
@@ -152,25 +174,25 @@ describe('onboardingConstants', () => {
     });
 
     it('should customize sublabels for meditation need', () => {
-      const scenarios = getJourneyScenarios(['meditation'], mockColors);
+      const scenarios = getJourneyScenarios(['meditation'], mockColors, mockT);
       const matin = scenarios.find(s => s.label === 'Matin');
       expect(matin.sublabel).toContain('Méditation');
     });
 
     it('should customize sublabels for work need', () => {
-      const scenarios = getJourneyScenarios(['work'], mockColors);
+      const scenarios = getJourneyScenarios(['work'], mockColors, mockT);
       const journee = scenarios.find(s => s.label === 'Journée');
       expect(journee.sublabel).toContain('Pomodoro');
     });
 
     it('should customize sublabels for neurodivergent need', () => {
-      const scenarios = getJourneyScenarios(['neurodivergent'], mockColors);
+      const scenarios = getJourneyScenarios(['neurodivergent'], mockColors, mockT);
       const pause = scenarios.find(s => s.label === 'Pause');
       expect(pause.sublabel).toContain('Reset sensoriel');
     });
 
     it('should use fallback colors when colors is undefined', () => {
-      const scenarios = getJourneyScenarios([], undefined);
+      const scenarios = getJourneyScenarios([], undefined, mockT);
       scenarios.forEach(scenario => {
         expect(scenario.color).toBeTruthy();
         expect(scenario.color).toMatch(/^#/);
