@@ -1,6 +1,6 @@
 ---
 created: '2025-12-07'
-updated: '2025-12-08'
+updated: '2025-12-12'
 status: active
 type: milestone
 milestone: M8
@@ -30,14 +30,19 @@ M8 = Optimisation Conversion. Transformer les utilisateurs gratuits en abonnés 
 
 ---
 
+## Missions Complétées
+
+| Mission | Statut | Description | Date |
+|---------|--------|-------------|------|
+| [mission-onboarding-v2.md](../done/mission-onboarding-v2.md) | done | Refonte onboarding 6 filtres | 2025-12-12 |
+
 ## Missions Actives
 
-| Mission | Statut | Description |
-|---------|--------|-------------|
-| [mission-onboarding-v2.md](mission-onboarding-v2.md) | in_progress | Refonte onboarding 6 filtres |
+*Aucune mission active — Prêt pour prochaine itération*
 
 ### Futures missions identifiées
 
+- `mission-duration-popover.md` — UX preset durée dans TimerScreen
 - `mission-analytics-m8.md` — Enrichir tracking funnel (post-onboarding)
 - `mission-paywall-optimization.md` — A/B test paywall (si data suffisantes)
 
@@ -61,6 +66,12 @@ M8 = Optimisation Conversion. Transformer les utilisateurs gratuits en abonnés 
 
 **2025-12-08 :**
 - Restructuration fichiers (overview + mission séparés)
+- Onboarding V2 : 6 filtres développés, analytics intégrés, tests Jest
+
+**2025-12-12 :**
+- ✅ Mission onboarding-v2 complétée et mergée dans main
+- Pushed to production (proto → main → origin/main)
+- V1 complètement supprimé, V2 en place avec 54 tests
 
 ---
 
