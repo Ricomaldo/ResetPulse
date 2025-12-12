@@ -20,7 +20,68 @@
     "controlsSubtext": "The timer continues in the background",
     "completion": "Enjoy ResetPulse!",
     "restartGuide": "Restart the guide",
-    "restartGuideDescription": "Show the welcome screen and tips again"
+    "restartGuideDescription": "Show the welcome screen and tips again",
+    "v2": {
+      "filter0": {
+        "breathe": "Breathe.\nYour time is yours.",
+        "tapToContinue": "Tap to continue"
+      },
+      "filter1": {
+        "title": "What will you use ResetPulse for?",
+        "meditation": "Meditation & Wellbeing",
+        "work": "Work & Study",
+        "creativity": "Creativity & Flow",
+        "time": "Daily time management",
+        "neurodivergent": "My brain works differently",
+        "helper": "Select at least one option",
+        "continue": "Continue"
+      },
+      "filter2": {
+        "title": "Create your first moment",
+        "activity": "Activity",
+        "duration": "Duration",
+        "palette": "Palette",
+        "color": "Color",
+        "cta": "Create my moment",
+        "minutes": "min"
+      },
+      "filter3": {
+        "title": "Test your moment",
+        "subtitle": "60 seconds to discover the experience",
+        "breathe": "Breathe...",
+        "almostDone": "Almost done..."
+      },
+      "filter4": {
+        "title": "Imagine your days with ResetPulse",
+        "tagline": "Every moment, its color.\nEvery activity, its rhythm.",
+        "cta": "Create more moments",
+        "morning": "Morning",
+        "day": "Day",
+        "break": "Break",
+        "evening": "Evening",
+        "morningMeditation": "Meditation 20min",
+        "morningNeuro": "Grounding 5min",
+        "morningGentle": "Gentle wake 10min",
+        "dayWork": "Pomodoro Focus 25min",
+        "dayNeuro": "Short sprints 15min",
+        "dayFocus": "Concentration 30min",
+        "breakNeuro": "Sensory reset 5min",
+        "breakRelax": "Disconnect 15min",
+        "eveningCreative": "Free creativity 45min",
+        "eveningMeditation": "Relaxation 15min",
+        "eveningRelax": "Unwind 20min"
+      },
+      "filter5": {
+        "title": "Unlock everything",
+        "featureColors": "All colors.",
+        "featureActivities": "All activities.",
+        "featureComfort": "Maximum comfort.",
+        "gift": "7 DAYS FREE",
+        "price": "Then €4.99 once — yours forever.",
+        "trialCta": "Try 7 days free",
+        "skipCta": "Maybe later"
+      }
+    }
   },
   "timer": {
     "durationPopover": {
@@ -179,6 +240,14 @@
     "rotationDirection": "Rotation direction",
     "startTrial": "Start free trial",
     "maybeLater": "Maybe later",
-    "restore": "Restore my purchases"
+    "restore": "Restore my purchases",
+    "activity": "Activity {name}",
+    "activityLocked": "Premium activity locked",
+    "moreActivities": "More activities",
+    "discoverPremium": "Discover premium activities"
+  },
+  "discovery": {
+    "defaultCta": "Unlock everything - 7 days free",
+    "defaultDismiss": "Maybe later"
   }
 }
