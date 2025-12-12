@@ -278,6 +278,42 @@ export default function SettingsModal({ visible, onClose }) {
       color: theme.colors.background,
     },
 
+    // Dial mode grid (5 scale modes)
+    dialModeGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.xs,
+      marginTop: theme.spacing.sm,
+      justifyContent: 'space-between',
+    },
+
+    dialModeButton: {
+      width: '31%', // 3 columns with gaps
+      paddingVertical: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.xs,
+      borderRadius: theme.borderRadius.md,
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderWidth: 2,
+      borderColor: theme.colors.border,
+    },
+
+    dialModeButtonActive: {
+      backgroundColor: theme.colors.brand.primary,
+      borderColor: theme.colors.brand.primary,
+    },
+
+    dialModeText: {
+      fontSize: rs(12, 'min'),
+      color: theme.colors.text,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+
+    dialModeTextActive: {
+      color: theme.colors.background,
+    },
+
     paletteGrid: {
       flexDirection: "row",
       flexWrap: "wrap",
@@ -639,56 +675,41 @@ export default function SettingsModal({ visible, onClose }) {
               />
 
               {/* Mode Cadran */}
-              <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
-                <View style={{ flex: 1 }}>
+              <View style={[styles.optionRow, { marginTop: theme.spacing.md, flexDirection: 'column', alignItems: 'stretch' }]}>
+                <View>
                   <Text style={styles.optionLabel}>{t('settings.timer.dialMode')}</Text>
                   <Text style={styles.optionDescription}>
-                    {scaleMode === "60min"
-                      ? t('settings.timer.dialMode60')
-                      : t('settings.timer.dialMode25')}
+                    {scaleMode === "1min" && t('settings.timer.dialMode1')}
+                    {scaleMode === "5min" && t('settings.timer.dialMode5')}
+                    {scaleMode === "10min" && t('settings.timer.dialMode10')}
+                    {scaleMode === "25min" && t('settings.timer.dialMode25')}
+                    {scaleMode === "60min" && t('settings.timer.dialMode60')}
                   </Text>
                 </View>
-                <View style={styles.segmentedControl}>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      scaleMode === "60min" && styles.segmentButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setScaleMode("60min");
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text
+                <View style={styles.dialModeGrid}>
+                  {['1min', '5min', '10min', '25min', '60min'].map((mode) => (
+                    <TouchableOpacity
+                      key={mode}
                       style={[
-                        styles.segmentText,
-                        scaleMode === "60min" && styles.segmentTextActive,
+                        styles.dialModeButton,
+                        scaleMode === mode && styles.dialModeButtonActive,
                       ]}
+                      onPress={() => {
+                        haptics.selection().catch(() => {});
+                        setScaleMode(mode);
+                      }}
+                      activeOpacity={0.7}
                     >
-                      60min
-                    </Text>
-                  </Touchable>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      scaleMode === "25min" && styles.segmentButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setScaleMode("25min");
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text
-                      style={[
-                        styles.segmentText,
-                        scaleMode === "25min" && styles.segmentTextActive,
-                      ]}
-                    >
-                      25min
-                    </Text>
-                  </Touchable>
+                      <Text
+                        style={[
+                          styles.dialModeText,
+                          scaleMode === mode && styles.dialModeTextActive,
+                        ]}
+                      >
+                        {mode}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
 
