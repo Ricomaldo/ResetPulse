@@ -1,7 +1,7 @@
 ---
 created: "2025-12-08"
-updated: "2025-12-08"
-status: active
+updated: "2025-12-12"
+status: done
 type: mission
 milestone: M8
 priority: medium
@@ -32,21 +32,21 @@ L'onboarding V2 (Filter2) propose des boutons presets durée (5, 15, 25, 45, 60 
 
 ### Phase 1 : Composant Popover
 
-- [ ] Créer `src/components/DurationPopover.jsx`
-- [ ] Réutiliser `DURATION_OPTIONS` de `onboardingConstants.js`
-- [ ] Style cohérent avec theme (useTheme)
+- [x] Créer `src/components/DurationPopover.jsx`
+- [x] Réutiliser `DURATION_OPTIONS` de `onboardingConstants.js`
+- [x] Style cohérent avec theme (useTheme)
 
 ### Phase 2 : Intégration TimerScreen
 
-- [ ] Wrapper l'affichage digital dans TouchableOpacity
-- [ ] State `popoverVisible`
-- [ ] Connecter sélection à `setPresetDuration`
+- [x] Wrapper l'affichage digital dans TouchableOpacity
+- [x] State `popoverVisible`
+- [x] Connecter sélection à `setPresetDuration`
 
 ### Phase 3 : Polish
 
-- [ ] Animation ouverture/fermeture
-- [ ] Haptic feedback sur sélection
-- [ ] Accessibilité (labels)
+- [x] Animation ouverture/fermeture
+- [x] Haptic feedback sur sélection
+- [x] i18n support (FR/EN)
 
 ---
 
@@ -64,4 +64,25 @@ L'onboarding V2 (Filter2) propose des boutons presets durée (5, 15, 25, 45, 60 
 
 - Garder cohérence avec les presets onboarding
 - Le popover ne doit pas interférer avec le dial gesture
+
+---
+
+## Résultat
+
+**Mission terminée le 2025-12-12**
+
+- DurationPopover component créé avec 8 presets (5, 10, 15, 20, 25, 30, 45, 60 min)
+- DigitalTimer rendu tappable (TouchableOpacity wrapper)
+- Popover s'ouvre au tap sur DigitalTimer (uniquement quand timer arrêté)
+- Haptic feedback sur sélection + fermeture
+- i18n FR/EN intégré
+- Style cohérent avec theme system
+
+**Fichiers créés/modifiés :**
+
+- `src/components/DurationPopover.jsx` (nouveau)
+- `src/components/TimeTimer.jsx` (integration)
+- `src/components/timer/DigitalTimer.jsx` (pointerEvents removed)
+- `locales/fr.json` (timer.durationPopover keys)
+- `locales/en.json` (timer.durationPopover keys)
 

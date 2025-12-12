@@ -90,7 +90,6 @@ export default function DigitalTimer({ remaining, isRunning, color }) {
           ],
         },
       ]}
-      pointerEvents="none" // Always non-interactive, just displays time
     >
       <Text style={[styles.timeText, { opacity: isRunning ? 1 : 0.7 }]}>
         {formatTime(remaining)}

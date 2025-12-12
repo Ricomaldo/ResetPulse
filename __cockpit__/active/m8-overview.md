@@ -35,6 +35,7 @@ M8 = Optimisation Conversion. Transformer les utilisateurs gratuits en abonnés 
 | Mission | Statut | Description | Date |
 |---------|--------|-------------|------|
 | [mission-onboarding-v2.md](../done/mission-onboarding-v2.md) | done | Refonte onboarding 6 filtres | 2025-12-12 |
+| [mission-duration-popover.md](../done/mission-duration-popover.md) | done | Popover preset durée TimerScreen | 2025-12-12 |
 
 ## Missions Actives
 
@@ -42,9 +43,9 @@ M8 = Optimisation Conversion. Transformer les utilisateurs gratuits en abonnés 
 
 ### Futures missions identifiées
 
-- `mission-duration-popover.md` — UX preset durée dans TimerScreen
 - `mission-analytics-m8.md` — Enrichir tracking funnel (post-onboarding)
 - `mission-paywall-optimization.md` — A/B test paywall (si data suffisantes)
+- `mission-micro-celebrations.md` — Micro-célébrations fin timer (backlog)
 
 ---
 
@@ -72,6 +73,8 @@ M8 = Optimisation Conversion. Transformer les utilisateurs gratuits en abonnés 
 - ✅ Mission onboarding-v2 complétée et mergée dans main
 - Pushed to production (proto → main → origin/main)
 - V1 complètement supprimé, V2 en place avec 54 tests
+- ✅ Mission duration-popover complétée
+- DurationPopover avec 8 presets, i18n FR/EN, haptic feedback
 
 ---
 
