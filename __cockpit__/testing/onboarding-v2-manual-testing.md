@@ -1,9 +1,11 @@
 ---
 created: '2025-12-08'
-updated: '2025-12-08'
-status: active
+updated: '2025-12-12'
+status: completed
 type: checklist
 mission: mission-onboarding-v2.md
+test_date: '2025-12-12'
+result: success
 ---
 
 # Test Manuel — Onboarding V2
