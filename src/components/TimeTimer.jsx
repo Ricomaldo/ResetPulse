@@ -229,6 +229,7 @@ export default function TimeTimer({ onRunningChange, onTimerRef, onDialRef, onCo
           isCompleted={timer.isCompleted}
           currentActivity={currentActivity}
           showNumbers={false}
+          showDigitalTimer={showDigitalTimer}
         />
 
         {/* Message Overlay */}

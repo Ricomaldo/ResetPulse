@@ -42,6 +42,7 @@ function TimerDial({
   isCompleted = false,
   currentActivity = null,
   showNumbers = true,
+  showDigitalTimer = false,
 }) {
   const theme = useTheme();
   const [isDragging, setIsDragging] = useState(false);
@@ -277,8 +278,8 @@ function TimerDial({
         pulseDuration={currentActivity?.pulseDuration}
       />
 
-      {/* Dragging indicator */}
-      {isDragging && (
+      {/* Dragging indicator - only show if digital timer is hidden */}
+      {isDragging && !showDigitalTimer && (
         <View
           style={{
             position: 'absolute',
@@ -319,6 +320,7 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.isRunning === nextProps.isRunning &&
     prevProps.shouldPulse === nextProps.shouldPulse &&
     prevProps.isCompleted === nextProps.isCompleted &&
-    prevProps.currentActivity === nextProps.currentActivity
+    prevProps.currentActivity === nextProps.currentActivity &&
+    prevProps.showDigitalTimer === nextProps.showDigitalTimer
   );
 });
