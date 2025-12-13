@@ -75,14 +75,14 @@
         "eveningRelax": "Décompression 20min"
       },
       "filter5": {
-        "title": "Débloque tout",
+        "title": "Toutes les couleurs. Toutes les activités.",
         "featureColors": "Toutes les couleurs.",
         "featureActivities": "Toutes les activités.",
         "featureComfort": "Ton confort maximum.",
         "gift": "7 JOURS GRATUITS",
-        "price": "Puis 4,99€ une fois — à toi pour toujours.",
+        "price": "Essaie gratuitement pendant 7 jours.\nPuis 4,99€ une fois — à toi pour toujours.",
         "trialCta": "Essayer 7 jours gratuits",
-        "skipCta": "Peut-être plus tard"
+        "skipCta": "Découvrir l'app d'abord"
       }
     },
     "v3": {
