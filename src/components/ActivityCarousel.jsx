@@ -19,7 +19,7 @@ import haptics from "../utils/haptics";
 import { usePremiumStatus } from "../hooks/usePremiumStatus";
 import { PremiumModal, MoreActivitiesModal } from "./modals";
 
-export default function ActivityCarousel({ isTimerRunning = false }) {
+export default function ActivityCarousel({ isTimerRunning = false, drawerVisible = false }) {
   const theme = useTheme();
   const t = useTranslation();
   const {
@@ -76,15 +76,14 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   );
   const validIndex = currentIndex >= 0 ? currentIndex : 0;
 
-  // Scroll to current activity on mount
+  // Scroll to start when drawer opens
   useEffect(() => {
-    if (scrollViewRef.current && validIndex >= 0) {
+    if (drawerVisible && scrollViewRef.current) {
       setTimeout(() => {
-        const offsetX = validIndex * rs(80, "width");
-        scrollViewRef.current?.scrollTo({ x: offsetX, animated: false });
-      }, 100);
+        scrollViewRef.current?.scrollTo({ x: 0, animated: false });
+      }, 50);
     }
-  }, []);
+  }, [drawerVisible]);
 
   // Get or create animation value for an activity
   const getScaleAnim = (activityId) => {

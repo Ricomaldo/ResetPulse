@@ -30,7 +30,7 @@ const createStyles = (theme) => {
 
     activityLabel: {
       position: 'absolute',
-      top: rs(60),
+      top: rs(80),
       alignSelf: 'center',
       fontSize: rs(16),
       fontWeight: '500',
@@ -144,8 +144,8 @@ function TimerScreenContent() {
         const currentDur = timerRef.current.duration || 0;
         const currentProg = timerRef.current.progress || 1;
         const remaining = isTimerRunning
-          ? Math.ceil(currentDur * currentProg)
-          : currentDur;
+          ? Math.floor(currentDur * currentProg)
+          : Math.floor(currentDur);
         setTimerDuration(remaining);
       }
     }, 100); // Update every 100ms for smooth display
@@ -208,6 +208,7 @@ function TimerScreenContent() {
           currentDuration={currentDuration}
           onSelectPreset={handlePresetSelect}
           onOpenSettings={() => setSettingsModalVisible(true)}
+          drawerVisible={optionsDrawerVisible}
         />
       </Drawer>
 

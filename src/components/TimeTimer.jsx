@@ -109,8 +109,9 @@ export default function TimeTimer({
   const handleGraduationTap = (minutes) => {
     if (timer.running) return;
 
-    // Round to nearest minute for perfect alignment with graduations
-    minutes = Math.round(minutes);
+    // Round to nearest 10 seconds for granular control with smooth drag
+    const TEN_SECONDS = 10 / 60; // 10 seconds in minutes (~0.1667)
+    minutes = Math.round(minutes / TEN_SECONDS) * TEN_SECONDS;
 
     // Magnetic snap to 0 if very close
     if (minutes <= TIMER.GRADUATION_SNAP_THRESHOLD) {
