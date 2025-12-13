@@ -683,11 +683,12 @@ export default function SettingsModal({ visible, onClose }) {
                     {scaleMode === "5min" && t('settings.timer.dialMode5')}
                     {scaleMode === "10min" && t('settings.timer.dialMode10')}
                     {scaleMode === "25min" && t('settings.timer.dialMode25')}
+                    {scaleMode === "45min" && t('settings.timer.dialMode45')}
                     {scaleMode === "60min" && t('settings.timer.dialMode60')}
                   </Text>
                 </View>
                 <View style={styles.dialModeGrid}>
-                  {['1min', '5min', '10min', '25min', '60min'].map((mode) => (
+                  {['1min', '5min', '10min', '25min', '45min', '60min'].map((mode) => (
                     <TouchableOpacity
                       key={mode}
                       style={[

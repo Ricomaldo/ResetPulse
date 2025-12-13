@@ -4,12 +4,13 @@ import { View, StyleSheet, Animated, PanResponder, Dimensions, TouchableOpacity,
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import TimeTimer from '../components/TimeTimer';
 import Drawer from '../components/Drawer';
 import OptionsDrawerContent from '../components/OptionsDrawerContent';
-import SettingsDrawerContent from '../components/SettingsDrawerContent';
 import DigitalTimer from '../components/timer/DigitalTimer';
+import { SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 
 const SWIPE_THRESHOLD = 50;
@@ -41,16 +42,9 @@ const createStyles = (theme) => {
       position: 'absolute',
       bottom: rs(100),
       alignSelf: 'center',
-    },
-
-    digitalTimerToggle: {
-      paddingVertical: rs(6),
-      paddingHorizontal: rs(16),
-      borderRadius: rs(12),
-      backgroundColor: theme.colors.textSecondary,
-      opacity: 0.3,
-      minHeight: rs(12),
-      minWidth: rs(32),
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: rs(48),
     },
   });
 };
@@ -58,8 +52,9 @@ const createStyles = (theme) => {
 function TimerScreenContent() {
   const theme = useTheme();
   const { currentDuration, showDigitalTimer, setShowDigitalTimer, currentActivity } = useTimerOptions();
+  const { currentColor } = useTimerPalette();
   const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
-  const [settingsDrawerVisible, setSettingsDrawerVisible] = useState(false);
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerDuration, setTimerDuration] = useState(0);
   const timerRef = useRef(null);
@@ -186,26 +181,20 @@ function TimerScreenContent() {
         />
       </View>
 
-      {/* Digital Timer ou Point - partie basse (même position) */}
+      {/* Digital Timer ou Mini Toggle - partie basse (même position) */}
       <View style={styles.digitalTimerContainer}>
-        {showDigitalTimer ? (
-          <TouchableOpacity
-            onPress={handleToggleDigitalTimer}
-            activeOpacity={0.8}
-          >
-            <DigitalTimer
-              remaining={timerDuration}
-              isRunning={isTimerRunning}
-            />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.digitalTimerToggle}
-            onPress={handleToggleDigitalTimer}
-            activeOpacity={0.6}
-            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        <TouchableOpacity
+          onPress={handleToggleDigitalTimer}
+          activeOpacity={0.8}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
+          <DigitalTimer
+            remaining={timerDuration}
+            isRunning={isTimerRunning}
+            color={currentColor}
+            mini={!showDigitalTimer}
           />
-        )}
+        </TouchableOpacity>
       </View>
 
       {/* Options Drawer (from bottom) */}
@@ -213,27 +202,20 @@ function TimerScreenContent() {
         visible={optionsDrawerVisible}
         onClose={() => setOptionsDrawerVisible(false)}
         direction="bottom"
-        height={0.55}
+        height={0.5}
       >
         <OptionsDrawerContent
           currentDuration={currentDuration}
           onSelectPreset={handlePresetSelect}
-          onOpenSettings={() => {
-            setOptionsDrawerVisible(false);
-            setTimeout(() => setSettingsDrawerVisible(true), 300);
-          }}
+          onOpenSettings={() => setSettingsModalVisible(true)}
         />
       </Drawer>
 
-      {/* Settings Drawer (from bottom) */}
-      <Drawer
-        visible={settingsDrawerVisible}
-        onClose={() => setSettingsDrawerVisible(false)}
-        direction="bottom"
-        height={0.65}
-      >
-        <SettingsDrawerContent />
-      </Drawer>
+      {/* Settings Modal */}
+      <SettingsModal
+        visible={settingsModalVisible}
+        onClose={() => setSettingsModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }

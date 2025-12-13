@@ -148,6 +148,7 @@
       "dialMode5": "Échelle 5 minutes",
       "dialMode10": "Échelle 10 minutes",
       "dialMode25": "Échelle 25 minutes (Pomodoro)",
+      "dialMode45": "Échelle 45 minutes",
       "dialMode60": "Échelle 60 minutes",
       "rotationDirection": "Sens de rotation",
       "rotationClockwise": "Sens horaire",

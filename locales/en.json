@@ -145,6 +145,7 @@
       "dialMode5": "5 minutes scale",
       "dialMode10": "10 minutes scale",
       "dialMode25": "25 minutes scale (Pomodoro)",
+      "dialMode45": "45 minutes scale",
       "dialMode60": "60 minutes scale",
       "rotationDirection": "Rotation direction",
       "rotationClockwise": "Clockwise",

@@ -20,7 +20,7 @@ export const TimerOptionsProvider = ({ children }) => {
       showDigitalTimer: false, // Chrono numérique masqué par défaut (mode zen)
       keepAwakeEnabled: true, // Maintenir l'écran allumé pendant le timer (ON par défaut - timer visuel TDAH)
       clockwise: false,
-      scaleMode: '60min',
+      scaleMode: '45min',
       currentActivity: getDefaultActivity(),
       currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
       favoriteActivities: ['work', 'break', 'meditation'], // Free activities as default favorites (excluding 'none')

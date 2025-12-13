@@ -26,6 +26,7 @@ export default function SettingsDrawerContent() {
       paddingHorizontal: rs(20),
       paddingTop: rs(8),
       paddingBottom: rs(20),
+      flexGrow: 1,
     },
     title: {
       fontSize: rs(20),

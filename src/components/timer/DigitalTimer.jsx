@@ -8,7 +8,7 @@ import { rs } from '../../styles/responsive';
  * DigitalTimer - Displays remaining time in MM:SS format
  * Always visible when enabled in settings, updates dynamically during dial adjustment
  */
-export default function DigitalTimer({ remaining, isRunning }) {
+export default function DigitalTimer({ remaining, isRunning, color, mini = false }) {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(1)).current; // Start at 1 (visible)
   const translateYAnim = useRef(new Animated.Value(0)).current; // Start at 0 (no offset)
@@ -51,30 +51,27 @@ export default function DigitalTimer({ remaining, isRunning }) {
     container: {
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: theme.isDark ? theme.colors.brand.deep : theme.colors.brand.neutral,
-      paddingVertical: rs(8),
-      paddingHorizontal: rs(20),
-      borderRadius: rs(35),
-      borderWidth: 1,
+      backgroundColor: theme.colors.dialFill,
+      paddingVertical: mini ? rs(4) : rs(8),
+      paddingHorizontal: mini ? rs(12) : rs(20),
+      borderRadius: mini ? rs(12) : rs(35),
+      borderWidth: mini ? 2 : 1,
       borderColor: theme.colors.brand.neutral,
-      ...Platform.select({
-        ios: {
-          ...theme.shadow('lg'),
-        },
-        android: {
-          elevation: 4,
-        },
-      }),
+      minHeight: mini ? rs(12) : undefined,
+      minWidth: mini ? rs(32) : undefined,
     },
     timeText: {
-      fontSize: rs(32, 'min'),
+      fontSize: mini ? rs(1) : rs(32, 'min'),
       fontWeight: '600',
-      color: theme.colors.brand.deep + 'CC', // Gris anthracite 80% opacity
+      color: color || theme.colors.brand.primary,
       letterSpacing: 2,
       fontFamily: Platform.select({
         ios: 'Menlo', // SF Mono alternative
         android: 'monospace',
       }),
+      opacity: mini ? 0 : 1,
+      textAlign: 'center',
+      includeFontPadding: false,
     },
   });
 

@@ -1,6 +1,6 @@
 // src/components/Drawer.jsx
 import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
 
@@ -125,16 +125,16 @@ export default function Drawer({
         ? { borderBottomLeftRadius: rs(24), borderBottomRightRadius: rs(24) }
         : { borderTopLeftRadius: rs(24), borderTopRightRadius: rs(24) }
       ),
-      paddingTop: direction === 'top' ? rs(50) : rs(12),
-      paddingBottom: direction === 'bottom' ? rs(40) : rs(20),
+      paddingTop: direction === 'top' ? rs(50) : rs(8),
+      paddingBottom: direction === 'bottom' ? rs(30) : rs(20),
       zIndex: 1001,
       ...theme.shadow('xl'),
     },
     handleContainer: {
-      paddingVertical: rs(12),
+      paddingVertical: rs(8),
       paddingHorizontal: rs(60),
       alignSelf: 'center',
-      marginBottom: rs(4),
+      marginBottom: 0,
     },
     handle: {
       width: rs(40),
@@ -144,7 +144,6 @@ export default function Drawer({
     },
     contentWrapper: {
       flex: 1,
-      overflow: 'hidden',
     },
   });
 
@@ -169,9 +168,12 @@ export default function Drawer({
         <View style={styles.handleContainer} {...handlePanResponder.panHandlers}>
           <View style={styles.handle} />
         </View>
-        <View style={styles.contentWrapper}>
+        <ScrollView
+          style={styles.contentWrapper}
+          showsVerticalScrollIndicator={false}
+        >
           {children}
-        </View>
+        </ScrollView>
       </Animated.View>
     </>
   );
