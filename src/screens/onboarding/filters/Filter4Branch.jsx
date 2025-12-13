@@ -35,15 +35,12 @@ export default function Filter4Branch({ onContinue }) {
 
         {/* Choice Cards */}
         <View style={styles.choicesContainer}>
-          {/* Card A: Discover */}
+          {/* Card A: Explorer */}
           <TouchableOpacity
             style={styles.choiceCard}
             onPress={handleChoiceDiscover}
             activeOpacity={0.8}
           >
-            <View style={styles.choiceIconContainer}>
-              <Text style={styles.choiceIcon}>🚀</Text>
-            </View>
             <Text style={styles.choiceTitle}>
               {t('onboarding.v3.filter4.discoverTitle')}
             </Text>
@@ -52,15 +49,12 @@ export default function Filter4Branch({ onContinue }) {
             </Text>
           </TouchableOpacity>
 
-          {/* Card B: Personalize */}
+          {/* Card B: Personnaliser */}
           <TouchableOpacity
             style={styles.choiceCard}
             onPress={handleChoicePersonalize}
             activeOpacity={0.8}
           >
-            <View style={styles.choiceIconContainer}>
-              <Text style={styles.choiceIcon}>⚙️</Text>
-            </View>
             <Text style={styles.choiceTitle}>
               {t('onboarding.v3.filter4.personalizeTitle')}
             </Text>

@@ -27,25 +27,16 @@ export default function Filter5Paywall({ onComplete }) {
       <View style={styles.centerContent}>
         <Text style={styles.title}>{t('onboarding.v2.filter5.title')}</Text>
 
-        <View style={styles.paywallFeatures}>
-          <Text style={styles.paywallFeature}>{t('onboarding.v2.filter5.featureColors')}</Text>
-          <Text style={styles.paywallFeature}>{t('onboarding.v2.filter5.featureActivities')}</Text>
-          <Text style={styles.paywallFeature}>{t('onboarding.v2.filter5.featureComfort')}</Text>
-        </View>
-
-        <View style={styles.paywallBox}>
-          <Text style={styles.paywallGift}>{'\u{1F381}'} {t('onboarding.v2.filter5.gift')}</Text>
-          <Text style={styles.paywallPrice}>
-            {t('onboarding.v2.filter5.price')}
-          </Text>
-        </View>
+        <Text style={styles.subtitle}>
+          {t('onboarding.v2.filter5.subtitle')}
+        </Text>
 
         <TouchableOpacity style={styles.button} onPress={handleTrial}>
-          <Text style={styles.buttonText}>{t('onboarding.v2.filter5.trialCta')}</Text>
+          <Text style={styles.buttonText}>{t('onboarding.v2.filter5.ctaPrimary')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.skipButton} onPress={handleSkip} activeOpacity={0.7}>
-          <Text style={styles.skipText}>{t('onboarding.v2.filter5.skipCta')}</Text>
+          <Text style={styles.skipText}>{t('onboarding.v2.filter5.ctaSecondary')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -71,45 +62,26 @@ const createStyles = (colors, spacing, borderRadius) =>
       textAlign: 'center',
       marginBottom: rs(spacing.lg),
     },
-    paywallFeatures: {
-      marginVertical: rs(spacing.xl),
-    },
-    paywallFeature: {
-      fontSize: rs(20),
+    subtitle: {
+      fontSize: rs(17),
       color: colors.textSecondary,
       textAlign: 'center',
-      marginBottom: rs(spacing.md),
-    },
-    paywallBox: {
-      backgroundColor: colors.surfaceElevated,
-      borderRadius: borderRadius.xxl,
-      padding: rs(spacing.lg),
+      lineHeight: rs(26),
       marginBottom: rs(spacing.xl),
-      borderWidth: 2,
-      borderColor: colors.primary,
-      alignItems: 'center',
-    },
-    paywallGift: {
-      fontSize: rs(22),
-      color: colors.success,
-      fontWeight: '700',
-      marginBottom: rs(spacing.sm),
-    },
-    paywallPrice: {
-      fontSize: rs(15),
-      color: colors.textSecondary,
-      textAlign: 'center',
+      paddingHorizontal: rs(spacing.md),
     },
     button: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.brand.primary,
       paddingVertical: rs(spacing.md),
       paddingHorizontal: rs(spacing.xl),
       borderRadius: borderRadius.xl,
       alignItems: 'center',
       minWidth: rs(200),
+      minHeight: rs(56),
+      justifyContent: 'center',
     },
     buttonText: {
-      color: colors.text,
+      color: colors.background,
       fontSize: rs(18),
       fontWeight: '600',
     },

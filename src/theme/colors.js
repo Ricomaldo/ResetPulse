@@ -10,10 +10,11 @@ const baseColors = {
   // - Verts subtils : feedback positif et zones actives
   // - Bleus doux : navigation et information secondaire
   brand: {
-    primary: '#4A5568',    // Gris bleu - accents forts et CTA
-    secondary: '#68752C',  // Rouge brique - éléments secondaires
-    accent: '#8B3A3A',     // Olive foncé - zones actives/sélectionnées
+    primary: '#e5a8a3',    // Corail rosé - couleur principale (logo)
+    secondary: '#edceb1',  // Pêche doré - dégradé (logo)
+    accent: '#d4c5b8',     // Beige rosé - zones actives/sélectionnées
     deep: '#5A5A5A',       // Gris anthracite - textes et icônes
+    gradient: '#edceb1',   // Pêche doré - pour effets dégradés
   },
 
   // États sémantiques - Même signification en light/dark
@@ -37,7 +38,7 @@ export const lightTheme = {
   ...baseColors,
 
   // Couleurs adaptatives pour le mode clair - Plus nuancées, moins blanches
-  background: '#F9FAFB',          // Fond principal légèrement gris
+  background: '#ebe8e3',          // Fond principal crème (logo)
   surface: '#FFFFFF',             // Cartes et surfaces
   surfaceAlt: '#F3F4F6',         // Surface alternative plus visible
   cardBackground: '#FAFBFC',      // Fond des cartes

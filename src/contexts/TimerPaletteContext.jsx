@@ -14,13 +14,13 @@ export const TimerPaletteProvider = ({ children }) => {
   // Palette actuelle (persistée)
   const [currentPalette, setCurrentPalette] = usePersistedState(
     '@ResetPulse:timerPalette',
-    'terre' // Palette par défaut
+    'sérénité' // Palette par défaut
   );
 
   // Couleur sélectionnée dans la palette
   const [selectedColorIndex, setSelectedColorIndex] = usePersistedState(
     '@ResetPulse:selectedColor',
-    0 // Index de la couleur - bleu par défaut (index 0 depuis inversion palette terre)
+    0 // Index de la couleur - corail rosé par défaut (index 0 palette sérénité)
   );
 
   // Load onboarding config once (palette + colorIndex)
@@ -58,7 +58,7 @@ export const TimerPaletteProvider = ({ children }) => {
   }, [setCurrentPalette, setSelectedColorIndex]);
 
   // Récupération des couleurs
-  const paletteInfo = TIMER_PALETTES[currentPalette] || TIMER_PALETTES.terre;
+  const paletteInfo = TIMER_PALETTES[currentPalette] || TIMER_PALETTES.sérénité;
   const paletteColors = paletteInfo.colors;
   const timerColors = getTimerColors(currentPalette);
 

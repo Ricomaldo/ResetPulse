@@ -34,7 +34,7 @@ export default function Filter2Creation({ needs, onContinue }) {
   const [colorIndex, setColorIndex] = useState(defaults.colorIndex);
 
   const currentPalette = TIMER_PALETTES[palette];
-  const currentColors = currentPalette?.colors || TIMER_PALETTES.terre.colors;
+  const currentColors = currentPalette?.colors || TIMER_PALETTES.sérénité.colors;
   const currentColor = currentColors[colorIndex];
 
   const handleActivitySelect = (activity) => {
@@ -242,11 +242,11 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     activityPill: {
       flex: 1,
+      width: rs(80),
+      height: rs(80),
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: rs(spacing.md),
-      paddingHorizontal: rs(spacing.sm),
-      borderRadius: borderRadius.xl,
+      borderRadius: rs(50),
       backgroundColor: colors.surface,
       borderWidth: 2,
       borderColor: colors.border,
@@ -255,11 +255,11 @@ const createStyles = (colors, spacing, borderRadius) =>
       borderColor: 'transparent',
     },
     activityPillEmoji: {
-      fontSize: rs(28),
-      marginBottom: rs(spacing.xs),
+      fontSize: rs(24),
+      marginBottom: rs(2),
     },
     activityPillLabel: {
-      fontSize: rs(11),
+      fontSize: rs(10),
       color: colors.textSecondary,
       fontWeight: '500',
       textAlign: 'center',
@@ -279,7 +279,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       marginRight: rs(spacing.sm),
     },
     durationChipSelected: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.brand.primary,
     },
     durationText: {
       color: colors.textSecondary,
@@ -287,7 +287,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       fontWeight: '500',
     },
     durationTextSelected: {
-      color: colors.text,
+      color: colors.background,
       fontWeight: '600',
     },
     paletteRow: {
@@ -303,7 +303,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       alignItems: 'center',
     },
     paletteSelected: {
-      borderColor: colors.primary,
+      borderColor: colors.brand.primary,
       backgroundColor: colors.surfaceElevated,
     },
     palettePreview: {
@@ -348,15 +348,17 @@ const createStyles = (colors, spacing, borderRadius) =>
       backgroundColor: colors.background,
     },
     button: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.brand.primary,
       paddingVertical: rs(spacing.md),
       paddingHorizontal: rs(spacing.xl),
       borderRadius: borderRadius.xl,
       alignItems: 'center',
       minWidth: rs(200),
+      minHeight: rs(56),
+      justifyContent: 'center',
     },
     buttonText: {
-      color: colors.text,
+      color: colors.background,
       fontSize: rs(18),
       fontWeight: '600',
     },

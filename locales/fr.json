@@ -76,13 +76,9 @@
       },
       "filter5": {
         "title": "Toutes les couleurs. Toutes les activités.",
-        "featureColors": "Toutes les couleurs.",
-        "featureActivities": "Toutes les activités.",
-        "featureComfort": "Ton confort maximum.",
-        "gift": "7 JOURS GRATUITS",
-        "price": "Essaie gratuitement pendant 7 jours.\nPuis 4,99€ une fois — à toi pour toujours.",
-        "trialCta": "Essayer 7 jours gratuits",
-        "skipCta": "Découvrir l'app d'abord"
+        "subtitle": "Essaie gratuitement pendant 7 jours.\nPuis 4,99€ une fois — à toi pour toujours.",
+        "ctaPrimary": "Essayer 7 jours gratuits",
+        "ctaSecondary": "Découvrir l'app d'abord"
       }
     },
     "v3": {
@@ -95,7 +91,7 @@
       },
       "filter4": {
         "title": "Comment veux-tu continuer ?",
-        "discoverTitle": "Découvrir l'app",
+        "discoverTitle": "Explorer les possibilités",
         "discoverSubtitle": "Je configure plus tard",
         "personalizeTitle": "Personnaliser mon expérience",
         "personalizeSubtitle": "Son, interface, préférences"
