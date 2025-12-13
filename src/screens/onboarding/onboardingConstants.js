@@ -28,7 +28,7 @@ export const NEEDS_OPTIONS = [
 
 // Smart defaults selon les needs sélectionnés
 export const getSmartDefaults = (needs, freePalettes) => {
-  const defaultPalette = freePalettes[0] || 'terre';
+  const defaultPalette = freePalettes[0] || 'sérénité';
 
   if (needs.includes('meditation')) {
     return { duration: 20, palette: defaultPalette, colorIndex: 2 };
@@ -100,12 +100,24 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
 // Durées disponibles
 export const DURATION_OPTIONS = [5, 10, 15, 20, 25, 30, 45, 60];
 
-// Step names pour analytics
+// Step names pour analytics V3
 export const STEP_NAMES = [
-  'opening',
-  'needs',
-  'creation',
-  'test',
-  'vision',
-  'paywall',
+  'opening',           // 0: Filter0Opening
+  'needs',             // 1: Filter1Needs
+  'creation',          // 2: Filter2Creation
+  'test',              // 3: Filter3Test
+  'notifications',     // 4: Filter3_5Notifications
+  'branch',            // 5: Filter4Branch
+  'vision',            // 6a: Filter5aVision (parcours A)
+  'sound',             // 6b: Filter5bSound (parcours B)
+  'paywall',           // 7a: Filter5Paywall (parcours A)
+  'interface',         // 7b: Filter5cInterface (parcours B)
 ];
+
+// Helper pour obtenir le step name selon le parcours
+export const getStepName = (index, branch = null) => {
+  if (index <= 5) return STEP_NAMES[index];
+  if (index === 6) return branch === 'discover' ? STEP_NAMES[6] : STEP_NAMES[7];
+  if (index === 7) return branch === 'discover' ? STEP_NAMES[8] : STEP_NAMES[9];
+  return STEP_NAMES[0];
+};

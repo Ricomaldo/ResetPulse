@@ -8,7 +8,7 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, getJourneyScenarios } from '../onboardingConstants';
 
-export default function Filter4Vision({ needs = [], onContinue }) {
+export default function Filter5aVision({ needs = [], onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
   const scenarios = getJourneyScenarios(needs, colors, t);
