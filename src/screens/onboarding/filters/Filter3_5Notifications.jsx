@@ -1,7 +1,7 @@
 // src/screens/onboarding/filters/Filter3_5Notifications.jsx
 // Filtre 3.5 : Permission notifications (pré-permission expliquée)
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Notifications from 'expo-notifications';
@@ -9,10 +9,16 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
+import analytics from '../../../services/analytics';
 
 export default function Filter3_5Notifications({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
+
+  // Track when filter is displayed
+  useEffect(() => {
+    analytics.trackOnboardingNotifRequested();
+  }, []);
 
   const handleRequestPermission = async () => {
     haptics.selection().catch(() => {});
@@ -24,16 +30,25 @@ export default function Filter3_5Notifications({ onContinue }) {
         console.log('[Filter3.5] Notification permission:', status);
       }
 
+      // Track result
+      if (status === 'granted') {
+        analytics.trackOnboardingNotifGranted();
+      } else {
+        analytics.trackOnboardingNotifSkipped();
+      }
+
       // Continue regardless of permission granted/denied
       onContinue({ notificationPermission: status === 'granted' });
     } catch (error) {
       console.warn('[Filter3.5] Failed to request notification permission:', error);
+      analytics.trackOnboardingNotifSkipped();
       onContinue({ notificationPermission: false });
     }
   };
 
   const handleSkip = () => {
     haptics.selection().catch(() => {});
+    analytics.trackOnboardingNotifSkipped();
     onContinue({ notificationPermission: false });
   };
 
