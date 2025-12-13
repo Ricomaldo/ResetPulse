@@ -96,7 +96,7 @@
       "filter5b": {
         "title": "Choose your completion sound",
         "continue": "Continue",
-        "skip": "Discover the app →"
+        "skip": "Skip →"
       },
       "filter5c": {
         "title": "Adapt the display",
@@ -109,7 +109,7 @@
         "digitalTimer": "Digital timer",
         "digitalTimerHint": "Display remaining time in numbers",
         "finish": "Finish",
-        "skip": "Discover the app →"
+        "skip": "Skip →"
       }
     }
   },

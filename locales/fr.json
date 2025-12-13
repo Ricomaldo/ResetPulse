@@ -99,7 +99,7 @@
       "filter5b": {
         "title": "Choisis ton signal de fin",
         "continue": "Continuer",
-        "skip": "Découvrir l'app →"
+        "skip": "Passer →"
       },
       "filter5c": {
         "title": "Adapte l'affichage",
@@ -112,7 +112,7 @@
         "digitalTimer": "Chrono digital",
         "digitalTimerHint": "Affiche le temps restant en chiffres",
         "finish": "Terminer",
-        "skip": "Découvrir l'app →"
+        "skip": "Passer →"
       }
     }
   },
