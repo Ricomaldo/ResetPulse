@@ -10,6 +10,8 @@ import TimeTimer from '../components/TimeTimer';
 import Drawer from '../components/Drawer';
 import OptionsDrawerContent from '../components/OptionsDrawerContent';
 import DigitalTimer from '../components/timer/DigitalTimer';
+import CircularToggle from '../components/CircularToggle';
+import SwipeUpHint from '../components/SwipeUpHint';
 import { SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 
@@ -46,12 +48,34 @@ const createStyles = (theme) => {
       justifyContent: 'center',
       height: rs(48),
     },
+
+    rotationToggleContainer: {
+      position: 'absolute',
+      top: '35%',
+      alignSelf: 'center',
+    },
+
+    swipeHintContainer: {
+      position: 'absolute',
+      bottom: rs(20),
+      alignSelf: 'center',
+    },
+
+    digitalTimerToggle: {
+      paddingVertical: rs(6),
+      paddingHorizontal: rs(16),
+      borderRadius: rs(12),
+      backgroundColor: theme.colors.textSecondary,
+      opacity: 0.3,
+      minHeight: rs(12),
+      minWidth: rs(32),
+    },
   });
 };
 
 function TimerScreenContent() {
   const theme = useTheme();
-  const { currentDuration, showDigitalTimer, setShowDigitalTimer, currentActivity } = useTimerOptions();
+  const { currentDuration, showDigitalTimer, setShowDigitalTimer, currentActivity, clockwise, setClockwise, showRotationToggle } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
@@ -181,6 +205,17 @@ function TimerScreenContent() {
         />
       </View>
 
+      {/* Rotation Toggle - au-dessus du dial */}
+      {showRotationToggle && !isTimerRunning && (
+        <View style={styles.rotationToggleContainer}>
+          <CircularToggle
+            clockwise={clockwise}
+            onToggle={setClockwise}
+            size={50}
+          />
+        </View>
+      )}
+
       {/* Digital Timer ou Mini Toggle - partie basse (même position) */}
       <View style={styles.digitalTimerContainer}>
         <TouchableOpacity
@@ -196,6 +231,13 @@ function TimerScreenContent() {
           />
         </TouchableOpacity>
       </View>
+
+      {/* Swipe Up Hint - en bas */}
+      {!isTimerRunning && !optionsDrawerVisible && (
+        <View style={styles.swipeHintContainer}>
+          <SwipeUpHint message="Glissez vers le haut" />
+        </View>
+      )}
 
       {/* Options Drawer (from bottom) */}
       <Drawer
