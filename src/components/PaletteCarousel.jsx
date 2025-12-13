@@ -173,9 +173,9 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     colorButton: {
-      width: rs(60, "min"),
-      height: rs(60, "min"),
-      borderRadius: rs(30, "min"),
+      width: rs(50, "min"),
+      height: rs(50, "min"),
+      borderRadius: rs(25, "min"),
       borderWidth: 3,
       borderColor: "transparent",
       ...theme.shadows.md,
