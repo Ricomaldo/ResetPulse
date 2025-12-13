@@ -27,9 +27,12 @@ export default function Filter5bSound({ onContinue }) {
   const [playingId, setPlayingId] = useState(null);
   const timeoutRef = useRef(null);
 
-  // Preview son: joue 2 secondes au tap
+  // Tap sur un son: sélectionne + joue preview 2 secondes
   const handleSoundPress = async (soundId) => {
     haptics.selection().catch(() => {});
+
+    // Sélectionner le son immédiatement
+    setSelectedSound(soundId);
 
     // Stop preview actuel si existant
     if (timeoutRef.current) {
@@ -51,10 +54,6 @@ export default function Filter5bSound({ onContinue }) {
       console.warn('[Filter5b] Failed to play sound:', error);
       setPlayingId(null);
     }
-  };
-
-  const handleSelectSound = (soundId) => {
-    setSelectedSound(soundId);
   };
 
   const handleContinue = () => {
@@ -101,51 +100,38 @@ export default function Filter5bSound({ onContinue }) {
           const isPlaying = playingId === sound.id;
 
           return (
-            <View key={sound.id} style={styles.soundRow}>
-              {/* Sound Name + Select */}
-              <TouchableOpacity
-                style={[
-                  styles.soundNameButton,
-                  isSelected && styles.soundNameButtonActive,
-                ]}
-                onPress={() => handleSelectSound(sound.id)}
-                activeOpacity={0.7}
-              >
-                {isSelected && (
-                  <View style={styles.checkmark}>
-                    <Text style={styles.checkmarkIcon}>✓</Text>
-                  </View>
-                )}
-                <View style={styles.soundInfo}>
-                  <Text
-                    style={[
-                      styles.soundName,
-                      isSelected && styles.soundNameActive,
-                    ]}
-                  >
-                    {t(`sounds.${sound.id}`)}
-                  </Text>
-                  <Text style={styles.soundDuration}>{sound.duration}</Text>
+            <TouchableOpacity
+              key={sound.id}
+              style={[
+                styles.soundRow,
+                isSelected && styles.soundRowSelected,
+                isPlaying && styles.soundRowPlaying,
+              ]}
+              onPress={() => handleSoundPress(sound.id)}
+              activeOpacity={0.7}
+            >
+              {isSelected && (
+                <View style={styles.checkmark}>
+                  <Text style={styles.checkmarkIcon}>✓</Text>
                 </View>
-              </TouchableOpacity>
-
-              {/* Play Preview Button */}
-              <TouchableOpacity
-                style={[
-                  styles.playButton,
-                  isPlaying && styles.playButtonActive,
-                ]}
-                onPress={() => handleSoundPress(sound.id)}
-                activeOpacity={0.7}
-              >
-                <PlayIcon
-                  size={18}
-                  color={
-                    isPlaying ? colors.background : colors.brand.primary
-                  }
-                />
-              </TouchableOpacity>
-            </View>
+              )}
+              <View style={styles.soundInfo}>
+                <Text
+                  style={[
+                    styles.soundName,
+                    isSelected && styles.soundNameActive,
+                  ]}
+                >
+                  {t(`sounds.${sound.id}`)}
+                </Text>
+                <Text style={styles.soundDuration}>{sound.duration}</Text>
+              </View>
+              {isPlaying && (
+                <View style={styles.playingIndicator}>
+                  <Text style={styles.playingIcon}>🔊</Text>
+                </View>
+              )}
+            </TouchableOpacity>
           );
         })}
       </ScrollView>
@@ -203,23 +189,21 @@ const createStyles = (colors, spacing, borderRadius) =>
     soundRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: rs(spacing.sm),
-      gap: rs(spacing.sm),
-    },
-    soundNameButton: {
-      flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
       backgroundColor: colors.surface,
       borderRadius: borderRadius.lg,
       padding: rs(spacing.md),
       borderWidth: 2,
       borderColor: colors.border,
       minHeight: rs(60),
+      marginBottom: rs(spacing.sm),
     },
-    soundNameButtonActive: {
+    soundRowSelected: {
       borderColor: colors.brand.primary,
       backgroundColor: colors.brand.primary + '10',
+    },
+    soundRowPlaying: {
+      borderColor: colors.brand.primary,
+      backgroundColor: colors.brand.primary + '05',
     },
     checkmark: {
       width: rs(24),
@@ -252,18 +236,12 @@ const createStyles = (colors, spacing, borderRadius) =>
       fontSize: rs(12),
       color: colors.textSecondary,
     },
-    playButton: {
-      width: rs(44),
-      height: rs(44),
-      borderRadius: rs(22),
-      backgroundColor: colors.brand.primary + '20',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: colors.brand.primary,
+    playingIndicator: {
+      marginLeft: rs(spacing.sm),
+      paddingHorizontal: rs(spacing.sm),
     },
-    playButtonActive: {
-      backgroundColor: colors.brand.primary,
+    playingIcon: {
+      fontSize: rs(18),
     },
     bottomContainer: {
       paddingHorizontal: rs(spacing.xl),

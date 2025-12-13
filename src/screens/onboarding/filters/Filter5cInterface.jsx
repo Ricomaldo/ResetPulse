@@ -17,23 +17,25 @@ import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
 
 export default function Filter5cInterface({ onContinue }) {
-  const { colors, spacing, borderRadius } = useTheme();
+  const { colors, spacing, borderRadius, setTheme: applyTheme } = useTheme();
   const t = useTranslation();
 
   // States avec defaults
-  const [theme, setTheme] = useState('auto');
+  const [selectedTheme, setSelectedTheme] = useState('auto');
   const [minimalInterface, setMinimalInterface] = useState(true);
   const [digitalTimer, setDigitalTimer] = useState(true);
 
   const handleThemeSelect = (themeValue) => {
     haptics.selection().catch(() => {});
-    setTheme(themeValue);
+    setSelectedTheme(themeValue);
+    // Appliquer le thème immédiatement (live preview)
+    applyTheme(themeValue);
   };
 
   const handleFinish = () => {
     haptics.selection().catch(() => {});
     onContinue({
-      theme,
+      theme: selectedTheme,
       minimalInterface,
       digitalTimer,
     });
@@ -41,6 +43,8 @@ export default function Filter5cInterface({ onContinue }) {
 
   const handleSkip = () => {
     haptics.selection().catch(() => {});
+    // Remettre le thème par défaut si skip
+    applyTheme('auto');
     onContinue({
       theme: 'auto',
       minimalInterface: true,
@@ -76,7 +80,7 @@ export default function Filter5cInterface({ onContinue }) {
                 key={themeOption}
                 style={[
                   styles.segmentButton,
-                  theme === themeOption && styles.segmentButtonActive,
+                  selectedTheme === themeOption && styles.segmentButtonActive,
                 ]}
                 onPress={() => handleThemeSelect(themeOption)}
                 activeOpacity={0.7}
@@ -84,7 +88,7 @@ export default function Filter5cInterface({ onContinue }) {
                 <Text
                   style={[
                     styles.segmentText,
-                    theme === themeOption && styles.segmentTextActive,
+                    selectedTheme === themeOption && styles.segmentTextActive,
                   ]}
                 >
                   {t(`onboarding.v3.filter5c.theme${themeOption.charAt(0).toUpperCase() + themeOption.slice(1)}`)}
