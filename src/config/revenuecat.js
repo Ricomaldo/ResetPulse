@@ -32,7 +32,7 @@ export const ENTITLEMENTS = {
 export const FREEMIUM_CONFIG = {
   free: {
     palettes: ["softLaser", "terre"], // 2 palettes UNIQUEMENT
-    activities: ["none", "work", "break", "breathing"], // 4 activités
+    activities: ["none", "work", "break", "meditation"], // 4 activités
   },
   premium: {
     palettes: "all", // Débloquer 15 total

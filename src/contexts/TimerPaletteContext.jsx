@@ -1,13 +1,16 @@
 // src/contexts/TimerPaletteContext.jsx
 // Contexte dédié aux palettes du timer (séparé du thème global)
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { TIMER_PALETTES, getTimerColors } from '../config/timerPalettes';
 
 const TimerPaletteContext = createContext(null);
 
 export const TimerPaletteProvider = ({ children }) => {
+  const hasLoadedOnboardingConfig = useRef(false);
+
   // Palette actuelle (persistée)
   const [currentPalette, setCurrentPalette] = usePersistedState(
     '@ResetPulse:timerPalette',
@@ -19,6 +22,40 @@ export const TimerPaletteProvider = ({ children }) => {
     '@ResetPulse:selectedColor',
     0 // Index de la couleur - bleu par défaut (index 0 depuis inversion palette terre)
   );
+
+  // Load onboarding config once (palette + colorIndex)
+  useEffect(() => {
+    if (hasLoadedOnboardingConfig.current) return;
+
+    const loadOnboardingConfig = async () => {
+      try {
+        const configStr = await AsyncStorage.getItem('user_timer_config');
+        if (configStr) {
+          const config = JSON.parse(configStr);
+
+          // Apply palette and color from onboarding
+          if (config.palette && TIMER_PALETTES[config.palette]) {
+            setCurrentPalette(config.palette);
+          }
+          if (config.colorIndex !== undefined) {
+            setSelectedColorIndex(config.colorIndex);
+          }
+
+          if (__DEV__) {
+            console.log('[TimerPaletteContext] Applied onboarding palette config:', {
+              palette: config.palette,
+              colorIndex: config.colorIndex,
+            });
+          }
+        }
+        hasLoadedOnboardingConfig.current = true;
+      } catch (error) {
+        console.warn('[TimerPaletteContext] Failed to load onboarding config:', error);
+      }
+    };
+
+    loadOnboardingConfig();
+  }, [setCurrentPalette, setSelectedColorIndex]);
 
   // Récupération des couleurs
   const paletteInfo = TIMER_PALETTES[currentPalette] || TIMER_PALETTES.terre;
