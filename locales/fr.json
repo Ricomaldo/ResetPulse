@@ -84,6 +84,40 @@
         "trialCta": "Essayer 7 jours gratuits",
         "skipCta": "Peut-être plus tard"
       }
+    },
+    "v3": {
+      "filter3_5": {
+        "title": "Reste informé, même en arrière-plan",
+        "body": "ResetPulse peut te notifier quand ton moment est terminé — même si tu utilises une autre app.",
+        "bodySecondary": "Sans notifications, tu devras garder l'app ouverte.",
+        "ctaPrimary": "Activer les notifications",
+        "ctaSecondary": "Continuer sans"
+      },
+      "filter4": {
+        "title": "Comment veux-tu continuer ?",
+        "discoverTitle": "Découvrir l'app",
+        "discoverSubtitle": "Je configure plus tard",
+        "personalizeTitle": "Personnaliser mon expérience",
+        "personalizeSubtitle": "Son, interface, préférences"
+      },
+      "filter5b": {
+        "title": "Choisis ton signal de fin",
+        "continue": "Continuer",
+        "skip": "Découvrir l'app →"
+      },
+      "filter5c": {
+        "title": "Adapte l'affichage",
+        "theme": "Thème",
+        "themeLight": "Clair",
+        "themeDark": "Sombre",
+        "themeAuto": "Auto",
+        "minimalInterface": "Interface minimaliste",
+        "minimalInterfaceHint": "Masque les options pour plus de focus",
+        "digitalTimer": "Chrono digital",
+        "digitalTimerHint": "Affiche le temps restant en chiffres",
+        "finish": "Terminer",
+        "skip": "Découvrir l'app →"
+      }
     }
   },
   "timer": {
@@ -207,6 +241,7 @@
     "writing": "Écriture"
   },
   "palettes": {
+    "sérénité": "Sérénité",
     "terre": "Terre",
     "softLaser": "Soft Laser",
     "classique": "Classique",
@@ -217,7 +252,6 @@
     "aurore": "Aurore",
     "crépuscule": "Crépuscule",
     "douce": "Douce",
-    "pastel_girly": "Pastelles",
     "automne": "Automne",
     "lavande": "Lavande",
     "canard": "Canard",
