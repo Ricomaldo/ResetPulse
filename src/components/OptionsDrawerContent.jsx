@@ -1,6 +1,6 @@
 // src/components/OptionsDrawerContent.jsx
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
 import ActivityCarousel from './ActivityCarousel';
@@ -16,79 +16,63 @@ export default function OptionsDrawerContent({
   const theme = useTheme();
 
   const styles = StyleSheet.create({
-    scrollView: {
-      flex: 1,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(20),
-      paddingTop: rs(8),
+    container: {
       paddingBottom: rs(20),
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      marginBottom: rs(8),
+      paddingHorizontal: rs(20),
     },
     section: {
       marginBottom: rs(16),
+      paddingHorizontal: rs(20),
+    },
+    sectionFullWidth: {
+      marginBottom: rs(16),
+      paddingHorizontal: rs(20),
     },
     sectionLabel: {
       fontSize: rs(13),
       color: theme.colors.textSecondary,
-      marginBottom: rs(12),
-      fontWeight: '500',
-    },
-    settingsButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: rs(12),
-      paddingHorizontal: rs(20),
-      marginTop: rs(12),
-      borderRadius: theme.borderRadius.md,
-      backgroundColor: theme.colors.border + '20', // 20% opacity
-    },
-    settingsButtonText: {
-      fontSize: rs(15),
-      color: theme.colors.textSecondary,
-      marginLeft: rs(8),
+      marginBottom: rs(8),
       fontWeight: '500',
     },
   });
 
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollContent}
-      showsVerticalScrollIndicator={false}
-    >
-        {/* Activités */}
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Activité</Text>
-          <ActivityCarousel isTimerRunning={false} />
-        </View>
-
-        {/* Durées */}
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Durée</Text>
-          <PresetPills
-            currentDuration={currentDuration}
-            onSelectPreset={onSelectPreset}
-          />
-        </View>
-
-        {/* Palettes */}
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Couleur</Text>
-          <PaletteCarousel isTimerRunning={false} />
-        </View>
-
-      {/* Settings Button */}
+    <View style={styles.container}>
+      {/* Settings Icon - en haut à droite */}
       {onOpenSettings && (
-        <TouchableOpacity
-          style={styles.settingsButton}
-          onPress={onOpenSettings}
-          activeOpacity={0.7}
-        >
-          <Icons name="settings" size={rs(20)} color={theme.colors.textSecondary} />
-          <Text style={styles.settingsButtonText}>Réglages</Text>
-        </TouchableOpacity>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={onOpenSettings} activeOpacity={0.6}>
+            <Icons name="settings" size={rs(20)} color={theme.colors.textSecondary} />
+          </TouchableOpacity>
+        </View>
       )}
-    </ScrollView>
+
+      {/* Palettes */}
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>Couleur</Text>
+        <PaletteCarousel isTimerRunning={false} />
+      </View>
+
+      {/* Activités */}
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>Activité</Text>
+        <ActivityCarousel isTimerRunning={false} />
+      </View>
+
+      {/* Durées */}
+      <View style={styles.sectionFullWidth}>
+        <Text style={styles.sectionLabel}>Durée</Text>
+        <PresetPills
+          currentDuration={currentDuration}
+          onSelectPreset={onSelectPreset}
+        />
+      </View>
+    </View>
   );
 }

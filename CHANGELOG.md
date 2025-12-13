@@ -5,6 +5,43 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🎨 UX Revolution - Bottom Drawer & Scale Modes
+
+#### Added
+- **Scale mode 45 minutes** - Nouveau mode cadran pour sessions focus étendues
+  - Ajout du mode '45min' dans DIAL_MODES
+  - Traductions FR/EN pour dialMode45
+  - Mode par défaut aligné avec durée par défaut (45min)
+
+- **6 presets de durée** sur 2 lignes - Accès rapide à toutes les échelles
+  - 1, 5, 10, 25, 45, 60 minutes
+  - Layout en grille 3x2 sur toute la largeur
+  - Sélection automatique du scale mode approprié
+
+#### Changed
+- **Drawer d'options du haut → bas** - Geste naturel de swipe UP
+  - Direction inversée pour meilleure ergonomie
+  - Swipe UP depuis l'écran principal pour ouvrir les options
+  - Hauteur optimisée à 50% de l'écran
+
+- **Simplification du drawer** - Focus sur l'essentiel
+  - Settings → Modal au lieu de drawer imbriqué
+  - Icône settings en coin haut-droit du drawer
+  - Ordre optimisé: Couleur → Activité → Durée
+
+- **Style presets amélioré** - Cohérence avec onboarding
+  - BorderRadius plus carré (lg au lieu de xxl)
+  - Style identique à Filter2Creation
+  - Pills qui s'étendent sur toute la largeur (flex: 1)
+
+#### Fixed
+- **Bug layout ActivityCarousel** - Espacement vertical corrigé
+  - Suppression de `height: "100%"` qui causait l'étirement
+  - Carrousel prend maintenant sa hauteur naturelle
+  - Drawer content bien espacé et scrollable
+
 ## [1.2.5] - 2025-12-05
 
 ### 🚀 Production Release - App Stores Live

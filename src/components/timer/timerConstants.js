@@ -43,6 +43,15 @@ export const DIAL_MODES = {
     numberInterval: 5,
     defaultDuration: 25 * 60,
   },
+  '45min': {
+    maxMinutes: 45,
+    label: '45 minutes',
+    description: 'Extended focus',
+    graduationInterval: 1,
+    majorTickInterval: 5,
+    numberInterval: 5,
+    defaultDuration: 45 * 60,
+  },
   '60min': {
     maxMinutes: 60,
     label: '1 heure',

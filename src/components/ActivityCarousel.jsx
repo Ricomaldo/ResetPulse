@@ -181,7 +181,6 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
       position: "relative",
       alignItems: "center",
       justifyContent: "center",
-      height: "100%",
       // L'affichage en mode zen est maintenant géré par TimerScreen + useMinimalInterface
     },
 
