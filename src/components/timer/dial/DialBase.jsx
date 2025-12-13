@@ -18,6 +18,7 @@ const DialBase = React.memo(({
   minuteNumbers,
   showNumbers = true,
   showGraduations = true,
+  color,
 }) => {
   const theme = useTheme();
 
@@ -28,9 +29,9 @@ const DialBase = React.memo(({
         cx={centerX}
         cy={centerY}
         r={radius}
-        stroke={theme.colors.border}
+        stroke={color || theme.colors.brand.primary}
         strokeWidth={strokeWidth}
-        fill={theme.colors.dialFill}
+        fill={theme.colors.background}
       />
 
       {/* Graduation marks */}
@@ -41,7 +42,7 @@ const DialBase = React.memo(({
           y1={mark.y1}
           x2={mark.x2}
           y2={mark.y2}
-          stroke={theme.colors.border}
+          stroke={color || theme.colors.brand.primary}
           strokeWidth={mark.strokeWidth}
           opacity={mark.opacity}
         />
@@ -72,7 +73,7 @@ const DialBase = React.memo(({
         cx={centerX}
         cy={centerY}
         r={radius}
-        stroke={theme.colors.border}
+        stroke={color || theme.colors.brand.primary}
         strokeWidth={strokeWidth}
         fill="none"
       />
@@ -84,7 +85,8 @@ const DialBase = React.memo(({
     prevProps.svgSize === nextProps.svgSize &&
     prevProps.radius === nextProps.radius &&
     prevProps.graduationMarks === nextProps.graduationMarks &&
-    prevProps.minuteNumbers === nextProps.minuteNumbers
+    prevProps.minuteNumbers === nextProps.minuteNumbers &&
+    prevProps.color === nextProps.color
   );
 });
 

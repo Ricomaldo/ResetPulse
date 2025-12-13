@@ -12,6 +12,8 @@ export default function SettingsDrawerContent() {
     setShouldPulse,
     showDigitalTimer,
     setShowDigitalTimer,
+    showActivityEmoji,
+    setShowActivityEmoji,
     clockwise,
     setClockwise,
     useMinimalInterface,
@@ -70,6 +72,18 @@ export default function SettingsDrawerContent() {
           <Switch
             value={showDigitalTimer}
             onValueChange={setShowDigitalTimer}
+            trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
+          />
+        </View>
+
+        <View style={styles.settingRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.settingLabel}>Emoji d'activité</Text>
+            <Text style={styles.settingDescription}>Afficher l'emoji au centre du timer</Text>
+          </View>
+          <Switch
+            value={showActivityEmoji}
+            onValueChange={setShowActivityEmoji}
             trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
           />
         </View>

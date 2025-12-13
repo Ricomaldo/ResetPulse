@@ -18,6 +18,7 @@ export const TimerOptionsProvider = ({ children }) => {
       showPalettes: true, // Affichage des palettes activé par défaut
       useMinimalInterface: true, // Interface minimaliste activée par défaut (masque activités + palettes quand timer tourne)
       showDigitalTimer: false, // Chrono numérique masqué par défaut (mode zen)
+      showActivityEmoji: true, // Affichage de l'emoji d'activité dans le dial activé par défaut
       keepAwakeEnabled: true, // Maintenir l'écran allumé pendant le timer (ON par défaut - timer visuel TDAH)
       showRotationToggle: true, // Afficher le toggle de rotation au-dessus du dial
       clockwise: false,
@@ -71,6 +72,7 @@ export const TimerOptionsProvider = ({ children }) => {
     showPalettes: values.showPalettes,
     useMinimalInterface: values.useMinimalInterface,
     showDigitalTimer: values.showDigitalTimer,
+    showActivityEmoji: values.showActivityEmoji,
     keepAwakeEnabled: values.keepAwakeEnabled,
     showRotationToggle: values.showRotationToggle,
     clockwise: values.clockwise,
@@ -87,6 +89,7 @@ export const TimerOptionsProvider = ({ children }) => {
     setShowPalettes: (val) => updateValue('showPalettes', val),
     setUseMinimalInterface: (val) => updateValue('useMinimalInterface', val),
     setShowDigitalTimer: (val) => updateValue('showDigitalTimer', val),
+    setShowActivityEmoji: (val) => updateValue('showActivityEmoji', val),
     setKeepAwakeEnabled: (val) => updateValue('keepAwakeEnabled', val),
     setShowRotationToggle: (val) => updateValue('showRotationToggle', val),
     setClockwise: (val) => updateValue('clockwise', val),

@@ -13,6 +13,7 @@ const DialCenter = React.memo(({
   activityEmoji,
   isRunning,
   shouldPulse,
+  showActivityEmoji = true,
   color,
   pulseDuration = PULSE_ANIMATION.DURATION, // Default from constants
 }) => {
@@ -65,8 +66,8 @@ const DialCenter = React.memo(({
     }
   }, [isRunning, shouldPulse, pulseAnim, glowAnim, pulseDuration]);
 
-  // Show emoji if provided
-  if (activityEmoji) {
+  // Show emoji if provided and enabled in settings
+  if (activityEmoji && showActivityEmoji) {
     return (
       <View
         style={{

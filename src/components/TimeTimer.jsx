@@ -23,6 +23,7 @@ export default function TimeTimer({
     scaleMode,
     currentActivity,
     currentDuration,
+    showActivityEmoji,
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
 
@@ -154,6 +155,7 @@ export default function TimeTimer({
           }
           isRunning={timer.running}
           shouldPulse={shouldPulse}
+          showActivityEmoji={showActivityEmoji}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}
           isCompleted={timer.isCompleted}

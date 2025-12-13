@@ -8,7 +8,7 @@ import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import TimeTimer from '../components/TimeTimer';
 import Drawer from '../components/Drawer';
-import OptionsDrawerContent from '../components/OptionsDrawerContent';
+import ExpandableDrawerContent from '../components/ExpandableDrawerContent';
 import DigitalTimer from '../components/timer/DigitalTimer';
 import CircularToggle from '../components/CircularToggle';
 import SwipeUpHint from '../components/SwipeUpHint';
@@ -51,7 +51,7 @@ const createStyles = (theme) => {
 
     rotationToggleContainer: {
       position: 'absolute',
-      top: '35%',
+      top: '20%',
       alignSelf: 'center',
     },
 
@@ -165,11 +165,8 @@ function TimerScreenContent() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (timerRef.current) {
-        const currentDur = timerRef.current.duration || 0;
-        const currentProg = timerRef.current.progress || 1;
-        const remaining = isTimerRunning
-          ? Math.floor(currentDur * currentProg)
-          : Math.floor(currentDur);
+        // Use timer.remaining directly - it's already calculated correctly in useTimer
+        const remaining = timerRef.current.remaining || timerRef.current.duration || 0;
         setTimerDuration(remaining);
       }
     }, 100); // Update every 100ms for smooth display
@@ -239,18 +236,19 @@ function TimerScreenContent() {
         </View>
       )}
 
-      {/* Options Drawer (from bottom) */}
+      {/* Options Drawer (from bottom) - swipe up to expand for settings */}
       <Drawer
         visible={optionsDrawerVisible}
         onClose={() => setOptionsDrawerVisible(false)}
         direction="bottom"
         height={0.5}
+        expandedHeight={0.85}
       >
-        <OptionsDrawerContent
+        <ExpandableDrawerContent
           currentDuration={currentDuration}
           onSelectPreset={handlePresetSelect}
-          onOpenSettings={() => setSettingsModalVisible(true)}
           drawerVisible={optionsDrawerVisible}
+          onOpenSettings={() => setSettingsModalVisible(true)}
         />
       </Drawer>
 
