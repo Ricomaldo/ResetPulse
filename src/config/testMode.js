@@ -6,7 +6,7 @@
 
 // Affiche le FAB wrench pour switcher Free/Premium dans l'app
 // true = FAB visible, false = FAB caché (production)
-export const DEV_MODE = false;
+export const DEV_MODE = true;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
