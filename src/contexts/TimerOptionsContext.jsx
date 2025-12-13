@@ -17,7 +17,7 @@ export const TimerOptionsProvider = ({ children }) => {
       showActivities: true, // Affichage des activités activé par défaut
       showPalettes: true, // Affichage des palettes activé par défaut
       useMinimalInterface: true, // Interface minimaliste activée par défaut (masque activités + palettes quand timer tourne)
-      showDigitalTimer: true, // Chrono numérique activé par défaut
+      showDigitalTimer: false, // Chrono numérique masqué par défaut (mode zen)
       keepAwakeEnabled: true, // Maintenir l'écran allumé pendant le timer (ON par défaut - timer visuel TDAH)
       clockwise: false,
       scaleMode: '60min',

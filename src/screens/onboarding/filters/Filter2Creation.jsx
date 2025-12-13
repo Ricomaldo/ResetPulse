@@ -70,11 +70,13 @@ export default function Filter2Creation({ needs, onContinue }) {
             progress={1}
             duration={duration * 60}
             color={currentColor}
-            size={rs(200)}
+            size={rs(150)}
             scaleMode={duration > 25 ? '60min' : '25min'}
             activityEmoji={selectedActivity.emoji}
             isRunning={false}
             shouldPulse={false}
+            showGraduations={false}
+            showNumbers={false}
           />
         </View>
 
@@ -213,26 +215,26 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     scrollContent: {
       paddingHorizontal: rs(spacing.lg),
-      paddingTop: rs(spacing.lg),
-      paddingBottom: rs(120),
+      paddingTop: rs(spacing.md),
+      paddingBottom: rs(100),
     },
     title: {
-      fontSize: rs(28),
+      fontSize: rs(24),
       fontWeight: '600',
       color: colors.text,
       textAlign: 'center',
-      marginBottom: rs(spacing.lg),
+      marginBottom: rs(spacing.md),
     },
     sectionLabel: {
-      fontSize: rs(14),
+      fontSize: rs(13),
       color: colors.textSecondary,
-      marginTop: rs(spacing.lg),
-      marginBottom: rs(spacing.md),
+      marginTop: rs(spacing.md),
+      marginBottom: rs(spacing.sm),
       fontWeight: '500',
     },
     previewContainer: {
       alignItems: 'center',
-      marginBottom: rs(spacing.md),
+      marginBottom: rs(spacing.sm),
     },
     activityRow: {
       flexDirection: 'row',
@@ -242,8 +244,8 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     activityPill: {
       flex: 1,
-      width: rs(80),
-      height: rs(80),
+      width: rs(70),
+      height: rs(70),
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: rs(50),
@@ -255,11 +257,11 @@ const createStyles = (colors, spacing, borderRadius) =>
       borderColor: 'transparent',
     },
     activityPillEmoji: {
-      fontSize: rs(24),
+      fontSize: rs(22),
       marginBottom: rs(2),
     },
     activityPillLabel: {
-      fontSize: rs(10),
+      fontSize: rs(9),
       color: colors.textSecondary,
       fontWeight: '500',
       textAlign: 'center',

@@ -16,7 +16,6 @@ import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
 import useSimpleAudio from '../../../hooks/useSimpleAudio';
 import { TIMER_SOUNDS } from '../../../config/sounds';
-import { PlayIcon } from '../../../components/Icons';
 
 export default function Filter5bSound({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();

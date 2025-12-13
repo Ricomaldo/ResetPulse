@@ -9,16 +9,18 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
-import { DEV_MODE } from '../../config/testMode';
+import { SHOW_DEV_FAB } from '../../config/testMode';
 
 export default function DevFab({
   isPremiumMode,
   onPremiumChange,
+  onResetOnboarding,
+  onGoToApp,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
 
-  if (!DEV_MODE) return null;
+  if (!SHOW_DEV_FAB) return null;
 
   const toggleMenu = () => {
     const toValue = isOpen ? 0 : 1;
@@ -113,6 +115,33 @@ export default function DevFab({
             {isPremiumMode ? '⭐ Premium' : '🆓 Free'}
           </Text>
         </View>
+
+        {/* Onboarding Controls */}
+        {(onResetOnboarding || onGoToApp) && (
+          <View style={styles.menuSection}>
+            <Text style={styles.menuLabel}>Onboarding</Text>
+            <View style={styles.buttonRow}>
+              {onResetOnboarding && (
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.resetButton]}
+                  onPress={() => handleOptionPress(onResetOnboarding)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.actionText}>🔄 Reset</Text>
+                </TouchableOpacity>
+              )}
+              {onGoToApp && (
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.goToAppButton]}
+                  onPress={() => handleOptionPress(onGoToApp)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.actionText}>→ App</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        )}
       </Animated.View>
     </View>
   );
@@ -219,5 +248,32 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 14,
     color: '#ccc',
+  },
+
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+
+  actionButton: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+
+  resetButton: {
+    backgroundColor: '#d9534f',
+  },
+
+  goToAppButton: {
+    backgroundColor: '#5cb85c',
+  },
+
+  actionText: {
+    fontSize: 13,
+    color: '#fff',
+    fontWeight: '600',
   },
 });

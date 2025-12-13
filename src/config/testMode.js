@@ -4,9 +4,14 @@
  * Configuration pour le mode développement/test
  */
 
-// Affiche le FAB wrench pour switcher Free/Premium dans l'app
-// true = FAB visible, false = FAB caché (production)
+// Active le mode développement général
+// true = mode dev, false = production
 export const DEV_MODE = true;
+
+// Affiche le FAB wrench pour contrôle dev (premium, onboarding reset, etc.)
+// true = FAB visible, false = FAB caché
+// Note: Nécessite DEV_MODE = true pour fonctionner
+export const SHOW_DEV_FAB = false;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
@@ -21,6 +26,7 @@ export const isTestPremium = () => {
 
 export default {
   DEV_MODE,
+  SHOW_DEV_FAB,
   DEFAULT_PREMIUM,
   TEST_MODE,
   isTestPremium,

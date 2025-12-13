@@ -46,8 +46,8 @@ export default function TimerOptions() {
     },
 
     optionButtonActive: {
-      backgroundColor: theme.colors.primary,
-      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.brand.primary,
+      borderColor: theme.colors.brand.primary,
     },
 
     optionText: {

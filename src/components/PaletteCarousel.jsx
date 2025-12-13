@@ -35,6 +35,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showColorsModal, setShowColorsModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [viewedPaletteIndex, setViewedPaletteIndex] = useState(effectiveIndex);
 
   const { isPremium: isPremiumUser } = usePremiumStatus();
 
@@ -47,7 +48,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const currentPaletteIndex = DISPLAY_PALETTES.indexOf(currentPalette);
   const effectiveIndex = currentPaletteIndex >= 0 ? currentPaletteIndex : 0;
 
-  // Scroll to current palette on mount
+  // Scroll to current palette on mount and sync viewed index when currentPalette changes
   useEffect(() => {
     if (scrollViewRef.current && effectiveIndex >= 0) {
       setTimeout(() => {
@@ -55,9 +56,10 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
           x: effectiveIndex * rs(232, "width"),
           animated: false,
         });
+        setViewedPaletteIndex(effectiveIndex);
       }, 100);
     }
-  }, []);
+  }, [effectiveIndex]);
 
   // Show palette name with animation
   const showPaletteName = () => {
@@ -97,7 +99,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   // Calcul de la largeur totale (palettes + bouton "+" en freemium)
   const totalSlides = isPremiumUser ? DISPLAY_PALETTES.length : DISPLAY_PALETTES.length + 1;
 
-  // Handle scroll end to detect palette change
+  // Handle scroll end to show palette name (no color change)
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const containerWidth = rs(232, "width");
@@ -109,12 +111,11 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     }
 
     if (
-      newIndex !== effectiveIndex &&
       newIndex >= 0 &&
       newIndex < DISPLAY_PALETTES.length
     ) {
-      const newPaletteName = DISPLAY_PALETTES[newIndex];
-      setPalette(newPaletteName);
+      // Update viewed palette index and show name
+      setViewedPaletteIndex(newIndex);
       showPaletteName();
     }
   };
@@ -249,23 +250,23 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     onboardingToastText: {
       fontSize: rs(13, 'min'),
       fontWeight: '600',
-      color: '#FFFFFF',
+      color: theme.colors.fixed.white,
       textAlign: 'center',
     },
   });
 
   // Navigation functions
   const scrollToPrevious = () => {
-    if (effectiveIndex > 0) {
-      const newIndex = effectiveIndex - 1;
-      const newPaletteName = DISPLAY_PALETTES[newIndex];
+    if (viewedPaletteIndex > 0) {
+      const newIndex = viewedPaletteIndex - 1;
 
       scrollViewRef.current?.scrollTo({
         x: newIndex * rs(232, "width"),
         animated: true,
       });
 
-      setPalette(newPaletteName);
+      // Update viewed palette and show name
+      setViewedPaletteIndex(newIndex);
       showPaletteName();
     }
   };
@@ -274,18 +275,17 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     // Permettre de scroller vers le bouton "+" en freemium
     const maxIndex = isPremiumUser ? DISPLAY_PALETTES.length - 1 : DISPLAY_PALETTES.length;
 
-    if (effectiveIndex < maxIndex) {
-      const newIndex = effectiveIndex + 1;
+    if (viewedPaletteIndex < maxIndex) {
+      const newIndex = viewedPaletteIndex + 1;
 
       scrollViewRef.current?.scrollTo({
         x: newIndex * rs(232, "width"),
         animated: true,
       });
 
-      // Si on arrive sur une vraie palette, la sélectionner
+      // Si on arrive sur une vraie palette, update viewed index et afficher le nom
       if (newIndex < DISPLAY_PALETTES.length) {
-        const newPaletteName = DISPLAY_PALETTES[newIndex];
-        setPalette(newPaletteName);
+        setViewedPaletteIndex(newIndex);
         showPaletteName();
       }
     }
@@ -302,10 +302,10 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       <TouchableOpacity
         style={[
           styles.chevronButton,
-          effectiveIndex === 0 && styles.chevronDisabled,
+          viewedPaletteIndex === 0 && styles.chevronDisabled,
         ]}
         onPress={scrollToPrevious}
-        disabled={effectiveIndex === 0}
+        disabled={viewedPaletteIndex === 0}
         activeOpacity={0.7}
       >
         <Text style={styles.chevronText}>‹</Text>
@@ -332,7 +332,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         pointerEvents="none"
       >
         <Text style={styles.paletteLabelText}>
-          {formatPaletteName(currentPalette)}
+          {formatPaletteName(DISPLAY_PALETTES[viewedPaletteIndex])}
         </Text>
       </Animated.View>
 
@@ -371,7 +371,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                     styles.colorButton,
                     {
                       backgroundColor: color,
-                      opacity: isCurrentPalette ? 1 : 0.5,
                     },
                     isCurrentPalette &&
                       currentColor === color &&
@@ -381,8 +380,10 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                     if (isCurrentPalette) {
                       setColorIndex(colorIndex);
                     } else {
+                      // Change palette + color, and sync viewed index
                       setPalette(paletteName);
                       setColorIndex(colorIndex);
+                      setViewedPaletteIndex(paletteIndex);
                       showPaletteName();
                     }
                   }}
@@ -415,10 +416,10 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       <TouchableOpacity
         style={[
           styles.chevronButton,
-          effectiveIndex >= totalSlides - 1 && styles.chevronDisabled,
+          viewedPaletteIndex >= totalSlides - 1 && styles.chevronDisabled,
         ]}
         onPress={scrollToNext}
-        disabled={effectiveIndex >= totalSlides - 1}
+        disabled={viewedPaletteIndex >= totalSlides - 1}
         activeOpacity={0.7}
       >
         <Text style={styles.chevronText}>›</Text>

@@ -4,7 +4,7 @@ import { StatusBar, Animated, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ========== DEV MODE ==========
-import { DEV_MODE, DEFAULT_PREMIUM } from './src/config/testMode';
+import { DEV_MODE, SHOW_DEV_FAB, DEFAULT_PREMIUM } from './src/config/testMode';
 import DevFab from './src/dev/components/DevFab';
 import { DevPremiumContext } from './src/dev/DevPremiumContext';
 // ==============================
@@ -97,6 +97,7 @@ function AppContent() {
 export default function App() {
   // ========== DEV MODE STATE ==========
   const [isPremiumMode, setIsPremiumMode] = useState(DEFAULT_PREMIUM);
+  const [resetTrigger, setResetTrigger] = useState(0);
 
   // Initialize Mixpanel Analytics (M7.5)
   useEffect(() => {
@@ -115,32 +116,57 @@ export default function App() {
     initAnalytics();
   }, []);
 
+  // ========== DEV: Reset Onboarding ==========
+  const handleResetOnboarding = async () => {
+    try {
+      await AsyncStorage.removeItem(ONBOARDING_COMPLETED_KEY);
+      await AsyncStorage.removeItem('user_timer_config');
+      setResetTrigger(prev => prev + 1); // Force AppContent remount
+      console.log('[DevFab] Onboarding reset');
+    } catch (error) {
+      console.warn('[DevFab] Failed to reset onboarding:', error);
+    }
+  };
+
+  // ========== DEV: Go to App ==========
+  const handleGoToApp = async () => {
+    try {
+      await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, 'true');
+      setResetTrigger(prev => prev + 1); // Force AppContent remount
+      console.log('[DevFab] Jumped to app');
+    } catch (error) {
+      console.warn('[DevFab] Failed to skip to app:', error);
+    }
+  };
+
   // Contenu principal
   const renderContent = () => (
     <ErrorBoundary>
       <ThemeProvider>
         <PurchaseProvider>
           <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
-            <AppContent />
+            <AppContent key={resetTrigger} />
           </DevPremiumContext.Provider>
         </PurchaseProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
 
-  // En mode dev, afficher le FAB + contenu
-  if (DEV_MODE) {
+  // En mode dev avec FAB activé, afficher le FAB + contenu
+  if (DEV_MODE && SHOW_DEV_FAB) {
     return (
       <View style={{ flex: 1 }}>
         {renderContent()}
         <DevFab
           isPremiumMode={isPremiumMode}
           onPremiumChange={setIsPremiumMode}
+          onResetOnboarding={handleResetOnboarding}
+          onGoToApp={handleGoToApp}
         />
       </View>
     );
   }
 
-  // Production: app normale sans DevFab
+  // Production ou dev sans FAB: app normale
   return renderContent();
 }

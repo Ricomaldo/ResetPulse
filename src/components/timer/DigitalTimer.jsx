@@ -8,7 +8,7 @@ import { rs } from '../../styles/responsive';
  * DigitalTimer - Displays remaining time in MM:SS format
  * Always visible when enabled in settings, updates dynamically during dial adjustment
  */
-export default function DigitalTimer({ remaining, isRunning, color }) {
+export default function DigitalTimer({ remaining, isRunning }) {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(1)).current; // Start at 1 (visible)
   const translateYAnim = useRef(new Animated.Value(0)).current; // Start at 0 (no offset)
@@ -56,7 +56,7 @@ export default function DigitalTimer({ remaining, isRunning, color }) {
       paddingHorizontal: rs(20),
       borderRadius: rs(35),
       borderWidth: 1,
-      borderColor: theme.colors.neutral,
+      borderColor: theme.colors.brand.neutral,
       ...Platform.select({
         ios: {
           ...theme.shadow('lg'),
@@ -69,7 +69,7 @@ export default function DigitalTimer({ remaining, isRunning, color }) {
     timeText: {
       fontSize: rs(32, 'min'),
       fontWeight: '600',
-      color: color ? `${color}CC` : theme.colors.text + 'CC', // 80% opacity
+      color: theme.colors.brand.deep + 'CC', // Gris anthracite 80% opacity
       letterSpacing: 2,
       fontFamily: Platform.select({
         ios: 'Menlo', // SF Mono alternative

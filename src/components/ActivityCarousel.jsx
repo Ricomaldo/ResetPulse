@@ -1,15 +1,23 @@
 // src/components/ActivityCarousel.jsx
-import React, { useRef, useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, Animated, TouchableOpacity, Platform } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTranslation } from '../hooks/useTranslation';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { rs, getComponentSizes } from '../styles/responsive';
-import { getAllActivities, getFreeActivities } from '../config/activities';
-import haptics from '../utils/haptics';
-import { usePremiumStatus } from '../hooks/usePremiumStatus';
-import { PremiumModal, MoreActivitiesModal } from './modals';
+import React, { useRef, useEffect, useState } from "react";
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Animated,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+import { useTheme } from "../theme/ThemeProvider";
+import { useTranslation } from "../hooks/useTranslation";
+import { useTimerOptions } from "../contexts/TimerOptionsContext";
+import { useTimerPalette } from "../contexts/TimerPaletteContext";
+import { rs, getComponentSizes } from "../styles/responsive";
+import { getAllActivities, getFreeActivities } from "../config/activities";
+import haptics from "../utils/haptics";
+import { usePremiumStatus } from "../hooks/usePremiumStatus";
+import { PremiumModal, MoreActivitiesModal } from "./modals";
 
 export default function ActivityCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -19,7 +27,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     setCurrentActivity,
     setCurrentDuration,
     favoriteActivities = [],
-    activityDurations = {}
+    activityDurations = {},
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const scrollViewRef = useRef(null);
@@ -28,7 +36,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const toastAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState("");
 
   // Check premium status (test mode or actual premium)
   const { isPremium: isPremiumUser } = usePremiumStatus();
@@ -42,8 +50,8 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
   const activities = isPremiumUser
     ? [...allActivities].sort((a, b) => {
         // 'none' (Basique) always comes first
-        if (a.id === 'none') return -1;
-        if (b.id === 'none') return 1;
+        if (a.id === "none") return -1;
+        if (b.id === "none") return 1;
 
         const aIsFavorite = favoriteActivities.includes(a.id);
         const bIsFavorite = favoriteActivities.includes(b.id);
@@ -53,7 +61,9 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
         // If both are favorites, maintain their order in favoriteActivities
         if (aIsFavorite && bIsFavorite) {
-          return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);
+          return (
+            favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id)
+          );
         }
 
         return 0;
@@ -61,14 +71,16 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     : freeActivities; // Mode freemium: uniquement les activités gratuites (inclut 'none')
 
   // Find current activity index (default to 0 if not found, which is 'none')
-  const currentIndex = activities.findIndex(a => a.id === currentActivity?.id);
+  const currentIndex = activities.findIndex(
+    (a) => a.id === currentActivity?.id
+  );
   const validIndex = currentIndex >= 0 ? currentIndex : 0;
 
   // Scroll to current activity on mount
   useEffect(() => {
     if (scrollViewRef.current && validIndex >= 0) {
       setTimeout(() => {
-        const offsetX = validIndex * rs(80, 'width');
+        const offsetX = validIndex * rs(80, "width");
         scrollViewRef.current?.scrollTo({ x: offsetX, animated: false });
       }, 100);
     }
@@ -131,7 +143,7 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
         duration: 300,
         useNativeDriver: true,
       }),
-    ]).start(() => setToastMessage(''));
+    ]).start(() => setToastMessage(""));
   };
 
   const handleActivityPress = (activity) => {
@@ -166,10 +178,10 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
 
   const styles = StyleSheet.create({
     container: {
-      position: 'relative',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100%',
+      position: "relative",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100%",
       // L'affichage en mode zen est maintenant géré par TimerScreen + useMinimalInterface
     },
 
@@ -178,138 +190,138 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
     },
 
     scrollContent: {
-      paddingHorizontal: rs(30, 'width'), // Show peek of adjacent items
-      alignItems: 'center',
+      paddingHorizontal: rs(30, "width"), // Show peek of adjacent items
+      alignItems: "center",
       gap: theme.spacing.md,
     },
 
     activityWrapper: {
-      width: rs(60, 'min'),
-      height: rs(60, 'min'),
-      borderRadius: rs(30, 'min'),
-      overflow: 'visible',
-      backgroundColor: 'transparent',
+      width: rs(60, "min"),
+      height: rs(60, "min"),
+      borderRadius: rs(30, "min"),
+      overflow: "visible",
+      backgroundColor: "transparent",
     },
 
     activityButtonInner: {
-      width: '100%',
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: rs(30, 'min'),
+      width: "100%",
+      height: "100%",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: rs(30, "min"),
       backgroundColor: theme.colors.surface,
-      ...(Platform.OS === 'ios' ? theme.shadow('sm') : {}),
+      ...(Platform.OS === "ios" ? theme.shadow("sm") : {}),
     },
 
     activityButtonActive: {
       backgroundColor: currentColor || theme.colors.brand.primary,
       borderWidth: 2,
       borderColor: currentColor || theme.colors.brand.secondary,
-      ...(Platform.OS === 'ios' ? theme.shadow('md') : {}),
+      ...(Platform.OS === "ios" ? theme.shadow("md") : {}),
     },
 
     activityInner: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%',
-      height: '100%',
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%",
+      height: "100%",
     },
 
     activityEmoji: {
-      fontSize: rs(34, 'min'),
-      lineHeight: rs(36, 'min'),
-      textAlign: 'center',
+      fontSize: rs(34, "min"),
+      lineHeight: rs(36, "min"),
+      textAlign: "center",
     },
 
     activityIcon: {
-      width: rs(34, 'min'),
-      height: rs(34, 'min'),
+      width: rs(34, "min"),
+      height: rs(34, "min"),
       // Pas de tintColor pour garder les couleurs originales de l'icône
     },
 
     activityLabel: {
-      fontSize: rs(9, 'min'),
+      fontSize: rs(9, "min"),
       marginTop: 2,
       color: theme.colors.textSecondary,
-      fontWeight: '500',
-      textAlign: 'center',
+      fontWeight: "500",
+      textAlign: "center",
     },
 
     activityLabelActive: {
       color: theme.colors.background,
-      fontWeight: '600',
+      fontWeight: "600",
     },
 
     premiumBadge: {
-      position: 'absolute',
+      position: "absolute",
       top: -2,
       right: -2,
-      backgroundColor: 'transparent',
-      alignItems: 'center',
-      justifyContent: 'center',
+      backgroundColor: "transparent",
+      alignItems: "center",
+      justifyContent: "center",
     },
 
     lockIcon: {
-      fontSize: rs(16, 'min'),
+      fontSize: rs(16, "min"),
       opacity: 0.75,
-      textShadowColor: 'rgba(0, 0, 0, 0.3)',
+      textShadowColor: "rgba(0, 0, 0, 0.3)",
       textShadowOffset: { width: 0, height: 1 },
       textShadowRadius: 2,
     },
 
     // Bouton "+" pour mode freemium
     moreButton: {
-      width: rs(60, 'min'),
-      height: rs(60, 'min'),
-      borderRadius: rs(30, 'min'),
+      width: rs(60, "min"),
+      height: rs(60, "min"),
+      borderRadius: rs(30, "min"),
       backgroundColor: theme.colors.surface,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       borderWidth: 2,
       borderColor: theme.colors.border,
-      borderStyle: 'dashed',
-      ...(Platform.OS === 'ios' ? theme.shadow('sm') : {}),
+      borderStyle: "dashed",
+      ...(Platform.OS === "ios" ? theme.shadow("sm") : {}),
     },
 
     moreButtonText: {
-      fontSize: rs(28, 'min'),
+      fontSize: rs(28, "min"),
       color: theme.colors.textSecondary,
-      fontWeight: '300',
+      fontWeight: "300",
     },
 
     activityNameBadge: {
-      position: 'absolute',
+      position: "absolute",
       top: -35,
       backgroundColor: theme.colors.background,
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.xs,
       borderRadius: theme.borderRadius.lg,
-      ...theme.shadow('md'),
+      ...theme.shadow("md"),
     },
 
     activityNameText: {
-      fontSize: rs(14, 'min'),
-      fontWeight: '600',
+      fontSize: rs(14, "min"),
+      fontWeight: "600",
       color: theme.colors.text,
     },
 
     onboardingToast: {
-      position: 'absolute',
-      bottom: rs(50, 'height'),
-      alignSelf: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      position: "absolute",
+      bottom: rs(50, "height"),
+      alignSelf: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.85)",
       paddingHorizontal: theme.spacing.lg,
       paddingVertical: theme.spacing.md,
       borderRadius: theme.borderRadius.lg,
-      maxWidth: '80%',
-      ...theme.shadow('lg'),
+      maxWidth: "80%",
+      ...theme.shadow("lg"),
     },
 
     onboardingToastText: {
-      fontSize: rs(13, 'min'),
-      fontWeight: '600',
-      color: '#FFFFFF',
-      textAlign: 'center',
+      fontSize: rs(13, "min"),
+      fontWeight: "600",
+      color: theme.colors.fixed.white,
+      textAlign: "center",
     },
   });
 
@@ -322,19 +334,19 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
             styles.activityNameBadge,
             {
               opacity: fadeAnim,
-              transform: [{
-                translateY: fadeAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [5, 0]
-                })
-              }]
-            }
+              transform: [
+                {
+                  translateY: fadeAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [5, 0],
+                  }),
+                },
+              ],
+            },
           ]}
           pointerEvents="none"
         >
-          <Text style={styles.activityNameText}>
-            {currentActivity.label}
-          </Text>
+          <Text style={styles.activityNameText}>{currentActivity.label}</Text>
         </Animated.View>
       )}
 
@@ -352,19 +364,25 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
           const isLocked = activity.isPremium && !isPremiumUser;
 
           return (
-            <View key={activity.id} style={[
-              styles.activityWrapper,
-              { opacity: isLocked ? 0.5 : 1 }
-            ]}>
+            <View
+              key={activity.id}
+              style={[styles.activityWrapper, { opacity: isLocked ? 0.5 : 1 }]}
+            >
               <TouchableOpacity
                 accessible={true}
-                accessibilityLabel={t('accessibility.activity', { name: activity.label })}
+                accessibilityLabel={t("accessibility.activity", {
+                  name: activity.label,
+                })}
                 accessibilityRole="button"
-                accessibilityState={{selected: isActive, disabled: isLocked}}
-                accessibilityHint={isLocked ? t('accessibility.activityLocked') : t('accessibility.activity', { name: activity.label })}
+                accessibilityState={{ selected: isActive, disabled: isLocked }}
+                accessibilityHint={
+                  isLocked
+                    ? t("accessibility.activityLocked")
+                    : t("accessibility.activity", { name: activity.label })
+                }
                 style={[
                   styles.activityButtonInner,
-                  isActive && styles.activityButtonActive
+                  isActive && styles.activityButtonActive,
                 ]}
                 onPress={() => handleActivityPress(activity)}
                 activeOpacity={0.7}
@@ -373,11 +391,11 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
                 <Animated.View
                   style={[
                     styles.activityInner,
-                    { transform: [{ scale: getScaleAnim(activity.id) }] }
+                    { transform: [{ scale: getScaleAnim(activity.id) }] },
                   ]}
                 >
                   <Text style={styles.activityEmoji}>
-                    {activity.id === 'none' ? '⏱️' : activity.emoji}
+                    {activity.id === "none" ? "⏱️" : activity.emoji}
                   </Text>
                 </Animated.View>
 
@@ -398,8 +416,8 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
             onPress={handleMorePress}
             activeOpacity={0.7}
             accessible={true}
-            accessibilityLabel={t('accessibility.moreActivities')}
-            accessibilityHint={t('accessibility.discoverPremium')}
+            accessibilityLabel={t("accessibility.moreActivities")}
+            accessibilityHint={t("accessibility.discoverPremium")}
           >
             <Text style={styles.moreButtonText}>+</Text>
           </TouchableOpacity>
@@ -421,19 +439,21 @@ export default function ActivityCarousel({ isTimerRunning = false }) {
       />
 
       {/* Onboarding Toast */}
-      {toastMessage !== '' && (
+      {toastMessage !== "" && (
         <Animated.View
           style={[
             styles.onboardingToast,
             {
               opacity: toastAnim,
-              transform: [{
-                translateY: toastAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0]
-                })
-              }]
-            }
+              transform: [
+                {
+                  translateY: toastAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [20, 0],
+                  }),
+                },
+              ],
+            },
           ]}
           pointerEvents="none"
         >

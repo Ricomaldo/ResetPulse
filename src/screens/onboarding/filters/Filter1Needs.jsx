@@ -33,7 +33,7 @@ export default function Filter1Needs({ onContinue }) {
   const styles = createStyles(colors, spacing, borderRadius);
 
   return (
-    <SafeAreaView style={styles.screen} edges={['top']}>
+    <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -118,7 +118,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       marginBottom: rs(spacing.md),
     },
     needSelected: {
-      borderColor: colors.primary,
+      borderColor: colors.brand.primary,
       backgroundColor: colors.surfaceElevated,
     },
     needEmoji: {
@@ -141,7 +141,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     helperText: {
       fontSize: rs(14),
-      color: colors.textTertiary,
+      color: colors.textLight,
       textAlign: 'center',
       marginTop: rs(spacing.lg),
     },
@@ -155,7 +155,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       backgroundColor: colors.background,
     },
     button: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.brand.primary,
       paddingVertical: rs(spacing.md),
       paddingHorizontal: rs(spacing.xl),
       borderRadius: borderRadius.xl,
