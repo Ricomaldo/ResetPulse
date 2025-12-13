@@ -102,7 +102,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   // Handle scroll end to show palette name (no color change)
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    const containerWidth = rs(232, "width");
+    const containerWidth = rs(280, "width");
     const newIndex = Math.round(offsetX / containerWidth);
 
     // Si on est sur le bouton "+" (dernière slide en freemium), ne rien faire
@@ -155,7 +155,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     scrollView: {
-      maxWidth: rs(232, "width"),
+      maxWidth: rs(280, "width"),
     },
 
     scrollContent: {
@@ -163,7 +163,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     paletteContainer: {
-      width: rs(232, "width"),
+      width: rs(280, "width"),
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
@@ -173,9 +173,9 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     colorButton: {
-      width: rs(44, "min"),
-      height: rs(44, "min"),
-      borderRadius: rs(22, "min"),
+      width: rs(60, "min"),
+      height: rs(60, "min"),
+      borderRadius: rs(30, "min"),
       borderWidth: 3,
       borderColor: "transparent",
       ...theme.shadows.md,
@@ -261,7 +261,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       const newIndex = viewedPaletteIndex - 1;
 
       scrollViewRef.current?.scrollTo({
-        x: newIndex * rs(232, "width"),
+        x: newIndex * rs(280, "width"),
         animated: true,
       });
 
@@ -279,7 +279,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       const newIndex = viewedPaletteIndex + 1;
 
       scrollViewRef.current?.scrollTo({
-        x: newIndex * rs(232, "width"),
+        x: newIndex * rs(280, "width"),
         animated: true,
       });
 
@@ -296,20 +296,23 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     setShowColorsModal(true);
   };
 
+  const maxIndex = isPremiumUser ? DISPLAY_PALETTES.length - 1 : DISPLAY_PALETTES.length;
+  const isAtStart = viewedPaletteIndex === 0;
+  const isAtEnd = viewedPaletteIndex >= maxIndex;
+
   return (
     <View style={styles.outerContainer}>
-      {/* Left chevron */}
-      <TouchableOpacity
-        style={[
-          styles.chevronButton,
-          viewedPaletteIndex === 0 && styles.chevronDisabled,
-        ]}
-        onPress={scrollToPrevious}
-        disabled={viewedPaletteIndex === 0}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.chevronText}>‹</Text>
-      </TouchableOpacity>
+      {/* Left chevron - hidden at start */}
+      {!isAtStart && (
+        <TouchableOpacity
+          style={styles.chevronButton}
+          onPress={scrollToPrevious}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.chevronText}>‹</Text>
+        </TouchableOpacity>
+      )}
+      {isAtStart && <View style={[styles.chevronButton, { opacity: 0 }]} />}
 
       {/* Palette carousel */}
       <View>
@@ -346,7 +349,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         onMomentumScrollEnd={handleScrollEnd}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
-        snapToInterval={rs(232, "width")}
+        snapToInterval={rs(280, "width")}
         decelerationRate="fast"
       >
         {DISPLAY_PALETTES.map((paletteName, paletteIndex) => {
@@ -412,18 +415,17 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       </ScrollView>
       </View>
 
-      {/* Right chevron */}
-      <TouchableOpacity
-        style={[
-          styles.chevronButton,
-          viewedPaletteIndex >= totalSlides - 1 && styles.chevronDisabled,
-        ]}
-        onPress={scrollToNext}
-        disabled={viewedPaletteIndex >= totalSlides - 1}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.chevronText}>›</Text>
-      </TouchableOpacity>
+      {/* Right chevron - hidden at end */}
+      {!isAtEnd && (
+        <TouchableOpacity
+          style={styles.chevronButton}
+          onPress={scrollToNext}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.chevronText}>›</Text>
+        </TouchableOpacity>
+      )}
+      {isAtEnd && <View style={[styles.chevronButton, { opacity: 0 }]} />}
 
       {/* Premium Modal (pour achat direct) */}
       <PremiumModal

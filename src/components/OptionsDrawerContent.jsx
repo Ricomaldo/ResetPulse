@@ -12,6 +12,7 @@ export default function OptionsDrawerContent({
   currentDuration = 0,
   onSelectPreset,
   onOpenSettings,
+  drawerVisible = false,
 }) {
   const theme = useTheme();
 
@@ -62,7 +63,7 @@ export default function OptionsDrawerContent({
       {/* Activités */}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Activité</Text>
-        <ActivityCarousel isTimerRunning={false} />
+        <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
       </View>
 
       {/* Durées */}
