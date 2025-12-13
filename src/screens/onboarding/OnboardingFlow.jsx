@@ -6,6 +6,7 @@ import { View, TouchableOpacity, Text, StyleSheet, AppState } from 'react-native
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs, STEP_NAMES } from './onboardingConstants';
 import analytics from '../../services/analytics';
+import { DEV_MODE } from '../../config/testMode';
 
 import {
   Filter0Opening,
@@ -87,9 +88,9 @@ export default function OnboardingFlow({ onComplete }) {
     });
   };
 
-  // Dev navigation (visible uniquement en __DEV__)
+  // Dev navigation (visible uniquement si DEV_MODE = true)
   const DevBar = () => {
-    if (!__DEV__) return null;
+    if (!DEV_MODE) return null;
 
     const styles = createDevStyles(colors, spacing);
     return (

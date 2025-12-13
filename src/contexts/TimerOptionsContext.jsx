@@ -1,11 +1,14 @@
 // src/contexts/TimerOptionsContext.jsx
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePersistedObject } from '../hooks/usePersistedState';
 import { getDefaultActivity } from '../config/activities';
 
 const TimerOptionsContext = createContext(null);
 
 export const TimerOptionsProvider = ({ children }) => {
+  const hasLoadedOnboardingConfig = useRef(false);
+
   // Utiliser un seul objet persisté pour toutes les options
   const { values, updateValue, isLoading } = usePersistedObject(
     '@ResetPulse:timerOptions',
@@ -20,11 +23,45 @@ export const TimerOptionsProvider = ({ children }) => {
       scaleMode: '60min',
       currentActivity: getDefaultActivity(),
       currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
-      favoriteActivities: ['work', 'break', 'breathing'], // Free activities as default favorites (excluding 'none')
+      favoriteActivities: ['work', 'break', 'meditation'], // Free activities as default favorites (excluding 'none')
       selectedSoundId: 'bell_classic', // Son par défaut
       activityDurations: {}, // { activityId: duration } - Mémorise la durée préférée par activité
     }
   );
+
+  // Load onboarding config once after initial load
+  useEffect(() => {
+    if (isLoading || hasLoadedOnboardingConfig.current) return;
+
+    const loadOnboardingConfig = async () => {
+      try {
+        const configStr = await AsyncStorage.getItem('user_timer_config');
+        if (configStr) {
+          const config = JSON.parse(configStr);
+
+          // Apply onboarding config to context
+          if (config.activity) {
+            updateValue('currentActivity', config.activity);
+          }
+          if (config.duration) {
+            updateValue('currentDuration', config.duration);
+          }
+
+          // Remove temp config after applying
+          await AsyncStorage.removeItem('user_timer_config');
+
+          if (__DEV__) {
+            console.log('[TimerOptionsContext] Applied onboarding config:', config);
+          }
+        }
+        hasLoadedOnboardingConfig.current = true;
+      } catch (error) {
+        console.warn('[TimerOptionsContext] Failed to load onboarding config:', error);
+      }
+    };
+
+    loadOnboardingConfig();
+  }, [isLoading, updateValue]);
 
   const value = {
     // States
