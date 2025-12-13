@@ -12,13 +12,25 @@ export default function Drawer({
   onClose,
   children,
   direction = 'top', // 'top' or 'bottom'
-  height = 0.5, // Percentage of screen height
+  height = 0.5, // Percentage of screen height (collapsed)
+  expandedHeight = 0.85, // Percentage when expanded
+  onExpand, // Callback when drawer expands
 }) {
   const theme = useTheme();
-  const drawerHeight = SCREEN_HEIGHT * height;
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const currentHeight = isExpanded ? expandedHeight : height;
+  const drawerHeight = SCREEN_HEIGHT * currentHeight;
   const initialPosition = direction === 'top' ? -drawerHeight : drawerHeight;
   const translateY = useRef(new Animated.Value(initialPosition)).current;
 
+  // Reset expanded state when drawer closes
+  useEffect(() => {
+    if (!visible) {
+      setIsExpanded(false);
+    }
+  }, [visible]);
+
+  // Animate drawer position based on visible and expanded state
   useEffect(() => {
     Animated.spring(translateY, {
       toValue: visible ? 0 : initialPosition,
@@ -26,83 +38,40 @@ export default function Drawer({
       tension: 50,
       friction: 10,
     }).start();
-  }, [visible, initialPosition]);
+  }, [visible, initialPosition, isExpanded]);
 
-  // Handle-only PanResponder for swipe to close
+  // Handle-only PanResponder for swipe to expand/collapse/close
   const handlePanResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: (_, gestureState) => {
         return Math.abs(gestureState.dy) > 5;
       },
-      onPanResponderMove: (_, gestureState) => {
-        // Allow movement in closing direction only
-        if (direction === 'top' && gestureState.dy < 0) {
-          // Top drawer can only move up (to close)
-          translateY.setValue(gestureState.dy);
-        } else if (direction === 'bottom' && gestureState.dy > 0) {
-          // Bottom drawer can only move down (to close)
-          translateY.setValue(gestureState.dy);
-        }
-      },
       onPanResponderRelease: (_, gestureState) => {
-        // Close if threshold exceeded in correct direction
-        const shouldClose = direction === 'top'
-          ? gestureState.dy < -SWIPE_THRESHOLD  // Swipe up to close top drawer
-          : gestureState.dy > SWIPE_THRESHOLD;   // Swipe down to close bottom drawer
-
-        if (shouldClose) {
-          onClose();
-        } else {
-          // Spring back to open position
-          Animated.spring(translateY, {
-            toValue: 0,
-            useNativeDriver: true,
-            tension: 50,
-            friction: 10,
-          }).start();
+        if (direction === 'bottom') {
+          // Swipe DOWN
+          if (gestureState.dy > SWIPE_THRESHOLD) {
+            if (isExpanded) {
+              // Collapse to normal height
+              setIsExpanded(false);
+            } else {
+              // Close drawer
+              onClose();
+            }
+          }
+          // Swipe UP
+          else if (gestureState.dy < -SWIPE_THRESHOLD) {
+            if (!isExpanded) {
+              // Expand drawer
+              setIsExpanded(true);
+              if (onExpand) onExpand();
+            }
+          }
         }
       },
     })
   ).current;
 
-  // Full drawer PanResponder - only intercepts if starting from handle area
-  const drawerPanResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: (evt) => {
-        // Only capture if touch starts in handle area (top 60px for bottom drawer, top 60px for top drawer)
-        const touchY = evt.nativeEvent.locationY;
-        if (direction === 'bottom') {
-          return touchY < 60; // First 60px from top of drawer
-        }
-        return false; // Top drawer uses handle only
-      },
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        if (direction === 'bottom') {
-          const touchY = evt.nativeEvent.locationY;
-          return touchY < 60 && Math.abs(gestureState.dy) > 5;
-        }
-        return false;
-      },
-      onPanResponderMove: (_, gestureState) => {
-        if (direction === 'bottom' && gestureState.dy > 0) {
-          translateY.setValue(gestureState.dy);
-        }
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (direction === 'bottom' && gestureState.dy > SWIPE_THRESHOLD) {
-          onClose();
-        } else {
-          Animated.spring(translateY, {
-            toValue: 0,
-            useNativeDriver: true,
-            tension: 50,
-            friction: 10,
-          }).start();
-        }
-      },
-    })
-  ).current;
 
   const styles = StyleSheet.create({
     overlay: {
@@ -131,10 +100,10 @@ export default function Drawer({
       ...theme.shadow('xl'),
     },
     handleContainer: {
-      paddingVertical: rs(8),
-      paddingHorizontal: rs(60),
+      paddingVertical: rs(16),
+      paddingHorizontal: rs(80),
       alignSelf: 'center',
-      marginBottom: 0,
+      marginBottom: rs(8),
     },
     handle: {
       width: rs(40),
@@ -163,17 +132,30 @@ export default function Drawer({
             transform: [{ translateY }],
           },
         ]}
-        {...drawerPanResponder.panHandlers}
+        {...(!isExpanded ? handlePanResponder.panHandlers : {})}
       >
-        <View style={styles.handleContainer} {...handlePanResponder.panHandlers}>
+        <View style={styles.handleContainer} {...(isExpanded ? handlePanResponder.panHandlers : {})}>
           <View style={styles.handle} />
         </View>
-        <ScrollView
-          style={styles.contentWrapper}
-          showsVerticalScrollIndicator={false}
-        >
-          {children}
-        </ScrollView>
+        {isExpanded ? (
+          <ScrollView
+            style={styles.contentWrapper}
+            showsVerticalScrollIndicator={false}
+            bounces={true}
+          >
+            {React.isValidElement(children)
+              ? React.cloneElement(children, { isExpanded })
+              : children
+            }
+          </ScrollView>
+        ) : (
+          <View style={styles.contentWrapper}>
+            {React.isValidElement(children)
+              ? React.cloneElement(children, { isExpanded })
+              : children
+            }
+          </View>
+        )}
       </Animated.View>
     </>
   );

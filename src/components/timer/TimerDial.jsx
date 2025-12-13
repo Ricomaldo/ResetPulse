@@ -38,6 +38,7 @@ function TimerDial({
   activityEmoji = null,
   isRunning = false,
   shouldPulse = true,
+  showActivityEmoji = true,
   onGraduationTap = null,
   onDialTap = null,
   isCompleted = false,
@@ -256,6 +257,7 @@ function TimerDial({
         minuteNumbers={minuteNumbers}
         showNumbers={showNumbers}
         showGraduations={showGraduations}
+        color={color}
       />
 
       {/* Progress layer: animated arc */}
@@ -308,6 +310,7 @@ function TimerDial({
         activityEmoji={activityEmoji}
         isRunning={isRunning}
         shouldPulse={shouldPulse}
+        showActivityEmoji={showActivityEmoji}
         color={color}
         pulseDuration={currentActivity?.pulseDuration}
       />

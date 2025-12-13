@@ -31,6 +31,7 @@ export default function CircularToggle({ clockwise, onToggle, size = 60 }) {
     },
     icon: {
       fontSize: rs(size * 0.5, 'min'),
+      color: theme.colors.textSecondary,
     },
   });
 

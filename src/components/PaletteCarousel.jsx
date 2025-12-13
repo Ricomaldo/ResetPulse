@@ -35,7 +35,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showColorsModal, setShowColorsModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  const [viewedPaletteIndex, setViewedPaletteIndex] = useState(effectiveIndex);
 
   const { isPremium: isPremiumUser } = usePremiumStatus();
 
@@ -48,12 +47,14 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   const currentPaletteIndex = DISPLAY_PALETTES.indexOf(currentPalette);
   const effectiveIndex = currentPaletteIndex >= 0 ? currentPaletteIndex : 0;
 
+  const [viewedPaletteIndex, setViewedPaletteIndex] = useState(effectiveIndex);
+
   // Scroll to current palette on mount and sync viewed index when currentPalette changes
   useEffect(() => {
     if (scrollViewRef.current && effectiveIndex >= 0) {
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
-          x: effectiveIndex * rs(232, "width"),
+          x: effectiveIndex * rs(280, "width"),
           animated: false,
         });
         setViewedPaletteIndex(effectiveIndex);
@@ -176,14 +177,19 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       width: rs(50, "min"),
       height: rs(50, "min"),
       borderRadius: rs(25, "min"),
-      borderWidth: 3,
-      borderColor: "transparent",
+      borderWidth: 2,
+      padding: rs(4, "min"),
+      backgroundColor: theme.colors.background,
       ...theme.shadows.md,
     },
 
+    colorButtonInner: {
+      flex: 1,
+      borderRadius: rs(18, "min"),
+    },
+
     colorButtonActive: {
-      borderColor: theme.colors.background,
-      transform: [{ scale: 1.2 }],
+      transform: [{ scale: 1.1 }],
       ...theme.shadows.lg,
       elevation: 5,
     },
@@ -207,7 +213,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
     // Bouton "+" pour découvrir plus de palettes
     moreButtonContainer: {
-      width: rs(232, "width"),
+      width: rs(280, "width"),
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
@@ -372,9 +378,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                   }}
                   style={[
                     styles.colorButton,
-                    {
-                      backgroundColor: color,
-                    },
+                    { borderColor: color },
                     isCurrentPalette &&
                       currentColor === color &&
                       styles.colorButtonActive,
@@ -391,7 +395,14 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                     }
                   }}
                   activeOpacity={0.7}
-                />
+                >
+                  <View
+                    style={[
+                      styles.colorButtonInner,
+                      { backgroundColor: color },
+                    ]}
+                  />
+                </TouchableOpacity>
               ))}
             </View>
           );
