@@ -119,7 +119,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       backgroundColor: colors.background,
     },
     button: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.brand.primary,
       paddingVertical: rs(spacing.md),
       paddingHorizontal: rs(spacing.xl),
       borderRadius: borderRadius.xl,

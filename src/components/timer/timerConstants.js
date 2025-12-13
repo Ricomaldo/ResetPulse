@@ -79,7 +79,7 @@ export const DIAL_VISUAL = {
 
 export const TIMER_SVG = {
   PADDING: 50,
-  RADIUS_OFFSET: 25,
+  RADIUS_OFFSET: 50, // Augmenté pour réduire le dial et laisser respirer les graduations (zen mode)
   STROKE_WIDTH: 4.5,
   SVG_OFFSET: 25
 };

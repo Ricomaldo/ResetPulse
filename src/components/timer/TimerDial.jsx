@@ -39,10 +39,11 @@ function TimerDial({
   isRunning = false,
   shouldPulse = true,
   onGraduationTap = null,
+  onDialTap = null,
   isCompleted = false,
   currentActivity = null,
   showNumbers = true,
-  showDigitalTimer = false,
+  showGraduations = true,
 }) {
   const theme = useTheme();
   const [isDragging, setIsDragging] = useState(false);
@@ -54,7 +55,9 @@ function TimerDial({
   // Calculate responsive sizes
   const circleSize = size || rs(280, 'min');
   const svgSize = circleSize + TIMER_SVG.PADDING;
-  const radius = (circleSize / 2) - TIMER_SVG.RADIUS_OFFSET;
+  const radiusOuter = (circleSize / 2); // Radius for graduations (outer)
+  const radiusBackground = radiusOuter - 30; // Cercle blanc (laisse espace pour graduations)
+  const radius = radiusBackground - 8; // Arc de progression (un peu plus petit → anneau blanc visible)
   const strokeWidth = TIMER_SVG.STROKE_WIDTH;
   const centerX = svgSize / 2;
   const centerY = svgSize / 2;
@@ -70,16 +73,16 @@ function TimerDial({
 
   // Get graduation marks and numbers from centralized logic
   const graduationMarks = useMemo(() => {
-    const marks = dial.getGraduationMarks(radius, centerX, centerY);
+    const marks = dial.getGraduationMarks(radiusBackground, centerX, centerY); // Sur le cercle blanc
     return marks.map(mark => ({
       ...mark,
       strokeWidth: mark.isMajor ? TIMER_VISUAL.TICK_WIDTH_MAJOR : TIMER_VISUAL.TICK_WIDTH_MINOR,
       opacity: mark.isMajor ? TIMER_VISUAL.TICK_OPACITY_MAJOR : TIMER_VISUAL.TICK_OPACITY_MINOR,
     }));
-  }, [dial, radius, centerX, centerY]);
+  }, [dial, radiusBackground, centerX, centerY]);
 
   const minuteNumbers = useMemo(() => {
-    const numberRadius = radius + TIMER_PROPORTIONS.NUMBER_RADIUS;
+    const numberRadius = radiusBackground + TIMER_PROPORTIONS.NUMBER_RADIUS; // À l'extérieur du cercle blanc
     const positions = dial.getNumberPositions(numberRadius, centerX, centerY);
     return positions.map((pos, index) => ({
       key: `num-${index}`,
@@ -88,15 +91,24 @@ function TimerDial({
       minute: pos.value,
       fontSize: Math.max(TIMER_PROPORTIONS.MIN_NUMBER_FONT, circleSize * TIMER_PROPORTIONS.NUMBER_FONT_RATIO),
     }));
-  }, [dial, radius, centerX, centerY, circleSize]);
+  }, [dial, radiusBackground, centerX, centerY, circleSize]);
 
-  // Pan responder for drag interaction
+  // Pan responder for drag interaction + tap detection
+  const gestureStartTimeRef = useRef(null);
+  const gestureStartPosRef = useRef(null);
+
   const panResponder = useMemo(() =>
     PanResponder.create({
-      onStartShouldSetPanResponder: () => false, // Don't capture on tap
-      onMoveShouldSetPanResponder: () => !isRunning && !!onGraduationTap, // Only capture on move
+      onStartShouldSetPanResponder: () => true, // Capture all touches
+      onMoveShouldSetPanResponder: () => !isRunning && !!onGraduationTap, // Only capture move for drag when stopped
 
       onPanResponderGrant: (evt) => {
+        gestureStartTimeRef.current = Date.now();
+        gestureStartPosRef.current = {
+          x: evt.nativeEvent.locationX,
+          y: evt.nativeEvent.locationY,
+        };
+
         if (isRunning) return;
         setIsDragging(true);
 
@@ -185,15 +197,36 @@ function TimerDial({
         dragOffsetRef.current = newMinutes - touchMinutes;
       },
 
-      onPanResponderRelease: () => {
+      onPanResponderRelease: (evt) => {
+        const now = Date.now();
+        const timeDelta = now - (gestureStartTimeRef.current || now);
+        const startPos = gestureStartPosRef.current;
+
+        // Calculate movement distance
+        let movementDistance = 0;
+        if (startPos) {
+          const dx = evt.nativeEvent.locationX - startPos.x;
+          const dy = evt.nativeEvent.locationY - startPos.y;
+          movementDistance = Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Detect tap: quick release (<200ms) with minimal movement (<10px)
+        const isTap = timeDelta < 200 && movementDistance < 10;
+
+        if (isTap && onDialTap) {
+          onDialTap();
+        }
+
         setIsDragging(false);
         lastMinutesRef.current = null;
         lastTouchMinutesRef.current = null;
         lastMoveTimeRef.current = null;
         dragOffsetRef.current = 0;
+        gestureStartTimeRef.current = null;
+        gestureStartPosRef.current = null;
       },
     }),
-    [dial, isRunning, onGraduationTap, centerX, centerY, isDragging, duration]
+    [dial, isRunning, onGraduationTap, onDialTap, centerX, centerY, isDragging, duration]
   );
 
   // Animated color for completion
@@ -204,7 +237,7 @@ function TimerDial({
 
   return (
     <View
-      {...(!isRunning && onGraduationTap ? panResponder.panHandlers : {})}
+      {...panResponder.panHandlers}
       style={{
         width: svgSize,
         height: svgSize,
@@ -217,11 +250,12 @@ function TimerDial({
         svgSize={svgSize}
         centerX={centerX}
         centerY={centerY}
-        radius={radius}
+        radius={radiusBackground}
         strokeWidth={strokeWidth}
         graduationMarks={graduationMarks}
         minuteNumbers={minuteNumbers}
         showNumbers={showNumbers}
+        showGraduations={showGraduations}
       />
 
       {/* Progress layer: animated arc */}
@@ -278,8 +312,8 @@ function TimerDial({
         pulseDuration={currentActivity?.pulseDuration}
       />
 
-      {/* Dragging indicator - only show if digital timer is hidden */}
-      {isDragging && !showDigitalTimer && (
+      {/* Dragging indicator */}
+      {isDragging && (
         <View
           style={{
             position: 'absolute',
@@ -319,8 +353,8 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.activityEmoji === nextProps.activityEmoji &&
     prevProps.isRunning === nextProps.isRunning &&
     prevProps.shouldPulse === nextProps.shouldPulse &&
+    prevProps.onDialTap === nextProps.onDialTap &&
     prevProps.isCompleted === nextProps.isCompleted &&
-    prevProps.currentActivity === nextProps.currentActivity &&
-    prevProps.showDigitalTimer === nextProps.showDigitalTimer
+    prevProps.currentActivity === nextProps.currentActivity
   );
 });

@@ -294,13 +294,13 @@ const createDevStyles = (colors, spacing) =>
       alignItems: 'center',
     },
     devButtonActive: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.brand.primary,
     },
     devResetButton: {
       width: rs(36),
       height: rs(36),
       borderRadius: rs(18),
-      backgroundColor: colors.accent,
+      backgroundColor: colors.brand.accent,
       justifyContent: 'center',
       alignItems: 'center',
       marginLeft: rs(spacing.md),

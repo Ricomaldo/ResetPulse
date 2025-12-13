@@ -95,7 +95,7 @@ const createStyles = (colors, spacing) =>
     tapHint: {
       position: 'absolute',
       bottom: rs(100),
-      color: colors.textTertiary,
+      color: colors.textLight,
       fontSize: rs(14),
     },
   });

@@ -1,269 +1,239 @@
 // src/screens/TimerScreen.jsx
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { View, StyleSheet, TouchableOpacity, PanResponder, Animated } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, StyleSheet, Animated, PanResponder, Dimensions, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
-import { useTranslation } from '../hooks/useTranslation';
-import ActivityCarousel from '../components/ActivityCarousel';
-import PaletteCarousel from '../components/PaletteCarousel';
 import TimeTimer from '../components/TimeTimer';
-import { SettingsModal } from '../components/modals';
-import { SettingsIcon } from '../components/Icons';
+import Drawer from '../components/Drawer';
+import OptionsDrawerContent from '../components/OptionsDrawerContent';
+import SettingsDrawerContent from '../components/SettingsDrawerContent';
+import DigitalTimer from '../components/timer/DigitalTimer';
 import { rs } from '../styles/responsive';
-import { ENTRANCE_ANIMATION, SPRING } from '../components/timer/timerConstants';
-import { getGridHeights } from '../styles/gridLayout';
 
-// Grid-based styles with Golden Ratio
+const SWIPE_THRESHOLD = 50;
+const { width, height } = Dimensions.get('window');
+
 const createStyles = (theme) => {
-  const heights = getGridHeights();
-
   return StyleSheet.create({
     container: {
       flex: 1,
-      paddingHorizontal: rs(20),
     },
 
-    header: {
-      height: heights.header,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      paddingHorizontal: rs(10),
-      zIndex: 100,
-    },
-
-    settingsButton: {
-      width: rs(44, 'min'),
-      height: rs(44, 'min'),
-      borderRadius: rs(22, 'min'),
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...theme.shadows.md,
-    },
-
-    activitySection: {
-      height: heights.activities,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'visible',
-    },
-
-    timerSection: {
+    timerContainer: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },
 
-    paletteSection: {
-      height: heights.palette,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: rs(10, 'height'),
+    activityLabel: {
+      position: 'absolute',
+      top: rs(60),
+      alignSelf: 'center',
+      fontSize: rs(16),
+      fontWeight: '500',
+      color: theme.colors.textSecondary,
+      letterSpacing: 0.5,
     },
 
-    paletteContainer: {
-      backgroundColor: theme.isDark ? theme.colors.brand.deep : theme.colors.brand.neutral,
-      paddingVertical: rs(8),
-      paddingHorizontal: rs(20),
-      borderRadius: rs(35),
-      borderWidth: 1,
-      borderColor: theme.colors.brand.primary,
-      ...theme.shadows.lg,
+    digitalTimerContainer: {
+      position: 'absolute',
+      bottom: rs(100),
+      alignSelf: 'center',
+    },
+
+    digitalTimerToggle: {
+      paddingVertical: rs(6),
+      paddingHorizontal: rs(16),
+      borderRadius: rs(12),
+      backgroundColor: theme.colors.textSecondary,
+      opacity: 0.3,
+      minHeight: rs(12),
+      minWidth: rs(32),
     },
   });
 };
 
 function TimerScreenContent() {
   const theme = useTheme();
-  const t = useTranslation();
-  const { showActivities, showPalettes, useMinimalInterface } = useTimerOptions();
-  const [settingsVisible, setSettingsVisible] = useState(false);
+  const { currentDuration, showDigitalTimer, setShowDigitalTimer, currentActivity } = useTimerOptions();
+  const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
+  const [settingsDrawerVisible, setSettingsDrawerVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [timerDuration, setTimerDuration] = useState(0);
   const timerRef = useRef(null);
+  const dialWrapperRef = useRef(null);
+  const dialLayoutRef = useRef(null);
 
-  // Keep screen awake during timer (ON par défaut - timer visuel TDAH)
+  // Keep screen awake during timer
   useTimerKeepAwake();
 
-  // Get styles with memoization to prevent recreation
-  const styles = useMemo(() => createStyles(theme), [theme]);
+  const styles = createStyles(theme);
 
-  // Animation values for staggered entrance
-  const headerAnim = useRef(new Animated.Value(0)).current;
-  const activityAnim = useRef(new Animated.Value(0)).current;
-  const timerAnim = useRef(new Animated.Value(0)).current;
-  const timerScaleAnim = useRef(new Animated.Value(0.8)).current;
-  const paletteAnim = useRef(new Animated.Value(0)).current;
+  // Helper to check if touch is within dial bounds
+  const isTouchInDial = (evt) => {
+    if (!dialLayoutRef.current) return false;
 
-  // Staggered entrance animations
-  useEffect(() => {
-    const animations = [
-      // Header slides down
-      Animated.timing(headerAnim, {
-        toValue: 1,
-        duration: ENTRANCE_ANIMATION.HEADER_DURATION,
-        delay: ENTRANCE_ANIMATION.HEADER_DELAY,
-        useNativeDriver: true,
-      }),
-      // Activities slide in from left
-      Animated.timing(activityAnim, {
-        toValue: 1,
-        duration: ENTRANCE_ANIMATION.ACTIVITY_DURATION,
-        delay: ENTRANCE_ANIMATION.ACTIVITY_DELAY,
-        useNativeDriver: true,
-      }),
-      // Timer fades and scales in
-      Animated.parallel([
-        Animated.timing(timerAnim, {
-          toValue: 1,
-          duration: ENTRANCE_ANIMATION.TIMER_DURATION,
-          delay: ENTRANCE_ANIMATION.TIMER_DELAY,
-          useNativeDriver: true,
-        }),
-        Animated.spring(timerScaleAnim, {
-          toValue: 1,
-          tension: SPRING.TENSION,
-          friction: SPRING.FRICTION,
-          delay: ENTRANCE_ANIMATION.TIMER_DELAY,
-          useNativeDriver: true,
-        }),
-      ]),
-      // Palette slides up
-      Animated.timing(paletteAnim, {
-        toValue: 1,
-        duration: ENTRANCE_ANIMATION.PALETTE_DURATION,
-        delay: ENTRANCE_ANIMATION.PALETTE_DELAY,
-        useNativeDriver: true,
-      }),
-    ];
+    const { pageX, pageY } = evt.nativeEvent;
+    const { x, y, width: dialWidth, height: dialHeight } = dialLayoutRef.current;
 
-    Animated.stagger(0, animations).start();
-  }, []);
+    return (
+      pageX >= x &&
+      pageX <= x + dialWidth &&
+      pageY >= y &&
+      pageY <= y + dialHeight
+    );
+  };
 
-  // Swipe to exit zen mode (when timer is running)
+  // Swipe up gesture to reveal options drawer (but not when touching dial)
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => isTimerRunning,
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        // Only respond to vertical swipes when timer is running
-        return isTimerRunning && Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 10;
+      onStartShouldSetPanResponder: (evt) => {
+        if (isTouchInDial(evt)) return false; // Let dial handle its own gestures
+        return !isTimerRunning && !optionsDrawerVisible;
       },
-      onPanResponderRelease: (evt, gestureState) => {
-        // Pause timer on significant vertical swipe
-        if (Math.abs(gestureState.dy) > 50 && timerRef.current) {
-          timerRef.current.toggleRunning();
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        if (isTouchInDial(evt)) return false; // Let dial handle its own gestures
+        return !isTimerRunning && !optionsDrawerVisible && gestureState.dy < -10; // Swipe UP (negative dy)
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dy < -SWIPE_THRESHOLD) { // Swipe UP
+          setOptionsDrawerVisible(true);
         }
       },
     })
   ).current;
 
+  // Handle dial tap = start/pause
+  const handleDialTap = () => {
+    if (timerRef.current) {
+      timerRef.current.toggleRunning();
+    }
+  };
+
+  // Handle preset selection from drawer
+  const handlePresetSelect = (seconds) => {
+    if (timerRef.current) {
+      timerRef.current.setDuration(seconds);
+      setTimerDuration(seconds);
+    }
+  };
+
+  // Capture dial wrapper layout for gesture detection
+  const handleDialRef = (ref) => {
+    dialWrapperRef.current = ref;
+    if (ref) {
+      ref.measureInWindow((x, y, width, height) => {
+        dialLayoutRef.current = { x, y, width, height };
+      });
+    }
+  };
+
+  // Toggle digital timer visibility
+  const handleToggleDigitalTimer = () => {
+    setShowDigitalTimer(!showDigitalTimer);
+  };
+
+  // Update timer duration for digital timer display
+  useEffect(() => {
+    if (timerRef.current) {
+      setTimerDuration(timerRef.current.duration || 0);
+    }
+  }, [currentDuration]);
+
+  // Update timer duration continuously (both when running and when dragging)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timerRef.current) {
+        const currentDur = timerRef.current.duration || 0;
+        const currentProg = timerRef.current.progress || 1;
+        const remaining = isTimerRunning
+          ? Math.ceil(currentDur * currentProg)
+          : currentDur;
+        setTimerDuration(remaining);
+      }
+    }, 100); // Update every 100ms for smooth display
+
+    return () => clearInterval(interval);
+  }, [isTimerRunning]);
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       edges={['top', 'bottom']}
-      {...panResponder.panHandlers}>
-      {/* Header with Settings Button */}
-      <Animated.View
-        style={[
-          styles.header,
-          {
-            opacity: headerAnim,
-            transform: [{
-              translateY: headerAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [-20, 0]
-              })
-            }]
-          }
-        ]}>
-        <View style={{ flex: 1 }} />
-        <TouchableOpacity
-          accessible={true}
-          accessibilityLabel={t('accessibility.settings')}
-          accessibilityHint={t('accessibility.openSettings')}
-          accessibilityRole="button"
-          style={[styles.settingsButton, {
-            backgroundColor: theme.colors.brand.neutral,
-            borderWidth: 1,
-            borderColor: theme.colors.brand.secondary
-          }]}
-          onPress={() => setSettingsVisible(true)}
-          activeOpacity={0.7}
-        >
-          <SettingsIcon size={rs(24, 'min')} color={theme.colors.brand.primary} />
-        </TouchableOpacity>
-      </Animated.View>
+      {...panResponder.panHandlers}
+    >
+      {/* Activity label - en haut */}
+      {currentActivity && currentActivity.id !== 'none' && (
+        <Text style={styles.activityLabel}>
+          {currentActivity.emoji} {currentActivity.label}
+        </Text>
+      )}
 
-      {/* Activities Section */}
-      <Animated.View
-        style={[
-          styles.activitySection,
-          {
-            opacity: (showActivities && !(useMinimalInterface && isTimerRunning)) ? 1 : 0,
-            transform: [
-              {
-                translateX: activityAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [-30, 0]
-                })
-              },
-              {
-                scale: activityAnim
-              }
-            ]
-          }
-        ]}
-        pointerEvents={(showActivities && !(useMinimalInterface && isTimerRunning)) ? 'auto' : 'none'}
-      >
-        <ActivityCarousel isTimerRunning={isTimerRunning} />
-      </Animated.View>
-
-      {/* Timer Section - Flex to take available space */}
-      <Animated.View
-        style={[
-          styles.timerSection,
-          {
-            opacity: timerAnim,
-            transform: [{
-              scale: timerScaleAnim
-            }]
-          }
-        ]}>
+      {/* Timer - center, zen */}
+      <View style={styles.timerContainer}>
         <TimeTimer
           onRunningChange={setIsTimerRunning}
-          onTimerRef={(ref) => { timerRef.current = ref; }}
-        />
-      </Animated.View>
-
-      {/* Palette Section */}
-      <Animated.View
-        style={[styles.paletteSection, {
-          opacity: (showPalettes && !(useMinimalInterface && isTimerRunning)) ? 1 : 0,
-          transform: [
-            {
-              translateY: paletteAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [30, 0]
-              })
-            },
-            {
-              scale: paletteAnim
+          onTimerRef={(ref) => {
+            timerRef.current = ref;
+            if (ref) {
+              setTimerDuration(ref.duration || 0);
             }
-          ]
-        }]}
-        pointerEvents={(showPalettes && !(useMinimalInterface && isTimerRunning)) ? 'auto' : 'none'}
-      >
-        <View style={styles.paletteContainer}>
-          <PaletteCarousel isTimerRunning={isTimerRunning} />
-        </View>
-      </Animated.View>
+          }}
+          onDialRef={handleDialRef}
+          onDialTap={handleDialTap}
+        />
+      </View>
 
-      {/* Settings Modal */}
-      <SettingsModal
-        visible={settingsVisible}
-        onClose={() => setSettingsVisible(false)}
-      />
+      {/* Digital Timer ou Point - partie basse (même position) */}
+      <View style={styles.digitalTimerContainer}>
+        {showDigitalTimer ? (
+          <TouchableOpacity
+            onPress={handleToggleDigitalTimer}
+            activeOpacity={0.8}
+          >
+            <DigitalTimer
+              remaining={timerDuration}
+              isRunning={isTimerRunning}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.digitalTimerToggle}
+            onPress={handleToggleDigitalTimer}
+            activeOpacity={0.6}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          />
+        )}
+      </View>
+
+      {/* Options Drawer (from bottom) */}
+      <Drawer
+        visible={optionsDrawerVisible}
+        onClose={() => setOptionsDrawerVisible(false)}
+        direction="bottom"
+        height={0.55}
+      >
+        <OptionsDrawerContent
+          currentDuration={currentDuration}
+          onSelectPreset={handlePresetSelect}
+          onOpenSettings={() => {
+            setOptionsDrawerVisible(false);
+            setTimeout(() => setSettingsDrawerVisible(true), 300);
+          }}
+        />
+      </Drawer>
+
+      {/* Settings Drawer (from bottom) */}
+      <Drawer
+        visible={settingsDrawerVisible}
+        onClose={() => setSettingsDrawerVisible(false)}
+        direction="bottom"
+        height={0.65}
+      >
+        <SettingsDrawerContent />
+      </Drawer>
     </SafeAreaView>
   );
 }

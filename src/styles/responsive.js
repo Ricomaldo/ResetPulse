@@ -138,8 +138,8 @@ export const getComponentSizes = () => {
   const { width, height, isLandscape } = getDeviceInfo();
 
   return {
-    // Timer circle size - MASSIVEMENT augmenté pour dominer l'écran
-    timerCircle: rs(isLandscape ? Math.min(width * 0.5, height * 0.8) : width * 0.85, 'min'),
+    // Timer circle size - ZEN MODE: domine l'écran (taille absolue, pas rs)
+    timerCircle: isLandscape ? Math.min(width * 0.6, height * 0.9) : width * 0.95,
 
     // Activity button size
     activityButton: rs(isLandscape ? 60 : 65, 'min'),
