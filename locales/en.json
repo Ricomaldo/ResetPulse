@@ -72,14 +72,14 @@
         "eveningRelax": "Unwind 20min"
       },
       "filter5": {
-        "title": "Unlock everything",
+        "title": "All colors. All activities.",
         "featureColors": "All colors.",
         "featureActivities": "All activities.",
         "featureComfort": "Maximum comfort.",
         "gift": "7 DAYS FREE",
-        "price": "Then €4.99 once — yours forever.",
+        "price": "Try free for 7 days.\nThen €4.99 once — yours forever.",
         "trialCta": "Try 7 days free",
-        "skipCta": "Maybe later"
+        "skipCta": "Discover the app first"
       }
     },
     "v3": {
