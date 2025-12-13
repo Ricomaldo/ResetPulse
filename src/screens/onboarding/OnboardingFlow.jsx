@@ -200,6 +200,8 @@ export default function OnboardingFlow({ onComplete }) {
           <Filter4Branch
             onContinue={(data) => {
               setBranch(data.branch);
+              // Track V3 specific event
+              analytics.trackOnboardingBranchSelected(data.branch);
               analytics.trackOnboardingStepCompleted(5, getStepName(5, data.branch), {
                 branch_selected: data.branch,
               });
@@ -217,6 +219,8 @@ export default function OnboardingFlow({ onComplete }) {
             <Filter5bSound
               onContinue={(data) => {
                 setSoundConfig(data.selectedSound);
+                // Track V3 specific event
+                analytics.trackOnboardingSoundSelected(data.selectedSound);
                 analytics.trackOnboardingStepCompleted(6, getStepName(6, branch), {
                   sound_selected: data.selectedSound,
                 });
@@ -236,6 +240,12 @@ export default function OnboardingFlow({ onComplete }) {
             <Filter5cInterface
               onContinue={(data) => {
                 setInterfaceConfig(data);
+                // Track V3 specific event
+                analytics.trackOnboardingInterfaceConfigured(
+                  data.theme,
+                  data.minimalInterface,
+                  data.digitalTimer
+                );
                 analytics.trackOnboardingStepCompleted(7, getStepName(7, branch), {
                   theme: data.theme,
                   minimal_interface: data.minimalInterface,
