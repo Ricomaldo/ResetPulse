@@ -13,7 +13,6 @@ export default function OptionsDrawerContent({
   onSelectPreset,
   onOpenSettings,
   drawerVisible = false,
-  hideSettingsIcon = false,
 }) {
   const theme = useTheme();
 
@@ -46,8 +45,8 @@ export default function OptionsDrawerContent({
 
   return (
     <View style={styles.container}>
-      {/* Settings Icon - en haut à droite (hidden si dans pager) */}
-      {onOpenSettings && !hideSettingsIcon && (
+      {/* Settings Icon - en haut à droite */}
+      {onOpenSettings && (
         <View style={styles.header}>
           <TouchableOpacity onPress={onOpenSettings} activeOpacity={0.6}>
             <Icons name="settings" size={rs(20)} color={theme.colors.textSecondary} />

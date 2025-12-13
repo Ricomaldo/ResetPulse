@@ -8,10 +8,11 @@ import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import TimeTimer from '../components/TimeTimer';
 import Drawer from '../components/Drawer';
-import DrawerPager from '../components/DrawerPager';
+import OptionsDrawerContent from '../components/OptionsDrawerContent';
 import DigitalTimer from '../components/timer/DigitalTimer';
 import CircularToggle from '../components/CircularToggle';
 import SwipeUpHint from '../components/SwipeUpHint';
+import { SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 
 const SWIPE_THRESHOLD = 50;
@@ -77,6 +78,7 @@ function TimerScreenContent() {
   const { currentDuration, showDigitalTimer, setShowDigitalTimer, currentActivity, clockwise, setClockwise, showRotationToggle } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerDuration, setTimerDuration] = useState(0);
   const timerRef = useRef(null);
@@ -242,14 +244,21 @@ function TimerScreenContent() {
         visible={optionsDrawerVisible}
         onClose={() => setOptionsDrawerVisible(false)}
         direction="bottom"
-        height={0.6}
+        height={0.5}
       >
-        <DrawerPager
+        <OptionsDrawerContent
           currentDuration={currentDuration}
           onSelectPreset={handlePresetSelect}
+          onOpenSettings={() => setSettingsModalVisible(true)}
           drawerVisible={optionsDrawerVisible}
         />
       </Drawer>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        visible={settingsModalVisible}
+        onClose={() => setSettingsModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
