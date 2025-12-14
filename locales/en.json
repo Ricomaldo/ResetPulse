@@ -282,6 +282,16 @@
   },
   "discovery": {
     "defaultCta": "Unlock everything - 7 days free",
-    "defaultDismiss": "Maybe later"
+    "defaultDismiss": "Maybe later",
+    "moreColors": {
+      "title": "Even more colors",
+      "subtitle": "Ocean, forest, lavender, duck...",
+      "tagline": "Every mood, its atmosphere."
+    },
+    "moreActivities": {
+      "title": "Even more moments",
+      "subtitle": "Nap, writing, reading, yoga...",
+      "tagline": "Every moment deserves its color."
+    }
   }
 }
