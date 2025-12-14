@@ -59,9 +59,17 @@ function AppContent() {
     // Persister
     try {
       await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, 'true');
-      // Optionnel: sauvegarder la config timer choisie
+      // Sauvegarder la config timer choisie (Filter2Creation)
       if (data.timerConfig) {
         await AsyncStorage.setItem('user_timer_config', JSON.stringify(data.timerConfig));
+      }
+      // Sauvegarder la config son choisie (Filter5bSound)
+      if (data.soundConfig) {
+        await AsyncStorage.setItem('user_sound_config', JSON.stringify(data.soundConfig));
+      }
+      // Sauvegarder la config interface choisie (Filter5cInterface)
+      if (data.interfaceConfig) {
+        await AsyncStorage.setItem('user_interface_config', JSON.stringify(data.interfaceConfig));
       }
     } catch (error) {
       console.warn('[App] Failed to save onboarding state:', error);
@@ -121,6 +129,8 @@ export default function App() {
     try {
       await AsyncStorage.removeItem(ONBOARDING_COMPLETED_KEY);
       await AsyncStorage.removeItem('user_timer_config');
+      await AsyncStorage.removeItem('user_sound_config');
+      await AsyncStorage.removeItem('user_interface_config');
       setResetTrigger(prev => prev + 1); // Force AppContent remount
       console.log('[DevFab] Onboarding reset');
     } catch (error) {
