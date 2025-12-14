@@ -7,7 +7,8 @@ import {
   getJourneyScenarios,
   DURATION_OPTIONS,
   STEP_NAMES,
-} from '../../../../src/screens/onboarding/onboardingConstants';
+  getStepName,
+} from '../../src/screens/onboarding/onboardingConstants';
 
 describe('onboardingConstants', () => {
   describe('rs (responsive sizing)', () => {
@@ -115,7 +116,7 @@ describe('onboardingConstants', () => {
 
     it('should handle empty freePalettes array', () => {
       const result = getSmartDefaults(['work'], []);
-      expect(result.palette).toBe('terre'); // fallback
+      expect(result.palette).toBe('sérénité'); // fallback to default when no palettes
     });
   });
 
@@ -215,19 +216,54 @@ describe('onboardingConstants', () => {
   });
 
   describe('STEP_NAMES', () => {
-    it('should have exactly 6 step names', () => {
-      expect(STEP_NAMES).toHaveLength(6);
+    it('should have exactly 10 step names for V3 flow', () => {
+      expect(STEP_NAMES).toHaveLength(10);
     });
 
     it('should contain all filter names in order', () => {
       expect(STEP_NAMES).toEqual([
-        'opening',
-        'needs',
-        'creation',
-        'test',
-        'vision',
-        'paywall',
+        'opening',           // 0: Filter0Opening
+        'needs',             // 1: Filter1Needs
+        'creation',          // 2: Filter2Creation
+        'test',              // 3: Filter3Test
+        'notifications',     // 4: Filter3_5Notifications
+        'branch',            // 5: Filter4Branch
+        'vision',            // 6a: Filter5aVision (discover path)
+        'sound',             // 6b: Filter5bSound (personalize path)
+        'paywall',           // 7a: Filter5Paywall (discover path)
+        'interface',         // 7b: Filter5cInterface (personalize path)
       ]);
+    });
+  });
+
+  describe('getStepName helper', () => {
+    it('should return step name for early steps regardless of branch', () => {
+      expect(getStepName(0)).toBe('opening');
+      expect(getStepName(1)).toBe('needs');
+      expect(getStepName(2)).toBe('creation');
+      expect(getStepName(3)).toBe('test');
+      expect(getStepName(4)).toBe('notifications');
+      expect(getStepName(5)).toBe('branch');
+    });
+
+    it('should return vision for step 6 on discover path', () => {
+      expect(getStepName(6, 'discover')).toBe('vision');
+    });
+
+    it('should return sound for step 6 on personalize path', () => {
+      expect(getStepName(6, 'personalize')).toBe('sound');
+    });
+
+    it('should return paywall for step 7 on discover path', () => {
+      expect(getStepName(7, 'discover')).toBe('paywall');
+    });
+
+    it('should return interface for step 7 on personalize path', () => {
+      expect(getStepName(7, 'personalize')).toBe('interface');
+    });
+
+    it('should default to opening for invalid step', () => {
+      expect(getStepName(100)).toBe('opening');
     });
   });
 });

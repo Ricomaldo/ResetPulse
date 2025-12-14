@@ -281,7 +281,8 @@
     "activity": "Activité {name}",
     "activityLocked": "Activité premium verrouillée",
     "moreActivities": "Plus d'activités",
-    "discoverPremium": "Découvrir les activités premium"
+    "discoverPremium": "Découvrir les activités premium",
+    "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee"
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
@@ -302,5 +303,47 @@
     "message": "Envie d'explorer plus de couleurs et d'activités ?",
     "explore": "Explorer le premium",
     "dismiss": "Peut-être plus tard"
+  },
+  "customActivities": {
+    "create": {
+      "title": "Creer une activite",
+      "namePlaceholder": "Ex: Guitare, Cuisine...",
+      "nameLabel": "Nom de l'activite",
+      "emojiLabel": "Choisir un emoji",
+      "durationLabel": "Duree par defaut",
+      "preview": "Apercu",
+      "previewPlaceholder": "Mon activite",
+      "buttonCreate": "Creer",
+      "buttonCancel": "Annuler",
+      "errorTitle": "Information manquante",
+      "errorEmoji": "Veuillez choisir un emoji pour votre activite.",
+      "errorName": "Veuillez entrer un nom pour votre activite."
+    },
+    "edit": {
+      "title": "Modifier l'activite",
+      "buttonSave": "Enregistrer",
+      "buttonDelete": "Supprimer",
+      "deleteConfirmTitle": "Supprimer ?",
+      "deleteConfirmMessage": "Cette action est irreversible.",
+      "deleteConfirmButton": "Supprimer",
+      "deleteCancelButton": "Annuler",
+      "usageStats": "Utilisee %{count} fois"
+    },
+    "premium": {
+      "gateTitle": "Fonctionnalite Premium",
+      "gateMessage": "Creez des activites personnalisees infinies avec ResetPulse Premium",
+      "gateButton": "Decouvrir Premium",
+      "gateDismiss": "Plus tard"
+    },
+    "duration": {
+      "minutes": "min"
+    },
+    "addButton": "Creer une activite",
+    "addButtonHint": "Creer une activite personnalisee",
+    "toast": {
+      "created": "Activite creee !",
+      "updated": "Activite modifiee",
+      "deleted": "Activite supprimee"
+    }
   }
 }

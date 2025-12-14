@@ -35,6 +35,19 @@ export default function useTimer(initialDuration = 240, onComplete) {
     playSoundRef.current = playSound;
   }, [playSound]);
 
+  // Use refs for values that don't affect timer calculation but are needed for callbacks/analytics
+  const currentActivityRef = useRef(currentActivity);
+  const onCompleteRef = useRef(onComplete);
+  const currentPaletteRef = useRef(currentPalette);
+  const currentColorRef = useRef(currentColor);
+
+  useEffect(() => {
+    currentActivityRef.current = currentActivity;
+    onCompleteRef.current = onComplete;
+    currentPaletteRef.current = currentPalette;
+    currentColorRef.current = currentColor;
+  }, [currentActivity, onComplete, currentPalette, currentColor]);
+
   // Notifications pour background
   const { scheduleTimerNotification, cancelTimerNotification } = useNotificationTimer();
 
@@ -70,7 +83,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         setHasCompleted(true);
 
         // Track timer completion
-        analytics.trackTimerCompleted(duration, currentActivity, 100);
+        analytics.trackTimerCompleted(duration, currentActivityRef.current, 100);
 
         // Vérifier si l'app était en background (notification a déjà sonné)
         const skipSound = wasInBackgroundRef.current;
@@ -108,8 +121,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
         wasInBackgroundRef.current = false;
 
         // Call completion callback if provided
-        if (onComplete) {
-          onComplete();
+        if (onCompleteRef.current) {
+          onCompleteRef.current();
         }
 
         // Reset completion state after animation
@@ -128,7 +141,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         console.log(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé!`);
       }
     }
-  }, [startTime, duration, running, onComplete, currentActivity]);
+  }, [startTime, duration, running]);
 
   // Effect 1: Initialize startTime when starting
   useEffect(() => {
@@ -254,13 +267,21 @@ export default function useTimer(initialDuration = 240, onComplete) {
         scheduleTimerNotification(remaining);
 
         // Sauvegarder la durée initiale si elle a changé
-        if (currentActivity?.id && duration > 0 &&
-            activityDurations[currentActivity.id] !== duration) {
-          saveActivityDuration(currentActivity.id, duration);
+        if (currentActivityRef.current?.id && duration > 0 &&
+            activityDurations[currentActivityRef.current.id] !== duration) {
+          saveActivityDuration(currentActivityRef.current.id, duration);
         }
 
         // Track timer start
-        analytics.trackTimerStarted(duration, currentActivity, currentColor, currentPalette);
+        analytics.trackTimerStarted(duration, currentActivityRef.current, currentColorRef.current, currentPaletteRef.current);
+
+        // Track custom activity usage (increment counter done separately in carousel/context)
+        if (currentActivityRef.current?.isCustom) {
+          analytics.trackCustomActivityUsed(
+            currentActivityRef.current.id,
+            (currentActivityRef.current.timesUsed || 0) + 1
+          );
+        }
 
         if (__DEV__) {
           const now = new Date();
@@ -281,20 +302,20 @@ export default function useTimer(initialDuration = 240, onComplete) {
       // Track timer paused (only if timer was actually running)
       if (startTime) {
         const elapsed = duration - remaining;
-        analytics.trackTimerAbandoned(duration, elapsed, 'paused', currentActivity);
+        analytics.trackTimerAbandoned(duration, elapsed, 'paused', currentActivityRef.current);
       }
 
       // Annuler la notification
       cancelTimerNotification();
     }
   }, [remaining, duration, isPaused, running, scheduleTimerNotification, cancelTimerNotification,
-      currentActivity, activityDurations, saveActivityDuration, currentColor, currentPalette, startTime]);
+      activityDurations, saveActivityDuration, startTime]);
 
   const resetTimer = useCallback(() => {
     // Track timer reset (only if timer had started and not completed)
     if (running || isPaused) {
       const elapsed = duration - remaining;
-      analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivity);
+      analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivityRef.current);
     }
 
     setRemaining(0); // Reset to ZERO, not duration
@@ -306,7 +327,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
     // Annuler notification si programmée
     cancelTimerNotification();
-  }, [cancelTimerNotification, running, isPaused, duration, remaining, currentActivity]);
+  }, [cancelTimerNotification, running, isPaused, duration, remaining]);
 
   const setPresetDuration = useCallback((minutes) => {
     const newDuration = minutes * 60;

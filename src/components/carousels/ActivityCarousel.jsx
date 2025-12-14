@@ -21,7 +21,13 @@ import { rs, getComponentSizes } from "../../styles/responsive";
 import { getAllActivities, getFreeActivities } from "../../config/activities";
 import haptics from "../../utils/haptics";
 import { usePremiumStatus } from "../../hooks/usePremiumStatus";
-import { PremiumModal, MoreActivitiesModal } from "../modals";
+import { useCustomActivities } from "../../hooks/useCustomActivities";
+import {
+  PremiumModal,
+  MoreActivitiesModal,
+  CreateActivityModal,
+  EditActivityModal,
+} from "../modals";
 
 export default function ActivityCarousel({ isTimerRunning = false, drawerVisible = false }) {
   const theme = useTheme();
@@ -40,18 +46,24 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   const toastAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
+  const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
+  const [showEditActivityModal, setShowEditActivityModal] = useState(false);
+  const [activityToEdit, setActivityToEdit] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
 
   // Check premium status (test mode or actual premium)
   const { isPremium: isPremiumUser } = usePremiumStatus();
+
+  // Get custom activities
+  const { customActivities } = useCustomActivities();
 
   // Get activities based on premium status
   const allActivities = getAllActivities();
   const freeActivities = getFreeActivities();
 
   // En mode freemium: none + 4 activités gratuites + bouton "+"
-  // En mode premium: toutes les activités triées par favoris
-  const activities = isPremiumUser
+  // En mode premium: toutes les activités triées par favoris + custom activities
+  const builtInActivities = isPremiumUser
     ? [...allActivities].sort((a, b) => {
         // 'none' (Basique) always comes first
         if (a.id === "none") return -1;
@@ -73,6 +85,11 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
         return 0;
       })
     : freeActivities; // Mode freemium: uniquement les activités gratuites (inclut 'none')
+
+  // Combine built-in activities with custom activities (premium only)
+  const activities = isPremiumUser
+    ? [...builtInActivities, ...customActivities]
+    : builtInActivities;
 
   // Find current activity index (default to 0 if not found, which is 'none')
   const currentIndex = activities.findIndex(
@@ -177,6 +194,49 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   const handleMorePress = () => {
     haptics.selection().catch(() => {});
     setShowMoreActivitiesModal(true);
+  };
+
+  // Handler pour le bouton "+" (mode premium - création)
+  const handleCreatePress = () => {
+    haptics.selection().catch(() => {});
+    setShowCreateActivityModal(true);
+  };
+
+  // Handler pour long press sur une activité custom
+  const handleActivityLongPress = (activity) => {
+    if (activity.isCustom) {
+      haptics.impact('medium').catch(() => {});
+      setActivityToEdit(activity);
+      setShowEditActivityModal(true);
+    }
+  };
+
+  // Handler pour activity créée
+  const handleActivityCreated = (newActivity) => {
+    // Optionally select the newly created activity
+    setCurrentActivity(newActivity);
+    setCurrentDuration(newActivity.defaultDuration);
+    showToast(t('customActivities.toast.created'));
+  };
+
+  // Handler pour activity mise à jour
+  const handleActivityUpdated = (updatedActivity) => {
+    // If the updated activity is currently selected, update it
+    if (currentActivity?.id === updatedActivity.id) {
+      setCurrentActivity(updatedActivity);
+    }
+    showToast(t('customActivities.toast.updated'));
+  };
+
+  // Handler pour activity supprimée
+  const handleActivityDeleted = (deletedActivity) => {
+    // If the deleted activity was selected, reset to default
+    if (currentActivity?.id === deletedActivity.id) {
+      const defaultActivity = activities.find((a) => a.id === 'none') || activities[0];
+      setCurrentActivity(defaultActivity);
+      setCurrentDuration(defaultActivity?.defaultDuration || 2700);
+    }
+    showToast(t('customActivities.toast.deleted'));
   };
 
   const styles = StyleSheet.create({
@@ -291,6 +351,41 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       fontWeight: "300",
     },
 
+    // Bouton "+" pour mode premium (création)
+    createButton: {
+      width: rs(60, "min"),
+      height: rs(60, "min"),
+      borderRadius: rs(30, "min"),
+      backgroundColor: theme.colors.brand.primary + "15",
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 2,
+      borderColor: theme.colors.brand.primary + "40",
+      borderStyle: "dashed",
+      ...(Platform.OS === "ios" ? theme.shadow("sm") : {}),
+    },
+
+    createButtonText: {
+      fontSize: rs(28, "min"),
+      color: theme.colors.brand.primary,
+      fontWeight: "300",
+    },
+
+    // Badge personnalisé pour custom activities
+    customBadge: {
+      position: "absolute",
+      top: -2,
+      right: -2,
+      backgroundColor: "transparent",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    customIcon: {
+      fontSize: rs(14, "min"),
+      opacity: 0.75,
+    },
+
     activityNameBadge: {
       position: "absolute",
       top: -35,
@@ -363,7 +458,8 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       >
         {activities.map((activity) => {
           const isActive = currentActivity?.id === activity.id;
-          const isLocked = activity.isPremium && !isPremiumUser;
+          const isLocked = activity.isPremium && !isPremiumUser && !activity.isCustom;
+          const isCustom = activity.isCustom;
 
           return (
             <View
@@ -373,20 +469,24 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
               <TouchableOpacity
                 accessible={true}
                 accessibilityLabel={t("accessibility.activity", {
-                  name: activity.label,
+                  name: activity.label || activity.name,
                 })}
                 accessibilityRole="button"
                 accessibilityState={{ selected: isActive, disabled: isLocked }}
                 accessibilityHint={
                   isLocked
                     ? t("accessibility.activityLocked")
-                    : t("accessibility.activity", { name: activity.label })
+                    : isCustom
+                    ? t("accessibility.customActivityHint")
+                    : t("accessibility.activity", { name: activity.label || activity.name })
                 }
                 style={[
                   styles.activityButtonInner,
                   isActive && styles.activityButtonActive,
                 ]}
                 onPress={() => handleActivityPress(activity)}
+                onLongPress={() => handleActivityLongPress(activity)}
+                delayLongPress={500}
                 activeOpacity={0.7}
                 disabled={false}
               >
@@ -406,12 +506,18 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
                     <Text style={styles.lockIcon}>✨</Text>
                   </View>
                 )}
+
+                {isCustom && !isActive && (
+                  <View style={styles.customBadge}>
+                    <Text style={styles.customIcon}>✎</Text>
+                  </View>
+                )}
               </TouchableOpacity>
             </View>
           );
         })}
 
-        {/* Bouton "+" en mode freemium */}
+        {/* Bouton "+" en mode freemium - ouvre discovery modal */}
         {!isPremiumUser && (
           <TouchableOpacity
             style={styles.moreButton}
@@ -422,6 +528,20 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
             accessibilityHint={t("accessibility.discoverPremium")}
           >
             <Text style={styles.moreButtonText}>+</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Bouton "+" en mode premium - ouvre create modal */}
+        {isPremiumUser && (
+          <TouchableOpacity
+            style={styles.createButton}
+            onPress={handleCreatePress}
+            activeOpacity={0.7}
+            accessible={true}
+            accessibilityLabel={t("customActivities.addButton")}
+            accessibilityHint={t("customActivities.addButtonHint")}
+          >
+            <Text style={styles.createButtonText}>+</Text>
           </TouchableOpacity>
         )}
       </ScrollView>
@@ -438,6 +558,26 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
         visible={showMoreActivitiesModal}
         onClose={() => setShowMoreActivitiesModal(false)}
         onOpenPaywall={() => setShowPremiumModal(true)}
+      />
+
+      {/* Create Activity Modal (premium) */}
+      <CreateActivityModal
+        visible={showCreateActivityModal}
+        onClose={() => setShowCreateActivityModal(false)}
+        onOpenPaywall={() => setShowPremiumModal(true)}
+        onActivityCreated={handleActivityCreated}
+      />
+
+      {/* Edit Activity Modal (premium - custom activities only) */}
+      <EditActivityModal
+        visible={showEditActivityModal}
+        onClose={() => {
+          setShowEditActivityModal(false);
+          setActivityToEdit(null);
+        }}
+        activity={activityToEdit}
+        onActivityUpdated={handleActivityUpdated}
+        onActivityDeleted={handleActivityDeleted}
       />
 
       {/* Onboarding Toast */}

@@ -8,6 +8,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
 import TimerDial from '../timer/TimerDial';
@@ -31,6 +32,12 @@ export default function TimeTimer({
     showActivityEmoji,
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
+
+  // Get custom activities for incrementing usage
+  const { incrementUsage } = useCustomActivities();
+
+  // Track if we've already incremented for current timer session
+  const hasIncrementedUsage = useRef(false);
 
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION, onTimerComplete);
@@ -71,6 +78,19 @@ export default function TimeTimer({
       onRunningChange(timer.running);
     }
   }, [timer.running, onRunningChange]);
+
+  // Increment custom activity usage when timer starts
+  useEffect(() => {
+    if (timer.running && currentActivity?.isCustom && !hasIncrementedUsage.current) {
+      incrementUsage(currentActivity.id);
+      hasIncrementedUsage.current = true;
+    }
+
+    // Reset flag when timer stops (not running and not paused)
+    if (!timer.running && timer.remaining === 0) {
+      hasIncrementedUsage.current = false;
+    }
+  }, [timer.running, timer.remaining, currentActivity, incrementUsage]);
 
   // Get responsive dimensions - zen mode: timer dominates
   const { timerCircle } = getComponentSizes();

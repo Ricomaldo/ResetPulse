@@ -92,7 +92,7 @@ function TimerScreenContent() {
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timerDuration, setTimerDuration] = useState(0);
+  const [timerRemaining, setTimerRemaining] = useState(0);
   const timerRef = useRef(null);
   const dialWrapperRef = useRef(null);
   const dialLayoutRef = useRef(null);
@@ -147,7 +147,7 @@ function TimerScreenContent() {
   const handlePresetSelect = (seconds) => {
     if (timerRef.current) {
       timerRef.current.setDuration(seconds);
-      setTimerDuration(seconds);
+      setTimerRemaining(seconds);
     }
   };
 
@@ -177,20 +177,21 @@ function TimerScreenContent() {
     }
   };
 
-  // Update timer duration for digital timer display
+  // Update timer remaining for digital timer display
   useEffect(() => {
     if (timerRef.current) {
-      setTimerDuration(timerRef.current.duration || 0);
+      setTimerRemaining(timerRef.current.remaining || timerRef.current.duration || 0);
     }
   }, [currentDuration]);
 
-  // Update timer duration continuously (both when running and when dragging)
+  // Update timer remaining continuously (both when running and when dragging)
   useEffect(() => {
     const interval = setInterval(() => {
       if (timerRef.current) {
         // Use timer.remaining directly - it's already calculated correctly in useTimer
         const remaining = timerRef.current.remaining || timerRef.current.duration || 0;
-        setTimerDuration(remaining);
+        // Only update if value actually changed to prevent unnecessary re-renders
+        setTimerRemaining(prev => prev !== remaining ? remaining : prev);
       }
     }, 100); // Update every 100ms for smooth display
 
@@ -217,7 +218,7 @@ function TimerScreenContent() {
           onTimerRef={(ref) => {
             timerRef.current = ref;
             if (ref) {
-              setTimerDuration(ref.duration || 0);
+              setTimerRemaining(ref.remaining || ref.duration || 0);
             }
           }}
           onDialRef={handleDialRef}
@@ -245,7 +246,7 @@ function TimerScreenContent() {
           hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
           <DigitalTimer
-            remaining={timerDuration}
+            remaining={timerRemaining}
             isRunning={isTimerRunning}
             color={currentColor}
             mini={!showDigitalTimer}
