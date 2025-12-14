@@ -1,4 +1,8 @@
-// src/components/timer/dial/DialBase.jsx
+/**
+ * @fileoverview Static dial base with circles, graduations, and numbers
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React from 'react';
 import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
@@ -7,6 +11,16 @@ import { TIMER_VISUAL } from '../timerConstants';
 /**
  * DialBase - Static SVG elements (circles, graduations, numbers)
  * Heavily memoized as these don't change during timer operation
+ * @param {number} svgSize - Total SVG container size
+ * @param {number} centerX - Center X coordinate
+ * @param {number} centerY - Center Y coordinate
+ * @param {number} radius - Dial radius
+ * @param {number} strokeWidth - Stroke width for dial
+ * @param {Array} graduationMarks - Array of graduation mark configurations
+ * @param {Array} minuteNumbers - Array of number label configurations
+ * @param {boolean} showNumbers - Whether to show numbers
+ * @param {boolean} showGraduations - Whether to show graduations
+ * @param {string} color - Primary color for the dial
  */
 const DialBase = React.memo(({
   svgSize,

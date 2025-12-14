@@ -1,12 +1,14 @@
-// src/components/OptionsDrawerContent.jsx
+/**
+ * @fileoverview Options drawer content with carousels for activities, palettes, and presets
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { rs } from '../styles/responsive';
-import ActivityCarousel from './ActivityCarousel';
-import PresetPills from './PresetPills';
-import PaletteCarousel from './PaletteCarousel';
-import Icons from './Icons';
+import { useTheme } from '../../theme/ThemeProvider';
+import { rs } from '../../styles/responsive';
+import { ActivityCarousel, PaletteCarousel, PresetPills } from '../carousels';
+import { Icons } from '../layout';
 
 export default function OptionsDrawerContent({
   currentDuration = 0,

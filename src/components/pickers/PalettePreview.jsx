@@ -1,9 +1,13 @@
-// src/components/PalettePreview.jsx
+/**
+ * @fileoverview Palette preview component showing color bars
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { TIMER_PALETTES } from '../config/timerPalettes';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { TIMER_PALETTES } from '../../config/timerPalettes';
 
 export const PalettePreview = ({ paletteName }) => {
   const theme = useTheme();

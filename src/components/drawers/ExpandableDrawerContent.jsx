@@ -1,8 +1,12 @@
-// src/components/ExpandableDrawerContent.jsx
+/**
+ * @fileoverview Expandable drawer that shows options and settings when expanded
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { rs } from '../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
+import { rs } from '../../styles/responsive';
 import OptionsDrawerContent from './OptionsDrawerContent';
 import SettingsDrawerContent from './SettingsDrawerContent';
 

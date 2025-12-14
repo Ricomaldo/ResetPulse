@@ -1,14 +1,18 @@
-// src/components/TimeTimer.jsx
+/**
+ * @fileoverview Main TimeTimer component - orchestrates timer dial and controls
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { rs, getComponentSizes } from '../styles/responsive';
-import useTimer from '../hooks/useTimer';
-import TimerDial from './timer/TimerDial';
-import haptics from '../utils/haptics';
-import { TIMER, TEXT, getDialMode } from './timer/timerConstants';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { rs, getComponentSizes } from '../../styles/responsive';
+import useTimer from '../../hooks/useTimer';
+import TimerDial from '../timer/TimerDial';
+import haptics from '../../utils/haptics';
+import { TIMER, TEXT, getDialMode } from '../timer/timerConstants';
 
 export default function TimeTimer({
   onRunningChange,
@@ -106,13 +110,20 @@ export default function TimeTimer({
     },
   });
 
-  // Handle tap on graduation to set duration
+  /**
+   * Handle tap/drag on graduation to set duration
+   * Uses scale-specific magnetic snap granularity for better precision
+   * @param {number} minutes - Raw minutes value from dial interaction
+   */
   const handleGraduationTap = (minutes) => {
     if (timer.running) return;
 
-    // Round to nearest 10 seconds for granular control with smooth drag
-    const TEN_SECONDS = 10 / 60; // 10 seconds in minutes (~0.1667)
-    minutes = Math.round(minutes / TEN_SECONDS) * TEN_SECONDS;
+    // Get scale-specific magnetic snap granularity
+    const dialMode = getDialMode(scaleMode);
+    const magneticSnapMinutes = (dialMode.magneticSnapSeconds || 10) / 60;
+
+    // Round to nearest snap increment for granular control
+    minutes = Math.round(minutes / magneticSnapMinutes) * magneticSnapMinutes;
 
     // Magnetic snap to 0 if very close
     if (minutes <= TIMER.GRADUATION_SNAP_THRESHOLD) {
@@ -129,8 +140,7 @@ export default function TimeTimer({
       newDuration = 0;
     } else {
       // Clamp to current scale mode's max
-      const maxMinutes = getDialMode(scaleMode).maxMinutes;
-      const clampedMinutes = Math.min(maxMinutes, minutes);
+      const clampedMinutes = Math.min(dialMode.maxMinutes, minutes);
       newDuration = clampedMinutes * 60;
     }
 

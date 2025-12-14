@@ -1,12 +1,16 @@
-// src/components/SwipeUpHint.jsx
+/**
+ * @fileoverview Animated swipe up hint with bouncing arrow
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { rs } from '../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
+import { rs } from '../../styles/responsive';
 
 /**
- * SwipeUpHint - Hint animé pour indiquer qu'on peut swiper vers le haut
- * Affiche une flèche qui bounce doucement et un message
+ * SwipeUpHint - Animated hint indicating swipe gesture
+ * @param {string} message - Text to display below the arrow
  */
 export default function SwipeUpHint({ message = 'Glissez vers le haut' }) {
   const theme = useTheme();

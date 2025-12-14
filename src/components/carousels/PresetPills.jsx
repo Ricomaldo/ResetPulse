@@ -1,9 +1,13 @@
-// src/components/PresetPills.jsx
+/**
+ * @fileoverview Preset duration pills for quick timer selection
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { rs } from '../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { rs } from '../../styles/responsive';
 
 const PRESETS = [
   { minutes: 1, label: '1' },

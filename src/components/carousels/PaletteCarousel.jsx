@@ -1,4 +1,8 @@
-// src/components/PaletteCarousel.jsx
+/**
+ * @fileoverview Palette carousel for selecting timer colors
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useRef, useEffect, useState } from "react";
 import {
   View,
@@ -8,14 +12,14 @@ import {
   Text,
   Animated,
 } from "react-native";
-import { useTheme } from "../theme/ThemeProvider";
-import { useTimerPalette } from "../contexts/TimerPaletteContext";
-import { useTranslation } from "../hooks/useTranslation";
-import { rs } from "../styles/responsive";
-import { TIMER_PALETTES, getFreePalettes } from "../config/timerPalettes";
-import { usePremiumStatus } from "../hooks/usePremiumStatus";
-import haptics from "../utils/haptics";
-import { PremiumModal, MoreColorsModal } from "./modals";
+import { useTheme } from "../../theme/ThemeProvider";
+import { useTimerPalette } from "../../contexts/TimerPaletteContext";
+import { useTranslation } from "../../hooks/useTranslation";
+import { rs } from "../../styles/responsive";
+import { TIMER_PALETTES, getFreePalettes } from "../../config/timerPalettes";
+import { usePremiumStatus } from "../../hooks/usePremiumStatus";
+import haptics from "../../utils/haptics";
+import { PremiumModal, MoreColorsModal } from "../modals";
 
 export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();

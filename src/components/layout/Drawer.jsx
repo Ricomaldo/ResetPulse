@@ -1,27 +1,46 @@
-// src/components/Drawer.jsx
-import React, { useRef, useEffect } from 'react';
+/**
+ * @fileoverview Animated drawer component with expand/collapse functionality
+ * Features improved gesture handling for smooth swipe interactions
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
+import React, { useRef, useEffect, useCallback } from 'react';
 import { View, StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { rs } from '../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
+import { rs } from '../../styles/responsive';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 50;
+const VELOCITY_THRESHOLD = 0.5; // Velocity for quick swipe detection
 
+/**
+ * Drawer component with smooth gesture-based expand/collapse
+ * @param {boolean} visible - Whether drawer is visible
+ * @param {function} onClose - Callback when drawer closes
+ * @param {React.ReactNode} children - Drawer content
+ * @param {string} direction - 'top' or 'bottom'
+ * @param {number} height - Collapsed height as percentage (0-1)
+ * @param {number} expandedHeight - Expanded height as percentage (0-1)
+ * @param {function} onExpand - Callback when drawer expands
+ */
 export default function Drawer({
   visible,
   onClose,
   children,
-  direction = 'top', // 'top' or 'bottom'
-  height = 0.5, // Percentage of screen height (collapsed)
-  expandedHeight = 0.85, // Percentage when expanded
-  onExpand, // Callback when drawer expands
+  direction = 'top',
+  height = 0.5,
+  expandedHeight = 0.85,
+  onExpand,
 }) {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = React.useState(false);
   const currentHeight = isExpanded ? expandedHeight : height;
   const drawerHeight = SCREEN_HEIGHT * currentHeight;
+  const collapsedHeight = SCREEN_HEIGHT * height;
+  const expandedHeightPx = SCREEN_HEIGHT * expandedHeight;
   const initialPosition = direction === 'top' ? -drawerHeight : drawerHeight;
   const translateY = useRef(new Animated.Value(initialPosition)).current;
+  const gestureOffset = useRef(0);
 
   // Reset expanded state when drawer closes
   useEffect(() => {
@@ -35,37 +54,85 @@ export default function Drawer({
     Animated.spring(translateY, {
       toValue: visible ? 0 : initialPosition,
       useNativeDriver: true,
-      tension: 50,
-      friction: 10,
+      tension: 65,
+      friction: 11,
+      overshootClamping: false,
     }).start();
   }, [visible, initialPosition, isExpanded]);
 
-  // Handle-only PanResponder for swipe to expand/collapse/close
+  // Improved PanResponder with gesture tracking for fluid feel
   const handlePanResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: (_, gestureState) => {
-        return Math.abs(gestureState.dy) > 5;
+        // Respond to vertical gestures with higher sensitivity
+        return Math.abs(gestureState.dy) > 3;
+      },
+      onPanResponderGrant: () => {
+        // Store current position when gesture starts
+        gestureOffset.current = 0;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        // Follow finger movement for responsive feel (bottom drawer)
+        if (direction === 'bottom') {
+          // Clamp movement based on current state
+          let dy = gestureState.dy;
+          if (!isExpanded) {
+            // When collapsed, allow drag down (close) or up (expand)
+            dy = Math.max(-100, dy); // Limit upward drag
+          } else {
+            // When expanded, only allow drag down
+            dy = Math.max(0, dy);
+          }
+          translateY.setValue(dy);
+        }
       },
       onPanResponderRelease: (_, gestureState) => {
         if (direction === 'bottom') {
-          // Swipe DOWN
-          if (gestureState.dy > SWIPE_THRESHOLD) {
+          const { dy, vy } = gestureState;
+
+          // Quick swipe detection using velocity
+          const isQuickSwipeDown = vy > VELOCITY_THRESHOLD;
+          const isQuickSwipeUp = vy < -VELOCITY_THRESHOLD;
+
+          // Swipe DOWN or quick downward gesture
+          if (dy > SWIPE_THRESHOLD || isQuickSwipeDown) {
             if (isExpanded) {
               // Collapse to normal height
               setIsExpanded(false);
+              Animated.spring(translateY, {
+                toValue: 0,
+                useNativeDriver: true,
+                tension: 65,
+                friction: 11,
+              }).start();
             } else {
               // Close drawer
               onClose();
             }
           }
-          // Swipe UP
-          else if (gestureState.dy < -SWIPE_THRESHOLD) {
+          // Swipe UP or quick upward gesture
+          else if (dy < -SWIPE_THRESHOLD || isQuickSwipeUp) {
             if (!isExpanded) {
               // Expand drawer
               setIsExpanded(true);
               if (onExpand) onExpand();
             }
+            // Snap back to position
+            Animated.spring(translateY, {
+              toValue: 0,
+              useNativeDriver: true,
+              tension: 65,
+              friction: 11,
+            }).start();
+          } else {
+            // Snap back if not enough movement
+            Animated.spring(translateY, {
+              toValue: 0,
+              useNativeDriver: true,
+              tension: 65,
+              friction: 11,
+            }).start();
           }
         }
       },

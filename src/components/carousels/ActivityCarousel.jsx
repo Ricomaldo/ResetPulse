@@ -1,4 +1,8 @@
-// src/components/ActivityCarousel.jsx
+/**
+ * @fileoverview Activity carousel for selecting timer activities
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useRef, useEffect, useState } from "react";
 import {
   View,
@@ -9,15 +13,15 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { useTheme } from "../theme/ThemeProvider";
-import { useTranslation } from "../hooks/useTranslation";
-import { useTimerOptions } from "../contexts/TimerOptionsContext";
-import { useTimerPalette } from "../contexts/TimerPaletteContext";
-import { rs, getComponentSizes } from "../styles/responsive";
-import { getAllActivities, getFreeActivities } from "../config/activities";
-import haptics from "../utils/haptics";
-import { usePremiumStatus } from "../hooks/usePremiumStatus";
-import { PremiumModal, MoreActivitiesModal } from "./modals";
+import { useTheme } from "../../theme/ThemeProvider";
+import { useTranslation } from "../../hooks/useTranslation";
+import { useTimerOptions } from "../../contexts/TimerOptionsContext";
+import { useTimerPalette } from "../../contexts/TimerPaletteContext";
+import { rs, getComponentSizes } from "../../styles/responsive";
+import { getAllActivities, getFreeActivities } from "../../config/activities";
+import haptics from "../../utils/haptics";
+import { usePremiumStatus } from "../../hooks/usePremiumStatus";
+import { PremiumModal, MoreActivitiesModal } from "../modals";
 
 export default function ActivityCarousel({ isTimerRunning = false, drawerVisible = false }) {
   const theme = useTheme();

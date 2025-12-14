@@ -1,10 +1,22 @@
-// src/components/timer/timerConstants.js
-// Constantes centralisées pour le Timer (fusionnées depuis constants/)
+/**
+ * @fileoverview Centralized timer constants for dial modes, animations, and interactions
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 
 // ============================================
 // DIAL MODES (from dialModes.js)
 // ============================================
 
+/**
+ * Dial modes configuration with magnetic snap granularity
+ * magneticSnapSeconds: Snap increment in seconds for each scale mode
+ * - 1min scale: 5s snap (12 positions per revolution)
+ * - 5min scale: 10s snap (30 positions)
+ * - 10min scale: 15s snap (40 positions)
+ * - 25min scale: 30s snap (50 positions)
+ * - 45min/60min scale: 60s snap (45/60 positions)
+ */
 export const DIAL_MODES = {
   '1min': {
     maxMinutes: 1,
@@ -15,6 +27,7 @@ export const DIAL_MODES = {
     numberInterval: 1,
     defaultDuration: 60,
     useSeconds: true,
+    magneticSnapSeconds: 5,
   },
   '5min': {
     maxMinutes: 5,
@@ -24,6 +37,7 @@ export const DIAL_MODES = {
     majorTickInterval: 1,
     numberInterval: 1,
     defaultDuration: 5 * 60,
+    magneticSnapSeconds: 10,
   },
   '10min': {
     maxMinutes: 10,
@@ -33,6 +47,7 @@ export const DIAL_MODES = {
     majorTickInterval: 2,
     numberInterval: 2,
     defaultDuration: 10 * 60,
+    magneticSnapSeconds: 15,
   },
   '25min': {
     maxMinutes: 25,
@@ -42,6 +57,7 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 25 * 60,
+    magneticSnapSeconds: 30,
   },
   '45min': {
     maxMinutes: 45,
@@ -51,6 +67,7 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 45 * 60,
+    magneticSnapSeconds: 60,
   },
   '60min': {
     maxMinutes: 60,
@@ -60,6 +77,7 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 30 * 60,
+    magneticSnapSeconds: 60,
   }
 };
 
@@ -150,10 +168,14 @@ export const TIMER = {
   },
 };
 
+/**
+ * Drag interaction constants for arc manipulation
+ * Tuned for smooth, responsive feel during drag gestures
+ */
 export const DRAG = {
-  BASE_RESISTANCE: 0.85,
-  VELOCITY_THRESHOLD: 50,
-  VELOCITY_REDUCTION: 0.3,
+  BASE_RESISTANCE: 0.9, // Higher = more responsive to touch (was 0.85)
+  VELOCITY_THRESHOLD: 40, // Lower = slower movements feel more responsive (was 50)
+  VELOCITY_REDUCTION: 0.25, // Lower = less reduction at high velocity (was 0.3)
   WRAP_THRESHOLD: 0.4,
 };
 

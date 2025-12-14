@@ -6,12 +6,9 @@ import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
-import TimeTimer from '../components/TimeTimer';
-import Drawer from '../components/Drawer';
-import ExpandableDrawerContent from '../components/ExpandableDrawerContent';
+import { TimeTimer, Drawer, CircularToggle, SwipeUpHint } from '../components/layout';
+import { ExpandableDrawerContent } from '../components/drawers';
 import DigitalTimer from '../components/timer/DigitalTimer';
-import CircularToggle from '../components/CircularToggle';
-import SwipeUpHint from '../components/SwipeUpHint';
 import { SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 

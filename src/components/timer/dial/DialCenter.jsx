@@ -1,4 +1,8 @@
-// src/components/timer/dial/DialCenter.jsx
+/**
+ * @fileoverview Center display with activity emoji and pulse animations
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Animated } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
@@ -6,7 +10,14 @@ import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
 
 /**
  * DialCenter - Activity emoji and pulse animations
- * Handles center display and pulsing effects
+ * Handles center display and pulsing effects during timer operation
+ * @param {number} circleSize - Size of the dial
+ * @param {string} activityEmoji - Emoji to display
+ * @param {boolean} isRunning - Whether timer is running
+ * @param {boolean} shouldPulse - Whether to show pulse animation
+ * @param {boolean} showActivityEmoji - Whether to show the emoji
+ * @param {string} color - Color for pulse effects
+ * @param {number} pulseDuration - Duration of pulse animation
  */
 const DialCenter = React.memo(({
   circleSize,

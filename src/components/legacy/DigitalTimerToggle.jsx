@@ -1,9 +1,14 @@
-// src/components/DigitalTimerToggle.jsx
+/**
+ * @fileoverview Toggle button for digital timer visibility
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ * @deprecated This component is no longer used - kept for reference
+ */
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { rs } from '../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { rs } from '../../styles/responsive';
 import Svg, { Path } from 'react-native-svg';
 
 function EyeIcon({ size = 24, color, isVisible }) {

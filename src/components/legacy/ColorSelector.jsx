@@ -1,11 +1,14 @@
-// src/components/ColorSelector.jsx
-// Sélecteur de couleurs pour la palette active du timer
-
+/**
+ * @fileoverview Color selector for active timer palette
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ * @deprecated This component is no longer used - kept for reference
+ */
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
-import { rs } from '../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { rs } from '../../styles/responsive';
 
 export default function ColorSelector() {
   const theme = useTheme();

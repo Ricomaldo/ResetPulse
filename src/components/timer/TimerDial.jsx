@@ -1,4 +1,9 @@
-// src/components/timer/TimerDial.jsx
+/**
+ * @fileoverview Timer dial component with drag/tap interaction
+ * Orchestrates dial sub-components for visual timer display
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useMemo, useRef, useState } from 'react';
 import { View, Animated, PanResponder, Text } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -15,7 +20,11 @@ import {
   VISUAL,
 } from './timerConstants';
 
-// Ease-out function for smooth deceleration (quadratic)
+/**
+ * Quadratic ease-out for natural deceleration during drag
+ * @param {number} t - Progress value 0-1
+ * @returns {number} Eased value
+ */
 const easeOut = (t) => t * (2 - t);
 
 // Import modular components
