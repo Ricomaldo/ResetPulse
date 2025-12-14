@@ -4,10 +4,11 @@
  * @updated 2025-12-14
  */
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Alert, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useTranslation } from '../../hooks/useTranslation';
+import { SoundPicker } from '../pickers';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
@@ -25,6 +26,10 @@ export default function SettingsDrawerContent() {
     setClockwise,
     useMinimalInterface,
     setUseMinimalInterface,
+    scaleMode,
+    setScaleMode,
+    selectedSoundId,
+    setSelectedSoundId,
   } = useTimerOptions();
 
   const styles = StyleSheet.create({
@@ -60,6 +65,43 @@ export default function SettingsDrawerContent() {
       fontSize: rs(13),
       color: theme.colors.textSecondary,
       marginTop: rs(4),
+    },
+    sectionLabel: {
+      fontSize: rs(14),
+      fontWeight: '600',
+      color: theme.colors.text,
+      marginTop: rs(16),
+      marginBottom: rs(8),
+    },
+    dialModeGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: rs(8),
+      marginTop: rs(12),
+      justifyContent: 'space-between',
+    },
+    dialModeButton: {
+      width: '31%',
+      paddingVertical: rs(10),
+      paddingHorizontal: rs(8),
+      borderRadius: rs(8),
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderWidth: 2,
+      borderColor: theme.colors.border,
+    },
+    dialModeButtonActive: {
+      backgroundColor: theme.colors.brand.primary,
+      borderColor: theme.colors.brand.primary,
+    },
+    dialModeText: {
+      fontSize: rs(12),
+      color: theme.colors.text,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+    dialModeTextActive: {
+      color: theme.colors.background,
     },
   });
 
@@ -157,6 +199,47 @@ export default function SettingsDrawerContent() {
           onValueChange={setUseMinimalInterface}
           trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
         />
+      </View>
+
+      {/* Sons du Timer */}
+      <Text style={styles.sectionLabel}>Sons du timer</Text>
+      <Text style={styles.settingDescription}>
+        Choisir le son de fin de timer
+      </Text>
+      <SoundPicker
+        selectedSoundId={selectedSoundId}
+        onSoundSelect={setSelectedSoundId}
+      />
+
+      {/* Mode Cadran */}
+      <Text style={styles.sectionLabel}>Mode Cadran</Text>
+      <Text style={styles.settingDescription}>
+        Échelle maximale du minuteur
+      </Text>
+      <View style={styles.dialModeGrid}>
+        {['1min', '5min', '10min', '25min', '45min', '60min'].map((mode) => (
+          <TouchableOpacity
+            key={mode}
+            style={[
+              styles.dialModeButton,
+              scaleMode === mode && styles.dialModeButtonActive,
+            ]}
+            onPress={() => {
+              haptics.selection().catch(() => {});
+              setScaleMode(mode);
+            }}
+            activeOpacity={0.7}
+          >
+            <Text
+              style={[
+                styles.dialModeText,
+                scaleMode === mode && styles.dialModeTextActive,
+              ]}
+            >
+              {mode}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </ScrollView>
   );

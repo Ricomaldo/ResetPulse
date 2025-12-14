@@ -37,25 +37,51 @@ export const TimerOptionsProvider = ({ children }) => {
 
     const loadOnboardingConfig = async () => {
       try {
-        const configStr = await AsyncStorage.getItem('user_timer_config');
-        if (configStr) {
-          const config = JSON.parse(configStr);
-
-          // Apply onboarding config to context
+        // Load timer config (Filter2Creation: activity + duration)
+        const timerConfigStr = await AsyncStorage.getItem('user_timer_config');
+        if (timerConfigStr) {
+          const config = JSON.parse(timerConfigStr);
           if (config.activity) {
             updateValue('currentActivity', config.activity);
           }
           if (config.duration) {
             updateValue('currentDuration', config.duration);
           }
-
-          // Remove temp config after applying
           await AsyncStorage.removeItem('user_timer_config');
-
           if (__DEV__) {
-            console.log('[TimerOptionsContext] Applied onboarding config:', config);
+            console.log('[TimerOptionsContext] Applied timer config:', config);
           }
         }
+
+        // Load sound config (Filter5bSound: selectedSound)
+        const soundConfigStr = await AsyncStorage.getItem('user_sound_config');
+        if (soundConfigStr) {
+          const soundId = JSON.parse(soundConfigStr);
+          updateValue('selectedSoundId', soundId);
+          await AsyncStorage.removeItem('user_sound_config');
+          if (__DEV__) {
+            console.log('[TimerOptionsContext] Applied sound config:', soundId);
+          }
+        }
+
+        // Load interface config (Filter5cInterface: theme, minimalInterface, digitalTimer)
+        const interfaceConfigStr = await AsyncStorage.getItem('user_interface_config');
+        if (interfaceConfigStr) {
+          const config = JSON.parse(interfaceConfigStr);
+          // Note: theme is applied via ThemeProvider, not here
+          // Only apply timer-specific interface options
+          if (config.minimalInterface !== undefined) {
+            updateValue('useMinimalInterface', config.minimalInterface);
+          }
+          if (config.digitalTimer !== undefined) {
+            updateValue('showDigitalTimer', config.digitalTimer);
+          }
+          await AsyncStorage.removeItem('user_interface_config');
+          if (__DEV__) {
+            console.log('[TimerOptionsContext] Applied interface config:', config);
+          }
+        }
+
         hasLoadedOnboardingConfig.current = true;
       } catch (error) {
         console.warn('[TimerOptionsContext] Failed to load onboarding config:', error);
