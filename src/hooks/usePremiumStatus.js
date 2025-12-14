@@ -4,7 +4,7 @@
 import { useContext } from 'react';
 import { usePurchases } from '../contexts/PurchaseContext';
 import { DevPremiumContext } from '../dev/DevPremiumContext';
-import { DEV_MODE } from '../config/testMode';
+import { DEV_MODE } from '../config/test-mode';
 
 /**
  * Hook pour vérifier le statut premium de l'utilisateur

@@ -1,10 +1,10 @@
 // src/config/sounds.js
-// Re-export depuis soundsMapping pour compatibilité
+// Re-export depuis sounds-mapping pour compatibilité
 import {
   getTimerSounds,
   getSoundById as _getSoundById,
   DEFAULT_SOUND_ID as _DEFAULT_SOUND_ID
-} from './soundsMapping';
+} from './sounds-mapping';
 
 // Export la liste des sons
 export const TIMER_SOUNDS = getTimerSounds();
