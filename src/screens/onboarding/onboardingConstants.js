@@ -28,7 +28,7 @@ export const NEEDS_OPTIONS = [
 
 // Smart defaults selon les needs sélectionnés
 export const getSmartDefaults = (needs, freePalettes) => {
-  const defaultPalette = freePalettes[0] || 'sérénité';
+  const defaultPalette = freePalettes[0] || 'serenity';
 
   if (needs.includes('meditation')) {
     return { duration: 20, palette: defaultPalette, colorIndex: 2 };
@@ -100,18 +100,18 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
 // Durées disponibles
 export const DURATION_OPTIONS = [5, 10, 15, 20, 25, 30, 45, 60];
 
-// Step names pour analytics V3
+// Step names pour analytics V3 (3-digit naming convention)
 export const STEP_NAMES = [
-  'opening',           // 0: Filter0Opening
-  'needs',             // 1: Filter1Needs
-  'creation',          // 2: Filter2Creation
-  'test',              // 3: Filter3Test
-  'notifications',     // 4: Filter3_5Notifications
-  'branch',            // 5: Filter4Branch
-  'vision',            // 6a: Filter5aVision (parcours A)
-  'sound',             // 6b: Filter5bSound (parcours B)
-  'paywall',           // 7a: Filter5Paywall (parcours A)
-  'interface',         // 7b: Filter5cInterface (parcours B)
+  'opening',           // 0: Filter-010-opening
+  'needs',             // 1: Filter-020-needs
+  'creation',          // 2: Filter-030-creation
+  'test',              // 3: Filter-040-test
+  'notifications',     // 4: Filter-050-notifications
+  'branch',            // 5: Filter-060-branch
+  'vision',            // 6a: Filter-070-vision-discover (discover path)
+  'sound',             // 6b: Filter-080-sound-personalize (personalize path)
+  'paywall',           // 7a: Filter-090-paywall-discover (discover path)
+  'interface',         // 7b: Filter-100-interface-personalize (personalize path)
 ];
 
 // Helper pour obtenir le step name selon le parcours
