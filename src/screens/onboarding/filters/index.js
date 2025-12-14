@@ -1,17 +1,14 @@
 // src/screens/onboarding/filters/index.js
-// Export centralisé des filtres onboarding V3
+// Export centralisé des filtres onboarding V3 (3-digit convention)
 
-// V2 filters (0-5)
-export { default as Filter0Opening } from './Filter0Opening';
-export { default as Filter1Needs } from './Filter1Needs';
-export { default as Filter2Creation } from './Filter2Creation';
-export { default as Filter3Test } from './Filter3Test';
-export { default as Filter4Vision } from './Filter4Vision';
-export { default as Filter5Paywall } from './Filter5Paywall';
-
-// V3 filters (3.5, 4, 5a, 5b, 5c)
-export { default as Filter3_5Notifications } from './Filter3_5Notifications';
-export { default as Filter4Branch } from './Filter4Branch';
-export { default as Filter5aVision } from './Filter5aVision';
-export { default as Filter5bSound } from './Filter5bSound';
-export { default as Filter5cInterface } from './Filter5cInterface';
+// Filters 010-100 (3-digit multiples of 10 for future expansion)
+export { default as Filter010Opening } from './Filter-010-opening';
+export { default as Filter020Needs } from './Filter-020-needs';
+export { default as Filter030Creation } from './Filter-030-creation';
+export { default as Filter040Test } from './Filter-040-test';
+export { default as Filter050Notifications } from './Filter-050-notifications';
+export { default as Filter060Branch } from './Filter-060-branch';
+export { default as Filter070VisionDiscover } from './Filter-070-vision-discover';
+export { default as Filter080SoundPersonalize } from './Filter-080-sound-personalize';
+export { default as Filter090PaywallDiscover } from './Filter-090-paywall-discover';
+export { default as Filter100InterfacePersonalize } from './Filter-100-interface-personalize';

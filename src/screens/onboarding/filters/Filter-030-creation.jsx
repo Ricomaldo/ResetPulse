@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import TimerDial from '../../../components/timer/TimerDial';
-import { TIMER_PALETTES, getFreePalettes } from '../../../config/timerPalettes';
+import { TIMER_PALETTES, getFreePalettes } from '../../../config/timer-palettes';
 import {
   rs,
   FREE_ACTIVITIES,
@@ -34,7 +34,7 @@ export default function Filter2Creation({ needs, onContinue }) {
   const [colorIndex, setColorIndex] = useState(defaults.colorIndex);
 
   const currentPalette = TIMER_PALETTES[palette];
-  const currentColors = currentPalette?.colors || TIMER_PALETTES.sérénité.colors;
+  const currentColors = currentPalette?.colors || TIMER_PALETTES.serenity.colors;
   const currentColor = currentColors[colorIndex];
 
   const handleActivitySelect = (activity) => {

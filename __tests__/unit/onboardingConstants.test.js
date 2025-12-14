@@ -73,7 +73,7 @@ describe('onboardingConstants', () => {
   });
 
   describe('getSmartDefaults', () => {
-    const freePalettes = ['terre', 'softLaser'];
+    const freePalettes = ['earth', 'softLaser'];
 
     it('should return default values when no needs selected', () => {
       const result = getSmartDefaults([], freePalettes);
@@ -116,7 +116,7 @@ describe('onboardingConstants', () => {
 
     it('should handle empty freePalettes array', () => {
       const result = getSmartDefaults(['work'], []);
-      expect(result.palette).toBe('sérénité'); // fallback to default when no palettes
+      expect(result.palette).toBe('serenity'); // fallback to default when no palettes
     });
   });
 
