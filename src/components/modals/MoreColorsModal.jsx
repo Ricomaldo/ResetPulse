@@ -1,10 +1,10 @@
 // src/components/modals/MoreColorsModal.jsx
 // Modale "Encore plus de couleurs" - découverte des palettes premium
-// TODO i18n: title, subtitle, tagline
 
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
+import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
 import { TIMER_PALETTES } from "../../config/timerPalettes";
 import DiscoveryModal from "./DiscoveryModal";
@@ -20,6 +20,7 @@ const PREMIUM_PALETTES = Object.entries(TIMER_PALETTES)
 
 export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
   const theme = useTheme();
+  const t = useTranslation();
 
   const styles = StyleSheet.create({
     paletteGrid: {
@@ -58,9 +59,9 @@ export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
       visible={visible}
       onClose={onClose}
       onUnlock={onOpenPaywall}
-      title="Encore plus de couleurs"
-      subtitle="Océan, forêt, lavande, canard..."
-      tagline="Chaque humeur, son ambiance."
+      title={t('discovery.moreColors.title')}
+      subtitle={t('discovery.moreColors.subtitle')}
+      tagline={t('discovery.moreColors.tagline')}
     >
       <View style={styles.paletteGrid}>
         {PREMIUM_PALETTES.map((palette) => (

@@ -4,13 +4,16 @@
  * @updated 2025-12-14
  */
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Alert } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
 
 export default function SettingsDrawerContent() {
   const theme = useTheme();
+  const t = useTranslation();
   const {
     shouldPulse,
     setShouldPulse,
@@ -99,7 +102,35 @@ export default function SettingsDrawerContent() {
           </View>
           <Switch
             value={shouldPulse}
-            onValueChange={setShouldPulse}
+            onValueChange={(value) => {
+              if (value) {
+                // ⚠️ CRITICAL: Avertissement épilepsie/photosensibilité (conformité légale)
+                Alert.alert(
+                  t('settings.interface.pulseWarningTitle'),
+                  t('settings.interface.pulseWarningMessage'),
+                  [
+                    {
+                      text: t('common.cancel'),
+                      style: "cancel",
+                      onPress: () => {
+                        haptics.selection().catch(() => {});
+                      },
+                    },
+                    {
+                      text: t('settings.interface.pulseWarningEnable'),
+                      onPress: () => {
+                        haptics.switchToggle().catch(() => {});
+                        setShouldPulse(true);
+                      },
+                    },
+                  ],
+                  { cancelable: true }
+                );
+              } else {
+                haptics.switchToggle().catch(() => {});
+                setShouldPulse(false);
+              }
+            }}
             trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
           />
         </View>

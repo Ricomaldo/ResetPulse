@@ -1,10 +1,10 @@
 // src/components/modals/MoreActivitiesModal.jsx
 // Modale "Encore plus de moments" - découverte des activités premium
-// TODO i18n: title, subtitle, tagline
 
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
+import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
 import DiscoveryModal from "./DiscoveryModal";
 
@@ -16,6 +16,7 @@ const PREMIUM_EMOJIS = [
 
 export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall }) {
   const theme = useTheme();
+  const t = useTranslation();
 
   const styles = StyleSheet.create({
     emojiGrid: {
@@ -39,9 +40,9 @@ export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall })
       visible={visible}
       onClose={onClose}
       onUnlock={onOpenPaywall}
-      title="Encore plus de moments"
-      subtitle="Sieste, écriture, lecture, yoga..."
-      tagline="Chaque moment mérite sa couleur."
+      title={t('discovery.moreActivities.title')}
+      subtitle={t('discovery.moreActivities.subtitle')}
+      tagline={t('discovery.moreActivities.tagline')}
     >
       <View style={styles.emojiGrid}>
         {PREMIUM_EMOJIS.map((emoji, index) => (

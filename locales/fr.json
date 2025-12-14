@@ -285,6 +285,16 @@
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
-    "defaultDismiss": "Peut-être plus tard"
+    "defaultDismiss": "Peut-être plus tard",
+    "moreColors": {
+      "title": "Encore plus de couleurs",
+      "subtitle": "Océan, forêt, lavande, canard...",
+      "tagline": "Chaque humeur, son ambiance."
+    },
+    "moreActivities": {
+      "title": "Encore plus de moments",
+      "subtitle": "Sieste, écriture, lecture, yoga...",
+      "tagline": "Chaque moment mérite sa couleur."
+    }
   }
 }
