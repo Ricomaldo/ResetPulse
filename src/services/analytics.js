@@ -443,6 +443,110 @@ class AnalyticsService {
       activity_id: activity?.id || 'none',
     });
   }
+
+  // ============================================
+  // CONVERSION ANALYTICS - ADR-003
+  // ============================================
+
+  /**
+   * Event: Two Timers Milestone Reached
+   * Trigger: TimerScreen - When user completes 2nd timer
+   * KPI: > 40% of users should reach this milestone
+   */
+  trackTwoTimersMilestone() {
+    this.track('two_timers_milestone', {});
+  }
+
+  /**
+   * Event: Two Timers Modal Shown
+   * Trigger: TwoTimersModal - Modal displayed to user
+   * KPI: Confirms reach of conversion trigger
+   */
+  trackTwoTimersModalShown() {
+    this.track('two_timers_modal_shown', {});
+  }
+
+  /**
+   * Event: Two Timers Modal Explore Clicked
+   * Trigger: TwoTimersModal - User clicks "Explorer le premium"
+   * KPI: > 15% conversion from shown to explore (ADR-003)
+   */
+  trackTwoTimersModalExploreClicked() {
+    this.track('two_timers_modal_explore_clicked', {});
+  }
+
+  /**
+   * Event: Two Timers Modal Dismissed
+   * Trigger: TwoTimersModal - User clicks "Peut-être plus tard"
+   * KPI: Track dismissal rate
+   */
+  trackTwoTimersModalDismissed() {
+    this.track('two_timers_modal_dismissed', {});
+  }
+
+  // ============================================
+  // DISCOVERY MODALS ANALYTICS - ADR-003 Étape 5
+  // ============================================
+
+  /**
+   * Event: Discovery Modal Shown
+   * Trigger: MoreColorsModal or MoreActivitiesModal shown
+   * KPI: Measure ongoing discovery engagement
+   *
+   * @param {string} type - 'colors' | 'activities'
+   */
+  trackDiscoveryModalShown(type) {
+    this.track('discovery_modal_shown', {
+      type,
+    });
+  }
+
+  /**
+   * Event: Discovery Modal Unlock Clicked
+   * Trigger: User clicks "Débloquer tout" in discovery modal
+   * KPI: > 20% conversion from shown to unlock (ADR-003)
+   *
+   * @param {string} type - 'colors' | 'activities'
+   */
+  trackDiscoveryModalUnlockClicked(type) {
+    this.track('discovery_modal_unlock_clicked', {
+      type,
+    });
+  }
+
+  /**
+   * Event: Discovery Modal Dismissed
+   * Trigger: User closes discovery modal without action
+   * KPI: Track dismissal patterns
+   *
+   * @param {string} type - 'colors' | 'activities'
+   */
+  trackDiscoveryModalDismissed(type) {
+    this.track('discovery_modal_dismissed', {
+      type,
+    });
+  }
+
+  // ============================================
+  // SETTINGS ANALYTICS
+  // ============================================
+
+  /**
+   * Event: Setting Changed
+   * Trigger: User changes any setting in app
+   * KPI: Measure feature usage and preferences
+   *
+   * @param {string} settingName - Name of setting changed
+   * @param {any} newValue - New value
+   * @param {any} oldValue - Previous value (optional)
+   */
+  trackSettingChanged(settingName, newValue, oldValue = null) {
+    this.track('setting_changed', {
+      setting_name: settingName,
+      new_value: newValue,
+      old_value: oldValue,
+    });
+  }
 }
 
 // Singleton export

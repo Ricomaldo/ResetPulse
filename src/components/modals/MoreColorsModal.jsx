@@ -1,13 +1,14 @@
 // src/components/modals/MoreColorsModal.jsx
 // Modale "Encore plus de couleurs" - découverte des palettes premium
 
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
 import { TIMER_PALETTES } from "../../config/timerPalettes";
 import DiscoveryModal from "./DiscoveryModal";
+import analytics from "../../services/analytics";
 
 // Récupérer les palettes premium
 const PREMIUM_PALETTES = Object.entries(TIMER_PALETTES)
@@ -21,6 +22,22 @@ const PREMIUM_PALETTES = Object.entries(TIMER_PALETTES)
 export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
   const theme = useTheme();
   const t = useTranslation();
+
+  useEffect(() => {
+    if (visible) {
+      analytics.trackDiscoveryModalShown('colors');
+    }
+  }, [visible]);
+
+  const handleUnlock = () => {
+    analytics.trackDiscoveryModalUnlockClicked('colors');
+    onOpenPaywall?.();
+  };
+
+  const handleClose = () => {
+    analytics.trackDiscoveryModalDismissed('colors');
+    onClose();
+  };
 
   const styles = StyleSheet.create({
     paletteGrid: {
@@ -57,8 +74,8 @@ export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
   return (
     <DiscoveryModal
       visible={visible}
-      onClose={onClose}
-      onUnlock={onOpenPaywall}
+      onClose={handleClose}
+      onUnlock={handleUnlock}
       title={t('discovery.moreColors.title')}
       subtitle={t('discovery.moreColors.subtitle')}
       tagline={t('discovery.moreColors.tagline')}

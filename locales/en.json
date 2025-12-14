@@ -293,5 +293,11 @@
       "subtitle": "Nap, writing, reading, yoga...",
       "tagline": "Every moment deserves its color."
     }
+  },
+  "twoTimers": {
+    "title": "You've created 2 moments!",
+    "message": "Want to explore more colors and activities?",
+    "explore": "Explore premium",
+    "dismiss": "Maybe later"
   }
 }

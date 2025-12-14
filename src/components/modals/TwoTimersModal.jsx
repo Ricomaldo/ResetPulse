@@ -1,7 +1,7 @@
 // src/components/modals/TwoTimersModal.jsx
 // Modale de rappel après 2 timers complétés (ADR-003)
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Modal,
   View,
@@ -14,18 +14,27 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
+import analytics from '../../services/analytics';
 
 export default function TwoTimersModal({ visible, onClose, onExplore }) {
   const theme = useTheme();
   const t = useTranslation();
 
+  useEffect(() => {
+    if (visible) {
+      analytics.trackTwoTimersModalShown();
+    }
+  }, [visible]);
+
   const handleExplore = () => {
+    analytics.trackTwoTimersModalExploreClicked();
     haptics.selection().catch(() => {});
     onClose();
     onExplore?.();
   };
 
   const handleSkip = () => {
+    analytics.trackTwoTimersModalDismissed();
     haptics.selection().catch(() => {});
     onClose();
   };
@@ -98,10 +107,10 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
         <View style={styles.modalContainer}>
           <Text style={styles.emoji}>🎉</Text>
           <Text style={styles.title}>
-            Tu as créé 2 moments !
+            {t('twoTimers.title')}
           </Text>
           <Text style={styles.message}>
-            Envie d'explorer plus de couleurs et d'activités ?
+            {t('twoTimers.message')}
           </Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -110,7 +119,7 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
               activeOpacity={0.8}
             >
               <Text style={styles.primaryButtonText}>
-                Explorer le premium
+                {t('twoTimers.explore')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -119,7 +128,7 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
               activeOpacity={0.6}
             >
               <Text style={styles.secondaryButtonText}>
-                Peut-être plus tard
+                {t('twoTimers.dismiss')}
               </Text>
             </TouchableOpacity>
           </View>
