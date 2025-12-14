@@ -2,9 +2,9 @@
 created: '2025-12-14'
 updated: '2025-12-14'
 status: active
-last_audit: '#4 Accessibility'
-audits_completed: 7
-audits_remaining: 3
+last_audit: '#5 UX/Conversion'
+audits_completed: 8
+audits_remaining: 2
 ---
 
 # Current: Audits Multi-Axes Post-Refacto
@@ -31,11 +31,11 @@ Suite aux changements majeurs:
 | **3** | Security | ✅ completed | `../../knowledge/findings/2025-12-14_03-security.v2.md` | 1j | P1 Blocking |
 | **8** | Design System Consistency | ✅ completed | `../../knowledge/findings/2025-12-14_08-design-system.v2.md` | 1j | P3 Polish |
 | **4** | Accessibility (A11y) | ✅ completed | `../../knowledge/findings/2025-12-14_04-accessibility.v2.md` | 1j | P2 Core |
-| **9** | Analytics Implementation | ⏳ pending | `../../knowledge/findings/2025-12-14_09-analytics.md` | 1j | P2 Core |
-| **5** | UX / Conversion | ⏳ pending | `../../knowledge/findings/2025-12-14_05-ux-conversion.md` | 1j | P2 Core |
+| **9** | Analytics Implementation | ✅ completed | `../../knowledge/findings/2025-12-14_09-analytics.md` | 1j | P2 Core |
+| **5** | UX / Conversion | ✅ completed | `../../knowledge/findings/2025-12-14_05-ux-conversion.v2.md` | 1j | P2 Core |
 | **10** | Premium Feature Integration | ⏳ pending | `../../knowledge/findings/2025-12-14_10-premium-integration.md` | 1j | P3 Polish |
 
-**Completion**: 7/10 audits (70%) | **Next**: #9 (Analytics) | **Timeline**: ~3j remaining
+**Completion**: 8/10 audits (80%) | **Next**: #10 (Premium Integration) | **Timeline**: ~2j remaining
 
 ---
 
@@ -225,7 +225,45 @@ Suite aux changements majeurs:
 
 ---
 
-### ⏳ NEXT: #9 - Analytics Implementation (P2 Core)
+### ✅ COMPLETED: #5 - UX / Conversion (P2 Core)
+
+- [x] **#5 UX / Conversion** 📊
+  - **Rapport V1** : `../../knowledge/findings/2025-12-14_05-ux-conversion.md` (B- UX 75%, C+ Conv 68%)
+  - **Rapport V2** : `../../knowledge/findings/2025-12-14_05-ux-conversion.v2.md` (B+ 82%)
+  - **EXTRAORDINARY FINDING** : 0% P0 overlap between V1 and V2 (completely different issues)
+  - **Key Findings** :
+    - ❌ **CRITICAL P0** : Broken Filter 090 paywall (NO RevenueCat purchase integration)
+    - ❌ **V2 P0** : DEV_MODE enabled in production code (test-mode.js)
+    - ❌ **V1 P0** : AsyncStorage blocks app launch (500-1000ms blank screen Android)
+    - ❌ **V1 P0** : Purchase error recovery missing (no retry button, lost revenue)
+    - ❌ **V1 P0** : Onboarding abandonment risk (no progress indicator, 30-40% vs 5-10% industry)
+    - ❌ **V1 P0** : Modal stacking creates UX deadlock (2-3 levels deep, no back nav)
+    - ⚠️ **V1 P1** : Permission request timing suboptimal (23% funnel dropout at Stage 6)
+    - ⚠️ **V2 P1** : No lock indicators on premium items (users feel tricked)
+    - ⚠️ **V2 P1** : Confusing branch choice labels (Filter 060)
+    - ⚠️ **V2 P1** : No back button in onboarding (high friction for neuroatypical)
+    - ⚠️ **V2 P1** : Missing premium section in settings (no upgrade path)
+  - **Reconciled Score** : **~72% (C) - UX/Conversion** (V1: 75%/68%, V2: 82%)
+  - **Production Readiness** : ❌ **CRITICAL NO - 6 P0 blockers total** (V1: 4, V2: 2)
+  - **Status** : NOT production ready - extraordinary complementary findings
+  - **Delta Analysis** :
+    - V2 discovered broken paywall implementation V1 completely missed (0% onboarding conversion)
+    - V1 provided strategic UX insights V2 didn't (permission timing, benchmarks, funnel dropout analysis)
+    - V1 excelled: Error state coverage, industry benchmarks, quantitative metrics, conversion strategy
+    - V2 excelled: Implementation verification, configuration audit, code accuracy, analytics validation
+    - **Audit Quality** : V1 78%, V2 73% (nearly tied, highly complementary)
+    - **Key Insight** : Combined audit is 3x more valuable than either alone
+  - **P0 Blockers** (6 total):
+    1. Broken Filter 090 paywall (2-4h) - 0% onboarding conversion for discover branch
+    2. DEV_MODE enabled (1min) - Dev controls visible to end users
+    3. AsyncStorage blocks launch (4-6h) - Poor first impression
+    4. Purchase error recovery missing (2-3h) - Lost revenue
+    5. Onboarding progress indicator (2-4h) - 30-40% abandonment vs 5-10% industry
+    6. Modal stacking deadlock (2-3 days) - Users abandon premium flow
+
+---
+
+### ⏳ NEXT: #10 - Premium Feature Integration (P3 Polish)
 
 ---
 
