@@ -2,9 +2,9 @@
 created: '2025-12-14'
 updated: '2025-12-14'
 status: active
-last_audit: '#8 Design System'
-audits_completed: 6
-audits_remaining: 4
+last_audit: '#4 Accessibility'
+audits_completed: 7
+audits_remaining: 3
 ---
 
 # Current: Audits Multi-Axes Post-Refacto
@@ -30,12 +30,12 @@ Suite aux changements majeurs:
 | **6** | Test Coverage | ✅ completed | `../../knowledge/findings/2025-12-14_06-test-coverage.v2.md` | 1j | P1 Blocking |
 | **3** | Security | ✅ completed | `../../knowledge/findings/2025-12-14_03-security.v2.md` | 1j | P1 Blocking |
 | **8** | Design System Consistency | ✅ completed | `../../knowledge/findings/2025-12-14_08-design-system.v2.md` | 1j | P3 Polish |
-| **4** | Accessibility (A11y) | ⏳ pending | `../../knowledge/findings/2025-12-14_04-accessibility.md` | 1j | P2 Core |
+| **4** | Accessibility (A11y) | ✅ completed | `../../knowledge/findings/2025-12-14_04-accessibility.v2.md` | 1j | P2 Core |
 | **9** | Analytics Implementation | ⏳ pending | `../../knowledge/findings/2025-12-14_09-analytics.md` | 1j | P2 Core |
 | **5** | UX / Conversion | ⏳ pending | `../../knowledge/findings/2025-12-14_05-ux-conversion.md` | 1j | P2 Core |
 | **10** | Premium Feature Integration | ⏳ pending | `../../knowledge/findings/2025-12-14_10-premium-integration.md` | 1j | P3 Polish |
 
-**Completion**: 6/10 audits | **Next**: #4 (Accessibility) | **Timeline**: ~4j remaining
+**Completion**: 7/10 audits (70%) | **Next**: #9 (Analytics) | **Timeline**: ~3j remaining
 
 ---
 
@@ -194,7 +194,38 @@ Suite aux changements majeurs:
 
 ---
 
-### ⏳ NEXT: #4 - Accessibility (A11y) (P2 Core)
+### ✅ COMPLETED: #4 - Accessibility (A11y) (P2 Core)
+
+- [x] **#4 Accessibility** ♿️
+  - **Rapport V1** : `../../knowledge/findings/2025-12-14_04-accessibility.md` (baseline 62% WCAG AA)
+  - **Rapport V2** : `../../knowledge/findings/2025-12-14_04-accessibility.v2.md` (52%, F grade)
+  - **Key Findings** :
+    - ❌ **CRITICAL**: App NOT production ready for neuroatypical users
+    - ✅ **V1 WRONG**: useReducedMotion hook EXISTS (V1 said "not implemented")
+    - ✅ **V1 WRONG**: Focus indicators exist (85% on buttons, V1 said 0%)
+    - ❌ **V2 DISCOVERY**: Modals catastrophic failure (1 label / 12 modals = 8%)
+    - ❌ **V2 DISCOVERY**: Touch targets critical fail (90%+ violations, V1 said 87% pass)
+    - ✅ **V1 CORRECT**: Color contrast #e5a8a3 = 2.89:1 on white (FAIL)
+    - ✅ **V1 DISCOVERY**: Hardcoded French labels (CircularToggle)
+    - ❌ **BOTH AGREE**: Timer dial not accessible to screen readers (P0)
+  - **Reconciled Score** : **~58% WCAG 2.1 AA** (V1: 62%, V2: 52%)
+  - **Production Readiness** : ❌ **CRITICAL NO - P0 fixes required (18-22h)**
+  - **Status** : NOT production ready for target audience (neuroatypical users need excellent a11y)
+  - **Delta Analysis** :
+    - V2 discovered critical gaps V1 missed (modals, touch targets)
+    - V2 found features V1 missed (useReducedMotion hook, focus indicators)
+    - V1 provided deeper specialized analysis (color contrast, i18n)
+    - V2 systematic 36-component audit vs V1 spot-checks
+    - **V2 audit quality: 87%** vs **V1: 74%** (V2 more thorough + accurate)
+  - **P0 Blockers** :
+    1. Modals inaccessible (4h) - Screen reader users cannot use premium features
+    2. Touch targets <44pt (6h) - Motor impairment users cannot tap small targets
+    3. Timer dial not accessible (8h) - Core feature unusable for screen reader users
+    4. Color contrast violations (4-6h) - Low vision users cannot read text
+
+---
+
+### ⏳ NEXT: #9 - Analytics Implementation (P2 Core)
 
 ---
 
