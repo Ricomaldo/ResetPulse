@@ -56,7 +56,16 @@ class Logger {
   async getStoredErrors() {
     try {
       const errors = await AsyncStorage.getItem(ERROR_STORAGE_KEY);
-      return errors ? JSON.parse(errors) : [];
+      if (!errors) {
+        return [];
+      }
+      try {
+        return JSON.parse(errors);
+      } catch (parseError) {
+        // Malformed JSON, clear and return empty
+        await AsyncStorage.removeItem(ERROR_STORAGE_KEY);
+        return [];
+      }
     } catch (e) {
       return [];
     }

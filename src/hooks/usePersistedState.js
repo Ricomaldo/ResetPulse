@@ -19,8 +19,13 @@ export function usePersistedState(key, defaultValue) {
       try {
         const storedValue = await AsyncStorage.getItem(key);
         if (storedValue !== null && isMountedRef.current) {
-          const parsed = JSON.parse(storedValue);
-          setValue(parsed);
+          try {
+            const parsed = JSON.parse(storedValue);
+            setValue(parsed);
+          } catch (parseError) {
+            console.warn(`Erreur lors du parsing JSON de ${key}:`, parseError.message);
+            // Keep default value
+          }
         }
       } catch (error) {
         console.warn(`Erreur lors du chargement de ${key}:`, error);
@@ -73,9 +78,15 @@ export function usePersistedObject(key, defaultValues) {
       try {
         const storedValue = await AsyncStorage.getItem(key);
         if (storedValue !== null && isMountedRef.current) {
-          const parsed = JSON.parse(storedValue);
-          // Merge avec les valeurs par défaut pour gérer les nouvelles propriétés
-          setValues({ ...defaultValues, ...parsed });
+          try {
+            const parsed = JSON.parse(storedValue);
+            // Merge avec les valeurs par défaut pour gérer les nouvelles propriétés
+            setValues({ ...defaultValues, ...parsed });
+          } catch (parseError) {
+            console.warn(`Erreur lors du parsing JSON de ${key}:`, parseError.message);
+            // Keep default values
+            setValues(defaultValues);
+          }
         }
       } catch (error) {
         console.warn(`Erreur lors du chargement de ${key}:`, error);

@@ -5,17 +5,28 @@
  * One-time purchase 4,99€ + Trial 7 jours
  *
  * ADR: docs/decisions/adr-monetization-v11.md
+ *
+ * Keys are loaded from app.json extras (environment-safe)
  */
 
-// Clés API RevenueCat
+import Constants from 'expo-constants';
+
+// Load RevenueCat keys from app.json extras
+const { revenueCat } = Constants.expoConfig?.extra || {};
+
 export const REVENUECAT_CONFIG = {
   ios: {
-    apiKey: "appl_NJoSzWzcoJXLiNDMTGKJShISApt",
+    apiKey: revenueCat?.iosKey || '',
   },
   android: {
-    apiKey: "goog_URjPIqpNSxbyogfdststoCOmQRg",
+    apiKey: revenueCat?.androidKey || '',
   },
 };
+
+// Validation
+if (!revenueCat?.iosKey || !revenueCat?.androidKey) {
+  console.warn('[RevenueCat] API keys not configured in app.json extra');
+}
 
 // Produit unique: one-time purchase
 export const PRODUCT_IDS = {

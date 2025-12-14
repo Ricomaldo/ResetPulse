@@ -43,47 +43,62 @@ export const TimerOptionsProvider = ({ children }) => {
         // Load timer config (Filter2Creation: activity + duration)
         const timerConfigStr = await AsyncStorage.getItem('user_timer_config');
         if (timerConfigStr) {
-          const config = JSON.parse(timerConfigStr);
-          if (config.activity) {
-            updateValue('currentActivity', config.activity);
-          }
-          if (config.duration) {
-            updateValue('currentDuration', config.duration);
-          }
-          await AsyncStorage.removeItem('user_timer_config');
-          if (__DEV__) {
-            logger.log('[TimerOptionsContext] Applied timer config:', config);
+          try {
+            const config = JSON.parse(timerConfigStr);
+            if (config.activity) {
+              updateValue('currentActivity', config.activity);
+            }
+            if (config.duration) {
+              updateValue('currentDuration', config.duration);
+            }
+            await AsyncStorage.removeItem('user_timer_config');
+            if (__DEV__) {
+              logger.log('[TimerOptionsContext] Applied timer config:', config);
+            }
+          } catch (parseError) {
+            logger.warn('[TimerOptionsContext] Failed to parse timer config:', parseError.message);
+            await AsyncStorage.removeItem('user_timer_config');
           }
         }
 
         // Load sound config (Filter5bSound: selectedSound)
         const soundConfigStr = await AsyncStorage.getItem('user_sound_config');
         if (soundConfigStr) {
-          const soundId = JSON.parse(soundConfigStr);
-          updateValue('selectedSoundId', soundId);
-          await AsyncStorage.removeItem('user_sound_config');
-          if (__DEV__) {
-            logger.log('[TimerOptionsContext] Applied sound config:', soundId);
+          try {
+            const soundId = JSON.parse(soundConfigStr);
+            updateValue('selectedSoundId', soundId);
+            await AsyncStorage.removeItem('user_sound_config');
+            if (__DEV__) {
+              logger.log('[TimerOptionsContext] Applied sound config:', soundId);
+            }
+          } catch (parseError) {
+            logger.warn('[TimerOptionsContext] Failed to parse sound config:', parseError.message);
+            await AsyncStorage.removeItem('user_sound_config');
           }
         }
 
         // Load interface config (Filter5cInterface: theme, minimalInterface, digitalTimer)
         const interfaceConfigStr = await AsyncStorage.getItem('user_interface_config');
         if (interfaceConfigStr) {
-          const config = JSON.parse(interfaceConfigStr);
+          try {
+            const config = JSON.parse(interfaceConfigStr);
 
-          if (config.theme) {
-            await AsyncStorage.setItem('@ResetPulse:themeMode', config.theme);
-          }
-          if (config.minimalInterface !== undefined) {
-            updateValue('useMinimalInterface', config.minimalInterface);
-          }
-          if (config.digitalTimer !== undefined) {
-            updateValue('showDigitalTimer', config.digitalTimer);
-          }
-          await AsyncStorage.removeItem('user_interface_config');
-          if (__DEV__) {
-            logger.log('[TimerOptionsContext] Applied interface config:', config);
+            if (config.theme) {
+              await AsyncStorage.setItem('@ResetPulse:themeMode', config.theme);
+            }
+            if (config.minimalInterface !== undefined) {
+              updateValue('useMinimalInterface', config.minimalInterface);
+            }
+            if (config.digitalTimer !== undefined) {
+              updateValue('showDigitalTimer', config.digitalTimer);
+            }
+            await AsyncStorage.removeItem('user_interface_config');
+            if (__DEV__) {
+              logger.log('[TimerOptionsContext] Applied interface config:', config);
+            }
+          } catch (parseError) {
+            logger.warn('[TimerOptionsContext] Failed to parse interface config:', parseError.message);
+            await AsyncStorage.removeItem('user_interface_config');
           }
         }
 
