@@ -2,11 +2,8 @@
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import logger from '../utils/logger';
 import { usePersistedObject } from '../hooks/usePersistedState';
-import logger from '../utils/logger';
 import { getDefaultActivity } from '../config/activities';
-import logger from '../utils/logger';
 
 const TimerOptionsContext = createContext(null);
 
