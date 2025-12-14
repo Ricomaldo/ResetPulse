@@ -22,7 +22,7 @@ Suite aux changements majeurs:
 
 | # | Audit | Status | Rapport | Durée | Priorité |
 |---|-------|--------|---------|-------|----------|
-| **7** | Architecture Review | ✅ completed | `../../knowledge/findings/2025-12-14_07-architecture.v2.md` | 1j | P3 Foundation |
+| **7** | Architecture Review | ✅ completed | `../../docs/reports/audit-07-architecture-validation.md` | 1j | P3 Foundation |
 | **1** | Code Quality | ⏳ pending | `../../knowledge/findings/2025-12-14_01-code-quality.md` | 1j | P1 Blocking |
 | **6** | Test Coverage | ⏳ pending | `../../knowledge/findings/2025-12-14_06-test-coverage.md` | 1j | P1 Blocking |
 | **2** | Performance | ⏳ pending | `../../knowledge/findings/2025-12-14_02-performance.md` | 1j | P1 Blocking |
@@ -57,8 +57,8 @@ Suite aux changements majeurs:
 ### ✅ COMPLETED: #7 - Architecture Review (Foundation)
 
 - [x] **#7 Architecture Review** 🏗️
-  - **Rapport V1** : `../../knowledge/findings/2025-12-14_07-architecture.md` (baseline 85%)
-  - **Rapport V2** : `../../knowledge/findings/2025-12-14_07-architecture.v2.md` (re-audit 98%)
+  - **Rapport V1** : `../../docs/reports/audit-07-architecture-baseline.md` (baseline 85%)
+  - **Rapport V2** : `../../docs/reports/audit-07-architecture-validation.md` (re-audit 98%)
   - **Checklist** :
     - [x] ADR-01 compliance audit (95% - déviation documentée)
     - [x] Naming convention scan (98% - filters + config fixed)
