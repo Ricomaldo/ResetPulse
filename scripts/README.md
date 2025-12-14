@@ -1,3 +1,9 @@
+---
+created: '2025-12-14'
+updated: '2025-12-14'
+status: active
+---
+
 # 📜 Scripts - ResetPulse
 
 Scripts utilitaires pour automatiser les tâches de développement.

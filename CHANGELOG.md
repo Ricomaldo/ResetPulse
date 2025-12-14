@@ -1,3 +1,9 @@
+---
+created: '2025-12-14'
+updated: '2025-12-14'
+status: active
+---
+
 # Changelog
 
 All notable changes to ResetPulse will be documented in this file.
