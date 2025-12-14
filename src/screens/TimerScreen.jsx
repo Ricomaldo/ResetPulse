@@ -9,7 +9,7 @@ import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { TimeTimer, Drawer, CircularToggle, SwipeUpHint } from '../components/layout';
 import { ExpandableDrawerContent } from '../components/drawers';
 import DigitalTimer from '../components/timer/DigitalTimer';
-import { SettingsModal } from '../components/modals';
+import { SettingsModal, TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 
 const SWIPE_THRESHOLD = 50;
@@ -72,10 +72,24 @@ const createStyles = (theme) => {
 
 function TimerScreenContent() {
   const theme = useTheme();
-  const { currentDuration, showDigitalTimer, setShowDigitalTimer, currentActivity, clockwise, setClockwise, showRotationToggle } = useTimerOptions();
+  const {
+    currentDuration,
+    showDigitalTimer,
+    setShowDigitalTimer,
+    currentActivity,
+    clockwise,
+    setClockwise,
+    showRotationToggle,
+    incrementCompletedTimers,
+    completedTimersCount,
+    hasSeenTwoTimersModal,
+    setHasSeenTwoTimersModal,
+  } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+  const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
+  const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerDuration, setTimerDuration] = useState(0);
   const timerRef = useRef(null);
@@ -151,6 +165,17 @@ function TimerScreenContent() {
     setShowDigitalTimer(!showDigitalTimer);
   };
 
+  // Handle timer completion (ADR-003: trigger after 2 timers)
+  const handleTimerComplete = () => {
+    const newCount = incrementCompletedTimers();
+
+    // Show modal after 2nd timer if not already shown
+    if (newCount === 2 && !hasSeenTwoTimersModal) {
+      setTwoTimersModalVisible(true);
+      setHasSeenTwoTimersModal(true);
+    }
+  };
+
   // Update timer duration for digital timer display
   useEffect(() => {
     if (timerRef.current) {
@@ -196,6 +221,7 @@ function TimerScreenContent() {
           }}
           onDialRef={handleDialRef}
           onDialTap={handleDialTap}
+          onTimerComplete={handleTimerComplete}
         />
       </View>
 
@@ -253,6 +279,20 @@ function TimerScreenContent() {
       <SettingsModal
         visible={settingsModalVisible}
         onClose={() => setSettingsModalVisible(false)}
+      />
+
+      {/* Two Timers Reminder Modal (ADR-003) */}
+      <TwoTimersModal
+        visible={twoTimersModalVisible}
+        onClose={() => setTwoTimersModalVisible(false)}
+        onExplore={() => setPremiumModalVisible(true)}
+      />
+
+      {/* Premium Modal */}
+      <PremiumModal
+        visible={premiumModalVisible}
+        onClose={() => setPremiumModalVisible(false)}
+        highlightedFeature="toutes les couleurs et activités"
       />
     </SafeAreaView>
   );

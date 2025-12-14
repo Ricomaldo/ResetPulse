@@ -28,6 +28,8 @@ export const TimerOptionsProvider = ({ children }) => {
       favoriteActivities: ['work', 'break', 'meditation'], // Free activities as default favorites (excluding 'none')
       selectedSoundId: 'bell_classic', // Son par défaut
       activityDurations: {}, // { activityId: duration } - Mémorise la durée préférée par activité
+      completedTimersCount: 0, // Compteur de timers complétés (ADR-003: trigger après 2)
+      hasSeenTwoTimersModal: false, // Modal "2 moments créés" déjà affiché
     }
   );
 
@@ -108,6 +110,8 @@ export const TimerOptionsProvider = ({ children }) => {
     favoriteActivities: values.favoriteActivities,
     selectedSoundId: values.selectedSoundId,
     activityDurations: values.activityDurations,
+    completedTimersCount: values.completedTimersCount,
+    hasSeenTwoTimersModal: values.hasSeenTwoTimersModal,
 
     // Actions
     setShouldPulse: (val) => updateValue('shouldPulse', val),
@@ -125,11 +129,20 @@ export const TimerOptionsProvider = ({ children }) => {
     setFavoriteActivities: (val) => updateValue('favoriteActivities', val),
     setSelectedSoundId: (val) => updateValue('selectedSoundId', val),
     setActivityDurations: (val) => updateValue('activityDurations', val),
+    setCompletedTimersCount: (val) => updateValue('completedTimersCount', val),
+    setHasSeenTwoTimersModal: (val) => updateValue('hasSeenTwoTimersModal', val),
 
     // Helper pour sauvegarder la durée d'une activité spécifique
     saveActivityDuration: (activityId, duration) => {
       const updated = { ...values.activityDurations, [activityId]: duration };
       updateValue('activityDurations', updated);
+    },
+
+    // Helper pour incrémenter le compteur de timers complétés (ADR-003)
+    incrementCompletedTimers: () => {
+      const newCount = (values.completedTimersCount || 0) + 1;
+      updateValue('completedTimersCount', newCount);
+      return newCount; // Retourne le nouveau count pour trigger immédiat
     },
 
     // Loading state
