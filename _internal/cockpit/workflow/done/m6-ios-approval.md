@@ -63,7 +63,7 @@ Cette version inclut:
 
 **RevenueCat Dashboard**:
 - Project ID: `revenuecat-474510`
-- iOS API Key: `***REMOVED***`
+- iOS API Key: `appl_NJoSzWzcoJXLiNDMTGKJShISApt`
 - Entitlement: `premium_access`
 
 **StoreKit Testing**:
@@ -235,7 +235,7 @@ Provisioning Profile: ResetPulse Production
 ### RevenueCat
 ```
 SDK: react-native-purchases@9.5.3
-API Key: ***REMOVED***
+API Key: appl_NJoSzWzcoJXLiNDMTGKJShISApt
 Entitlement: premium_access
 Product: com.irimwebforge.resetpulse.premium_lifetime
 ```
