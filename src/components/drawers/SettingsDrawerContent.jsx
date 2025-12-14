@@ -11,6 +11,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { SoundPicker } from '../pickers';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
+import analytics from '../../services/analytics';
 
 export default function SettingsDrawerContent() {
   const theme = useTheme();
@@ -120,7 +121,10 @@ export default function SettingsDrawerContent() {
           </View>
           <Switch
             value={showDigitalTimer}
-            onValueChange={setShowDigitalTimer}
+            onValueChange={(value) => {
+              analytics.trackSettingChanged('digital_timer', value, showDigitalTimer);
+              setShowDigitalTimer(value);
+            }}
             trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
           />
         </View>
@@ -132,7 +136,10 @@ export default function SettingsDrawerContent() {
           </View>
           <Switch
             value={showActivityEmoji}
-            onValueChange={setShowActivityEmoji}
+            onValueChange={(value) => {
+              analytics.trackSettingChanged('activity_emoji', value, showActivityEmoji);
+              setShowActivityEmoji(value);
+            }}
             trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
           />
         </View>
@@ -162,6 +169,7 @@ export default function SettingsDrawerContent() {
                       text: t('settings.interface.pulseWarningEnable'),
                       onPress: () => {
                         haptics.switchToggle().catch(() => {});
+                        analytics.trackSettingChanged('pulse_animation', true, shouldPulse);
                         setShouldPulse(true);
                       },
                     },
@@ -170,6 +178,7 @@ export default function SettingsDrawerContent() {
                 );
               } else {
                 haptics.switchToggle().catch(() => {});
+                analytics.trackSettingChanged('pulse_animation', false, shouldPulse);
                 setShouldPulse(false);
               }
             }}
@@ -184,7 +193,10 @@ export default function SettingsDrawerContent() {
           </View>
           <Switch
             value={clockwise}
-            onValueChange={setClockwise}
+            onValueChange={(value) => {
+              analytics.trackSettingChanged('clockwise', value, clockwise);
+              setClockwise(value);
+            }}
             trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
           />
         </View>
@@ -196,7 +208,10 @@ export default function SettingsDrawerContent() {
         </View>
         <Switch
           value={useMinimalInterface}
-          onValueChange={setUseMinimalInterface}
+          onValueChange={(value) => {
+            analytics.trackSettingChanged('minimal_interface', value, useMinimalInterface);
+            setUseMinimalInterface(value);
+          }}
           trackColor={{ false: theme.colors.border, true: theme.colors.brand.primary }}
         />
       </View>
@@ -208,7 +223,10 @@ export default function SettingsDrawerContent() {
       </Text>
       <SoundPicker
         selectedSoundId={selectedSoundId}
-        onSoundSelect={setSelectedSoundId}
+        onSoundSelect={(soundId) => {
+          analytics.trackSettingChanged('timer_sound', soundId, selectedSoundId);
+          setSelectedSoundId(soundId);
+        }}
       />
 
       {/* Mode Cadran */}
@@ -226,6 +244,7 @@ export default function SettingsDrawerContent() {
             ]}
             onPress={() => {
               haptics.selection().catch(() => {});
+              analytics.trackSettingChanged('scale_mode', mode, scaleMode);
               setScaleMode(mode);
             }}
             activeOpacity={0.7}
