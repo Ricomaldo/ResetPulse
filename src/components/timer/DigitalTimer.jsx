@@ -1,4 +1,8 @@
-// src/components/timer/DigitalTimer.jsx
+/**
+ * @fileoverview Digital timer display showing MM:SS format
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -6,7 +10,11 @@ import { rs } from '../../styles/responsive';
 
 /**
  * DigitalTimer - Displays remaining time in MM:SS format
- * Always visible when enabled in settings, updates dynamically during dial adjustment
+ * Features subtle pulse animation when running
+ * @param {number} remaining - Remaining time in seconds
+ * @param {boolean} isRunning - Whether timer is running
+ * @param {string} color - Text color
+ * @param {boolean} mini - Whether to use mini display mode
  */
 export default function DigitalTimer({ remaining, isRunning, color, mini = false }) {
   const theme = useTheme();

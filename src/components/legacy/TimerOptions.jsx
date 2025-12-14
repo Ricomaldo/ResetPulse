@@ -1,9 +1,14 @@
-// src/components/TimerOptions.jsx
+/**
+ * @fileoverview Timer options panel for scale mode and direction
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ * @deprecated This component is no longer used - replaced by SettingsDrawerContent
+ */
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { rs } from '../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { rs } from '../../styles/responsive';
 
 export default function TimerOptions() {
   const theme = useTheme();

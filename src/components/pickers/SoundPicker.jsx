@@ -1,4 +1,8 @@
-// src/components/SoundPicker.jsx
+/**
+ * @fileoverview Sound picker component for selecting timer completion sounds
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   View,
@@ -9,12 +13,12 @@ import {
   Animated
 } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { useTheme } from '../theme/ThemeProvider';
-import { rs } from '../styles/responsive';
-import { TIMER_SOUNDS, getSoundById } from '../config/sounds';
-import haptics from '../utils/haptics';
-import useSimpleAudio from '../hooks/useSimpleAudio';
-import { PlayIcon, PauseIcon } from './Icons';
+import { useTheme } from '../../theme/ThemeProvider';
+import { rs } from '../../styles/responsive';
+import { TIMER_SOUNDS, getSoundById } from '../../config/sounds';
+import haptics from '../../utils/haptics';
+import useSimpleAudio from '../../hooks/useSimpleAudio';
+import { PlayIcon, PauseIcon } from '../layout/Icons';
 
 // Composant de loader circulaire style iOS
 const CircularProgress = ({ duration, size = 24, strokeWidth = 2, color }) => {

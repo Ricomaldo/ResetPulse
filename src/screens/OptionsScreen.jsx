@@ -4,10 +4,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
-import ActivityCarousel from '../components/ActivityCarousel';
-import PresetPills from '../components/PresetPills';
-import PaletteCarousel from '../components/PaletteCarousel';
-import Icons from '../components/Icons';
+import { ActivityCarousel, PaletteCarousel, PresetPills } from '../components/carousels';
+import { Icons } from '../components/layout';
 
 export default function OptionsScreen({
   currentDuration = 0,

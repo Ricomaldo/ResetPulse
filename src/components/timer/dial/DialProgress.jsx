@@ -1,4 +1,8 @@
-// src/components/timer/dial/DialProgress.jsx
+/**
+ * @fileoverview Animated progress arc that displays remaining time
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React, { useMemo, useRef, useEffect } from 'react';
 import { Animated } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
@@ -11,6 +15,17 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 /**
  * DialProgress - Animated progress arc
  * Only this component re-renders during timer operation
+ * @param {number} svgSize - SVG container size
+ * @param {number} centerX - Center X coordinate
+ * @param {number} centerY - Center Y coordinate
+ * @param {number} radius - Arc radius
+ * @param {number} strokeWidth - Stroke width
+ * @param {number} progress - Progress value 0-1
+ * @param {string} color - Arc color
+ * @param {boolean} isClockwise - Direction of progress
+ * @param {string} scaleMode - Scale mode (1min, 5min, etc.)
+ * @param {Animated.Value} animatedColor - Animated color for completion
+ * @param {boolean} isRunning - Whether timer is running
  */
 const DialProgress = React.memo(({
   svgSize,

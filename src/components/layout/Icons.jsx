@@ -1,4 +1,8 @@
-// src/components/Icons.jsx
+/**
+ * @fileoverview SVG icon components for the application
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React from 'react';
 import Svg, { Path, Circle, Polyline } from 'react-native-svg';
 

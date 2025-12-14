@@ -1,10 +1,15 @@
-// src/components/ControlButtons.jsx
+/**
+ * @fileoverview Control buttons for timer (play/pause/reset)
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ * @deprecated This component is no longer used - kept for reference
+ */
 import React, { forwardRef } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { PlayIcon, PauseIcon, ResetIcon } from './Icons';
-import { rs } from '../styles/responsive';
-import { BUTTON, TOUCH } from './timer/timerConstants';
+import { useTheme } from '../../theme/ThemeProvider';
+import { PlayIcon, PauseIcon, ResetIcon } from '../layout/Icons';
+import { rs } from '../../styles/responsive';
+import { BUTTON, TOUCH } from '../timer/timerConstants';
 
 const ControlButtons = forwardRef(({ isRunning, onToggleRunning, onReset }, ref) => {
   const theme = useTheme();

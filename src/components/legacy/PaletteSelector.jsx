@@ -1,8 +1,13 @@
-// src/components/PaletteSelector.jsx
+/**
+ * @fileoverview Palette selector grid for choosing timer palette
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ * @deprecated This component is no longer used - replaced by PaletteCarousel
+ */
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 
 export const PaletteSelector = () => {
   const { setPalette, getAvailablePalettes, currentPalette } = useTimerPalette();

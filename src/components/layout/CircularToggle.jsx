@@ -1,13 +1,19 @@
-// src/components/CircularToggle.jsx
+/**
+ * @fileoverview Circular toggle button for clockwise/counter-clockwise rotation
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ */
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { rs } from '../styles/responsive';
-import haptics from '../utils/haptics';
+import { useTheme } from '../../theme/ThemeProvider';
+import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
 
 /**
- * CircularToggle - Toggle circulaire pour changer le sens de rotation
- * Affiche deux flèches circulaires : sens horaire / anti-horaire
+ * CircularToggle - Circular toggle button for rotation direction
+ * @param {boolean} clockwise - Current rotation direction
+ * @param {function} onToggle - Callback when toggle is pressed
+ * @param {number} size - Size of the toggle button
  */
 export default function CircularToggle({ clockwise, onToggle, size = 60 }) {
   const theme = useTheme();

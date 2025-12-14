@@ -1,4 +1,9 @@
-// src/components/DurationPopover.jsx
+/**
+ * @fileoverview Duration selection popover modal
+ * @created 2025-12-14
+ * @updated 2025-12-14
+ * @deprecated This component is no longer used - kept for reference
+ */
 import React from 'react';
 import {
   Modal,
@@ -9,10 +14,10 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
-import { useTranslation } from '../hooks/useTranslation';
-import { rs } from '../styles/responsive';
-import haptics from '../utils/haptics';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
+import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
 
 const DURATION_PRESETS = [5, 10, 15, 20, 25, 30, 45, 60];
 
