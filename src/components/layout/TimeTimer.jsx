@@ -19,6 +19,7 @@ export default function TimeTimer({
   onTimerRef,
   onDialRef,
   onDialTap,
+  onTimerComplete,
 }) {
   const theme = useTheme();
   const {
@@ -32,7 +33,7 @@ export default function TimeTimer({
   const { currentColor } = useTimerPalette();
 
   // Initialize timer with current duration or default
-  const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION);
+  const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION, onTimerComplete);
 
   // Refs for onboarding
   const dialWrapperRef = useRef(null);
