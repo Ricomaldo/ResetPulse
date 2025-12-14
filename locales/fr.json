@@ -296,5 +296,11 @@
       "subtitle": "Sieste, écriture, lecture, yoga...",
       "tagline": "Chaque moment mérite sa couleur."
     }
+  },
+  "twoTimers": {
+    "title": "Tu as créé 2 moments !",
+    "message": "Envie d'explorer plus de couleurs et d'activités ?",
+    "explore": "Explorer le premium",
+    "dismiss": "Peut-être plus tard"
   }
 }

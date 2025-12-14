@@ -11,6 +11,7 @@ import { ExpandableDrawerContent } from '../components/drawers';
 import DigitalTimer from '../components/timer/DigitalTimer';
 import { SettingsModal, TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
+import analytics from '../services/analytics';
 
 const SWIPE_THRESHOLD = 50;
 const { width, height } = Dimensions.get('window');
@@ -169,8 +170,8 @@ function TimerScreenContent() {
   const handleTimerComplete = () => {
     const newCount = incrementCompletedTimers();
 
-    // Show modal after 2nd timer if not already shown
     if (newCount === 2 && !hasSeenTwoTimersModal) {
+      analytics.trackTwoTimersMilestone();
       setTwoTimersModalVisible(true);
       setHasSeenTwoTimersModal(true);
     }
