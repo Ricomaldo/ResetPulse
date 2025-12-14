@@ -70,8 +70,10 @@ export const TimerOptionsProvider = ({ children }) => {
         const interfaceConfigStr = await AsyncStorage.getItem('user_interface_config');
         if (interfaceConfigStr) {
           const config = JSON.parse(interfaceConfigStr);
-          // Note: theme is applied via ThemeProvider, not here
-          // Only apply timer-specific interface options
+
+          if (config.theme) {
+            await AsyncStorage.setItem('@ResetPulse:themeMode', config.theme);
+          }
           if (config.minimalInterface !== undefined) {
             updateValue('useMinimalInterface', config.minimalInterface);
           }
