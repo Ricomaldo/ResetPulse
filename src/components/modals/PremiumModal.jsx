@@ -73,7 +73,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
     try {
       console.log('[IAP] 🚀 Starting purchase flow...');
       setIsPurchasing(true);
-      haptics.selection().catch(() => {});
+      haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
       // Get offerings from RevenueCat
       console.log('[IAP] 📡 Fetching offerings from RevenueCat...');
@@ -144,7 +144,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       });
 
       if (result.success) {
-        haptics.success().catch(() => {});
+        haptics.success().catch(() => { /* Optional operation - failure is non-critical */ });
         Alert.alert(
           t('premium.welcomeTitle'),
           t('premium.welcomeMessage'),
@@ -181,13 +181,13 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   const handleRestore = async () => {
     try {
       setIsRestoring(true);
-      haptics.selection().catch(() => {});
+      haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
       const result = await restorePurchases();
 
       if (result.success) {
         if (result.hasPremium) {
-          haptics.success().catch(() => {});
+          haptics.success().catch(() => { /* Optional operation - failure is non-critical */ });
           Alert.alert(
             t('premium.restoreSuccess'),
             t('premium.restoreSuccessMessage'),
@@ -226,7 +226,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
     if (isAnyOperationInProgress) {
       return;
     }
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
   };
 

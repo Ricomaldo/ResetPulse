@@ -7,26 +7,29 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Switch,
   Platform,
   TouchableNativeFeedback,
-  Alert,
-  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTimerOptions } from "../../contexts/TimerOptionsContext";
 import { useTimerPalette } from "../../contexts/TimerPaletteContext";
 import { rs } from "../../styles/responsive";
-import { PalettePreview, SoundPicker } from "../pickers";
 import PremiumModal from "./PremiumModal";
 import MoreColorsModal from "./MoreColorsModal";
 import MoreActivitiesModal from "./MoreActivitiesModal";
 import { getAllActivities } from "../../config/activities";
-import { TIMER_PALETTES, isPalettePremium } from '../../config/timer-palettes";
 import haptics from "../../utils/haptics";
 import { usePremiumStatus } from "../../hooks/usePremiumStatus";
 import { useTranslation } from "../../hooks/useTranslation";
+
+// Import section components
+import {
+  SettingsInterfaceSection,
+  SettingsTimerSection,
+  SettingsAppearanceSection,
+  SettingsAboutSection,
+} from "./settings";
 
 // Storage key pour onboarding V2 (same as App.js)
 const ONBOARDING_COMPLETED_KEY = "onboarding_v2_completed";
@@ -64,10 +67,10 @@ export default function SettingsModal({ visible, onClose }) {
   } = useTimerOptions();
 
   const allActivities = getAllActivities();
-  const { isPremium: isPremiumUser } = usePremiumStatus(); // Check premium status for test mode
+  const { isPremium: isPremiumUser } = usePremiumStatus();
 
   const toggleFavorite = (activityId) => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     const newFavorites = favoriteActivities.includes(activityId)
       ? favoriteActivities.filter((id) => id !== activityId)
       : [...favoriteActivities, activityId];
@@ -152,8 +155,8 @@ export default function SettingsModal({ visible, onClose }) {
 
     closeButton: {
       padding: theme.spacing.md,
-      margin: -theme.spacing.sm, // Extend tap area outside visible bounds
-      minWidth: 44, // iOS minimum tap target
+      margin: -theme.spacing.sm,
+      minWidth: 44,
       minHeight: 44,
       alignItems: 'center',
       justifyContent: 'center',
@@ -172,7 +175,6 @@ export default function SettingsModal({ visible, onClose }) {
       marginBottom: theme.spacing.lg,
     },
 
-    // Card-based sections (NIVEAU 1 - Core Experience)
     sectionCard: {
       backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadius.lg,
@@ -183,39 +185,26 @@ export default function SettingsModal({ visible, onClose }) {
       ...theme.shadow('sm'),
     },
 
-    // Card with emphasis (for important sections)
     sectionCardPrimary: {
       backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadius.lg,
       padding: theme.spacing.md,
-      marginBottom: theme.spacing.sm, // Réduit de md à sm
+      marginBottom: theme.spacing.sm,
       borderWidth: 1,
       borderColor: theme.colors.brand.primary + '15',
       ...theme.shadow('md'),
     },
 
-    // Flat section (for "À propos")
     sectionFlat: {
       marginBottom: theme.spacing.md,
       paddingTop: theme.spacing.sm,
     },
 
-    // Level divider
     levelDivider: {
       height: 1,
       backgroundColor: theme.colors.divider,
       marginVertical: theme.spacing.lg,
       marginHorizontal: theme.spacing.md,
-    },
-
-    levelDividerText: {
-      fontSize: rs(11, 'min'),
-      color: theme.colors.textLight,
-      textAlign: 'center',
-      marginTop: -theme.spacing.sm,
-      backgroundColor: theme.colors.background,
-      alignSelf: 'center',
-      paddingHorizontal: theme.spacing.sm,
     },
 
     sectionTitle: {
@@ -277,7 +266,6 @@ export default function SettingsModal({ visible, onClose }) {
       color: theme.colors.background,
     },
 
-    // Dial mode grid (5 scale modes)
     dialModeGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -287,7 +275,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     dialModeButton: {
-      width: '31%', // 3 columns with gaps
+      width: '31%',
       paddingVertical: theme.spacing.sm,
       paddingHorizontal: theme.spacing.xs,
       borderRadius: theme.borderRadius.md,
@@ -338,10 +326,6 @@ export default function SettingsModal({ visible, onClose }) {
       ...theme.shadow("md"),
     },
 
-    paletteItemLocked: {
-      opacity: 0.6,
-    },
-
     paletteName: {
       fontSize: rs(10, "min"),
       color: theme.colors.text,
@@ -355,21 +339,6 @@ export default function SettingsModal({ visible, onClose }) {
       fontWeight: "600",
     },
 
-    paletteLockBadge: {
-      position: "absolute",
-      top: 4,
-      right: 4,
-      backgroundColor: "transparent",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-
-    lockIcon: {
-      fontSize: 14,
-      opacity: 0.75,
-    },
-
-    // Discovery button for palettes
     discoverButton: {
       width: "30%",
       aspectRatio: 1.5,
@@ -408,7 +377,6 @@ export default function SettingsModal({ visible, onClose }) {
       lineHeight: rs(11),
     },
 
-    // Discovery button for activities (22% width to match activity grid)
     discoverActivityButton: {
       width: "22%",
       aspectRatio: 1,
@@ -435,21 +403,6 @@ export default function SettingsModal({ visible, onClose }) {
       textAlign: "center",
       fontWeight: "600",
       lineHeight: rs(10),
-    },
-
-    colorRow: {
-      flexDirection: "row",
-      height: 16,
-      borderRadius: theme.borderRadius.sm,
-      overflow: "hidden",
-    },
-
-    colorSegment: {
-      flex: 1,
-    },
-
-    favoritesSection: {
-      marginTop: theme.spacing.md,
     },
 
     favoritesGrid: {
@@ -484,13 +437,6 @@ export default function SettingsModal({ visible, onClose }) {
       textAlign: "center",
     },
 
-    activityIcon: {
-      width: rs(24, "min"),
-      height: rs(24, "min"),
-      marginBottom: theme.spacing.xs / 2,
-      // Pas de tintColor pour garder les couleurs originales de l'icône
-    },
-
     activityItemLabel: {
       fontSize: rs(9, "min"),
       color: theme.colors.textLight,
@@ -500,40 +446,6 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     activityItemLabelFavorite: {
-      color: theme.colors.brand.primary,
-      fontWeight: "600",
-    },
-
-    premiumBadge: {
-      position: "absolute",
-      top: 2,
-      right: 2,
-      backgroundColor: "transparent",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-
-    lockMini: {
-      fontSize: 12,
-      opacity: 0.7,
-    },
-
-    sectionHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: theme.spacing.sm,
-    },
-
-    sectionBadge: {
-      backgroundColor: theme.colors.brand.primary + "15",
-      paddingHorizontal: theme.spacing.xs,
-      paddingVertical: 2,
-      borderRadius: theme.borderRadius.sm,
-    },
-
-    sectionBadgeText: {
-      fontSize: rs(10, "min"),
       color: theme.colors.brand.primary,
       fontWeight: "600",
     },
@@ -566,538 +478,67 @@ export default function SettingsModal({ visible, onClose }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            {/* 1. 🪄 Interface (Card Primary) - Comment je veux utiliser l'app */}
-            <View style={styles.sectionCardPrimary}>
-              <Text style={styles.sectionTitle}>{t('settings.interface.title')}</Text>
+            {/* 1. Interface Section */}
+            <SettingsInterfaceSection
+              useMinimalInterface={useMinimalInterface}
+              showDigitalTimer={showDigitalTimer}
+              shouldPulse={shouldPulse}
+              setUseMinimalInterface={setUseMinimalInterface}
+              setShowDigitalTimer={setShowDigitalTimer}
+              setShouldPulse={setShouldPulse}
+              theme={theme}
+              t={t}
+              styles={styles}
+            />
 
-              {/* Interface minimaliste */}
-              <View style={styles.optionRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.interface.minimalInterface')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {useMinimalInterface
-                      ? t('settings.interface.minimalInterfaceDescriptionOn')
-                      : t('settings.interface.minimalInterfaceDescriptionOff')}
-                  </Text>
-                </View>
-                <Switch
-                  accessible={true}
-                  accessibilityLabel={t('accessibility.minimalInterface')}
-                  accessibilityRole="switch"
-                  accessibilityState={{ checked: useMinimalInterface }}
-                  value={useMinimalInterface}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setUseMinimalInterface(value);
-                  }}
-                  {...theme.styles.switch(useMinimalInterface)}
-                />
-              </View>
+            {/* 2. Timer Section */}
+            <SettingsTimerSection
+              selectedSoundId={selectedSoundId}
+              scaleMode={scaleMode}
+              clockwise={clockwise}
+              keepAwakeEnabled={keepAwakeEnabled}
+              setSelectedSoundId={setSelectedSoundId}
+              setScaleMode={setScaleMode}
+              setClockwise={setClockwise}
+              setKeepAwakeEnabled={setKeepAwakeEnabled}
+              theme={theme}
+              t={t}
+              styles={styles}
+            />
 
-              {/* Chrono Numérique */}
-              <View style={styles.optionRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.interface.digitalTimer')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {showDigitalTimer
-                      ? t('settings.interface.digitalTimerDescriptionOn')
-                      : t('settings.interface.digitalTimerDescriptionOff')}
-                  </Text>
-                </View>
-                <Switch
-                  value={showDigitalTimer}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setShowDigitalTimer(value);
-                  }}
-                  {...theme.styles.switch(showDigitalTimer)}
-                />
-              </View>
-
-              {/* Animation Pulse */}
-              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.interface.pulseAnimation')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {shouldPulse
-                      ? t('settings.interface.pulseAnimationDescriptionOn')
-                      : t('settings.interface.pulseAnimationDescriptionOff')}
-                  </Text>
-                </View>
-                <Switch
-                  value={shouldPulse}
-                  onValueChange={(value) => {
-                    if (value) {
-                      // Avertissement pour conformité épilepsie/photosensibilité
-                      Alert.alert(
-                        t('settings.interface.pulseWarningTitle'),
-                        t('settings.interface.pulseWarningMessage'),
-                        [
-                          {
-                            text: t('common.cancel'),
-                            style: "cancel",
-                            onPress: () => {
-                              haptics.selection().catch(() => {});
-                            },
-                          },
-                          {
-                            text: t('settings.interface.pulseWarningEnable'),
-                            onPress: () => {
-                              haptics.switchToggle().catch(() => {});
-                              setShouldPulse(true);
-                            },
-                          },
-                        ],
-                        { cancelable: true }
-                      );
-                    } else {
-                      haptics.switchToggle().catch(() => {});
-                      setShouldPulse(false);
-                    }
-                  }}
-                  {...theme.styles.switch(shouldPulse)}
-                />
-              </View>
-            </View>
-
-            {/* 2. ⚙️ Timer (Card) - Réglages techniques du minuteur */}
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>{t('settings.timer.title')}</Text>
-
-              {/* Sons du Timer */}
-              <Text style={styles.optionDescription}>
-                {t('settings.timer.soundDescription')}
-              </Text>
-              <SoundPicker
-                selectedSoundId={selectedSoundId}
-                onSoundSelect={setSelectedSoundId}
-              />
-
-              {/* Mode Cadran */}
-              <View style={[styles.optionRow, { marginTop: theme.spacing.md, flexDirection: 'column', alignItems: 'stretch' }]}>
-                <View>
-                  <Text style={styles.optionLabel}>{t('settings.timer.dialMode')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {scaleMode === "1min" && t('settings.timer.dialMode1')}
-                    {scaleMode === "5min" && t('settings.timer.dialMode5')}
-                    {scaleMode === "10min" && t('settings.timer.dialMode10')}
-                    {scaleMode === "25min" && t('settings.timer.dialMode25')}
-                    {scaleMode === "45min" && t('settings.timer.dialMode45')}
-                    {scaleMode === "60min" && t('settings.timer.dialMode60')}
-                  </Text>
-                </View>
-                <View style={styles.dialModeGrid}>
-                  {['1min', '5min', '10min', '25min', '45min', '60min'].map((mode) => (
-                    <TouchableOpacity
-                      key={mode}
-                      style={[
-                        styles.dialModeButton,
-                        scaleMode === mode && styles.dialModeButtonActive,
-                      ]}
-                      onPress={() => {
-                        haptics.selection().catch(() => {});
-                        setScaleMode(mode);
-                      }}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.dialModeText,
-                          scaleMode === mode && styles.dialModeTextActive,
-                        ]}
-                      >
-                        {mode}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              {/* Sens de Rotation */}
-              <View style={styles.optionRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.timer.rotationDirection')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {clockwise ? t('settings.timer.rotationClockwise') : t('settings.timer.rotationCounterClockwise')}
-                  </Text>
-                </View>
-                <Switch
-                  accessible={true}
-                  accessibilityLabel={t('accessibility.rotationDirection')}
-                  accessibilityRole="switch"
-                  accessibilityState={{ checked: clockwise }}
-                  value={clockwise}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setClockwise(value);
-                  }}
-                  {...theme.styles.switch(clockwise)}
-                />
-              </View>
-
-              {/* Écran Toujours Allumé */}
-              <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.timer.keepAwake')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {keepAwakeEnabled
-                      ? t('settings.timer.keepAwakeDescriptionOn')
-                      : t('settings.timer.keepAwakeDescriptionOff')}
-                  </Text>
-                </View>
-                <Switch
-                  accessible={true}
-                  accessibilityLabel={t('accessibility.keepAwake')}
-                  accessibilityRole="switch"
-                  accessibilityState={{ checked: keepAwakeEnabled }}
-                  value={keepAwakeEnabled}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setKeepAwakeEnabled(value);
-                  }}
-                  {...theme.styles.switch(keepAwakeEnabled)}
-                />
-              </View>
-            </View>
-
-            {/* 3. 🎨 Apparence (Card) - Personnalisation visuelle */}
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>{t('settings.appearance.title')}</Text>
-
-              {/* Thème */}
-              <View style={styles.optionRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.appearance.theme')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {theme.mode === "auto"
-                      ? t('settings.appearance.themeDescriptionAuto')
-                      : theme.mode === "dark"
-                      ? t('settings.appearance.themeDescriptionDark')
-                      : t('settings.appearance.themeDescriptionLight')}
-                  </Text>
-                </View>
-                <View style={styles.segmentedControl}>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      theme.mode === "light" && styles.segmentButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      theme.setTheme("light");
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text
-                      style={[
-                        styles.segmentText,
-                        theme.mode === "light" && styles.segmentTextActive,
-                      ]}
-                    >
-                      {t('settings.appearance.themeLight')}
-                    </Text>
-                  </Touchable>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      theme.mode === "dark" && styles.segmentButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      theme.setTheme("dark");
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text
-                      style={[
-                        styles.segmentText,
-                        theme.mode === "dark" && styles.segmentTextActive,
-                      ]}
-                    >
-                      {t('settings.appearance.themeDark')}
-                    </Text>
-                  </Touchable>
-                  <Touchable
-                    style={[
-                      styles.segmentButton,
-                      theme.mode === "auto" && styles.segmentButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      theme.setTheme("auto");
-                    }}
-                    {...touchableProps}
-                  >
-                    <Text
-                      style={[
-                        styles.segmentText,
-                        theme.mode === "auto" && styles.segmentTextActive,
-                      ]}
-                    >
-                      {t('settings.appearance.themeAuto')}
-                    </Text>
-                  </Touchable>
-                </View>
-              </View>
-
-              {/* Palettes de couleurs */}
-              <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.appearance.showPalettes')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {showPalettes
-                      ? t('settings.appearance.showPalettesDescriptionOn')
-                      : t('settings.appearance.showPalettesDescriptionOff')}
-                  </Text>
-                </View>
-                <Switch
-                  accessible={true}
-                  accessibilityLabel={t('accessibility.showPalettes')}
-                  accessibilityRole="switch"
-                  accessibilityState={{ checked: showPalettes }}
-                  value={showPalettes}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setShowPalettes(value);
-                  }}
-                  {...theme.styles.switch(showPalettes)}
-                />
-              </View>
-
-              {showPalettes && (
-                <>
-                  <Text style={[styles.optionDescription, { marginTop: theme.spacing.sm }]}>
-                    {t('settings.appearance.palettesDescription')}
-                  </Text>
-                  <View style={styles.paletteGrid}>
-                    {/* Show only free palettes if user is not premium */}
-                    {Object.keys(TIMER_PALETTES)
-                      .filter(paletteName => isPremiumUser || !isPalettePremium(paletteName))
-                      .map((paletteName) => {
-                        const isActive = currentPalette === paletteName;
-                        const paletteInfo = TIMER_PALETTES[paletteName];
-
-                        return (
-                          <TouchableOpacity
-                            key={paletteName}
-                            style={[
-                              styles.paletteItem,
-                              isActive && styles.paletteItemActive,
-                            ]}
-                            onPress={() => setPalette(paletteName)}
-                            activeOpacity={0.7}
-                          >
-                            <PalettePreview paletteName={paletteName} />
-                            <Text
-                              style={[
-                                styles.paletteName,
-                                isActive && styles.paletteNameActive,
-                              ]}
-                            >
-                              {paletteInfo?.name || paletteName}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-
-                    {/* Discovery button for free users */}
-                    {!isPremiumUser && (
-                      <TouchableOpacity
-                        style={styles.discoverButton}
-                        onPress={() => {
-                          haptics.selection().catch(() => {});
-                          setShowMoreColorsModal(true);
-                        }}
-                        activeOpacity={0.7}
-                      >
-                        <View style={styles.discoverIconContainer}>
-                          <Text style={styles.discoverIcon}>+</Text>
-                        </View>
-                        <Text style={styles.discoverText}>Plus de{'\n'}palettes</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </>
-              )}
-
-              {/* Activités favorites */}
-              <View style={[styles.optionRow, { marginTop: theme.spacing.md, borderBottomWidth: 0 }]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('settings.appearance.showActivities')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {showActivities
-                      ? t('settings.appearance.showActivitiesDescriptionOn')
-                      : t('settings.appearance.showActivitiesDescriptionOff')}
-                  </Text>
-                </View>
-                <Switch
-                  accessible={true}
-                  accessibilityLabel={t('accessibility.showActivities')}
-                  accessibilityRole="switch"
-                  accessibilityState={{ checked: showActivities }}
-                  value={showActivities}
-                  onValueChange={(value) => {
-                    haptics.switchToggle().catch(() => {});
-                    setShowActivities(value);
-
-                    // Si on masque les activités, remettre à "none" (Basique)
-                    if (!value) {
-                      const noneActivity = allActivities.find(
-                        (activity) => activity.id === "none"
-                      );
-                      if (noneActivity) {
-                        setCurrentActivity(noneActivity);
-                      }
-                    }
-                  }}
-                  {...theme.styles.switch(showActivities)}
-                />
-              </View>
-
-              {showActivities && (
-                <>
-                  <Text style={[styles.optionDescription, { marginTop: theme.spacing.sm }]}>
-                    {t('settings.appearance.activitiesDescription')}
-                  </Text>
-                  <View style={styles.favoritesGrid}>
-                    {/* Show only free activities if user is not premium */}
-                    {allActivities
-                      .filter(activity => isPremiumUser || !activity.isPremium)
-                      .map((activity) => {
-                        const isFavorite = favoriteActivities.includes(
-                          activity.id
-                        );
-                        return (
-                          <TouchableOpacity
-                            key={activity.id}
-                            style={[
-                              styles.activityItem,
-                              isFavorite && styles.activityItemFavorite,
-                            ]}
-                            onPress={() => toggleFavorite(activity.id)}
-                            activeOpacity={0.7}
-                          >
-                            <Text style={styles.activityEmoji}>
-                              {activity.id === "none" ? "⏱️" : activity.emoji}
-                            </Text>
-                            <Text
-                              style={[
-                                styles.activityItemLabel,
-                                isFavorite && styles.activityItemLabelFavorite,
-                              ]}
-                            >
-                              {activity.label}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-
-                    {/* Discovery button for free users */}
-                    {!isPremiumUser && (
-                      <TouchableOpacity
-                        style={styles.discoverActivityButton}
-                        onPress={() => {
-                          haptics.selection().catch(() => {});
-                          setShowMoreActivitiesModal(true);
-                        }}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={styles.discoverActivityIcon}>+</Text>
-                        <Text style={styles.discoverActivityText}>Plus{'\n'}d'activités</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </>
-              )}
-            </View>
+            {/* 3. Appearance Section */}
+            <SettingsAppearanceSection
+              theme={theme}
+              currentPalette={currentPalette}
+              setPalette={setPalette}
+              showPalettes={showPalettes}
+              setShowPalettes={setShowPalettes}
+              showActivities={showActivities}
+              setShowActivities={setShowActivities}
+              favoriteActivities={favoriteActivities}
+              toggleFavorite={toggleFavorite}
+              allActivities={allActivities}
+              setCurrentActivity={setCurrentActivity}
+              isPremiumUser={isPremiumUser}
+              setShowMoreColorsModal={setShowMoreColorsModal}
+              setShowMoreActivitiesModal={setShowMoreActivitiesModal}
+              t={t}
+              styles={styles}
+              Touchable={Touchable}
+              touchableProps={touchableProps}
+            />
 
             {/* Divider avant À propos */}
             <View style={styles.levelDivider} />
 
-            {/* 4. ℹ️ À propos (Flat) */}
-            <View style={styles.sectionFlat}>
-              <Text style={styles.sectionTitle}>{t('settings.about.title')}</Text>
-              <View style={styles.optionRow}>
-                <View>
-                  <Text style={styles.optionLabel}>{t('settings.about.appName')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {t('settings.about.appDescription')}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.optionDescription,
-                      { marginTop: theme.spacing.xs },
-                    ]}
-                  >
-                    {t('settings.about.version')} 1.1.7
-                  </Text>
-                </View>
-              </View>
-
-              {/* Relancer le guide - Available for all users */}
-              <TouchableOpacity
-                style={styles.optionRow}
-                onPress={() => {
-                  haptics.selection().catch(() => {});
-                  // Reset l'onboarding complet (WelcomeScreen + tooltips)
-                  resetOnboarding();
-                  // Fermer le modal pour laisser le WelcomeScreen apparaître
-                  onClose();
-                }}
-                activeOpacity={0.7}
-              >
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.optionLabel}>{t('onboarding.restartGuide')}</Text>
-                  <Text style={styles.optionDescription}>
-                    {t('onboarding.restartGuideDescription')}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            {/* Dev Section - Only visible in development */}
-            {__DEV__ && (
-              <View style={styles.sectionFlat}>
-                <Text style={styles.sectionTitle}>{t('settings.dev.title')}</Text>
-                <TouchableOpacity
-                  style={styles.optionRow}
-                  onPress={() => {
-                    Alert.alert(
-                      t('settings.dev.resetOnboardingConfirmTitle'),
-                      t('settings.dev.resetOnboardingConfirmMessage'),
-                      [
-                        {
-                          text: t('common.cancel'),
-                          style: "cancel",
-                          onPress: () => {
-                            haptics.selection().catch(() => {});
-                          },
-                        },
-                        {
-                          text: t('settings.dev.resetOnboardingConfirmButton'),
-                          onPress: () => {
-                            resetOnboarding();
-                            haptics.success().catch(() => {});
-                            onClose();
-                          },
-                          style: "destructive",
-                        },
-                      ]
-                    );
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.optionLabel}>
-                      {t('settings.dev.resetOnboarding')}
-                    </Text>
-                    <Text style={styles.optionDescription}>
-                      {t('onboarding.restartGuideDescription')}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
+            {/* 4. About Section */}
+            <SettingsAboutSection
+              resetOnboarding={resetOnboarding}
+              onClose={onClose}
+              theme={theme}
+              t={t}
+              styles={styles}
+            />
           </ScrollView>
         </View>
       </View>

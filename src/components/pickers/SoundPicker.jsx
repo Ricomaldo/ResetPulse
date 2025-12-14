@@ -81,7 +81,7 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
   };
 
   const handleSoundPress = useCallback(async (soundId) => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
     // Si on appuie sur le son actuellement en lecture, on l'arrête
     if (playingId === soundId && isPlaying) {

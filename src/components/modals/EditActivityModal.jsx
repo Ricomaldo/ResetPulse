@@ -52,14 +52,14 @@ export default function EditActivityModal({
   }, [visible, activity]);
 
   const handleClose = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
   };
 
   const handleSave = () => {
     // Validate inputs
     if (!selectedEmoji) {
-      haptics.warning().catch(() => {});
+      haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
       Alert.alert(
         t('customActivities.create.errorTitle'),
         t('customActivities.create.errorEmoji')
@@ -68,7 +68,7 @@ export default function EditActivityModal({
     }
 
     if (!activityName.trim()) {
-      haptics.warning().catch(() => {});
+      haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
       Alert.alert(
         t('customActivities.create.errorTitle'),
         t('customActivities.create.errorName')
@@ -86,7 +86,7 @@ export default function EditActivityModal({
     // Track analytics
     analytics.trackCustomActivityEdited(activity.id);
 
-    haptics.success().catch(() => {});
+    haptics.success().catch(() => { /* Optional operation - failure is non-critical */ });
     onActivityUpdated?.({
       ...activity,
       emoji: selectedEmoji,
@@ -98,7 +98,7 @@ export default function EditActivityModal({
   };
 
   const handleDelete = () => {
-    haptics.warning().catch(() => {});
+    haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
 
     Alert.alert(
       t('customActivities.edit.deleteConfirmTitle'),
@@ -121,7 +121,7 @@ export default function EditActivityModal({
             // Delete the activity
             removeActivity(activity.id);
 
-            haptics.notification('error').catch(() => {});
+            haptics.notification('error').catch(() => { /* Optional operation - failure is non-critical */ });
             onActivityDeleted?.(activity);
             onClose();
           },

@@ -149,9 +149,9 @@ export default function TimeTimer({
     // Magnetic snap to 0 if very close
     if (minutes <= TIMER.GRADUATION_SNAP_THRESHOLD) {
       minutes = 0;
-      haptics.impact('light').catch(() => {}); // Light feedback for snap
+      haptics.impact('light').catch(() => { /* Optional operation - failure is non-critical */ }); // Light feedback for snap
     } else {
-      haptics.selection().catch(() => {});
+      haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     }
 
     // Convert minutes to seconds and handle 0 specially

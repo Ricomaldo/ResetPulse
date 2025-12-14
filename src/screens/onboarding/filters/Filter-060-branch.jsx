@@ -14,12 +14,12 @@ export default function Filter4Branch({ onContinue }) {
   const t = useTranslation();
 
   const handleChoiceDiscover = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onContinue({ branch: 'discover' });
   };
 
   const handleChoicePersonalize = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onContinue({ branch: 'personalize' });
   };
 

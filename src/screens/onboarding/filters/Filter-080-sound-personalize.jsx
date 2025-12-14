@@ -28,7 +28,7 @@ export default function Filter5bSound({ onContinue }) {
 
   // Tap sur un son: sélectionne + joue preview 2 secondes
   const handleSoundPress = async (soundId) => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
     // Sélectionner le son immédiatement
     setSelectedSound(soundId);
@@ -62,7 +62,7 @@ export default function Filter5bSound({ onContinue }) {
       stopSound();
     }
 
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onContinue({ selectedSound });
   };
 
@@ -73,7 +73,7 @@ export default function Filter5bSound({ onContinue }) {
       stopSound();
     }
 
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onContinue({ selectedSound: 'bell_classic' }); // Default
   };
 

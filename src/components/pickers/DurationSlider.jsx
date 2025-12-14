@@ -35,12 +35,12 @@ export default function DurationSlider({
   const t = useTranslation();
 
   const handlePresetPress = (durationSeconds) => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onValueChange(durationSeconds);
   };
 
   const handleIncrement = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     const currentIndex = DURATION_PRESETS.findIndex((p) => p.seconds === value);
     if (currentIndex < DURATION_PRESETS.length - 1) {
       onValueChange(DURATION_PRESETS[currentIndex + 1].seconds);
@@ -48,7 +48,7 @@ export default function DurationSlider({
   };
 
   const handleDecrement = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     const currentIndex = DURATION_PRESETS.findIndex((p) => p.seconds === value);
     if (currentIndex > 0) {
       onValueChange(DURATION_PRESETS[currentIndex - 1].seconds);

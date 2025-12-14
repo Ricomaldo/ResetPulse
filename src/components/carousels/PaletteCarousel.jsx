@@ -302,7 +302,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   };
 
   const handleMorePress = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     setShowColorsModal(true);
   };
 
