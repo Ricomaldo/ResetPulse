@@ -550,7 +550,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       <PremiumModal
         visible={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
-        highlightedFeature="activités premium"
+        highlightedFeature={t('discovery.activities')}
       />
 
       {/* More Activities Modal (freemium discovery) */}
