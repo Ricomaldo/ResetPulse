@@ -229,3 +229,10 @@ export const getActivityById = (id) =>
 // Get default activity
 export const getDefaultActivity = () =>
   ACTIVITIES.find((activity) => activity.id === "none");
+
+// Check if an activity is custom (created by user)
+export const isCustomActivity = (activity) => activity?.isCustom === true;
+
+// Get activity by ID (checks built-in activities only)
+// For custom activities, use useCustomActivities hook
+export const isBuiltInActivity = (activity) => !activity?.isCustom;

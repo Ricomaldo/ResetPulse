@@ -1,5 +1,5 @@
 // Tests for onboarding analytics events
-import Analytics from '../../../../src/services/analytics';
+import Analytics from '../../src/services/analytics';
 
 // Mock Mixpanel
 jest.mock('mixpanel-react-native', () => ({
@@ -139,22 +139,24 @@ describe('Onboarding Analytics', () => {
 
   describe('trackOnboardingCompleted', () => {
     it('should track completed with result and needs', () => {
-      Analytics.trackOnboardingCompleted('trial_started', ['work', 'time']);
+      Analytics.trackOnboardingCompleted('trial_started', ['work', 'time'], 'discover');
 
       expect(trackSpy).toHaveBeenCalledWith('onboarding_completed', {
         result: 'trial_started',
         needs_selected: ['work', 'time'],
         needs_count: 2,
+        branch: 'discover',
       });
     });
 
     it('should track completed with skipped result', () => {
-      Analytics.trackOnboardingCompleted('skipped', []);
+      Analytics.trackOnboardingCompleted('skipped', [], 'personalize');
 
       expect(trackSpy).toHaveBeenCalledWith('onboarding_completed', {
         result: 'skipped',
         needs_selected: [],
         needs_count: 0,
+        branch: 'personalize',
       });
     });
 
@@ -165,6 +167,7 @@ describe('Onboarding Analytics', () => {
         result: 'unknown',
         needs_selected: [],
         needs_count: 0,
+        branch: null,
       });
     });
   });

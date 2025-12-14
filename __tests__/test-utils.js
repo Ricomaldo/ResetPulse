@@ -5,11 +5,16 @@ import React from 'react';
 /**
  * Minimal renderHook implementation using react-test-renderer
  * No external dependencies, just what jest-expo provides
+ *
+ * @param {Function} callback - Hook to render
+ * @param {Object} options - Options object
+ * @param {React.ComponentType} options.wrapper - Optional wrapper component (for Context providers)
  */
-export function renderHook(callback) {
+export function renderHook(callback, options = {}) {
   let result = { current: null };
   let error = null;
   let renderer;
+  const { wrapper: Wrapper } = options;
 
   function TestComponent() {
     try {
@@ -20,8 +25,12 @@ export function renderHook(callback) {
     return null;
   }
 
+  const ComponentToRender = Wrapper
+    ? () => <Wrapper><TestComponent /></Wrapper>
+    : TestComponent;
+
   act(() => {
-    renderer = create(<TestComponent />);
+    renderer = create(<ComponentToRender />);
   });
 
   if (error) throw error;
@@ -30,7 +39,7 @@ export function renderHook(callback) {
     result,
     rerender: () => {
       act(() => {
-        renderer.update(<TestComponent />);
+        renderer.update(<ComponentToRender />);
       });
     },
     unmount: () => {

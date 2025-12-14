@@ -278,7 +278,8 @@
     "activity": "Activity {name}",
     "activityLocked": "Premium activity locked",
     "moreActivities": "More activities",
-    "discoverPremium": "Discover premium activities"
+    "discoverPremium": "Discover premium activities",
+    "customActivityHint": "Long press to edit this custom activity"
   },
   "discovery": {
     "defaultCta": "Unlock everything - 7 days free",
@@ -299,5 +300,47 @@
     "message": "Want to explore more colors and activities?",
     "explore": "Explore premium",
     "dismiss": "Maybe later"
+  },
+  "customActivities": {
+    "create": {
+      "title": "Create activity",
+      "namePlaceholder": "Ex: Guitar, Cooking...",
+      "nameLabel": "Activity name",
+      "emojiLabel": "Choose emoji",
+      "durationLabel": "Default duration",
+      "preview": "Preview",
+      "previewPlaceholder": "My activity",
+      "buttonCreate": "Create",
+      "buttonCancel": "Cancel",
+      "errorTitle": "Missing information",
+      "errorEmoji": "Please choose an emoji for your activity.",
+      "errorName": "Please enter a name for your activity."
+    },
+    "edit": {
+      "title": "Edit activity",
+      "buttonSave": "Save",
+      "buttonDelete": "Delete",
+      "deleteConfirmTitle": "Delete?",
+      "deleteConfirmMessage": "This action is irreversible.",
+      "deleteConfirmButton": "Delete",
+      "deleteCancelButton": "Cancel",
+      "usageStats": "Used %{count} times"
+    },
+    "premium": {
+      "gateTitle": "Premium Feature",
+      "gateMessage": "Create unlimited custom activities with ResetPulse Premium",
+      "gateButton": "Discover Premium",
+      "gateDismiss": "Later"
+    },
+    "duration": {
+      "minutes": "min"
+    },
+    "addButton": "Create activity",
+    "addButtonHint": "Create a custom activity",
+    "toast": {
+      "created": "Activity created!",
+      "updated": "Activity updated",
+      "deleted": "Activity deleted"
+    }
   }
 }

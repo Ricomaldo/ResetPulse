@@ -6,3 +6,5 @@
 
 export { default as SoundPicker } from './SoundPicker';
 export { default as PalettePreview } from './PalettePreview';
+export { default as EmojiPicker, ACTIVITY_EMOJIS } from './EmojiPicker';
+export { default as DurationSlider, DURATION_PRESETS } from './DurationSlider';

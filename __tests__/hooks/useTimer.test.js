@@ -1,18 +1,29 @@
 // Minimaliste useTimer tests for SDK 54
-import { renderHook, act } from '../../test-utils';
-import useTimer from '../../../src/hooks/useTimer';
-import { TIMER } from '../../../src/components/timer/timerConstants';
+import { renderHook, act } from '../test-utils';
+import useTimer from '../../src/hooks/useTimer';
+import { TIMER } from '../../src/components/timer/timerConstants';
 
 // Mock TimerOptionsContext
-jest.mock('../../../src/contexts/TimerOptionsContext', () => ({
+jest.mock('../../src/contexts/TimerOptionsContext', () => ({
   useTimerOptions: () => ({
     selectedSoundId: 'bell_classic',
     shouldPulse: false,
   })
 }));
 
+// Mock TimerPaletteContext
+jest.mock('../../src/contexts/TimerPaletteContext', () => ({
+  useTimerPalette: () => ({
+    currentPalette: 'terre',
+    currentColors: ['#8B4513', '#228B22', '#B22222', '#DAA520'],
+    selectedColorIndex: 0,
+    selectedColor: '#8B4513',
+    setSelectedColorIndex: jest.fn(),
+  })
+}));
+
 // Mock haptics
-jest.mock('../../../src/utils/haptics', () => ({
+jest.mock('../../src/utils/haptics', () => ({
   __esModule: true,
   default: {
     notification: jest.fn(() => Promise.resolve())
@@ -20,11 +31,21 @@ jest.mock('../../../src/utils/haptics', () => ({
 }));
 
 // Mock audio
-jest.mock('../../../src/hooks/useSimpleAudio', () => ({
+jest.mock('../../src/hooks/useSimpleAudio', () => ({
   __esModule: true,
   default: () => ({
     playSound: jest.fn()
   })
+}));
+
+// Mock analytics
+jest.mock('../../src/services/analytics', () => ({
+  __esModule: true,
+  default: {
+    trackTimerStarted: jest.fn(),
+    trackTimerCompleted: jest.fn(),
+    trackTimerAbandoned: jest.fn(),
+  }
 }));
 
 // Mock timers for tests

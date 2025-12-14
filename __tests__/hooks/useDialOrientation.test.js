@@ -1,6 +1,6 @@
 // Minimaliste useDialOrientation tests for SDK 54
-import { renderHook } from '../../test-utils';
-import { useDialOrientation } from '../../../src/hooks/useDialOrientation';
+import { renderHook } from '../test-utils';
+import { useDialOrientation } from '../../src/hooks/useDialOrientation';
 
 describe('useDialOrientation - Core functionality', () => {
 
