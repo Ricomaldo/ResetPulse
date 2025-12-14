@@ -21,7 +21,7 @@ export default function Filter3_5Notifications({ onContinue }) {
   }, []);
 
   const handleRequestPermission = async () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
     try {
       const { status } = await Notifications.requestPermissionsAsync();
@@ -47,7 +47,7 @@ export default function Filter3_5Notifications({ onContinue }) {
   };
 
   const handleSkip = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     analytics.trackOnboardingNotifSkipped();
     onContinue({ notificationPermission: false });
   };

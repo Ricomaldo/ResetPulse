@@ -26,14 +26,14 @@ export default function Filter5cInterface({ onContinue }) {
   const [digitalTimer, setDigitalTimer] = useState(true);
 
   const handleThemeSelect = (themeValue) => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     setSelectedTheme(themeValue);
     // Appliquer le thème immédiatement (live preview)
     applyTheme(themeValue);
   };
 
   const handleFinish = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onContinue({
       theme: selectedTheme,
       minimalInterface,
@@ -42,7 +42,7 @@ export default function Filter5cInterface({ onContinue }) {
   };
 
   const handleSkip = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     // Remettre le thème par défaut si skip
     applyTheme('auto');
     onContinue({
@@ -112,7 +112,7 @@ export default function Filter5cInterface({ onContinue }) {
             <Switch
               value={minimalInterface}
               onValueChange={(value) => {
-                haptics.switchToggle().catch(() => {});
+                haptics.switchToggle().catch(() => { /* Optional operation - failure is non-critical */ });
                 setMinimalInterface(value);
               }}
               trackColor={{
@@ -138,7 +138,7 @@ export default function Filter5cInterface({ onContinue }) {
             <Switch
               value={digitalTimer}
               onValueChange={(value) => {
-                haptics.switchToggle().catch(() => {});
+                haptics.switchToggle().catch(() => { /* Optional operation - failure is non-critical */ });
                 setDigitalTimer(value);
               }}
               trackColor={{

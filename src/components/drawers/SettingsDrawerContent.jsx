@@ -162,13 +162,13 @@ export default function SettingsDrawerContent() {
                       text: t('common.cancel'),
                       style: "cancel",
                       onPress: () => {
-                        haptics.selection().catch(() => {});
+                        haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
                       },
                     },
                     {
                       text: t('settings.interface.pulseWarningEnable'),
                       onPress: () => {
-                        haptics.switchToggle().catch(() => {});
+                        haptics.switchToggle().catch(() => { /* Optional operation - failure is non-critical */ });
                         analytics.trackSettingChanged('pulse_animation', true, shouldPulse);
                         setShouldPulse(true);
                       },
@@ -177,7 +177,7 @@ export default function SettingsDrawerContent() {
                   { cancelable: true }
                 );
               } else {
-                haptics.switchToggle().catch(() => {});
+                haptics.switchToggle().catch(() => { /* Optional operation - failure is non-critical */ });
                 analytics.trackSettingChanged('pulse_animation', false, shouldPulse);
                 setShouldPulse(false);
               }
@@ -243,7 +243,7 @@ export default function SettingsDrawerContent() {
               scaleMode === mode && styles.dialModeButtonActive,
             ]}
             onPress={() => {
-              haptics.selection().catch(() => {});
+              haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
               analytics.trackSettingChanged('scale_mode', mode, scaleMode);
               setScaleMode(mode);
             }}

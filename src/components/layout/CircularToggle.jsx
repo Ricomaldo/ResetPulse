@@ -19,7 +19,7 @@ export default function CircularToggle({ clockwise, onToggle, size = 60 }) {
   const theme = useTheme();
 
   const handlePress = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onToggle(!clockwise);
   };
 

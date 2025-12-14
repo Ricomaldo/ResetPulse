@@ -44,7 +44,7 @@ export default function EmojiPicker({
   const theme = useTheme();
 
   const handleEmojiPress = (emoji) => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onSelectEmoji(emoji);
   };
 

@@ -28,14 +28,14 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
 
   const handleExplore = () => {
     analytics.trackTwoTimersModalExploreClicked();
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
     onExplore?.();
   };
 
   const handleSkip = () => {
     analytics.trackTwoTimersModalDismissed();
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
   };
 

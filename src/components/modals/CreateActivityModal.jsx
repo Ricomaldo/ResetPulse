@@ -54,7 +54,7 @@ export default function CreateActivityModal({
   }, [visible]);
 
   const handleClose = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
   };
 
@@ -66,7 +66,7 @@ export default function CreateActivityModal({
   const handleCreate = () => {
     // Validate inputs
     if (!selectedEmoji) {
-      haptics.warning().catch(() => {});
+      haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
       Alert.alert(
         t('customActivities.create.errorTitle'),
         t('customActivities.create.errorEmoji')
@@ -75,7 +75,7 @@ export default function CreateActivityModal({
     }
 
     if (!activityName.trim()) {
-      haptics.warning().catch(() => {});
+      haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
       Alert.alert(
         t('customActivities.create.errorTitle'),
         t('customActivities.create.errorName')
@@ -122,7 +122,7 @@ export default function CreateActivityModal({
       duration
     );
 
-    haptics.success().catch(() => {});
+    haptics.success().catch(() => { /* Optional operation - failure is non-critical */ });
     onActivityCreated?.(newActivity);
     onClose();
   };

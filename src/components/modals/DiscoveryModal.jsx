@@ -34,7 +34,7 @@ export default function DiscoveryModal({
   const dismissTextFinal = dismissText || t('discovery.defaultDismiss');
 
   const handleUnlock = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
     // Petit délai pour la transition fluide
     setTimeout(() => {
@@ -43,7 +43,7 @@ export default function DiscoveryModal({
   };
 
   const handleClose = () => {
-    haptics.selection().catch(() => {});
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
   };
 
