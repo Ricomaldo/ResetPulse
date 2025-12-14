@@ -8,6 +8,10 @@ status: active
 
 > Documentation du projet ResetPulse - Timer iOS pour personnes neuroatypiques
 
+## 🚀 Point d'Entrée
+
+**→ Commencer par [`INDEX.md`](INDEX.md)** — Vue d'ensemble avec status et liens
+
 ## 🎯 Vue d'ensemble
 
 Documentation organisée en 3 catégories principales avec système de préfixes optionnels pour faciliter la navigation.
