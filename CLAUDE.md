@@ -1,6 +1,6 @@
 ---
 created: '2025-12-07'
-updated: '2025-12-07'
+updated: '2025-12-14'
 status: active
 ---
 
@@ -18,7 +18,7 @@ ResetPulse est une application Time Timer visuel pour utilisateurs neuroatypique
 - **i18n**: i18n-js (15 langues supportées)
 - **Analytics**: Mixpanel
 - **IAP**: RevenueCat (react-native-purchases)
-- **Package manager**: Yarn 4.9.1
+- **Package manager**: npm
 
 ## Commandes essentielles
 
@@ -127,6 +127,29 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 - iOS build nécessite Xcode (pas EAS Build) pour support IAP
 - Le hook `useTimer` est critique - bien testé dans `__tests__/`
 - Les palettes utilisent un système séparé du thème global (voir `timerPalettes.js`)
+
+---
+
+## Documentation
+
+La documentation du projet est organisée dans `_internal/docs/` :
+
+| Catégorie | Emplacement | Description |
+|-----------|-------------|-------------|
+| Guides | `_internal/docs/guides/` | Guides pratiques (builds, deployment, testing) |
+| Decisions | `_internal/docs/decisions/` | Décisions techniques et ADRs |
+| Reports | `_internal/docs/reports/` | Audits, analyses, architecture, legal |
+| Legacy | `_internal/docs/legacy/` | Documentation précédente (référence) |
+
+→ Voir [`_internal/docs/README.md`](_internal/docs/README.md) pour la structure complète.
+
+---
+
+## Cockpit
+
+Le cockpit (gestion de projet) est dans `_internal/cockpit/` :
+
+→ Voir [`_internal/cockpit/CLAUDE.md`](_internal/cockpit/CLAUDE.md) pour l'état des missions.
 
 ---
 
