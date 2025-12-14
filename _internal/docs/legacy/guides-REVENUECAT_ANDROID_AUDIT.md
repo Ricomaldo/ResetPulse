@@ -47,7 +47,7 @@ L'intégration RevenueCat pour Android est **fonctionnelle et conforme aux meill
 ```javascript
 export const REVENUECAT_CONFIG = {
   ios: {
-    apiKey: "***REMOVED***",
+    apiKey: "appl_NJoSzWzcoJXLiNDMTGKJShISApt",
   },
   android: {
     apiKey: "goog_OemWJnBmzLuWoAGmEfDJKFBEAYc",
@@ -228,7 +228,7 @@ versionName "1.1.5"
 
 **Project ID**: `revenuecat-474510`
 **Service Account**: `revenuecat-service-account@revenuecat-474510.iam.gserviceaccount.com`
-**Public API Key**: `***REMOVED***`
+**Public API Key**: `goog_URjPIqpNSxbyogfdststoCOmQRg`
 
 **Statut**: Service account créé et correctement configuré dans GCP
 

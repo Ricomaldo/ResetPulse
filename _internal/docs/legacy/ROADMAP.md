@@ -171,7 +171,7 @@ Mixpanel integration avant marketing launch. 6 events critiques trackés. Baseli
 **Configuration validée :**
 
 - ✅ SDK : mixpanel-react-native@3.1.2
-- ✅ Token projet : `***REMOVED***` (ResetPulse)
+- ✅ Token projet : `4b1bd9b9a3be61afb7c19b40ad5a73de` (ResetPulse)
 - ✅ Server EU : `https://api-eu.mixpanel.com` (RGPD compliance)
 - ✅ ProGuard rules Android : Obfuscation configured
 - ✅ Flush DEV : Feedback immédiat debugging

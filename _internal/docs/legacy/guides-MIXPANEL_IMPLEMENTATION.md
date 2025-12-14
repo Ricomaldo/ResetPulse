@@ -79,7 +79,7 @@ import { Mixpanel } from 'mixpanel-react-native';
 import { Platform } from 'react-native';
 
 // Mixpanel Project Token - ResetPulse Production
-const MIXPANEL_TOKEN = '***REMOVED***';
+const MIXPANEL_TOKEN = '4b1bd9b9a3be61afb7c19b40ad5a73de';
 
 class Analytics {
   constructor() {

@@ -10,10 +10,10 @@
 // Clés API RevenueCat
 export const REVENUECAT_CONFIG = {
   ios: {
-    apiKey: "***REMOVED***",
+    apiKey: "appl_NJoSzWzcoJXLiNDMTGKJShISApt",
   },
   android: {
-    apiKey: "***REMOVED***",
+    apiKey: "goog_URjPIqpNSxbyogfdststoCOmQRg",
   },
 };
 

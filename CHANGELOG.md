@@ -428,7 +428,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Analytics Service** (`src/services/analytics.js`)
   - Mixpanel SDK v3+ integration (mixpanel-react-native@3.1.2)
   - EU data residency configuration (https://api-eu.mixpanel.com)
-  - Token projet: ***REMOVED***
+  - Token projet: 4b1bd9b9a3be61afb7c19b40ad5a73de
   - Super properties: platform, app_version
   - Graceful fallback Expo Go
   - Flush immédiat DEV (debugging feedback)
@@ -440,7 +440,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Fixed
 - **Token Organisation → Projet** - Events droppés silencieusement
   - Initial: 19fef5beb302264e8e3eaf9c0ccaed91 (organisation token)
-  - Corrigé: ***REMOVED*** (projet ResetPulse)
+  - Corrigé: 4b1bd9b9a3be61afb7c19b40ad5a73de (projet ResetPulse)
 
 - **EU Data Residency RGPD** - Serveurs US → EU
   - Added: `setServerURL('https://api-eu.mixpanel.com')` après init()
@@ -669,7 +669,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 - **RevenueCat SDK Integration** - Complete in-app purchase system
   - SDK `react-native-purchases@9.5.3` installed and configured
-  - iOS API Key: `***REMOVED***`
+  - iOS API Key: `appl_NJoSzWzcoJXLiNDMTGKJShISApt`
   - Android API Key: `goog_OemWJnBmzLuWoAGmEfDJKFBEAYc`
   - Product: `com.irimwebforge.resetpulse.premium` (non-consumable)
   - Entitlement: `premium_access`

@@ -77,7 +77,7 @@ Analytics.trackAppOpened(true); // Test event
 **Hypothèse** : Token incorrect ?
 
 **Vérification dashboard** :
-- Settings → Project Token : `***REMOVED***`
+- Settings → Project Token : `4b1bd9b9a3be61afb7c19b40ad5a73de`
 
 **Code `analytics.js:22`** :
 ```javascript
@@ -88,7 +88,7 @@ const MIXPANEL_TOKEN = '19fef5beb302264e8e3eaf9c0ccaed91'; // ❌ MAUVAIS
 
 **Fix appliqué** :
 ```javascript
-const MIXPANEL_TOKEN = '***REMOVED***'; // ✅ CORRECT
+const MIXPANEL_TOKEN = '4b1bd9b9a3be61afb7c19b40ad5a73de'; // ✅ CORRECT
 ```
 
 **Commit** : `c36c7b3` - Fix token organization → project
@@ -320,7 +320,7 @@ if (__DEV__) {
 - 6 events : Implémentés dans 4 fichiers
 
 **Configuration** :
-- Token : `***REMOVED***`
+- Token : `4b1bd9b9a3be61afb7c19b40ad5a73de`
 - Endpoint : `https://api-eu.mixpanel.com`
 - ProGuard : 3 rules Android
 
