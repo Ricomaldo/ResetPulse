@@ -5,8 +5,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import Purchases from 'react-native-purchases';
 import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
-import { TEST_MODE } from '../config/testMode';
+import { TEST_MODE } from '../config/test-mode';
 import Analytics from '../services/analytics';
+import logger from '../utils/logger';
 
 const PurchaseContext = createContext();
 
@@ -42,7 +43,7 @@ export const PurchaseProvider = ({ children }) => {
       Purchases.addCustomerInfoUpdateListener(updateCustomerInfo);
 
     } catch (error) {
-      console.error('[RevenueCat] Initialization error:', error);
+      logger.error('[RevenueCat] Initialization error:', error);
       setIsLoading(false);
     }
   };
@@ -60,7 +61,7 @@ export const PurchaseProvider = ({ children }) => {
   const purchaseProduct = async (productIdentifier) => {
     // Prevent double-purchase race condition
     if (isPurchasing) {
-      console.warn('[RevenueCat] Purchase already in progress, ignoring');
+      logger.warn('[RevenueCat] Purchase already in progress, ignoring');
       return { success: false, error: 'Purchase already in progress' };
     }
 
@@ -69,7 +70,7 @@ export const PurchaseProvider = ({ children }) => {
 
       // WORKAROUND for RevenueCat bug with non-consumable products
       // Try to get the package instead of using product directly
-      console.log('[RevenueCat] 🔍 Attempting purchase with product ID:', productIdentifier);
+      logger.log('[RevenueCat] 🔍 Attempting purchase with product ID:', productIdentifier);
 
       // First try to get offerings to find the package
       const offerings = await Purchases.getOfferings();
@@ -79,7 +80,7 @@ export const PurchaseProvider = ({ children }) => {
         );
 
         if (targetPackage) {
-          console.log('[RevenueCat] 📦 Found package, using purchasePackage:', targetPackage.identifier);
+          logger.log('[RevenueCat] 📦 Found package, using purchasePackage:', targetPackage.identifier);
           const { customerInfo: info } = await Purchases.purchasePackage(targetPackage);
           updateCustomerInfo(info);
 
@@ -99,7 +100,7 @@ export const PurchaseProvider = ({ children }) => {
       }
 
       // Fallback to purchaseProduct if package not found
-      console.log('[RevenueCat] ⚠️ Package not found, falling back to purchaseProduct');
+      logger.log('[RevenueCat] ⚠️ Package not found, falling back to purchaseProduct');
       const { customerInfo: info } = await Purchases.purchaseProduct(productIdentifier);
       updateCustomerInfo(info);
 
@@ -128,7 +129,7 @@ export const PurchaseProvider = ({ children }) => {
 
       // Handle network errors
       if (error.code === Purchases.PURCHASES_ERROR_CODE.NETWORK_ERROR) {
-        console.error('[RevenueCat] Network error during purchase:', error);
+        logger.error('[RevenueCat] Network error during purchase:', error);
         return {
           success: false,
           error: 'Pas de connexion internet. Vérifiez votre réseau et réessayez.',
@@ -138,7 +139,7 @@ export const PurchaseProvider = ({ children }) => {
 
       // Handle store errors
       if (error.code === Purchases.PURCHASES_ERROR_CODE.STORE_PROBLEM_ERROR) {
-        console.error('[RevenueCat] Store problem:', error);
+        logger.error('[RevenueCat] Store problem:', error);
         return {
           success: false,
           error: 'Problème avec le store. Réessayez plus tard.',
@@ -148,7 +149,7 @@ export const PurchaseProvider = ({ children }) => {
 
       // Handle payment errors
       if (error.code === Purchases.PURCHASES_ERROR_CODE.PAYMENT_PENDING_ERROR) {
-        console.error('[RevenueCat] Payment pending:', error);
+        logger.error('[RevenueCat] Payment pending:', error);
         return {
           success: false,
           error: 'Paiement en attente. Vérifiez vos achats dans quelques minutes.',
@@ -157,7 +158,7 @@ export const PurchaseProvider = ({ children }) => {
       }
 
       // Generic error
-      console.error('[RevenueCat] Purchase error:', error);
+      logger.error('[RevenueCat] Purchase error:', error);
       return { success: false, error: error.message || 'Une erreur est survenue' };
     } finally {
       setIsPurchasing(false);
@@ -180,7 +181,7 @@ export const PurchaseProvider = ({ children }) => {
     } catch (error) {
       // Handle network errors during restore
       if (error.code === Purchases.PURCHASES_ERROR_CODE.NETWORK_ERROR) {
-        console.error('[RevenueCat] Network error during restore:', error);
+        logger.error('[RevenueCat] Network error during restore:', error);
         return {
           success: false,
           error: 'Pas de connexion internet. Vérifiez votre réseau et réessayez.',
@@ -188,18 +189,18 @@ export const PurchaseProvider = ({ children }) => {
         };
       }
 
-      console.error('[RevenueCat] Restore error:', error);
+      logger.error('[RevenueCat] Restore error:', error);
       return { success: false, error: error.message || 'Erreur de restauration' };
     }
   };
 
   const getOfferings = async () => {
     try {
-      console.log('[RevenueCat] 🔍 Fetching offerings...');
+      logger.log('[RevenueCat] 🔍 Fetching offerings...');
       const offerings = await Purchases.getOfferings();
 
       // DEBUG: Log complete offerings structure
-      console.log('[RevenueCat] 📦 Raw offerings object:', {
+      logger.log('[RevenueCat] 📦 Raw offerings object:', {
         hasAll: !!offerings.all,
         allKeys: offerings.all ? Object.keys(offerings.all) : [],
         hasCurrent: !!offerings.current,
@@ -209,7 +210,7 @@ export const PurchaseProvider = ({ children }) => {
 
       // Log current offering details if available
       if (offerings.current) {
-        console.log('[RevenueCat] ✅ Current offering found:', {
+        logger.log('[RevenueCat] ✅ Current offering found:', {
           identifier: offerings.current.identifier,
           packagesCount: offerings.current.availablePackages?.length,
           packages: offerings.current.availablePackages?.map(pkg => ({
@@ -220,18 +221,18 @@ export const PurchaseProvider = ({ children }) => {
           }))
         });
       } else {
-        console.warn('[RevenueCat] ⚠️ No current offering found');
+        logger.warn('[RevenueCat] ⚠️ No current offering found');
       }
 
       return offerings.current;
     } catch (error) {
       // Handle network errors when fetching offerings
       if (error.code === Purchases.PURCHASES_ERROR_CODE.NETWORK_ERROR) {
-        console.error('[RevenueCat] Network error fetching offerings:', error);
+        logger.error('[RevenueCat] Network error fetching offerings:', error);
         return { error: 'network', message: 'Pas de connexion internet' };
       }
 
-      console.error('[RevenueCat] Get offerings error:', error);
+      logger.error('[RevenueCat] Get offerings error:', error);
       return { error: 'unknown', message: error.message || 'Erreur inconnue' };
     }
   };

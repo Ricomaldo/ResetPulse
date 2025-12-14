@@ -7,7 +7,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
-import { TIMER_PALETTES } from '../../config/timerPalettes';
+import { TIMER_PALETTES } from '../../config/timer-palettes';
 
 export const PalettePreview = ({ paletteName }) => {
   const theme = useTheme();

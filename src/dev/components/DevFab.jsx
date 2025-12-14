@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
-import { SHOW_DEV_FAB } from '../../config/testMode';
+import { SHOW_DEV_FAB } from '../../config/test-mode';
 
 export default function DevFab({
   isPremiumMode,

@@ -16,7 +16,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { useTimerPalette } from "../../contexts/TimerPaletteContext";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
-import { TIMER_PALETTES, getFreePalettes } from "../../config/timerPalettes";
+import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes";
 import { usePremiumStatus } from "../../hooks/usePremiumStatus";
 import haptics from "../../utils/haptics";
 import { PremiumModal, MoreColorsModal } from "../modals";
@@ -373,9 +373,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                 <TouchableOpacity
                   key={`${paletteName}-${colorIndex}`}
                   accessible={true}
-                  accessibilityLabel={`Couleur ${
-                    colorIndex + 1
-                  } de la palette ${paletteInfo.name}`}
+                  accessibilityLabel={t('accessibility.colorNumber', { number: colorIndex + 1 })}
                   accessibilityRole="button"
                   accessibilityState={{
                     selected: isCurrentPalette && currentColor === color,
@@ -420,7 +418,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
               onPress={handleMorePress}
               activeOpacity={0.7}
               accessible={true}
-              accessibilityLabel="Découvrir plus de palettes"
+              accessibilityLabel={t('accessibility.discoverMorePalettes')}
               accessibilityRole="button"
             >
               <Text style={styles.moreButtonText}>+</Text>
@@ -446,7 +444,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       <PremiumModal
         visible={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
-        highlightedFeature="palettes premium"
+        highlightedFeature={t('discovery.colors')}
       />
 
       {/* More Colors Modal (découverte) */}

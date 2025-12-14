@@ -6,7 +6,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
-import { TIMER_PALETTES } from "../../config/timerPalettes";
+import { TIMER_PALETTES } from '../../config/timer-palettes";
 import DiscoveryModal from "./DiscoveryModal";
 import analytics from "../../services/analytics";
 

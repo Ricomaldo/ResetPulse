@@ -4,7 +4,7 @@ import { StatusBar, Animated, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ========== DEV MODE ==========
-import { DEV_MODE, SHOW_DEV_FAB, DEFAULT_PREMIUM } from './src/config/testMode';
+import { DEV_MODE, SHOW_DEV_FAB, DEFAULT_PREMIUM } from './src/config/test-mode';
 import DevFab from './src/dev/components/DevFab';
 import { DevPremiumContext } from './src/dev/DevPremiumContext';
 // ==============================

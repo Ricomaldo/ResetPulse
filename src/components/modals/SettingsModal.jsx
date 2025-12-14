@@ -23,7 +23,7 @@ import PremiumModal from "./PremiumModal";
 import MoreColorsModal from "./MoreColorsModal";
 import MoreActivitiesModal from "./MoreActivitiesModal";
 import { getAllActivities } from "../../config/activities";
-import { TIMER_PALETTES, isPalettePremium } from "../../config/timerPalettes";
+import { TIMER_PALETTES, isPalettePremium } from '../../config/timer-palettes";
 import haptics from "../../utils/haptics";
 import { usePremiumStatus } from "../../hooks/usePremiumStatus";
 import { useTranslation } from "../../hooks/useTranslation";

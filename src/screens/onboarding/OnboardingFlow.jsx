@@ -6,19 +6,19 @@ import { View, TouchableOpacity, Text, StyleSheet, AppState } from 'react-native
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs, getStepName } from './onboardingConstants';
 import analytics from '../../services/analytics';
-import { DEV_MODE } from '../../config/testMode';
+import { DEV_MODE } from '../../config/test-mode';
 
 import {
-  Filter0Opening,
-  Filter1Needs,
-  Filter2Creation,
-  Filter3Test,
-  Filter3_5Notifications,
-  Filter4Branch,
-  Filter5aVision,
-  Filter5bSound,
-  Filter5cInterface,
-  Filter5Paywall,
+  Filter010Opening,
+  Filter020Needs,
+  Filter030Creation,
+  Filter040Test,
+  Filter050Notifications,
+  Filter060Branch,
+  Filter070VisionDiscover,
+  Filter080SoundPersonalize,
+  Filter090PaywallDiscover,
+  Filter100InterfacePersonalize,
 } from './filters';
 
 const TOTAL_FILTERS = 8;
@@ -135,13 +135,13 @@ export default function OnboardingFlow({ onComplete }) {
   const renderFilter = () => {
     switch (currentFilter) {
       case 0:
-        // Filter 0: Opening (breathe)
-        return <Filter0Opening onContinue={goToNextFilter} />;
+        // Filter 010: Opening (breathe)
+        return <Filter010Opening onContinue={goToNextFilter} />;
 
       case 1:
-        // Filter 1: Needs
+        // Filter 020: Needs
         return (
-          <Filter1Needs
+          <Filter020Needs
             onContinue={(selectedNeeds) => {
               setNeeds(selectedNeeds);
               // Track step completed avec les needs sélectionnés
@@ -155,9 +155,9 @@ export default function OnboardingFlow({ onComplete }) {
         );
 
       case 2:
-        // Filter 2: Creation
+        // Filter 030: Creation
         return (
-          <Filter2Creation
+          <Filter030Creation
             needs={needs}
             onContinue={(config) => {
               setTimerConfig(config);
@@ -175,15 +175,15 @@ export default function OnboardingFlow({ onComplete }) {
         );
 
       case 3:
-        // Filter 3: Test 60 sec
+        // Filter 040: Test 60 sec
         return (
-          <Filter3Test timerConfig={timerConfig} onContinue={goToNextFilter} />
+          <Filter040Test timerConfig={timerConfig} onContinue={goToNextFilter} />
         );
 
       case 4:
-        // Filter 3.5: Notifications Permission
+        // Filter 050: Notifications Permission
         return (
-          <Filter3_5Notifications
+          <Filter050Notifications
             onContinue={(data) => {
               setNotificationPermission(data.notificationPermission);
               analytics.trackOnboardingStepCompleted(4, getStepName(4, branch), {
@@ -195,9 +195,9 @@ export default function OnboardingFlow({ onComplete }) {
         );
 
       case 5:
-        // Filter 4: Branch Choice
+        // Filter 060: Branch Choice
         return (
-          <Filter4Branch
+          <Filter060Branch
             onContinue={(data) => {
               setBranch(data.branch);
               // Track V3 specific event
@@ -211,12 +211,12 @@ export default function OnboardingFlow({ onComplete }) {
         );
 
       case 6:
-        // Filter 5a (discover) or 5b (personalize)
+        // Filter 070 (discover) or 080 (personalize)
         if (branch === 'discover') {
-          return <Filter5aVision needs={needs} onContinue={goToNextFilter} />;
+          return <Filter070VisionDiscover needs={needs} onContinue={goToNextFilter} />;
         } else if (branch === 'personalize') {
           return (
-            <Filter5bSound
+            <Filter080SoundPersonalize
               onContinue={(data) => {
                 setSoundConfig(data.selectedSound);
                 // Track V3 specific event
@@ -229,15 +229,15 @@ export default function OnboardingFlow({ onComplete }) {
             />
           );
         }
-        return <Filter0Opening onContinue={goToNextFilter} />;
+        return <Filter010Opening onContinue={goToNextFilter} />;
 
       case 7:
         // Filter 6 (paywall for discover) or 5c (interface for personalize)
         if (branch === 'discover') {
-          return <Filter5Paywall onComplete={handleComplete} />;
+          return <Filter090PaywallDiscover onComplete={handleComplete} />;
         } else if (branch === 'personalize') {
           return (
-            <Filter5cInterface
+            <Filter100InterfacePersonalize
               onContinue={(data) => {
                 setInterfaceConfig(data);
                 // Track V3 specific event
@@ -257,10 +257,10 @@ export default function OnboardingFlow({ onComplete }) {
             />
           );
         }
-        return <Filter0Opening onContinue={goToNextFilter} />;
+        return <Filter010Opening onContinue={goToNextFilter} />;
 
       default:
-        return <Filter0Opening onContinue={goToNextFilter} />;
+        return <Filter010Opening onContinue={goToNextFilter} />;
     }
   };
 

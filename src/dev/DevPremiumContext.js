@@ -2,7 +2,7 @@
 // Contexte pour override le mode premium en dev
 
 import React, { createContext, useContext, useState } from 'react';
-import { DEFAULT_PREMIUM, DEV_MODE } from '../config/testMode';
+import { DEFAULT_PREMIUM, DEV_MODE } from '../config/test-mode';
 
 const DevPremiumContext = createContext(null);
 
