@@ -2,9 +2,13 @@
 // Contexte dédié aux palettes du timer (séparé du thème global)
 
 import React, { createContext, useContext, useEffect, useRef } from 'react';
+import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import logger from '../utils/logger';
 import { usePersistedState } from '../hooks/usePersistedState';
-import { TIMER_PALETTES, getTimerColors } from '../config/timerPalettes';
+import logger from '../utils/logger';
+import { TIMER_PALETTES, getTimerColors } from '../config/timer-palettes';
+import logger from '../utils/logger';
 
 const TimerPaletteContext = createContext(null);
 
@@ -14,7 +18,7 @@ export const TimerPaletteProvider = ({ children }) => {
   // Palette actuelle (persistée)
   const [currentPalette, setCurrentPalette] = usePersistedState(
     '@ResetPulse:timerPalette',
-    'sérénité' // Palette par défaut
+    'serenity' // Palette par défaut
   );
 
   // Couleur sélectionnée dans la palette
@@ -42,7 +46,7 @@ export const TimerPaletteProvider = ({ children }) => {
           }
 
           if (__DEV__) {
-            console.log('[TimerPaletteContext] Applied onboarding palette config:', {
+            logger.log('[TimerPaletteContext] Applied onboarding palette config:', {
               palette: config.palette,
               colorIndex: config.colorIndex,
             });
@@ -50,7 +54,7 @@ export const TimerPaletteProvider = ({ children }) => {
         }
         hasLoadedOnboardingConfig.current = true;
       } catch (error) {
-        console.warn('[TimerPaletteContext] Failed to load onboarding config:', error);
+        logger.warn('[TimerPaletteContext] Failed to load onboarding config:', error);
       }
     };
 
@@ -58,7 +62,7 @@ export const TimerPaletteProvider = ({ children }) => {
   }, [setCurrentPalette, setSelectedColorIndex]);
 
   // Récupération des couleurs
-  const paletteInfo = TIMER_PALETTES[currentPalette] || TIMER_PALETTES.sérénité;
+  const paletteInfo = TIMER_PALETTES[currentPalette] || TIMER_PALETTES.serenity;
   const paletteColors = paletteInfo.colors;
   const timerColors = getTimerColors(currentPalette);
 

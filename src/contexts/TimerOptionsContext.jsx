@@ -1,8 +1,12 @@
 // src/contexts/TimerOptionsContext.jsx
 import React, { createContext, useContext, useEffect, useRef } from 'react';
+import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import logger from '../utils/logger';
 import { usePersistedObject } from '../hooks/usePersistedState';
+import logger from '../utils/logger';
 import { getDefaultActivity } from '../config/activities';
+import logger from '../utils/logger';
 
 const TimerOptionsContext = createContext(null);
 
@@ -51,7 +55,7 @@ export const TimerOptionsProvider = ({ children }) => {
           }
           await AsyncStorage.removeItem('user_timer_config');
           if (__DEV__) {
-            console.log('[TimerOptionsContext] Applied timer config:', config);
+            logger.log('[TimerOptionsContext] Applied timer config:', config);
           }
         }
 
@@ -62,7 +66,7 @@ export const TimerOptionsProvider = ({ children }) => {
           updateValue('selectedSoundId', soundId);
           await AsyncStorage.removeItem('user_sound_config');
           if (__DEV__) {
-            console.log('[TimerOptionsContext] Applied sound config:', soundId);
+            logger.log('[TimerOptionsContext] Applied sound config:', soundId);
           }
         }
 
@@ -82,13 +86,13 @@ export const TimerOptionsProvider = ({ children }) => {
           }
           await AsyncStorage.removeItem('user_interface_config');
           if (__DEV__) {
-            console.log('[TimerOptionsContext] Applied interface config:', config);
+            logger.log('[TimerOptionsContext] Applied interface config:', config);
           }
         }
 
         hasLoadedOnboardingConfig.current = true;
       } catch (error) {
-        console.warn('[TimerOptionsContext] Failed to load onboarding config:', error);
+        logger.warn('[TimerOptionsContext] Failed to load onboarding config:', error);
       }
     };
 
