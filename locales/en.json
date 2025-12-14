@@ -235,20 +235,20 @@
     "writing": "Writing"
   },
   "palettes": {
-    "sérénité": "Serenity",
-    "terre": "Earth",
+    "serenity": "Serenity",
+    "earth": "Earth",
     "softLaser": "Soft Laser",
-    "classique": "Classic",
+    "classic": "Classic",
     "tropical": "Tropical",
     "zen": "Zen",
-    "forêt": "Forest",
-    "océan": "Ocean",
-    "aurore": "Aurora",
-    "crépuscule": "Twilight",
-    "douce": "Gentle",
-    "automne": "Autumn",
-    "lavande": "Lavender",
-    "canard": "Teal",
+    "forest": "Forest",
+    "ocean": "Ocean",
+    "dawn": "Aurora",
+    "dusk": "Twilight",
+    "soft": "Gentle",
+    "autumn": "Autumn",
+    "lavender": "Lavender",
+    "teal": "Teal",
     "darkLaser": "Dark Laser"
   },
   "sounds": {
@@ -279,7 +279,10 @@
     "activityLocked": "Premium activity locked",
     "moreActivities": "More activities",
     "discoverPremium": "Discover premium activities",
-    "customActivityHint": "Long press to edit this custom activity"
+    "customActivityHint": "Long press to edit this custom activity",
+    "colorNumber": "Couleur {number}",
+    "paletteNumber": "Palette {name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
   },
   "discovery": {
     "defaultCta": "Unlock everything - 7 days free",
@@ -293,7 +296,9 @@
       "title": "Even more moments",
       "subtitle": "Nap, writing, reading, yoga...",
       "tagline": "Every moment deserves its color."
-    }
+    },
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
   },
   "twoTimers": {
     "title": "You've created 2 moments!",
