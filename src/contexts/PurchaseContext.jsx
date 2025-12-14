@@ -1,8 +1,11 @@
 // src/contexts/PurchaseContext.jsx
 // Phase 2 - Implementation RevenueCat core
+// Phase 5 - Performance optimizations (caching)
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Purchases from 'react-native-purchases';
 import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
 import { TEST_MODE } from '../config/test-mode';
@@ -10,6 +13,63 @@ import Analytics from '../services/analytics';
 import logger from '../utils/logger';
 
 const PurchaseContext = createContext();
+
+// Cache configuration
+const CACHE_KEY = 'revenuecat_customer_info';
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+// Cache helper functions
+const loadCachedStatus = async () => {
+  try {
+    const cachedData = await AsyncStorage.getItem(CACHE_KEY);
+    if (!cachedData) {
+      return null;
+    }
+
+    let isPremium, timestamp;
+    try {
+      ({ isPremium, timestamp } = JSON.parse(cachedData));
+    } catch (parseError) {
+      logger.warn('[RevenueCat Cache] Failed to parse cached data:', parseError.message);
+      await AsyncStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+
+    // Check if cache is expired
+    if (isCacheExpired(timestamp)) {
+      logger.log('[RevenueCat Cache] Cache expired, clearing');
+      await AsyncStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+
+    logger.log('[RevenueCat Cache] Using cached premium status:', isPremium);
+    return isPremium;
+  } catch (error) {
+    logger.error('[RevenueCat Cache] Error loading cache:', error);
+    return null;
+  }
+};
+
+const saveCachedStatus = async (isPremium) => {
+  try {
+    const cacheData = {
+      isPremium,
+      timestamp: Date.now()
+    };
+    await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+    logger.log('[RevenueCat Cache] Saved premium status to cache:', isPremium);
+  } catch (error) {
+    logger.error('[RevenueCat Cache] Error saving cache:', error);
+  }
+};
+
+const isCacheExpired = (timestamp) => {
+  return (Date.now() - timestamp) > CACHE_TTL;
+};
+
+const checkPremiumEntitlement = (customerInfo) => {
+  return customerInfo?.entitlements?.active?.[ENTITLEMENTS.premium_access] !== undefined;
+};
 
 export const PurchaseProvider = ({ children }) => {
   const [isPremium, setIsPremium] = useState(false);
@@ -23,37 +83,63 @@ export const PurchaseProvider = ({ children }) => {
 
   const initializePurchases = async () => {
     try {
-      // Configuration SDK selon la plateforme
+      // Step 1: Check cache first for instant UI feedback
+      const cachedStatus = await loadCachedStatus();
+      if (cachedStatus !== null) {
+        // Set cached status immediately (non-blocking)
+        setIsPremium(cachedStatus);
+        setIsLoading(false);
+        logger.log('[RevenueCat] Using cached status, refreshing in background');
+      }
+
+      // Step 2: Configure SDK
       const apiKey = Platform.OS === 'ios'
         ? REVENUECAT_CONFIG.ios.apiKey
         : REVENUECAT_CONFIG.android.apiKey;
 
-      // Initialiser RevenueCat
       await Purchases.configure({ apiKey });
-
-      // Log level ERROR for production (DEBUG used during development only)
       Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
 
-      // Récupérer le customerInfo initial
+      // Step 3: Fetch fresh data in background
       const info = await Purchases.getCustomerInfo();
+      const freshPremiumStatus = checkPremiumEntitlement(info);
+
+      // Update UI with fresh data
       updateCustomerInfo(info);
+
+      // Step 4: Save fresh status to cache
+      await saveCachedStatus(freshPremiumStatus);
 
       // Listener pour les mises à jour en temps réel
       Purchases.addCustomerInfoUpdateListener(updateCustomerInfo);
 
     } catch (error) {
       logger.error('[RevenueCat] Initialization error:', error);
+
+      // Fallback strategy: If we have cache, use it; otherwise default to free
+      const cachedStatus = await loadCachedStatus();
+      if (cachedStatus !== null) {
+        logger.log('[RevenueCat] Network error, using cached status:', cachedStatus);
+        setIsPremium(cachedStatus);
+      } else {
+        logger.log('[RevenueCat] Network error, no cache, defaulting to free');
+        setIsPremium(false);
+      }
+
       setIsLoading(false);
     }
   };
 
-  const updateCustomerInfo = (info) => {
+  const updateCustomerInfo = async (info) => {
     setCustomerInfo(info);
 
     // Vérifier si l'entitlement premium est actif
-    const hasEntitlement = info?.entitlements?.active?.[ENTITLEMENTS.premium_access] !== undefined;
+    const hasEntitlement = checkPremiumEntitlement(info);
     setIsPremium(hasEntitlement);
     setIsLoading(false);
+
+    // Save to cache
+    await saveCachedStatus(hasEntitlement);
     // Premium status logs removed - use React DevTools if needed
   };
 
@@ -66,6 +152,10 @@ export const PurchaseProvider = ({ children }) => {
 
     try {
       setIsPurchasing(true);
+
+      // Invalidate cache before purchase to ensure fresh data after
+      await AsyncStorage.removeItem(CACHE_KEY);
+      logger.log('[RevenueCat] Cache invalidated before purchase');
 
       // WORKAROUND for RevenueCat bug with non-consumable products
       // Try to get the package instead of using product directly
@@ -251,6 +341,10 @@ export const PurchaseProvider = ({ children }) => {
       {children}
     </PurchaseContext.Provider>
   );
+};
+
+PurchaseProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const usePurchases = () => {

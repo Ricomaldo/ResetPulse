@@ -35,21 +35,25 @@ export const TimerPaletteProvider = ({ children }) => {
       try {
         const configStr = await AsyncStorage.getItem('user_timer_config');
         if (configStr) {
-          const config = JSON.parse(configStr);
+          try {
+            const config = JSON.parse(configStr);
 
-          // Apply palette and color from onboarding
-          if (config.palette && TIMER_PALETTES[config.palette]) {
-            setCurrentPalette(config.palette);
-          }
-          if (config.colorIndex !== undefined) {
-            setSelectedColorIndex(config.colorIndex);
-          }
+            // Apply palette and color from onboarding
+            if (config.palette && TIMER_PALETTES[config.palette]) {
+              setCurrentPalette(config.palette);
+            }
+            if (config.colorIndex !== undefined) {
+              setSelectedColorIndex(config.colorIndex);
+            }
 
-          if (__DEV__) {
-            logger.log('[TimerPaletteContext] Applied onboarding palette config:', {
-              palette: config.palette,
-              colorIndex: config.colorIndex,
-            });
+            if (__DEV__) {
+              logger.log('[TimerPaletteContext] Applied onboarding palette config:', {
+                palette: config.palette,
+                colorIndex: config.colorIndex,
+              });
+            }
+          } catch (parseError) {
+            logger.warn('[TimerPaletteContext] Failed to parse config:', parseError.message);
           }
         }
         hasLoadedOnboardingConfig.current = true;
