@@ -131,20 +131,20 @@
     "cleaning": "Уборка"
   },
   "palettes": {
-    "terre": "Земля",
+    "earth": "Земля",
     "softLaser": "Soft Laser",
-    "classique": "Классика",
+    "classic": "Классика",
     "tropical": "Тропики",
     "zen": "Дзен",
-    "forêt": "Лес",
-    "océan": "Океан",
-    "aurore": "Аврора",
-    "crépuscule": "Сумерки",
-    "douce": "Нежность",
+    "forest": "Лес",
+    "ocean": "Океан",
+    "dawn": "Аврора",
+    "dusk": "Сумерки",
+    "soft": "Нежность",
     "pastel_girly": "Пастель",
-    "automne": "Осень",
-    "lavande": "Лаванда",
-    "canard": "Бирюзовый",
+    "autumn": "Осень",
+    "lavender": "Лаванда",
+    "teal": "Бирюзовый",
     "darkLaser": "Dark Laser"
   },
   "sounds": {
@@ -170,6 +170,29 @@
     "rotationDirection": "Направление вращения",
     "startTrial": "Начать бесплатную пробную версию",
     "maybeLater": "Может быть позже",
-    "restore": "Восстановить покупки"
+    "restore": "Восстановить покупки",
+    "activity": "Activité: {name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur {number}",
+    "paletteNumber": "Palette {name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
   }
 }

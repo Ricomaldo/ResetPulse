@@ -131,20 +131,20 @@
     "cleaning": "Pulizia"
   },
   "palettes": {
-    "terre": "Terra",
+    "earth": "Terra",
     "softLaser": "Soft Laser",
-    "classique": "Classico",
+    "classic": "Classico",
     "tropical": "Tropicale",
     "zen": "Zen",
-    "forêt": "Foresta",
-    "océan": "Oceano",
-    "aurore": "Aurora",
-    "crépuscule": "Crepuscolo",
-    "douce": "Delicato",
+    "forest": "Foresta",
+    "ocean": "Oceano",
+    "dawn": "Aurora",
+    "dusk": "Crepuscolo",
+    "soft": "Delicato",
     "pastel_girly": "Pastello",
-    "automne": "Autunno",
-    "lavande": "Lavanda",
-    "canard": "Turchese",
+    "autumn": "Autunno",
+    "lavender": "Lavanda",
+    "teal": "Turchese",
     "darkLaser": "Dark Laser"
   },
   "sounds": {
@@ -170,6 +170,29 @@
     "rotationDirection": "Direzione di rotazione",
     "startTrial": "Inizia prova gratuita",
     "maybeLater": "Forse più tardi",
-    "restore": "Ripristina i miei acquisti"
+    "restore": "Ripristina i miei acquisti",
+    "activity": "Activité: {name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur {number}",
+    "paletteNumber": "Palette {name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
   }
 }

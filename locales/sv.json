@@ -131,20 +131,20 @@
     "cleaning": "Städning"
   },
   "palettes": {
-    "terre": "Jord",
+    "earth": "Jord",
     "softLaser": "Soft Laser",
-    "classique": "Klassisk",
+    "classic": "Klassisk",
     "tropical": "Tropisk",
     "zen": "Zen",
-    "forêt": "Skog",
-    "océan": "Ocean",
-    "aurore": "Aurora",
-    "crépuscule": "Skymning",
-    "douce": "Mild",
+    "forest": "Skog",
+    "ocean": "Ocean",
+    "dawn": "Aurora",
+    "dusk": "Skymning",
+    "soft": "Mild",
     "pastel_girly": "Pasteller",
-    "automne": "Höst",
-    "lavande": "Lavendel",
-    "canard": "Blågrön",
+    "autumn": "Höst",
+    "lavender": "Lavendel",
+    "teal": "Blågrön",
     "darkLaser": "Dark Laser"
   },
   "sounds": {
@@ -170,6 +170,29 @@
     "rotationDirection": "Rotationsriktning",
     "startTrial": "Starta gratis provperiod",
     "maybeLater": "Kanske senare",
-    "restore": "Återställ mina köp"
+    "restore": "Återställ mina köp",
+    "activity": "Activité: {name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur {number}",
+    "paletteNumber": "Palette {name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
   }
 }

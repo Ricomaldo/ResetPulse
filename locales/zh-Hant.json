@@ -131,20 +131,20 @@
     "cleaning": "清潔"
   },
   "palettes": {
-    "terre": "大地",
+    "earth": "大地",
     "softLaser": "Soft Laser",
-    "classique": "經典",
+    "classic": "經典",
     "tropical": "熱帶",
     "zen": "禪",
-    "forêt": "森林",
-    "océan": "海洋",
-    "aurore": "極光",
-    "crépuscule": "黃昏",
-    "douce": "溫柔",
+    "forest": "森林",
+    "ocean": "海洋",
+    "dawn": "極光",
+    "dusk": "黃昏",
+    "soft": "溫柔",
     "pastel_girly": "粉彩",
-    "automne": "秋天",
-    "lavande": "薰衣草",
-    "canard": "青綠",
+    "autumn": "秋天",
+    "lavender": "薰衣草",
+    "teal": "青綠",
     "darkLaser": "Dark Laser"
   },
   "sounds": {
@@ -170,6 +170,29 @@
     "rotationDirection": "旋轉方向",
     "startTrial": "開始免費試用",
     "maybeLater": "稍後再說",
-    "restore": "恢復我的購買"
+    "restore": "恢復我的購買",
+    "activity": "Activité: {name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur {number}",
+    "paletteNumber": "Palette {name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
   }
 }

@@ -238,20 +238,20 @@
     "writing": "Écriture"
   },
   "palettes": {
-    "sérénité": "Sérénité",
-    "terre": "Terre",
+    "serenity": "Sérénité",
+    "earth": "Terre",
     "softLaser": "Soft Laser",
-    "classique": "Classique",
+    "classic": "Classique",
     "tropical": "Tropical",
     "zen": "Zen",
-    "forêt": "Forêt",
-    "océan": "Océan",
-    "aurore": "Aurore",
-    "crépuscule": "Crépuscule",
-    "douce": "Douce",
-    "automne": "Automne",
-    "lavande": "Lavande",
-    "canard": "Canard",
+    "forest": "Forêt",
+    "ocean": "Océan",
+    "dawn": "Aurore",
+    "dusk": "Crépuscule",
+    "soft": "Douce",
+    "autumn": "Automne",
+    "lavender": "Lavande",
+    "teal": "Canard",
     "darkLaser": "Dark Laser"
   },
   "sounds": {
@@ -282,7 +282,10 @@
     "activityLocked": "Activité premium verrouillée",
     "moreActivities": "Plus d'activités",
     "discoverPremium": "Découvrir les activités premium",
-    "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee"
+    "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee",
+    "colorNumber": "Couleur {number}",
+    "paletteNumber": "Palette {name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
@@ -296,7 +299,9 @@
       "title": "Encore plus de moments",
       "subtitle": "Sieste, écriture, lecture, yoga...",
       "tagline": "Chaque moment mérite sa couleur."
-    }
+    },
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
   },
   "twoTimers": {
     "title": "Tu as créé 2 moments !",
