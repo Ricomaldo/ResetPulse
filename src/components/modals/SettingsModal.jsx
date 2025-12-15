@@ -458,16 +458,30 @@ export default function SettingsModal({ visible, onClose }) {
       animationType="slide"
       transparent={true}
       onRequestClose={onClose}
+      accessible={true}
+      accessibilityViewIsModal={true}
     >
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
+        <View
+          style={styles.modalContainer}
+          accessible={true}
+          accessibilityRole="dialog"
+          accessibilityLabel={t('settings.title')}
+          accessibilityHint={t('accessibility.settingsModalHint')}
+        >
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>{t('settings.title')}</Text>
+            <Text
+              style={styles.title}
+              accessibilityRole="header"
+            >
+              {t('settings.title')}
+            </Text>
             <TouchableOpacity
               accessible={true}
               accessibilityLabel={t('accessibility.closeSettings')}
               accessibilityRole="button"
+              accessibilityHint={t('accessibility.closeModalHint')}
               onPress={onClose}
               style={styles.closeButton}
             >

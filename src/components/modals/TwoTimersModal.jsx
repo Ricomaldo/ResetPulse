@@ -107,11 +107,28 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
       animationType="fade"
       transparent={true}
       onRequestClose={handleSkip}
+      accessible={true}
+      accessibilityViewIsModal={true}
     >
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.emoji}>🎉</Text>
-          <Text style={styles.title}>
+        <View
+          style={styles.modalContainer}
+          accessible={true}
+          accessibilityRole="dialog"
+          accessibilityLabel={t('twoTimers.title')}
+          accessibilityHint={t('accessibility.twoTimersModalHint')}
+        >
+          <Text
+            style={styles.emoji}
+            accessible={true}
+            accessibilityLabel={t('accessibility.celebrationEmoji')}
+          >
+            🎉
+          </Text>
+          <Text
+            style={styles.title}
+            accessibilityRole="header"
+          >
             {t('twoTimers.title')}
           </Text>
           <Text style={styles.message}>
@@ -122,6 +139,9 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
               style={styles.primaryButton}
               onPress={handleExplore}
               activeOpacity={0.8}
+              accessibilityLabel={t('twoTimers.explore')}
+              accessibilityRole="button"
+              accessibilityHint={t('accessibility.exploreSettingsHint')}
             >
               <Text style={styles.primaryButtonText}>
                 {t('twoTimers.explore')}
@@ -131,6 +151,9 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
               style={styles.secondaryButton}
               onPress={handleSkip}
               activeOpacity={0.6}
+              accessibilityLabel={t('twoTimers.dismiss')}
+              accessibilityRole="button"
+              accessibilityHint={t('accessibility.closeModalHint')}
             >
               <Text style={styles.secondaryButtonText}>
                 {t('twoTimers.dismiss')}

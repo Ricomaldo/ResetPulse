@@ -6,12 +6,14 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../../theme/tokens';
 
 /**
  * DigitalTimer - Displays remaining time in MM:SS format
  * Features subtle pulse animation when running
+ * Fully accessible with live region announcements
  * @param {number} remaining - Remaining time in seconds
  * @param {boolean} isRunning - Whether timer is running
  * @param {string} color - Text color
@@ -19,6 +21,7 @@ import { fontWeights } from '../../../theme/tokens';
  */
 const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, color, mini = false }) {
   const theme = useTheme();
+  const t = useTranslation();
   const fadeAnim = useRef(new Animated.Value(1)).current; // Start at 1 (visible)
   const translateYAnim = useRef(new Animated.Value(0)).current; // Start at 0 (no offset)
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -85,6 +88,16 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
     },
   });
 
+  // Format time for display
+  const formattedTime = formatTime(remaining);
+
+  // Build accessibility label with time and status
+  const timerStatus = isRunning
+    ? t('accessibility.timer.timerRunning')
+    : t('accessibility.timer.timerPaused');
+
+  const accessibilityLabel = t('accessibility.timer.timeRemaining', { time: formattedTime }) + ', ' + timerStatus;
+
   return (
     <Animated.View
       style={[
@@ -97,9 +110,19 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
           ],
         },
       ]}
+      accessible={true}
+      accessibilityRole="timer"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLiveRegion="polite"
+      accessibilityValue={{
+        min: 0,
+        max: remaining,
+        now: remaining,
+        text: formattedTime
+      }}
     >
       <Text style={[styles.timeText, { opacity: isRunning ? 1 : 0.7 }]}>
-        {formatTime(remaining)}
+        {formattedTime}
       </Text>
     </Animated.View>
   );

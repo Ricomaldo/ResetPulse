@@ -37,7 +37,13 @@ const DialBase = React.memo(({
   const theme = useTheme();
 
   return (
-    <Svg width={svgSize} height={svgSize} style={{ position: 'absolute' }}>
+    <Svg
+      width={svgSize}
+      height={svgSize}
+      style={{ position: 'absolute' }}
+      accessible={false}
+      importantForAccessibility="no"
+    >
       {/* Background circle */}
       <Circle
         cx={centerX}

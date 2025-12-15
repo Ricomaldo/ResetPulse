@@ -27,7 +27,7 @@ import {
   EditActivityModal,
 } from "../modals";
 import { ActivityItem, PlusButton } from "./activity-items";
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 export default function ActivityCarousel({ isTimerRunning = false, drawerVisible = false }) {
   const theme = useTheme();

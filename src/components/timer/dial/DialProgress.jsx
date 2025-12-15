@@ -88,6 +88,8 @@ const DialProgress = React.memo(({
       height={svgSize}
       style={{ position: 'absolute' }}
       pointerEvents="none"
+      accessible={false}
+      importantForAccessibility="no"
     >
       {progress >= 0.9999 ? (
         // Full circle

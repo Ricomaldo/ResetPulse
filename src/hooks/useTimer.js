@@ -1,15 +1,19 @@
 // src/hooks/useTimer.js
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { AppState } from 'react-native';
+import { AppState, AccessibilityInfo } from 'react-native';
 import haptics from '../utils/haptics';
 import { TIMER } from '../components/timer/timerConstants';
 import useSimpleAudio from './useSimpleAudio';
 import useNotificationTimer from './useNotificationTimer';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { useTranslation } from './useTranslation';
 import analytics from '../services/analytics';
 
 export default function useTimer(initialDuration = 240, onComplete) {
+  // Translation hook for accessibility announcements
+  const t = useTranslation();
+
   // Core timer states
   const [duration, setDuration] = useState(initialDuration);
   const [remaining, setRemaining] = useState(initialDuration);
@@ -122,6 +126,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
         Promise.all(feedbackPromises).catch(() => {
           // Au moins un feedback a fonctionné, on continue
         });
+
+        // Accessibility announcement for screen readers
+        const activityLabel = currentActivityRef.current?.label || t('activities.none');
+        const completionMessage = currentActivityRef.current?.label
+          ? t('accessibility.timer.activityCompleted', { activity: activityLabel })
+          : t('accessibility.timer.timerCompleted');
+
+        AccessibilityInfo.announceForAccessibility(completionMessage);
 
         // Reset flag
         wasInBackgroundRef.current = false;
@@ -341,6 +353,13 @@ export default function useTimer(initialDuration = 240, onComplete) {
       }
       setIsPaused(false);
       setRunning(true);
+
+      // Accessibility announcement for timer start
+      const activityLabel = currentActivityRef.current?.label || t('activities.none');
+      const startMessage = currentActivityRef.current?.label
+        ? t('accessibility.timer.activityStarted', { activity: activityLabel })
+        : t('accessibility.timer.timerRunning');
+      AccessibilityInfo.announceForAccessibility(startMessage);
     } else {
       // Pause
       setRunning(false);
@@ -356,9 +375,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
       // Annuler la notification
       cancelTimerNotification();
+
+      // Accessibility announcement for timer pause
+      AccessibilityInfo.announceForAccessibility(t('accessibility.timer.timerPaused'));
     }
   }, [remaining, duration, isPaused, running, scheduleTimerNotification, cancelTimerNotification,
-      activityDurations, saveActivityDuration, startTime]);
+      activityDurations, saveActivityDuration, startTime, t]);
 
   const resetTimer = useCallback(() => {
     // Track timer reset (only if timer had started and not completed)

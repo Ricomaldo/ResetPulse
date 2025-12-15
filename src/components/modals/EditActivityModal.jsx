@@ -359,6 +359,8 @@ export default function EditActivityModal({
       animationType="slide"
       onRequestClose={handleClose}
       statusBarTranslucent
+      accessible={true}
+      accessibilityViewIsModal={true}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -368,18 +370,36 @@ export default function EditActivityModal({
           style={styles.overlay}
           activeOpacity={1}
           onPress={handleClose}
+          accessible={false}
+          importantForAccessibility="no"
         >
-          <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
-            <View style={styles.modalContainer}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+            accessible={false}
+          >
+            <View
+              style={styles.modalContainer}
+              accessible={true}
+              accessibilityRole="dialog"
+              accessibilityLabel={t('customActivities.edit.title')}
+              accessibilityHint={t('accessibility.editActivityModalHint')}
+            >
               {/* Header */}
               <View style={styles.header}>
-                <Text style={styles.headerTitle}>
+                <Text
+                  style={styles.headerTitle}
+                  accessibilityRole="header"
+                >
                   {t('customActivities.edit.title')}
                 </Text>
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={handleClose}
                   activeOpacity={0.7}
+                  accessibilityLabel={t('accessibility.closeEditActivity')}
+                  accessibilityRole="button"
+                  accessibilityHint={t('accessibility.closeModalHint')}
                 >
                   <Text style={styles.closeButtonText}>X</Text>
                 </TouchableOpacity>
@@ -471,6 +491,9 @@ export default function EditActivityModal({
                     style={styles.cancelButton}
                     onPress={handleClose}
                     activeOpacity={0.7}
+                    accessibilityLabel={t('customActivities.create.buttonCancel')}
+                    accessibilityRole="button"
+                    accessibilityHint={t('accessibility.closeModalHint')}
                   >
                     <Text style={styles.cancelButtonText}>
                       {t('customActivities.create.buttonCancel')}
@@ -485,6 +508,10 @@ export default function EditActivityModal({
                     onPress={handleSave}
                     activeOpacity={0.8}
                     disabled={!isFormValid}
+                    accessibilityLabel={t('customActivities.edit.buttonSave')}
+                    accessibilityRole="button"
+                    accessibilityHint={t('accessibility.saveActivityHint')}
+                    accessibilityState={{ disabled: !isFormValid }}
                   >
                     <Text style={styles.saveButtonText}>
                       {t('customActivities.edit.buttonSave')}
@@ -497,6 +524,9 @@ export default function EditActivityModal({
                   style={styles.deleteButton}
                   onPress={handleDelete}
                   activeOpacity={0.7}
+                  accessibilityLabel={t('customActivities.edit.buttonDelete')}
+                  accessibilityRole="button"
+                  accessibilityHint={t('accessibility.deleteActivityHint')}
                 >
                   <Text style={styles.deleteButtonText}>
                     {t('customActivities.edit.buttonDelete')}
