@@ -201,3 +201,35 @@ updated: 'YYYY-MM-DD'
 status: draft | active | archived
 ---
 ```
+
+---
+
+## 🗺️ Framework Navigation
+
+**You're here**: Working on ResetPulse (React Native timer app).
+
+### Quick Reads (New Session)
+- **System overview** (5min): `~/dev/_ref/guides/framework-momentum.md`
+- **Agent onboarding** (20min): `~/dev/_ref/guides/agent-onboarding.md` ← **Read this first if new to project**
+- **Audit methodology** (reference): `~/dev/_ref/guides/audit-cycles.md`
+
+### Active Work
+- **What's the current mission?** → `cat _internal/cockpit/workflow/active/current.md`
+- **Mission template**: `_internal/cockpit/planning/mission-*.md`
+- **Project state** → `_internal/cockpit/CLAUDE.md`
+
+### System Standards (Project-Level)
+- **Architecture decisions**: `_internal/docs/decisions/`
+- **Architecture reports** (current state): `_internal/docs/reports/`
+- **Audit archives** (historical): `_internal/docs/audits/audit-YYYY-MM-DD/`
+
+### System Standards (System-Level)
+- **ADR-01** (Architecture): `~/dev/_ref/standards/ADR-01-architecture-v2.md`
+- **ADR-02** (Conventions): `~/dev/_ref/standards/ADR-02-conventions-nommage.md`
+- **Cockpit Framework**: `~/dev/_ref/frameworks/cockpit.md`
+- **Documentation Framework**: `~/dev/_ref/frameworks/documentation.md`
+
+### Tooling
+- **Validate frontmatter**: `~/dev/_infra/scripts/validate-frontmatter.sh`
+- **Check all active missions**: `~/dev/_infra/scripts/check-missions.sh`
+- **Scaffold new project**: `~/dev/_infra/scripts/new-project.sh`
