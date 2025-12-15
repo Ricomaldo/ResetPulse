@@ -4,28 +4,49 @@ updated: '2025-12-14'
 status: active
 ---
 
-# 📊 Reports
+# 📊 Reports — Architecture & Design Documentation
 
-> Documentation de référence : audits, analyses, architecture, legal
+> **"Living" documentation** : Architecture decisions, design system, analytics, performance baselines
+>
+> ⚠️ **NOT audit findings** — See `../audits/` for historical audit cycles
 
 ## 🎯 Objectif
 
-Ce dossier contient tous les rapports, audits, analyses et documents de référence (architecture, legal) du projet.
+Ce dossier contient la **documentation à jour** du projet :
+- Comment le système fonctionne maintenant (architecture decisions)
+- Design tokens, patterns, composants (design system)
+- Performance baselines & metrics (observations)
+- Analytics implementation (tracking plan)
+- Premium/IAP integration (design)
+- Legal documents (privacy, terms)
 
-## 📝 Système de Préfixes
+**Note clé** : Ceci est la **source de vérité ACTUELLE**, mise à jour au fil du temps.
 
-**Aucun préfixe obligatoire** - Tous les fichiers sont des rapports.
+## 🔄 Relationship to Audits
 
-### Préfixes optionnels (recommandés pour organisation)
+| Type | Location | Purpose | Mutable? |
+|------|----------|---------|----------|
+| **Architecture docs** | `/reports/` | Current design, decisions | ✅ Updated regularly |
+| **Audit findings** | `/audits/` | Historical snapshots | ❌ Immutable archive |
 
-Pour faciliter la navigation, vous pouvez utiliser des préfixes optionnels :
+**Example:**
+- `reports/code-quality.md` = "Voici la qualité du code d'après notre standard"
+- `audits/audit-2025-14-12/reports/2025-12-14_code-quality-baseline.md` = "Le 2025-12-14, baseline audit a trouvé ça"
 
-- `architecture-*` : Documentation d'architecture (ex: `architecture-theme-system.md`)
+## 📝 Naming Convention
+
+**No mandatory prefix** - Tous les fichiers sont des documents de référence.
+
+### Optional prefixes (for organization)
+
+Pour faciliter la navigation :
+
+- `architecture-*` : Architecture decisions (ex: `architecture-theme-system.md`, `architecture-onboarding-v2.md`)
+- `design-*` : Design system & patterns (ex: `design-tokens.md`, `design-buttons.md`)
+- `analysis-*` : Technical analyses (ex: `analysis-revenuecat.md`, `analysis-performance-baseline.md`)
 - `legal-*` : Documents légaux (ex: `legal-privacy-policy.md`)
-- `audit-*` : Audits formels (ex: `audit-code-quality.md`, `audit-wcag-contrast.md`)
-- `analysis-*` : Analyses diverses (ex: `analysis-revenuecat.md`)
 
-**Note :** Les préfixes sont optionnels. Un fichier peut s'appeler simplement `code-quality.md` ou `wcag-contrast.md`.
+**Format actuel** : Fichiers simples sans préfixe (ex: `code-quality.md`, `accessibility.md`, `premium.md`)
 
 ### Exemples de noms
 

@@ -20,12 +20,24 @@ Documentation organisée en 3 catégories principales avec système de préfixes
 
 ```
 _internal/docs/
-├── README.md              # Ce fichier
+├── README.md              # Ce fichier (guide de navigation)
 ├── guides/                # 📖 Opérationnel (comment faire)
 ├── decisions/             # 🎯 Décisions (pourquoi)
-├── reports/               # 📊 Rapports (audits, analyses, architecture, legal)
+├── reports/               # 📊 Architecture & Design "LIVING" (à jour)
+├── audits/                # 📋 Audit Cycles (historique immuable)
 └── legacy/                # 📦 Documentation précédente (référence)
 ```
+
+### Key Distinction
+
+| Folder | Type | Mutability | Purpose |
+|--------|------|-----------|---------|
+| **`reports/`** | Living docs | ✅ Updated regularly | Current architecture, design system, analyses |
+| **`audits/`** | Historical snapshots | ❌ Immutable | Audit cycles (baseline → fixes → validation) |
+
+**Example clarity:**
+- `reports/code-quality.md` = "Code quality standard NOW"
+- `audits/audit-2025-14-12/reports/2025-12-14_code-quality-baseline.md` = "Code quality snapshot on 2025-12-14"
 
 ## 📖 Catégories
 
@@ -47,14 +59,38 @@ Décisions techniques, stratégies et Architecture Decision Records (ADRs).
 
 **Préfixe recommandé pour ADRs :** `adr-*`
 
-### [`reports/`](reports/) - Rapports
-Audits, analyses, documentation d'architecture et documents légaux.
-- Audits techniques
-- Analyses (RevenueCat, performance, etc.)
-- Architecture et design system
-- Documents légaux
+### [`reports/`](reports/) - Architecture & Design (LIVING)
+**"Source de vérité ACTUELLE"** — Documentation mise à jour régulièrement.
+- Architecture decisions (comment ça fonctionne)
+- Design system (tokens, patterns, composants)
+- Performance baselines & metrics
+- Analytics implementation (tracking plan)
+- Premium/IAP integration design
+- Documents légaux (privacy, terms)
 
-**Préfixes optionnels :** `architecture-*`, `audit-*`, `analysis-*`, `legal-*`
+**⚠️ NOT audit findings** — See [`audits/`](#audits---cycles-formels) for historical snapshots
+
+**Préfixes optionnels :** `architecture-*`, `design-*`, `analysis-*`, `legal-*`
+
+### [`audits/`](audits/) - Audit Cycles (IMMUTABLE)
+**Historical snapshots** — Audit archives, immuables après validation.
+- Audit baseline (découverte des findings)
+- Audit validation (vérification post-fixes)
+- Handoffs per domain
+- Complete methodology & execution logs
+
+**Structure example:**
+```
+audits/
+└── audit-2025-14-12/          ← Dated archive (immutable)
+    ├── INDEX.md               ← Summary of 10 audits
+    ├── CHECKLIST.md           ← All 46+ findings (P0-P3)
+    ├── reports/               ← Baseline + validation audit files
+    ├── handoffs/              ← Engineer context
+    └── method/                ← Methodology & execution log
+```
+
+Each audit cycle is **timestamped and complete** — never modified after sign-off.
 
 ## 📦 Documentation Legacy
 
