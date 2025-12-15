@@ -1,12 +1,24 @@
 ---
 created: '2025-12-07'
-updated: '2025-12-14'
+updated: '2025-12-15'
 status: active
+type: project-framework
 ---
 
 # CLAUDE.md - ResetPulse
 
-## Vue d'ensemble
+## 🏗️ Framework (Stable Reference)
+
+This document defines the **project architecture, tech stack, and conventions**. It changes rarely.
+
+For **current missions, workflows, or next steps**, see:
+- **Current mission** → `_internal/cockpit/workflow/active/current.md` (symlink to planning/)
+- **All missions** → `_internal/cockpit/planning/` or `_internal/cockpit/workflow/`
+- **Audit archive** → `_internal/docs/audits/`
+
+---
+
+## 📱 Vue d'ensemble
 
 ResetPulse est une application Time Timer visuel pour utilisateurs neuroatypiques (TDAH, TSA). App React Native/Expo en production sur Apple App Store et Google Play. Modèle freemium avec RevenueCat pour les IAP.
 
@@ -130,30 +142,33 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 
 ---
 
-## Documentation
+## 📚 Documentation Framework
 
 La documentation du projet est organisée dans `_internal/docs/` :
 
-| Catégorie | Emplacement | Description |
-|-----------|-------------|-------------|
-| Guides | `_internal/docs/guides/` | Guides pratiques (builds, deployment, testing) |
-| Decisions | `_internal/docs/decisions/` | Décisions techniques et ADRs |
-| Reports | `_internal/docs/reports/` | Audits, analyses, architecture, legal |
-| Legacy | `_internal/docs/legacy/` | Documentation précédente (référence) |
+| Catégorie | Emplacement | Contenu |
+|-----------|-------------|---------|
+| **Guides** | `_internal/docs/guides/` | How-to (builds, deployment, testing) |
+| **Decisions** | `_internal/docs/decisions/` | ADRs (Architecture Decision Records) |
+| **Reports** | `_internal/docs/reports/` | Living architecture docs (updated regularly) |
+| **Audits** | `_internal/docs/audits/` | Audit cycles (immutable archives, timestamped) |
+| **Legacy** | `_internal/docs/legacy/` | Previous documentation (reference) |
 
-→ Voir [`_internal/docs/README.md`](_internal/docs/README.md) pour la structure complète.
-
----
-
-## Cockpit
-
-Le cockpit (gestion de projet) est dans `_internal/cockpit/` :
-
-→ Voir [`_internal/cockpit/CLAUDE.md`](_internal/cockpit/CLAUDE.md) pour l'état des missions.
+→ See [`_internal/docs/README.md`](_internal/docs/README.md) for complete structure.
 
 ---
 
-## Références Système
+## 🚀 Cockpit & Missions
+
+Project execution (missions, workflows, audits) is orchestrated in `_internal/cockpit/` :
+
+- **Current mission** → `_internal/cockpit/workflow/active/current.md` (symlink to planning/)
+- **All missions** → `_internal/cockpit/planning/` or `_internal/cockpit/workflow/`
+- **Cockpit framework** → See [`_internal/cockpit/CLAUDE.md`](_internal/cockpit/CLAUDE.md)
+
+---
+
+## 🔧 System References
 
 Ce projet suit l'Architecture V2. Sources de vérité :
 
