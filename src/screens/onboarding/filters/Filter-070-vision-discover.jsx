@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, getJourneyScenarios } from '../onboardingConstants';
-import { fontWeights } from '../../../../theme/tokens';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter5aVision({ needs = [], onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();

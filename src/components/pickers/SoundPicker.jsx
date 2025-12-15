@@ -19,7 +19,7 @@ import { TIMER_SOUNDS, getSoundById } from '../../config/sounds';
 import haptics from '../../utils/haptics';
 import useSimpleAudio from '../../hooks/useSimpleAudio';
 import { PlayIcon, PauseIcon } from '../layout/Icons';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 // Composant de loader circulaire style iOS
 const CircularProgress = React.memo(({ duration, size = 24, strokeWidth = 2, color }) => {

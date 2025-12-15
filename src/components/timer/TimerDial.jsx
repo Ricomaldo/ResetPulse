@@ -113,7 +113,7 @@ function TimerDial({
   const panResponder = useMemo(() =>
     PanResponder.create({
       onStartShouldSetPanResponder: () => true, // Capture all touches
-      onMoveShouldSetPanResponder: () => !isRunning && !!onGraduationTap, // Only capture move for drag when stopped
+      onMoveShouldSetPanResponder: () => !!onGraduationTap, // Allow drag anytime (even when running for skipping ahead)
 
       onPanResponderGrant: (evt) => {
         gestureStartTimeRef.current = Date.now();
@@ -122,7 +122,6 @@ function TimerDial({
           y: evt.nativeEvent.locationY,
         };
 
-        if (isRunning) return;
         setIsDragging(true);
 
         // Calculate where the user touched
@@ -146,8 +145,6 @@ function TimerDial({
       },
 
       onPanResponderMove: (evt) => {
-        if (isRunning) return;
-
         // Calculate where the user is touching now
         const touchMinutes = dial.coordinatesToMinutes(
           evt.nativeEvent.locationX,
@@ -239,7 +236,7 @@ function TimerDial({
         gestureStartPosRef.current = null;
       },
     }),
-    [dial, isRunning, onGraduationTap, onDialTap, centerX, centerY, isDragging, duration]
+    [dial, isRunning, onGraduationTap, onDialTap]
   );
 
   // Animated color for completion

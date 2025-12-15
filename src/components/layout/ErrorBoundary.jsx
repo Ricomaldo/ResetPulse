@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import * as Updates from 'expo-updates';
 import Logger from '../../utils/logger';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 class ErrorBoundary extends Component {
   constructor(props) {

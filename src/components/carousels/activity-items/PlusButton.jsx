@@ -8,7 +8,7 @@ import { Text, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { rs } from "../../../styles/responsive";
-import { fontWeights } from '../../../../theme/tokens';
+import { fontWeights } from '../../../theme/tokens';
 
 /**
  * PlusButton - Dumb component for "+" button in carousel

@@ -10,7 +10,7 @@ import {
   Animated,
 } from 'react-native';
 import { SHOW_DEV_FAB } from '../../config/test-mode';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 export default function DevFab({
   isPremiumMode,
