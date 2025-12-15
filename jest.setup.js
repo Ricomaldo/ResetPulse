@@ -41,6 +41,12 @@ jest.mock('expo-notifications', () => ({
   requestPermissionsAsync: jest.fn(() => Promise.resolve({ granted: true })),
 }));
 
+// Mock expo-audio (native module)
+jest.mock('expo-audio', () => ({
+  useAudioPlayer: jest.fn(() => ({ play: jest.fn(), stop: jest.fn() })),
+  setAudioModeAsync: jest.fn(() => Promise.resolve()),
+}));
+
 // Mock haptics utility
 jest.mock('./src/utils/haptics', () => ({
   __esModule: true,
@@ -67,6 +73,27 @@ jest.mock('react-native', () => {
     return RN.View({ ...props, children });
   });
 
+  // Add Animated mock for component tests
+  const AnimatedValue = function(initialValue) {
+    this.setValue = jest.fn();
+    this.addListener = jest.fn();
+    this.removeListener = jest.fn();
+    this.__getValue = () => initialValue;
+    this.interpolate = jest.fn((config) => ({
+      __isAnimatedValue: true,
+      __getValue: () => config.outputRange?.[0] || 0,
+    }));
+  };
+
+  RN.Animated = {
+    ...RN.Animated,
+    Value: AnimatedValue,
+    timing: jest.fn(() => ({
+      start: jest.fn(),
+      stop: jest.fn(),
+    })),
+  };
+
   return RN;
 });
 
@@ -85,6 +112,53 @@ jest.mock('react-native-svg', () => {
     TSpan: 'TSpan',
   };
 });
+
+// Mock theme tokens
+jest.mock('./src/theme/tokens', () => ({
+  fontWeights: {
+    light: '300',
+    regular: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+  spacing: {
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 24,
+  },
+  borderRadius: {
+    sm: 4,
+    md: 8,
+    lg: 12,
+    xl: 16,
+  },
+  shadows: {
+    sm: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 3.84,
+      elevation: 2,
+    },
+    md: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 5.46,
+      elevation: 4,
+    },
+    lg: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.2,
+      shadowRadius: 7.49,
+      elevation: 6,
+    },
+  },
+}));
 
 // Suppress console warnings during tests (optional - comment out for debugging)
 // global.console.warn = jest.fn();
