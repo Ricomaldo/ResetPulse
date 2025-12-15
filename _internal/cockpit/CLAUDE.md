@@ -2,25 +2,19 @@
 created: '2025-11-30'
 updated: '2025-12-15'
 status: active
-type: cockpit-index
+type: cockpit-framework
 ---
 
 # Cockpit ResetPulse
 
-Centre de commandement projet ResetPulse.
+## 🏗️ Framework (Stable Reference)
 
-## 🚀 Quick Start (Eric)
+This document defines the **cockpit architecture, workflows, and rules**. It changes rarely.
 
-**Où es-tu en ce moment?** Lis ci-dessous dans cet ordre:
-
-1. **Current mission** → `workflow/active/current.md` (symlink to planning/)
-2. **Audit summary** → `../docs/audits/audit-2025-14-12/INDEX.md` (10-audit recap)
-3. **Next fix** → Choose Phase 2 section (A, B, or C) in planning/mission-post-audits-fix-sequence.md
-
-**What you need**:
-- Audit findings + architecture decisions: `../docs/audits/audit-2025-14-12/`
-- Living architecture docs: `../docs/reports/` (NOT audit history)
-- Execution plan: `planning/mission-post-audits-fix-sequence.md`
+For **current state, missions, or next steps**, see:
+- **Current mission** → `workflow/active/current.md` (symlink → `planning/mission-post-audits-fix-sequence.md`)
+- **All missions** → `workflow/` (active/, backlog/, done/)
+- **Audit findings** → `../docs/audits/audit-2025-14-12/`
 
 ---
 
@@ -112,17 +106,20 @@ M11+     ░░░░░░░░░░░░░░░░░░░░░░░�
 
 ---
 
-## 📍 Quick Navigation
+## 🔗 Related Frameworks
 
-- **Current Mission** → `workflow/active/current.md` (symlink to planning/)
-- **All Missions** → `workflow/` (active, backlog, done)
-- **Planning** → `planning/mission-post-audits-fix-sequence.md` (execution plan)
-- **Audit Archive** → `../docs/audits/audit-2025-14-12/` (findings + references)
+| Reference | Purpose |
+|-----------|---------|
+| `../../CLAUDE.md` | Project tech stack, conventions, architecture |
+| `../docs/README.md` | Documentation structure (guides, decisions, reports, audits) |
+| `RULES.md` | Cockpit rules (what goes where) |
+| `../docs/legacy/ROADMAP.md` | Product roadmap (context) |
+| `../../CHANGELOG.md` | Version history |
 
-## Voir Aussi
+---
 
-- Projet : `../../CLAUDE.md` (tech stack, conventions)
-- Documentation : `../docs/README.md` (guides, decisions, reports)
-- Cockpit Rules : `RULES.md`
-- Roadmap : `../docs/legacy/ROADMAP.md`
-- Changelog : `../../CHANGELOG.md`
+## 📌 Key Principle
+
+**Cockpit is the execution layer** — it orchestrates missions, workflows, and audits.
+
+**Living tools** (missions, workflows, audits) are the **fast-changing sources of truth**. This CLAUDE.md defines HOW cockpit works, not WHAT is happening now.
