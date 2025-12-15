@@ -6,10 +6,10 @@ import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
-import { TIMER_PALETTES } from '../../config/timer-palettes";
+import { TIMER_PALETTES } from '../../config/timer-palettes';
 import DiscoveryModal from "./DiscoveryModal";
 import analytics from "../../services/analytics";
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 // Récupérer les palettes premium
 const PREMIUM_PALETTES = Object.entries(TIMER_PALETTES)
@@ -20,7 +20,7 @@ const PREMIUM_PALETTES = Object.entries(TIMER_PALETTES)
     colors: palette.colors,
   }));
 
-export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
+export default function MoreColorsModal({ visible, onClose, onOpenPaywall, modalId }) {
   const theme = useTheme();
   const t = useTranslation();
 
@@ -32,6 +32,7 @@ export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
 
   const handleUnlock = () => {
     analytics.trackDiscoveryModalUnlockClicked('colors');
+    // Legacy callback for backward compatibility
     onOpenPaywall?.();
   };
 
@@ -80,15 +81,33 @@ export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
       title={t('discovery.moreColors.title')}
       subtitle={t('discovery.moreColors.subtitle')}
       tagline={t('discovery.moreColors.tagline')}
+      modalId={modalId}
+      highlightedFeature="colors"
     >
-      <View style={styles.paletteGrid}>
+      <View
+        style={styles.paletteGrid}
+        accessible={true}
+        accessibilityRole="list"
+        accessibilityLabel={t('accessibility.premiumPalettesList')}
+      >
         {PREMIUM_PALETTES.map((palette) => (
-          <View key={palette.key} style={styles.paletteItem}>
-            <View style={styles.colorsRow}>
+          <View
+            key={palette.key}
+            style={styles.paletteItem}
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLabel={t('accessibility.paletteItem', { name: palette.name })}
+          >
+            <View
+              style={styles.colorsRow}
+              accessible={false}
+              importantForAccessibility="no-hide-descendants"
+            >
               {palette.colors.map((color, index) => (
                 <View
                   key={index}
                   style={[styles.colorCircle, { backgroundColor: color }]}
+                  accessible={false}
                 />
               ))}
             </View>

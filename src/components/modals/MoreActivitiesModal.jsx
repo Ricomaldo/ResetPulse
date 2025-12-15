@@ -10,7 +10,7 @@ import { ACTIVITIES } from "../../config/activities";
 import DiscoveryModal from "./DiscoveryModal";
 import analytics from "../../services/analytics";
 
-export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall }) {
+export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall, modalId }) {
   const theme = useTheme();
   const t = useTranslation();
 
@@ -22,6 +22,7 @@ export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall })
 
   const handleUnlock = () => {
     analytics.trackDiscoveryModalUnlockClicked('activities');
+    // Legacy callback for backward compatibility
     onOpenPaywall?.();
   };
 
@@ -55,10 +56,23 @@ export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall })
       title={t('discovery.moreActivities.title')}
       subtitle={t('discovery.moreActivities.subtitle')}
       tagline={t('discovery.moreActivities.tagline')}
+      modalId={modalId}
+      highlightedFeature="activities"
     >
-      <View style={styles.emojiGrid}>
+      <View
+        style={styles.emojiGrid}
+        accessible={true}
+        accessibilityRole="list"
+        accessibilityLabel={t('accessibility.premiumActivitiesList')}
+      >
         {ACTIVITIES.filter(activity => activity.isPremium && activity.emoji).map((activity) => (
-          <Text key={activity.id} style={styles.emoji}>
+          <Text
+            key={activity.id}
+            style={styles.emoji}
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLabel={`${activity.emoji} ${activity.name || activity.label}`}
+          >
             {activity.emoji}
           </Text>
         ))}

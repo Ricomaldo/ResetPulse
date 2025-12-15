@@ -16,11 +16,13 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { usePurchases } from "../../contexts/PurchaseContext";
 import { useAnalytics } from "../../hooks/useAnalytics";
 import { useTranslation } from "../../hooks/useTranslation";
+import { useModalStack } from "../../contexts/ModalStackContext";
 import { rs } from "../../styles/responsive";
 import haptics from "../../utils/haptics";
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
-export default function PremiumModal({ visible, onClose, highlightedFeature }) {
+export default function PremiumModal({ visible, onClose, highlightedFeature, modalId }) {
+  const modalStack = useModalStack();
   const theme = useTheme();
   const analytics = useAnalytics();
   const t = useTranslation();
@@ -282,7 +284,16 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       return;
     }
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-    onClose();
+
+    // If this modal is in the stack, pop it from the stack
+    if (modalId) {
+      modalStack.popById(modalId);
+    }
+
+    // Always call onClose for backward compatibility
+    if (onClose) {
+      onClose();
+    }
   };
 
   const styles = StyleSheet.create({
@@ -431,12 +442,25 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       animationType="fade"
       onRequestClose={handleClose}
       statusBarTranslucent
+      accessible={true}
+      accessibilityViewIsModal={true}
     >
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
+        <View
+          style={styles.modalContainer}
+          accessible={true}
+          accessibilityRole="dialog"
+          accessibilityLabel={t('premium.title')}
+          accessibilityHint={t('accessibility.premiumModalHint')}
+        >
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>{t('premium.title')}</Text>
+            <Text
+              style={styles.title}
+              accessibilityRole="header"
+            >
+              {t('premium.title')}
+            </Text>
           </View>
 
           {/* Body */}
@@ -466,8 +490,10 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               onPress={handlePurchase}
               disabled={isAnyOperationInProgress}
               activeOpacity={0.8}
-              accessibilityLabel={t('premium.startTrial')}
+              accessibilityLabel={t('accessibility.unlockPremium', { price: dynamicPrice || '4,99€' })}
               accessibilityRole="button"
+              accessibilityHint={t('accessibility.unlockPremiumHint')}
+              accessibilityState={{ disabled: isAnyOperationInProgress }}
             >
               {isPurchasing ? (
                 <ActivityIndicator color="#FFFFFF" size="small" />
@@ -483,8 +509,9 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               onPress={handleClose}
               disabled={isAnyOperationInProgress}
               activeOpacity={0.7}
-              accessibilityLabel={t('premium.maybeLater')}
+              accessibilityLabel={t('accessibility.closePremiumModal')}
               accessibilityRole="button"
+              accessibilityHint={t('accessibility.closeModalHint')}
             >
               <Text style={styles.secondaryButtonText}>
                 {t('premium.maybeLater')}
@@ -497,8 +524,10 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
               onPress={handleRestore}
               disabled={isAnyOperationInProgress}
               activeOpacity={0.7}
-              accessibilityLabel={t('premium.restore')}
+              accessibilityLabel={t('accessibility.restorePurchases')}
               accessibilityRole="button"
+              accessibilityHint={t('accessibility.restorePurchasesHint')}
+              accessibilityState={{ disabled: isAnyOperationInProgress }}
             >
               {isRestoring ? (
                 <ActivityIndicator

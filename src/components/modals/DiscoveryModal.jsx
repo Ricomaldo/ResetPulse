@@ -12,9 +12,11 @@ import {
 } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
+import { useModalStack } from "../../contexts/ModalStackContext";
 import { rs } from "../../styles/responsive";
 import haptics from "../../utils/haptics";
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
+import PremiumModal from "./PremiumModal";
 
 export default function DiscoveryModal({
   visible,
@@ -26,9 +28,12 @@ export default function DiscoveryModal({
   children,
   ctaText,
   dismissText,
+  modalId,
+  highlightedFeature,
 }) {
   const theme = useTheme();
   const t = useTranslation();
+  const modalStack = useModalStack();
 
   // Use i18n defaults if not provided
   const ctaTextFinal = ctaText || t('discovery.defaultCta');
@@ -36,16 +41,34 @@ export default function DiscoveryModal({
 
   const handleUnlock = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-    onClose();
-    // Petit délai pour la transition fluide
-    setTimeout(() => {
+
+    // Push PremiumModal to the stack
+    modalStack.push(PremiumModal, {
+      onClose: () => {
+        // When premium modal closes, it will pop itself
+        // No need to do anything here
+      },
+      highlightedFeature: highlightedFeature || 'discovery',
+    });
+
+    // Also call legacy onUnlock if provided (for backward compatibility)
+    if (onUnlock) {
       onUnlock();
-    }, 200);
+    }
   };
 
   const handleClose = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-    onClose();
+
+    // If this modal is in the stack, pop it
+    if (modalId) {
+      modalStack.popById(modalId);
+    }
+
+    // Always call onClose for backward compatibility
+    if (onClose) {
+      onClose();
+    }
   };
 
   const styles = StyleSheet.create({
@@ -145,23 +168,46 @@ export default function DiscoveryModal({
       animationType="fade"
       onRequestClose={handleClose}
       statusBarTranslucent
+      accessible={true}
+      accessibilityViewIsModal={true}
     >
       <View style={styles.overlay}>
         <TouchableOpacity
           style={styles.overlay}
           activeOpacity={1}
           onPress={handleClose}
+          accessible={false}
+          importantForAccessibility="no"
         >
           <TouchableOpacity
             activeOpacity={1}
             onPress={(e) => e.stopPropagation()}
+            accessible={false}
           >
-            <View style={styles.modalContainer}>
+            <View
+              style={styles.modalContainer}
+              accessible={true}
+              accessibilityRole="dialog"
+              accessibilityLabel={title}
+              accessibilityHint={t('accessibility.discoveryModalHint')}
+            >
               {/* Title */}
-              <Text style={styles.title}>{title}</Text>
+              <Text
+                style={styles.title}
+                accessibilityRole="header"
+              >
+                {title}
+              </Text>
 
               {/* Subtitle */}
-              {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+              {subtitle && (
+                <Text
+                  style={styles.subtitle}
+                  accessibilityRole="text"
+                >
+                  {subtitle}
+                </Text>
+              )}
 
               {/* Children (grille d'emojis, palettes, etc.) */}
               <View style={styles.childrenContainer}>{children}</View>
@@ -174,6 +220,9 @@ export default function DiscoveryModal({
                 style={styles.primaryButton}
                 onPress={handleUnlock}
                 activeOpacity={0.8}
+                accessibilityLabel={ctaTextFinal}
+                accessibilityRole="button"
+                accessibilityHint={t('accessibility.unlockPremiumHint')}
               >
                 <Text style={styles.primaryButtonText}>{ctaTextFinal}</Text>
               </TouchableOpacity>
@@ -183,6 +232,9 @@ export default function DiscoveryModal({
                 style={styles.secondaryButton}
                 onPress={handleClose}
                 activeOpacity={0.7}
+                accessibilityLabel={dismissTextFinal}
+                accessibilityRole="button"
+                accessibilityHint={t('accessibility.closeModalHint')}
               >
                 <Text style={styles.secondaryButtonText}>{dismissTextFinal}</Text>
               </TouchableOpacity>
