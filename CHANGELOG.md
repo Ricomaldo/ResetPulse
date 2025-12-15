@@ -11,6 +11,46 @@ All notable changes to ResetPulse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-12-15
+
+### ✨ Phase 2 Complete — Production Release (P0 Blockers Eliminated)
+
+**Major Release**: Accessibility, UX/Conversion, and Test Coverage overhaul
+
+#### 🎯 P0 Blockers Addressed (14/14)
+
+##### Phase 2A: Accessibility (WCAG AA)
+- ✅ **A1**: 8 modals fully accessible (PremiumModal, DiscoveryModal, MoreActivities, MoreColors, Settings, CreateActivity, EditActivity, TwoTimers)
+  - Added `accessibilityRole="dialog"`, `accessibilityViewIsModal={true}`, labels + hints
+  - 23 i18n accessibility keys
+- ✅ **A2**: 44pt touch target minimum on 90%+ interactive elements (buttons, sliders, carousel)
+- ✅ **A3**: Timer dial fully accessible with live region announcements, dynamic roles, custom swipe actions
+  - 11 i18n accessibility keys
+- ✅ **A4**: Color contrast fixed (#e5a8a3 → WCAG AA compliant)
+
+##### Phase 2B: UX/Conversion Pipeline
+- ✅ **U1-U5**: DEV_MODE, AsyncStorage persistence, RevenueCat paywall integration, onboarding progress bar, error recovery
+- ✅ **U6**: Modal stacking context (ModalStackContext + ModalStackRenderer) for nested navigation
+
+##### Phase 2C: Test Coverage (Pragmatic Suite)
+- ✅ **239/239 tests passing (100%)**
+- 26 component smoke tests (7 files)
+- 213 core tests (14 files: hooks, contexts, screens, units, configs)
+- 0 linting errors in explorer
+
+#### 🚀 Additional Improvements (Phase 4)
+- Performance: 86 useEffects → 69, memoization coverage 13% → 69%, RAF 60Hz timer
+- Design system: Typography tokens, hardcoded emojis removed
+- UX: Lock indicators, labels fixed, back button, premium section, deferred permissions
+
+#### 📦 Release Ready
+- Jest suite 100% passing
+- Clean git history (17 commits)
+- .gitignore updated (coverage/ excluded)
+- Production v2.0.0 candidate
+
+---
+
 ## [Unreleased]
 
 ### 🔍 Quality Assurance - 10 Audits Post-Refacto Completed (100%)
