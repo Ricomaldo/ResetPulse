@@ -95,7 +95,7 @@ describe('useTimer - Core functionality', () => {
       });
 
       expect(result.current.running).toBe(true);
-      expect(result.current.displayMessage).toBe("C'est parti");
+      expect(result.current.displayMessage).toBe("Ça commence.");
 
       unmount(); // Clean up
     });
