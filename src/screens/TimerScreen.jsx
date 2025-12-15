@@ -311,12 +311,6 @@ function TimerScreenContent() {
         />
       </Drawer>
 
-      {/* Settings Modal */}
-      <SettingsModal
-        visible={settingsModalVisible}
-        onClose={() => setSettingsModalVisible(false)}
-      />
-
       {/* Two Timers Reminder Modal (ADR-003) */}
       <TwoTimersModal
         visible={twoTimersModalVisible}
