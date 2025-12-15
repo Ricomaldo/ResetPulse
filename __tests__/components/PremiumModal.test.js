@@ -74,6 +74,30 @@ jest.mock('../../src/styles/responsive', () => ({
   rs: (value) => value,
 }));
 
+// Mock theme tokens
+jest.mock('../../src/theme/tokens', () => ({
+  fontWeights: {
+    light: '300',
+    regular: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+}));
+
+// Mock ModalStackContext
+jest.mock('../../src/contexts/ModalStackContext', () => ({
+  useModalStack: () => ({
+    push: jest.fn(),
+    pop: jest.fn(),
+    popById: jest.fn(),
+    clear: jest.fn(),
+    depth: 0,
+    isEmpty: true,
+    modalStack: [],
+  }),
+}));
+
 // Mock Alert
 jest.spyOn(Alert, 'alert');
 

@@ -158,4 +158,6 @@ const ActivityItem = React.memo(({
       </TouchableOpacity>
     </View>
   );
-}
+});
+
+export default ActivityItem;

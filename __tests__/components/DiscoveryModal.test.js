@@ -34,6 +34,49 @@ jest.mock('../../src/hooks/useTranslation', () => ({
   },
 }));
 
+// Mock ModalStackContext
+jest.mock('../../src/contexts/ModalStackContext', () => ({
+  useModalStack: () => ({
+    push: jest.fn(),
+    pop: jest.fn(),
+    popById: jest.fn(),
+    clear: jest.fn(),
+    depth: 0,
+    isEmpty: true,
+    modalStack: [],
+  }),
+}));
+
+// Mock responsive styles
+jest.mock('../../src/styles/responsive', () => ({
+  rs: (value) => value,
+}));
+
+// Mock theme tokens
+jest.mock('../../src/theme/tokens', () => ({
+  fontWeights: {
+    light: '300',
+    regular: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+}));
+
+// Mock haptics
+jest.mock('../../src/utils/haptics', () => {
+  const selection = jest.fn(() => Promise.resolve());
+  return {
+    __esModule: true,
+    default: {
+      selection,
+      success: jest.fn(() => Promise.resolve()),
+      error: jest.fn(() => Promise.resolve()),
+    },
+    selection,
+  };
+});
+
 describe('DiscoveryModal', () => {
   const defaultProps = {
     visible: true,
