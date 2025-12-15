@@ -117,6 +117,7 @@ audit-2025-14-12/
 ├── INDEX.md                           ← You are here
 ├── CHECKLIST.md                       ← Exhaustive P0/P1/P2/P3 findings
 ├── method/
+│   ├── mission-scope.md               ← Original brief (perimetre, what was in scope)
 │   ├── completion-report.md           ← Full mission execution log (643 lines)
 │   ├── method-multi-audit-flow.md     ← Methodology used
 │   └── method-personas-claudes.md     ← Claude personas involved
@@ -128,7 +129,7 @@ audit-2025-14-12/
 │   ├── handoff-engineer-security.md
 │   ├── handoff-engineer-test-coverage.md
 │   └── ... (other handoffs)
-└── reports/
+├── reports/
     ├── 2025-12-14_07-architecture-baseline.md
     ├── 2025-12-14_07-architecture-validation.md
     ├── 2025-12-14_code-quality-baseline.md
@@ -136,6 +137,18 @@ audit-2025-14-12/
     ├── ... (18 additional audit files)
     └── 2025-12-14_premium-integration-validation.md
 ```
+
+### 📁 File Purpose Guide
+
+| File | Location | Purpose |
+|------|----------|---------|
+| **INDEX.md** | archive root | Executive summary: 10-audit table, production readiness, blockers |
+| **CHECKLIST.md** | archive root | Exhaustive findings: all 46+ P0/P1/P2/P3 issues with links |
+| **mission-scope.md** | method/ | Original brief: what was in scope (template/reference) |
+| **completion-report.md** | method/ | Execution log: what was done, decisions taken, all 10 audits detailed |
+| **method-\*.md** | method/ | Audit process: methodology, personas, workflow |
+| **handoff-\*.md** | handoffs/ | Per-domain: engineer context for 6 key areas (a11y, design, performance, etc.) |
+| **2025-12-14_\*.md** | reports/ | Individual audits: full baseline + validation reports for each domain |
 
 ---
 
