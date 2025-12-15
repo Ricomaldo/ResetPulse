@@ -129,20 +129,17 @@ describe('TimerScreen', () => {
     const instance = component.root;
     const texts = instance.findAllByType('Text');
 
-    // Find activity label text
-    const activityText = texts.find(t => {
+    // Activity label only shows when timer is running
+    // On initial render (timer not running), shows startup message
+    const startupText = texts.find(t => {
       try {
-        const children = t.props.children;
-        return Array.isArray(children) &&
-               children.includes('💻') &&
-               children.includes(' ') &&
-               children.includes('Work');
+        return t.props.children === 'Tapote le timer pour commencer';
       } catch {
         return false;
       }
     });
 
-    expect(activityText).toBeTruthy();
+    expect(startupText).toBeTruthy();
   });
 
   it('should render TimeTimer component', () => {
