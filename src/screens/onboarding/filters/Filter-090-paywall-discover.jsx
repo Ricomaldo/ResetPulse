@@ -8,7 +8,7 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 import PremiumModal from '../../../components/modals/PremiumModal';
-import { fontWeights } from '../../../../theme/tokens';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter5Paywall({ onComplete }) {
   const { colors, spacing, borderRadius } = useTheme();

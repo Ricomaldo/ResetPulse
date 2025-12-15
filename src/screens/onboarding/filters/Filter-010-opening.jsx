@@ -6,7 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
-import { fontWeights } from '../../../../theme/tokens';
+import { fontWeights } from '../../../theme/tokens';
 
 const BREATH_CYCLES = 5;
 const BREATH_DURATION = 1500;

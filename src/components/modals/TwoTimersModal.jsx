@@ -15,7 +15,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import analytics from '../../services/analytics';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 export default function TwoTimersModal({ visible, onClose, onExplore }) {
   const theme = useTheme();

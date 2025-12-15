@@ -8,7 +8,7 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import TimerDial from '../../../components/timer/TimerDial';
 import { rs } from '../onboardingConstants';
-import { fontWeights } from '../../../../theme/tokens';
+import { fontWeights } from '../../../theme/tokens';
 
 const TEST_DURATION = 60; // seconds
 const UPDATE_INTERVAL = 50; // ms (20 fps)

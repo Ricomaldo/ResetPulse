@@ -8,7 +8,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { rs } from '../../styles/responsive';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 const PRESETS = [
   { minutes: 1, label: '1' },

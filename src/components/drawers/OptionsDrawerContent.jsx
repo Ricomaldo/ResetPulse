@@ -9,7 +9,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 import { ActivityCarousel, PaletteCarousel, PresetPills } from '../carousels';
 import { Icons } from '../layout';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 export default function OptionsDrawerContent({
   currentDuration = 0,

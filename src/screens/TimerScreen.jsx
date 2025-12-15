@@ -76,6 +76,7 @@ function TimerScreenContent() {
   const theme = useTheme();
   const {
     currentDuration,
+    setCurrentDuration,
     showDigitalTimer,
     setShowDigitalTimer,
     currentActivity,
@@ -97,6 +98,21 @@ function TimerScreenContent() {
   const timerRef = useRef(null);
   const dialWrapperRef = useRef(null);
   const dialLayoutRef = useRef(null);
+  const activityLabelAnimRef = useRef(new Animated.Value(0)).current;
+
+  // Animate activity label on timer start
+  useEffect(() => {
+    if (isTimerRunning && currentActivity && currentActivity.id !== 'none') {
+      Animated.spring(activityLabelAnimRef, {
+        toValue: 1,
+        friction: 10,
+        tension: 50,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      activityLabelAnimRef.setValue(0);
+    }
+  }, [isTimerRunning, currentActivity]);
 
   // Keep screen awake during timer
   useTimerKeepAwake();
@@ -149,6 +165,7 @@ function TimerScreenContent() {
     if (timerRef.current) {
       timerRef.current.setDuration(seconds);
       setTimerRemaining(seconds);
+      setCurrentDuration(seconds);
     }
   };
 
@@ -205,12 +222,30 @@ function TimerScreenContent() {
       edges={['top', 'bottom']}
       {...panResponder.panHandlers}
     >
-      {/* Activity label - en haut */}
-      {currentActivity && currentActivity.id !== 'none' && (
-        <Text style={styles.activityLabel}>
-          {currentActivity.emoji} {currentActivity.label}
-        </Text>
-      )}
+      {/* Activity label - en haut (dynamic based on timer state) */}
+      <Animated.Text
+        style={[
+          styles.activityLabel,
+          {
+            transform: [
+              {
+                translateY: activityLabelAnimRef.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [10, 0],
+                }),
+              },
+            ],
+            opacity: activityLabelAnimRef.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1],
+            }),
+          },
+        ]}
+      >
+        {isTimerRunning && currentActivity && currentActivity.id !== 'none'
+          ? `${currentActivity.emoji} ${currentActivity.label}`
+          : 'Tapote le timer pour commencer'}
+      </Animated.Text>
 
       {/* Timer - center, zen */}
       <View style={styles.timerContainer}>

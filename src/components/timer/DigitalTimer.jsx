@@ -8,7 +8,7 @@ import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 /**
  * DigitalTimer - Displays remaining time in MM:SS format

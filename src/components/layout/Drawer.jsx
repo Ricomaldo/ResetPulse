@@ -49,7 +49,7 @@ export default function Drawer({
     }
   }, [visible]);
 
-  // Animate drawer position based on visible and expanded state
+  // Animate drawer position based on visible state only (not expanded state)
   useEffect(() => {
     Animated.spring(translateY, {
       toValue: visible ? 0 : initialPosition,
@@ -58,7 +58,7 @@ export default function Drawer({
       friction: 11,
       overshootClamping: false,
     }).start();
-  }, [visible, initialPosition, isExpanded]);
+  }, [visible, initialPosition]); // Removed isExpanded to prevent re-animation on expand
 
   // Improved PanResponder with gesture tracking for fluid feel
   const handlePanResponder = useRef(

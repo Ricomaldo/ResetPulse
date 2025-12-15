@@ -3,7 +3,7 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
@@ -14,7 +14,7 @@ import useTimer from '../../hooks/useTimer';
 import TimerDial from '../timer/TimerDial';
 import haptics from '../../utils/haptics';
 import { TIMER, TEXT, getDialMode } from '../timer/timerConstants';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 export default function TimeTimer({
   onRunningChange,
@@ -40,6 +40,9 @@ export default function TimeTimer({
   // Track if we've already incremented for current timer session
   const hasIncrementedUsage = useRef(false);
 
+  // Track last synced context duration to prevent drag reset
+  const lastSyncedContextDurationRef = useRef(currentDuration);
+
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION, onTimerComplete);
 
@@ -60,12 +63,14 @@ export default function TimeTimer({
     }
   }, [onDialRef]);
 
-  // Update timer duration when currentDuration changes
+  // Update timer duration when currentDuration changes from context (NOT from drag)
   useEffect(() => {
-    if (currentDuration && currentDuration !== timer.duration) {
+    // Only sync if context duration changed since last sync (ignores local drag changes)
+    if (currentDuration && currentDuration !== lastSyncedContextDurationRef.current) {
       timer.setDuration(currentDuration);
+      lastSyncedContextDurationRef.current = currentDuration;
     }
-  }, [currentDuration, timer.duration, timer.setDuration]); // setDuration is stable from useCallback
+  }, [currentDuration, timer.setDuration]); // REMOVED timer.duration to prevent drag reset
 
   // Notify parent of running state changes
   useEffect(() => {
@@ -131,7 +136,7 @@ export default function TimeTimer({
    * Uses scale-specific magnetic snap granularity for better precision
    * @param {number} minutes - Raw minutes value from dial interaction
    */
-  const handleGraduationTap = (minutes) => {
+  const handleGraduationTap = useCallback((minutes) => {
     if (timer.running) return;
 
     // Get scale-specific magnetic snap granularity
@@ -163,7 +168,7 @@ export default function TimeTimer({
     timer.setDuration(newDuration);
 
     // Duration will be saved when user presses play (useTimer.js handles this)
-  };
+  }, [timer, scaleMode]);
 
   return (
     <View style={styles.container}>
@@ -194,9 +199,7 @@ export default function TimeTimer({
         {timer.displayMessage && (
           <View style={styles.messageOverlay}>
             <Text style={styles.messageText}>
-              {timer.displayMessage === "C'est parti" && currentActivity?.label
-                ? currentActivity.label
-                : timer.displayMessage === "C'est reparti" &&
+              {timer.displayMessage === "C'est reparti" &&
                   currentActivity?.label
                 ? currentActivity.label
                 : timer.displayMessage === "C'est fini" &&

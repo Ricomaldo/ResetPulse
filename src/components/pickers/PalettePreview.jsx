@@ -8,7 +8,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 export const PalettePreview = React.memo(({ paletteName }) => {
   const theme = useTheme();

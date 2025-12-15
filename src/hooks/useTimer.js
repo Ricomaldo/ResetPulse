@@ -295,7 +295,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
       return "Pause";
     }
     if (showParti) {
-      return "C'est parti";
+      return "Ça commence.";
     }
     if (showReparti) {
       return "C'est reparti";

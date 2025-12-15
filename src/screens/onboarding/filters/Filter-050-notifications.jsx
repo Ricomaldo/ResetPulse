@@ -10,7 +10,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
 import analytics from '../../../services/analytics';
-import { fontWeights } from '../../../../theme/tokens';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter3_5Notifications({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
