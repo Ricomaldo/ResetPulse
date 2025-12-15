@@ -6,6 +6,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import { rs } from '../styles/responsive';
 import { ActivityCarousel, PaletteCarousel, PresetPills } from '../components/carousels';
 import { Icons } from '../components/layout';
+import { fontWeights } from '../../theme/tokens';
 
 export default function OptionsScreen({
   currentDuration = 0,
@@ -36,7 +37,7 @@ export default function OptionsScreen({
     },
     headerText: {
       fontSize: rs(24),
-      fontWeight: '700',
+      fontWeight: fontWeights.bold,
       color: theme.colors.text,
       textAlign: 'center',
     },
@@ -47,7 +48,7 @@ export default function OptionsScreen({
       fontSize: rs(14),
       color: theme.colors.textSecondary,
       marginBottom: rs(12),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
@@ -68,7 +69,7 @@ export default function OptionsScreen({
       fontSize: rs(16),
       color: theme.colors.text,
       marginLeft: rs(10),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });
 

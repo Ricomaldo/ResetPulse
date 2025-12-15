@@ -1,67 +1,76 @@
-/**
- * @fileoverview Step progress indicator for onboarding flow
- * Shows user progress through multi-step onboarding (prevents abandonment)
- * @created 2025-12-14
- */
+// src/components/onboarding/StepIndicator.jsx
+// Progress indicator for onboarding flow (dots or step count)
+
 import React from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { rs } from '../../styles/responsive';
+import { rs } from '../../screens/onboarding/onboardingConstants';
+import { fontWeights } from '../../../theme/tokens';
 
 /**
- * StepIndicator - Visual progress dots for onboarding steps
- * @param {number} current - Current step index (0-based)
- * @param {number} total - Total number of steps
+ * StepIndicator - Shows progress through onboarding
+ * @param {number} current - Current step (0-indexed)
+ * @param {number} total - Total steps
  */
-export default function StepIndicator({ current = 0, total = 8 }) {
-  const theme = useTheme();
+export default function StepIndicator({ current, total }) {
+  const { colors, spacing } = useTheme();
+  const styles = createStyles(colors, spacing);
 
+  // Use dot style for better visual feedback
   return (
     <View style={styles.container}>
-      {Array.from({ length: total }, (_, i) => {
-        const isCompleted = i < current;
-        const isCurrent = i === current;
-        const isUpcoming = i > current;
-
-        return (
+      <View style={styles.dotsContainer}>
+        {Array.from({ length: total }).map((_, idx) => (
           <View
-            key={i}
-            accessible={true}
-            accessibilityRole="progressbar"
-            accessibilityLabel={`Step ${i + 1} of ${total}`}
-            accessibilityValue={{
-              min: 1,
-              max: total,
-              now: current + 1,
-            }}
+            key={idx}
             style={[
               styles.dot,
-              {
-                backgroundColor: isCompleted || isCurrent
-                  ? theme.colors.brand.primary
-                  : theme.colors.border,
-                opacity: isUpcoming ? 0.3 : 0.7,
-                width: isCurrent ? rs(12, 'min') : rs(8, 'min'),
-                transform: [{ scale: isCurrent ? 1.3 : 1 }],
-              },
+              idx === current && styles.dotActive,
+              idx < current && styles.dotCompleted,
             ]}
           />
-        );
-      })}
+        ))}
+      </View>
+      <Text style={styles.stepText}>
+        {current + 1} / {total}
+      </Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: rs(16, 'min'),
-    gap: rs(8, 'min'),
-  },
-  dot: {
-    height: rs(8, 'min'),
-    borderRadius: rs(4, 'min'),
-  },
-});
+const createStyles = (colors, spacing) =>
+  StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      paddingVertical: rs(spacing.lg),
+      paddingHorizontal: rs(spacing.md),
+    },
+    dotsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: rs(spacing.sm),
+      marginBottom: rs(spacing.md),
+    },
+    dot: {
+      width: rs(8),
+      height: rs(8),
+      borderRadius: rs(4),
+      backgroundColor: colors.border,
+    },
+    dotActive: {
+      backgroundColor: colors.brand.primary,
+      width: rs(12),
+      height: rs(12),
+      borderRadius: rs(6),
+    },
+    dotCompleted: {
+      backgroundColor: colors.brand.primary,
+      opacity: 0.5,
+    },
+    stepText: {
+      fontSize: rs(14),
+      color: colors.textSecondary,
+      fontWeight: fontWeights.medium,
+    },
+  });

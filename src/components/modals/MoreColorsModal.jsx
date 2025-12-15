@@ -9,6 +9,7 @@ import { rs } from "../../styles/responsive";
 import { TIMER_PALETTES } from '../../config/timer-palettes";
 import DiscoveryModal from "./DiscoveryModal";
 import analytics from "../../services/analytics";
+import { fontWeights } from '../../../theme/tokens';
 
 // Récupérer les palettes premium
 const PREMIUM_PALETTES = Object.entries(TIMER_PALETTES)
@@ -67,7 +68,7 @@ export default function MoreColorsModal({ visible, onClose, onOpenPaywall }) {
       fontSize: rs(10, "min"),
       color: theme.colors.textSecondary,
       textAlign: "center",
-      fontWeight: "500",
+      fontWeight: fontWeights.medium,
     },
   });
 

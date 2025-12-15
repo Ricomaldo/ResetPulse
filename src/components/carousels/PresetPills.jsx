@@ -8,6 +8,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { rs } from '../../styles/responsive';
+import { fontWeights } from '../../../theme/tokens';
 
 const PRESETS = [
   { minutes: 1, label: '1' },
@@ -70,12 +71,12 @@ export default function PresetPills({ currentDuration, onSelectPreset }) {
     },
     pillText: {
       fontSize: rs(15),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
     },
     pillTextActive: {
       color: theme.colors.background,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });
 

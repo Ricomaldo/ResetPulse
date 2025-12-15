@@ -19,6 +19,7 @@ import { TIMER_SOUNDS, getSoundById } from '../../config/sounds';
 import haptics from '../../utils/haptics';
 import useSimpleAudio from '../../hooks/useSimpleAudio';
 import { PlayIcon, PauseIcon } from '../layout/Icons';
+import { fontWeights } from '../../../theme/tokens';
 
 // Composant de loader circulaire style iOS
 const CircularProgress = ({ duration, size = 24, strokeWidth = 2, color }) => {
@@ -151,6 +152,7 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
       backgroundColor: theme.colors.surface,
       borderWidth: 2,
       borderColor: 'transparent',
+      minHeight: 44,
     },
 
     soundItemActive: {
@@ -174,7 +176,7 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
 
     soundName: {
       fontSize: rs(13, 'min'),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       color: theme.colors.text,
     },
 

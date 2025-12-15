@@ -6,14 +6,9 @@ import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
+import { ACTIVITIES } from "../../config/activities";
 import DiscoveryModal from "./DiscoveryModal";
 import analytics from "../../services/analytics";
-
-// Emojis des 14 activités premium
-const PREMIUM_EMOJIS = [
-  "😴", "✍️", "📖", "📚", "🧘‍♀️", "💪", "🚶",
-  "👨‍🍳", "🎮", "✏️", "🎵", "🧹"
-];
 
 export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall }) {
   const theme = useTheme();
@@ -62,9 +57,9 @@ export default function MoreActivitiesModal({ visible, onClose, onOpenPaywall })
       tagline={t('discovery.moreActivities.tagline')}
     >
       <View style={styles.emojiGrid}>
-        {PREMIUM_EMOJIS.map((emoji, index) => (
-          <Text key={index} style={styles.emoji}>
-            {emoji}
+        {ACTIVITIES.filter(activity => activity.isPremium && activity.emoji).map((activity) => (
+          <Text key={activity.id} style={styles.emoji}>
+            {activity.emoji}
           </Text>
         ))}
       </View>

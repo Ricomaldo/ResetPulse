@@ -11,6 +11,8 @@ import { DevPremiumContext } from './src/dev/DevPremiumContext';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
+import { ModalStackProvider } from './src/contexts/ModalStackContext';
+import ModalStackRenderer from './src/components/modals/ModalStackRenderer';
 import TimerScreen from './src/screens/TimerScreen';
 import { OnboardingFlow } from './src/screens/onboarding';
 import { ErrorBoundary } from './src/components/layout';
@@ -22,10 +24,11 @@ const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
 function AppContent() {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const [onboardingCompleted, setOnboardingCompleted] = useState(null); // null = loading
-  const [onboardingResult, setOnboardingResult] = useState(null);
+  // Use optimistic value (false = show onboarding) to avoid blocking render
+  // AsyncStorage load happens in background and updates state if needed
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
-  // Charger l'état onboarding depuis AsyncStorage
+  // Load onboarding state asynchronously without blocking initial render
   useEffect(() => {
     const loadOnboardingState = async () => {
       try {
@@ -75,13 +78,6 @@ function AppContent() {
       console.warn('[App] Failed to save onboarding state:', error);
     }
   };
-
-  // Loading state
-  if (onboardingCompleted === null) {
-    return (
-      <View style={{ flex: 1, backgroundColor: theme.colors.background }} />
-    );
-  }
 
   return (
     <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
@@ -154,9 +150,12 @@ export default function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <PurchaseProvider>
-          <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
-            <AppContent key={resetTrigger} />
-          </DevPremiumContext.Provider>
+          <ModalStackProvider>
+            <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
+              <AppContent key={resetTrigger} />
+              <ModalStackRenderer />
+            </DevPremiumContext.Provider>
+          </ModalStackProvider>
         </PurchaseProvider>
       </ThemeProvider>
     </ErrorBoundary>

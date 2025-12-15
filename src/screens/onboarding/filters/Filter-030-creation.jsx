@@ -21,6 +21,7 @@ import {
   DURATION_OPTIONS,
   getSmartDefaults,
 } from '../onboardingConstants';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter2Creation({ needs, onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
@@ -220,7 +221,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(24),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.md),
@@ -230,7 +231,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       color: colors.textSecondary,
       marginTop: rs(spacing.md),
       marginBottom: rs(spacing.sm),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
     },
     previewContainer: {
       alignItems: 'center',
@@ -263,12 +264,12 @@ const createStyles = (colors, spacing, borderRadius) =>
     activityPillLabel: {
       fontSize: rs(9),
       color: colors.textSecondary,
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       textAlign: 'center',
     },
     activityPillLabelSelected: {
       color: colors.background,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     horizontalScroll: {
       marginBottom: rs(spacing.sm),
@@ -286,11 +287,11 @@ const createStyles = (colors, spacing, borderRadius) =>
     durationText: {
       color: colors.textSecondary,
       fontSize: rs(15),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
     },
     durationTextSelected: {
       color: colors.background,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     paletteRow: {
       flexDirection: 'row',
@@ -324,7 +325,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     paletteNameSelected: {
       color: colors.text,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     colorRow: {
       flexDirection: 'row',
@@ -362,6 +363,6 @@ const createStyles = (colors, spacing, borderRadius) =>
     buttonText: {
       color: colors.background,
       fontSize: rs(18),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });

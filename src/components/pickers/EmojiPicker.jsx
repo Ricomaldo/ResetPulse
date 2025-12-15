@@ -86,6 +86,8 @@ export default function EmojiPicker({
     emojiButton: {
       width: rs(48, 'min'),
       height: rs(48, 'min'),
+      minWidth: 44,
+      minHeight: 44,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: rs(12, 'min'),

@@ -15,6 +15,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { useTimerOptions } from "../../contexts/TimerOptionsContext";
 import { useTimerPalette } from "../../contexts/TimerPaletteContext";
 import { rs } from "../../styles/responsive";
+import { fontWeights } from "../../theme/tokens";
 import PremiumModal from "./PremiumModal";
 import MoreColorsModal from "./MoreColorsModal";
 import MoreActivitiesModal from "./MoreActivitiesModal";
@@ -149,7 +150,7 @@ export default function SettingsModal({ visible, onClose }) {
 
     title: {
       fontSize: rs(24, "min"),
-      fontWeight: "bold",
+      fontWeight: fontWeights.bold,
       color: theme.colors.text,
     },
 
@@ -209,7 +210,7 @@ export default function SettingsModal({ visible, onClose }) {
 
     sectionTitle: {
       fontSize: rs(16, "min"),
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
       marginBottom: theme.spacing.sm,
     },
@@ -258,7 +259,7 @@ export default function SettingsModal({ visible, onClose }) {
     segmentText: {
       fontSize: rs(11, "min"),
       color: theme.colors.text,
-      fontWeight: "500",
+      fontWeight: fontWeights.medium,
       textAlign: "center",
     },
 
@@ -293,7 +294,7 @@ export default function SettingsModal({ visible, onClose }) {
     dialModeText: {
       fontSize: rs(12, 'min'),
       color: theme.colors.text,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       textAlign: 'center',
     },
 
@@ -331,12 +332,12 @@ export default function SettingsModal({ visible, onClose }) {
       color: theme.colors.text,
       textAlign: "center",
       marginTop: theme.spacing.xs / 2,
-      fontWeight: "500",
+      fontWeight: fontWeights.medium,
     },
 
     paletteNameActive: {
       color: theme.colors.brand.primary,
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
     },
 
     discoverButton: {
@@ -365,7 +366,7 @@ export default function SettingsModal({ visible, onClose }) {
 
     discoverIcon: {
       fontSize: rs(20),
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       color: theme.colors.brand.primary,
     },
 
@@ -373,7 +374,7 @@ export default function SettingsModal({ visible, onClose }) {
       fontSize: rs(9, "min"),
       color: theme.colors.brand.primary,
       textAlign: "center",
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       lineHeight: rs(11),
     },
 
@@ -393,7 +394,7 @@ export default function SettingsModal({ visible, onClose }) {
 
     discoverActivityIcon: {
       fontSize: rs(24),
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       color: theme.colors.brand.primary,
     },
 
@@ -401,7 +402,7 @@ export default function SettingsModal({ visible, onClose }) {
       fontSize: rs(8, "min"),
       color: theme.colors.brand.primary,
       textAlign: "center",
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       lineHeight: rs(10),
     },
 
@@ -440,14 +441,14 @@ export default function SettingsModal({ visible, onClose }) {
     activityItemLabel: {
       fontSize: rs(9, "min"),
       color: theme.colors.textLight,
-      fontWeight: "500",
+      fontWeight: fontWeights.medium,
       textAlign: "center",
       width: "100%",
     },
 
     activityItemLabelFavorite: {
       color: theme.colors.brand.primary,
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
     },
   });
 

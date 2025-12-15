@@ -8,6 +8,7 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
+import { fontWeights } from '../../../../theme/tokens';
 
 export default function Filter4Branch({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
@@ -81,7 +82,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.xxl),
@@ -113,7 +114,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     choiceTitle: {
       fontSize: rs(20),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.xs),

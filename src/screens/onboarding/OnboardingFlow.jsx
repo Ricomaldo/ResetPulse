@@ -3,12 +3,16 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, AppState } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs, getStepName } from './onboardingConstants';
 import analytics from '../../services/analytics';
+import logger from '../../utils/logger';
 import { DEV_MODE } from '../../config/test-mode';
+import StepIndicator from '../../components/onboarding/StepIndicator';
 
 import {
+import { fontWeights } from '../../../theme/tokens';
   Filter010Opening,
   Filter020Needs,
   Filter030Creation,
@@ -30,6 +34,7 @@ export default function OnboardingFlow({ onComplete }) {
   const [timerConfig, setTimerConfig] = useState({});
   const [branch, setBranch] = useState(null); // 'discover' | 'personalize'
   const [notificationPermission, setNotificationPermission] = useState(false);
+  const [shouldRequestPermissionLater, setShouldRequestPermissionLater] = useState(false);
   const [soundConfig, setSoundConfig] = useState(null);
   const [interfaceConfig, setInterfaceConfig] = useState(null);
   const appStateRef = useRef(AppState.currentState);
@@ -72,6 +77,13 @@ export default function OnboardingFlow({ onComplete }) {
     setCurrentFilter((prev) => prev + 1);
   };
 
+  const goToPreviousFilter = () => {
+    // Track back navigation
+    if (currentFilter > 0) {
+      setCurrentFilter((prev) => prev - 1);
+    }
+  };
+
   const jumpToFilter = (n) => {
     setCurrentFilter(n);
   };
@@ -82,16 +94,35 @@ export default function OnboardingFlow({ onComplete }) {
     setTimerConfig({});
     setBranch(null);
     setNotificationPermission(false);
+    setShouldRequestPermissionLater(false);
     setSoundConfig(null);
     setInterfaceConfig(null);
     hasTrackedStart.current = false;
   };
 
-  const handleComplete = (result) => {
+  const requestNotificationPermissionAfterOnboarding = async () => {
+    if (!shouldRequestPermissionLater) {
+      return;
+    }
+
+    try {
+      logger.log('[Onboarding] Requesting notification permission after onboarding');
+      const { status } = await Notifications.requestPermissionsAsync();
+      logger.log('[Onboarding] Notification permission result:', status);
+    } catch (error) {
+      logger.error('[Onboarding] Failed to request notification permission:', error);
+    }
+  };
+
+  const handleComplete = async (result) => {
     // Track final step completed
     analytics.trackOnboardingStepCompleted(currentFilter, getStepName(currentFilter, branch), { result });
     // Track onboarding completed avec résultat et branch
     analytics.trackOnboardingCompleted(result, needs, branch);
+
+    // Request notification permission after onboarding completes
+    await requestNotificationPermissionAfterOnboarding();
+
     // Transmet le résultat final et toutes les configs
     onComplete({
       result,
@@ -186,6 +217,7 @@ export default function OnboardingFlow({ onComplete }) {
           <Filter050Notifications
             onContinue={(data) => {
               setNotificationPermission(data.notificationPermission);
+              setShouldRequestPermissionLater(data.shouldRequestLater || false);
               analytics.trackOnboardingStepCompleted(4, getStepName(4, branch), {
                 permission_granted: data.notificationPermission,
               });
@@ -264,13 +296,53 @@ export default function OnboardingFlow({ onComplete }) {
     }
   };
 
+  const styles = createStyles(colors, spacing);
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <DevBar />
+      {/* Back button header - hidden on first screen */}
+      {currentFilter > 0 && (
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={goToPreviousFilter}
+            style={styles.backButton}
+            activeOpacity={0.7}
+            accessibilityLabel="Go back"
+            accessibilityRole="button"
+          >
+            <Text style={styles.backButtonText}>‹</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      <StepIndicator current={currentFilter} total={TOTAL_FILTERS} />
       {renderFilter()}
     </View>
   );
 }
+
+const createStyles = (colors, spacing) =>
+  StyleSheet.create({
+    header: {
+      paddingHorizontal: rs(spacing.md),
+      paddingVertical: rs(spacing.sm),
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    backButton: {
+      width: rs(44),
+      height: rs(44),
+      justifyContent: 'center',
+      alignItems: 'center',
+      minWidth: 44,
+      minHeight: 44,
+    },
+    backButtonText: {
+      fontSize: rs(32),
+      color: colors.text,
+      fontWeight: fontWeights.light,
+    },
+  });
 
 const createDevStyles = (colors, spacing) =>
   StyleSheet.create({
@@ -308,6 +380,6 @@ const createDevStyles = (colors, spacing) =>
     devButtonText: {
       color: colors.text,
       fontSize: rs(14),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });

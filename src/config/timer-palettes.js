@@ -2,7 +2,7 @@ import i18n from "../i18n";
 
 export const TIMER_PALETTES = {
   serenity: {
-    colors: ["#e5a8a3", "#edceb1", "#C17B7A", "#8B6F5C"],
+    colors: ["#c17a71", "#edceb1", "#C17B7A", "#8B6F5C"],
     get name() {
       return i18n.t("palettes.serenity");
     },

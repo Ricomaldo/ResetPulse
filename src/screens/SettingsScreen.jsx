@@ -1,10 +1,14 @@
 // src/screens/SettingsScreen.jsx
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { usePurchases } from '../contexts/PurchaseContext';
+import { usePremiumStatus } from '../hooks/usePremiumStatus';
 import { rs } from '../styles/responsive';
+import PremiumModal from '../components/modals/PremiumModal';
+import { fontWeights } from '../theme/tokens';
 
 export default function SettingsScreen() {
   const theme = useTheme();
@@ -18,6 +22,31 @@ export default function SettingsScreen() {
     useMinimalInterface,
     setUseMinimalInterface,
   } = useTimerOptions();
+  const { isPremium } = usePremiumStatus();
+  const { restorePurchases } = usePurchases();
+  const [premiumModalVisible, setPremiumModalVisible] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
+
+  const handleRestorePurchases = async () => {
+    setIsRestoring(true);
+    try {
+      const result = await restorePurchases();
+      if (result.success) {
+        Alert.alert(
+          'Restauration réussie',
+          result.hasPremium
+            ? 'Vos achats ont été restaurés. Toutes les fonctionnalités premium sont débloquées.'
+            : 'Aucun achat précédent trouvé pour ce compte.'
+        );
+      } else {
+        Alert.alert('Erreur', result.error || 'Impossible de restaurer vos achats.');
+      }
+    } catch (error) {
+      Alert.alert('Erreur', 'Une erreur inattendue s\'est produite.');
+    } finally {
+      setIsRestoring(false);
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -41,9 +70,63 @@ export default function SettingsScreen() {
     },
     headerText: {
       fontSize: rs(24),
-      fontWeight: '700',
+      fontWeight: fontWeights.bold,
       color: theme.colors.text,
       textAlign: 'center',
+    },
+    premiumSection: {
+      marginBottom: rs(24),
+      paddingVertical: rs(16),
+      paddingHorizontal: rs(16),
+      borderRadius: rs(12),
+      backgroundColor: theme.colors.surface,
+      borderWidth: 1,
+      borderColor: isPremium ? theme.colors.brand.primary : theme.colors.border + '40',
+    },
+    premiumHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: rs(12),
+      gap: rs(8),
+    },
+    premiumBadge: {
+      fontSize: rs(24),
+    },
+    premiumTitle: {
+      fontSize: rs(16),
+      fontWeight: fontWeights.bold,
+      color: isPremium ? theme.colors.brand.primary : theme.colors.text,
+      flex: 1,
+    },
+    premiumStatus: {
+      fontSize: rs(13),
+      color: theme.colors.textSecondary,
+      marginBottom: rs(12),
+    },
+    premiumButton: {
+      minHeight: 44,
+      borderRadius: rs(8),
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: rs(12),
+      paddingHorizontal: rs(16),
+      marginTop: rs(8),
+    },
+    premiumButtonUnlock: {
+      backgroundColor: theme.colors.brand.primary,
+    },
+    premiumButtonRestore: {
+      backgroundColor: theme.colors.surfaceElevated,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+    },
+    premiumButtonText: {
+      fontSize: rs(14),
+      fontWeight: fontWeights.semibold,
+      color: theme.colors.text,
+    },
+    premiumButtonUnlockText: {
+      color: theme.colors.fixed.white,
     },
     settingRow: {
       flexDirection: 'row',
@@ -60,7 +143,7 @@ export default function SettingsScreen() {
     settingLabel: {
       fontSize: rs(17),
       color: theme.colors.text,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       marginBottom: rs(4),
     },
     settingDescription: {
@@ -81,6 +164,42 @@ export default function SettingsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Premium Section */}
+        <View style={styles.premiumSection}>
+          <View style={styles.premiumHeader}>
+            <Text style={styles.premiumBadge}>{isPremium ? '👑' : '✨'}</Text>
+            <Text style={styles.premiumTitle}>
+              {isPremium ? 'Premium Actif' : 'Déverrouiller Premium'}
+            </Text>
+          </View>
+          <Text style={styles.premiumStatus}>
+            {isPremium
+              ? 'Vous avez accès à tous les palettes et activités.'
+              : 'Accédez à 13 palettes supplémentaires et 14 activités.'}
+          </Text>
+          {!isPremium && (
+            <TouchableOpacity
+              style={[styles.premiumButton, styles.premiumButtonUnlock]}
+              onPress={() => setPremiumModalVisible(true)}
+            >
+              <Text style={[styles.premiumButtonText, styles.premiumButtonUnlockText]}>
+                Déverrouiller Premium
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={[styles.premiumButton, styles.premiumButtonRestore]}
+            onPress={handleRestorePurchases}
+            disabled={isRestoring}
+          >
+            {isRestoring ? (
+              <ActivityIndicator color={theme.colors.text} />
+            ) : (
+              <Text style={styles.premiumButtonText}>Restaurer mes achats</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
             <Text style={styles.settingLabel}>Chrono numérique</Text>
@@ -153,6 +272,13 @@ export default function SettingsScreen() {
           />
         </View>
       </ScrollView>
+
+      {/* Premium Modal */}
+      <PremiumModal
+        visible={premiumModalVisible}
+        onClose={() => setPremiumModalVisible(false)}
+        highlightedFeature="settings_premium"
+      />
     </SafeAreaView>
   );
 }

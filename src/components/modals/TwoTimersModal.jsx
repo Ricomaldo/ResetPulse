@@ -15,6 +15,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import analytics from '../../services/analytics';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function TwoTimersModal({ visible, onClose, onExplore }) {
   const theme = useTheme();
@@ -60,7 +61,7 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
     },
     title: {
       fontSize: rs(22),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
       textAlign: 'center',
       marginBottom: theme.spacing.sm,
@@ -80,15 +81,19 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
       paddingVertical: theme.spacing.md,
       borderRadius: theme.borderRadius.md,
       alignItems: 'center',
+      minHeight: 44,
+      justifyContent: 'center',
     },
     primaryButtonText: {
       fontSize: rs(16),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.background,
     },
     secondaryButton: {
       paddingVertical: theme.spacing.sm,
       alignItems: 'center',
+      minHeight: 44,
+      justifyContent: 'center',
     },
     secondaryButtonText: {
       fontSize: rs(14),

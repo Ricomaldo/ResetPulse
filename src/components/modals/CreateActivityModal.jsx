@@ -23,6 +23,7 @@ import DurationSlider from '../pickers/DurationSlider';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import analytics from '../../services/analytics';
+import { fontWeights } from '../../theme/tokens';
 
 // Constants
 const MAX_NAME_LENGTH = 20;
@@ -171,17 +172,19 @@ export default function CreateActivityModal({
 
     headerTitle: {
       fontSize: rs(20, 'min'),
-      fontWeight: 'bold',
+      fontWeight: fontWeights.bold,
       color: theme.colors.text,
     },
 
     closeButton: {
-      width: rs(32, 'min'),
-      height: rs(32, 'min'),
+      padding: theme.spacing.sm,
+      minWidth: 44,
+      minHeight: 44,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: rs(16, 'min'),
+      borderRadius: theme.borderRadius.md,
       backgroundColor: theme.colors.surface,
+      margin: -theme.spacing.xs,
     },
 
     closeButtonText: {
@@ -200,7 +203,7 @@ export default function CreateActivityModal({
 
     sectionLabel: {
       fontSize: rs(14, 'min'),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.sm,
     },
@@ -274,7 +277,7 @@ export default function CreateActivityModal({
 
     previewName: {
       fontSize: rs(18, 'min'),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
     },
 
@@ -313,7 +316,7 @@ export default function CreateActivityModal({
 
     cancelButtonText: {
       fontSize: rs(16, 'min'),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.textSecondary,
     },
 
@@ -335,7 +338,7 @@ export default function CreateActivityModal({
 
     createButtonText: {
       fontSize: rs(16, 'min'),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: '#FFFFFF',
     },
   });

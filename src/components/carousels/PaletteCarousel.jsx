@@ -20,6 +20,7 @@ import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes";
 import { usePremiumStatus } from "../../hooks/usePremiumStatus";
 import haptics from "../../utils/haptics";
 import { PremiumModal, MoreColorsModal } from "../modals";
+import { fontWeights } from "../../theme/tokens";
 
 export default function PaletteCarousel({ isTimerRunning = false }) {
   const theme = useTheme();
@@ -141,6 +142,8 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     chevronButton: {
       width: rs(32, "min"),
       height: rs(32, "min"),
+      minWidth: 44,
+      minHeight: 44,
       borderRadius: rs(16, "min"),
       backgroundColor: theme.colors.surface,
       alignItems: "center",
@@ -156,7 +159,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     chevronText: {
       fontSize: rs(18, "min"),
       color: theme.colors.text,
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
     },
 
     scrollView: {
@@ -180,6 +183,8 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     colorButton: {
       width: rs(50, "min"),
       height: rs(50, "min"),
+      minWidth: 44,
+      minHeight: 44,
       borderRadius: rs(25, "min"),
       borderWidth: 2,
       padding: rs(4, "min"),
@@ -210,7 +215,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
     paletteLabelText: {
       fontSize: rs(13, "min"),
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
       letterSpacing: 0.5,
     },
@@ -228,6 +233,8 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     moreButton: {
       width: rs(44, "min"),
       height: rs(44, "min"),
+      minWidth: 44,
+      minHeight: 44,
       borderRadius: rs(22, "min"),
       backgroundColor: theme.colors.surface,
       borderWidth: 2,
@@ -241,7 +248,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     moreButtonText: {
       fontSize: rs(24, "min"),
       color: theme.colors.textSecondary,
-      fontWeight: "300",
+      fontWeight: fontWeights.light,
     },
 
     onboardingToast: {
@@ -259,7 +266,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
     onboardingToastText: {
       fontSize: rs(13, 'min'),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.fixed.white,
       textAlign: 'center',
     },

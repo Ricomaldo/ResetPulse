@@ -12,6 +12,7 @@ import DigitalTimer from '../components/timer/DigitalTimer';
 import { SettingsModal, TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
+import { fontWeights } from '../../theme/tokens';
 
 const SWIPE_THRESHOLD = 50;
 const { width, height } = Dimensions.get('window');
@@ -33,7 +34,7 @@ const createStyles = (theme) => {
       top: rs(80),
       alignSelf: 'center',
       fontSize: rs(16),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
       letterSpacing: 0.5,
     },

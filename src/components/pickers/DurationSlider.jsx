@@ -13,6 +13,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
+import { fontWeights } from '../../../theme/tokens';
 
 // Preset durations in seconds
 const DURATION_PRESETS = [
@@ -75,6 +76,8 @@ export default function DurationSlider({
     valueButton: {
       width: rs(48, 'min'),
       height: rs(48, 'min'),
+      minWidth: 44,
+      minHeight: 44,
       borderRadius: rs(24, 'min'),
       backgroundColor: theme.colors.surface,
       alignItems: 'center',
@@ -89,7 +92,7 @@ export default function DurationSlider({
 
     valueButtonText: {
       fontSize: rs(24, 'min'),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
     },
 
@@ -100,7 +103,7 @@ export default function DurationSlider({
 
     valueText: {
       fontSize: rs(32, 'min'),
-      fontWeight: 'bold',
+      fontWeight: fontWeights.bold,
       color: theme.colors.text,
     },
 
@@ -125,7 +128,9 @@ export default function DurationSlider({
       borderWidth: 1,
       borderColor: theme.colors.border,
       minWidth: rs(60, 'min'),
+      minHeight: 44,
       alignItems: 'center',
+      justifyContent: 'center',
     },
 
     presetButtonActive: {
@@ -135,13 +140,13 @@ export default function DurationSlider({
 
     presetText: {
       fontSize: rs(14, 'min'),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
     },
 
     presetTextActive: {
       color: theme.colors.brand.primary,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });
 

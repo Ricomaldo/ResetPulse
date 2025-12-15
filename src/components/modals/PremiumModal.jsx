@@ -18,6 +18,7 @@ import { useAnalytics } from "../../hooks/useAnalytics";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
 import haptics from "../../utils/haptics";
+import { fontWeights } from '../../../theme/tokens';
 
 export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   const theme = useTheme();
@@ -34,6 +35,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
   const [hasTrackedPaywall, setHasTrackedPaywall] = useState(false);
   const [dynamicPrice, setDynamicPrice] = useState(null);
   const [isLoadingPrice, setIsLoadingPrice] = useState(false);
+  const [purchaseAttempts, setPurchaseAttempts] = useState(0);
 
   // Track paywall viewed once per session (M7.5)
   useEffect(() => {
@@ -144,6 +146,8 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       });
 
       if (result.success) {
+        // Reset attempts on success
+        setPurchaseAttempts(0);
         haptics.success().catch(() => { /* Optional operation - failure is non-critical */ });
         Alert.alert(
           t('premium.welcomeTitle'),
@@ -153,19 +157,70 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       } else if (result.cancelled) {
         // User cancelled, silent
       } else if (result.isNetworkError) {
-        // Network error - user-friendly message
-        Alert.alert(t('premium.noConnection'), result.error, [{ text: t('common.ok') }]);
+        // Network error - show retry button
+        const newAttempts = purchaseAttempts + 1;
+        setPurchaseAttempts(newAttempts);
+
+        const buttons = [
+          { text: t('common.cancel'), style: 'cancel' }
+        ];
+
+        // Show retry button if less than 3 attempts
+        if (newAttempts < 3) {
+          buttons.unshift({
+            text: t('common.retry'),
+            onPress: handlePurchase
+          });
+        } else {
+          // After 3 failed attempts, show support link
+          buttons.unshift({
+            text: t('premium.contactSupport'),
+            onPress: () => {
+              // Future: open support email or link
+              console.log('[PremiumModal] Contact support requested after 3 failed attempts');
+            }
+          });
+        }
+
+        Alert.alert(
+          t('premium.noConnection'),
+          result.error + (newAttempts >= 3 ? '\n\n' + t('premium.tooManyAttempts') : ''),
+          buttons
+        );
       } else if (result.isPaymentPending) {
         // Payment pending - informative message
         Alert.alert(t('premium.paymentPending'), result.error, [
           { text: t('common.ok'), onPress: onClose },
         ]);
       } else {
-        // Generic error
+        // Generic error - show retry button
+        const newAttempts = purchaseAttempts + 1;
+        setPurchaseAttempts(newAttempts);
+
+        const buttons = [
+          { text: t('common.cancel'), style: 'cancel' }
+        ];
+
+        // Show retry button if less than 3 attempts
+        if (newAttempts < 3) {
+          buttons.unshift({
+            text: t('common.retry'),
+            onPress: handlePurchase
+          });
+        } else {
+          // After 3 failed attempts, show support link
+          buttons.unshift({
+            text: t('premium.contactSupport'),
+            onPress: () => {
+              console.log('[PremiumModal] Contact support requested after 3 failed attempts');
+            }
+          });
+        }
+
         Alert.alert(
           t('premium.error'),
-          result.error || t('premium.errorPurchase'),
-          [{ text: t('common.ok') }]
+          (result.error || t('premium.errorPurchase')) + (newAttempts >= 3 ? '\n\n' + t('premium.tooManyAttempts') : ''),
+          buttons
         );
       }
     } catch (error) {
@@ -266,7 +321,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
 
     title: {
       fontSize: rs(26, "min"),
-      fontWeight: "bold",
+      fontWeight: fontWeights.bold,
       color: theme.colors.text,
       textAlign: "center",
       marginBottom: theme.spacing.md,
@@ -295,7 +350,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
 
     featuresText: {
       fontSize: rs(18, "min"),
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
       textAlign: "center",
       marginBottom: theme.spacing.sm,
@@ -303,7 +358,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
 
     priceText: {
       fontSize: rs(20, "min"),
-      fontWeight: "bold",
+      fontWeight: fontWeights.bold,
       color: theme.colors.brand.primary,
       textAlign: "center",
       marginBottom: theme.spacing.xs,
@@ -329,7 +384,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
 
     primaryButtonText: {
       fontSize: rs(17, "min"),
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       color: "#FFFFFF",
     },
 
@@ -340,11 +395,12 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       alignItems: "center",
       justifyContent: "center",
       minHeight: 44,
+      minWidth: 44,
     },
 
     secondaryButtonText: {
       fontSize: rs(15, "min"),
-      fontWeight: "500",
+      fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
     },
 
@@ -352,6 +408,9 @@ export default function PremiumModal({ visible, onClose, highlightedFeature }) {
       marginTop: theme.spacing.md,
       padding: theme.spacing.sm,
       alignItems: "center",
+      minHeight: 44,
+      minWidth: 44,
+      justifyContent: "center",
     },
 
     restoreButtonText: {

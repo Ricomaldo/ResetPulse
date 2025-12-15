@@ -15,6 +15,7 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter5cInterface({ onContinue }) {
   const { colors, spacing, borderRadius, setTheme: applyTheme } = useTheme();
@@ -190,7 +191,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
     },
@@ -206,7 +207,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     sectionLabel: {
       fontSize: rs(16),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       marginBottom: rs(spacing.sm),
     },
@@ -230,12 +231,12 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     segmentText: {
       fontSize: rs(14),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       color: colors.text,
     },
     segmentTextActive: {
       color: colors.background,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     toggleRow: {
       flexDirection: 'row',
@@ -253,7 +254,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     toggleLabel: {
       fontSize: rs(16),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       marginBottom: rs(4),
     },
@@ -281,7 +282,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     primaryButtonText: {
       color: colors.background,
       fontSize: rs(18),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     skipButton: {
       paddingVertical: rs(spacing.sm),
@@ -290,6 +291,6 @@ const createStyles = (colors, spacing, borderRadius) =>
     skipButtonText: {
       color: colors.textSecondary,
       fontSize: rs(15),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
     },
   });
