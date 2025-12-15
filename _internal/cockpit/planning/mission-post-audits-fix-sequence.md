@@ -8,6 +8,23 @@ next_session: true
 
 # Mission: Post-Audits Fix Sequence — ResetPulse v1.4
 
+## 🚀 Quick Start (First Time Here?)
+
+**You are here** because audits found 14 P0 blockers. This mission sequences the fixes.
+
+1. **2 min** → Read [`INDEX.md`](../../docs/audits/audit-2025-14-12/INDEX.md) (executive summary)
+2. **5 min** → Read sections below (choose A, B, or C)
+3. **Follow links** → Audit reports explain each finding
+4. **Implement & checkbox** → Mark progress
+5. **Next fix** → Move to next item
+
+**Resources**:
+- Audit archive: `../../docs/audits/audit-2025-14-12/`
+- Architecture docs: `../../docs/reports/` (NOT audit findings)
+- Handoffs: `../../docs/audits/audit-2025-14-12/handoffs/`
+
+---
+
 ## 🎯 Objectif
 
 Transformer les 14 P0 findings (audit-2025-14-12) en fixes séquencées, validées, et production-ready.
