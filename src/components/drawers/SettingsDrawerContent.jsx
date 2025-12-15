@@ -1,10 +1,11 @@
 /**
  * @fileoverview Settings drawer content with toggle options for timer behavior
+ * FIXED: Removed internal ScrollView nesting (drawer handles outer scroll)
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Switch, Alert, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -35,14 +36,11 @@ export default function SettingsDrawerContent() {
   } = useTimerOptions();
 
   const styles = StyleSheet.create({
-    scrollView: {
-      flex: 1,
-    },
     scrollContent: {
       paddingHorizontal: rs(20),
       paddingTop: rs(8),
       paddingBottom: rs(20),
-      flexGrow: 1,
+      flex: 1,
     },
     title: {
       fontSize: rs(20),
@@ -108,18 +106,14 @@ export default function SettingsDrawerContent() {
   });
 
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollContent}
-      showsVerticalScrollIndicator={false}
-    >
-        <Text style={styles.title}>Réglages</Text>
+    <View style={styles.scrollContent}>
+      <Text style={styles.title}>Réglages</Text>
 
-        <View style={styles.settingRow}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.settingLabel}>Chrono numérique</Text>
-            <Text style={styles.settingDescription}>Afficher le temps restant</Text>
-          </View>
+      <View style={styles.settingRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.settingLabel}>Chrono numérique</Text>
+          <Text style={styles.settingDescription}>Afficher le temps restant</Text>
+        </View>
           <Switch
             value={showDigitalTimer}
             onValueChange={(value) => {
@@ -261,6 +255,6 @@ export default function SettingsDrawerContent() {
           </TouchableOpacity>
         ))}
       </View>
-    </ScrollView>
+    </View>
   );
 }

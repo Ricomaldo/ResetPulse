@@ -131,9 +131,9 @@ describe('TimerScreen', () => {
 
     // Activity label only shows when timer is running
     // On initial render (timer not running), shows startup message
-    const startupText = texts.find(t => {
+    const startupText = texts.find((t) => {
       try {
-        return t.props.children === 'Tapote le timer pour commencer';
+        return t.props.children === 'Tap sur le cadran pour démarrer';
       } catch {
         return false;
       }

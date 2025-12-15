@@ -90,9 +90,9 @@ export default function OptionsScreen({
           <ActivityCarousel isTimerRunning={false} />
         </View>
 
-        {/* Durées */}
+        {/* Taille du cadran */}
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Durée</Text>
+          <Text style={styles.sectionLabel}>Taille du cadran</Text>
           <PresetPills
             currentDuration={currentDuration}
             onSelectPreset={onSelectPreset}
