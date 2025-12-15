@@ -352,6 +352,8 @@ export default function CreateActivityModal({
       animationType="slide"
       onRequestClose={handleClose}
       statusBarTranslucent
+      accessible={true}
+      accessibilityViewIsModal={true}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -361,18 +363,36 @@ export default function CreateActivityModal({
           style={styles.overlay}
           activeOpacity={1}
           onPress={handleClose}
+          accessible={false}
+          importantForAccessibility="no"
         >
-          <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
-            <View style={styles.modalContainer}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+            accessible={false}
+          >
+            <View
+              style={styles.modalContainer}
+              accessible={true}
+              accessibilityRole="dialog"
+              accessibilityLabel={t('customActivities.create.title')}
+              accessibilityHint={t('accessibility.createActivityModalHint')}
+            >
               {/* Header */}
               <View style={styles.header}>
-                <Text style={styles.headerTitle}>
+                <Text
+                  style={styles.headerTitle}
+                  accessibilityRole="header"
+                >
                   {t('customActivities.create.title')}
                 </Text>
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={handleClose}
                   activeOpacity={0.7}
+                  accessibilityLabel={t('accessibility.closeCreateActivity')}
+                  accessibilityRole="button"
+                  accessibilityHint={t('accessibility.closeModalHint')}
                 >
                   <Text style={styles.closeButtonText}>X</Text>
                 </TouchableOpacity>
@@ -476,6 +496,9 @@ export default function CreateActivityModal({
                   style={styles.cancelButton}
                   onPress={handleClose}
                   activeOpacity={0.7}
+                  accessibilityLabel={t('customActivities.create.buttonCancel')}
+                  accessibilityRole="button"
+                  accessibilityHint={t('accessibility.closeModalHint')}
                 >
                   <Text style={styles.cancelButtonText}>
                     {t('customActivities.create.buttonCancel')}
@@ -490,6 +513,10 @@ export default function CreateActivityModal({
                   onPress={handleCreate}
                   activeOpacity={0.8}
                   disabled={!isFormValid}
+                  accessibilityLabel={t('customActivities.create.buttonCreate')}
+                  accessibilityRole="button"
+                  accessibilityHint={t('accessibility.createActivityHint')}
+                  accessibilityState={{ disabled: !isFormValid }}
                 >
                   <Text style={styles.createButtonText}>
                     {t('customActivities.create.buttonCreate')}

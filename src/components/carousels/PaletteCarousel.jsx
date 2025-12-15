@@ -16,7 +16,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { useTimerPalette } from "../../contexts/TimerPaletteContext";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
-import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes";
+import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes';
 import { usePremiumStatus } from "../../hooks/usePremiumStatus";
 import haptics from "../../utils/haptics";
 import { PremiumModal, MoreColorsModal } from "../modals";

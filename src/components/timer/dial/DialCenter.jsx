@@ -91,6 +91,8 @@ const DialCenter = React.memo(({
           justifyContent: 'center',
         }}
         pointerEvents="none"
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
       >
         <Animated.View
           style={{
@@ -153,6 +155,8 @@ const DialCenter = React.memo(({
           justifyContent: 'center',
         }}
         pointerEvents="none"
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
       >
         <Animated.View
           style={{

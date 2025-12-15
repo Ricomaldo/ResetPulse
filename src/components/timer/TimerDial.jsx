@@ -8,6 +8,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { View, Animated, PanResponder, Text } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useDialOrientation } from '../../hooks/useDialOrientation';
+import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import {
   TIMER_SVG,
@@ -32,7 +33,7 @@ import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialCenter from './dial/DialCenter';
 import Svg, { Circle } from 'react-native-svg';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 /**
  * TimerDial - Main timer dial component
@@ -57,6 +58,7 @@ function TimerDial({
   showGraduations = true,
 }) {
   const theme = useTheme();
+  const t = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
   const completionColorAnim = useRef(new Animated.Value(0)).current;
 
@@ -246,6 +248,21 @@ function TimerDial({
     outputRange: [color || theme.colors.energy, COLORS.COMPLETION_GREEN],
   });
 
+  // Calculate accessibility information
+  const durationMinutes = Math.round(duration / 60);
+  const activityName = currentActivity?.label || t('activities.none');
+
+  // Build accessibility label
+  const dialAccessibilityLabel = t('accessibility.timer.dial', {
+    minutes: durationMinutes,
+    activity: activityName
+  });
+
+  // Build accessibility hint
+  const dialAccessibilityHint = isRunning
+    ? t('accessibility.timer.dialTapToToggle')
+    : t('accessibility.timer.dialAdjustable') + ' ' + t('accessibility.timer.dialTapToToggle');
+
   return (
     <View
       {...panResponder.panHandlers}
@@ -254,6 +271,35 @@ function TimerDial({
         height: svgSize,
         alignItems: 'center',
         justifyContent: 'center',
+      }}
+      accessible={true}
+      accessibilityRole={isRunning ? "timer" : "adjustable"}
+      accessibilityLabel={dialAccessibilityLabel}
+      accessibilityHint={dialAccessibilityHint}
+      accessibilityValue={{
+        min: 0,
+        max: getDialMode(scaleMode).maxMinutes,
+        now: durationMinutes,
+        text: `${durationMinutes} minutes`
+      }}
+      accessibilityActions={!isRunning ? [
+        { name: 'increment', label: 'Increase duration' },
+        { name: 'decrement', label: 'Decrease duration' },
+        { name: 'activate', label: 'Start timer' },
+      ] : [
+        { name: 'activate', label: 'Pause timer' },
+      ]}
+      onAccessibilityAction={(event) => {
+        const { actionName } = event.nativeEvent;
+        if (actionName === 'increment' && onGraduationTap && !isRunning) {
+          const newDuration = Math.min(duration + 60, getDialMode(scaleMode).maxMinutes * 60);
+          onGraduationTap(newDuration / 60);
+        } else if (actionName === 'decrement' && onGraduationTap && !isRunning) {
+          const newDuration = Math.max(0, duration - 60);
+          onGraduationTap(newDuration / 60);
+        } else if (actionName === 'activate' && onDialTap) {
+          onDialTap();
+        }
       }}
     >
       {/* Base layer: static elements */}
@@ -297,7 +343,14 @@ function TimerDial({
       })()}
 
       {/* Physical fixation dots - rendered on top of dial */}
-      <Svg width={svgSize} height={svgSize} style={{ position: 'absolute' }} pointerEvents="none">
+      <Svg
+        width={svgSize}
+        height={svgSize}
+        style={{ position: 'absolute' }}
+        pointerEvents="none"
+        accessible={false}
+        importantForAccessibility="no"
+      >
         <Circle
           cx={centerX}
           cy={centerY}
@@ -337,6 +390,8 @@ function TimerDial({
             borderRadius: theme.borderRadius.md,
             ...theme.shadow('md'),
           }}
+          accessible={false}
+          importantForAccessibility="no-hide-descendants"
         >
           <Text
             style={{

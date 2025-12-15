@@ -10,9 +10,8 @@ import analytics from '../../services/analytics';
 import logger from '../../utils/logger';
 import { DEV_MODE } from '../../config/test-mode';
 import StepIndicator from '../../components/onboarding/StepIndicator';
-
+import { fontWeights } from '../../theme/tokens';
 import {
-import { fontWeights } from '../../../theme/tokens';
   Filter010Opening,
   Filter020Needs,
   Filter030Creation,
