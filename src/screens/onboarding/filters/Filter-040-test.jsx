@@ -8,6 +8,7 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import TimerDial from '../../../components/timer/TimerDial';
 import { rs } from '../onboardingConstants';
+import { fontWeights } from '../../../../theme/tokens';
 
 const TEST_DURATION = 60; // seconds
 const UPDATE_INTERVAL = 50; // ms (20 fps)
@@ -103,7 +104,7 @@ const createStyles = (colors, spacing) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.lg),

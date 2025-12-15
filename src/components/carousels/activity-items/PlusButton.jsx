@@ -8,6 +8,7 @@ import { Text, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { rs } from "../../../styles/responsive";
+import { fontWeights } from '../../../../theme/tokens';
 
 /**
  * PlusButton - Dumb component for "+" button in carousel
@@ -44,7 +45,7 @@ export default function PlusButton({
     moreButtonText: {
       fontSize: rs(28, "min"),
       color: theme.colors.textSecondary,
-      fontWeight: "300",
+      fontWeight: fontWeights.light,
     },
 
     // Bouton "+" pour mode premium (création)
@@ -64,7 +65,7 @@ export default function PlusButton({
     createButtonText: {
       fontSize: rs(28, "min"),
       color: theme.colors.brand.primary,
-      fontWeight: "300",
+      fontWeight: fontWeights.light,
     },
   });
 

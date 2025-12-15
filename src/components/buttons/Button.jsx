@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { createFocusStyle } from '../../styles/focusStyles';
+import { fontWeights } from '../../../theme/tokens';
 
 /**
  * Primary Button - Brand color, filled
@@ -130,7 +131,7 @@ export const DestructiveButton = ({
       style={[
         styles.base,
         {
-          backgroundColor: colors.semantic.error,
+          backgroundColor: '#D94040', // Error red
           borderRadius: borderRadius.lg,
           paddingVertical: spacing.md,
           paddingHorizontal: spacing.lg,
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   disabled: {
     opacity: 0.5,

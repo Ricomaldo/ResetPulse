@@ -57,6 +57,15 @@ export const shadows = {
   },
 };
 
+// Font weights
+export const fontWeights = {
+  light: '300',      // For subtle text, timer display
+  regular: '400',    // Default body text
+  medium: '500',     // Secondary headings, subtitles
+  semibold: '600',   // Primary text, buttons, titles
+  bold: '700',       // Strong emphasis, headers
+};
+
 // Typographie responsive
 export const typography = {
   // Tailles de base
@@ -71,32 +80,32 @@ export const typography = {
   // Styles spécifiques
   timer: {
     fontSize: width * 0.12,  // 12% de la largeur d'écran
-    fontWeight: '300',
+    fontWeight: fontWeights.light,
     letterSpacing: -1,
   },
   title: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.15,
   },
   subtitle: {
     fontSize: 17,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     letterSpacing: 0.1,
   },
   body: {
     fontSize: 15,
-    fontWeight: '400',
+    fontWeight: fontWeights.regular,
     letterSpacing: 0,
   },
   caption: {
     fontSize: 13,
-    fontWeight: '400',
+    fontWeight: fontWeights.regular,
     letterSpacing: 0.2,
   },
   button: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
   },
 };

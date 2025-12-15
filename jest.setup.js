@@ -52,5 +52,39 @@ jest.mock('./src/utils/haptics', () => ({
   },
 }));
 
+// Mock react-native-purchases (RevenueCat)
+jest.mock('react-native-purchases');
+
+// Mock React Native components that need special handling
+// Note: NativeAnimatedHelper path changed in newer RN versions - removed to avoid import errors
+
+// Mock ScrollView for component tests
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native');
+
+  // Override ScrollView to handle refs properly
+  RN.ScrollView = jest.fn().mockImplementation(({ children, ...props }) => {
+    return RN.View({ ...props, children });
+  });
+
+  return RN;
+});
+
+// Mock react-native-svg (used in timer dial)
+jest.mock('react-native-svg', () => {
+  const React = require('react');
+  return {
+    Svg: 'Svg',
+    Circle: 'Circle',
+    Path: 'Path',
+    G: 'G',
+    Defs: 'Defs',
+    LinearGradient: 'LinearGradient',
+    Stop: 'Stop',
+    Text: 'Text',
+    TSpan: 'TSpan',
+  };
+});
+
 // Suppress console warnings during tests (optional - comment out for debugging)
 // global.console.warn = jest.fn();

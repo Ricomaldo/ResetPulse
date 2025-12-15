@@ -38,25 +38,8 @@ export const ENTITLEMENTS = {
   premium_access: "premium_access",
 };
 
-// Configuration freemium (source de vérité)
-// ADR ligne 127-138: 2 palettes + 4 activités
-export const FREEMIUM_CONFIG = {
-  free: {
-    palettes: ["softLaser", "terre"], // 2 palettes UNIQUEMENT
-    activities: ["none", "work", "break", "meditation"], // 4 activités
-  },
-  premium: {
-    palettes: "all", // Débloquer 15 total
-    activities: "all", // Débloquer 16 total
-    price: "4.99",
-    type: "one-time",
-    trial: "7 days",
-  },
-};
-
 export default {
   REVENUECAT_CONFIG,
   PRODUCT_IDS,
   ENTITLEMENTS,
-  FREEMIUM_CONFIG,
 };

@@ -78,6 +78,19 @@ export const conversionEvents = {
   },
 
   /**
+   * Event: Purchase Restored
+   * Trigger: RevenueCat restore purchases success
+   * Tracks when user restores previously purchased premium access
+   *
+   * @param {string} packageIdentifier - Restored package ID
+   */
+  trackPurchaseRestored(packageIdentifier) {
+    this.track('purchase_restored', {
+      package_id: packageIdentifier,
+    });
+  },
+
+  /**
    * Event: Two Timers Milestone Reached
    * Trigger: TimerScreen - When user completes 2nd timer
    * KPI: > 40% of users should reach this milestone

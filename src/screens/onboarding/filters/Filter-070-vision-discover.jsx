@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, getJourneyScenarios } from '../onboardingConstants';
+import { fontWeights } from '../../../../theme/tokens';
 
 export default function Filter5aVision({ needs = [], onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
@@ -64,7 +65,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.lg),
@@ -87,7 +88,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     scenarioLabel: {
       fontSize: rs(17),
       color: colors.text,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     scenarioSublabel: {
       fontSize: rs(14),
@@ -129,6 +130,6 @@ const createStyles = (colors, spacing, borderRadius) =>
     buttonText: {
       color: colors.text,
       fontSize: rs(18),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });

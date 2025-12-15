@@ -14,6 +14,7 @@ import useTimer from '../../hooks/useTimer';
 import TimerDial from '../timer/TimerDial';
 import haptics from '../../utils/haptics';
 import { TIMER, TEXT, getDialMode } from '../timer/timerConstants';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function TimeTimer({
   onRunningChange,
@@ -50,18 +51,12 @@ export default function TimeTimer({
     if (onTimerRef) {
       onTimerRef(timer);
     }
-  }, [timer, onTimerRef]);
+  }, [onTimerRef, timer]); // Include timer to avoid stale references
 
   // Pass dial ref to parent (pass .current directly)
   useEffect(() => {
-    if (onDialRef) {
-      // Use a small delay to ensure ref is attached
-      const timeout = setTimeout(() => {
-        if (dialWrapperRef.current) {
-          onDialRef(dialWrapperRef.current);
-        }
-      }, 50);
-      return () => clearTimeout(timeout);
+    if (onDialRef && dialWrapperRef.current) {
+      onDialRef(dialWrapperRef.current);
     }
   }, [onDialRef]);
 
@@ -70,7 +65,7 @@ export default function TimeTimer({
     if (currentDuration && currentDuration !== timer.duration) {
       timer.setDuration(currentDuration);
     }
-  }, [currentDuration]);
+  }, [currentDuration, timer.duration, timer.setDuration]); // setDuration is stable from useCallback
 
   // Notify parent of running state changes
   useEffect(() => {
@@ -124,7 +119,7 @@ export default function TimeTimer({
 
     messageText: {
       fontSize: rs(18, 'min'),
-      fontWeight: '700',
+      fontWeight: fontWeights.bold,
       color: currentColor || theme.colors.brand.primary,
       textAlign: 'center',
       letterSpacing: TEXT.LETTER_SPACING,

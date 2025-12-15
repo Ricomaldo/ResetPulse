@@ -91,10 +91,10 @@
       },
       "filter4": {
         "title": "Comment veux-tu continuer ?",
-        "discoverTitle": "Explorer les possibilités",
-        "discoverSubtitle": "Je configure plus tard",
-        "personalizeTitle": "Personnaliser mon expérience",
-        "personalizeSubtitle": "Son, interface, préférences"
+        "discoverTitle": "Commencer à utiliser l'app",
+        "discoverSubtitle": "Sauter la configuration, personnaliser plus tard",
+        "personalizeTitle": "Configurer maintenant",
+        "personalizeSubtitle": "Son, thème, interface"
       },
       "filter5b": {
         "title": "Choisis ton signal de fin",

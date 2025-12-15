@@ -9,6 +9,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 import { ActivityCarousel, PaletteCarousel, PresetPills } from '../carousels';
 import { Icons } from '../layout';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function OptionsDrawerContent({
   currentDuration = 0,
@@ -41,7 +42,7 @@ export default function OptionsDrawerContent({
       fontSize: rs(13),
       color: theme.colors.textSecondary,
       marginBottom: rs(8),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
     },
   });
 

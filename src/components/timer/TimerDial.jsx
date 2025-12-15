@@ -32,6 +32,7 @@ import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialCenter from './dial/DialCenter';
 import Svg, { Circle } from 'react-native-svg';
+import { fontWeights } from '../../../theme/tokens';
 
 /**
  * TimerDial - Main timer dial component
@@ -340,7 +341,7 @@ function TimerDial({
           <Text
             style={{
               fontSize: 16,
-              fontWeight: '600',
+              fontWeight: fontWeights.semibold,
               color: theme.colors.text,
             }}
           >

@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import * as Updates from 'expo-updates';
 import Logger from '../../utils/logger';
+import { fontWeights } from '../../../theme/tokens';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
     color: '#fff',
     marginBottom: 10
   },
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: fontWeights.semibold
   }
 });
 

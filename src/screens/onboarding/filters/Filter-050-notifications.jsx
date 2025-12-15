@@ -10,6 +10,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
 import analytics from '../../../services/analytics';
+import { fontWeights } from '../../../../theme/tokens';
 
 export default function Filter3_5Notifications({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
@@ -23,33 +24,19 @@ export default function Filter3_5Notifications({ onContinue }) {
   const handleRequestPermission = async () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
-    try {
-      const { status } = await Notifications.requestPermissionsAsync();
+    // Defer actual permission request until after onboarding
+    // This avoids interrupting the onboarding flow with system dialogs
+    analytics.trackOnboardingNotifGranted();
 
-      if (__DEV__) {
-        console.log('[Filter3.5] Notification permission:', status);
-      }
-
-      // Track result
-      if (status === 'granted') {
-        analytics.trackOnboardingNotifGranted();
-      } else {
-        analytics.trackOnboardingNotifSkipped();
-      }
-
-      // Continue regardless of permission granted/denied
-      onContinue({ notificationPermission: status === 'granted' });
-    } catch (error) {
-      console.warn('[Filter3.5] Failed to request notification permission:', error);
-      analytics.trackOnboardingNotifSkipped();
-      onContinue({ notificationPermission: false });
-    }
+    // Save preference without requesting system permission yet
+    // The permission will be requested after onboarding completes
+    onContinue({ notificationPermission: true, shouldRequestLater: true });
   };
 
   const handleSkip = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     analytics.trackOnboardingNotifSkipped();
-    onContinue({ notificationPermission: false });
+    onContinue({ notificationPermission: false, shouldRequestLater: false });
   };
 
   const styles = createStyles(colors, spacing, borderRadius);
@@ -129,7 +116,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.lg),
@@ -165,7 +152,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     primaryButtonText: {
       color: colors.background,
       fontSize: rs(18),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     secondaryButton: {
       paddingVertical: rs(spacing.md),
@@ -181,6 +168,6 @@ const createStyles = (colors, spacing, borderRadius) =>
     secondaryButtonText: {
       color: colors.text,
       fontSize: rs(16),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });

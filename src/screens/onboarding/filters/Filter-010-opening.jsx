@@ -6,6 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
+import { fontWeights } from '../../../../theme/tokens';
 
 const BREATH_CYCLES = 5;
 const BREATH_DURATION = 1500;
@@ -90,7 +91,7 @@ const createStyles = (colors, spacing) =>
       color: colors.text,
       textAlign: 'center',
       lineHeight: rs(38),
-      fontWeight: '300',
+      fontWeight: fontWeights.light,
     },
     tapHint: {
       position: 'absolute',

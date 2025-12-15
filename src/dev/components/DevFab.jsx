@@ -10,6 +10,7 @@ import {
   Animated,
 } from 'react-native';
 import { SHOW_DEV_FAB } from '../../config/test-mode';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function DevFab({
   isPremiumMode,
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   menuLabel: {
     fontSize: 11,
     color: '#888',
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 6,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
   toggleText: {
     fontSize: 13,
     color: '#888',
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
 
   toggleTextActive: {
@@ -274,6 +275,6 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: 13,
     color: '#fff',
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
 });

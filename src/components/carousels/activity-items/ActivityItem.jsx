@@ -146,7 +146,7 @@ export default function ActivityItem({
 
         {isLocked && (
           <View style={styles.premiumBadge}>
-            <Text style={styles.lockIcon}>✨</Text>
+            <Text style={styles.lockIcon}>🔒</Text>
           </View>
         )}
 

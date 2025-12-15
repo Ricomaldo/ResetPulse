@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
+import { fontWeights } from '../../../theme/tokens';
 
 /**
  * DigitalTimer - Displays remaining time in MM:SS format
@@ -71,7 +72,7 @@ export default function DigitalTimer({ remaining, isRunning, color, mini = false
     },
     timeText: {
       fontSize: mini ? rs(1) : rs(32, 'min'),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: color || theme.colors.brand.primary,
       letterSpacing: 2,
       fontFamily: Platform.select({

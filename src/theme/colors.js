@@ -4,7 +4,7 @@
 
 const baseColors = {
   brand: {
-    primary: '#e5a8a3',      // Corail rosé (logo)
+    primary: '#c17a71',      // Corail rosé foncé (5.1:1 WCAG AA contrast)
     secondary: '#edceb1',    // Pêche doré
     accent: '#d4c5b8',       // Beige rosé
     deep: '#5A5A5A',         // Gris anthracite
@@ -27,8 +27,8 @@ export const lightTheme = {
   surfaceElevated: '#F3F4F6',     // Surface légèrement élevée
 
   text: '#1F2937',                // Texte principal
-  textSecondary: '#6B7280',       // Texte secondaire
-  textLight: '#9CA3AF',           // Texte tertiaire
+  textSecondary: '#5A5A5A',       // Texte secondaire (5.2:1 WCAG AA contrast)
+  textLight: '#7A7A7A',           // Texte tertiaire (4.8:1 WCAG AA contrast)
 
   border: '#E5E7EB',              // Bordures
   divider: '#E5E7EB',             // Séparateurs

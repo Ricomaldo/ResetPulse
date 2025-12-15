@@ -14,6 +14,7 @@ import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
 import { rs } from "../../styles/responsive";
 import haptics from "../../utils/haptics";
+import { fontWeights } from '../../../theme/tokens';
 
 export default function DiscoveryModal({
   visible,
@@ -79,7 +80,7 @@ export default function DiscoveryModal({
 
     title: {
       fontSize: rs(24, "min"),
-      fontWeight: "bold",
+      fontWeight: fontWeights.bold,
       color: theme.colors.text,
       textAlign: "center",
       marginBottom: theme.spacing.sm,
@@ -117,7 +118,7 @@ export default function DiscoveryModal({
 
     primaryButtonText: {
       fontSize: rs(16, "min"),
-      fontWeight: "600",
+      fontWeight: fontWeights.semibold,
       color: "#FFFFFF",
     },
 
@@ -132,7 +133,7 @@ export default function DiscoveryModal({
 
     secondaryButtonText: {
       fontSize: rs(14, "min"),
-      fontWeight: "500",
+      fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
     },
   });

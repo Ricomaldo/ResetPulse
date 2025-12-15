@@ -12,6 +12,7 @@ import { SoundPicker } from '../pickers';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import analytics from '../../services/analytics';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function SettingsDrawerContent() {
   const theme = useTheme();
@@ -45,7 +46,7 @@ export default function SettingsDrawerContent() {
     },
     title: {
       fontSize: rs(20),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
       marginBottom: rs(24),
     },
@@ -69,7 +70,7 @@ export default function SettingsDrawerContent() {
     },
     sectionLabel: {
       fontSize: rs(14),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
       marginTop: rs(16),
       marginBottom: rs(8),
@@ -98,7 +99,7 @@ export default function SettingsDrawerContent() {
     dialModeText: {
       fontSize: rs(12),
       color: theme.colors.text,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       textAlign: 'center',
     },
     dialModeTextActive: {

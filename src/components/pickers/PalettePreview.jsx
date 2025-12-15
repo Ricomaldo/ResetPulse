@@ -8,6 +8,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
+import { fontWeights } from '../../../theme/tokens';
 
 export const PalettePreview = ({ paletteName }) => {
   const theme = useTheme();
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 8,
   },
   paletteInfo: {

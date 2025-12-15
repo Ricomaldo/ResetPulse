@@ -88,10 +88,10 @@
       },
       "filter4": {
         "title": "How do you want to continue?",
-        "discoverTitle": "Explore the possibilities",
-        "discoverSubtitle": "I'll configure later",
-        "personalizeTitle": "Personalize my experience",
-        "personalizeSubtitle": "Sound, interface, preferences"
+        "discoverTitle": "Start using the app",
+        "discoverSubtitle": "Skip setup, customize later",
+        "personalizeTitle": "Configure now",
+        "personalizeSubtitle": "Sound, theme, interface"
       },
       "filter5b": {
         "title": "Choose your completion sound",

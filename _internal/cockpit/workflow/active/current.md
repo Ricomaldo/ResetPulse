@@ -1,1 +1,1 @@
-../../../planning/mission-post-audits-fix-sequence.md
+../../planning/mission-post-audits-fix-sequence.md

@@ -1,18 +1,28 @@
 // src/screens/onboarding/filters/Filter5Paywall.jsx
 // Filtre 5 : Paywall soft (trial / skip)
 
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../onboardingConstants';
+import PremiumModal from '../../../components/modals/PremiumModal';
+import { fontWeights } from '../../../../theme/tokens';
 
 export default function Filter5Paywall({ onComplete }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
+  const [premiumModalVisible, setPremiumModalVisible] = useState(false);
 
   const handleTrial = () => {
+    // Open premium paywall modal for actual RevenueCat purchase flow
+    setPremiumModalVisible(true);
+  };
+
+  const handlePremiumModalClose = () => {
+    // Close modal and continue onboarding with trial/premium status
+    setPremiumModalVisible(false);
     onComplete('trial');
   };
 
@@ -39,6 +49,13 @@ export default function Filter5Paywall({ onComplete }) {
           <Text style={styles.skipText}>{t('onboarding.v2.filter5.ctaSecondary')}</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Premium paywall modal - opens when user taps "Try Premium" */}
+      <PremiumModal
+        visible={premiumModalVisible}
+        onClose={handlePremiumModalClose}
+        highlightedFeature="onboarding_paywall"
+      />
     </SafeAreaView>
   );
 }
@@ -57,7 +74,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.lg),
@@ -83,7 +100,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     buttonText: {
       color: colors.background,
       fontSize: rs(18),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     skipButton: {
       marginTop: rs(spacing.lg),
@@ -99,6 +116,6 @@ const createStyles = (colors, spacing, borderRadius) =>
     skipText: {
       color: colors.text,
       fontSize: rs(16),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
   });

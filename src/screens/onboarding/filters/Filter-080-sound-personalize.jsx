@@ -16,6 +16,7 @@ import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
 import useSimpleAudio from '../../../hooks/useSimpleAudio';
 import { TIMER_SOUNDS } from '../../../config/sounds';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter5bSound({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
@@ -174,7 +175,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
     },
@@ -216,20 +217,20 @@ const createStyles = (colors, spacing, borderRadius) =>
     checkmarkIcon: {
       color: colors.background,
       fontSize: rs(14),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     soundInfo: {
       flex: 1,
     },
     soundName: {
       fontSize: rs(15),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       color: colors.text,
       marginBottom: rs(2),
     },
     soundNameActive: {
       color: colors.brand.primary,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     soundDuration: {
       fontSize: rs(12),
@@ -261,7 +262,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     primaryButtonText: {
       color: colors.background,
       fontSize: rs(18),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     skipButton: {
       paddingVertical: rs(spacing.sm),
@@ -270,6 +271,6 @@ const createStyles = (colors, spacing, borderRadius) =>
     skipButtonText: {
       color: colors.textSecondary,
       fontSize: rs(15),
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
     },
   });

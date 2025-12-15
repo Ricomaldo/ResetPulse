@@ -27,6 +27,7 @@ import {
   EditActivityModal,
 } from "../modals";
 import { ActivityItem, PlusButton } from "./activity-items";
+import { fontWeights } from '../../../theme/tokens';
 
 export default function ActivityCarousel({ isTimerRunning = false, drawerVisible = false }) {
   const theme = useTheme();
@@ -166,7 +167,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.xs,
       borderRadius: theme.borderRadius.lg, ...theme.shadow("md"),
     },
-    activityNameText: { fontSize: rs(14, "min"), fontWeight: "600", color: theme.colors.text },
+    activityNameText: { fontSize: rs(14, "min"), fontWeight: fontWeights.semibold, color: theme.colors.text },
     onboardingToast: {
       position: "absolute", bottom: rs(50, "height"), alignSelf: "center",
       backgroundColor: "rgba(0, 0, 0, 0.85)", paddingHorizontal: theme.spacing.lg,
@@ -174,7 +175,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       maxWidth: "80%", ...theme.shadow("lg"),
     },
     onboardingToastText: {
-      fontSize: rs(13, "min"), fontWeight: "600",
+      fontSize: rs(13, "min"), fontWeight: fontWeights.semibold,
       color: theme.colors.fixed.white, textAlign: "center",
     },
   });

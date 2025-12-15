@@ -6,7 +6,7 @@
 
 // Active le mode développement général
 // true = mode dev, false = production
-export const DEV_MODE = true;
+export const DEV_MODE = false;
 
 // Affiche le FAB wrench pour contrôle dev (premium, onboarding reset, etc.)
 // true = FAB visible, false = FAB caché

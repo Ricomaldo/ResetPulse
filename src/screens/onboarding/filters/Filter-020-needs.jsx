@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, NEEDS_OPTIONS } from '../onboardingConstants';
+import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter1Needs({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
@@ -102,7 +103,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     title: {
       fontSize: rs(28),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: colors.text,
       textAlign: 'center',
       marginBottom: rs(spacing.lg),
@@ -132,12 +133,12 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     needLabelSelected: {
       color: colors.text,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     checkmark: {
       fontSize: rs(20),
       color: colors.success,
-      fontWeight: '700',
+      fontWeight: fontWeights.bold,
     },
     helperText: {
       fontSize: rs(14),
@@ -168,7 +169,7 @@ const createStyles = (colors, spacing, borderRadius) =>
     buttonText: {
       color: colors.text,
       fontSize: rs(18),
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     buttonTextDisabled: {
       color: colors.textTertiary,

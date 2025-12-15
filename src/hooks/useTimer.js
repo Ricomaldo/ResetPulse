@@ -31,9 +31,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Audio with selected sound - using simple audio hook
   const { playSound } = useSimpleAudio(selectedSoundId);
   const playSoundRef = useRef(playSound);
-  useEffect(() => {
-    playSoundRef.current = playSound;
-  }, [playSound]);
+  // Sync ref on every render (playSound changes when audio state changes)
+  playSoundRef.current = playSound;
 
   // Use refs for values that don't affect timer calculation but are needed for callbacks/analytics
   const currentActivityRef = useRef(currentActivity);
@@ -41,12 +40,11 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const currentPaletteRef = useRef(currentPalette);
   const currentColorRef = useRef(currentColor);
 
-  useEffect(() => {
-    currentActivityRef.current = currentActivity;
-    onCompleteRef.current = onComplete;
-    currentPaletteRef.current = currentPalette;
-    currentColorRef.current = currentColor;
-  }, [currentActivity, onComplete, currentPalette, currentColor]);
+  // Sync refs directly (no effect needed - these don't trigger re-renders)
+  currentActivityRef.current = currentActivity;
+  onCompleteRef.current = onComplete;
+  currentPaletteRef.current = currentPalette;
+  currentColorRef.current = currentColor;
 
   // Notifications pour background
   const { scheduleTimerNotification, cancelTimerNotification } = useNotificationTimer();
