@@ -83,7 +83,7 @@ export default function useNotificationTimer() {
   }, []);
 
   // Programmer une notification pour la fin du timer
-  const scheduleTimerNotification = async (seconds) => {
+  const scheduleTimerNotification = async (seconds, activity) => {
     // Skip si notifications non disponibles (iOS Simulator)
     if (!notificationsAvailable) {
       return null;
@@ -104,10 +104,15 @@ export default function useNotificationTimer() {
         second: '2-digit'
       });
 
+      // Construire le titre avec emoji + label de l'activité
+      const activityEmoji = activity?.emoji || '⏰';
+      const activityLabel = activity?.label || 'Timer';
+      const title = `${activityEmoji} ${activityLabel} terminé !`;
+
       // Programmer nouvelle notification
       const id = await Notifications.scheduleNotificationAsync({
         content: {
-          title: "⏰ Timer terminé !",
+          title,
           body: `Votre timer de ${Math.floor(seconds/60)}min ${seconds%60}s est terminé`,
           sound: 'bell_short.wav', // Son bell_classic
           // Pour Android 8+ le son du channel est utilisé

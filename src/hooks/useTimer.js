@@ -317,7 +317,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         setTimeout(() => setShowReparti(false), TIMER.MESSAGE_DISPLAY_DURATION);
 
         // Re-programmer notification avec temps restant
-        scheduleTimerNotification(remaining);
+        scheduleTimerNotification(remaining, currentActivityRef.current);
       } else {
         // First start
         setShowParti(true);
@@ -325,7 +325,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
 
         // Programmer notification pour la fin
-        scheduleTimerNotification(remaining);
+        scheduleTimerNotification(remaining, currentActivityRef.current);
 
         // Sauvegarder la durée initiale si elle a changé
         if (currentActivityRef.current?.id && duration > 0 &&
