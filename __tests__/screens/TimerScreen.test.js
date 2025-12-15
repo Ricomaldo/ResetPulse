@@ -86,7 +86,6 @@ jest.mock('../../src/components/timer/DigitalTimer', () => 'DigitalTimer');
 
 // Mock modals
 jest.mock('../../src/components/modals', () => ({
-  SettingsModal: 'SettingsModal',
   TwoTimersModal: 'TwoTimersModal',
   PremiumModal: 'PremiumModal',
 }));
@@ -197,16 +196,6 @@ describe('TimerScreen', () => {
     expect(drawerContent.length).toBe(1);
   });
 
-  it('should render SettingsModal component', () => {
-    let component;
-    act(() => {
-      component = create(<TimerScreen />);
-    });
-
-    const instance = component.root;
-    const settingsModal = instance.findAllByType('SettingsModal');
-    expect(settingsModal.length).toBe(1);
-  });
 
   it('should render TwoTimersModal component', () => {
     let component;
