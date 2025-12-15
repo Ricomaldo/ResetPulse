@@ -3,7 +3,7 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import {
   View,
   ScrollView,
@@ -46,10 +46,16 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
   // En freemium : seulement les palettes gratuites + bouton "+"
   // En premium : toutes les palettes
   const FREE_PALETTE_NAMES = getFreePalettes();
-  const ALL_PALETTE_NAMES = Object.keys(TIMER_PALETTES);
-  const DISPLAY_PALETTES = isPremiumUser ? ALL_PALETTE_NAMES : FREE_PALETTE_NAMES;
+  const ALL_PALETTE_NAMES = useMemo(() => Object.keys(TIMER_PALETTES), []);
+  const DISPLAY_PALETTES = useMemo(() =>
+    isPremiumUser ? ALL_PALETTE_NAMES : FREE_PALETTE_NAMES,
+    [isPremiumUser, ALL_PALETTE_NAMES, FREE_PALETTE_NAMES]
+  );
 
-  const currentPaletteIndex = DISPLAY_PALETTES.indexOf(currentPalette);
+  const currentPaletteIndex = useMemo(() =>
+    DISPLAY_PALETTES.indexOf(currentPalette),
+    [DISPLAY_PALETTES, currentPalette]
+  );
   const effectiveIndex = currentPaletteIndex >= 0 ? currentPaletteIndex : 0;
 
   const [viewedPaletteIndex, setViewedPaletteIndex] = useState(effectiveIndex);

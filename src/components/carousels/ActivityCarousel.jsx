@@ -3,7 +3,7 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import {
   View,
   ScrollView,
@@ -56,20 +56,26 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   const allActivities = getAllActivities();
   const freeActivities = getFreeActivities();
 
-  const builtInActivities = isPremiumUser
-    ? [...allActivities].sort((a, b) => {
-        if (a.id === "none") return -1;
-        if (b.id === "none") return 1;
-        const aIsFavorite = favoriteActivities.includes(a.id);
-        const bIsFavorite = favoriteActivities.includes(b.id);
-        if (aIsFavorite && !bIsFavorite) return -1;
-        if (!aIsFavorite && bIsFavorite) return 1;
-        if (aIsFavorite && bIsFavorite) return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);
-        return 0;
-      })
-    : freeActivities;
+  // Memoize expensive sorting/filtering operations
+  const builtInActivities = useMemo(() => {
+    if (!isPremiumUser) return freeActivities;
 
-  const activities = isPremiumUser ? [...builtInActivities, ...customActivities] : builtInActivities;
+    return [...allActivities].sort((a, b) => {
+      if (a.id === "none") return -1;
+      if (b.id === "none") return 1;
+      const aIsFavorite = favoriteActivities.includes(a.id);
+      const bIsFavorite = favoriteActivities.includes(b.id);
+      if (aIsFavorite && !bIsFavorite) return -1;
+      if (!aIsFavorite && bIsFavorite) return 1;
+      if (aIsFavorite && bIsFavorite) return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);
+      return 0;
+    });
+  }, [isPremiumUser, allActivities, freeActivities, favoriteActivities]);
+
+  const activities = useMemo(() =>
+    isPremiumUser ? [...builtInActivities, ...customActivities] : builtInActivities,
+    [isPremiumUser, builtInActivities, customActivities]
+  );
 
   useEffect(() => {
     if (drawerVisible && scrollViewRef.current) {
@@ -98,16 +104,16 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
     ]).start();
   };
 
-  const showToast = (message) => {
+  const showToast = useCallback((message) => {
     setToastMessage(message);
     Animated.sequence([
       Animated.timing(toastAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
       Animated.delay(2000),
       Animated.timing(toastAnim, { toValue: 0, duration: 300, useNativeDriver: true }),
     ]).start(() => setToastMessage(""));
-  };
+  }, [toastAnim]);
 
-  const handleActivityPress = (activity) => {
+  const handleActivityPress = useCallback((activity) => {
     if (activity.isPremium && !isPremiumUser) {
       haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
       setShowPremiumModal(true);
@@ -121,38 +127,45 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
     else if (activity.defaultDuration) setCurrentDuration(activity.defaultDuration);
     animateSelection(activity.id);
     showActivityName();
-  };
+  }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration]);
 
-  const handleMorePress = () => { haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ }); setShowMoreActivitiesModal(true); };
-  const handleCreatePress = () => { haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ }); setShowCreateActivityModal(true); };
+  const handleMorePress = useCallback(() => {
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+    setShowMoreActivitiesModal(true);
+  }, []);
 
-  const handleActivityLongPress = (activity) => {
+  const handleCreatePress = useCallback(() => {
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+    setShowCreateActivityModal(true);
+  }, []);
+
+  const handleActivityLongPress = useCallback((activity) => {
     if (activity.isCustom) {
       haptics.impact('medium').catch(() => { /* Optional operation - failure is non-critical */ });
       setActivityToEdit(activity);
       setShowEditActivityModal(true);
     }
-  };
+  }, []);
 
-  const handleActivityCreated = (newActivity) => {
+  const handleActivityCreated = useCallback((newActivity) => {
     setCurrentActivity(newActivity);
     setCurrentDuration(newActivity.defaultDuration);
     showToast(t('customActivities.toast.created'));
-  };
+  }, [setCurrentActivity, setCurrentDuration, showToast, t]);
 
-  const handleActivityUpdated = (updatedActivity) => {
+  const handleActivityUpdated = useCallback((updatedActivity) => {
     if (currentActivity?.id === updatedActivity.id) setCurrentActivity(updatedActivity);
     showToast(t('customActivities.toast.updated'));
-  };
+  }, [currentActivity, setCurrentActivity, showToast, t]);
 
-  const handleActivityDeleted = (deletedActivity) => {
+  const handleActivityDeleted = useCallback((deletedActivity) => {
     if (currentActivity?.id === deletedActivity.id) {
       const defaultActivity = activities.find((a) => a.id === 'none') || activities[0];
       setCurrentActivity(defaultActivity);
       setCurrentDuration(defaultActivity?.defaultDuration || 2700);
     }
     showToast(t('customActivities.toast.deleted'));
-  };
+  }, [currentActivity, activities, setCurrentActivity, setCurrentDuration, showToast, t]);
 
   const styles = StyleSheet.create({
     container: { position: "relative", alignItems: "center", justifyContent: "center" },

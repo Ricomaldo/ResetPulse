@@ -12,7 +12,7 @@ import { fontWeights } from '../../../theme/tokens';
  * @param {number} current - Current step (0-indexed)
  * @param {number} total - Total steps
  */
-export default function StepIndicator({ current, total }) {
+const StepIndicator = React.memo(function StepIndicator({ current, total }) {
   const { colors, spacing } = useTheme();
   const styles = createStyles(colors, spacing);
 
@@ -36,7 +36,9 @@ export default function StepIndicator({ current, total }) {
       </Text>
     </View>
   );
-}
+});
+
+export default StepIndicator;
 
 const createStyles = (colors, spacing) =>
   StyleSheet.create({

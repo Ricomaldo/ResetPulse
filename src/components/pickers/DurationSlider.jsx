@@ -13,7 +13,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 // Preset durations in seconds
 const DURATION_PRESETS = [
@@ -27,7 +27,7 @@ const DURATION_PRESETS = [
   { minutes: 60, seconds: 3600 },
 ];
 
-export default function DurationSlider({
+const DurationSlider = React.memo(function DurationSlider({
   value,
   onValueChange,
   style,
@@ -211,6 +211,8 @@ export default function DurationSlider({
       </View>
     </View>
   );
-}
+});
+
+export default DurationSlider;
 
 export { DURATION_PRESETS };

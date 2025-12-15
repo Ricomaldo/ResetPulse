@@ -19,7 +19,7 @@ import { fontWeights } from '../../../../theme/tokens';
  * @param {string} props.accessibilityLabel - Accessibility label
  * @param {string} props.accessibilityHint - Accessibility hint
  */
-export default function PlusButton({
+const PlusButton = React.memo(function PlusButton({
   isPremium,
   onPress,
   accessibilityLabel,
@@ -83,4 +83,6 @@ export default function PlusButton({
       </Text>
     </TouchableOpacity>
   );
-}
+});
+
+export default PlusButton;

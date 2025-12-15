@@ -17,7 +17,7 @@ import { fontWeights } from '../../../theme/tokens';
  * @param {string} color - Text color
  * @param {boolean} mini - Whether to use mini display mode
  */
-export default function DigitalTimer({ remaining, isRunning, color, mini = false }) {
+const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, color, mini = false }) {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(1)).current; // Start at 1 (visible)
   const translateYAnim = useRef(new Animated.Value(0)).current; // Start at 0 (no offset)
@@ -103,4 +103,6 @@ export default function DigitalTimer({ remaining, isRunning, color, mini = false
       </Text>
     </Animated.View>
   );
-}
+});
+
+export default DigitalTimer;

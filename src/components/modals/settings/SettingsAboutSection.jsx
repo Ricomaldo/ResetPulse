@@ -9,7 +9,7 @@ import haptics from '../../../utils/haptics';
  * - Restart guide button (resets onboarding)
  * - Dev tools (only visible in __DEV__ mode)
  */
-export default function SettingsAboutSection({
+const SettingsAboutSection = React.memo(function SettingsAboutSection({
   // Callbacks
   resetOnboarding,
   onClose,
@@ -107,4 +107,6 @@ export default function SettingsAboutSection({
       )}
     </>
   );
-}
+});
+
+export default SettingsAboutSection;
