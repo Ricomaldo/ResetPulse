@@ -1,1 +1,0 @@
-../../knowledge/findings/2025-12-14_06-test-coverage.v2.md
