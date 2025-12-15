@@ -11,7 +11,7 @@ import haptics from '../../../utils/haptics';
  * - Rotation direction toggle (clockwise/counter-clockwise)
  * - Keep awake toggle (screen stays on during timer)
  */
-export default function SettingsTimerSection({
+const SettingsTimerSection = React.memo(function SettingsTimerSection({
   // Values
   selectedSoundId,
   scaleMode,
@@ -128,4 +128,6 @@ export default function SettingsTimerSection({
       </View>
     </View>
   );
-}
+});
+
+export default SettingsTimerSection;

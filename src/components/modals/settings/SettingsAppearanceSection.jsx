@@ -11,7 +11,7 @@ import haptics from '../../../utils/haptics';
  * - Palette visibility toggle + palette grid with discovery button
  * - Activities visibility toggle + favorites grid with discovery button
  */
-export default function SettingsAppearanceSection({
+const SettingsAppearanceSection = React.memo(function SettingsAppearanceSection({
   // Theme
   theme,
   // Palette
@@ -290,4 +290,6 @@ export default function SettingsAppearanceSection({
       )}
     </View>
   );
-}
+});
+
+export default SettingsAppearanceSection;

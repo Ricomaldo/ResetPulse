@@ -22,7 +22,7 @@ import { PlayIcon, PauseIcon } from '../layout/Icons';
 import { fontWeights } from '../../../theme/tokens';
 
 // Composant de loader circulaire style iOS
-const CircularProgress = ({ duration, size = 24, strokeWidth = 2, color }) => {
+const CircularProgress = React.memo(({ duration, size = 24, strokeWidth = 2, color }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -67,7 +67,7 @@ const CircularProgress = ({ duration, size = 24, strokeWidth = 2, color }) => {
       />
     </Svg>
   );
-};
+});
 
 export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
   const theme = useTheme();

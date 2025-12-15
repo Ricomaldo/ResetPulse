@@ -68,7 +68,8 @@ describe('CircularToggle', () => {
     });
 
     const instance = component.root;
-    const button = instance.findByType('TouchableOpacity');
+    const buttons = instance.findAllByType('TouchableOpacity');
+    const button = buttons[0];
 
     act(() => {
       button.props.onPress();
@@ -86,7 +87,8 @@ describe('CircularToggle', () => {
     });
 
     const instance = component.root;
-    const button = instance.findByType('TouchableOpacity');
+    const buttons = instance.findAllByType('TouchableOpacity');
+    const button = buttons[0];
     expect(button.props.accessibilityRole).toBe('switch');
   });
 
@@ -99,7 +101,8 @@ describe('CircularToggle', () => {
     });
 
     const instance = component.root;
-    const button = instance.findByType('TouchableOpacity');
+    const buttons = instance.findAllByType('TouchableOpacity');
+    const button = buttons[0];
     expect(button.props.accessibilityState).toEqual({ checked: true });
   });
 
@@ -112,7 +115,8 @@ describe('CircularToggle', () => {
     });
 
     const instance = component.root;
-    const button = instance.findByType('TouchableOpacity');
+    const buttons = instance.findAllByType('TouchableOpacity');
+    const button = buttons[0];
     expect(button.props.accessibilityState).toEqual({ checked: false });
   });
 

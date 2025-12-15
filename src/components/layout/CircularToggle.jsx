@@ -15,7 +15,7 @@ import haptics from '../../utils/haptics';
  * @param {function} onToggle - Callback when toggle is pressed
  * @param {number} size - Size of the toggle button
  */
-export default function CircularToggle({ clockwise, onToggle, size = 60 }) {
+const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle, size = 60 }) {
   const theme = useTheme();
 
   const handlePress = () => {
@@ -55,4 +55,6 @@ export default function CircularToggle({ clockwise, onToggle, size = 60 }) {
       </Text>
     </TouchableOpacity>
   );
-}
+});
+
+export default CircularToggle;

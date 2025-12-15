@@ -36,7 +36,7 @@ const ACTIVITY_EMOJIS = [
 
 const NUM_COLUMNS = 6;
 
-export default function EmojiPicker({
+const EmojiPicker = React.memo(function EmojiPicker({
   selectedEmoji,
   onSelectEmoji,
   style,
@@ -114,7 +114,9 @@ export default function EmojiPicker({
       />
     </View>
   );
-}
+});
+
+export default EmojiPicker;
 
 // Export emoji list for potential reuse
 export { ACTIVITY_EMOJIS };

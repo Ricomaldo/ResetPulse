@@ -56,7 +56,8 @@ describe('Button Components', () => {
       });
 
       const instance = component.root;
-      const button = instance.findByType('TouchableOpacity');
+      const buttons = instance.findAllByType('TouchableOpacity');
+      const button = buttons[0];
 
       act(() => {
         button.props.onPress();
@@ -74,7 +75,8 @@ describe('Button Components', () => {
       });
 
       const instance = component.root;
-      const button = instance.findByType('TouchableOpacity');
+      const buttons = instance.findAllByType('TouchableOpacity');
+      const button = buttons[0];
       expect(button.props.disabled).toBe(true);
     });
 
@@ -130,7 +132,8 @@ describe('Button Components', () => {
       });
 
       const instance = component.root;
-      const button = instance.findByType('TouchableOpacity');
+      const buttons = instance.findAllByType('TouchableOpacity');
+      const button = buttons[0];
 
       act(() => {
         button.props.onPress();
@@ -148,7 +151,8 @@ describe('Button Components', () => {
       });
 
       const instance = component.root;
-      const button = instance.findByType('TouchableOpacity');
+      const buttons = instance.findAllByType('TouchableOpacity');
+      const button = buttons[0];
       const style = Array.isArray(button.props.style)
         ? button.props.style.flat()
         : [button.props.style];
@@ -183,7 +187,8 @@ describe('Button Components', () => {
       });
 
       const instance = component.root;
-      const button = instance.findByType('TouchableOpacity');
+      const buttons = instance.findAllByType('TouchableOpacity');
+      const button = buttons[0];
 
       act(() => {
         button.props.onPress();
@@ -218,7 +223,8 @@ describe('Button Components', () => {
       });
 
       const instance = component.root;
-      const button = instance.findByType('TouchableOpacity');
+      const buttons = instance.findAllByType('TouchableOpacity');
+      const button = buttons[0];
 
       act(() => {
         button.props.onPress();

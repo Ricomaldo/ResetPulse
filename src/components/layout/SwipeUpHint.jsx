@@ -12,7 +12,7 @@ import { rs } from '../../styles/responsive';
  * SwipeUpHint - Animated hint indicating swipe gesture
  * @param {string} message - Text to display below the arrow
  */
-export default function SwipeUpHint({ message = 'Glissez vers le haut' }) {
+const SwipeUpHint = React.memo(function SwipeUpHint({ message = 'Glissez vers le haut' }) {
   const theme = useTheme();
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
@@ -71,4 +71,6 @@ export default function SwipeUpHint({ message = 'Glissez vers le haut' }) {
       <Text style={styles.message}>{message}</Text>
     </View>
   );
-}
+});
+
+export default SwipeUpHint;

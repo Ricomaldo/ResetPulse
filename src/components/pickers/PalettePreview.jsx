@@ -10,7 +10,7 @@ import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
 import { fontWeights } from '../../../theme/tokens';
 
-export const PalettePreview = ({ paletteName }) => {
+export const PalettePreview = React.memo(({ paletteName }) => {
   const theme = useTheme();
   const { currentPalette, getAvailablePalettes } = useTimerPalette();
 
@@ -47,7 +47,7 @@ export const PalettePreview = ({ paletteName }) => {
       </View>
     </View>
   );
-};
+});
 
 export default PalettePreview;
 

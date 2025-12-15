@@ -9,7 +9,7 @@ import haptics from '../../../utils/haptics';
  * - Digital timer display toggle
  * - Pulse animation toggle (with photosensitivity warning)
  */
-export default function SettingsInterfaceSection({
+const SettingsInterfaceSection = React.memo(function SettingsInterfaceSection({
   // Values
   useMinimalInterface,
   showDigitalTimer,
@@ -118,4 +118,6 @@ export default function SettingsInterfaceSection({
       </View>
     </View>
   );
-}
+});
+
+export default SettingsInterfaceSection;

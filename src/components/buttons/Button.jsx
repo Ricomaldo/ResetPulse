@@ -8,12 +8,12 @@ import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { createFocusStyle } from '../../styles/focusStyles';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights } from '../../theme/tokens';
 
 /**
  * Primary Button - Brand color, filled
  */
-export const PrimaryButton = ({
+export const PrimaryButton = React.memo(({
   label,
   onPress,
   disabled = false,
@@ -61,12 +61,12 @@ export const PrimaryButton = ({
       )}
     </TouchableOpacity>
   );
-};
+});
 
 /**
  * Secondary Button - Outlined with brand color
  */
-export const SecondaryButton = ({
+export const SecondaryButton = React.memo(({
   label,
   onPress,
   disabled = false,
@@ -111,12 +111,12 @@ export const SecondaryButton = ({
       </Text>
     </TouchableOpacity>
   );
-};
+});
 
 /**
  * Destructive Button - Error color for delete/dangerous actions
  */
-export const DestructiveButton = ({
+export const DestructiveButton = React.memo(({
   label,
   onPress,
   disabled = false,
@@ -159,12 +159,12 @@ export const DestructiveButton = ({
       </Text>
     </TouchableOpacity>
   );
-};
+});
 
 /**
  * Text Button - Minimal, underlined text
  */
-export const TextButton = ({
+export const TextButton = React.memo(({
   label,
   onPress,
   disabled = false,
@@ -201,7 +201,7 @@ export const TextButton = ({
       </Text>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   base: {

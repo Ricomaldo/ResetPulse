@@ -22,7 +22,7 @@ import { rs } from "../../../styles/responsive";
  * @param {function} props.onLongPress - Handler for long press event
  * @param {Animated.Value} props.scaleAnim - Animation value for scale transform
  */
-export default function ActivityItem({
+const ActivityItem = React.memo(({
   activity,
   isActive,
   isLocked,
@@ -31,7 +31,7 @@ export default function ActivityItem({
   onPress,
   onLongPress,
   scaleAnim,
-}) {
+}) => {
   const theme = useTheme();
   const t = useTranslation();
 

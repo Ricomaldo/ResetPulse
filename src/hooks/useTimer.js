@@ -51,12 +51,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Refs
   const intervalRef = useRef(null);
+  const rafRef = useRef(null);
   const isMountedRef = useRef(true);
   const hasTriggeredCompletion = useRef(false);
   const appStateRef = useRef(AppState.currentState);
   const wasInBackgroundRef = useRef(false);
+  const isInForegroundRef = useRef(AppState.currentState === 'active');
 
-  // Timer update function with background support
+  // Timer update function with hybrid foreground/background support
   const updateTimer = useCallback(() => {
     if (!isMountedRef.current || !running || !startTime) return;
 
@@ -67,8 +69,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
     setRemaining(newRemaining);
 
     if (newRemaining > 0 && running) {
-      // Use setTimeout for background support instead of requestAnimationFrame
-      intervalRef.current = setTimeout(updateTimer, 100); // Update every 100ms
+      // Hybrid approach: Use RAF for smooth foreground, setTimeout for battery-efficient background
+      if (isInForegroundRef.current) {
+        // Foreground: Use requestAnimationFrame for smooth 60Hz updates
+        rafRef.current = requestAnimationFrame(updateTimer);
+      } else {
+        // Background: Use 1000ms setTimeout for battery efficiency
+        intervalRef.current = setTimeout(updateTimer, 1000);
+      }
     } else if (newRemaining === 0) {
       // Timer finished - reset states properly
       setRunning(false);
@@ -150,12 +158,21 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
   }, [running, startTime, remaining, duration]);
 
-  // Effect 2: Start/stop timer loop (with background support)
+  // Effect 2: Start/stop timer loop (with hybrid RAF/setTimeout support)
   useEffect(() => {
     if (running && startTime) {
-      // Use setTimeout instead of requestAnimationFrame for background support
-      intervalRef.current = setTimeout(updateTimer, 100);
+      // Start with appropriate mechanism based on current app state
+      if (isInForegroundRef.current) {
+        rafRef.current = requestAnimationFrame(updateTimer);
+      } else {
+        intervalRef.current = setTimeout(updateTimer, 1000);
+      }
     } else {
+      // Clean up both RAF and setTimeout
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
         intervalRef.current = null;
@@ -166,6 +183,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
 
     return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
       }
@@ -184,6 +204,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
       }
@@ -193,19 +216,47 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Track app state to detect background/foreground transitions
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
+      const wasInForeground = isInForegroundRef.current;
+      const nowInForeground = nextAppState === 'active';
+
+      // Update foreground state
+      isInForegroundRef.current = nowInForeground;
+
       if (
         appStateRef.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        // App est revenue au foreground
+        // App returned to foreground
         // Si le timer était running, on suppose qu'il a pu se terminer en background
         if (running && remaining <= 1) {
           wasInBackgroundRef.current = true;
         }
+
+        // Switch from setTimeout to RAF if timer is running
+        if (running && startTime) {
+          // Cancel background setTimeout
+          if (intervalRef.current) {
+            clearTimeout(intervalRef.current);
+            intervalRef.current = null;
+          }
+          // Start foreground RAF
+          rafRef.current = requestAnimationFrame(updateTimer);
+        }
       } else if (nextAppState.match(/inactive|background/)) {
-        // App passe en background pendant que le timer tourne
+        // App going to background
         if (running && remaining > 0) {
           wasInBackgroundRef.current = true;
+        }
+
+        // Switch from RAF to setTimeout if timer is running
+        if (running && startTime) {
+          // Cancel foreground RAF
+          if (rafRef.current) {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
+          }
+          // Start background setTimeout (1000ms for battery efficiency)
+          intervalRef.current = setTimeout(updateTimer, 1000);
         }
       }
 
@@ -217,7 +268,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     return () => {
       subscription.remove();
     };
-  }, [running, remaining]);
+  }, [running, remaining, startTime, updateTimer]);
 
   // Display message logic
   const displayTime = () => {
