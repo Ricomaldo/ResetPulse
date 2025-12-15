@@ -1,6 +1,14 @@
 // src/screens/TimerScreen.jsx
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Animated, PanResponder, Dimensions, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Animated,
+  PanResponder,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
@@ -9,7 +17,7 @@ import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { TimeTimer, Drawer, CircularToggle, SwipeUpHint } from '../components/layout';
 import { ExpandableDrawerContent } from '../components/drawers';
 import DigitalTimer from '../components/timer/DigitalTimer';
-import { SettingsModal, TwoTimersModal, PremiumModal } from '../components/modals';
+import { TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
 import { fontWeights } from '../theme/tokens';
@@ -90,7 +98,6 @@ function TimerScreenContent() {
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
-  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -126,12 +133,7 @@ function TimerScreenContent() {
     const { pageX, pageY } = evt.nativeEvent;
     const { x, y, width: dialWidth, height: dialHeight } = dialLayoutRef.current;
 
-    return (
-      pageX >= x &&
-      pageX <= x + dialWidth &&
-      pageY >= y &&
-      pageY <= y + dialHeight
-    );
+    return pageX >= x && pageX <= x + dialWidth && pageY >= y && pageY <= y + dialHeight;
   };
 
   // Swipe up gesture to reveal options drawer (but not when touching dial)
@@ -146,7 +148,8 @@ function TimerScreenContent() {
         return !isTimerRunning && !optionsDrawerVisible && gestureState.dy < -10; // Swipe UP (negative dy)
       },
       onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy < -SWIPE_THRESHOLD) { // Swipe UP
+        if (gestureState.dy < -SWIPE_THRESHOLD) {
+          // Swipe UP
           setOptionsDrawerVisible(true);
         }
       },
@@ -209,7 +212,7 @@ function TimerScreenContent() {
         // Use timer.remaining directly - it's already calculated correctly in useTimer
         const remaining = timerRef.current.remaining || timerRef.current.duration || 0;
         // Only update if value actually changed to prevent unnecessary re-renders
-        setTimerRemaining(prev => prev !== remaining ? remaining : prev);
+        setTimerRemaining((prev) => (prev !== remaining ? remaining : prev));
       }
     }, 100); // Update every 100ms for smooth display
 
@@ -244,7 +247,7 @@ function TimerScreenContent() {
       >
         {isTimerRunning && currentActivity && currentActivity.id !== 'none'
           ? `${currentActivity.emoji} ${currentActivity.label}`
-          : 'Tapote le timer pour commencer'}
+          : 'Tap sur le cadran pour démarrer'}
       </Animated.Text>
 
       {/* Timer - center, zen */}
@@ -266,11 +269,7 @@ function TimerScreenContent() {
       {/* Rotation Toggle - au-dessus du dial */}
       {showRotationToggle && !isTimerRunning && (
         <View style={styles.rotationToggleContainer}>
-          <CircularToggle
-            clockwise={clockwise}
-            onToggle={setClockwise}
-            size={50}
-          />
+          <CircularToggle clockwise={clockwise} onToggle={setClockwise} size={50} />
         </View>
       )}
 
@@ -309,7 +308,6 @@ function TimerScreenContent() {
           currentDuration={currentDuration}
           onSelectPreset={handlePresetSelect}
           drawerVisible={optionsDrawerVisible}
-          onOpenSettings={() => setSettingsModalVisible(true)}
         />
       </Drawer>
 

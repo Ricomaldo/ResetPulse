@@ -354,6 +354,9 @@ export default function useTimer(initialDuration = 240, onComplete) {
       setIsPaused(false);
       setRunning(true);
 
+      // Light haptic feedback on timer start
+      haptics.timerStart();
+
       // Accessibility announcement for timer start
       const activityLabel = currentActivityRef.current?.label || t('activities.none');
       const startMessage = currentActivityRef.current?.label
