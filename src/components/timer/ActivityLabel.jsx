@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 
 /**
@@ -19,6 +18,7 @@ function ActivityLabel({
   animatedDots,
   displayMessage,
   isCompleted,
+  color,
 }) {
   const theme = useTheme();
   const dotsOpacityRef = useRef(new Animated.Value(0)).current;
@@ -55,19 +55,19 @@ function ActivityLabel({
       top: rs(80),
     },
     dots: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(16),
-      fontWeight: fontWeights.medium,
+      color: color || theme.colors.brand.primary,
+      fontSize: rs(24),
+      fontWeight: '600',
       left: '50%',
       letterSpacing: 0.5,
-      marginLeft: rs(38), // Position dots closer to label
+      marginLeft: rs(18), // Position dots closer to label
       position: 'absolute',
       width: rs(24),
     },
     label: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(16),
-      fontWeight: fontWeights.medium,
+      color: color || theme.colors.brand.primary,
+      fontSize: rs(24),
+      fontWeight: '600',
       left: 0,
       letterSpacing: 0.5,
       position: 'absolute',
@@ -103,6 +103,7 @@ function ActivityLabel({
 
 ActivityLabel.propTypes = {
   animatedDots: PropTypes.string.isRequired,
+  color: PropTypes.string,
   displayMessage: PropTypes.string,
   emoji: PropTypes.string,
   isCompleted: PropTypes.bool,
@@ -110,6 +111,7 @@ ActivityLabel.propTypes = {
 };
 
 ActivityLabel.defaultProps = {
+  color: undefined,
   displayMessage: '',
   emoji: '',
   isCompleted: false,
