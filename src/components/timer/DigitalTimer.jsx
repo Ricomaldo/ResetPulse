@@ -3,56 +3,22 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
-import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
+import { rs } from '../../styles/responsive';
 
 /**
  * DigitalTimer - Displays remaining time in MM:SS format
- * Features subtle pulse animation when running, synced to activity rhythm
+ * Static display, no animation
  * Fully accessible with live region announcements
- * @param {number} remaining - Remaining time in seconds
- * @param {boolean} isRunning - Whether timer is running
- * @param {string} color - Text color
- * @param {boolean} mini - Whether to use mini display mode
- * @param {number} pulseDuration - Milliseconds for each pulse cycle (activity rhythm)
  */
-const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, color, mini = false, pulseDuration = 800 }) {
+const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, color, mini }) {
   const theme = useTheme();
   const t = useTranslation();
-  const fadeAnim = useRef(new Animated.Value(1)).current; // Start at 1 (visible)
-  const translateYAnim = useRef(new Animated.Value(0)).current; // Start at 0 (no offset)
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  // Subtle pulse animation when timer is running, synced to activity pulseDuration
-  useEffect(() => {
-    if (isRunning) {
-      // Scale pulse synced to activity rhythm
-      const halfDuration = pulseDuration / 2;
-      const pulseAnimation = Animated.loop(
-        Animated.sequence([
-          Animated.timing(scaleAnim, {
-            toValue: 1.02,
-            duration: halfDuration,
-            useNativeDriver: true,
-          }),
-          Animated.timing(scaleAnim, {
-            toValue: 1,
-            duration: halfDuration,
-            useNativeDriver: true,
-          }),
-        ])
-      );
-      pulseAnimation.start();
-      return () => pulseAnimation.stop();
-    } else {
-      // Reset scale when not running
-      scaleAnim.setValue(1);
-    }
-  }, [isRunning, pulseDuration]);
 
   // Format time as MM:SS
   const formatTime = (seconds) => {
@@ -65,28 +31,29 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
-      justifyContent: 'center',
       backgroundColor: theme.colors.dialFill,
-      paddingVertical: mini ? rs(4) : rs(8),
-      paddingHorizontal: mini ? rs(12) : rs(20),
+      borderColor: theme.colors.brand.neutral,
       borderRadius: mini ? rs(12) : rs(35),
       borderWidth: mini ? 2 : 1,
-      borderColor: theme.colors.brand.neutral,
+      justifyContent: 'center',
       minHeight: mini ? rs(12) : undefined,
       minWidth: mini ? rs(32) : undefined,
+      paddingHorizontal: mini ? rs(12) : rs(20),
+      paddingVertical: mini ? rs(4) : rs(8),
     },
     timeText: {
-      fontSize: mini ? rs(1) : rs(32, 'min'),
-      fontWeight: fontWeights.semibold,
       color: color || theme.colors.brand.primary,
-      letterSpacing: 2,
       fontFamily: Platform.select({
-        ios: 'Menlo', // SF Mono alternative
+        ios: 'Menlo',
         android: 'monospace',
       }),
+      fontSize: mini ? rs(1) : rs(32, 'min'),
+      fontWeight: fontWeights.semibold,
+      includeFontPadding: false,
+      lineHeight: mini ? undefined : rs(40, 'min'),
       opacity: mini ? 0 : 1,
       textAlign: 'center',
-      includeFontPadding: false,
+      textAlignVertical: 'center',
     },
   });
 
@@ -98,21 +65,14 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
     ? t('accessibility.timer.timerRunning')
     : t('accessibility.timer.timerPaused');
 
-  const accessibilityLabel = t('accessibility.timer.timeRemaining', { time: formattedTime }) + ', ' + timerStatus;
+  const accessibilityLabel = `${t('accessibility.timer.timeRemaining', { time: formattedTime })}, ${timerStatus}`;
+
+  const textOpacity = isRunning ? 1 : 0.7;
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          opacity: fadeAnim,
-          transform: [
-            { translateY: translateYAnim },
-            { scale: scaleAnim }
-          ],
-        },
-      ]}
-      accessible={true}
+    <View
+      style={styles.container}
+      accessible
       accessibilityRole="timer"
       accessibilityLabel={accessibilityLabel}
       accessibilityLiveRegion="polite"
@@ -120,14 +80,26 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
         min: 0,
         max: remaining,
         now: remaining,
-        text: formattedTime
+        text: formattedTime,
       }}
     >
-      <Text style={[styles.timeText, { opacity: isRunning ? 1 : 0.7 }]}>
+      <Text style={[styles.timeText, { opacity: textOpacity }]}>
         {formattedTime}
       </Text>
-    </Animated.View>
+    </View>
   );
 });
+
+DigitalTimer.propTypes = {
+  color: PropTypes.string,
+  isRunning: PropTypes.bool.isRequired,
+  mini: PropTypes.bool,
+  remaining: PropTypes.number.isRequired,
+};
+
+DigitalTimer.defaultProps = {
+  color: undefined,
+  mini: false,
+};
 
 export default DigitalTimer;
