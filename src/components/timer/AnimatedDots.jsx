@@ -4,12 +4,12 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 import useAnimatedDots from '../../hooks/useAnimatedDots';
 
-export default function AnimatedDots({ opacity, color }) {
+export default function AnimatedDots({ opacity, color, pulseDuration = 800 }) {
   const theme = useTheme();
-  const dotStates = useAnimatedDots();
+  const dotStates = useAnimatedDots(pulseDuration);
 
-  // Get color from theme based on color prop, fallback to textSecondary
-  const dotColor = color ? theme.colors[color] : theme.colors.textSecondary;
+  // Use color directly (it's already the hex value from currentColor)
+  const dotColor = color || theme.colors.textSecondary;
 
   return (
     <Animated.View
