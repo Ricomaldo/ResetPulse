@@ -35,6 +35,25 @@ export default function OptionsDrawerContent({
       marginBottom: rs(8),
       fontWeight: fontWeights.medium,
     },
+    durationDisplay: {
+      marginTop: rs(12),
+      paddingHorizontal: rs(4),
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rs(8),
+    },
+    durationLabel: {
+      fontSize: rs(12),
+      color: theme.colors.textSecondary,
+      fontWeight: fontWeights.medium,
+    },
+    durationValue: {
+      fontSize: rs(16),
+      color: theme.colors.text,
+      fontWeight: fontWeights.semibold,
+      fontFamily: 'Menlo',
+      minWidth: rs(50),
+    },
     settingsButtonContainer: {
       position: 'absolute',
       bottom: rs(16),
@@ -75,13 +94,20 @@ export default function OptionsDrawerContent({
         <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
       </View>
 
-      {/* Échelle */}
+      {/* Cadran (Scale) */}
       <View style={styles.section}>
-        <Text style={styles.sectionLabel}>Échelle</Text>
+        <Text style={styles.sectionLabel}>Cadran</Text>
         <PresetPills
           currentDuration={currentDuration}
           onSelectPreset={onSelectPreset}
         />
+        {/* Display current duration */}
+        <View style={styles.durationDisplay}>
+          <Text style={styles.durationLabel}>Durée</Text>
+          <Text style={styles.durationValue}>
+            {Math.floor(currentDuration / 60)}:{String(currentDuration % 60).padStart(2, '0')}
+          </Text>
+        </View>
       </View>
 
       {/* Settings Button - Discrete bottom button */}
