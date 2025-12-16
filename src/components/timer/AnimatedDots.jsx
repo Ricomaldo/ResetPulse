@@ -24,13 +24,13 @@ export default function AnimatedDots({ opacity, color, pulseDuration = 800 }) {
         <Animated.Text
           key={index}
           style={{
-            fontSize: rs(16),
+            fontSize: rs(24),
             color: dotColor,
             opacity: dotStates[index],
-            marginHorizontal: rs(2),
+            marginHorizontal: rs(6),
           }}
         >
-          ·
+          •
         </Animated.Text>
       ))}
     </Animated.View>
