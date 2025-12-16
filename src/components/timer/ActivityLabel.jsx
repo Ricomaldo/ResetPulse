@@ -48,31 +48,30 @@ function ActivityLabel({
 
   const styles = StyleSheet.create({
     container: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      height: rs(32),
       left: 0,
       position: 'absolute',
       right: 0,
       top: rs(80),
     },
-    content: {
-      alignItems: 'center',
-      flexDirection: 'row',
-    },
     dots: {
       color: theme.colors.brand.primary,
       fontSize: rs(24),
       fontWeight: '600',
+      left: '50%',
       letterSpacing: 0.5,
-      marginLeft: rs(2),
-      width: rs(28), // Fixed width for "..." (3 dots)
+      marginLeft: rs(65), // Position right of center (half screen + small gap)
+      position: 'absolute',
+      width: rs(28),
     },
     label: {
       color: theme.colors.brand.primary,
       fontSize: rs(24),
       fontWeight: '600',
+      left: 0,
       letterSpacing: 0.5,
-      minWidth: rs(150), // Fixed width to stay centered
+      position: 'absolute',
+      right: 0,
       textAlign: 'center',
     },
   });
@@ -83,23 +82,21 @@ function ActivityLabel({
 
   return (
     <Animated.View style={styles.container}>
-      <Animated.View style={styles.content}>
-        <Animated.Text style={styles.label}>
-          {displayText}
+      <Animated.Text style={styles.label}>
+        {displayText}
+      </Animated.Text>
+      {shouldShowDots && (
+        <Animated.Text
+          style={[
+            styles.dots,
+            {
+              opacity: dotsOpacityRef,
+            },
+          ]}
+        >
+          {animatedDots}
         </Animated.Text>
-        {shouldShowDots && (
-          <Animated.Text
-            style={[
-              styles.dots,
-              {
-                opacity: dotsOpacityRef,
-              },
-            ]}
-          >
-            {animatedDots}
-          </Animated.Text>
-        )}
-      </Animated.View>
+      )}
     </Animated.View>
   );
 }
