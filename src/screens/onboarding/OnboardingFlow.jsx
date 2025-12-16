@@ -136,7 +136,7 @@ export default function OnboardingFlow({ onComplete }) {
 
   // Dev navigation (visible uniquement si DEV_MODE = true)
   const DevBar = () => {
-    if (!DEV_MODE) return null;
+    if (!DEV_MODE) {return null;}
 
     const styles = createDevStyles(colors, spacing);
     return (
@@ -164,134 +164,134 @@ export default function OnboardingFlow({ onComplete }) {
 
   const renderFilter = () => {
     switch (currentFilter) {
-      case 0:
-        // Filter 010: Opening (breathe)
-        return <Filter010Opening onContinue={goToNextFilter} />;
+    case 0:
+      // Filter 010: Opening (breathe)
+      return <Filter010Opening onContinue={goToNextFilter} />;
 
-      case 1:
-        // Filter 020: Needs
-        return (
-          <Filter020Needs
-            onContinue={(selectedNeeds) => {
-              setNeeds(selectedNeeds);
-              // Track step completed avec les needs sélectionnés
-              analytics.trackOnboardingStepCompleted(1, getStepName(1, branch), {
-                needs_selected: selectedNeeds,
-                needs_count: selectedNeeds.length,
-              });
-              setCurrentFilter((prev) => prev + 1);
-            }}
-          />
-        );
+    case 1:
+      // Filter 020: Needs
+      return (
+        <Filter020Needs
+          onContinue={(selectedNeeds) => {
+            setNeeds(selectedNeeds);
+            // Track step completed avec les needs sélectionnés
+            analytics.trackOnboardingStepCompleted(1, getStepName(1, branch), {
+              needs_selected: selectedNeeds,
+              needs_count: selectedNeeds.length,
+            });
+            setCurrentFilter((prev) => prev + 1);
+          }}
+        />
+      );
 
-      case 2:
-        // Filter 030: Creation
-        return (
-          <Filter030Creation
-            needs={needs}
-            onContinue={(config) => {
-              setTimerConfig(config);
-              // Track timer config saved avec les choix utilisateur
-              analytics.trackTimerConfigSaved(config);
-              // Track step completed avec la config
-              analytics.trackOnboardingStepCompleted(2, getStepName(2, branch), {
-                activity: config.activity,
-                palette: config.palette,
-                duration: config.duration,
-              });
-              setCurrentFilter((prev) => prev + 1);
-            }}
-          />
-        );
+    case 2:
+      // Filter 030: Creation
+      return (
+        <Filter030Creation
+          needs={needs}
+          onContinue={(config) => {
+            setTimerConfig(config);
+            // Track timer config saved avec les choix utilisateur
+            analytics.trackTimerConfigSaved(config);
+            // Track step completed avec la config
+            analytics.trackOnboardingStepCompleted(2, getStepName(2, branch), {
+              activity: config.activity,
+              palette: config.palette,
+              duration: config.duration,
+            });
+            setCurrentFilter((prev) => prev + 1);
+          }}
+        />
+      );
 
-      case 3:
-        // Filter 040: Test 60 sec
-        return (
-          <Filter040Test timerConfig={timerConfig} onContinue={goToNextFilter} />
-        );
+    case 3:
+      // Filter 040: Test 60 sec
+      return (
+        <Filter040Test timerConfig={timerConfig} onContinue={goToNextFilter} />
+      );
 
-      case 4:
-        // Filter 050: Notifications Permission
+    case 4:
+      // Filter 050: Notifications Permission
+      return (
+        <Filter050Notifications
+          onContinue={(data) => {
+            setNotificationPermission(data.notificationPermission);
+            setShouldRequestPermissionLater(data.shouldRequestLater || false);
+            analytics.trackOnboardingStepCompleted(4, getStepName(4, branch), {
+              permission_granted: data.notificationPermission,
+            });
+            setCurrentFilter((prev) => prev + 1);
+          }}
+        />
+      );
+
+    case 5:
+      // Filter 060: Branch Choice
+      return (
+        <Filter060Branch
+          onContinue={(data) => {
+            setBranch(data.branch);
+            // Track V3 specific event
+            analytics.trackOnboardingBranchSelected(data.branch);
+            analytics.trackOnboardingStepCompleted(5, getStepName(5, data.branch), {
+              branch_selected: data.branch,
+            });
+            setCurrentFilter((prev) => prev + 1);
+          }}
+        />
+      );
+
+    case 6:
+      // Filter 070 (discover) or 080 (personalize)
+      if (branch === 'discover') {
+        return <Filter070VisionDiscover needs={needs} onContinue={goToNextFilter} />;
+      } else if (branch === 'personalize') {
         return (
-          <Filter050Notifications
+          <Filter080SoundPersonalize
             onContinue={(data) => {
-              setNotificationPermission(data.notificationPermission);
-              setShouldRequestPermissionLater(data.shouldRequestLater || false);
-              analytics.trackOnboardingStepCompleted(4, getStepName(4, branch), {
-                permission_granted: data.notificationPermission,
-              });
-              setCurrentFilter((prev) => prev + 1);
-            }}
-          />
-        );
-
-      case 5:
-        // Filter 060: Branch Choice
-        return (
-          <Filter060Branch
-            onContinue={(data) => {
-              setBranch(data.branch);
+              setSoundConfig(data.selectedSound);
               // Track V3 specific event
-              analytics.trackOnboardingBranchSelected(data.branch);
-              analytics.trackOnboardingStepCompleted(5, getStepName(5, data.branch), {
-                branch_selected: data.branch,
+              analytics.trackOnboardingSoundSelected(data.selectedSound);
+              analytics.trackOnboardingStepCompleted(6, getStepName(6, branch), {
+                sound_selected: data.selectedSound,
               });
               setCurrentFilter((prev) => prev + 1);
             }}
           />
         );
+      }
+      return <Filter010Opening onContinue={goToNextFilter} />;
 
-      case 6:
-        // Filter 070 (discover) or 080 (personalize)
-        if (branch === 'discover') {
-          return <Filter070VisionDiscover needs={needs} onContinue={goToNextFilter} />;
-        } else if (branch === 'personalize') {
-          return (
-            <Filter080SoundPersonalize
-              onContinue={(data) => {
-                setSoundConfig(data.selectedSound);
-                // Track V3 specific event
-                analytics.trackOnboardingSoundSelected(data.selectedSound);
-                analytics.trackOnboardingStepCompleted(6, getStepName(6, branch), {
-                  sound_selected: data.selectedSound,
-                });
-                setCurrentFilter((prev) => prev + 1);
-              }}
-            />
-          );
-        }
-        return <Filter010Opening onContinue={goToNextFilter} />;
+    case 7:
+      // Filter 6 (paywall for discover) or 5c (interface for personalize)
+      if (branch === 'discover') {
+        return <Filter090PaywallDiscover onComplete={handleComplete} />;
+      } else if (branch === 'personalize') {
+        return (
+          <Filter100InterfacePersonalize
+            onContinue={(data) => {
+              setInterfaceConfig(data);
+              // Track V3 specific event
+              analytics.trackOnboardingInterfaceConfigured(
+                data.theme,
+                data.minimalInterface,
+                data.digitalTimer
+              );
+              analytics.trackOnboardingStepCompleted(7, getStepName(7, branch), {
+                theme: data.theme,
+                minimal_interface: data.minimalInterface,
+                digital_timer: data.digitalTimer,
+              });
+              // Complete onboarding without paywall
+              handleComplete('skipped');
+            }}
+          />
+        );
+      }
+      return <Filter010Opening onContinue={goToNextFilter} />;
 
-      case 7:
-        // Filter 6 (paywall for discover) or 5c (interface for personalize)
-        if (branch === 'discover') {
-          return <Filter090PaywallDiscover onComplete={handleComplete} />;
-        } else if (branch === 'personalize') {
-          return (
-            <Filter100InterfacePersonalize
-              onContinue={(data) => {
-                setInterfaceConfig(data);
-                // Track V3 specific event
-                analytics.trackOnboardingInterfaceConfigured(
-                  data.theme,
-                  data.minimalInterface,
-                  data.digitalTimer
-                );
-                analytics.trackOnboardingStepCompleted(7, getStepName(7, branch), {
-                  theme: data.theme,
-                  minimal_interface: data.minimalInterface,
-                  digital_timer: data.digitalTimer,
-                });
-                // Complete onboarding without paywall
-                handleComplete('skipped');
-              }}
-            />
-          );
-        }
-        return <Filter010Opening onContinue={goToNextFilter} />;
-
-      default:
-        return <Filter010Opening onContinue={goToNextFilter} />;
+    default:
+      return <Filter010Opening onContinue={goToNextFilter} />;
     }
   };
 
@@ -322,24 +322,24 @@ export default function OnboardingFlow({ onComplete }) {
 
 const createStyles = (colors, spacing) =>
   StyleSheet.create({
-    header: {
-      paddingHorizontal: rs(spacing.md),
-      paddingVertical: rs(spacing.sm),
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
     backButton: {
-      width: rs(44),
+      alignItems: 'center',
       height: rs(44),
       justifyContent: 'center',
-      alignItems: 'center',
-      minWidth: 44,
       minHeight: 44,
+      minWidth: 44,
+      width: rs(44),
     },
     backButtonText: {
-      fontSize: rs(32),
       color: colors.text,
+      fontSize: rs(32),
       fontWeight: fontWeights.light,
+    },
+    header: {
+      borderBottomColor: colors.border,
+      borderBottomWidth: 1,
+      paddingHorizontal: rs(spacing.md),
+      paddingVertical: rs(spacing.sm),
     },
   });
 
@@ -347,38 +347,38 @@ const createDevStyles = (colors, spacing) =>
   StyleSheet.create({
     devBar: {
       backgroundColor: colors.surface,
-      paddingTop: 50,
       paddingBottom: rs(spacing.sm),
       paddingHorizontal: rs(spacing.md),
-    },
-    devRow: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      gap: rs(spacing.sm),
+      paddingTop: 50,
     },
     devButton: {
-      width: rs(36),
-      height: rs(36),
-      borderRadius: rs(18),
-      backgroundColor: colors.surfaceElevated,
-      justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: colors.surfaceElevated,
+      borderRadius: rs(18),
+      height: rs(36),
+      justifyContent: 'center',
+      width: rs(36),
     },
     devButtonActive: {
       backgroundColor: colors.brand.primary,
-    },
-    devResetButton: {
-      width: rs(36),
-      height: rs(36),
-      borderRadius: rs(18),
-      backgroundColor: colors.brand.accent,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginLeft: rs(spacing.md),
     },
     devButtonText: {
       color: colors.text,
       fontSize: rs(14),
       fontWeight: fontWeights.semibold,
+    },
+    devResetButton: {
+      alignItems: 'center',
+      backgroundColor: colors.brand.accent,
+      borderRadius: rs(18),
+      height: rs(36),
+      justifyContent: 'center',
+      marginLeft: rs(spacing.md),
+      width: rs(36),
+    },
+    devRow: {
+      flexDirection: 'row',
+      gap: rs(spacing.sm),
+      justifyContent: 'center',
     },
   });

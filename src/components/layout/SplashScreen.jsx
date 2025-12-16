@@ -41,32 +41,32 @@ export default function SplashScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  loader: {
+    marginTop: 16,
+  },
+  logo: {
     alignItems: 'center',
+    borderRadius: 20,
+    elevation: 3,
+    height: 100,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    width: 100,
   },
   logoContainer: {
     marginBottom: 32,
   },
-  logo: {
-    width: 100,
-    height: 100,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
-  },
   logoInner: {
-    width: 60,
-    height: 60,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 12,
-  },
-  loader: {
-    marginTop: 16,
+    height: 60,
+    width: 60,
   },
 });

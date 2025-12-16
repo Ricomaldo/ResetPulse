@@ -71,57 +71,57 @@ export default function Filter4Branch({ onContinue }) {
 
 const createStyles = (colors, spacing, borderRadius) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
     centerContent: {
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: rs(spacing.xl),
     },
-    title: {
-      fontSize: rs(28),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-      marginBottom: rs(spacing.xxl),
-    },
-    choicesContainer: {
-      gap: rs(spacing.lg),
-    },
     choiceCard: {
+      alignItems: 'center',
       backgroundColor: colors.surface,
-      borderRadius: borderRadius.xl,
-      padding: rs(spacing.xl),
-      alignItems: 'center',
-      borderWidth: 2,
       borderColor: colors.border,
+      borderRadius: borderRadius.xl,
+      borderWidth: 2,
+      justifyContent: 'center',
       minHeight: rs(160),
-      justifyContent: 'center',
-    },
-    choiceIconContainer: {
-      width: rs(64),
-      height: rs(64),
-      borderRadius: rs(32),
-      backgroundColor: colors.brand.primary + '20',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: rs(spacing.md),
+      padding: rs(spacing.xl),
     },
     choiceIcon: {
       fontSize: rs(32),
     },
-    choiceTitle: {
-      fontSize: rs(20),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-      marginBottom: rs(spacing.xs),
+    choiceIconContainer: {
+      alignItems: 'center',
+      backgroundColor: colors.brand.primary + '20',
+      borderRadius: rs(32),
+      height: rs(64),
+      justifyContent: 'center',
+      marginBottom: rs(spacing.md),
+      width: rs(64),
     },
     choiceSubtitle: {
-      fontSize: rs(14),
       color: colors.textSecondary,
+      fontSize: rs(14),
+      textAlign: 'center',
+    },
+    choiceTitle: {
+      color: colors.text,
+      fontSize: rs(20),
+      fontWeight: fontWeights.semibold,
+      marginBottom: rs(spacing.xs),
+      textAlign: 'center',
+    },
+    choicesContainer: {
+      gap: rs(spacing.lg),
+    },
+    screen: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    title: {
+      color: colors.text,
+      fontSize: rs(28),
+      fontWeight: fontWeights.semibold,
+      marginBottom: rs(spacing.xxl),
       textAlign: 'center',
     },
   });

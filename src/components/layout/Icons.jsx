@@ -62,7 +62,7 @@ const iconMap = {
 
 const Icons = ({ name, size = 24, color }) => {
   const IconComponent = iconMap[name];
-  if (!IconComponent) return null;
+  if (!IconComponent) {return null;}
   return <IconComponent size={size} color={color} />;
 };
 

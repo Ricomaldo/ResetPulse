@@ -11,7 +11,7 @@ import { getSoundById } from '../config/sounds';
 let isGloballyConfigured = false;
 
 const configureAudioOnce = async () => {
-  if (isGloballyConfigured) return;
+  if (isGloballyConfigured) {return;}
 
   try {
     await setAudioModeAsync({
@@ -73,7 +73,7 @@ export default function useSimpleAudio(defaultSoundId = 'bell_classic') {
 
   // Listener pour savoir quand le son est terminé
   useEffect(() => {
-    if (!player) return;
+    if (!player) {return;}
 
     const subscription = player.addListener('playbackStatusUpdate', (status) => {
       if (status.isLoaded && status.didJustFinish) {

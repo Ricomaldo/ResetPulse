@@ -49,8 +49,8 @@ const DialProgress = React.memo(({
 
   // Calculate progress path
   const progressPath = useMemo(() => {
-    if (progress <= 0) return '';
-    if (progress >= 0.9999) return null; // Full circle
+    if (progress <= 0) {return '';}
+    if (progress >= 0.9999) {return null;} // Full circle
 
     const progressRadius = radius - strokeWidth / 2;
     return dial.getProgressPath(progress, centerX, centerY, progressRadius);
@@ -80,7 +80,7 @@ const DialProgress = React.memo(({
     outputRange: [0.85, 1.0], // Fade from 85% to 100%
   });
 
-  if (progress <= 0) return null;
+  if (progress <= 0) {return null;}
 
   return (
     <Svg

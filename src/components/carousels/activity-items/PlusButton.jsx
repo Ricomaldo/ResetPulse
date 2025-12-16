@@ -3,11 +3,11 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React from "react";
-import { Text, TouchableOpacity, Platform, StyleSheet } from "react-native";
-import { useTheme } from "../../../theme/ThemeProvider";
-import { useTranslation } from "../../../hooks/useTranslation";
-import { rs } from "../../../styles/responsive";
+import React from 'react';
+import { Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
+import { rs } from '../../../styles/responsive';
 import { fontWeights } from '../../../theme/tokens';
 
 /**
@@ -30,41 +30,41 @@ const PlusButton = React.memo(function PlusButton({
   const styles = StyleSheet.create({
     // Bouton "+" pour mode freemium
     moreButton: {
-      width: rs(60, "min"),
-      height: rs(60, "min"),
-      borderRadius: rs(30, "min"),
+      alignItems: 'center',
       backgroundColor: theme.colors.surface,
-      alignItems: "center",
-      justifyContent: "center",
-      borderWidth: 2,
       borderColor: theme.colors.border,
-      borderStyle: "dashed",
-      ...(Platform.OS === "ios" ? theme.shadow("sm") : {}),
+      borderRadius: rs(30, 'min'),
+      borderStyle: 'dashed',
+      borderWidth: 2,
+      height: rs(60, 'min'),
+      justifyContent: 'center',
+      width: rs(60, 'min'),
+      ...(Platform.OS === 'ios' ? theme.shadow('sm') : {}),
     },
 
     moreButtonText: {
-      fontSize: rs(28, "min"),
       color: theme.colors.textSecondary,
+      fontSize: rs(28, 'min'),
       fontWeight: fontWeights.light,
     },
 
     // Bouton "+" pour mode premium (création)
     createButton: {
-      width: rs(60, "min"),
-      height: rs(60, "min"),
-      borderRadius: rs(30, "min"),
-      backgroundColor: theme.colors.brand.primary + "15",
-      alignItems: "center",
-      justifyContent: "center",
+      alignItems: 'center',
+      backgroundColor: theme.colors.brand.primary + '15',
+      borderColor: theme.colors.brand.primary + '40',
+      borderRadius: rs(30, 'min'),
+      borderStyle: 'dashed',
       borderWidth: 2,
-      borderColor: theme.colors.brand.primary + "40",
-      borderStyle: "dashed",
-      ...(Platform.OS === "ios" ? theme.shadow("sm") : {}),
+      height: rs(60, 'min'),
+      justifyContent: 'center',
+      width: rs(60, 'min'),
+      ...(Platform.OS === 'ios' ? theme.shadow('sm') : {}),
     },
 
     createButtonText: {
-      fontSize: rs(28, "min"),
       color: theme.colors.brand.primary,
+      fontSize: rs(28, 'min'),
       fontWeight: fontWeights.light,
     },
   });

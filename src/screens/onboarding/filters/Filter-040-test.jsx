@@ -27,7 +27,7 @@ export default function Filter3Test({ timerConfig, onContinue }) {
   }, []);
 
   useEffect(() => {
-    if (!started) return;
+    if (!started) {return;}
     startTime.current = Date.now();
 
     const interval = setInterval(() => {
@@ -92,36 +92,36 @@ export default function Filter3Test({ timerConfig, onContinue }) {
 
 const createStyles = (colors, spacing) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
     centerContent: {
+      alignItems: 'center',
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
       paddingHorizontal: rs(spacing.lg),
     },
-    title: {
-      fontSize: rs(28),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-      marginBottom: rs(spacing.lg),
+    screen: {
+      backgroundColor: colors.background,
+      flex: 1,
     },
     subtitle: {
-      fontSize: rs(16),
       color: colors.textSecondary,
-      textAlign: 'center',
+      fontSize: rs(16),
       marginBottom: rs(spacing.xl),
+      textAlign: 'center',
     },
     testDialContainer: {
-      marginVertical: rs(spacing.xl),
       alignItems: 'center',
+      marginVertical: rs(spacing.xl),
     },
     testHint: {
-      fontSize: rs(18),
       color: colors.textSecondary,
+      fontSize: rs(18),
       fontStyle: 'italic',
+    },
+    title: {
+      color: colors.text,
+      fontSize: rs(28),
+      fontWeight: fontWeights.semibold,
+      marginBottom: rs(spacing.lg),
+      textAlign: 'center',
     },
   });

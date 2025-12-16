@@ -28,14 +28,14 @@ class ErrorBoundary extends Component {
     });
   }
 
-  handleRestart = async () => {
+  async handleRestart() {
     if (Updates.isAvailable) {
       await Updates.reloadAsync();
     } else {
       // En dev, reset le state
       this.setState({ hasError: false });
     }
-  };
+  }
 
   render() {
     if (this.state.hasError) {
@@ -50,7 +50,7 @@ class ErrorBoundary extends Component {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={this.handleRestart}
+              onPress={() => this.handleRestart()}
             >
               <Text style={styles.buttonText}>Redémarrer</Text>
             </TouchableOpacity>
@@ -63,10 +63,17 @@ class ErrorBoundary extends Component {
   }
 }
 
+const COLORS = {
+  background: '#1a1a1a',
+  white: '#ffffff',
+  gray: '#999999',
+  button: '#4A90E2',
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: COLORS.background,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -81,23 +88,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: fontWeights.bold,
-    color: '#fff',
+    color: COLORS.white,
     marginBottom: 10
   },
   message: {
     fontSize: 16,
-    color: '#999',
+    color: COLORS.gray,
     textAlign: 'center',
     marginBottom: 30
   },
   button: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: COLORS.button,
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 25
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: fontWeights.semibold
   }

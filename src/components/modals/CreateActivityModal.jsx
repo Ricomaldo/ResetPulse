@@ -129,13 +129,130 @@ export default function CreateActivityModal({
   };
 
   const styles = StyleSheet.create({
-    overlay: {
+    cancelButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
       flex: 1,
-      backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
-      }),
-      justifyContent: 'flex-end',
+      justifyContent: 'center',
+      minHeight: rs(52, 'min'),
+      padding: theme.spacing.md,
+    },
+
+    cancelButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+
+    charCounter: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+    },
+
+    clearButton: {
+      padding: theme.spacing.xs,
+    },
+
+    clearButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16, 'min'),
+    },
+
+    closeButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.md,
+      justifyContent: 'center',
+      margin: -theme.spacing.xs,
+      minHeight: 44,
+      minWidth: 44,
+      padding: theme.spacing.sm,
+    },
+
+    closeButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(18, 'min'),
+    },
+
+    createButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.brand.primary,
+      borderRadius: theme.borderRadius.lg,
+      flex: 2,
+      justifyContent: 'center',
+      minHeight: rs(52, 'min'),
+      padding: theme.spacing.md,
+      ...theme.shadow('md'),
+    },
+
+    createButtonDisabled: {
+      backgroundColor: theme.colors.textSecondary,
+      opacity: 0.5,
+    },
+
+    createButtonText: {
+      color: '#FFFFFF',
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+
+    durationContainer: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.lg,
+      padding: theme.spacing.md,
+    },
+
+    emojiPickerContainer: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.lg,
+      maxHeight: rs(200, 'min'),
+      padding: theme.spacing.sm,
+    },
+
+    footer: {
+      borderTopColor: theme.colors.border,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      gap: theme.spacing.md,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.lg,
+    },
+
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingBottom: theme.spacing.md,
+      paddingHorizontal: theme.spacing.lg,
+      paddingTop: theme.spacing.lg,
+    },
+
+    headerTitle: {
+      color: theme.colors.text,
+      fontSize: rs(20, 'min'),
+      fontWeight: fontWeights.bold,
+    },
+
+    input: {
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(16, 'min'),
+      height: rs(48, 'min'),
+    },
+
+    inputContainer: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.md,
     },
 
     modalContainer: {
@@ -159,111 +276,29 @@ export default function CreateActivityModal({
       }),
     },
 
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: theme.spacing.lg,
-      paddingTop: theme.spacing.lg,
-      paddingBottom: theme.spacing.md,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: theme.colors.border,
-    },
-
-    headerTitle: {
-      fontSize: rs(20, 'min'),
-      fontWeight: fontWeights.bold,
-      color: theme.colors.text,
-    },
-
-    closeButton: {
-      padding: theme.spacing.sm,
-      minWidth: 44,
-      minHeight: 44,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: theme.borderRadius.md,
-      backgroundColor: theme.colors.surface,
-      margin: -theme.spacing.xs,
-    },
-
-    closeButtonText: {
-      fontSize: rs(18, 'min'),
-      color: theme.colors.textSecondary,
-    },
-
-    scrollContent: {
-      paddingHorizontal: theme.spacing.lg,
-      paddingBottom: theme.spacing.xl,
-    },
-
-    section: {
-      marginTop: theme.spacing.lg,
-    },
-
-    sectionLabel: {
-      fontSize: rs(14, 'min'),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.textSecondary,
-      marginBottom: theme.spacing.sm,
-    },
-
-    emojiPickerContainer: {
-      maxHeight: rs(200, 'min'),
-      borderRadius: theme.borderRadius.lg,
-      backgroundColor: theme.colors.surface,
-      padding: theme.spacing.sm,
-    },
-
-    inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      paddingHorizontal: theme.spacing.md,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-    },
-
-    input: {
+    overlay: {
+      backgroundColor: Platform.select({
+        ios: 'rgba(0, 0, 0, 0.4)',
+        android: 'rgba(0, 0, 0, 0.5)',
+      }),
       flex: 1,
-      height: rs(48, 'min'),
-      fontSize: rs(16, 'min'),
-      color: theme.colors.text,
-    },
-
-    charCounter: {
-      fontSize: rs(12, 'min'),
-      color: theme.colors.textSecondary,
-    },
-
-    clearButton: {
-      padding: theme.spacing.xs,
-    },
-
-    clearButtonText: {
-      fontSize: rs(16, 'min'),
-      color: theme.colors.textSecondary,
-    },
-
-    durationContainer: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-    },
-
-    previewSection: {
-      marginTop: theme.spacing.xl,
+      justifyContent: 'flex-end',
     },
 
     previewCard: {
-      flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      borderWidth: 1,
       borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      flexDirection: 'row',
+      padding: theme.spacing.md,
+    },
+
+    previewDuration: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      marginTop: theme.spacing.xs,
     },
 
     previewEmoji: {
@@ -276,15 +311,9 @@ export default function CreateActivityModal({
     },
 
     previewName: {
+      color: theme.colors.text,
       fontSize: rs(18, 'min'),
       fontWeight: fontWeights.semibold,
-      color: theme.colors.text,
-    },
-
-    previewDuration: {
-      fontSize: rs(14, 'min'),
-      color: theme.colors.textSecondary,
-      marginTop: theme.spacing.xs,
     },
 
     previewPlaceholder: {
@@ -293,53 +322,24 @@ export default function CreateActivityModal({
       opacity: 0.3,
     },
 
-    footer: {
-      flexDirection: 'row',
+    previewSection: {
+      marginTop: theme.spacing.xl,
+    },
+
+    scrollContent: {
+      paddingBottom: theme.spacing.xl,
       paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.lg,
-      gap: theme.spacing.md,
-      borderTopWidth: StyleSheet.hairlineWidth,
-      borderTopColor: theme.colors.border,
     },
 
-    cancelButton: {
-      flex: 1,
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: rs(52, 'min'),
-      borderWidth: 1,
-      borderColor: theme.colors.border,
+    section: {
+      marginTop: theme.spacing.lg,
     },
 
-    cancelButtonText: {
-      fontSize: rs(16, 'min'),
-      fontWeight: fontWeights.semibold,
+    sectionLabel: {
       color: theme.colors.textSecondary,
-    },
-
-    createButton: {
-      flex: 2,
-      backgroundColor: theme.colors.brand.primary,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: rs(52, 'min'),
-      ...theme.shadow('md'),
-    },
-
-    createButtonDisabled: {
-      backgroundColor: theme.colors.textSecondary,
-      opacity: 0.5,
-    },
-
-    createButtonText: {
-      fontSize: rs(16, 'min'),
+      fontSize: rs(14, 'min'),
       fontWeight: fontWeights.semibold,
-      color: '#FFFFFF',
+      marginBottom: theme.spacing.sm,
     },
   });
 

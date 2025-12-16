@@ -1,7 +1,7 @@
 // src/components/modals/DiscoveryModal.jsx
 // Modale générique de découverte premium (activités, couleurs, etc.)
 
-import React from "react";
+import React from 'react';
 import {
   Modal,
   View,
@@ -9,14 +9,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
-import { useTranslation } from "../../hooks/useTranslation";
-import { useModalStack } from "../../contexts/ModalStackContext";
-import { rs } from "../../styles/responsive";
-import haptics from "../../utils/haptics";
+} from 'react-native';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
+import { useModalStack } from '../../contexts/ModalStackContext';
+import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
 import { fontWeights } from '../../theme/tokens';
-import PremiumModal from "./PremiumModal";
+import PremiumModal from './PremiumModal';
 
 export default function DiscoveryModal({
   visible,
@@ -72,14 +72,8 @@ export default function DiscoveryModal({
   };
 
   const styles = StyleSheet.create({
-    overlay: {
-      flex: 1,
-      backgroundColor: Platform.select({
-        ios: "rgba(0, 0, 0, 0.4)",
-        android: "rgba(0, 0, 0, 0.5)",
-      }),
-      justifyContent: "center",
-      alignItems: "center",
+    childrenContainer: {
+      marginBottom: theme.spacing.lg,
     },
 
     modalContainer: {
@@ -88,76 +82,82 @@ export default function DiscoveryModal({
         ios: 20,
         android: 16,
       }),
-      width: "85%",
       maxWidth: 380,
       padding: theme.spacing.xl,
-      ...theme.shadow("xl"),
+      width: '85%',
+      ...theme.shadow('xl'),
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + "30",
+          borderColor: theme.colors.border + '30',
         },
         android: {},
       }),
     },
 
-    title: {
-      fontSize: rs(24, "min"),
-      fontWeight: fontWeights.bold,
-      color: theme.colors.text,
-      textAlign: "center",
-      marginBottom: theme.spacing.sm,
-    },
-
-    subtitle: {
-      fontSize: rs(14, "min"),
-      color: theme.colors.textSecondary,
-      textAlign: "center",
-      marginBottom: theme.spacing.lg,
-    },
-
-    childrenContainer: {
-      marginBottom: theme.spacing.lg,
-    },
-
-    tagline: {
-      fontSize: rs(15, "min"),
-      color: theme.colors.textSecondary,
-      textAlign: "center",
-      lineHeight: rs(22, "min"),
-      marginBottom: theme.spacing.xl,
-      fontStyle: "italic",
+    overlay: {
+      alignItems: 'center',
+      backgroundColor: Platform.select({
+        ios: 'rgba(0, 0, 0, 0.4)',
+        android: 'rgba(0, 0, 0, 0.5)',
+      }),
+      flex: 1,
+      justifyContent: 'center',
     },
 
     primaryButton: {
+      alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
       borderRadius: 12,
-      padding: theme.spacing.lg,
-      alignItems: "center",
-      justifyContent: "center",
+      justifyContent: 'center',
       minHeight: 52,
-      ...theme.shadow("md"),
+      padding: theme.spacing.lg,
+      ...theme.shadow('md'),
     },
 
     primaryButtonText: {
-      fontSize: rs(16, "min"),
+      color: '#FFFFFF',
+      fontSize: rs(16, 'min'),
       fontWeight: fontWeights.semibold,
-      color: "#FFFFFF",
     },
 
     secondaryButton: {
-      backgroundColor: "transparent",
+      alignItems: 'center',
+      backgroundColor: 'transparent',
       borderRadius: 12,
-      padding: theme.spacing.md,
-      alignItems: "center",
-      justifyContent: "center",
+      justifyContent: 'center',
       marginTop: theme.spacing.md,
+      padding: theme.spacing.md,
     },
 
     secondaryButtonText: {
-      fontSize: rs(14, "min"),
-      fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.medium,
+    },
+
+    subtitle: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      marginBottom: theme.spacing.lg,
+      textAlign: 'center',
+    },
+
+    tagline: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(15, 'min'),
+      fontStyle: 'italic',
+      lineHeight: rs(22, 'min'),
+      marginBottom: theme.spacing.xl,
+      textAlign: 'center',
+    },
+
+    title: {
+      color: theme.colors.text,
+      fontSize: rs(24, 'min'),
+      fontWeight: fontWeights.bold,
+      marginBottom: theme.spacing.sm,
+      textAlign: 'center',
     },
   });
 

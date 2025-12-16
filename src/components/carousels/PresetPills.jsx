@@ -40,30 +40,30 @@ export default function PresetPills({ onSelectPreset }) {
     container: {
       gap: rs(theme.spacing.sm),
     },
-    row: {
-      flexDirection: 'row',
-      gap: rs(theme.spacing.sm),
-    },
     pill: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.lg,
       flex: 1,
+      justifyContent: 'center',
       paddingHorizontal: rs(theme.spacing.lg),
       paddingVertical: rs(theme.spacing.md),
-      borderRadius: theme.borderRadius.lg,
-      backgroundColor: theme.colors.surface,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     pillActive: {
       backgroundColor: theme.colors.brand.primary,
     },
     pillText: {
+      color: theme.colors.textSecondary,
       fontSize: rs(15),
       fontWeight: fontWeights.medium,
-      color: theme.colors.textSecondary,
     },
     pillTextActive: {
       color: theme.colors.background,
       fontWeight: fontWeights.semibold,
+    },
+    row: {
+      flexDirection: 'row',
+      gap: rs(theme.spacing.sm),
     },
   });
 

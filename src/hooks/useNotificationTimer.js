@@ -26,7 +26,7 @@ try {
 // Créer le channel Android pour les notifications du timer
 // REQUIS pour Android 8.0+ (API 26+)
 const setupAndroidChannel = async () => {
-  if (Platform.OS !== 'android') return;
+  if (Platform.OS !== 'android') {return;}
 
   try {
     await Notifications.setNotificationChannelAsync('timer', {

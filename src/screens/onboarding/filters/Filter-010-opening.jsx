@@ -68,35 +68,35 @@ export default function Filter0Opening({ onContinue }) {
 
 const createStyles = (colors, spacing) =>
   StyleSheet.create({
-    fullScreen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    centerContent: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: rs(spacing.lg),
-    },
     breathingCircle: {
-      width: rs(160),
-      height: rs(160),
-      borderRadius: rs(80),
       backgroundColor: colors.brand.primary,
-      opacity: 0.8,
+      borderRadius: rs(80),
+      height: rs(160),
       marginBottom: rs(spacing.xl),
+      opacity: 0.8,
+      width: rs(160),
     },
     breathingText: {
-      fontSize: rs(26),
       color: colors.text,
-      textAlign: 'center',
-      lineHeight: rs(38),
+      fontSize: rs(26),
       fontWeight: fontWeights.light,
+      lineHeight: rs(38),
+      textAlign: 'center',
+    },
+    centerContent: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: rs(spacing.lg),
+    },
+    fullScreen: {
+      backgroundColor: colors.background,
+      flex: 1,
     },
     tapHint: {
-      position: 'absolute',
       bottom: rs(100),
       color: colors.textLight,
       fontSize: rs(14),
+      position: 'absolute',
     },
   });

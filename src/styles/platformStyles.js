@@ -231,9 +231,9 @@ export const createInputStyle = (theme, focused = false) => ({
 export const createListItemStyle = (theme, pressed = false) => ({
   backgroundColor: pressed
     ? Platform.select({
-        ios: theme.colors.surface + '80',
-        android: theme.colors.surface,
-      })
+      ios: theme.colors.surface + '80',
+      android: theme.colors.surface,
+    })
     : theme.colors.surface,
 
   paddingHorizontal: 16,

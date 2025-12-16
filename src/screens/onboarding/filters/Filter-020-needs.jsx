@@ -89,79 +89,13 @@ export default function Filter1Needs({ onContinue }) {
 
 const createStyles = (colors, spacing, borderRadius) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(spacing.lg),
-      paddingTop: rs(spacing.lg),
-      paddingBottom: rs(120),
-    },
-    title: {
-      fontSize: rs(28),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-      marginBottom: rs(spacing.lg),
-    },
-    needOption: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: rs(spacing.md),
-      borderRadius: borderRadius.xl,
-      borderWidth: 2,
-      borderColor: colors.border,
-      backgroundColor: colors.surface,
-      marginBottom: rs(spacing.md),
-    },
-    needSelected: {
-      borderColor: colors.brand.primary,
-      backgroundColor: colors.surfaceElevated,
-    },
-    needEmoji: {
-      fontSize: rs(26),
-      marginRight: rs(spacing.md),
-    },
-    needLabel: {
-      flex: 1,
-      fontSize: rs(16),
-      color: colors.text,
-    },
-    needLabelSelected: {
-      color: colors.text,
-      fontWeight: fontWeights.semibold,
-    },
-    checkmark: {
-      fontSize: rs(20),
-      color: colors.success,
-      fontWeight: fontWeights.bold,
-    },
-    helperText: {
-      fontSize: rs(14),
-      color: colors.textLight,
-      textAlign: 'center',
-      marginTop: rs(spacing.lg),
-    },
-    footer: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      padding: rs(spacing.lg),
-      paddingBottom: rs(40),
-      backgroundColor: colors.background,
-    },
     button: {
-      backgroundColor: colors.brand.primary,
-      paddingVertical: rs(spacing.md),
-      paddingHorizontal: rs(spacing.xl),
-      borderRadius: borderRadius.xl,
       alignItems: 'center',
+      backgroundColor: colors.brand.primary,
+      borderRadius: borderRadius.xl,
       minWidth: rs(200),
+      paddingHorizontal: rs(spacing.xl),
+      paddingVertical: rs(spacing.md),
     },
     buttonDisabled: {
       backgroundColor: colors.border,
@@ -173,5 +107,71 @@ const createStyles = (colors, spacing, borderRadius) =>
     },
     buttonTextDisabled: {
       color: colors.textTertiary,
+    },
+    checkmark: {
+      color: colors.success,
+      fontSize: rs(20),
+      fontWeight: fontWeights.bold,
+    },
+    footer: {
+      backgroundColor: colors.background,
+      bottom: 0,
+      left: 0,
+      padding: rs(spacing.lg),
+      paddingBottom: rs(40),
+      position: 'absolute',
+      right: 0,
+    },
+    helperText: {
+      color: colors.textLight,
+      fontSize: rs(14),
+      marginTop: rs(spacing.lg),
+      textAlign: 'center',
+    },
+    needEmoji: {
+      fontSize: rs(26),
+      marginRight: rs(spacing.md),
+    },
+    needLabel: {
+      color: colors.text,
+      flex: 1,
+      fontSize: rs(16),
+    },
+    needLabelSelected: {
+      color: colors.text,
+      fontWeight: fontWeights.semibold,
+    },
+    needOption: {
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: borderRadius.xl,
+      borderWidth: 2,
+      flexDirection: 'row',
+      marginBottom: rs(spacing.md),
+      padding: rs(spacing.md),
+    },
+    needSelected: {
+      backgroundColor: colors.surfaceElevated,
+      borderColor: colors.brand.primary,
+    },
+    screen: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: rs(120),
+      paddingHorizontal: rs(spacing.lg),
+      paddingTop: rs(spacing.lg),
+    },
+    scrollView: {
+      flex: 1,
+    },
+    title: {
+      color: colors.text,
+      fontSize: rs(28),
+      fontWeight: fontWeights.semibold,
+      marginBottom: rs(spacing.lg),
+      textAlign: 'center',
     },
   });

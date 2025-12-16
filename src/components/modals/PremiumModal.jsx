@@ -1,7 +1,7 @@
 // src/components/modals/PremiumModal.jsx
 // Phase 4 - Premium Modal UI
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -11,14 +11,14 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
-import { usePurchases } from "../../contexts/PurchaseContext";
-import { useAnalytics } from "../../hooks/useAnalytics";
-import { useTranslation } from "../../hooks/useTranslation";
-import { useModalStack } from "../../contexts/ModalStackContext";
-import { rs } from "../../styles/responsive";
-import haptics from "../../utils/haptics";
+} from 'react-native';
+import { useTheme } from '../../theme/ThemeProvider';
+import { usePurchases } from '../../contexts/PurchaseContext';
+import { useAnalytics } from '../../hooks/useAnalytics';
+import { useTranslation } from '../../hooks/useTranslation';
+import { useModalStack } from '../../contexts/ModalStackContext';
+import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
 import { fontWeights } from '../../theme/tokens';
 
 export default function PremiumModal({ visible, onClose, highlightedFeature, modalId }) {
@@ -51,7 +51,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
   // Fetch dynamic price from RevenueCat when modal opens
   useEffect(() => {
     const fetchPrice = async () => {
-      if (!visible || dynamicPrice) return;
+      if (!visible || dynamicPrice) {return;}
 
       setIsLoadingPrice(true);
       try {
@@ -92,7 +92,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
       });
 
       // Handle network error from getOfferings
-      if (offerings?.error === "network") {
+      if (offerings?.error === 'network') {
         console.error('[IAP] ❌ Network error while fetching offerings');
         Alert.alert(
           t('premium.noConnection'),
@@ -226,7 +226,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
         );
       }
     } catch (error) {
-      console.error("[PremiumModal] Purchase error:", error);
+      console.error('[PremiumModal] Purchase error:', error);
       Alert.alert(t('premium.error'), t('premium.errorOfferings'), [
         { text: t('common.ok') },
       ]);
@@ -269,7 +269,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
         );
       }
     } catch (error) {
-      console.error("[PremiumModal] Restore error:", error);
+      console.error('[PremiumModal] Restore error:', error);
       Alert.alert(t('premium.error'), t('premium.unexpectedError'), [
         { text: t('common.ok') },
       ]);
@@ -297,14 +297,45 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
   };
 
   const styles = StyleSheet.create({
-    overlay: {
-      flex: 1,
-      backgroundColor: Platform.select({
-        ios: "rgba(0, 0, 0, 0.4)",
-        android: "rgba(0, 0, 0, 0.5)",
-      }),
-      justifyContent: "center",
-      alignItems: "center",
+    body: {
+      marginBottom: theme.spacing.xl,
+    },
+
+    bodyText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16, 'min'),
+      lineHeight: rs(24, 'min'),
+      marginBottom: theme.spacing.lg,
+      textAlign: 'center',
+    },
+
+    buttons: {
+      gap: theme.spacing.md,
+    },
+
+    features: {
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '30',
+      borderRadius: 12,
+      borderWidth: 2,
+      marginBottom: theme.spacing.lg,
+      padding: theme.spacing.lg,
+    },
+
+    featuresText: {
+      color: theme.colors.text,
+      fontSize: rs(18, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginBottom: theme.spacing.sm,
+      textAlign: 'center',
+    },
+
+    header: {
+      marginBottom: theme.spacing.lg,
+    },
+
+    loader: {
+      marginLeft: theme.spacing.sm,
     },
 
     modalContainer: {
@@ -313,80 +344,45 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
         ios: 16,
         android: 12,
       }),
-      width: "85%",
       maxWidth: 400,
       padding: theme.spacing.xl,
-      ...theme.shadow("xl"),
+      width: '85%',
+      ...theme.shadow('xl'),
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + "30",
+          borderColor: theme.colors.border + '30',
         },
         android: {},
       }),
     },
 
-    header: {
-      marginBottom: theme.spacing.lg,
-    },
-
-    title: {
-      fontSize: rs(26, "min"),
-      fontWeight: fontWeights.bold,
-      color: theme.colors.text,
-      textAlign: "center",
-      marginBottom: theme.spacing.md,
-    },
-
-    body: {
-      marginBottom: theme.spacing.xl,
-    },
-
-    bodyText: {
-      fontSize: rs(16, "min"),
-      color: theme.colors.textSecondary,
-      textAlign: "center",
-      lineHeight: rs(24, "min"),
-      marginBottom: theme.spacing.lg,
-    },
-
-    features: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: 12,
-      padding: theme.spacing.lg,
-      marginBottom: theme.spacing.lg,
-      borderWidth: 2,
-      borderColor: theme.colors.brand.primary + "30",
-    },
-
-    featuresText: {
-      fontSize: rs(18, "min"),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.text,
-      textAlign: "center",
-      marginBottom: theme.spacing.sm,
+    overlay: {
+      alignItems: 'center',
+      backgroundColor: Platform.select({
+        ios: 'rgba(0, 0, 0, 0.4)',
+        android: 'rgba(0, 0, 0, 0.5)',
+      }),
+      flex: 1,
+      justifyContent: 'center',
     },
 
     priceText: {
-      fontSize: rs(20, "min"),
-      fontWeight: fontWeights.bold,
       color: theme.colors.brand.primary,
-      textAlign: "center",
+      fontSize: rs(20, 'min'),
+      fontWeight: fontWeights.bold,
       marginBottom: theme.spacing.xs,
-    },
-
-    buttons: {
-      gap: theme.spacing.md,
+      textAlign: 'center',
     },
 
     primaryButton: {
+      alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
       borderRadius: 12,
-      padding: theme.spacing.lg,
-      alignItems: "center",
-      justifyContent: "center",
+      justifyContent: 'center',
       minHeight: 52,
-      ...theme.shadow("md"),
+      padding: theme.spacing.lg,
+      ...theme.shadow('md'),
     },
 
     primaryButtonDisabled: {
@@ -394,44 +390,48 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
     },
 
     primaryButtonText: {
-      fontSize: rs(17, "min"),
+      color: '#FFFFFF',
+      fontSize: rs(17, 'min'),
       fontWeight: fontWeights.semibold,
-      color: "#FFFFFF",
-    },
-
-    secondaryButton: {
-      backgroundColor: "transparent",
-      borderRadius: 12,
-      padding: theme.spacing.md,
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: 44,
-      minWidth: 44,
-    },
-
-    secondaryButtonText: {
-      fontSize: rs(15, "min"),
-      fontWeight: fontWeights.medium,
-      color: theme.colors.textSecondary,
     },
 
     restoreButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
       marginTop: theme.spacing.md,
-      padding: theme.spacing.sm,
-      alignItems: "center",
       minHeight: 44,
       minWidth: 44,
-      justifyContent: "center",
+      padding: theme.spacing.sm,
     },
 
     restoreButtonText: {
-      fontSize: rs(13, "min"),
       color: theme.colors.textSecondary,
-      textDecorationLine: "underline",
+      fontSize: rs(13, 'min'),
+      textDecorationLine: 'underline',
     },
 
-    loader: {
-      marginLeft: theme.spacing.sm,
+    secondaryButton: {
+      alignItems: 'center',
+      backgroundColor: 'transparent',
+      borderRadius: 12,
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: 44,
+      padding: theme.spacing.md,
+    },
+
+    secondaryButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(15, 'min'),
+      fontWeight: fontWeights.medium,
+    },
+
+    title: {
+      color: theme.colors.text,
+      fontSize: rs(26, 'min'),
+      fontWeight: fontWeights.bold,
+      marginBottom: theme.spacing.md,
+      textAlign: 'center',
     },
   });
 

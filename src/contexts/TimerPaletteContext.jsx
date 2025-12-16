@@ -26,7 +26,7 @@ export const TimerPaletteProvider = ({ children }) => {
 
   // Load onboarding config once (palette + colorIndex)
   useEffect(() => {
-    if (hasLoadedOnboardingConfig.current) return;
+    if (hasLoadedOnboardingConfig.current) {return;}
 
     const loadOnboardingConfig = async () => {
       try {

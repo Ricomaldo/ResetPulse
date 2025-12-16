@@ -164,113 +164,113 @@ export default function Filter5bSound({ onContinue }) {
 
 const createStyles = (colors, spacing, borderRadius) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    header: {
-      paddingHorizontal: rs(spacing.xl),
-      paddingTop: rs(spacing.lg),
-      paddingBottom: rs(spacing.md),
-    },
-    title: {
-      fontSize: rs(28),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-    },
-    scrollView: {
-      flex: 1,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(spacing.xl),
+    bottomContainer: {
+      borderTopColor: colors.border,
+      borderTopWidth: 1,
+      gap: rs(spacing.sm),
       paddingBottom: rs(spacing.lg),
-    },
-    soundRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: colors.surface,
-      borderRadius: borderRadius.lg,
-      padding: rs(spacing.md),
-      borderWidth: 2,
-      borderColor: colors.border,
-      minHeight: rs(60),
-      marginBottom: rs(spacing.sm),
-    },
-    soundRowSelected: {
-      borderColor: colors.brand.primary,
-      backgroundColor: colors.brand.primary + '10',
-    },
-    soundRowPlaying: {
-      borderColor: colors.brand.primary,
-      backgroundColor: colors.brand.primary + '05',
+      paddingHorizontal: rs(spacing.xl),
+      paddingTop: rs(spacing.md),
     },
     checkmark: {
-      width: rs(24),
-      height: rs(24),
-      borderRadius: rs(12),
-      backgroundColor: colors.brand.primary,
       alignItems: 'center',
+      backgroundColor: colors.brand.primary,
+      borderRadius: rs(12),
+      height: rs(24),
       justifyContent: 'center',
       marginRight: rs(spacing.sm),
+      width: rs(24),
     },
     checkmarkIcon: {
       color: colors.background,
       fontSize: rs(14),
       fontWeight: fontWeights.semibold,
     },
-    soundInfo: {
-      flex: 1,
+    header: {
+      paddingBottom: rs(spacing.md),
+      paddingHorizontal: rs(spacing.xl),
+      paddingTop: rs(spacing.lg),
     },
-    soundName: {
-      fontSize: rs(15),
-      fontWeight: fontWeights.medium,
-      color: colors.text,
-      marginBottom: rs(2),
-    },
-    soundNameActive: {
-      color: colors.brand.primary,
-      fontWeight: fontWeights.semibold,
-    },
-    soundDuration: {
-      fontSize: rs(12),
-      color: colors.textSecondary,
+    playingIcon: {
+      fontSize: rs(18),
     },
     playingIndicator: {
       marginLeft: rs(spacing.sm),
       paddingHorizontal: rs(spacing.sm),
     },
-    playingIcon: {
-      fontSize: rs(18),
-    },
-    bottomContainer: {
-      paddingHorizontal: rs(spacing.xl),
-      paddingTop: rs(spacing.md),
-      paddingBottom: rs(spacing.lg),
-      gap: rs(spacing.sm),
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-    },
     primaryButton: {
-      backgroundColor: colors.brand.primary,
-      paddingVertical: rs(spacing.md),
-      borderRadius: borderRadius.xl,
       alignItems: 'center',
-      minHeight: rs(56),
+      backgroundColor: colors.brand.primary,
+      borderRadius: borderRadius.xl,
       justifyContent: 'center',
+      minHeight: rs(56),
+      paddingVertical: rs(spacing.md),
     },
     primaryButtonText: {
       color: colors.background,
       fontSize: rs(18),
       fontWeight: fontWeights.semibold,
     },
+    screen: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: rs(spacing.lg),
+      paddingHorizontal: rs(spacing.xl),
+    },
+    scrollView: {
+      flex: 1,
+    },
     skipButton: {
-      paddingVertical: rs(spacing.sm),
       alignItems: 'center',
+      paddingVertical: rs(spacing.sm),
     },
     skipButtonText: {
       color: colors.textSecondary,
       fontSize: rs(15),
       fontWeight: fontWeights.medium,
+    },
+    soundDuration: {
+      color: colors.textSecondary,
+      fontSize: rs(12),
+    },
+    soundInfo: {
+      flex: 1,
+    },
+    soundName: {
+      color: colors.text,
+      fontSize: rs(15),
+      fontWeight: fontWeights.medium,
+      marginBottom: rs(2),
+    },
+    soundNameActive: {
+      color: colors.brand.primary,
+      fontWeight: fontWeights.semibold,
+    },
+    soundRow: {
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: borderRadius.lg,
+      borderWidth: 2,
+      flexDirection: 'row',
+      marginBottom: rs(spacing.sm),
+      minHeight: rs(60),
+      padding: rs(spacing.md),
+    },
+    soundRowPlaying: {
+      backgroundColor: colors.brand.primary + '05',
+      borderColor: colors.brand.primary,
+    },
+    soundRowSelected: {
+      backgroundColor: colors.brand.primary + '10',
+      borderColor: colors.brand.primary,
+    },
+    title: {
+      color: colors.text,
+      fontSize: rs(28),
+      fontWeight: fontWeights.semibold,
+      textAlign: 'center',
     },
   });

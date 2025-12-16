@@ -44,35 +44,35 @@ const createStyles = (colors, spacing) =>
   StyleSheet.create({
     container: {
       alignItems: 'center',
-      paddingVertical: rs(spacing.lg),
       paddingHorizontal: rs(spacing.md),
-    },
-    dotsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: rs(spacing.sm),
-      marginBottom: rs(spacing.md),
+      paddingVertical: rs(spacing.lg),
     },
     dot: {
-      width: rs(8),
-      height: rs(8),
-      borderRadius: rs(4),
       backgroundColor: colors.border,
+      borderRadius: rs(4),
+      height: rs(8),
+      width: rs(8),
     },
     dotActive: {
       backgroundColor: colors.brand.primary,
-      width: rs(12),
-      height: rs(12),
       borderRadius: rs(6),
+      height: rs(12),
+      width: rs(12),
     },
     dotCompleted: {
       backgroundColor: colors.brand.primary,
       opacity: 0.5,
     },
+    dotsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: rs(spacing.sm),
+      justifyContent: 'center',
+      marginBottom: rs(spacing.md),
+    },
     stepText: {
-      fontSize: rs(14),
       color: colors.textSecondary,
+      fontSize: rs(14),
       fontWeight: fontWeights.medium,
     },
   });

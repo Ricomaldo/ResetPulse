@@ -3,7 +3,7 @@
  * @created 2025-12-14
  * @updated 2025-12-16
  */
-import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
+import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import {
   View,
   ScrollView,
@@ -11,24 +11,28 @@ import {
   Text,
   Animated,
   TouchableOpacity,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
-import { useTranslation } from "../../hooks/useTranslation";
-import { useTimerOptions } from "../../contexts/TimerOptionsContext";
-import { useTimerPalette } from "../../contexts/TimerPaletteContext";
-import { rs } from "../../styles/responsive";
-import { getAllActivities, getFreeActivities } from "../../config/activities";
-import haptics from "../../utils/haptics";
-import { usePremiumStatus } from "../../hooks/usePremiumStatus";
-import { useCustomActivities } from "../../hooks/useCustomActivities";
+  Dimensions,
+} from 'react-native';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { rs } from '../../styles/responsive';
+import { getAllActivities, getFreeActivities } from '../../config/activities';
+import haptics from '../../utils/haptics';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useCustomActivities } from '../../hooks/useCustomActivities';
 import {
   PremiumModal,
   MoreActivitiesModal,
   CreateActivityModal,
   EditActivityModal,
-} from "../modals";
-import { ActivityItem, PlusButton } from "./activity-items";
+} from '../modals';
+import { ActivityItem, PlusButton } from './activity-items';
 import { fontWeights } from '../../theme/tokens';
+
+// Couleurs extraites pour respecter la règle no-color-literals
+const OVERLAY_DARK = 'rgba(0, 0, 0, 0.85)';
 
 export default function ActivityCarousel({ isTimerRunning = false, drawerVisible = false }) {
   const theme = useTheme();
@@ -54,7 +58,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
   const [showEditActivityModal, setShowEditActivityModal] = useState(false);
   const [activityToEdit, setActivityToEdit] = useState(null);
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastMessage, setToastMessage] = useState('');
 
   const { isPremium: isPremiumUser } = usePremiumStatus();
   const { customActivities } = useCustomActivities();
@@ -63,23 +67,23 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
 
   // Memoize expensive sorting/filtering operations
   const builtInActivities = useMemo(() => {
-    if (!isPremiumUser) return freeActivities;
+    if (!isPremiumUser) {return freeActivities;}
 
     return [...allActivities].sort((a, b) => {
-      if (a.id === "none") return -1;
-      if (b.id === "none") return 1;
+      if (a.id === 'none') {return -1;}
+      if (b.id === 'none') {return 1;}
       const aIsFavorite = favoriteActivities.includes(a.id);
       const bIsFavorite = favoriteActivities.includes(b.id);
-      if (aIsFavorite && !bIsFavorite) return -1;
-      if (!aIsFavorite && bIsFavorite) return 1;
-      if (aIsFavorite && bIsFavorite) return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);
+      if (aIsFavorite && !bIsFavorite) {return -1;}
+      if (!aIsFavorite && bIsFavorite) {return 1;}
+      if (aIsFavorite && bIsFavorite) {return favoriteActivities.indexOf(a.id) - favoriteActivities.indexOf(b.id);}
       return 0;
     });
   }, [isPremiumUser, allActivities, freeActivities, favoriteActivities]);
 
   const activities = useMemo(() =>
     isPremiumUser ? [...builtInActivities, ...customActivities] : builtInActivities,
-    [isPremiumUser, builtInActivities, customActivities]
+  [isPremiumUser, builtInActivities, customActivities]
   );
 
   useEffect(() => {
@@ -89,7 +93,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   }, [drawerVisible]);
 
   const getScaleAnim = (activityId) => {
-    if (!scaleAnims[activityId]) scaleAnims[activityId] = new Animated.Value(1);
+    if (!scaleAnims[activityId]) {scaleAnims[activityId] = new Animated.Value(1);}
     return scaleAnims[activityId];
   };
 
@@ -115,7 +119,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       Animated.timing(toastAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
       Animated.delay(2000),
       Animated.timing(toastAnim, { toValue: 0, duration: 300, useNativeDriver: true }),
-    ]).start(() => setToastMessage(""));
+    ]).start(() => setToastMessage(''));
   }, [toastAnim]);
 
   const handleActivityPress = useCallback((activity) => {
@@ -128,8 +132,8 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     setCurrentActivity(activity);
     const savedDuration = activityDurations[activity.id];
-    if (savedDuration) setCurrentDuration(savedDuration);
-    else if (activity.defaultDuration) setCurrentDuration(activity.defaultDuration);
+    if (savedDuration) {setCurrentDuration(savedDuration);}
+    else if (activity.defaultDuration) {setCurrentDuration(activity.defaultDuration);}
     animateSelection(activity.id);
     showActivityName();
   }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration]);
@@ -159,7 +163,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   }, [setCurrentActivity, setCurrentDuration, showToast, t]);
 
   const handleActivityUpdated = useCallback((updatedActivity) => {
-    if (currentActivity?.id === updatedActivity.id) setCurrentActivity(updatedActivity);
+    if (currentActivity?.id === updatedActivity.id) {setCurrentActivity(updatedActivity);}
     showToast(t('customActivities.toast.updated'));
   }, [currentActivity, setCurrentActivity, showToast, t]);
 
@@ -202,86 +206,89 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   }, [scrollOffset]);
 
   const styles = StyleSheet.create({
+    activityNameBadge: {
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.lg,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
+      position: 'absolute',
+      top: -35,
+      ...theme.shadow('md'),
+    },
+    activityNameText: {
+      color: theme.colors.text,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+    chevronButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      borderRadius: rs(16, 'min'),
+      height: rs(32, 'min'),
+      justifyContent: 'center',
+      marginHorizontal: theme.spacing.xs,
+      minHeight: 44,
+      minWidth: 44,
+      width: rs(32, 'min'),
+      ...theme.shadows.sm,
+    },
+    chevronDisabled: {
+      opacity: 0.3,
+      pointerEvents: 'none',
+    },
+    chevronText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(18, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+
+    onboardingToast: {
+      alignSelf: 'center',
+      backgroundColor: OVERLAY_DARK,
+      borderRadius: theme.borderRadius.lg,
+      bottom: rs(50, 'height'),
+      maxWidth: '80%',
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+      position: 'absolute',
+      ...theme.shadow('lg'),
+    },
+    onboardingToastText: {
+      color: theme.colors.fixed.white,
+      fontSize: rs(13, 'min'),
+      fontWeight: fontWeights.semibold,
+      textAlign: 'center',
+    },
     outerContainer: {
-      position: "relative",
-      alignItems: "center",
-      justifyContent: "center",
-      flexDirection: "row",
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.xs,
+      justifyContent: 'center',
+    },
+    scrollContent: {
+      alignItems: 'center',
+      gap: theme.spacing.md,
+      paddingHorizontal: rs(30, 'width'),
     },
     scrollView: {
       flexGrow: 0,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(30, "width"),
-      alignItems: "center",
-      gap: theme.spacing.md,
-    },
-    chevronButton: {
-      width: rs(32, "min"),
-      height: rs(32, "min"),
-      minWidth: 44,
-      minHeight: 44,
-      borderRadius: rs(16, "min"),
-      backgroundColor: theme.colors.background,
-      alignItems: "center",
-      justifyContent: "center",
-      marginHorizontal: theme.spacing.xs,
-      ...theme.shadows.sm,
-    },
-    chevronText: {
-      fontSize: rs(18, "min"),
-      color: theme.colors.textSecondary,
-      fontWeight: fontWeights.semibold,
-    },
-    activityNameBadge: {
-      position: "absolute",
-      top: -35,
-      backgroundColor: theme.colors.background,
-      paddingHorizontal: theme.spacing.md,
-      paddingVertical: theme.spacing.xs,
-      borderRadius: theme.borderRadius.lg,
-      ...theme.shadow("md"),
-    },
-    activityNameText: {
-      fontSize: rs(14, "min"),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.text,
-    },
-    onboardingToast: {
-      position: "absolute",
-      bottom: rs(50, "height"),
-      alignSelf: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.85)",
-      paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.md,
-      borderRadius: theme.borderRadius.lg,
-      maxWidth: "80%",
-      ...theme.shadow("lg"),
-    },
-    onboardingToastText: {
-      fontSize: rs(13, "min"),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.fixed.white,
-      textAlign: "center",
     },
   });
 
   return (
     <View style={styles.outerContainer}>
       {/* Left chevron */}
-      {showLeftArrow && (
-        <TouchableOpacity
-          style={styles.chevronButton}
-          onPress={scrollLeft}
-          activeOpacity={0.7}
-          accessible={true}
-          accessibilityRole="button"
-          accessibilityLabel={t("accessibility.scrollLeft")}
-        >
-          <Text style={styles.chevronText}>‹</Text>
-        </TouchableOpacity>
-      )}
-      {!showLeftArrow && <View style={[styles.chevronButton, { opacity: 0 }]} />}
+      <TouchableOpacity
+        style={[styles.chevronButton, !showLeftArrow && styles.chevronDisabled]}
+        onPress={scrollLeft}
+        activeOpacity={0.7}
+        disabled={!showLeftArrow}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={t('accessibility.scrollLeft')}
+      >
+        <Text style={styles.chevronText}>‹</Text>
+      </TouchableOpacity>
 
       {/* Carousel container */}
       <View>
@@ -343,32 +350,30 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
             onPress={isPremiumUser ? handleCreatePress : handleMorePress}
             accessibilityLabel={
               isPremiumUser
-                ? t("customActivities.addButton")
-                : t("accessibility.moreActivities")
+                ? t('customActivities.addButton')
+                : t('accessibility.moreActivities')
             }
             accessibilityHint={
               isPremiumUser
-                ? t("customActivities.addButtonHint")
-                : t("accessibility.discoverPremium")
+                ? t('customActivities.addButtonHint')
+                : t('accessibility.discoverPremium')
             }
           />
         </ScrollView>
       </View>
 
       {/* Right chevron */}
-      {showRightArrow && (
-        <TouchableOpacity
-          style={styles.chevronButton}
-          onPress={scrollRight}
-          activeOpacity={0.7}
-          accessible={true}
-          accessibilityRole="button"
-          accessibilityLabel={t("accessibility.scrollRight")}
-        >
-          <Text style={styles.chevronText}>›</Text>
-        </TouchableOpacity>
-      )}
-      {!showRightArrow && <View style={[styles.chevronButton, { opacity: 0 }]} />}
+      <TouchableOpacity
+        style={[styles.chevronButton, !showRightArrow && styles.chevronDisabled]}
+        onPress={scrollRight}
+        activeOpacity={0.7}
+        disabled={!showRightArrow}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={t('accessibility.scrollRight')}
+      >
+        <Text style={styles.chevronText}>›</Text>
+      </TouchableOpacity>
 
       <PremiumModal
         visible={showPremiumModal}
@@ -396,7 +401,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
         onActivityUpdated={handleActivityUpdated}
         onActivityDeleted={handleActivityDeleted}
       />
-      {toastMessage !== "" && (
+      {toastMessage !== '' && (
         <Animated.View
           style={[
             styles.onboardingToast,

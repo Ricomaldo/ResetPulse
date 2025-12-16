@@ -41,63 +41,63 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
   };
 
   const styles = StyleSheet.create({
-    overlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
+    buttonContainer: {
+      gap: theme.spacing.sm,
+    },
+    emoji: {
+      fontSize: rs(48),
+      marginBottom: theme.spacing.md,
+      textAlign: 'center',
+    },
+    message: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(15),
+      lineHeight: rs(22),
+      marginBottom: theme.spacing.xl,
+      textAlign: 'center',
     },
     modalContainer: {
       backgroundColor: theme.colors.background,
       borderRadius: 16,
-      width: '85%',
       padding: theme.spacing.xl,
+      width: '85%',
       ...theme.shadow('xl'),
     },
-    emoji: {
-      fontSize: rs(48),
-      textAlign: 'center',
-      marginBottom: theme.spacing.md,
-    },
-    title: {
-      fontSize: rs(22),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.text,
-      textAlign: 'center',
-      marginBottom: theme.spacing.sm,
-    },
-    message: {
-      fontSize: rs(15),
-      color: theme.colors.textSecondary,
-      textAlign: 'center',
-      lineHeight: rs(22),
-      marginBottom: theme.spacing.xl,
-    },
-    buttonContainer: {
-      gap: theme.spacing.sm,
+    overlay: {
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      flex: 1,
+      justifyContent: 'center',
     },
     primaryButton: {
-      backgroundColor: theme.colors.brand.primary,
-      paddingVertical: theme.spacing.md,
-      borderRadius: theme.borderRadius.md,
       alignItems: 'center',
-      minHeight: 44,
+      backgroundColor: theme.colors.brand.primary,
+      borderRadius: theme.borderRadius.md,
       justifyContent: 'center',
+      minHeight: 44,
+      paddingVertical: theme.spacing.md,
     },
     primaryButtonText: {
+      color: theme.colors.background,
       fontSize: rs(16),
       fontWeight: fontWeights.semibold,
-      color: theme.colors.background,
     },
     secondaryButton: {
-      paddingVertical: theme.spacing.sm,
       alignItems: 'center',
-      minHeight: 44,
       justifyContent: 'center',
+      minHeight: 44,
+      paddingVertical: theme.spacing.sm,
     },
     secondaryButtonText: {
-      fontSize: rs(14),
       color: theme.colors.textLight,
+      fontSize: rs(14),
+    },
+    title: {
+      color: theme.colors.text,
+      fontSize: rs(22),
+      fontWeight: fontWeights.semibold,
+      marginBottom: theme.spacing.sm,
+      textAlign: 'center',
     },
   });
 

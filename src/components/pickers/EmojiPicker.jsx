@@ -80,23 +80,23 @@ const EmojiPicker = React.memo(function EmojiPicker({
     container: {
       width: '100%',
     },
-    listContent: {
-      paddingVertical: rs(8, 'min'),
-    },
-    emojiButton: {
-      width: rs(48, 'min'),
-      height: rs(48, 'min'),
-      minWidth: 44,
-      minHeight: 44,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: rs(12, 'min'),
-      borderWidth: 2,
-      margin: rs(4, 'min'),
-    },
     emoji: {
       fontSize: rs(28, 'min'),
       lineHeight: rs(32, 'min'),
+    },
+    emojiButton: {
+      alignItems: 'center',
+      borderRadius: rs(12, 'min'),
+      borderWidth: 2,
+      height: rs(48, 'min'),
+      justifyContent: 'center',
+      margin: rs(4, 'min'),
+      minHeight: 44,
+      minWidth: 44,
+      width: rs(48, 'min'),
+    },
+    listContent: {
+      paddingVertical: rs(8, 'min'),
     },
   });
 

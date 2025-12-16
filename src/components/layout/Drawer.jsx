@@ -1,6 +1,7 @@
 /**
  * @fileoverview Modern draggable bottom sheet with real-time gesture tracking
  * Follows finger during drag (like Spotify/Google Maps), snaps to positions on release
+ * Polish improvements: animated height, adaptive padding, handle feedback, responsive springs
  * @created 2025-12-14
  * @updated 2025-12-16
  */
@@ -14,6 +15,8 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 50;
 const VELOCITY_THRESHOLD = 0.5;
 const EXPAND_ZONE_HEIGHT = 80; // Swipe-up zone height (handle + buffer)
+const SPRING_TENSION = 80; // More responsive
+const SPRING_FRICTION = 10; // Snappier feel
 
 export default function Drawer({
   visible,
@@ -28,40 +31,63 @@ export default function Drawer({
   const [isExpanded, setIsExpanded] = useState(false);
   const scrollOffsetRef = useRef(0);
   const dragStartYRef = useRef(0);
-  const touchStartYRef = useRef(0); // Track initial touch position for expansion zone
+  const touchStartYRef = useRef(0);
+  const isDraggingRef = useRef(false);
 
-  // Heights in pixels (let React handle these, not animations)
+  // Heights in pixels
   const collapsedHeightPx = SCREEN_HEIGHT * height;
   const expandedHeightPx = SCREEN_HEIGHT * expandedHeight;
-  const currentHeightPx = isExpanded ? expandedHeightPx : collapsedHeightPx;
 
-  // Only animate position (translateY) - native driver safe
+  // Animate position (translateY) - native driver safe
   const translateY = useRef(new Animated.Value(direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT)).current;
+
+  // Animate height smoothly - NOT native driver, but performant enough for height
+  const animatedHeight = useRef(new Animated.Value(collapsedHeightPx)).current;
+
+  // Animate handle opacity for drag feedback
+  const handleOpacity = useRef(new Animated.Value(1)).current;
 
   // Helper to animate to specific position
   const animateToPosition = (toValue, onComplete) => {
     Animated.spring(translateY, {
       toValue,
       useNativeDriver: true,
-      tension: 65,
-      friction: 11,
+      tension: SPRING_TENSION,
+      friction: SPRING_FRICTION,
     }).start(onComplete);
   };
 
-  // Open/close animation - ONLY translateY (native safe)
+  // Animate height with spring
+  const animateHeight = (toValue) => {
+    Animated.spring(animatedHeight, {
+      toValue,
+      useNativeDriver: false,
+      tension: SPRING_TENSION,
+      friction: SPRING_FRICTION,
+    }).start();
+  };
+
+  // Open/close animation - translateY + height
   useEffect(() => {
     Animated.spring(translateY, {
       toValue: visible ? 0 : (direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT),
       useNativeDriver: true,
-      tension: 65,
-      friction: 11,
+      tension: SPRING_TENSION,
+      friction: SPRING_FRICTION,
     }).start();
   }, [visible, direction, translateY]);
+
+  // Animate height when expansion state changes
+  useEffect(() => {
+    const targetHeight = isExpanded ? expandedHeightPx : collapsedHeightPx;
+    animateHeight(targetHeight);
+  }, [isExpanded, collapsedHeightPx, expandedHeightPx]);
 
   // Reset on close
   useEffect(() => {
     if (!visible) {
       setIsExpanded(false);
+      handleOpacity.setValue(1);
     }
   }, [visible]);
 
@@ -81,10 +107,17 @@ export default function Drawer({
         return Math.abs(dy) > 3;
       },
       onPanResponderGrant: (evt) => {
-        // Capture current position of translateY
+        // Capture current position
         dragStartYRef.current = translateY._value;
-        // Capture initial touch Y position for expansion zone check
         touchStartYRef.current = evt.nativeEvent.locationY;
+        isDraggingRef.current = true;
+
+        // Fade handle on drag start for visual feedback
+        Animated.timing(handleOpacity, {
+          toValue: 0.5,
+          duration: 100,
+          useNativeDriver: true,
+        }).start();
       },
       onPanResponderMove: (_, gestureState) => {
         if (direction === 'bottom') {
@@ -104,6 +137,15 @@ export default function Drawer({
           const finalY = translateY._value;
           const isQuickSwipeDown = vy > VELOCITY_THRESHOLD;
           const isInExpandZone = touchStartYRef.current < EXPAND_ZONE_HEIGHT;
+
+          isDraggingRef.current = false;
+
+          // Restore handle opacity
+          Animated.timing(handleOpacity, {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: true,
+          }).start();
 
           // Determine snap target based on final position and velocity
           if (finalY > SCREEN_HEIGHT * 0.5 || isQuickSwipeDown) {
@@ -130,21 +172,25 @@ export default function Drawer({
   ).current;
 
 
+  // Calculate adaptive padding based on expansion state
+  const paddingBottomValue = isExpanded ? rs(20) : rs(12);
+  const paddingTopValue = isExpanded ? rs(12) : rs(8);
+
   const styles = StyleSheet.create({
     contentWrapper: {
       flex: 1,
     },
     drawer: {
       ...(direction === 'top'
-        ? { borderBottomLeftRadius: rs(24), borderBottomRightRadius: rs(24) }
-        : { borderTopLeftRadius: rs(24), borderTopRightRadius: rs(24) }
+        ? { borderBottomLeftRadius: rs(20), borderBottomRightRadius: rs(20) }
+        : { borderTopLeftRadius: rs(20), borderTopRightRadius: rs(20) }
       ),
       backgroundColor: theme.colors.background,
       bottom: direction === 'bottom' ? 0 : undefined,
       left: 0,
       overflow: 'hidden',
-      paddingBottom: direction === 'bottom' ? rs(30) : rs(20),
-      paddingTop: direction === 'top' ? rs(50) : rs(8),
+      paddingBottom: direction === 'bottom' ? paddingBottomValue : rs(20),
+      paddingTop: direction === 'top' ? rs(50) : paddingTopValue,
       position: 'absolute',
       right: 0,
       top: direction === 'top' ? 0 : undefined,
@@ -159,9 +205,9 @@ export default function Drawer({
     },
     handleContainer: {
       alignSelf: 'center',
-      marginBottom: rs(8),
+      marginBottom: rs(12),
       paddingHorizontal: rs(80),
-      paddingVertical: rs(16),
+      paddingVertical: rs(12),
     },
     overlay: {
       backgroundColor: theme.colors.overlay,
@@ -189,38 +235,37 @@ export default function Drawer({
         style={[
           styles.drawer,
           {
-            height: currentHeightPx,
+            height: animatedHeight,
             transform: [{ translateY }],
           },
         ]}
         {...panResponder.panHandlers}
       >
-        <View style={styles.handleContainer}>
+        <Animated.View
+          style={[
+            styles.handleContainer,
+            {
+              opacity: handleOpacity,
+            },
+          ]}
+        >
           <View style={styles.handle} />
-        </View>
-        {isExpanded ? (
-          <ScrollView
-            style={styles.contentWrapper}
-            scrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-            bounces={false}
-            onScroll={(e) => {
-              scrollOffsetRef.current = e.nativeEvent.contentOffset.y;
-            }}
-          >
-            {React.isValidElement(children)
-              ? React.cloneElement(children, { isExpanded })
-              : children
-            }
-          </ScrollView>
-        ) : (
-          <View style={styles.contentWrapper}>
-            {React.isValidElement(children)
-              ? React.cloneElement(children, { isExpanded })
-              : children
-            }
-          </View>
-        )}
+        </Animated.View>
+
+        <ScrollView
+          style={styles.contentWrapper}
+          scrollEnabled={isExpanded}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          onScroll={(e) => {
+            scrollOffsetRef.current = e.nativeEvent.contentOffset.y;
+          }}
+        >
+          {React.isValidElement(children)
+            ? React.cloneElement(children, { isExpanded })
+            : children
+          }
+        </ScrollView>
       </Animated.View>
     </>
   );

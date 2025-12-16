@@ -25,19 +25,19 @@ const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle,
 
   const styles = StyleSheet.create({
     container: {
-      width: rs(size, 'min'),
-      height: rs(size, 'min'),
-      borderRadius: rs(size / 2, 'min'),
-      backgroundColor: theme.colors.surface,
-      borderWidth: 2,
-      borderColor: theme.colors.border,
       alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: rs(size / 2, 'min'),
+      borderWidth: 2,
+      height: rs(size, 'min'),
       justifyContent: 'center',
+      width: rs(size, 'min'),
       ...theme.shadow('sm'),
     },
     icon: {
-      fontSize: rs(size * 0.5, 'min'),
       color: theme.colors.textSecondary,
+      fontSize: rs(size * 0.5, 'min'),
     },
   });
 

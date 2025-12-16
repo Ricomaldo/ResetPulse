@@ -132,13 +132,129 @@ export default function EditActivityModal({
   };
 
   const styles = StyleSheet.create({
-    overlay: {
+    buttonRow: {
+      flexDirection: 'row',
+      gap: theme.spacing.md,
+    },
+
+    cancelButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
       flex: 1,
-      backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
-      }),
-      justifyContent: 'flex-end',
+      justifyContent: 'center',
+      minHeight: rs(52, 'min'),
+      padding: theme.spacing.md,
+    },
+
+    cancelButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+
+    charCounter: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+    },
+
+    clearButton: {
+      padding: theme.spacing.xs,
+    },
+
+    clearButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16, 'min'),
+    },
+
+    closeButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.md,
+      justifyContent: 'center',
+      margin: -theme.spacing.xs,
+      minHeight: 44,
+      minWidth: 44,
+      padding: theme.spacing.sm,
+    },
+
+    closeButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(18, 'min'),
+    },
+
+    deleteButton: {
+      alignItems: 'center',
+      backgroundColor: 'transparent',
+      borderColor: theme.colors.fixed?.red || '#FF3B30',
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      justifyContent: 'center',
+      minHeight: rs(48, 'min'),
+      padding: theme.spacing.md,
+    },
+
+    deleteButtonText: {
+      color: theme.colors.fixed?.red || '#FF3B30',
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+
+    durationContainer: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.lg,
+      padding: theme.spacing.md,
+    },
+
+    emojiPickerContainer: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.lg,
+      maxHeight: rs(200, 'min'),
+      padding: theme.spacing.sm,
+    },
+
+    footer: {
+      borderTopColor: theme.colors.border,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      gap: theme.spacing.md,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.lg,
+    },
+
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingBottom: theme.spacing.md,
+      paddingHorizontal: theme.spacing.lg,
+      paddingTop: theme.spacing.lg,
+    },
+
+    headerTitle: {
+      color: theme.colors.text,
+      fontSize: rs(20, 'min'),
+      fontWeight: fontWeights.bold,
+    },
+
+    input: {
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(16, 'min'),
+      height: rs(48, 'min'),
+    },
+
+    inputContainer: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.md,
     },
 
     modalContainer: {
@@ -162,160 +278,23 @@ export default function EditActivityModal({
       }),
     },
 
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: theme.spacing.lg,
-      paddingTop: theme.spacing.lg,
-      paddingBottom: theme.spacing.md,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: theme.colors.border,
-    },
-
-    headerTitle: {
-      fontSize: rs(20, 'min'),
-      fontWeight: fontWeights.bold,
-      color: theme.colors.text,
-    },
-
-    closeButton: {
-      padding: theme.spacing.sm,
-      minWidth: 44,
-      minHeight: 44,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: theme.borderRadius.md,
-      backgroundColor: theme.colors.surface,
-      margin: -theme.spacing.xs,
-    },
-
-    closeButtonText: {
-      fontSize: rs(18, 'min'),
-      color: theme.colors.textSecondary,
-    },
-
-    scrollContent: {
-      paddingHorizontal: theme.spacing.lg,
-      paddingBottom: theme.spacing.xl,
-    },
-
-    section: {
-      marginTop: theme.spacing.lg,
-    },
-
-    sectionLabel: {
-      fontSize: rs(14, 'min'),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.textSecondary,
-      marginBottom: theme.spacing.sm,
-    },
-
-    emojiPickerContainer: {
-      maxHeight: rs(200, 'min'),
-      borderRadius: theme.borderRadius.lg,
-      backgroundColor: theme.colors.surface,
-      padding: theme.spacing.sm,
-    },
-
-    inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      paddingHorizontal: theme.spacing.md,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-    },
-
-    input: {
+    overlay: {
+      backgroundColor: Platform.select({
+        ios: 'rgba(0, 0, 0, 0.4)',
+        android: 'rgba(0, 0, 0, 0.5)',
+      }),
       flex: 1,
-      height: rs(48, 'min'),
-      fontSize: rs(16, 'min'),
-      color: theme.colors.text,
-    },
-
-    charCounter: {
-      fontSize: rs(12, 'min'),
-      color: theme.colors.textSecondary,
-    },
-
-    clearButton: {
-      padding: theme.spacing.xs,
-    },
-
-    clearButtonText: {
-      fontSize: rs(16, 'min'),
-      color: theme.colors.textSecondary,
-    },
-
-    durationContainer: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-    },
-
-    statsSection: {
-      marginTop: theme.spacing.xl,
-    },
-
-    statsCard: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-    },
-
-    statsIcon: {
-      fontSize: rs(24, 'min'),
-      marginRight: theme.spacing.md,
-    },
-
-    statsText: {
-      fontSize: rs(14, 'min'),
-      color: theme.colors.textSecondary,
-    },
-
-    footer: {
-      paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.lg,
-      gap: theme.spacing.md,
-      borderTopWidth: StyleSheet.hairlineWidth,
-      borderTopColor: theme.colors.border,
-    },
-
-    buttonRow: {
-      flexDirection: 'row',
-      gap: theme.spacing.md,
-    },
-
-    cancelButton: {
-      flex: 1,
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: rs(52, 'min'),
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-    },
-
-    cancelButtonText: {
-      fontSize: rs(16, 'min'),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.textSecondary,
+      justifyContent: 'flex-end',
     },
 
     saveButton: {
-      flex: 2,
+      alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
       borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      alignItems: 'center',
+      flex: 2,
       justifyContent: 'center',
       minHeight: rs(52, 'min'),
+      padding: theme.spacing.md,
       ...theme.shadow('md'),
     },
 
@@ -325,32 +304,53 @@ export default function EditActivityModal({
     },
 
     saveButtonText: {
-      fontSize: rs(16, 'min'),
-      fontWeight: fontWeights.semibold,
       color: '#FFFFFF',
-    },
-
-    deleteButton: {
-      backgroundColor: 'transparent',
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: rs(48, 'min'),
-      borderWidth: 1,
-      borderColor: theme.colors.fixed?.red || '#FF3B30',
-    },
-
-    deleteButtonText: {
       fontSize: rs(16, 'min'),
       fontWeight: fontWeights.semibold,
-      color: theme.colors.fixed?.red || '#FF3B30',
+    },
+
+    scrollContent: {
+      paddingBottom: theme.spacing.xl,
+      paddingHorizontal: theme.spacing.lg,
+    },
+
+    section: {
+      marginTop: theme.spacing.lg,
+    },
+
+    sectionLabel: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginBottom: theme.spacing.sm,
+    },
+
+    statsCard: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.lg,
+      flexDirection: 'row',
+      padding: theme.spacing.md,
+    },
+
+    statsIcon: {
+      fontSize: rs(24, 'min'),
+      marginRight: theme.spacing.md,
+    },
+
+    statsSection: {
+      marginTop: theme.spacing.xl,
+    },
+
+    statsText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
     },
   });
 
   const isFormValid = selectedEmoji && activityName.trim().length > 0;
 
-  if (!activity) return null;
+  if (!activity) {return null;}
 
   return (
     <Modal

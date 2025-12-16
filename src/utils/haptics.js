@@ -51,7 +51,7 @@ class HapticManager {
 
   // Generic haptic trigger
   async trigger(type = HapticTypes.selection) {
-    if (!this.isEnabled) return;
+    if (!this.isEnabled) {return;}
 
     if (Platform.OS === 'ios') {
       await this.triggerIOS(type);
@@ -65,44 +65,44 @@ class HapticManager {
     try {
       // Map to expo-haptics types
       switch (type) {
-        case HapticTypes.selection:
-          await Haptics.selectionAsync();
-          break;
+      case HapticTypes.selection:
+        await Haptics.selectionAsync();
+        break;
 
-        case HapticTypes.impactLight:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          break;
+      case HapticTypes.impactLight:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        break;
 
-        case HapticTypes.impactMedium:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          break;
+      case HapticTypes.impactMedium:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        break;
 
-        case HapticTypes.impactHeavy:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          break;
+      case HapticTypes.impactHeavy:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        break;
 
-        case HapticTypes.notificationSuccess:
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          break;
+      case HapticTypes.notificationSuccess:
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        break;
 
-        case HapticTypes.notificationWarning:
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-          break;
+      case HapticTypes.notificationWarning:
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+        break;
 
-        case HapticTypes.notificationError:
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-          break;
+      case HapticTypes.notificationError:
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        break;
 
-        case HapticTypes.soft:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          break;
+      case HapticTypes.soft:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        break;
 
-        case HapticTypes.rigid:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          break;
+      case HapticTypes.rigid:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        break;
 
-        default:
-          await Haptics.selectionAsync();
+      default:
+        await Haptics.selectionAsync();
       }
     } catch (e) {
       // Fallback to Vibration API if haptic library not available
@@ -116,44 +116,44 @@ class HapticManager {
     try {
       // Try to use expo-haptics first for better Android support
       switch (type) {
-        case HapticTypes.selection:
-          await Haptics.selectionAsync();
-          break;
+      case HapticTypes.selection:
+        await Haptics.selectionAsync();
+        break;
 
-        case HapticTypes.impactLight:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          break;
+      case HapticTypes.impactLight:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        break;
 
-        case HapticTypes.impactMedium:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          break;
+      case HapticTypes.impactMedium:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        break;
 
-        case HapticTypes.impactHeavy:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          break;
+      case HapticTypes.impactHeavy:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        break;
 
-        case HapticTypes.notificationSuccess:
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          break;
+      case HapticTypes.notificationSuccess:
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        break;
 
-        case HapticTypes.notificationWarning:
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-          break;
+      case HapticTypes.notificationWarning:
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+        break;
 
-        case HapticTypes.notificationError:
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-          break;
+      case HapticTypes.notificationError:
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        break;
 
-        case HapticTypes.soft:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          break;
+      case HapticTypes.soft:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        break;
 
-        case HapticTypes.rigid:
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          break;
+      case HapticTypes.rigid:
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        break;
 
-        default:
-          await Haptics.selectionAsync();
+      default:
+        await Haptics.selectionAsync();
       }
     } catch (e) {
       // Fallback to native vibration patterns
@@ -198,27 +198,27 @@ class HapticManager {
 
   async impact(intensity = 'medium') {
     switch (intensity) {
-      case 'light':
-        await this.trigger(HapticTypes.impactLight);
-        break;
-      case 'heavy':
-        await this.trigger(HapticTypes.impactHeavy);
-        break;
-      default:
-        await this.trigger(HapticTypes.impactMedium);
+    case 'light':
+      await this.trigger(HapticTypes.impactLight);
+      break;
+    case 'heavy':
+      await this.trigger(HapticTypes.impactHeavy);
+      break;
+    default:
+      await this.trigger(HapticTypes.impactMedium);
     }
   }
 
   async notification(type = 'success') {
     switch (type) {
-      case 'warning':
-        await this.trigger(HapticTypes.notificationWarning);
-        break;
-      case 'error':
-        await this.trigger(HapticTypes.notificationError);
-        break;
-      default:
-        await this.trigger(HapticTypes.notificationSuccess);
+    case 'warning':
+      await this.trigger(HapticTypes.notificationWarning);
+      break;
+    case 'error':
+      await this.trigger(HapticTypes.notificationError);
+      break;
+    default:
+      await this.trigger(HapticTypes.notificationSuccess);
     }
   }
 

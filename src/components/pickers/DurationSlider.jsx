@@ -66,71 +66,17 @@ const DurationSlider = React.memo(function DurationSlider({
       width: '100%',
     },
 
-    valueContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: theme.spacing.md,
-    },
-
-    valueButton: {
-      width: rs(48, 'min'),
-      height: rs(48, 'min'),
-      minWidth: 44,
-      minHeight: 44,
-      borderRadius: rs(24, 'min'),
-      backgroundColor: theme.colors.surface,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-    },
-
-    valueButtonDisabled: {
-      opacity: 0.4,
-    },
-
-    valueButtonText: {
-      fontSize: rs(24, 'min'),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.text,
-    },
-
-    valueDisplay: {
-      marginHorizontal: theme.spacing.lg,
-      alignItems: 'center',
-    },
-
-    valueText: {
-      fontSize: rs(32, 'min'),
-      fontWeight: fontWeights.bold,
-      color: theme.colors.text,
-    },
-
-    valueUnit: {
-      fontSize: rs(14, 'min'),
-      color: theme.colors.textSecondary,
-      marginTop: theme.spacing.xs,
-    },
-
-    presetsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      gap: theme.spacing.sm,
-    },
-
     presetButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 1,
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: rs(60, 'min'),
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.sm,
-      borderRadius: theme.borderRadius.md,
-      backgroundColor: theme.colors.surface,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      minWidth: rs(60, 'min'),
-      minHeight: 44,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
 
     presetButtonActive: {
@@ -139,14 +85,68 @@ const DurationSlider = React.memo(function DurationSlider({
     },
 
     presetText: {
+      color: theme.colors.textSecondary,
       fontSize: rs(14, 'min'),
       fontWeight: fontWeights.medium,
-      color: theme.colors.textSecondary,
     },
 
     presetTextActive: {
       color: theme.colors.brand.primary,
       fontWeight: fontWeights.semibold,
+    },
+
+    presetsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.sm,
+      justifyContent: 'center',
+    },
+
+    valueButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: rs(24, 'min'),
+      borderWidth: 1,
+      height: rs(48, 'min'),
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: 44,
+      width: rs(48, 'min'),
+    },
+
+    valueButtonDisabled: {
+      opacity: 0.4,
+    },
+
+    valueButtonText: {
+      color: theme.colors.text,
+      fontSize: rs(24, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+
+    valueContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginBottom: theme.spacing.md,
+    },
+
+    valueDisplay: {
+      alignItems: 'center',
+      marginHorizontal: theme.spacing.lg,
+    },
+
+    valueText: {
+      color: theme.colors.text,
+      fontSize: rs(32, 'min'),
+      fontWeight: fontWeights.bold,
+    },
+
+    valueUnit: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      marginTop: theme.spacing.xs,
     },
   });
 

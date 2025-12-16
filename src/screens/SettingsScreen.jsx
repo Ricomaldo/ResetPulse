@@ -50,106 +50,106 @@ export default function SettingsScreen() {
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
       backgroundColor: theme.colors.background,
-    },
-    scrollView: {
       flex: 1,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(20),
-      paddingTop: rs(60),
-      paddingBottom: rs(40),
     },
     header: {
+      borderBottomColor: theme.colors.border + '20',
+      borderBottomWidth: 1,
+      paddingBottom: rs(12),
       paddingHorizontal: rs(20),
       paddingTop: rs(16),
-      paddingBottom: rs(12),
-      borderBottomWidth: 1,
-      borderBottomColor: theme.colors.border + '20',
     },
     headerText: {
+      color: theme.colors.text,
       fontSize: rs(24),
       fontWeight: fontWeights.bold,
-      color: theme.colors.text,
       textAlign: 'center',
-    },
-    premiumSection: {
-      marginBottom: rs(24),
-      paddingVertical: rs(16),
-      paddingHorizontal: rs(16),
-      borderRadius: rs(12),
-      backgroundColor: theme.colors.surface,
-      borderWidth: 1,
-      borderColor: isPremium ? theme.colors.brand.primary : theme.colors.border + '40',
-    },
-    premiumHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: rs(12),
-      gap: rs(8),
     },
     premiumBadge: {
       fontSize: rs(24),
     },
-    premiumTitle: {
-      fontSize: rs(16),
-      fontWeight: fontWeights.bold,
-      color: isPremium ? theme.colors.brand.primary : theme.colors.text,
-      flex: 1,
-    },
-    premiumStatus: {
-      fontSize: rs(13),
-      color: theme.colors.textSecondary,
-      marginBottom: rs(12),
-    },
     premiumButton: {
-      minHeight: 44,
+      alignItems: 'center',
       borderRadius: rs(8),
       justifyContent: 'center',
-      alignItems: 'center',
-      paddingVertical: rs(12),
-      paddingHorizontal: rs(16),
       marginTop: rs(8),
+      minHeight: 44,
+      paddingHorizontal: rs(16),
+      paddingVertical: rs(12),
+    },
+    premiumButtonRestore: {
+      backgroundColor: theme.colors.surfaceElevated,
+      borderColor: theme.colors.border,
+      borderWidth: 1,
+    },
+    premiumButtonText: {
+      color: theme.colors.text,
+      fontSize: rs(14),
+      fontWeight: fontWeights.semibold,
     },
     premiumButtonUnlock: {
       backgroundColor: theme.colors.brand.primary,
     },
-    premiumButtonRestore: {
-      backgroundColor: theme.colors.surfaceElevated,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-    },
-    premiumButtonText: {
-      fontSize: rs(14),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.text,
-    },
     premiumButtonUnlockText: {
       color: theme.colors.fixed.white,
     },
-    settingRow: {
-      flexDirection: 'row',
+    premiumHeader: {
       alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: 'row',
+      gap: rs(8),
+      marginBottom: rs(12),
+    },
+    premiumSection: {
+      backgroundColor: theme.colors.surface,
+      borderColor: isPremium ? theme.colors.brand.primary : theme.colors.border + '40',
+      borderRadius: rs(12),
+      borderWidth: 1,
+      marginBottom: rs(24),
+      paddingHorizontal: rs(16),
       paddingVertical: rs(16),
-      borderBottomWidth: 1,
-      borderBottomColor: theme.colors.border + '20',
+    },
+    premiumStatus: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(13),
+      marginBottom: rs(12),
+    },
+    premiumTitle: {
+      color: isPremium ? theme.colors.brand.primary : theme.colors.text,
+      flex: 1,
+      fontSize: rs(16),
+      fontWeight: fontWeights.bold,
+    },
+    scrollContent: {
+      paddingBottom: rs(40),
+      paddingHorizontal: rs(20),
+      paddingTop: rs(60),
+    },
+    scrollView: {
+      flex: 1,
+    },
+    settingDescription: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14),
+      lineHeight: rs(20),
     },
     settingInfo: {
       flex: 1,
       marginRight: rs(16),
     },
     settingLabel: {
-      fontSize: rs(17),
       color: theme.colors.text,
+      fontSize: rs(17),
       fontWeight: fontWeights.semibold,
       marginBottom: rs(4),
     },
-    settingDescription: {
-      fontSize: rs(14),
-      color: theme.colors.textSecondary,
-      lineHeight: rs(20),
+    settingRow: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border + '20',
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: rs(16),
     },
   });
 

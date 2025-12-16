@@ -62,8 +62,8 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
       sublabel: hasMeditation
         ? t('onboarding.v2.filter4.morningMeditation')
         : hasNeuro
-        ? t('onboarding.v2.filter4.morningNeuro')
-        : t('onboarding.v2.filter4.morningGentle'),
+          ? t('onboarding.v2.filter4.morningNeuro')
+          : t('onboarding.v2.filter4.morningGentle'),
       color: colors?.success || '#6B8E23',
     },
     {
@@ -72,8 +72,8 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
       sublabel: hasWork
         ? t('onboarding.v2.filter4.dayWork')
         : hasNeuro
-        ? t('onboarding.v2.filter4.dayNeuro')
-        : t('onboarding.v2.filter4.dayFocus'),
+          ? t('onboarding.v2.filter4.dayNeuro')
+          : t('onboarding.v2.filter4.dayFocus'),
       color: colors?.accent || '#FF6B6B',
     },
     {
@@ -90,8 +90,8 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
       sublabel: hasCreativity
         ? t('onboarding.v2.filter4.eveningCreative')
         : hasMeditation
-        ? t('onboarding.v2.filter4.eveningMeditation')
-        : t('onboarding.v2.filter4.eveningRelax'),
+          ? t('onboarding.v2.filter4.eveningMeditation')
+          : t('onboarding.v2.filter4.eveningRelax'),
       color: colors?.info || '#4ECDC4',
     },
   ];
@@ -116,8 +116,8 @@ export const STEP_NAMES = [
 
 // Helper pour obtenir le step name selon le parcours
 export const getStepName = (index, branch = null) => {
-  if (index <= 5) return STEP_NAMES[index];
-  if (index === 6) return branch === 'discover' ? STEP_NAMES[6] : STEP_NAMES[7];
-  if (index === 7) return branch === 'discover' ? STEP_NAMES[8] : STEP_NAMES[9];
+  if (index <= 5) {return STEP_NAMES[index];}
+  if (index === 6) {return branch === 'discover' ? STEP_NAMES[6] : STEP_NAMES[7];}
+  if (index === 7) {return branch === 'discover' ? STEP_NAMES[8] : STEP_NAMES[9];}
   return STEP_NAMES[0];
 };

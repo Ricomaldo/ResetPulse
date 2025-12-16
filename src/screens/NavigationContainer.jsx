@@ -70,12 +70,12 @@ export default function NavigationContainer() {
   };
 
   const styles = StyleSheet.create({
+    page: {
+      height: SCREEN_HEIGHT,
+      width: '100%',
+    },
     pager: {
       flex: 1,
-    },
-    page: {
-      width: '100%',
-      height: SCREEN_HEIGHT,
     },
   });
 
