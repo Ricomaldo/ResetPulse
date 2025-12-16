@@ -273,6 +273,7 @@ function TimerScreenContent() {
               outputRange: [1, 1],
             })}
             color={currentColor}
+            pulseDuration={currentActivity.pulseDuration}
           />
         )}
       </Animated.View>
