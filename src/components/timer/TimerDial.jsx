@@ -227,9 +227,9 @@ function TimerDial({
         // Detect long press: held (>=500ms) with minimal movement (<10px)
         const isLongPress = timeDelta >= 500 && movementDistance < 10;
 
-        // If tap detected on graduation, snap to nearest mark BEFORE toggling timer
-        // (snap must happen before timer starts, otherwise handleGraduationTap will bail)
-        if (isTap && onGraduationTap && lastMinutesRef.current !== null) {
+        // Always snap to nearest major mark when releasing (end of drag or tap)
+        // Prevents edge cases like 3min58 on 5min scale
+        if (onGraduationTap && lastMinutesRef.current !== null) {
           onGraduationTap(lastMinutesRef.current, true); // Snap to nearest major mark
         }
 
