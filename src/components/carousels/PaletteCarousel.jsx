@@ -1,7 +1,7 @@
 /**
  * @fileoverview Palette carousel for selecting timer colors
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import {
@@ -230,7 +230,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       letterSpacing: 0.5,
     },
 
-    // Bouton "+" pour découvrir plus de palettes
+    // Bouton "Discover Colors" pour mode freemium
     moreButtonContainer: {
       alignItems: 'center',
       flexDirection: 'row',
@@ -242,22 +242,24 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
     moreButton: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border,
-      borderRadius: rs(22, 'min'),
-      borderStyle: 'dashed',
-      borderWidth: 2,
-      height: rs(44, 'min'),
+      backgroundColor: theme.colors.brand.primary,
+      borderRadius: theme.borderRadius.lg,
+      flex: 1,
+      flexDirection: 'row',
+      gap: theme.spacing.xs,
       justifyContent: 'center',
-      minHeight: 44,
-      minWidth: 44,
-      width: rs(44, 'min'),
-      ...theme.shadows.sm,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.sm,
+      ...theme.shadows.md,
+    },
+
+    moreButtonIcon: {
+      fontSize: rs(20, 'min'),
     },
 
     moreButtonText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(18, 'min'),
+      color: theme.colors.fixed.white,
+      fontSize: rs(14, 'min'),
       fontWeight: fontWeights.semibold,
     },
 
@@ -425,7 +427,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
             );
           })}
 
-          {/* Bouton "+" en freemium pour découvrir plus de palettes */}
+          {/* Bouton "Discover Colors" en freemium */}
           {!isPremiumUser && (
             <View style={styles.moreButtonContainer}>
               <TouchableOpacity
@@ -436,7 +438,8 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                 accessibilityLabel={t('accessibility.discoverMorePalettes')}
                 accessibilityRole="button"
               >
-                <Text style={styles.moreButtonText}>+</Text>
+                <Text style={styles.moreButtonIcon}>💎</Text>
+                <Text style={styles.moreButtonText}>Discover</Text>
               </TouchableOpacity>
             </View>
           )}

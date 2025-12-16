@@ -1,6 +1,9 @@
 /**
- * @fileoverview Options drawer content - simplified to 3 core sections
- * Couleur, Activité, Échelle - Settings moved to modal
+ * @fileoverview Options drawer content - 3 core sections in logical order
+ * 1. Activité (primary choice: what are you doing?)
+ * 2. Cadran (technical config: dial granularity)
+ * 3. Couleur (cosmetic: visual style)
+ * Settings moved to modal
  * @created 2025-12-14
  * @updated 2025-12-16
  */
@@ -67,15 +70,7 @@ export default function OptionsDrawerContent({
 
   return (
     <View style={styles.container}>
-      {/* Couleur (Palettes) */}
-      <View style={styles.section}>
-        <Text style={styles.sectionLabel}>Couleur</Text>
-      </View>
-      <View style={styles.carouselWrapper}>
-        <PaletteCarousel isTimerRunning={false} />
-      </View>
-
-      {/* Activité */}
+      {/* 1. Activité - Primary choice */}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Activité</Text>
       </View>
@@ -83,10 +78,18 @@ export default function OptionsDrawerContent({
         <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
       </View>
 
-      {/* Cadran (Scale) */}
+      {/* 2. Cadran (Scale) - Technical config */}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Cadran</Text>
         <PresetPills onSelectPreset={onSelectPreset} />
+      </View>
+
+      {/* 3. Couleur (Palettes) - Cosmetic */}
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>Couleur</Text>
+      </View>
+      <View style={styles.carouselWrapper}>
+        <PaletteCarousel isTimerRunning={false} />
       </View>
 
       {/* Settings Button - Discrete bottom button */}
