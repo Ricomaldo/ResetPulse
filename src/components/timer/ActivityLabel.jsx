@@ -72,6 +72,8 @@ function ActivityLabel({
       fontSize: rs(24),
       fontWeight: '600',
       letterSpacing: 0.5,
+      minWidth: rs(150), // Fixed width to stay centered
+      textAlign: 'center',
     },
   });
 
