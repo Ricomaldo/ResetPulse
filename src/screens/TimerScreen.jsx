@@ -14,10 +14,10 @@ import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
-import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TimeTimer, Drawer, CircularToggle, SwipeUpHint } from '../components/layout';
 import { ExpandableDrawerContent } from '../components/drawers';
 import DigitalTimer from '../components/timer/DigitalTimer';
+import AnimatedDots from '../components/timer/AnimatedDots';
 import { TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
@@ -51,14 +51,6 @@ const createStyles = (theme) => {
       fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
       letterSpacing: 0.5,
-    },
-
-    activityDots: {
-      fontSize: rs(16),
-      fontWeight: fontWeights.medium,
-      color: theme.colors.textSecondary,
-      letterSpacing: 0.5,
-      marginTop: rs(4),
     },
 
     digitalTimerContainer: {
@@ -120,7 +112,6 @@ function TimerScreenContent() {
   const dialWrapperRef = useRef(null);
   const dialLayoutRef = useRef(null);
   const activityLabelAnimRef = useRef(new Animated.Value(0)).current;
-  const animatedDots = useAnimatedDots();
 
   // Animate activity label on timer start
   useEffect(() => {
@@ -274,19 +265,12 @@ function TimerScreenContent() {
 
         {/* Animated dots below activity label */}
         {isTimerRunning && currentActivity && currentActivity.id !== 'none' && (
-          <Animated.Text
-            style={[
-              styles.activityDots,
-              {
-                opacity: activityLabelAnimRef.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [1, 1],
-                }),
-              },
-            ]}
-          >
-            {animatedDots}
-          </Animated.Text>
+          <AnimatedDots
+            opacity={activityLabelAnimRef.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1],
+            })}
+          />
         )}
       </Animated.View>
 
