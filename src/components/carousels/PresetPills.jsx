@@ -39,14 +39,15 @@ export default function PresetPills({ currentDuration, onSelectPreset }) {
   const currentMinutes = Math.round(currentDuration / 60);
 
   const handlePresetSelect = (minutes) => {
-    const seconds = minutes * 60;
-
-    // Mettre à jour le scale mode selon la durée
+    // Calculer le scale mode basé sur le preset
     const newScaleMode = getScaleModeForDuration(minutes);
     setScaleMode(newScaleMode);
 
-    // Appeler le callback parent
-    onSelectPreset(seconds);
+    // Passer minutes ET scale mode au parent pour qu'il gère le capping
+    onSelectPreset({
+      scalePresetMinutes: minutes,
+      newScaleMode: newScaleMode,
+    });
   };
 
   const styles = StyleSheet.create({
