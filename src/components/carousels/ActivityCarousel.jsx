@@ -1,7 +1,7 @@
 /**
  * @fileoverview Activity carousel for selecting timer activities
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import {
@@ -11,9 +11,7 @@ import {
   Text,
   Animated,
   TouchableOpacity,
-  Dimensions,
 } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
 import { useTimerOptions } from "../../contexts/TimerOptionsContext";
@@ -204,149 +202,173 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   }, [scrollOffset]);
 
   const styles = StyleSheet.create({
-    container: { position: "relative", alignItems: "center", justifyContent: "center" },
-    scrollView: { flexGrow: 0 },
+    outerContainer: {
+      position: "relative",
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "row",
+    },
+    scrollView: {
+      flexGrow: 0,
+    },
     scrollContent: {
       paddingHorizontal: rs(30, "width"),
       alignItems: "center",
       gap: theme.spacing.md,
     },
-    arrowButton: {
-      position: "absolute",
-      top: "50%",
-      transform: [{ translateY: -14 }],
-      zIndex: 10,
-      width: rs(36),
-      height: rs(36),
-      borderRadius: rs(18),
+    chevronButton: {
+      width: rs(32, "min"),
+      height: rs(32, "min"),
+      minWidth: 44,
+      minHeight: 44,
+      borderRadius: rs(16, "min"),
+      backgroundColor: theme.colors.background,
       alignItems: "center",
       justifyContent: "center",
-      padding: rs(4),
+      marginHorizontal: theme.spacing.xs,
+      ...theme.shadows.sm,
     },
-    leftArrow: { left: rs(4) },
-    rightArrow: { right: rs(4) },
-    arrowIcon: {
-      color: theme.colors.brand.primary,
+    chevronText: {
+      fontSize: rs(18, "min"),
+      color: theme.colors.textSecondary,
+      fontWeight: fontWeights.semibold,
     },
     activityNameBadge: {
-      position: "absolute", top: -35, backgroundColor: theme.colors.background,
-      paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.xs,
-      borderRadius: theme.borderRadius.lg, ...theme.shadow("md"),
+      position: "absolute",
+      top: -35,
+      backgroundColor: theme.colors.background,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.borderRadius.lg,
+      ...theme.shadow("md"),
     },
-    activityNameText: { fontSize: rs(14, "min"), fontWeight: fontWeights.semibold, color: theme.colors.text },
+    activityNameText: {
+      fontSize: rs(14, "min"),
+      fontWeight: fontWeights.semibold,
+      color: theme.colors.text,
+    },
     onboardingToast: {
-      position: "absolute", bottom: rs(50, "height"), alignSelf: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.85)", paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.md, borderRadius: theme.borderRadius.lg,
-      maxWidth: "80%", ...theme.shadow("lg"),
+      position: "absolute",
+      bottom: rs(50, "height"),
+      alignSelf: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.85)",
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+      borderRadius: theme.borderRadius.lg,
+      maxWidth: "80%",
+      ...theme.shadow("lg"),
     },
     onboardingToastText: {
-      fontSize: rs(13, "min"), fontWeight: fontWeights.semibold,
-      color: theme.colors.fixed.white, textAlign: "center",
+      fontSize: rs(13, "min"),
+      fontWeight: fontWeights.semibold,
+      color: theme.colors.fixed.white,
+      textAlign: "center",
     },
   });
 
   return (
-    <View style={styles.container}>
-      {currentActivity && (
-        <Animated.View
-          style={[
-            styles.activityNameBadge,
-            {
-              opacity: fadeAnim,
-              transform: [
-                {
-                  translateY: fadeAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [5, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-          pointerEvents="none"
-        >
-          <Text style={styles.activityNameText}>{currentActivity.label}</Text>
-        </Animated.View>
-      )}
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        scrollEventThrottle={16}
-        onScroll={handleScroll}
-        onContentSizeChange={(width) => {
-          scrollContentWidthRef.current = width;
-          // Initial arrow visibility check
-          updateArrowVisibility(0);
-        }}
-      >
-        {activities.map((activity) => {
-          const isActive = currentActivity?.id === activity.id;
-          const isLocked = activity.isPremium && !isPremiumUser && !activity.isCustom;
-          const isCustom = activity.isCustom;
-
-          return (
-            <ActivityItem
-              key={activity.id}
-              activity={activity}
-              isActive={isActive}
-              isLocked={isLocked}
-              isCustom={isCustom}
-              currentColor={currentColor}
-              onPress={() => handleActivityPress(activity)}
-              onLongPress={() => handleActivityLongPress(activity)}
-              scaleAnim={getScaleAnim(activity.id)}
-            />
-          );
-        })}
-        <PlusButton
-          isPremium={isPremiumUser}
-          onPress={isPremiumUser ? handleCreatePress : handleMorePress}
-          accessibilityLabel={
-            isPremiumUser
-              ? t("customActivities.addButton")
-              : t("accessibility.moreActivities")
-          }
-          accessibilityHint={
-            isPremiumUser
-              ? t("customActivities.addButtonHint")
-              : t("accessibility.discoverPremium")
-          }
-        />
-      </ScrollView>
-
-      {/* Left Arrow */}
+    <View style={styles.outerContainer}>
+      {/* Left chevron */}
       {showLeftArrow && (
         <TouchableOpacity
-          style={[styles.arrowButton, styles.leftArrow]}
+          style={styles.chevronButton}
           onPress={scrollLeft}
           activeOpacity={0.7}
           accessible={true}
           accessibilityRole="button"
-          accessibilityLabel="Scroll left"
-          accessibilityHint="Scroll carousel to the left"
+          accessibilityLabel={t("accessibility.scrollLeft")}
         >
-          <Ionicons name="chevron-back" size={rs(20)} style={styles.arrowIcon} />
+          <Text style={styles.chevronText}>‹</Text>
         </TouchableOpacity>
       )}
+      {!showLeftArrow && <View style={[styles.chevronButton, { opacity: 0 }]} />}
 
-      {/* Right Arrow */}
+      {/* Carousel container */}
+      <View>
+        {currentActivity && (
+          <Animated.View
+            style={[
+              styles.activityNameBadge,
+              {
+                opacity: fadeAnim,
+                transform: [
+                  {
+                    translateY: fadeAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [5, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+            pointerEvents="none"
+          >
+            <Text style={styles.activityNameText}>{currentActivity.label}</Text>
+          </Animated.View>
+        )}
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          scrollEventThrottle={16}
+          onScroll={handleScroll}
+          onContentSizeChange={(width) => {
+            scrollContentWidthRef.current = width;
+            updateArrowVisibility(0);
+          }}
+        >
+          {activities.map((activity) => {
+            const isActive = currentActivity?.id === activity.id;
+            const isLocked = activity.isPremium && !isPremiumUser && !activity.isCustom;
+            const isCustom = activity.isCustom;
+
+            return (
+              <ActivityItem
+                key={activity.id}
+                activity={activity}
+                isActive={isActive}
+                isLocked={isLocked}
+                isCustom={isCustom}
+                currentColor={currentColor}
+                onPress={() => handleActivityPress(activity)}
+                onLongPress={() => handleActivityLongPress(activity)}
+                scaleAnim={getScaleAnim(activity.id)}
+              />
+            );
+          })}
+          <PlusButton
+            isPremium={isPremiumUser}
+            onPress={isPremiumUser ? handleCreatePress : handleMorePress}
+            accessibilityLabel={
+              isPremiumUser
+                ? t("customActivities.addButton")
+                : t("accessibility.moreActivities")
+            }
+            accessibilityHint={
+              isPremiumUser
+                ? t("customActivities.addButtonHint")
+                : t("accessibility.discoverPremium")
+            }
+          />
+        </ScrollView>
+      </View>
+
+      {/* Right chevron */}
       {showRightArrow && (
         <TouchableOpacity
-          style={[styles.arrowButton, styles.rightArrow]}
+          style={styles.chevronButton}
           onPress={scrollRight}
           activeOpacity={0.7}
           accessible={true}
           accessibilityRole="button"
-          accessibilityLabel="Scroll right"
-          accessibilityHint="Scroll carousel to the right"
+          accessibilityLabel={t("accessibility.scrollRight")}
         >
-          <Ionicons name="chevron-forward" size={rs(20)} style={styles.arrowIcon} />
+          <Text style={styles.chevronText}>›</Text>
         </TouchableOpacity>
       )}
+      {!showRightArrow && <View style={[styles.chevronButton, { opacity: 0 }]} />}
 
       <PremiumModal
         visible={showPremiumModal}

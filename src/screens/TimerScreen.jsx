@@ -7,14 +7,13 @@ import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsC
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { TimeTimer, Drawer, CircularToggle } from '../components/layout';
-import { ExpandableDrawerContent } from '../components/drawers';
+import OptionsDrawerContent from '../components/drawers/OptionsDrawerContent';
 import ActivityLabel from '../components/timer/ActivityLabel';
 import DigitalTimer from '../components/timer/DigitalTimer';
 import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TwoTimersModal, PremiumModal, SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
-import { getDialMode } from '../components/timer/timerConstants';
 
 const SWIPE_THRESHOLD = 50;
 
@@ -22,7 +21,6 @@ function TimerScreenContent() {
   const theme = useTheme();
   const {
     currentDuration,
-    setCurrentDuration,
     showDigitalTimer,
     setShowDigitalTimer,
     currentActivity,
@@ -32,7 +30,6 @@ function TimerScreenContent() {
     incrementCompletedTimers,
     hasSeenTwoTimersModal,
     setHasSeenTwoTimersModal,
-    scaleMode,
     setScaleMode,
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
@@ -150,24 +147,11 @@ function TimerScreenContent() {
   };
 
   // Handle preset selection from drawer
-  // New behavior: tap preset = change scale, preserve duration (capped to new scale max)
+  // Scale buttons ONLY change the dial's granularity. Duration is completely independent.
+  // If duration > scale max, the dial shows maxed out and digital timer shows the overflow.
   const handlePresetSelect = (presetData) => {
-    const { scalePresetMinutes, newScaleMode } = presetData;
-
-    // Update scale mode
+    const { newScaleMode } = presetData;
     setScaleMode(newScaleMode);
-
-    // Calculate new duration: keep current duration but cap to new scale max
-    const dialMode = getDialMode(newScaleMode);
-    const maxSecondsForNewScale = dialMode.maxMinutes * 60;
-    const cappedDuration = Math.min(currentDuration, maxSecondsForNewScale);
-
-    // Apply the capped duration
-    if (timerRef.current) {
-      timerRef.current.setDuration(cappedDuration);
-      setTimerRemaining(cappedDuration);
-      setCurrentDuration(cappedDuration);
-    }
   };
 
   // Capture dial wrapper layout for gesture detection
@@ -291,8 +275,7 @@ function TimerScreenContent() {
         height={0.5}
         expandedHeight={0.85}
       >
-        <ExpandableDrawerContent
-          currentDuration={currentDuration}
+        <OptionsDrawerContent
           onSelectPreset={handlePresetSelect}
           drawerVisible={optionsDrawerVisible}
           onOpenSettings={() => {

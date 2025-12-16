@@ -1,52 +1,38 @@
 /**
- * @fileoverview Preset duration pills for quick timer selection
+ * @fileoverview Preset scale pills - change dial granularity
+ * @description These buttons select which scale (granularity) the dial should use.
+ * Duration is completely independent - set by dragging the dial.
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 
 const PRESETS = [
-  { minutes: 1, label: '1' },
-  { minutes: 5, label: '5' },
-  { minutes: 10, label: '10' },
-  { minutes: 25, label: '25' },
-  { minutes: 45, label: '45' },
-  { minutes: 60, label: '60' },
+  { minutes: 1, scaleMode: '1min', label: '1' },
+  { minutes: 5, scaleMode: '5min', label: '5' },
+  { minutes: 10, scaleMode: '10min', label: '10' },
+  { minutes: 25, scaleMode: '25min', label: '25' },
+  { minutes: 45, scaleMode: '45min', label: '45' },
+  { minutes: 60, scaleMode: '60min', label: '60' },
 ];
 
-/**
- * Détermine le scale mode optimal selon la durée
- * @param {number} minutes - Durée en minutes
- * @returns {string} Scale mode ('1min', '5min', '10min', '25min', '45min', ou '60min')
- */
-function getScaleModeForDuration(minutes) {
-  if (minutes <= 1) return '1min';
-  if (minutes <= 5) return '5min';
-  if (minutes <= 10) return '10min';
-  if (minutes <= 25) return '25min';
-  if (minutes <= 45) return '45min';
-  return '60min';
-}
-
-export default function PresetPills({ currentDuration, onSelectPreset }) {
+export default function PresetPills({ onSelectPreset }) {
   const theme = useTheme();
-  const { setScaleMode } = useTimerOptions();
-  const currentMinutes = Math.round(currentDuration / 60);
+  const { scaleMode, setScaleMode } = useTimerOptions();
 
-  const handlePresetSelect = (minutes) => {
-    // Calculer le scale mode basé sur le preset
-    const newScaleMode = getScaleModeForDuration(minutes);
-    setScaleMode(newScaleMode);
+  const handlePresetSelect = (preset) => {
+    // Scale buttons only change the dial's granularity
+    setScaleMode(preset.scaleMode);
 
-    // Passer minutes ET scale mode au parent pour qu'il gère le capping
+    // Notify parent of the scale change
     onSelectPreset({
-      scalePresetMinutes: minutes,
-      newScaleMode: newScaleMode,
+      scalePresetMinutes: preset.minutes,
+      newScaleMode: preset.scaleMode,
     });
   };
 
@@ -86,12 +72,13 @@ export default function PresetPills({ currentDuration, onSelectPreset }) {
   const secondRow = PRESETS.slice(3, 6);
 
   const renderPreset = (preset) => {
-    const isActive = currentMinutes === preset.minutes;
+    // Button is active when its scale mode matches the current scale mode
+    const isActive = scaleMode === preset.scaleMode;
     return (
       <TouchableOpacity
         key={preset.minutes}
         style={[styles.pill, isActive && styles.pillActive]}
-        onPress={() => handlePresetSelect(preset.minutes)}
+        onPress={() => handlePresetSelect(preset)}
         activeOpacity={0.7}
       >
         <Text style={[styles.pillText, isActive && styles.pillTextActive]}>

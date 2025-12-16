@@ -78,9 +78,7 @@ jest.mock('../../src/components/layout', () => ({
 }));
 
 // Mock drawer content
-jest.mock('../../src/components/drawers', () => ({
-  ExpandableDrawerContent: 'ExpandableDrawerContent',
-}));
+jest.mock('../../src/components/drawers/OptionsDrawerContent', () => 'OptionsDrawerContent');
 
 // Mock DigitalTimer
 jest.mock('../../src/components/timer/DigitalTimer', () => 'DigitalTimer');
@@ -184,14 +182,14 @@ describe('TimerScreen', () => {
     expect(drawer.length).toBe(1);
   });
 
-  it('should render ExpandableDrawerContent inside Drawer', () => {
+  it('should render OptionsDrawerContent inside Drawer', () => {
     let component;
     act(() => {
       component = create(<TimerScreen />);
     });
 
     const instance = component.root;
-    const drawerContent = instance.findAllByType('ExpandableDrawerContent');
+    const drawerContent = instance.findAllByType('OptionsDrawerContent');
     expect(drawerContent.length).toBe(1);
   });
 
