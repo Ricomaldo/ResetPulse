@@ -41,6 +41,8 @@ const createStyles = (theme) => {
     activityLabelContainer: {
       position: 'absolute',
       top: rs(80),
+      left: 0,
+      right: 0,
       alignItems: 'center',
     },
 
