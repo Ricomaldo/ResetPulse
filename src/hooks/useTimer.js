@@ -354,8 +354,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
       setIsPaused(false);
       setRunning(true);
 
-      // Light haptic feedback on timer start
-      haptics.timerStart().catch(() => { /* Optional operation - failure is non-critical */ });
+      // Light haptic feedback on timer start (fire-and-forget)
+      haptics.timerStart();
 
       // Accessibility announcement for timer start
       const activityLabel = currentActivityRef.current?.label || t('activities.none');

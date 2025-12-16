@@ -26,7 +26,8 @@ jest.mock('../../src/contexts/TimerPaletteContext', () => ({
 jest.mock('../../src/utils/haptics', () => ({
   __esModule: true,
   default: {
-    notification: jest.fn(() => Promise.resolve())
+    notification: jest.fn(() => Promise.resolve()),
+    timerStart: jest.fn(() => Promise.resolve())
   }
 }));
 
