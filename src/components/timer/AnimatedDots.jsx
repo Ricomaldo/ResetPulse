@@ -20,7 +20,7 @@ export default function AnimatedDots({ opacity, color, pulseDuration = 800 }) {
         opacity,
       }}
     >
-      {[0, 1, 2, 3].map((index) => (
+      {[0, 1, 2].map((index) => (
         <Animated.Text
           key={index}
           style={{
