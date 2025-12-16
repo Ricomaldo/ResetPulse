@@ -60,7 +60,7 @@ function ActivityLabel({
       fontWeight: '600',
       left: '50%',
       letterSpacing: 0.5,
-      marginLeft: rs(65), // Position right of center (half screen + small gap)
+      marginLeft: rs(45), // Position right of text
       position: 'absolute',
       width: rs(28),
     },
