@@ -9,16 +9,17 @@
 // ============================================
 
 /**
- * Dial modes configuration with magnetic snap granularity
- * magneticSnapSeconds: Snap increment aligned to major tick marks
- * - 1min scale: 60s snap (aligns to 1min mark = majorTickInterval)
- * - 5min scale: 60s snap (aligns to 1min marks = majorTickInterval)
- * - 10min scale: 120s snap (aligns to 2min major marks = majorTickInterval × 60)
- * - 25min scale: 300s snap (aligns to 5min major marks = majorTickInterval × 60)
- * - 45min scale: 300s snap (aligns to 5min major marks = majorTickInterval × 60)
- * - 60min scale: 300s snap (aligns to 5min major marks = majorTickInterval × 60)
+ * Dial modes configuration with magnetic snap granularity (for tap precision)
+ * magneticSnapSeconds: Snap increment for tap-on-graduation precision (not drag)
+ * - 1min scale: 10s snap (6 positions: 0, 10, 20, 30, 40, 50, 60s) - useSeconds display
+ * - 5min scale: 60s snap (5 positions per minute, aligns to 1min marks)
+ * - 10min scale: 120s snap (aligns to 2min major marks)
+ * - 25min scale: 300s snap (aligns to 5min major marks)
+ * - 45min scale: 300s snap (aligns to 5min major marks)
+ * - 60min scale: 300s snap (aligns to 5min major marks)
  *
- * Rationale: Snap points now align with visible major marks, providing predictable feedback
+ * Rationale: Tap snap provides precision landing on visual marks. Continuous drag
+ * bypasses snap for smooth exploration (no snap applied during drag).
  */
 export const DIAL_MODES = {
   '1min': {
@@ -30,7 +31,7 @@ export const DIAL_MODES = {
     numberInterval: 1,
     defaultDuration: 60,
     useSeconds: true,
-    magneticSnapSeconds: 60,
+    magneticSnapSeconds: 10,
   },
   '5min': {
     maxMinutes: 5,
