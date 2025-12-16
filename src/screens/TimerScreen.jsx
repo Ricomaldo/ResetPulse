@@ -44,7 +44,7 @@ function TimerScreenContent() {
   const dialWrapperRef = useRef(null);
   const dialLayoutRef = useRef(null);
   const pillBounceRef = useRef(new Animated.Value(0)).current;
-  const animatedDots = useAnimatedDots(currentActivity?.pulseDuration || 800, isTimerRunning);
+  const animatedDots = useAnimatedDots(currentActivity?.pulseDuration || 800, displayMessage !== '');
 
   // Micro-bounce animation on mount (once only)
   useEffect(() => {
