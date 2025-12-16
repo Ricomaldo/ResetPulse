@@ -11,28 +11,25 @@ export const TimerOptionsProvider = ({ children }) => {
   const hasLoadedOnboardingConfig = useRef(false);
 
   // Utiliser un seul objet persisté pour toutes les options
-  const { values, updateValue, isLoading } = usePersistedObject(
-    '@ResetPulse:timerOptions',
-    {
-      shouldPulse: false, // Animation de pulsation désactivée par défaut (conformité épilepsie)
-      showActivities: true, // Affichage des activités activé par défaut
-      showPalettes: true, // Affichage des palettes activé par défaut
-      useMinimalInterface: true, // Interface minimaliste activée par défaut (masque activités + palettes quand timer tourne)
-      showDigitalTimer: false, // Chrono numérique masqué par défaut (mode zen)
-      showActivityEmoji: true, // Affichage de l'emoji d'activité dans le dial activé par défaut
-      keepAwakeEnabled: true, // Maintenir l'écran allumé pendant le timer (ON par défaut - timer visuel TDAH)
-      showRotationToggle: true, // Afficher le toggle de rotation au-dessus du dial
-      clockwise: false,
-      scaleMode: '45min',
-      currentActivity: getDefaultActivity(),
-      currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
-      favoriteActivities: ['work', 'break', 'meditation'], // Free activities as default favorites (excluding 'none')
-      selectedSoundId: 'bell_classic', // Son par défaut
-      activityDurations: {}, // { activityId: duration } - Mémorise la durée préférée par activité
-      completedTimersCount: 0, // Compteur de timers complétés (ADR-003: trigger après 2)
-      hasSeenTwoTimersModal: false, // Modal "2 moments créés" déjà affiché
-    }
-  );
+  const { values, updateValue, isLoading } = usePersistedObject('@ResetPulse:timerOptions', {
+    shouldPulse: false, // Animation de pulsation désactivée par défaut (conformité épilepsie)
+    showActivities: true, // Affichage des activités activé par défaut
+    showPalettes: true, // Affichage des palettes activé par défaut
+    useMinimalInterface: true, // Interface minimaliste activée par défaut (masque activités + palettes quand timer tourne)
+    showDigitalTimer: false, // Chrono numérique masqué par défaut (mode zen)
+    showActivityEmoji: true, // Affichage de l'emoji d'activité dans le dial activé par défaut
+    keepAwakeEnabled: true, // Maintenir l'écran allumé pendant le timer (ON par défaut - timer visuel TDAH)
+    showRotationToggle: false, // Afficher le toggle de rotation au-dessus du dial
+    clockwise: false,
+    scaleMode: '45min',
+    currentActivity: getDefaultActivity(),
+    currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
+    favoriteActivities: ['work', 'break', 'meditation'], // Free activities as default favorites (excluding 'none')
+    selectedSoundId: 'bell_classic', // Son par défaut
+    activityDurations: {}, // { activityId: duration } - Mémorise la durée préférée par activité
+    completedTimersCount: 0, // Compteur de timers complétés (ADR-003: trigger après 2)
+    hasSeenTwoTimersModal: false, // Modal "2 moments créés" déjà affiché
+  });
 
   // Load onboarding config once after initial load
   useEffect(() => {
@@ -97,7 +94,10 @@ export const TimerOptionsProvider = ({ children }) => {
               logger.log('[TimerOptionsContext] Applied interface config:', config);
             }
           } catch (parseError) {
-            logger.warn('[TimerOptionsContext] Failed to parse interface config:', parseError.message);
+            logger.warn(
+              '[TimerOptionsContext] Failed to parse interface config:',
+              parseError.message
+            );
             await AsyncStorage.removeItem('user_interface_config');
           }
         }
@@ -164,7 +164,7 @@ export const TimerOptionsProvider = ({ children }) => {
     },
 
     // Loading state
-    isLoading
+    isLoading,
   };
 
   // Ne pas rendre les enfants tant que le chargement n'est pas terminé
@@ -172,11 +172,7 @@ export const TimerOptionsProvider = ({ children }) => {
     return null; // Ou un loader si préféré
   }
 
-  return (
-    <TimerOptionsContext.Provider value={value}>
-      {children}
-    </TimerOptionsContext.Provider>
-  );
+  return <TimerOptionsContext.Provider value={value}>{children}</TimerOptionsContext.Provider>;
 };
 
 export const useTimerOptions = () => {

@@ -74,7 +74,7 @@ function TimerScreenContent() {
       fontSize: rs(16),
       fontWeight: fontWeights.medium,
       letterSpacing: 0.5,
-      minWidth: rs(100), // Reserve space so label doesn't shift
+      minWidth: rs(150), // Reserve space for "emoji label..." to prevent shifting
       textAlign: 'center',
     },
     activityLabelContainer: {
