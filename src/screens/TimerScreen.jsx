@@ -11,7 +11,7 @@ import { ExpandableDrawerContent } from '../components/drawers';
 import ActivityLabel from '../components/timer/ActivityLabel';
 import DigitalTimer from '../components/timer/DigitalTimer';
 import useAnimatedDots from '../hooks/useAnimatedDots';
-import { TwoTimersModal, PremiumModal } from '../components/modals';
+import { TwoTimersModal, PremiumModal, SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
 import { getDialMode } from '../components/timer/timerConstants';
@@ -37,6 +37,7 @@ function TimerScreenContent() {
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -282,7 +283,7 @@ function TimerScreenContent() {
       </Animated.View>
 
 
-      {/* Options Drawer (from bottom) - swipe up to expand for settings */}
+      {/* Options Drawer (from bottom) - 3 sections + Settings button */}
       <Drawer
         visible={optionsDrawerVisible}
         onClose={() => setOptionsDrawerVisible(false)}
@@ -294,6 +295,10 @@ function TimerScreenContent() {
           currentDuration={currentDuration}
           onSelectPreset={handlePresetSelect}
           drawerVisible={optionsDrawerVisible}
+          onOpenSettings={() => {
+            setOptionsDrawerVisible(false);
+            setSettingsModalVisible(true);
+          }}
         />
       </Drawer>
 
@@ -309,6 +314,12 @@ function TimerScreenContent() {
         visible={premiumModalVisible}
         onClose={() => setPremiumModalVisible(false)}
         highlightedFeature="toutes les couleurs et activités"
+      />
+
+      {/* Settings Modal */}
+      <SettingsModal
+        visible={settingsModalVisible}
+        onClose={() => setSettingsModalVisible(false)}
       />
     </SafeAreaView>
   );
