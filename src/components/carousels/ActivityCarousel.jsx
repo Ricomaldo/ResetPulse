@@ -272,7 +272,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       paddingVertical: theme.spacing.xs,
     },
     carouselContainer: {
-      flex: 1,
+      maxWidth: rs(280, 'width'),
     },
     scrollView: {
       flexGrow: 0,
