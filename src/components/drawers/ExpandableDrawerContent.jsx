@@ -1,12 +1,14 @@
 /**
  * @fileoverview Expandable drawer that shows options and settings when expanded
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
+import SwipeUpHint from '../layout/SwipeUpHint';
 import OptionsDrawerContent from './OptionsDrawerContent';
 import SettingsDrawerContent from './SettingsDrawerContent';
 
@@ -29,19 +31,10 @@ export default function ExpandableDrawerContent({
       flex: 1,
     },
     divider: {
-      height: 1,
       backgroundColor: theme.colors.border,
-      marginVertical: rs(16),
+      height: 1,
       marginHorizontal: rs(20),
-    },
-    expandHint: {
-      paddingVertical: rs(8),
-      alignItems: 'center',
-    },
-    expandHintText: {
-      fontSize: rs(11),
-      color: theme.colors.textSecondary,
-      opacity: 0.6,
+      marginVertical: rs(16),
     },
   });
 
@@ -55,13 +48,11 @@ export default function ExpandableDrawerContent({
         onOpenSettings={onOpenSettings}
       />
 
-      {/* Hint pour slider up (seulement si pas étendu) - moved up from bottom */}
+      {/* Hint pour slider up (seulement si pas étendu) */}
       {!isExpanded && (
         <>
           <View style={styles.divider} />
-          <View style={styles.expandHint}>
-            <Text style={styles.expandHintText}>↑ Glissez pour plus d'options</Text>
-          </View>
+          <SwipeUpHint message="Glissez pour plus d&apos;options" />
         </>
       )}
 
@@ -75,3 +66,11 @@ export default function ExpandableDrawerContent({
     </View>
   );
 }
+
+ExpandableDrawerContent.propTypes = {
+  currentDuration: PropTypes.number,
+  onSelectPreset: PropTypes.func,
+  drawerVisible: PropTypes.bool,
+  isExpanded: PropTypes.bool,
+  onOpenSettings: PropTypes.func,
+};

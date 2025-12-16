@@ -5,6 +5,7 @@
  * @updated 2025-12-16
  */
 import React, { useRef, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { View, StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
@@ -12,7 +13,6 @@ import { rs } from '../../styles/responsive';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 50;
 const VELOCITY_THRESHOLD = 0.5;
-const SNAP_THRESHOLD = 0.3; // Snap if past 30% of the way to next point
 
 export default function Drawer({
   visible,
@@ -122,45 +122,47 @@ export default function Drawer({
 
 
   const styles = StyleSheet.create({
-    overlay: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
-      zIndex: 1000,
+    contentWrapper: {
+      flex: 1,
     },
     drawer: {
-      position: 'absolute',
-      ...(direction === 'top' ? { top: 0 } : { bottom: 0 }),
-      left: 0,
-      right: 0,
-      backgroundColor: theme.colors.background,
       ...(direction === 'top'
         ? { borderBottomLeftRadius: rs(24), borderBottomRightRadius: rs(24) }
         : { borderTopLeftRadius: rs(24), borderTopRightRadius: rs(24) }
       ),
-      paddingTop: direction === 'top' ? rs(50) : rs(8),
+      backgroundColor: theme.colors.background,
+      bottom: direction === 'bottom' ? 0 : undefined,
+      left: 0,
+      overflow: 'hidden',
       paddingBottom: direction === 'bottom' ? rs(30) : rs(20),
+      paddingTop: direction === 'top' ? rs(50) : rs(8),
+      position: 'absolute',
+      right: 0,
+      top: direction === 'top' ? 0 : undefined,
       zIndex: 1001,
       ...theme.shadow('xl'),
-      overflow: 'hidden',
-    },
-    handleContainer: {
-      paddingVertical: rs(16),
-      paddingHorizontal: rs(80),
-      alignSelf: 'center',
-      marginBottom: rs(8),
     },
     handle: {
-      width: rs(40),
-      height: rs(4),
       backgroundColor: theme.colors.border,
       borderRadius: rs(2),
+      height: rs(4),
+      width: rs(40),
     },
-    contentWrapper: {
-      flex: 1,
+    handleContainer: {
+      alignSelf: 'center',
+      marginBottom: rs(8),
+      paddingHorizontal: rs(80),
+      paddingVertical: rs(16),
+    },
+    overlay: {
+      // eslint-disable-next-line react-native/no-color-literals
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      bottom: 0,
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      zIndex: 1000,
     },
   });
 
@@ -213,3 +215,13 @@ export default function Drawer({
     </>
   );
 }
+
+Drawer.propTypes = {
+  children: PropTypes.node,
+  direction: PropTypes.oneOf(['top', 'bottom']),
+  expandedHeight: PropTypes.number,
+  height: PropTypes.number,
+  onClose: PropTypes.func.isRequired,
+  onExpand: PropTypes.func,
+  visible: PropTypes.bool.isRequired,
+};
