@@ -32,7 +32,10 @@ export default function OptionsDrawerContent({
       color: theme.colors.textSecondary,
       fontSize: rs(13),
       fontWeight: fontWeights.medium,
-      marginBottom: rs(8),
+      marginBottom: theme.spacing.sm,
+    },
+    carouselContainer: {
+      marginBottom: rs(16),
     },
     settingsButton: {
       alignItems: 'center',
@@ -66,13 +69,17 @@ export default function OptionsDrawerContent({
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Couleur</Text>
       </View>
-      <PaletteCarousel isTimerRunning={false} />
+      <View style={styles.carouselContainer}>
+        <PaletteCarousel isTimerRunning={false} />
+      </View>
 
       {/* Activité */}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Activité</Text>
       </View>
-      <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
+      <View style={styles.carouselContainer}>
+        <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
+      </View>
 
       {/* Cadran (Scale) */}
       <View style={styles.section}>
