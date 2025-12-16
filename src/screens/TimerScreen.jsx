@@ -59,7 +59,7 @@ const createStyles = (theme) => {
       letterSpacing: 0.5,
       marginTop: rs(4),
       minHeight: rs(16),
-      minWidth: rs(30), // Reserve space for 3 dots to prevent horizontal shift
+      minWidth: rs(48), // Reserve space for 3 dots with spaces (· · ·) to prevent horizontal shift
       textAlign: 'left',
     },
 

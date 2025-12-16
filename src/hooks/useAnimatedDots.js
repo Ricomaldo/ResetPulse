@@ -21,8 +21,9 @@ export default function useAnimatedDots() {
     return () => clearInterval(interval);
   }, []);
 
-  // Return string of dots (·) for visual refinement
-  const dots = '·'.repeat(dotCount);
+  // Return string of dots (·) with spaces between them for visual clarity
+  const dotsArray = Array(dotCount).fill('·');
+  const dots = dotsArray.join(' ');
 
   return dots;
 }
