@@ -99,7 +99,7 @@ function TimerScreenContent() {
       width: '100%',
     },
     drawerHandle: {
-      backgroundColor: theme.colors.border,
+      backgroundColor: 'transparent', // Invisible affordance - structure only
       borderRadius: rs(2),
       height: rs(4),
       width: rs(36),
