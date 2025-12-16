@@ -13,8 +13,7 @@ import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
 import TimerDial from '../timer/TimerDial';
 import haptics from '../../utils/haptics';
-import { TIMER, TEXT, getDialMode } from '../timer/timerConstants';
-import { fontWeights } from '../../theme/tokens';
+import { TIMER, getDialMode } from '../timer/timerConstants';
 
 export default function TimeTimer({
   onRunningChange,
@@ -110,25 +109,6 @@ export default function TimeTimer({
       justifyContent: 'center',
       position: 'relative',
     },
-
-    messageOverlay: {
-      position: 'absolute',
-      top: '70%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.colors.background,
-      paddingHorizontal: theme.spacing.md,
-      paddingVertical: theme.spacing.xs,
-      borderRadius: theme.borderRadius.md,
-    },
-
-    messageText: {
-      fontSize: rs(18, 'min'),
-      fontWeight: fontWeights.bold,
-      color: currentColor || theme.colors.brand.primary,
-      textAlign: 'center',
-      letterSpacing: TEXT.LETTER_SPACING,
-    },
   });
 
   /**
@@ -195,20 +175,7 @@ export default function TimeTimer({
           showGraduations={true}
         />
 
-        {/* Message Overlay */}
-        {timer.displayMessage && (
-          <View style={styles.messageOverlay}>
-            <Text style={styles.messageText}>
-              {timer.displayMessage === "C'est reparti" &&
-                  currentActivity?.label
-                ? currentActivity.label
-                : timer.displayMessage === "C'est fini" &&
-                  currentActivity?.label
-                ? `${currentActivity.label} terminée`
-                : timer.displayMessage}
-            </Text>
-          </View>
-        )}
+        {/* Message Overlay - removed, icon in center replaces this info */}
       </View>
     </View>
   );

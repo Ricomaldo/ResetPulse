@@ -3,9 +3,11 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
+import PropTypes from 'prop-types';
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Animated } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
+import PlayPauseButton from '../PlayPauseButton';
 import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
 
 /**
@@ -18,6 +20,9 @@ import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
  * @param {boolean} showActivityEmoji - Whether to show the emoji
  * @param {string} color - Color for pulse effects
  * @param {number} pulseDuration - Duration of pulse animation
+ * @param {boolean} isCompleted - Whether timer is completed
+ * @param {boolean} isPaused - Whether timer is paused
+ * @param {function} onDialTap - Callback when center is tapped
  */
 const DialCenter = React.memo(({
   circleSize,
@@ -27,6 +32,9 @@ const DialCenter = React.memo(({
   showActivityEmoji = true,
   color,
   pulseDuration = PULSE_ANIMATION.DURATION, // Default from constants
+  isCompleted = false,
+  isPaused = false,
+  onDialTap = null,
 }) => {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -141,7 +149,7 @@ const DialCenter = React.memo(({
     );
   }
 
-  // Show pulse effect for "none" activity
+  // Show pulse effect for "none" activity during running
   if (!activityEmoji && isRunning && shouldPulse) {
     return (
       <View
@@ -190,9 +198,56 @@ const DialCenter = React.memo(({
     );
   }
 
+  // Show play/pause button when no emoji
+  if (!activityEmoji) {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <PlayPauseButton
+          isRunning={isRunning}
+          isCompleted={isCompleted}
+          isPaused={isPaused}
+          onPress={onDialTap}
+        />
+      </View>
+    );
+  }
+
   return null;
 });
 
 DialCenter.displayName = 'DialCenter';
+
+DialCenter.propTypes = {
+  activityEmoji: PropTypes.string,
+  circleSize: PropTypes.number.isRequired,
+  color: PropTypes.string,
+  isCompleted: PropTypes.bool,
+  isPaused: PropTypes.bool,
+  isRunning: PropTypes.bool.isRequired,
+  onDialTap: PropTypes.func,
+  pulseDuration: PropTypes.number,
+  shouldPulse: PropTypes.bool.isRequired,
+  showActivityEmoji: PropTypes.bool,
+};
+
+DialCenter.defaultProps = {
+  activityEmoji: null,
+  color: undefined,
+  isCompleted: false,
+  isPaused: false,
+  onDialTap: null,
+  pulseDuration: PULSE_ANIMATION.DURATION,
+  showActivityEmoji: true,
+};
 
 export default DialCenter;

@@ -32,6 +32,7 @@ const easeOut = (t) => t * (2 - t);
 import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialCenter from './dial/DialCenter';
+import PlayPauseButton from './PlayPauseButton';
 import Svg, { Circle } from 'react-native-svg';
 import { fontWeights } from '../../theme/tokens';
 
@@ -364,7 +365,7 @@ function TimerDial({
         />
       </Svg>
 
-      {/* Center layer: emoji and pulse */}
+      {/* Center layer: emoji, pulse, and play/pause button */}
       <DialCenter
         circleSize={circleSize}
         activityEmoji={activityEmoji}
@@ -373,6 +374,9 @@ function TimerDial({
         showActivityEmoji={showActivityEmoji}
         color={color}
         pulseDuration={currentActivity?.pulseDuration}
+        isCompleted={isCompleted}
+        isPaused={!isRunning && duration > 0 && !isCompleted}
+        onDialTap={onDialTap}
       />
 
       {/* Dragging indicator */}
