@@ -350,5 +350,75 @@
       "updated": "Activite modifiee",
       "deleted": "Activite supprimee"
     }
+  },
+  "timerMessages": {
+    "none": {
+      "startMessage": "Prêt",
+      "endMessage": "Bravo 🎉"
+    },
+    "work": {
+      "startMessage": "Focus",
+      "endMessage": "Accompli ✨"
+    },
+    "break": {
+      "startMessage": "Repos",
+      "endMessage": "Rechargé 🔋"
+    },
+    "meditation": {
+      "startMessage": "Respire",
+      "endMessage": "Centré 🪷"
+    },
+    "creativity": {
+      "startMessage": "Crée",
+      "endMessage": "Inspiré ✨"
+    },
+    "reading": {
+      "startMessage": "Plonge",
+      "endMessage": "Enrichi 📖"
+    },
+    "study": {
+      "startMessage": "Apprends",
+      "endMessage": "Progressé 📈"
+    },
+    "yoga": {
+      "startMessage": "Respire",
+      "endMessage": "Apaisé 🪷"
+    },
+    "sport": {
+      "startMessage": "Bouge",
+      "endMessage": "Énergisé ⚡"
+    },
+    "walking": {
+      "startMessage": "Marche",
+      "endMessage": "Revitalisé 🌿"
+    },
+    "cooking": {
+      "startMessage": "Prépare",
+      "endMessage": "Gourmand 🍽️"
+    },
+    "gaming": {
+      "startMessage": "Joue",
+      "endMessage": "Détendu 🎮"
+    },
+    "homework": {
+      "startMessage": "Concentre",
+      "endMessage": "Réussi ✅"
+    },
+    "music": {
+      "startMessage": "Joue",
+      "endMessage": "Harmonisé 🎵"
+    },
+    "cleaning": {
+      "startMessage": "Range",
+      "endMessage": "Serein ✨"
+    },
+    "nap": {
+      "startMessage": "Repose",
+      "endMessage": "Régénéré 💤"
+    },
+    "writing": {
+      "startMessage": "Écris",
+      "endMessage": "Libéré ✍️"
+    }
   }
 }

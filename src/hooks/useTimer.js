@@ -382,10 +382,11 @@ export default function useTimer(initialDuration = 240, onComplete) {
       analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivityRef.current);
     }
 
-    setRemaining(0); // Reset to ZERO, not duration
+    setRemaining(duration); // Reset to initial duration
     setRunning(false);
     setStartTime(null);
     setIsPaused(false);
+    setHasCompleted(false);
 
     // Annuler notification si programmée
     cancelTimerNotification();

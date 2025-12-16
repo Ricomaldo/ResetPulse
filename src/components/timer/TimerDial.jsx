@@ -53,7 +53,9 @@ function TimerDial({
   showActivityEmoji = true,
   onGraduationTap = null,
   onDialTap = null,
+  onDialLongPress = null,
   isCompleted = false,
+  isPaused = false,
   currentActivity = null,
   showNumbers = true,
   showGraduations = true,
@@ -224,7 +226,12 @@ function TimerDial({
         // Detect tap: quick release (<200ms) with minimal movement (<10px)
         const isTap = timeDelta < 200 && movementDistance < 10;
 
-        if (isTap && onDialTap) {
+        // Detect long press: held (>=500ms) with minimal movement (<10px)
+        const isLongPress = timeDelta >= 500 && movementDistance < 10;
+
+        if (isLongPress && onDialLongPress) {
+          onDialLongPress();
+        } else if (isTap && onDialTap) {
           onDialTap();
         }
 
@@ -340,32 +347,34 @@ function TimerDial({
         );
       })()}
 
-      {/* Physical fixation dots - rendered on top of dial */}
-      <Svg
-        width={svgSize}
-        height={svgSize}
-        style={{ position: 'absolute' }}
-        pointerEvents="none"
-        accessible={false}
-        importantForAccessibility="no"
-      >
-        <Circle
-          cx={centerX}
-          cy={centerY}
-          r={radius * 0.08}
-          fill={theme.colors.neutral}
-          opacity={0.8}
-        />
-        <Circle
-          cx={centerX}
-          cy={centerY}
-          r={radius * 0.04}
-          fill={theme.colors.text}
-          opacity={0.4}
-        />
-      </Svg>
+      {/* Physical fixation dots - hide when PlayPauseButton is displayed */}
+      {(showActivityEmoji || isRunning) && (
+        <Svg
+          width={svgSize}
+          height={svgSize}
+          style={{ position: 'absolute' }}
+          pointerEvents="none"
+          accessible={false}
+          importantForAccessibility="no"
+        >
+          <Circle
+            cx={centerX}
+            cy={centerY}
+            r={radius * 0.08}
+            fill={theme.colors.neutral}
+            opacity={0.8}
+          />
+          <Circle
+            cx={centerX}
+            cy={centerY}
+            r={radius * 0.04}
+            fill={theme.colors.text}
+            opacity={0.4}
+          />
+        </Svg>
+      )}
 
-      {/* Center layer: emoji, pulse, and play/pause button */}
+      {/* Center layer: emoji, pulse, or play/pause button */}
       <DialCenter
         circleSize={circleSize}
         activityEmoji={activityEmoji}
@@ -375,8 +384,9 @@ function TimerDial({
         color={color}
         pulseDuration={currentActivity?.pulseDuration}
         isCompleted={isCompleted}
-        isPaused={!isRunning && duration > 0 && !isCompleted}
-        onDialTap={onDialTap}
+        isPaused={isPaused}
+        onPress={onDialTap}
+        onLongPress={onDialLongPress}
       />
 
       {/* Dragging indicator */}

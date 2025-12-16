@@ -1,11 +1,12 @@
 /**
  * @fileoverview Digital timer display showing MM:SS format
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { fontWeights } from '../../theme/tokens';
@@ -16,7 +17,13 @@ import { rs } from '../../styles/responsive';
  * Static display, no animation
  * Fully accessible with live region announcements
  */
-const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, color, mini }) {
+const DigitalTimer = React.memo(function DigitalTimer({
+  remaining,
+  isRunning,
+  color,
+  mini,
+  showIcon,
+}) {
   const theme = useTheme();
   const t = useTranslation();
 
@@ -28,29 +35,32 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
+  // Pill style: icon-only when mini, icon+time when expanded
+  const pillHeight = mini ? rs(40) : rs(44);
+
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
-      backgroundColor: theme.colors.dialFill,
-      borderColor: theme.colors.brand.neutral,
-      borderRadius: mini ? rs(12) : rs(35),
-      borderWidth: mini ? 2 : 1,
-      height: mini ? rs(12) : rs(60, 'min'),
+      backgroundColor: theme.colors.background,
+      flexDirection: 'row',
+      gap: mini ? 0 : rs(10),
+      height: pillHeight,
       justifyContent: 'center',
-      minWidth: mini ? rs(32) : undefined,
-      paddingHorizontal: mini ? rs(12) : rs(20),
+      paddingHorizontal: mini ? rs(12) : rs(16),
+    },
+    icon: {
+      color: theme.colors.brand.primary,
     },
     timeText: {
-      color: color || theme.colors.brand.primary,
+      color: color || theme.colors.primary,
       fontFamily: Platform.select({
         ios: 'Menlo',
         android: 'monospace',
       }),
-      fontSize: mini ? rs(1) : rs(32, 'min'),
-      fontWeight: fontWeights.semibold,
+      fontSize: rs(24),
+      fontWeight: '600',
       includeFontPadding: false,
-      lineHeight: mini ? undefined : rs(32, 'min'),
-      opacity: mini ? 0 : 1,
+      lineHeight: rs(28),
       textAlign: 'center',
       textAlignVertical: 'center',
     },
@@ -64,7 +74,9 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
     ? t('accessibility.timer.timerRunning')
     : t('accessibility.timer.timerPaused');
 
-  const accessibilityLabel = `${t('accessibility.timer.timeRemaining', { time: formattedTime })}, ${timerStatus}`;
+  const accessibilityLabel = `${t('accessibility.timer.timeRemaining', {
+    time: formattedTime,
+  })}, ${timerStatus}`;
 
   const textOpacity = isRunning ? 1 : 0.7;
 
@@ -82,9 +94,10 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
         text: formattedTime,
       }}
     >
-      <Text style={[styles.timeText, { opacity: textOpacity }]}>
-        {formattedTime}
-      </Text>
+      {showIcon && (
+        <Ionicons name="settings-outline" size={rs(26)} color={theme.colors.brand.primary} />
+      )}
+      {!mini && <Text style={[styles.timeText, { opacity: textOpacity }]}>{formattedTime}</Text>}
     </View>
   );
 });
@@ -94,11 +107,13 @@ DigitalTimer.propTypes = {
   isRunning: PropTypes.bool.isRequired,
   mini: PropTypes.bool,
   remaining: PropTypes.number.isRequired,
+  showIcon: PropTypes.bool,
 };
 
 DigitalTimer.defaultProps = {
   color: undefined,
   mini: false,
+  showIcon: false,
 };
 
 export default DigitalTimer;

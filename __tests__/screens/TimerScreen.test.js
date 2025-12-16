@@ -73,7 +73,6 @@ jest.mock('../../src/components/layout', () => ({
   TimeTimer: 'TimeTimer',
   Drawer: 'Drawer',
   CircularToggle: 'CircularToggle',
-  SwipeUpHint: 'SwipeUpHint',
 }));
 
 // Mock drawer content
@@ -128,17 +127,16 @@ describe('TimerScreen', () => {
     const instance = component.root;
     const texts = instance.findAllByType('Text');
 
-    // Activity label only shows when timer is running
-    // On initial render (timer not running), shows startup message
-    const startupText = texts.find((t) => {
+    // Activity label shows the activity emoji and label
+    const activityText = texts.find((t) => {
       try {
-        return t.props.children === 'Tap sur le cadran pour démarrer';
+        return t.props.children && t.props.children.includes('💻') && t.props.children.includes('Work');
       } catch {
         return false;
       }
     });
 
-    expect(startupText).toBeTruthy();
+    expect(activityText).toBeTruthy();
   });
 
   it('should render TimeTimer component', () => {
@@ -161,17 +159,6 @@ describe('TimerScreen', () => {
     const instance = component.root;
     const digitalTimer = instance.findAllByType('DigitalTimer');
     expect(digitalTimer.length).toBe(1);
-  });
-
-  it('should render SwipeUpHint when timer is not running', () => {
-    let component;
-    act(() => {
-      component = create(<TimerScreen />);
-    });
-
-    const instance = component.root;
-    const swipeHint = instance.findAllByType('SwipeUpHint');
-    expect(swipeHint.length).toBe(1);
   });
 
   it('should render Drawer component', () => {

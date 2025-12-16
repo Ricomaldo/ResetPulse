@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 
@@ -11,6 +11,11 @@ import { rs } from '../../styles/responsive';
  * - REST: emoji + label (no dots)
  * - START/RUNNING/PAUSE: message with animated dots
  * - COMPLETE: end message (no dots)
+ *
+ * Layout: Flexbox with balance
+ * - Spacer left (invisible, same width as dots)
+ * - Message (centered)
+ * - Dots right (adjacent to message)
  */
 function ActivityLabel({
   emoji,
@@ -46,6 +51,7 @@ function ActivityLabel({
     prevDotsLengthRef.current = currentLength;
   }, [animatedDots, dotsOpacityRef]);
 
+  const dotWidth = rs(24);
   const styles = StyleSheet.create({
     container: {
       height: rs(32),
@@ -54,25 +60,28 @@ function ActivityLabel({
       right: 0,
       top: rs(80),
     },
-    dots: {
-      color: theme.colors.brand.primary,
-      fontSize: rs(24),
-      fontWeight: '600',
-      left: '50%',
-      letterSpacing: 0.5,
-      marginLeft: rs(45), // Position right of text
-      position: 'absolute',
-      width: rs(28),
+    flexContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flex: 1,
     },
-    label: {
+    spacerLeft: {
+      width: dotWidth,
+    },
+    message: {
       color: theme.colors.brand.primary,
       fontSize: rs(24),
       fontWeight: '600',
-      left: 0,
       letterSpacing: 0.5,
-      position: 'absolute',
-      right: 0,
-      textAlign: 'center',
+      includeFontPadding: false,
+      lineHeight: rs(24),
+    },
+    dotsContainer: {
+      width: dotWidth,
+      textAlign: 'left',
+      includeFontPadding: false,
+      lineHeight: rs(24),
     },
   });
 
@@ -81,23 +90,31 @@ function ActivityLabel({
   const displayText = displayMessage || (emoji && label ? `${emoji} ${label}` : '');
 
   return (
-    <Animated.View style={styles.container}>
-      <Animated.Text style={styles.label}>
-        {displayText}
-      </Animated.Text>
-      {shouldShowDots && (
-        <Animated.Text
-          style={[
-            styles.dots,
-            {
-              opacity: dotsOpacityRef,
-            },
-          ]}
-        >
-          {animatedDots}
+    <View style={styles.container}>
+      <View style={styles.flexContainer}>
+        {/* Invisible spacer left (balances dots on right) */}
+        <View style={styles.spacerLeft} />
+
+        {/* Message centered */}
+        <Animated.Text style={styles.message}>
+          {displayText}
         </Animated.Text>
-      )}
-    </Animated.View>
+
+        {/* Dots right, adjacent to message */}
+        {shouldShowDots && (
+          <Animated.Text
+            style={[
+              styles.dotsContainer,
+              {
+                opacity: dotsOpacityRef,
+              },
+            ]}
+          >
+            {animatedDots}
+          </Animated.Text>
+        )}
+      </View>
+    </View>
   );
 }
 
