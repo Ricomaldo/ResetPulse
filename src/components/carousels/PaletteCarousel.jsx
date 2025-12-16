@@ -439,7 +439,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
                 accessibilityRole="button"
               >
                 <Text style={styles.moreButtonIcon}>💎</Text>
-                <Text style={styles.moreButtonText}>Discover</Text>
+                <Text style={styles.moreButtonText}>{t('moreColors.title')}</Text>
               </TouchableOpacity>
             </View>
           )}
