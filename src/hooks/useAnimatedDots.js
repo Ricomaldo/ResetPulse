@@ -1,29 +1,31 @@
 import { useState, useEffect } from 'react';
 
 /**
- * Hook for subtle animated dots animation
- * Cycles through: (empty) · · · · · · · · · · · (empty) · · · ...
- * Slow breathing effect, barely perceptible
- * Duration: ~5 seconds per cycle
+ * Hook for animated dots with show/hide states
+ * Returns array of 4 opacity values that cycle sequentially
+ * Each dot lights up one after another in infinite loop
+ * Duration: ~2 seconds per complete cycle
  */
 export default function useAnimatedDots() {
-  const [dotCount, setDotCount] = useState(0);
+  const [dotStates, setDotStates] = useState([1, 0, 0, 0]); // 4 dots, first one visible
 
   useEffect(() => {
-    const cycle = [0, 1, 2, 3, 4]; // 0 dots, then 1, 2, 3, 4, repeat
+    const cycle = [
+      [1, 0, 0, 0], // dot 1 on
+      [0, 1, 0, 0], // dot 2 on
+      [0, 0, 1, 0], // dot 3 on
+      [0, 0, 0, 1], // dot 4 on
+    ];
     let index = 0;
 
     const interval = setInterval(() => {
-      setDotCount(cycle[index]);
+      setDotStates(cycle[index]);
       index = (index + 1) % cycle.length;
-    }, 1000); // 1000ms per step = 5s full cycle (slow & subtle)
+    }, 500); // 500ms per dot = 2s full cycle
 
     return () => clearInterval(interval);
   }, []);
 
-  // Return string of dots (·) with spaces between them for visual clarity
-  const dotsArray = Array(dotCount).fill('·');
-  const dots = dotsArray.join(' ');
-
-  return dots;
+  // Return array of 4 opacity values for each dot
+  return dotStates;
 }
