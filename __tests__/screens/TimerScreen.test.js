@@ -99,7 +99,7 @@ jest.mock('../../src/styles/responsive', () => ({
 jest.mock('../../src/components/timer/timerConstants', () => ({
   getDialMode: (mode) => ({
     maxMinutes: parseInt(mode) || 60,
-    magneticSnapSeconds: 10,
+    magneticSnapSeconds: 300, // Aligned to major marks (5min intervals)
   }),
   TIMER: { DEFAULT_DURATION: 1500 },
 }));
