@@ -97,12 +97,14 @@ function TimerScreenContent() {
       justifyContent: 'center',
       position: 'absolute',
       width: '100%',
+      zIndex: 1002, // Above drawer (1001)
     },
     drawerHandle: {
-      backgroundColor: 'transparent', // Invisible affordance - structure only
+      backgroundColor: theme.colors.textSecondary,
       borderRadius: rs(2),
       height: rs(4),
       width: rs(36),
+      opacity: 0.6,
     },
     rotationToggleContainer: {
       alignSelf: 'center',
