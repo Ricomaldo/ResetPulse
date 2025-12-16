@@ -41,7 +41,7 @@ const createStyles = (theme) => {
     activityLabelContainer: {
       position: 'absolute',
       top: rs(80),
-      alignSelf: 'center',
+      alignItems: 'center',
     },
 
     activityLabel: {
@@ -49,8 +49,6 @@ const createStyles = (theme) => {
       fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
       letterSpacing: 0.5,
-      minWidth: rs(130), // Reserve space to align with dots layout
-      textAlign: 'center',
     },
 
     activityDots: {
@@ -59,9 +57,6 @@ const createStyles = (theme) => {
       color: theme.colors.textSecondary,
       letterSpacing: 0.5,
       marginTop: rs(4),
-      minHeight: rs(16),
-      minWidth: rs(65), // Reserve space for 4 dots with spaces (· · · ·) to prevent horizontal shift
-      textAlign: 'left',
     },
 
     digitalTimerContainer: {
