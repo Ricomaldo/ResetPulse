@@ -49,6 +49,8 @@ const mockTimerOptionsContext = {
   setShouldPulse: jest.fn(),
   useMinimalInterface: false,
   setUseMinimalInterface: jest.fn(),
+  scaleMode: '60min',
+  setScaleMode: jest.fn(),
 };
 
 jest.mock('../../src/contexts/TimerOptionsContext', () => ({
@@ -87,11 +89,21 @@ jest.mock('../../src/components/timer/DigitalTimer', () => 'DigitalTimer');
 jest.mock('../../src/components/modals', () => ({
   TwoTimersModal: 'TwoTimersModal',
   PremiumModal: 'PremiumModal',
+  SettingsModal: 'SettingsModal',
 }));
 
 // Mock responsive styles
 jest.mock('../../src/styles/responsive', () => ({
   rs: (value) => value,
+}));
+
+// Mock timer constants
+jest.mock('../../src/components/timer/timerConstants', () => ({
+  getDialMode: (mode) => ({
+    maxMinutes: parseInt(mode) || 60,
+    magneticSnapSeconds: 10,
+  }),
+  TIMER: { DEFAULT_DURATION: 1500 },
 }));
 
 // Mock analytics
