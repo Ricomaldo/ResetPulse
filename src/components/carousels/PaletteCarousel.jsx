@@ -214,6 +214,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     paletteLabel: {
+      alignSelf: 'center',
       backgroundColor: theme.colors.background,
       borderRadius: theme.borderRadius.lg,
       paddingHorizontal: theme.spacing.lg,
