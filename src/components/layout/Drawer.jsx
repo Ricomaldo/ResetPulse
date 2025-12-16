@@ -71,7 +71,9 @@ export default function Drawer({
         const isScrolledDown = scrollOffsetRef.current > 0;
 
         // If scrolled down in content AND dragging down, let ScrollView handle it
-        if (isScrolledDown && dy > 0) return false;
+        if (isScrolledDown && dy > 0) {
+          return false;
+        }
 
         // Otherwise, capture gesture if threshold met
         return Math.abs(dy) > 3;
@@ -106,7 +108,9 @@ export default function Drawer({
             // Expand drawer (collapsed → expanded)
             setIsExpanded(true);
             animateToPosition(0);
-            if (onExpand) onExpand();
+            if (onExpand) {
+              onExpand();
+            }
           } else if (dy > SWIPE_THRESHOLD && isExpanded) {
             // Collapse drawer (expanded → collapsed)
             setIsExpanded(false);
@@ -155,8 +159,7 @@ export default function Drawer({
       paddingVertical: rs(16),
     },
     overlay: {
-      // eslint-disable-next-line react-native/no-color-literals
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      backgroundColor: theme.colors.overlay,
       bottom: 0,
       left: 0,
       position: 'absolute',
@@ -166,7 +169,9 @@ export default function Drawer({
     },
   });
 
-  if (!visible) return null;
+  if (!visible) {
+    return null;
+  }
 
   return (
     <>

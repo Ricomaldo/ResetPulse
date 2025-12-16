@@ -1,13 +1,11 @@
 // src/screens/TimerScreen.jsx
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   View,
   StyleSheet,
   Animated,
   PanResponder,
-  Dimensions,
   TouchableOpacity,
-  Text,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
@@ -24,69 +22,6 @@ import analytics from '../services/analytics';
 import { fontWeights } from '../theme/tokens';
 
 const SWIPE_THRESHOLD = 50;
-const { width, height } = Dimensions.get('window');
-
-const createStyles = (theme) => {
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-
-    timerContainer: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-
-    activityLabelContainer: {
-      position: 'absolute',
-      top: rs(80),
-      left: 0,
-      right: 0,
-      alignItems: 'center',
-    },
-
-    activityLabel: {
-      fontSize: rs(16),
-      fontWeight: fontWeights.medium,
-      color: theme.colors.textSecondary,
-      letterSpacing: 0.5,
-      minWidth: rs(100), // Reserve space so label doesn't shift
-      textAlign: 'center',
-    },
-
-    digitalTimerContainer: {
-      position: 'absolute',
-      bottom: rs(100),
-      alignSelf: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: rs(48),
-    },
-
-    rotationToggleContainer: {
-      position: 'absolute',
-      top: '20%',
-      alignSelf: 'center',
-    },
-
-    swipeHintContainer: {
-      position: 'absolute',
-      bottom: rs(20),
-      alignSelf: 'center',
-    },
-
-    digitalTimerToggle: {
-      paddingVertical: rs(6),
-      paddingHorizontal: rs(16),
-      borderRadius: rs(12),
-      backgroundColor: theme.colors.textSecondary,
-      opacity: 0.3,
-      minHeight: rs(12),
-      minWidth: rs(32),
-    },
-  });
-};
 
 function TimerScreenContent() {
   const theme = useTheme();
@@ -100,7 +35,6 @@ function TimerScreenContent() {
     setClockwise,
     showRotationToggle,
     incrementCompletedTimers,
-    completedTimersCount,
     hasSeenTwoTimersModal,
     setHasSeenTwoTimersModal,
   } = useTimerOptions();
@@ -132,11 +66,56 @@ function TimerScreenContent() {
   // Keep screen awake during timer
   useTimerKeepAwake();
 
-  const styles = createStyles(theme);
+  // Define styles (moved inside component so linter can track usage)
+  const styles = StyleSheet.create({
+    activityLabel: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16),
+      fontWeight: fontWeights.medium,
+      letterSpacing: 0.5,
+      minWidth: rs(100), // Reserve space so label doesn't shift
+      textAlign: 'center',
+    },
+    activityLabelContainer: {
+      alignItems: 'center',
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      top: rs(80),
+    },
+    container: {
+      flex: 1,
+    },
+    digitalTimerContainer: {
+      alignItems: 'center',
+      alignSelf: 'center',
+      bottom: rs(100),
+      height: rs(48),
+      justifyContent: 'center',
+      position: 'absolute',
+    },
+    rotationToggleContainer: {
+      alignSelf: 'center',
+      position: 'absolute',
+      top: '20%',
+    },
+    swipeHintContainer: {
+      alignSelf: 'center',
+      bottom: rs(20),
+      position: 'absolute',
+    },
+    timerContainer: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
+  });
 
   // Helper to check if touch is within dial bounds
   const isTouchInDial = (evt) => {
-    if (!dialLayoutRef.current) return false;
+    if (!dialLayoutRef.current) {
+      return false;
+    }
 
     const { pageX, pageY } = evt.nativeEvent;
     const { x, y, width: dialWidth, height: dialHeight } = dialLayoutRef.current;
@@ -148,11 +127,15 @@ function TimerScreenContent() {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: (evt) => {
-        if (isTouchInDial(evt)) return false; // Let dial handle its own gestures
+        if (isTouchInDial(evt)) {
+          return false; // Let dial handle its own gestures
+        }
         return !isTimerRunning && !optionsDrawerVisible;
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        if (isTouchInDial(evt)) return false; // Let dial handle its own gestures
+        if (isTouchInDial(evt)) {
+          return false; // Let dial handle its own gestures
+        }
         return !isTimerRunning && !optionsDrawerVisible && gestureState.dy < -10; // Swipe UP (negative dy)
       },
       onPanResponderRelease: (_, gestureState) => {
