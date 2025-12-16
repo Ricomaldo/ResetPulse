@@ -270,6 +270,9 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       gap: theme.spacing.md,
       paddingHorizontal: rs(30, 'width'),
     },
+    carouselContainer: {
+      flex: 1,
+    },
     scrollView: {
       flexGrow: 0,
     },
@@ -291,7 +294,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       </TouchableOpacity>
 
       {/* Carousel container */}
-      <View>
+      <View style={styles.carouselContainer}>
         {currentActivity && (
           <Animated.View
             style={[

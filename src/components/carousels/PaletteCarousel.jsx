@@ -1,7 +1,7 @@
 /**
  * @fileoverview Palette carousel for selecting timer colors
  * @created 2025-12-14
- * @updated 2025-12-16
+ * @updated 2025-12-14
  */
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import {
@@ -168,7 +168,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     outerContainer: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: theme.spacing.xs,
       justifyContent: 'center',
       position: 'relative',
     },
@@ -193,7 +192,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
     colorButton: {
       backgroundColor: theme.colors.background,
-      borderRadius: theme.borderRadius.full,
+      borderRadius: theme.borderRadius.round,
       borderWidth: 2,
       height: rs(50, 'min'),
       minHeight: 44,
@@ -204,7 +203,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     },
 
     colorButtonInner: {
-      borderRadius: rs(18, 'min'),
+      borderRadius: theme.borderRadius.round,
       flex: 1,
     },
 

@@ -22,20 +22,22 @@ export default function OptionsDrawerContent({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      paddingHorizontal: rs(20),
+      paddingTop: rs(16),
       paddingBottom: rs(60), // Extra space for settings button
     },
     section: {
       marginBottom: rs(16),
-      paddingHorizontal: rs(20),
+    },
+    carouselWrapper: {
+      marginBottom: rs(24),
+      overflow: 'visible',
     },
     sectionLabel: {
       color: theme.colors.textSecondary,
       fontSize: rs(13),
       fontWeight: fontWeights.medium,
-      marginBottom: theme.spacing.sm,
-    },
-    carouselContainer: {
-      marginBottom: rs(16),
+      marginBottom: rs(8),
     },
     settingsButton: {
       alignItems: 'center',
@@ -69,7 +71,7 @@ export default function OptionsDrawerContent({
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Couleur</Text>
       </View>
-      <View style={styles.carouselContainer}>
+      <View style={styles.carouselWrapper}>
         <PaletteCarousel isTimerRunning={false} />
       </View>
 
@@ -77,7 +79,7 @@ export default function OptionsDrawerContent({
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Activité</Text>
       </View>
-      <View style={styles.carouselContainer}>
+      <View style={styles.carouselWrapper}>
         <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
       </View>
 

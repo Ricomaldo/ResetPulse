@@ -1,7 +1,7 @@
 /**
  * @fileoverview Single activity item for the activity carousel
  * @created 2025-12-14
- * @updated 2025-12-16
+ * @updated 2025-12-14
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, Animated, Platform, StyleSheet } from 'react-native';
@@ -38,7 +38,7 @@ const ActivityItem = React.memo(
       activityButtonInner: {
         alignItems: 'center',
         backgroundColor: theme.colors.surface,
-        borderRadius: rs(20, 'min'),
+        borderRadius: theme.borderRadius.lg,
         height: '100%',
         justifyContent: 'center',
         width: '100%',

@@ -13,16 +13,17 @@ import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 
 /**
- * DigitalTimer - Displays remaining time in MM:SS format
- * Static display, no animation
+ * DigitalTimer - 2-state display
+ * Expanded: Shows "MM:SS" time (tap = collapse)
+ * Collapsed: Shows "⏱" icon (tap = expand)
  * Fully accessible with live region announcements
  */
 const DigitalTimer = React.memo(function DigitalTimer({
   remaining,
   isRunning,
   color,
-  mini,
-  showIcon,
+  isCollapsed,
+  pulseDuration,
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -35,24 +36,24 @@ const DigitalTimer = React.memo(function DigitalTimer({
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  // Pill style: icon-only when mini, icon+time when expanded
-  const pillHeight = mini ? rs(40) : rs(44);
+  // Pill dimensions
+  const pillHeight = isCollapsed ? rs(40) : rs(44);
 
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
       backgroundColor: theme.colors.background,
       flexDirection: 'row',
-      gap: mini ? 0 : rs(10),
+      gap: 0,
       height: pillHeight,
       justifyContent: 'center',
-      paddingHorizontal: mini ? rs(12) : rs(16),
+      paddingHorizontal: isCollapsed ? rs(12) : rs(16),
     },
     icon: {
-      color: theme.colors.brand.primary,
+      color: color || theme.colors.brand.primary,
     },
     timeText: {
-      color: color || theme.colors.primary,
+      color: color || theme.colors.brand.primary,
       fontFamily: Platform.select({
         ios: 'Menlo',
         android: 'monospace',
@@ -94,26 +95,27 @@ const DigitalTimer = React.memo(function DigitalTimer({
         text: formattedTime,
       }}
     >
-      {showIcon && (
-        <Ionicons name="settings-outline" size={rs(26)} color={theme.colors.brand.primary} />
+      {isCollapsed ? (
+        <Ionicons name="time-outline" size={rs(24)} style={styles.icon} />
+      ) : (
+        <Text style={[styles.timeText, { opacity: textOpacity }]}>{formattedTime}</Text>
       )}
-      {!mini && <Text style={[styles.timeText, { opacity: textOpacity }]}>{formattedTime}</Text>}
     </View>
   );
 });
 
 DigitalTimer.propTypes = {
   color: PropTypes.string,
+  isCollapsed: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,
-  mini: PropTypes.bool,
+  pulseDuration: PropTypes.number,
   remaining: PropTypes.number.isRequired,
-  showIcon: PropTypes.bool,
 };
 
 DigitalTimer.defaultProps = {
   color: undefined,
-  mini: false,
-  showIcon: false,
+  isCollapsed: false,
+  pulseDuration: 800,
 };
 
 export default DigitalTimer;
