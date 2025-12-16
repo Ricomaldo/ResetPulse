@@ -214,18 +214,17 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
     arrowButton: {
       position: "absolute",
       top: "50%",
-      transform: [{ translateY: -12 }],
+      transform: [{ translateY: -14 }],
       zIndex: 10,
-      width: rs(44),
-      height: rs(44),
-      borderRadius: rs(22),
-      backgroundColor: theme.colors.background,
+      width: rs(36),
+      height: rs(36),
+      borderRadius: rs(18),
       alignItems: "center",
       justifyContent: "center",
-      ...theme.shadow("md"),
+      padding: rs(4),
     },
-    leftArrow: { left: rs(8) },
-    rightArrow: { right: rs(8) },
+    leftArrow: { left: rs(4) },
+    rightArrow: { right: rs(4) },
     arrowIcon: {
       color: theme.colors.brand.primary,
     },
@@ -330,7 +329,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
           accessibilityLabel="Scroll left"
           accessibilityHint="Scroll carousel to the left"
         >
-          <Ionicons name="chevron-back" size={rs(24)} style={styles.arrowIcon} />
+          <Ionicons name="chevron-back" size={rs(20)} style={styles.arrowIcon} />
         </TouchableOpacity>
       )}
 
@@ -345,7 +344,7 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
           accessibilityLabel="Scroll right"
           accessibilityHint="Scroll carousel to the right"
         >
-          <Ionicons name="chevron-forward" size={rs(24)} style={styles.arrowIcon} />
+          <Ionicons name="chevron-forward" size={rs(20)} style={styles.arrowIcon} />
         </TouchableOpacity>
       )}
 
