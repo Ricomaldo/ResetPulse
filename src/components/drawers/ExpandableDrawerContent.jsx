@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
-import SwipeUpHint from '../layout/SwipeUpHint';
 import OptionsDrawerContent from './OptionsDrawerContent';
 import SettingsDrawerContent from './SettingsDrawerContent';
 
@@ -47,14 +46,6 @@ export default function ExpandableDrawerContent({
         drawerVisible={drawerVisible}
         onOpenSettings={onOpenSettings}
       />
-
-      {/* Hint pour slider up (seulement si pas étendu) */}
-      {!isExpanded && (
-        <>
-          <View style={styles.divider} />
-          <SwipeUpHint message="Glissez pour plus d&apos;options" />
-        </>
-      )}
 
       {/* Settings - visibles seulement quand étendu */}
       {isExpanded && (
