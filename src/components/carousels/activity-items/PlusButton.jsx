@@ -31,23 +31,20 @@ const PlusButton = React.memo(function PlusButton({
     // Bouton "+" pour mode freemium
     moreButton: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border,
-      borderRadius: theme.borderRadius.round,
-      borderStyle: 'dashed',
-      borderWidth: 2,
+      backgroundColor: theme.colors.brand.primary,
+      borderRadius: theme.borderRadius.lg,
       height: rs(60, 'min'),
       justifyContent: 'center',
       minHeight: 44,
       minWidth: 44,
       width: rs(60, 'min'),
-      ...theme.shadows.sm,
+      ...theme.shadows.md,
     },
 
     moreButtonText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(24, 'min'),
-      fontWeight: fontWeights.light,
+      color: theme.colors.fixed.white,
+      fontSize: rs(32, 'min'),
+      fontWeight: fontWeights.semibold,
     },
 
     // Bouton "+" pour mode premium (création)
@@ -55,7 +52,7 @@ const PlusButton = React.memo(function PlusButton({
       alignItems: 'center',
       backgroundColor: theme.colors.brand.primary + '15',
       borderColor: theme.colors.brand.primary + '40',
-      borderRadius: theme.borderRadius.round,
+      borderRadius: theme.borderRadius.lg,
       borderStyle: 'dashed',
       borderWidth: 2,
       height: rs(60, 'min'),
