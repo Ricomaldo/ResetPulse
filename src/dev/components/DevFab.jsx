@@ -21,7 +21,7 @@ export default function DevFab({
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
 
-  if (!SHOW_DEV_FAB) return null;
+  if (!SHOW_DEV_FAB) {return null;}
 
   const toggleMenu = () => {
     const toValue = isOpen ? 0 : 1;
@@ -149,106 +149,18 @@ export default function DevFab({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 60,
-    left: 20,
-    zIndex: 9999,
-    alignItems: 'flex-start',
-  },
-
-  fab: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#1a1a2e',
+  actionButton: {
     alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    borderWidth: 2,
-    borderColor: '#333',
-  },
-
-  fabOpen: {
-    backgroundColor: '#333',
-    borderColor: '#555',
-  },
-
-  fabIcon: {
-    fontSize: 24,
-  },
-
-  menu: {
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16,
-    padding: 16,
-    marginTop: 12,
-    minWidth: 180,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 10,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-
-  menuSection: {
-    marginBottom: 12,
-  },
-
-  menuLabel: {
-    fontSize: 11,
-    color: '#888',
-    fontWeight: fontWeights.semibold,
-    marginBottom: 6,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-
-  toggleRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-
-  toggleButton: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: '#2d2d3d',
-    alignItems: 'center',
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
 
-  toggleButtonActive: {
-    backgroundColor: '#4a6fa5',
-  },
-
-  toggleText: {
-    fontSize: 13,
-    color: '#888',
-    fontWeight: fontWeights.semibold,
-  },
-
-  toggleTextActive: {
+  actionText: {
     color: '#fff',
-  },
-
-  statusRow: {
-    alignItems: 'center',
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    marginTop: 4,
-  },
-
-  statusText: {
-    fontSize: 14,
-    color: '#ccc',
+    fontSize: 13,
+    fontWeight: fontWeights.semibold,
   },
 
   buttonRow: {
@@ -256,25 +168,113 @@ const styles = StyleSheet.create({
     gap: 8,
   },
 
-  actionButton: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    alignItems: 'center',
+  container: {
+    alignItems: 'flex-start',
+    left: 20,
+    position: 'absolute',
+    top: 60,
+    zIndex: 9999,
   },
 
-  resetButton: {
-    backgroundColor: '#d9534f',
+  fab: {
+    alignItems: 'center',
+    backgroundColor: '#1a1a2e',
+    borderColor: '#333',
+    borderRadius: 28,
+    borderWidth: 2,
+    elevation: 8,
+    height: 56,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    width: 56,
+  },
+
+  fabIcon: {
+    fontSize: 24,
+  },
+
+  fabOpen: {
+    backgroundColor: '#333',
+    borderColor: '#555',
   },
 
   goToAppButton: {
     backgroundColor: '#5cb85c',
   },
 
-  actionText: {
-    fontSize: 13,
-    color: '#fff',
+  menu: {
+    backgroundColor: '#1a1a2e',
+    borderColor: '#333',
+    borderRadius: 16,
+    borderWidth: 1,
+    elevation: 10,
+    marginTop: 12,
+    minWidth: 180,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+  },
+
+  menuLabel: {
+    color: '#888',
+    fontSize: 11,
     fontWeight: fontWeights.semibold,
+    letterSpacing: 0.5,
+    marginBottom: 6,
+    textTransform: 'uppercase',
+  },
+
+  menuSection: {
+    marginBottom: 12,
+  },
+
+  resetButton: {
+    backgroundColor: '#d9534f',
+  },
+
+  statusRow: {
+    alignItems: 'center',
+    borderTopColor: '#333',
+    borderTopWidth: 1,
+    marginTop: 4,
+    paddingTop: 8,
+  },
+
+  statusText: {
+    color: '#ccc',
+    fontSize: 14,
+  },
+
+  toggleButton: {
+    alignItems: 'center',
+    backgroundColor: '#2d2d3d',
+    borderRadius: 8,
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+
+  toggleButtonActive: {
+    backgroundColor: '#4a6fa5',
+  },
+
+  toggleRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+
+  toggleText: {
+    color: '#888',
+    fontSize: 13,
+    fontWeight: fontWeights.semibold,
+  },
+
+  toggleTextActive: {
+    color: '#fff',
   },
 });

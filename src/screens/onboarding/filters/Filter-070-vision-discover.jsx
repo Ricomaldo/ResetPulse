@@ -51,85 +51,85 @@ export default function Filter5aVision({ needs = [], onContinue }) {
 
 const createStyles = (colors, spacing, borderRadius) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(spacing.lg),
-      paddingTop: rs(spacing.lg),
-      paddingBottom: rs(120),
-    },
-    title: {
-      fontSize: rs(28),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-      marginBottom: rs(spacing.lg),
-    },
-    scenarioCard: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: rs(spacing.md),
-      backgroundColor: colors.surface,
-      borderRadius: borderRadius.xl,
-      marginBottom: rs(spacing.md),
-    },
-    scenarioEmoji: {
-      fontSize: rs(32),
-      marginRight: rs(spacing.md),
-    },
-    scenarioText: {
-      flex: 1,
-    },
-    scenarioLabel: {
-      fontSize: rs(17),
-      color: colors.text,
-      fontWeight: fontWeights.semibold,
-    },
-    scenarioSublabel: {
-      fontSize: rs(14),
-      color: colors.textSecondary,
-      marginTop: 2,
-    },
-    scenarioCircle: {
-      width: rs(44),
-      height: rs(44),
-      borderRadius: rs(22),
-      borderWidth: rs(5),
-      backgroundColor: colors.surface,
-    },
-    tagline: {
-      fontSize: rs(17),
-      color: colors.textSecondary,
-      textAlign: 'center',
-      fontStyle: 'italic',
-      marginTop: rs(spacing.xl),
-      lineHeight: rs(26),
-    },
-    footer: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      padding: rs(spacing.lg),
-      paddingBottom: rs(40),
-      backgroundColor: colors.background,
-    },
     button: {
-      backgroundColor: colors.brand.primary,
-      paddingVertical: rs(spacing.md),
-      paddingHorizontal: rs(spacing.xl),
-      borderRadius: borderRadius.xl,
       alignItems: 'center',
+      backgroundColor: colors.brand.primary,
+      borderRadius: borderRadius.xl,
       minWidth: rs(200),
+      paddingHorizontal: rs(spacing.xl),
+      paddingVertical: rs(spacing.md),
     },
     buttonText: {
       color: colors.text,
       fontSize: rs(18),
       fontWeight: fontWeights.semibold,
+    },
+    footer: {
+      backgroundColor: colors.background,
+      bottom: 0,
+      left: 0,
+      padding: rs(spacing.lg),
+      paddingBottom: rs(40),
+      position: 'absolute',
+      right: 0,
+    },
+    scenarioCard: {
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.xl,
+      flexDirection: 'row',
+      marginBottom: rs(spacing.md),
+      padding: rs(spacing.md),
+    },
+    scenarioCircle: {
+      backgroundColor: colors.surface,
+      borderRadius: rs(22),
+      borderWidth: rs(5),
+      height: rs(44),
+      width: rs(44),
+    },
+    scenarioEmoji: {
+      fontSize: rs(32),
+      marginRight: rs(spacing.md),
+    },
+    scenarioLabel: {
+      color: colors.text,
+      fontSize: rs(17),
+      fontWeight: fontWeights.semibold,
+    },
+    scenarioSublabel: {
+      color: colors.textSecondary,
+      fontSize: rs(14),
+      marginTop: 2,
+    },
+    scenarioText: {
+      flex: 1,
+    },
+    screen: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: rs(120),
+      paddingHorizontal: rs(spacing.lg),
+      paddingTop: rs(spacing.lg),
+    },
+    scrollView: {
+      flex: 1,
+    },
+    tagline: {
+      color: colors.textSecondary,
+      fontSize: rs(17),
+      fontStyle: 'italic',
+      lineHeight: rs(26),
+      marginTop: rs(spacing.xl),
+      textAlign: 'center',
+    },
+    title: {
+      color: colors.text,
+      fontSize: rs(28),
+      fontWeight: fontWeights.semibold,
+      marginBottom: rs(spacing.lg),
+      textAlign: 'center',
     },
   });

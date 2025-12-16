@@ -34,7 +34,7 @@ export function useDialOrientation(isClockwise, scaleMode) {
   const angleToMinutes = useCallback((angle) => {
     // Handle invalid inputs - protect against NaN
     const numAngle = Number(angle);
-    if (!isFinite(numAngle)) return 0;
+    if (!isFinite(numAngle)) {return 0;}
 
     let minutes;
 
@@ -61,8 +61,8 @@ export function useDialOrientation(isClockwise, scaleMode) {
     const numMinutes = Number(minutes);
     if (!isFinite(numMinutes)) {
       // Special case for Infinity: clamp to max
-      if (numMinutes === Infinity) return isClockwise ? 360 : 0;
-      if (numMinutes === -Infinity) return isClockwise ? 0 : 360;
+      if (numMinutes === Infinity) {return isClockwise ? 360 : 0;}
+      if (numMinutes === -Infinity) {return isClockwise ? 0 : 360;}
       return 0; // For NaN and other invalid values
     }
 
@@ -105,8 +105,8 @@ export function useDialOrientation(isClockwise, scaleMode) {
    * @returns {string} SVG path string
    */
   const getProgressPath = useCallback((progress, centerX, centerY, radius) => {
-    if (progress <= 0) return '';
-    if (progress >= 0.9999) return null; // Full circle
+    if (progress <= 0) {return '';}
+    if (progress >= 0.9999) {return null;} // Full circle
 
     const progressAngle = progress * 360;
     const progressRadius = radius;
@@ -150,7 +150,7 @@ export function useDialOrientation(isClockwise, scaleMode) {
 
     for (let i = 0; i < count; i++) {
       const minute = i * interval;
-      if (minute > config.maxMinutes) break;
+      if (minute > config.maxMinutes) {break;}
 
       const angle = minutesToAngle(minute) - 90; // -90 to start from top
       const x = centerX + radius * Math.cos((angle * Math.PI) / 180);

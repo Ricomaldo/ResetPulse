@@ -1,14 +1,14 @@
 // src/components/modals/MoreColorsModal.jsx
 // Modale "Encore plus de couleurs" - découverte des palettes premium
 
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
-import { useTranslation } from "../../hooks/useTranslation";
-import { rs } from "../../styles/responsive";
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
+import { rs } from '../../styles/responsive';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
-import DiscoveryModal from "./DiscoveryModal";
-import analytics from "../../services/analytics";
+import DiscoveryModal from './DiscoveryModal';
+import analytics from '../../services/analytics';
 import { fontWeights } from '../../theme/tokens';
 
 // Récupérer les palettes premium
@@ -42,34 +42,34 @@ export default function MoreColorsModal({ visible, onClose, onOpenPaywall, modal
   };
 
   const styles = StyleSheet.create({
-    paletteGrid: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      gap: theme.spacing.md,
-      paddingHorizontal: theme.spacing.xs,
-    },
-    paletteItem: {
-      width: "28%",
-      alignItems: "center",
-      marginBottom: theme.spacing.sm,
+    colorCircle: {
+      borderRadius: rs(8, 'min'),
+      height: rs(16, 'min'),
+      width: rs(16, 'min'),
+      ...theme.shadow('sm'),
     },
     colorsRow: {
-      flexDirection: "row",
+      flexDirection: 'row',
       gap: 4,
       marginBottom: theme.spacing.xs,
     },
-    colorCircle: {
-      width: rs(16, "min"),
-      height: rs(16, "min"),
-      borderRadius: rs(8, "min"),
-      ...theme.shadow("sm"),
+    paletteGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.md,
+      justifyContent: 'center',
+      paddingHorizontal: theme.spacing.xs,
+    },
+    paletteItem: {
+      alignItems: 'center',
+      marginBottom: theme.spacing.sm,
+      width: '28%',
     },
     paletteName: {
-      fontSize: rs(10, "min"),
       color: theme.colors.textSecondary,
-      textAlign: "center",
+      fontSize: rs(10, 'min'),
       fontWeight: fontWeights.medium,
+      textAlign: 'center',
     },
   });
 

@@ -51,8 +51,8 @@ const SettingsAppearanceSection = React.memo(function SettingsAppearanceSection(
             {theme.mode === 'auto'
               ? t('settings.appearance.themeDescriptionAuto')
               : theme.mode === 'dark'
-              ? t('settings.appearance.themeDescriptionDark')
-              : t('settings.appearance.themeDescriptionLight')}
+                ? t('settings.appearance.themeDescriptionDark')
+                : t('settings.appearance.themeDescriptionLight')}
           </Text>
         </View>
         <View style={styles.segmentedControl}>

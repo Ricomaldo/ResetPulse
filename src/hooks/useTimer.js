@@ -62,7 +62,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Timer update function with hybrid foreground/background support
   const updateTimer = useCallback(() => {
-    if (!isMountedRef.current || !running || !startTime) return;
+    if (!isMountedRef.current || !running || !startTime) {return;}
 
     const now = Date.now();
     const elapsed = Math.floor((now - startTime) / 1000);
@@ -296,11 +296,11 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
     // Show pause message when paused
     if (!running && isPaused) {
-      return "Pause";
+      return 'Pause';
     }
 
     // Show nothing at rest
-    return "";
+    return '';
   };
 
   // Controls
@@ -373,7 +373,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
       AccessibilityInfo.announceForAccessibility(t('accessibility.timer.timerPaused'));
     }
   }, [remaining, duration, isPaused, running, scheduleTimerNotification, cancelTimerNotification,
-      activityDurations, saveActivityDuration, startTime, t]);
+    activityDurations, saveActivityDuration, startTime, t]);
 
   const resetTimer = useCallback(() => {
     // Track timer reset (only if timer had started and not completed)

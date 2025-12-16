@@ -21,42 +21,42 @@ export default function OptionsDrawerContent({
 
   const styles = StyleSheet.create({
     container: {
-      paddingBottom: rs(60), // Extra space for settings button
       flex: 1,
+      paddingBottom: rs(60), // Extra space for settings button
     },
     section: {
       marginBottom: rs(16),
       paddingHorizontal: rs(20),
     },
     sectionLabel: {
-      fontSize: rs(13),
       color: theme.colors.textSecondary,
-      marginBottom: rs(8),
+      fontSize: rs(13),
       fontWeight: fontWeights.medium,
-    },
-    settingsButtonContainer: {
-      position: 'absolute',
-      bottom: rs(16),
-      left: 0,
-      right: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: rs(12),
+      marginBottom: rs(8),
     },
     settingsButton: {
-      flexDirection: 'row',
       alignItems: 'center',
+      flexDirection: 'row',
       gap: rs(6),
-      paddingVertical: rs(8),
       paddingHorizontal: rs(12),
+      paddingVertical: rs(8),
     },
-    settingsText: {
-      fontSize: rs(13),
-      color: theme.colors.textSecondary,
-      fontWeight: fontWeights.medium,
+    settingsButtonContainer: {
+      alignItems: 'center',
+      bottom: rs(16),
+      justifyContent: 'center',
+      left: 0,
+      paddingVertical: rs(12),
+      position: 'absolute',
+      right: 0,
     },
     settingsIcon: {
       color: theme.colors.textSecondary,
+    },
+    settingsText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(13),
+      fontWeight: fontWeights.medium,
     },
   });
 
@@ -65,14 +65,14 @@ export default function OptionsDrawerContent({
       {/* Couleur (Palettes) */}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Couleur</Text>
-        <PaletteCarousel isTimerRunning={false} />
       </View>
+      <PaletteCarousel isTimerRunning={false} />
 
       {/* Activité */}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Activité</Text>
-        <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
       </View>
+      <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
 
       {/* Cadran (Scale) */}
       <View style={styles.section}>

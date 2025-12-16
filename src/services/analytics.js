@@ -96,8 +96,8 @@ class AnalyticsService {
       console.log(`   Platform: ${Platform.OS}`);
       console.log(`   App Version: ${appVersion}`);
       console.log(`   Token: ${MIXPANEL_TOKEN.substring(0, 12)}...`);
-      console.log(`   Server URL: https://api-eu.mixpanel.com`);
-      console.log(`   Ready to track events`);
+      console.log('   Server URL: https://api-eu.mixpanel.com');
+      console.log('   Ready to track events');
     } catch (error) {
       // Graceful fallback for Expo Go (native module unavailable)
       if (error.message?.includes('initialize') && __DEV__) {
@@ -145,7 +145,7 @@ class AnalyticsService {
    * @param {string} userId - RevenueCat customerInfo.originalAppUserId
    */
   identify(userId) {
-    if (!this.isInitialized || !this.mixpanel) return;
+    if (!this.isInitialized || !this.mixpanel) {return;}
 
     this.mixpanel.identify(userId);
 
@@ -159,7 +159,7 @@ class AnalyticsService {
    * @param {Object} properties - Key-value pairs
    */
   setSuperProperties(properties) {
-    if (!this.isInitialized || !this.mixpanel) return;
+    if (!this.isInitialized || !this.mixpanel) {return;}
     this.mixpanel.registerSuperProperties(properties);
   }
 

@@ -60,28 +60,28 @@ function ActivityLabel({
       right: 0,
       top: rs(80),
     },
-    flexContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flex: 1,
-    },
-    spacerLeft: {
+    dotsContainer: {
+      includeFontPadding: false,
+      lineHeight: rs(24),
+      textAlign: 'left',
       width: dotWidth,
+    },
+    flexContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      flex: 1,
+      justifyContent: 'center',
     },
     message: {
       color: theme.colors.brand.primary,
       fontSize: rs(24),
       fontWeight: '600',
-      letterSpacing: 0.5,
       includeFontPadding: false,
+      letterSpacing: 0.5,
       lineHeight: rs(24),
     },
-    dotsContainer: {
+    spacerLeft: {
       width: dotWidth,
-      textAlign: 'left',
-      includeFontPadding: false,
-      lineHeight: rs(24),
     },
   });
 

@@ -207,63 +207,24 @@ export default function Filter2Creation({ needs, onContinue }) {
 
 const createStyles = (colors, spacing, borderRadius) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(spacing.lg),
-      paddingTop: rs(spacing.md),
-      paddingBottom: rs(100),
-    },
-    title: {
-      fontSize: rs(24),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-      marginBottom: rs(spacing.md),
-    },
-    sectionLabel: {
-      fontSize: rs(13),
-      color: colors.textSecondary,
-      marginTop: rs(spacing.md),
-      marginBottom: rs(spacing.sm),
-      fontWeight: fontWeights.medium,
-    },
-    previewContainer: {
-      alignItems: 'center',
-      marginBottom: rs(spacing.sm),
-    },
-    activityRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: rs(spacing.md),
-      gap: rs(spacing.sm),
-    },
     activityPill: {
-      flex: 1,
-      width: rs(70),
-      height: rs(70),
       alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: rs(50),
       backgroundColor: colors.surface,
-      borderWidth: 2,
       borderColor: colors.border,
-    },
-    activityPillSelected: {
-      borderColor: 'transparent',
+      borderRadius: rs(50),
+      borderWidth: 2,
+      flex: 1,
+      height: rs(70),
+      justifyContent: 'center',
+      width: rs(70),
     },
     activityPillEmoji: {
       fontSize: rs(22),
       marginBottom: rs(2),
     },
     activityPillLabel: {
-      fontSize: rs(9),
       color: colors.textSecondary,
+      fontSize: rs(9),
       fontWeight: fontWeights.medium,
       textAlign: 'center',
     },
@@ -271,15 +232,50 @@ const createStyles = (colors, spacing, borderRadius) =>
       color: colors.background,
       fontWeight: fontWeights.semibold,
     },
-    horizontalScroll: {
-      marginBottom: rs(spacing.sm),
+    activityPillSelected: {
+      borderColor: 'transparent',
+    },
+    activityRow: {
+      flexDirection: 'row',
+      gap: rs(spacing.sm),
+      justifyContent: 'space-between',
+      marginBottom: rs(spacing.md),
+    },
+    button: {
+      alignItems: 'center',
+      backgroundColor: colors.brand.primary,
+      borderRadius: borderRadius.xl,
+      justifyContent: 'center',
+      minHeight: rs(56),
+      minWidth: rs(200),
+      paddingHorizontal: rs(spacing.xl),
+      paddingVertical: rs(spacing.md),
+    },
+    buttonText: {
+      color: colors.background,
+      fontSize: rs(18),
+      fontWeight: fontWeights.semibold,
+    },
+    colorDot: {
+      borderRadius: rs(26),
+      height: rs(52),
+      width: rs(52),
+    },
+    colorDotSelected: {
+      borderColor: colors.text,
+      borderWidth: 4,
+    },
+    colorRow: {
+      flexDirection: 'row',
+      gap: rs(spacing.lg),
+      justifyContent: 'center',
     },
     durationChip: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.xxl,
+      marginRight: rs(spacing.sm),
       paddingHorizontal: rs(spacing.lg),
       paddingVertical: rs(spacing.md),
-      borderRadius: borderRadius.xxl,
-      backgroundColor: colors.surface,
-      marginRight: rs(spacing.sm),
     },
     durationChipSelected: {
       backgroundColor: colors.brand.primary,
@@ -293,31 +289,30 @@ const createStyles = (colors, spacing, borderRadius) =>
       color: colors.background,
       fontWeight: fontWeights.semibold,
     },
-    paletteRow: {
-      flexDirection: 'row',
-      gap: rs(spacing.md),
+    footer: {
+      backgroundColor: colors.background,
+      bottom: 0,
+      left: 0,
+      padding: rs(spacing.lg),
+      paddingBottom: rs(40),
+      position: 'absolute',
+      right: 0,
     },
-    paletteButton: {
-      flex: 1,
-      padding: rs(spacing.md),
-      borderRadius: borderRadius.xl,
-      borderWidth: 2,
-      borderColor: colors.border,
-      alignItems: 'center',
-    },
-    paletteSelected: {
-      borderColor: colors.brand.primary,
-      backgroundColor: colors.surfaceElevated,
-    },
-    palettePreview: {
-      flexDirection: 'row',
-      gap: rs(spacing.xs),
+    horizontalScroll: {
       marginBottom: rs(spacing.sm),
     },
+    paletteButton: {
+      alignItems: 'center',
+      borderColor: colors.border,
+      borderRadius: borderRadius.xl,
+      borderWidth: 2,
+      flex: 1,
+      padding: rs(spacing.md),
+    },
     paletteDot: {
-      width: rs(16),
-      height: rs(16),
       borderRadius: rs(8),
+      height: rs(16),
+      width: rs(16),
     },
     paletteName: {
       color: colors.textSecondary,
@@ -327,42 +322,47 @@ const createStyles = (colors, spacing, borderRadius) =>
       color: colors.text,
       fontWeight: fontWeights.semibold,
     },
-    colorRow: {
+    palettePreview: {
       flexDirection: 'row',
-      justifyContent: 'center',
-      gap: rs(spacing.lg),
+      gap: rs(spacing.xs),
+      marginBottom: rs(spacing.sm),
     },
-    colorDot: {
-      width: rs(52),
-      height: rs(52),
-      borderRadius: rs(26),
+    paletteRow: {
+      flexDirection: 'row',
+      gap: rs(spacing.md),
     },
-    colorDotSelected: {
-      borderWidth: 4,
-      borderColor: colors.text,
+    paletteSelected: {
+      backgroundColor: colors.surfaceElevated,
+      borderColor: colors.brand.primary,
     },
-    footer: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      padding: rs(spacing.lg),
-      paddingBottom: rs(40),
-      backgroundColor: colors.background,
-    },
-    button: {
-      backgroundColor: colors.brand.primary,
-      paddingVertical: rs(spacing.md),
-      paddingHorizontal: rs(spacing.xl),
-      borderRadius: borderRadius.xl,
+    previewContainer: {
       alignItems: 'center',
-      minWidth: rs(200),
-      minHeight: rs(56),
-      justifyContent: 'center',
+      marginBottom: rs(spacing.sm),
     },
-    buttonText: {
-      color: colors.background,
-      fontSize: rs(18),
+    screen: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: rs(100),
+      paddingHorizontal: rs(spacing.lg),
+      paddingTop: rs(spacing.md),
+    },
+    scrollView: {
+      flex: 1,
+    },
+    sectionLabel: {
+      color: colors.textSecondary,
+      fontSize: rs(13),
+      fontWeight: fontWeights.medium,
+      marginBottom: rs(spacing.sm),
+      marginTop: rs(spacing.md),
+    },
+    title: {
+      color: colors.text,
+      fontSize: rs(24),
       fontWeight: fontWeights.semibold,
+      marginBottom: rs(spacing.md),
+      textAlign: 'center',
     },
   });

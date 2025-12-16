@@ -10,6 +10,10 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { createFocusStyle } from '../../styles/focusStyles';
 import { fontWeights } from '../../theme/tokens';
 
+// Couleurs extraites pour respecter la règle no-color-literals
+const TRANSPARENT = 'transparent';
+const DANGER_RED = '#D94040';
+
 /**
  * Primary Button - Brand color, filled
  */
@@ -81,7 +85,7 @@ export const SecondaryButton = React.memo(({
       style={[
         styles.base,
         {
-          backgroundColor: 'transparent',
+          backgroundColor: TRANSPARENT,
           borderWidth: 1,
           borderColor: colors.brand.primary,
           borderRadius: borderRadius.lg,
@@ -131,7 +135,7 @@ export const DestructiveButton = React.memo(({
       style={[
         styles.base,
         {
-          backgroundColor: '#D94040', // Error red
+          backgroundColor: DANGER_RED, // Error red
           borderRadius: borderRadius.lg,
           paddingVertical: spacing.md,
           paddingHorizontal: spacing.lg,
@@ -209,22 +213,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 48,
   },
+  disabled: {
+    opacity: 0.5,
+  },
+  disabledText: {
+    opacity: 0.5,
+  },
   text: {
     fontSize: 16,
     fontWeight: fontWeights.semibold,
   },
-  disabled: {
-    opacity: 0.5,
-  },
   textButton: {
-    padding: 8,
     alignItems: 'center',
+    padding: 8,
   },
   textButtonLabel: {
     fontSize: 14,
     textDecorationLine: 'underline',
-  },
-  disabledText: {
-    opacity: 0.5,
   },
 });

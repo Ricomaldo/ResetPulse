@@ -4,8 +4,9 @@
  * @updated 2025-12-14
  */
 import React, { useCallback, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../../theme/ThemeProvider';
+import { View, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
+// theme provider not used in this component
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
@@ -13,8 +14,7 @@ import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
 import TimerDial from '../timer/TimerDial';
 import haptics from '../../utils/haptics';
-import { TIMER, TEXT, getDialMode } from '../timer/timerConstants';
-import { fontWeights } from '../../theme/tokens';
+import { TIMER, getDialMode } from '../timer/timerConstants';
 
 export default function TimeTimer({
   onRunningChange,
@@ -23,7 +23,6 @@ export default function TimeTimer({
   onDialTap,
   onTimerComplete,
 }) {
-  const theme = useTheme();
   const {
     shouldPulse,
     clockwise,
@@ -104,30 +103,11 @@ export default function TimeTimer({
     },
 
     timerWrapper: {
-      width: circleSize,
-      height: circleSize,
       alignItems: 'center',
+      height: circleSize,
       justifyContent: 'center',
       position: 'relative',
-    },
-
-    messageOverlay: {
-      position: 'absolute',
-      top: '70%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.colors.background,
-      paddingHorizontal: theme.spacing.md,
-      paddingVertical: theme.spacing.xs,
-      borderRadius: theme.borderRadius.md,
-    },
-
-    messageText: {
-      fontSize: rs(18, 'min'),
-      fontWeight: fontWeights.bold,
-      color: currentColor || theme.colors.brand.primary,
-      textAlign: 'center',
-      letterSpacing: TEXT.LETTER_SPACING,
+      width: circleSize,
     },
   });
 
@@ -137,7 +117,7 @@ export default function TimeTimer({
    * @param {number} minutes - Raw minutes value from dial interaction
    */
   const handleGraduationTap = useCallback((minutes) => {
-    if (timer.running) return;
+    if (timer.running) {return;}
 
     // Get scale-specific magnetic snap granularity
     const dialMode = getDialMode(scaleMode);
@@ -177,6 +157,7 @@ export default function TimeTimer({
         <TimerDial
           progress={timer.progress}
           duration={timer.duration}
+          remaining={timer.remaining}
           color={currentColor}
           size={circleSize}
           clockwise={clockwise}
@@ -202,3 +183,11 @@ export default function TimeTimer({
     </View>
   );
 }
+
+TimeTimer.propTypes = {
+  onRunningChange: PropTypes.func,
+  onTimerRef: PropTypes.func,
+  onDialRef: PropTypes.func,
+  onDialTap: PropTypes.func,
+  onTimerComplete: PropTypes.func,
+};

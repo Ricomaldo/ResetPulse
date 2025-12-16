@@ -1,5 +1,5 @@
 // src/components/modals/SettingsModal.jsx
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Modal,
   View,
@@ -9,20 +9,20 @@ import {
   ScrollView,
   Platform,
   TouchableNativeFeedback,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "../../theme/ThemeProvider";
-import { useTimerOptions } from "../../contexts/TimerOptionsContext";
-import { useTimerPalette } from "../../contexts/TimerPaletteContext";
-import { rs } from "../../styles/responsive";
-import { fontWeights } from "../../theme/tokens";
-import PremiumModal from "./PremiumModal";
-import MoreColorsModal from "./MoreColorsModal";
-import MoreActivitiesModal from "./MoreActivitiesModal";
-import { getAllActivities } from "../../config/activities";
-import haptics from "../../utils/haptics";
-import { usePremiumStatus } from "../../hooks/usePremiumStatus";
-import { useTranslation } from "../../hooks/useTranslation";
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { rs } from '../../styles/responsive';
+import { fontWeights } from '../../theme/tokens';
+import PremiumModal from './PremiumModal';
+import MoreColorsModal from './MoreColorsModal';
+import MoreActivitiesModal from './MoreActivitiesModal';
+import { getAllActivities } from '../../config/activities';
+import haptics from '../../utils/haptics';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useTranslation } from '../../hooks/useTranslation';
 
 // Import section components
 import {
@@ -30,10 +30,10 @@ import {
   SettingsTimerSection,
   SettingsAppearanceSection,
   SettingsAboutSection,
-} from "./settings";
+} from './settings';
 
 // Storage key pour onboarding V2 (same as App.js)
-const ONBOARDING_COMPLETED_KEY = "onboarding_v2_completed";
+const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
 
 export default function SettingsModal({ visible, onClose }) {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
@@ -85,38 +85,205 @@ export default function SettingsModal({ visible, onClose }) {
       // Note: App needs to reload to detect onboarding state change
       // User will need to force quit and reopen the app
     } catch (error) {
-      console.warn("[SettingsModal] Failed to reset onboarding:", error);
+      console.warn('[SettingsModal] Failed to reset onboarding:', error);
     }
   };
 
   // Platform-specific touchable component
   const Touchable =
-    Platform.OS === "android" &&
+    Platform.OS === 'android' &&
     TouchableNativeFeedback?.canUseNativeForeground?.()
       ? TouchableNativeFeedback
       : TouchableOpacity;
 
   const touchableProps =
-    Platform.OS === "android" && TouchableNativeFeedback?.Ripple
+    Platform.OS === 'android' && TouchableNativeFeedback?.Ripple
       ? {
-          background: TouchableNativeFeedback.Ripple(
-            theme.colors.brand.primary + "20",
-            false
-          ),
-        }
+        background: TouchableNativeFeedback.Ripple(
+          theme.colors.brand.primary + '20',
+          false
+        ),
+      }
       : {
-          activeOpacity: 0.7,
-        };
+        activeOpacity: 0.7,
+      };
 
   const styles = StyleSheet.create({
-    overlay: {
-      flex: 1,
-      backgroundColor: Platform.select({
-        ios: "rgba(0, 0, 0, 0.4)",
-        android: "rgba(0, 0, 0, 0.5)",
-      }),
-      justifyContent: "center",
-      alignItems: "center",
+    activityEmoji: {
+      fontSize: rs(24, 'min'),
+      marginBottom: theme.spacing.xs / 2,
+      textAlign: 'center',
+    },
+
+    activityItem: {
+      alignItems: 'center',
+      aspectRatio: 1,
+      backgroundColor: theme.colors.surface,
+      borderColor: 'transparent',
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 2,
+      justifyContent: 'center',
+      width: '22%',
+      ...theme.shadow('sm'),
+      padding: theme.spacing.xs,
+    },
+
+    activityItemFavorite: {
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.brand.primary,
+      ...theme.shadow('md'),
+    },
+
+    activityItemLabel: {
+      color: theme.colors.textLight,
+      fontSize: rs(9, 'min'),
+      fontWeight: fontWeights.medium,
+      textAlign: 'center',
+      width: '100%',
+    },
+
+    activityItemLabelFavorite: {
+      color: theme.colors.brand.primary,
+      fontWeight: fontWeights.semibold,
+    },
+
+    closeButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: -theme.spacing.sm,
+      minHeight: 44,
+      minWidth: 44,
+      padding: theme.spacing.md,
+    },
+
+    closeText: {
+      color: theme.colors.text,
+      fontSize: rs(20, 'min'),
+    },
+
+    dialModeButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 2,
+      paddingHorizontal: theme.spacing.xs,
+      paddingVertical: theme.spacing.sm,
+      width: '31%',
+    },
+
+    dialModeButtonActive: {
+      backgroundColor: theme.colors.brand.primary,
+      borderColor: theme.colors.brand.primary,
+    },
+
+    dialModeGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.xs,
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.sm,
+    },
+
+    dialModeText: {
+      color: theme.colors.text,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.semibold,
+      textAlign: 'center',
+    },
+
+    dialModeTextActive: {
+      color: theme.colors.background,
+    },
+
+    discoverActivityButton: {
+      alignItems: 'center',
+      aspectRatio: 1,
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '40',
+      borderRadius: theme.borderRadius.md,
+      borderStyle: 'dashed',
+      borderWidth: 2,
+      gap: theme.spacing.xs / 2,
+      justifyContent: 'center',
+      padding: theme.spacing.xs,
+      width: '22%',
+    },
+
+    discoverActivityIcon: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(24),
+      fontWeight: fontWeights.semibold,
+    },
+
+    discoverActivityText: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(8, 'min'),
+      fontWeight: fontWeights.semibold,
+      lineHeight: rs(10),
+      textAlign: 'center',
+    },
+
+    discoverButton: {
+      alignItems: 'center',
+      aspectRatio: 1.5,
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '40',
+      borderRadius: theme.borderRadius.md,
+      borderStyle: 'dashed',
+      borderWidth: 2,
+      gap: theme.spacing.xs,
+      justifyContent: 'center',
+      marginBottom: theme.spacing.sm,
+      padding: theme.spacing.xs,
+      width: '30%',
+    },
+
+    discoverIcon: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(20),
+      fontWeight: fontWeights.semibold,
+    },
+
+    discoverIconContainer: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.brand.primary + '20',
+      borderRadius: rs(16),
+      height: rs(32),
+      justifyContent: 'center',
+      width: rs(32),
+    },
+
+    discoverText: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(9, 'min'),
+      fontWeight: fontWeights.semibold,
+      lineHeight: rs(11),
+      textAlign: 'center',
+    },
+
+    favoritesGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
+    },
+
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: theme.spacing.lg,
+      paddingBottom: theme.spacing.sm,
+    },
+
+    levelDivider: {
+      backgroundColor: theme.colors.divider,
+      height: 1,
+      marginHorizontal: theme.spacing.md,
+      marginVertical: theme.spacing.lg,
     },
 
     modalContainer: {
@@ -125,47 +292,86 @@ export default function SettingsModal({ visible, onClose }) {
         ios: 16,
         android: 12,
       }),
-      width: "90%",
-      maxHeight: "80%",
+      maxHeight: '80%',
       padding: theme.spacing.lg,
-      ...theme.shadow("xl"),
+      width: '90%',
+      ...theme.shadow('xl'),
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + "30",
+          borderColor: theme.colors.border + '30',
         },
         android: {},
       }),
     },
 
-    header: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: theme.spacing.lg,
-      paddingBottom: theme.spacing.sm,
-      borderBottomWidth: 1,
-      borderBottomColor: theme.colors.border,
+    optionDescription: {
+      color: theme.colors.textLight,
+      fontSize: rs(11, 'min'),
+      marginTop: theme.spacing.xs / 2,
     },
 
-    title: {
-      fontSize: rs(24, "min"),
-      fontWeight: fontWeights.bold,
+    optionLabel: {
       color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(14, 'min'),
     },
 
-    closeButton: {
-      padding: theme.spacing.md,
-      margin: -theme.spacing.sm,
-      minWidth: 44,
-      minHeight: 44,
+    optionRow: {
       alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: theme.spacing.sm,
+    },
+
+    overlay: {
+      alignItems: 'center',
+      backgroundColor: Platform.select({
+        ios: 'rgba(0, 0, 0, 0.4)',
+        android: 'rgba(0, 0, 0, 0.5)',
+      }),
+      flex: 1,
       justifyContent: 'center',
     },
 
-    closeText: {
-      fontSize: rs(20, "min"),
+    paletteGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
+    },
+
+    paletteItem: {
+      aspectRatio: 1.5,
+      backgroundColor: theme.colors.surface,
+      borderColor: 'transparent',
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 2,
+      marginBottom: theme.spacing.sm,
+      padding: theme.spacing.xs,
+      width: '30%',
+      ...theme.shadow('sm'),
+    },
+
+    paletteItemActive: {
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.brand.primary,
+      ...theme.shadow('md'),
+    },
+
+    paletteName: {
       color: theme.colors.text,
+      fontSize: rs(10, 'min'),
+      fontWeight: fontWeights.medium,
+      marginTop: theme.spacing.xs / 2,
+      textAlign: 'center',
+    },
+
+    paletteNameActive: {
+      color: theme.colors.brand.primary,
+      fontWeight: fontWeights.semibold,
     },
 
     scrollContent: {
@@ -178,21 +384,21 @@ export default function SettingsModal({ visible, onClose }) {
 
     sectionCard: {
       backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      marginBottom: theme.spacing.md,
-      borderWidth: 1,
       borderColor: theme.colors.border + '30',
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      marginBottom: theme.spacing.md,
+      padding: theme.spacing.md,
       ...theme.shadow('sm'),
     },
 
     sectionCardPrimary: {
       backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.lg,
-      padding: theme.spacing.md,
-      marginBottom: theme.spacing.sm,
-      borderWidth: 1,
       borderColor: theme.colors.brand.primary + '15',
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      marginBottom: theme.spacing.sm,
+      padding: theme.spacing.md,
       ...theme.shadow('md'),
     },
 
@@ -201,55 +407,20 @@ export default function SettingsModal({ visible, onClose }) {
       paddingTop: theme.spacing.sm,
     },
 
-    levelDivider: {
-      height: 1,
-      backgroundColor: theme.colors.divider,
-      marginVertical: theme.spacing.lg,
-      marginHorizontal: theme.spacing.md,
-    },
-
     sectionTitle: {
-      fontSize: rs(16, "min"),
-      fontWeight: fontWeights.semibold,
       color: theme.colors.text,
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
       marginBottom: theme.spacing.sm,
     },
 
-    optionRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingVertical: theme.spacing.sm,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: theme.colors.border,
-    },
-
-    optionLabel: {
-      fontSize: rs(14, "min"),
-      color: theme.colors.text,
-      flex: 1,
-    },
-
-    optionDescription: {
-      fontSize: rs(11, "min"),
-      color: theme.colors.textLight,
-      marginTop: theme.spacing.xs / 2,
-    },
-
-    segmentedControl: {
-      flexDirection: "row",
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.md,
-      padding: 2,
-    },
-
     segmentButton: {
-      flex: 1,
-      paddingVertical: theme.spacing.xs,
-      paddingHorizontal: theme.spacing.xs,
+      alignItems: 'center',
       borderRadius: theme.borderRadius.md - 2,
-      alignItems: "center",
+      flex: 1,
       minWidth: 60,
+      paddingHorizontal: theme.spacing.xs,
+      paddingVertical: theme.spacing.xs,
     },
 
     segmentButtonActive: {
@@ -257,198 +428,27 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     segmentText: {
-      fontSize: rs(11, "min"),
       color: theme.colors.text,
+      fontSize: rs(11, 'min'),
       fontWeight: fontWeights.medium,
-      textAlign: "center",
+      textAlign: 'center',
     },
 
     segmentTextActive: {
       color: theme.colors.background,
     },
 
-    dialModeGrid: {
+    segmentedControl: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.md,
       flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: theme.spacing.xs,
-      marginTop: theme.spacing.sm,
-      justifyContent: 'space-between',
+      padding: 2,
     },
 
-    dialModeButton: {
-      width: '31%',
-      paddingVertical: theme.spacing.sm,
-      paddingHorizontal: theme.spacing.xs,
-      borderRadius: theme.borderRadius.md,
-      alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderWidth: 2,
-      borderColor: theme.colors.border,
-    },
-
-    dialModeButtonActive: {
-      backgroundColor: theme.colors.brand.primary,
-      borderColor: theme.colors.brand.primary,
-    },
-
-    dialModeText: {
-      fontSize: rs(12, 'min'),
+    title: {
       color: theme.colors.text,
-      fontWeight: fontWeights.semibold,
-      textAlign: 'center',
-    },
-
-    dialModeTextActive: {
-      color: theme.colors.background,
-    },
-
-    paletteGrid: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: theme.spacing.sm,
-      marginTop: theme.spacing.sm,
-    },
-
-    paletteItem: {
-      width: "30%",
-      aspectRatio: 1.5,
-      borderRadius: theme.borderRadius.md,
-      padding: theme.spacing.xs,
-      borderWidth: 2,
-      borderColor: "transparent",
-      backgroundColor: theme.colors.surface,
-      marginBottom: theme.spacing.sm,
-      ...theme.shadow("sm"),
-    },
-
-    paletteItemActive: {
-      borderColor: theme.colors.brand.primary,
-      backgroundColor: theme.colors.background,
-      ...theme.shadow("md"),
-    },
-
-    paletteName: {
-      fontSize: rs(10, "min"),
-      color: theme.colors.text,
-      textAlign: "center",
-      marginTop: theme.spacing.xs / 2,
-      fontWeight: fontWeights.medium,
-    },
-
-    paletteNameActive: {
-      color: theme.colors.brand.primary,
-      fontWeight: fontWeights.semibold,
-    },
-
-    discoverButton: {
-      width: "30%",
-      aspectRatio: 1.5,
-      borderRadius: theme.borderRadius.md,
-      padding: theme.spacing.xs,
-      borderWidth: 2,
-      borderColor: theme.colors.brand.primary + "40",
-      borderStyle: "dashed",
-      backgroundColor: theme.colors.surface,
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: theme.spacing.sm,
-      gap: theme.spacing.xs,
-    },
-
-    discoverIconContainer: {
-      width: rs(32),
-      height: rs(32),
-      borderRadius: rs(16),
-      backgroundColor: theme.colors.brand.primary + "20",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-
-    discoverIcon: {
-      fontSize: rs(20),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.brand.primary,
-    },
-
-    discoverText: {
-      fontSize: rs(9, "min"),
-      color: theme.colors.brand.primary,
-      textAlign: "center",
-      fontWeight: fontWeights.semibold,
-      lineHeight: rs(11),
-    },
-
-    discoverActivityButton: {
-      width: "22%",
-      aspectRatio: 1,
-      borderRadius: theme.borderRadius.md,
-      padding: theme.spacing.xs,
-      borderWidth: 2,
-      borderColor: theme.colors.brand.primary + "40",
-      borderStyle: "dashed",
-      backgroundColor: theme.colors.surface,
-      alignItems: "center",
-      justifyContent: "center",
-      gap: theme.spacing.xs / 2,
-    },
-
-    discoverActivityIcon: {
-      fontSize: rs(24),
-      fontWeight: fontWeights.semibold,
-      color: theme.colors.brand.primary,
-    },
-
-    discoverActivityText: {
-      fontSize: rs(8, "min"),
-      color: theme.colors.brand.primary,
-      textAlign: "center",
-      fontWeight: fontWeights.semibold,
-      lineHeight: rs(10),
-    },
-
-    favoritesGrid: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: theme.spacing.sm,
-      marginTop: theme.spacing.sm,
-    },
-
-    activityItem: {
-      width: "22%",
-      aspectRatio: 1,
-      borderRadius: theme.borderRadius.md,
-      backgroundColor: theme.colors.surface,
-      alignItems: "center",
-      justifyContent: "center",
-      borderWidth: 2,
-      borderColor: "transparent",
-      ...theme.shadow("sm"),
-      padding: theme.spacing.xs,
-    },
-
-    activityItemFavorite: {
-      borderColor: theme.colors.brand.primary,
-      backgroundColor: theme.colors.background,
-      ...theme.shadow("md"),
-    },
-
-    activityEmoji: {
-      fontSize: rs(24, "min"),
-      marginBottom: theme.spacing.xs / 2,
-      textAlign: "center",
-    },
-
-    activityItemLabel: {
-      fontSize: rs(9, "min"),
-      color: theme.colors.textLight,
-      fontWeight: fontWeights.medium,
-      textAlign: "center",
-      width: "100%",
-    },
-
-    activityItemLabelFavorite: {
-      color: theme.colors.brand.primary,
-      fontWeight: fontWeights.semibold,
+      fontSize: rs(24, 'min'),
+      fontWeight: fontWeights.bold,
     },
   });
 

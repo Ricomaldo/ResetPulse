@@ -17,7 +17,7 @@ export const PalettePreview = React.memo(({ paletteName }) => {
   // If paletteName is provided, use it for color preview
   if (paletteName) {
     const paletteColors = TIMER_PALETTES[paletteName]?.colors;
-    if (!paletteColors) return null;
+    if (!paletteColors) {return null;}
 
     return (
       <View style={styles.colorContainer}>
@@ -52,30 +52,30 @@ export const PalettePreview = React.memo(({ paletteName }) => {
 export default PalettePreview;
 
 const styles = StyleSheet.create({
+  colorBar: {
+    flex: 1,
+  },
+  colorContainer: {
+    borderRadius: 4,
+    flexDirection: 'row',
+    height: 20,
+    overflow: 'hidden',
+    width: '100%',
+  },
   container: {
-    padding: 16,
     alignItems: 'center',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: fontWeights.semibold,
-    marginBottom: 8,
-  },
-  paletteInfo: {
-    marginTop: 8,
+    padding: 16,
   },
   info: {
     fontSize: 12,
     textAlign: 'center',
   },
-  colorContainer: {
-    flexDirection: 'row',
-    height: 20,
-    width: '100%',
-    borderRadius: 4,
-    overflow: 'hidden',
+  paletteInfo: {
+    marginTop: 8,
   },
-  colorBar: {
-    flex: 1,
+  title: {
+    fontSize: 16,
+    fontWeight: fontWeights.semibold,
+    marginBottom: 8,
   },
 });

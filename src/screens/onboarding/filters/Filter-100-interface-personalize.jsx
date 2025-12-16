@@ -180,117 +180,117 @@ export default function Filter5cInterface({ onContinue }) {
 
 const createStyles = (colors, spacing, borderRadius) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    header: {
-      paddingHorizontal: rs(spacing.xl),
-      paddingTop: rs(spacing.lg),
-      paddingBottom: rs(spacing.md),
-    },
-    title: {
-      fontSize: rs(28),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      textAlign: 'center',
-    },
-    scrollView: {
-      flex: 1,
-    },
-    scrollContent: {
-      paddingHorizontal: rs(spacing.xl),
-      paddingBottom: rs(spacing.lg),
-    },
-    section: {
-      marginBottom: rs(spacing.xl),
-    },
-    sectionLabel: {
-      fontSize: rs(16),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      marginBottom: rs(spacing.sm),
-    },
-    segmentedControl: {
-      flexDirection: 'row',
-      backgroundColor: colors.surface,
-      borderRadius: borderRadius.lg,
-      padding: rs(4),
-      gap: rs(4),
-    },
-    segmentButton: {
-      flex: 1,
-      paddingVertical: rs(spacing.sm),
-      borderRadius: borderRadius.md,
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: rs(44),
-    },
-    segmentButtonActive: {
-      backgroundColor: colors.brand.primary,
-    },
-    segmentText: {
-      fontSize: rs(14),
-      fontWeight: fontWeights.medium,
-      color: colors.text,
-    },
-    segmentTextActive: {
-      color: colors.background,
-      fontWeight: fontWeights.semibold,
-    },
-    toggleRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: colors.surface,
-      borderRadius: borderRadius.lg,
-      padding: rs(spacing.md),
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    toggleInfo: {
-      flex: 1,
-      marginRight: rs(spacing.md),
-    },
-    toggleLabel: {
-      fontSize: rs(16),
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-      marginBottom: rs(4),
-    },
-    toggleHint: {
-      fontSize: rs(13),
-      color: colors.textSecondary,
-      lineHeight: rs(18),
-    },
     bottomContainer: {
+      borderTopColor: colors.border,
+      borderTopWidth: 1,
+      gap: rs(spacing.sm),
+      paddingBottom: rs(spacing.lg),
       paddingHorizontal: rs(spacing.xl),
       paddingTop: rs(spacing.md),
-      paddingBottom: rs(spacing.lg),
-      gap: rs(spacing.sm),
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
+    },
+    header: {
+      paddingBottom: rs(spacing.md),
+      paddingHorizontal: rs(spacing.xl),
+      paddingTop: rs(spacing.lg),
     },
     primaryButton: {
-      backgroundColor: colors.brand.primary,
-      paddingVertical: rs(spacing.md),
-      borderRadius: borderRadius.xl,
       alignItems: 'center',
-      minHeight: rs(56),
+      backgroundColor: colors.brand.primary,
+      borderRadius: borderRadius.xl,
       justifyContent: 'center',
+      minHeight: rs(56),
+      paddingVertical: rs(spacing.md),
     },
     primaryButtonText: {
       color: colors.background,
       fontSize: rs(18),
       fontWeight: fontWeights.semibold,
     },
-    skipButton: {
-      paddingVertical: rs(spacing.sm),
+    screen: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: rs(spacing.lg),
+      paddingHorizontal: rs(spacing.xl),
+    },
+    scrollView: {
+      flex: 1,
+    },
+    section: {
+      marginBottom: rs(spacing.xl),
+    },
+    sectionLabel: {
+      color: colors.text,
+      fontSize: rs(16),
+      fontWeight: fontWeights.semibold,
+      marginBottom: rs(spacing.sm),
+    },
+    segmentButton: {
       alignItems: 'center',
+      borderRadius: borderRadius.md,
+      flex: 1,
+      justifyContent: 'center',
+      minHeight: rs(44),
+      paddingVertical: rs(spacing.sm),
+    },
+    segmentButtonActive: {
+      backgroundColor: colors.brand.primary,
+    },
+    segmentText: {
+      color: colors.text,
+      fontSize: rs(14),
+      fontWeight: fontWeights.medium,
+    },
+    segmentTextActive: {
+      color: colors.background,
+      fontWeight: fontWeights.semibold,
+    },
+    segmentedControl: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      flexDirection: 'row',
+      gap: rs(4),
+      padding: rs(4),
+    },
+    skipButton: {
+      alignItems: 'center',
+      paddingVertical: rs(spacing.sm),
     },
     skipButtonText: {
       color: colors.textSecondary,
       fontSize: rs(15),
       fontWeight: fontWeights.medium,
+    },
+    title: {
+      color: colors.text,
+      fontSize: rs(28),
+      fontWeight: fontWeights.semibold,
+      textAlign: 'center',
+    },
+    toggleHint: {
+      color: colors.textSecondary,
+      fontSize: rs(13),
+      lineHeight: rs(18),
+    },
+    toggleInfo: {
+      flex: 1,
+      marginRight: rs(spacing.md),
+    },
+    toggleLabel: {
+      color: colors.text,
+      fontSize: rs(16),
+      fontWeight: fontWeights.semibold,
+      marginBottom: rs(4),
+    },
+    toggleRow: {
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: borderRadius.lg,
+      borderWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: rs(spacing.md),
     },
   });

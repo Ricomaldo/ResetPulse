@@ -5,7 +5,8 @@
  * @updated 2025-12-14
  */
 import React, { useMemo, useRef, useState } from 'react';
-import { View, Animated, PanResponder, Text } from 'react-native';
+import { View, Animated, PanResponder, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useDialOrientation } from '../../hooks/useDialOrientation';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -15,10 +16,8 @@ import {
   TIMER_PROPORTIONS,
   TIMER_VISUAL,
   COLORS,
-  DIAL_INTERACTION,
   getDialMode,
   DRAG,
-  VISUAL,
 } from './timerConstants';
 
 /**
@@ -32,9 +31,7 @@ const easeOut = (t) => t * (2 - t);
 import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialCenter from './dial/DialCenter';
-import PlayPauseButton from './PlayPauseButton';
-import Svg, { Circle } from 'react-native-svg';
-import { fontWeights } from '../../theme/tokens';
+import Svg, { Circle, Line } from 'react-native-svg';
 
 /**
  * TimerDial - Main timer dial component
@@ -43,6 +40,7 @@ import { fontWeights } from '../../theme/tokens';
 function TimerDial({
   progress = 1,
   duration = 0,
+  remaining = 0,
   color,
   size = null,
   clockwise = false,
@@ -244,7 +242,7 @@ function TimerDial({
         gestureStartPosRef.current = null;
       },
     }),
-    [dial, isRunning, onGraduationTap, onDialTap]
+  [dial, isRunning, onGraduationTap, onDialTap]
   );
 
   // Animated color for completion
@@ -268,156 +266,198 @@ function TimerDial({
     ? t('accessibility.timer.dialTapToToggle')
     : t('accessibility.timer.dialAdjustable') + ' ' + t('accessibility.timer.dialTapToToggle');
 
+  // Pre-calc scaled progress (0..1) based on current scale mode
+  const maxMinutesForScale = getDialMode(scaleMode).maxMinutes;
+  const currentMinutesForScale = duration / 60;
+  const scaledProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
+  const isZeroState = !isRunning && remaining === 0;
+
+  // Compute handle position on the draggable side of the arc
+  // Place the handle roughly at the middle of the radius, on the end angle of the arc
+  const handleAngleDeg = scaledProgress * 360;
+  const handleAngleRad = (handleAngleDeg * Math.PI) / 180;
+  // Positionné juste à l’intérieur de l’arc (quelques pixels en retrait du bord)
+  const handleInsetPx = rs(6);
+  const handleDistance = Math.max(0, radius - handleInsetPx);
+  const handleX = clockwise
+    ? centerX + handleDistance * Math.sin(handleAngleRad)
+    : centerX - handleDistance * Math.sin(handleAngleRad);
+  const handleY = centerY - handleDistance * Math.cos(handleAngleRad);
+
+  // Styles (extraction des styles inline pour satisfaire le linter)
+  const styles = StyleSheet.create({
+    absoluteOverlay: {
+      position: 'absolute',
+    },
+    root: {
+      alignItems: 'center',
+    },
+    svgContainer: {
+      alignItems: 'center',
+      height: svgSize,
+      justifyContent: 'center',
+      width: svgSize,
+    },
+  });
+
   return (
-    <View
-      {...panResponder.panHandlers}
-      style={{
-        width: svgSize,
-        height: svgSize,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-      accessible={true}
-      accessibilityRole={isRunning ? "timer" : "adjustable"}
-      accessibilityLabel={dialAccessibilityLabel}
-      accessibilityHint={dialAccessibilityHint}
-      accessibilityValue={{
-        min: 0,
-        max: getDialMode(scaleMode).maxMinutes,
-        now: durationMinutes,
-        text: `${durationMinutes} minutes`
-      }}
-      accessibilityActions={!isRunning ? [
-        { name: 'increment', label: 'Increase duration' },
-        { name: 'decrement', label: 'Decrease duration' },
-        { name: 'activate', label: 'Start timer' },
-      ] : [
-        { name: 'activate', label: 'Pause timer' },
-      ]}
-      onAccessibilityAction={(event) => {
-        const { actionName } = event.nativeEvent;
-        if (actionName === 'increment' && onGraduationTap && !isRunning) {
-          const newDuration = Math.min(duration + 60, getDialMode(scaleMode).maxMinutes * 60);
-          onGraduationTap(newDuration / 60);
-        } else if (actionName === 'decrement' && onGraduationTap && !isRunning) {
-          const newDuration = Math.max(0, duration - 60);
-          onGraduationTap(newDuration / 60);
-        } else if (actionName === 'activate' && onDialTap) {
-          onDialTap();
-        }
-      }}
-    >
-      {/* Base layer: static elements */}
-      <DialBase
-        svgSize={svgSize}
-        centerX={centerX}
-        centerY={centerY}
-        radius={radiusBackground}
-        strokeWidth={strokeWidth}
-        graduationMarks={graduationMarks}
-        minuteNumbers={minuteNumbers}
-        showNumbers={showNumbers}
-        showGraduations={showGraduations}
-        color={color}
-      />
+    <View style={styles.root}>
+      <View
+        {...panResponder.panHandlers}
+        style={styles.svgContainer}
+        accessible={true}
+        accessibilityRole={isRunning ? 'timer' : 'adjustable'}
+        accessibilityLabel={dialAccessibilityLabel}
+        accessibilityHint={dialAccessibilityHint}
+        accessibilityValue={{
+          min: 0,
+          max: getDialMode(scaleMode).maxMinutes,
+          now: durationMinutes,
+          text: `${durationMinutes} minutes`
+        }}
+        accessibilityActions={!isRunning ? [
+          { name: 'increment', label: 'Increase duration' },
+          { name: 'decrement', label: 'Decrease duration' },
+          { name: 'activate', label: 'Start timer' },
+        ] : [
+          { name: 'activate', label: 'Pause timer' },
+        ]}
+        onAccessibilityAction={(event) => {
+          const { actionName } = event.nativeEvent;
+          if (actionName === 'increment' && onGraduationTap && !isRunning) {
+            const newDuration = Math.min(duration + 60, getDialMode(scaleMode).maxMinutes * 60);
+            onGraduationTap(newDuration / 60);
+          } else if (actionName === 'decrement' && onGraduationTap && !isRunning) {
+            const newDuration = Math.max(0, duration - 60);
+            onGraduationTap(newDuration / 60);
+          } else if (actionName === 'activate' && onDialTap) {
+            onDialTap();
+          }
+        }}
+      >
+        {/* Base layer: static elements */}
+        <DialBase
+          svgSize={svgSize}
+          centerX={centerX}
+          centerY={centerY}
+          radius={radiusBackground}
+          strokeWidth={strokeWidth}
+          graduationMarks={graduationMarks}
+          minuteNumbers={minuteNumbers}
+          showNumbers={showNumbers}
+          showGraduations={showGraduations}
+          color={color}
+        />
 
-      {/* Progress layer: animated arc */}
-      {/* IMPORTANT: Scale progress based on dial mode */}
-      {(() => {
-        // Calculate scaled progress based on dial maximum
-        const maxMinutes = getDialMode(scaleMode).maxMinutes;
-        const currentMinutes = duration / 60; // Convert seconds to minutes
-        const scaledProgress = Math.min(1, currentMinutes / maxMinutes) * progress;
+        {/* Progress layer: animated arc */}
+        {/* IMPORTANT: Scale progress based on dial mode */}
+        {(() => {
+          return (
+            <DialProgress
+              svgSize={svgSize}
+              centerX={centerX}
+              centerY={centerY}
+              radius={radius}
+              strokeWidth={strokeWidth}
+              progress={scaledProgress}
+              color={color}
+              isClockwise={clockwise}
+              scaleMode={scaleMode}
+              animatedColor={animatedColor}
+              isRunning={isRunning}
+            />
+          );
+        })()}
 
+        {/* Zero-state radial segment from center to 12 o'clock (visual cue) */}
+        {isZeroState && (
+          <Svg width={svgSize} height={svgSize} style={styles.absoluteOverlay} pointerEvents="none" accessible={false} importantForAccessibility="no">
+            <Line
+              x1={centerX}
+              y1={centerY}
+              x2={centerX}
+              y2={centerY - radius}
+              stroke={theme.colors.textSecondary}
+              strokeOpacity={0.5}
+              strokeWidth={2}
+              strokeLinecap="round"
+            />
+          </Svg>
+        )}
 
-        return (
-          <DialProgress
-            svgSize={svgSize}
-            centerX={centerX}
-            centerY={centerY}
-            radius={radius}
-            strokeWidth={strokeWidth}
-            progress={scaledProgress}
-            color={color}
-            isClockwise={clockwise}
-            scaleMode={scaleMode}
-            animatedColor={animatedColor}
-            isRunning={isRunning}
-          />
-        );
-      })()}
+        {/* Drag handle indicator at the movable end of the arc */}
+        {!isRunning && (
+          <Svg width={svgSize} height={svgSize} style={styles.absoluteOverlay} pointerEvents="none" accessible={false} importantForAccessibility="no">
+            <Circle
+              cx={handleX}
+              cy={handleY}
+              r={Math.max(2, radius * 0.025)}
+              fill={theme.colors.textSecondary}
+              opacity={isDragging ? 0.9 : 0.6}
+            />
+          </Svg>
+        )}
 
-      {/* Physical fixation dots - hide when PlayPauseButton is displayed */}
-      {(showActivityEmoji || isRunning) && (
-        <Svg
-          width={svgSize}
-          height={svgSize}
-          style={{ position: 'absolute' }}
-          pointerEvents="none"
-          accessible={false}
-          importantForAccessibility="no"
-        >
-          <Circle
-            cx={centerX}
-            cy={centerY}
-            r={radius * 0.08}
-            fill={theme.colors.neutral}
-            opacity={0.8}
-          />
-          <Circle
-            cx={centerX}
-            cy={centerY}
-            r={radius * 0.04}
-            fill={theme.colors.text}
-            opacity={0.4}
-          />
-        </Svg>
-      )}
+        {/* Physical fixation dots - hide when PlayPauseButton is displayed */}
+        {(showActivityEmoji || isRunning) && (
+          <Svg width={svgSize} height={svgSize} style={styles.absoluteOverlay} pointerEvents="none" accessible={false} importantForAccessibility="no">
+            <Circle
+              cx={centerX}
+              cy={centerY}
+              r={radius * 0.08}
+              fill={theme.colors.neutral}
+              opacity={0.8}
+            />
+            <Circle
+              cx={centerX}
+              cy={centerY}
+              r={radius * 0.04}
+              fill={theme.colors.text}
+              opacity={0.4}
+            />
+          </Svg>
+        )}
 
-      {/* Center layer: emoji, pulse, or play/pause button */}
-      <DialCenter
-        circleSize={circleSize}
-        activityEmoji={activityEmoji}
-        isRunning={isRunning}
-        shouldPulse={shouldPulse}
-        showActivityEmoji={showActivityEmoji}
-        color={color}
-        pulseDuration={currentActivity?.pulseDuration}
-        isCompleted={isCompleted}
-        isPaused={isPaused}
-        onPress={onDialTap}
-        onLongPress={onDialLongPress}
-      />
-
-      {/* Dragging indicator */}
-      {isDragging && (
-        <View
-          style={{
-            position: 'absolute',
-            top: 10,
-            backgroundColor: theme.colors.background,
-            paddingHorizontal: theme.spacing.md,
-            paddingVertical: theme.spacing.xs,
-            borderRadius: theme.borderRadius.md,
-            ...theme.shadow('md'),
-          }}
-          accessible={false}
-          importantForAccessibility="no-hide-descendants"
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: fontWeights.semibold,
-              color: theme.colors.text,
-            }}
-          >
-            {Math.floor(duration / 60)} min
-          </Text>
-        </View>
-      )}
+        {/* Center layer: emoji, pulse, or play/pause button */}
+        <DialCenter
+          circleSize={circleSize}
+          activityEmoji={activityEmoji}
+          isRunning={isRunning}
+          shouldPulse={shouldPulse}
+          showActivityEmoji={showActivityEmoji}
+          color={color}
+          pulseDuration={currentActivity?.pulseDuration}
+          isCompleted={isCompleted}
+          isPaused={isPaused}
+          onPress={onDialTap}
+          onLongPress={onDialLongPress}
+        />
+      </View>
     </View>
   );
 }
+
+TimerDial.propTypes = {
+  progress: PropTypes.number,
+  duration: PropTypes.number,
+  remaining: PropTypes.number,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  clockwise: PropTypes.bool,
+  scaleMode: PropTypes.string,
+  activityEmoji: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  isRunning: PropTypes.bool,
+  shouldPulse: PropTypes.bool,
+  showActivityEmoji: PropTypes.bool,
+  onGraduationTap: PropTypes.func,
+  onDialTap: PropTypes.func,
+  onDialLongPress: PropTypes.func,
+  isCompleted: PropTypes.bool,
+  isPaused: PropTypes.bool,
+  currentActivity: PropTypes.object,
+  showNumbers: PropTypes.bool,
+  showGraduations: PropTypes.bool,
+};
 
 // Export memoized version
 export default React.memo(TimerDial, (prevProps, nextProps) => {

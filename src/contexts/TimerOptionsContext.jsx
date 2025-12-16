@@ -34,7 +34,7 @@ export const TimerOptionsProvider = ({ children }) => {
 
   // Load onboarding config once after initial load
   useEffect(() => {
-    if (isLoading || hasLoadedOnboardingConfig.current) return;
+    if (isLoading || hasLoadedOnboardingConfig.current) {return;}
 
     const loadOnboardingConfig = async () => {
       try {

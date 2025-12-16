@@ -38,19 +38,19 @@ const SwipeUpHint = React.memo(function SwipeUpHint({ message = 'Glissez vers le
   }, []);
 
   const styles = StyleSheet.create({
+    arrow: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(24),
+      opacity: 0.5,
+    },
     container: {
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: rs(12),
     },
-    arrow: {
-      fontSize: rs(24),
-      color: theme.colors.textSecondary,
-      opacity: 0.5,
-    },
     message: {
-      fontSize: rs(12),
       color: theme.colors.textSecondary,
+      fontSize: rs(12),
       marginTop: rs(4),
       opacity: 0.6,
     },

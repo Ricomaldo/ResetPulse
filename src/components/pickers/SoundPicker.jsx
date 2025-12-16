@@ -138,31 +138,33 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
       marginTop: theme.spacing.sm,
     },
 
-    soundList: {
-      maxHeight: 200,
-    },
-
-    soundItem: {
-      flexDirection: 'row',
+    loader: {
       alignItems: 'center',
-      paddingVertical: theme.spacing.sm,
-      paddingHorizontal: theme.spacing.sm,
-      borderRadius: theme.borderRadius.md,
-      marginBottom: theme.spacing.xs,
-      backgroundColor: theme.colors.surface,
-      borderWidth: 2,
-      borderColor: 'transparent',
-      minHeight: 44,
+      padding: theme.spacing.lg,
     },
 
-    soundItemActive: {
-      borderColor: theme.colors.brand.primary,
-      backgroundColor: theme.colors.background,
-      ...theme.shadow('sm'),
+    playIcon: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(16, 'min'),
     },
 
-    soundItemPlaying: {
-      backgroundColor: theme.colors.brand.primary + '10',
+    playIndicator: {
+      alignItems: 'center',
+      height: 24,
+      justifyContent: 'center',
+      marginLeft: theme.spacing.sm,
+      position: 'relative',
+      width: 24,
+    },
+
+    playIndicatorInner: {
+      alignItems: 'center',
+      bottom: 0,
+      justifyContent: 'center',
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      top: 0,
     },
 
     soundEmoji: {
@@ -174,39 +176,37 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
       flex: 1,
     },
 
+    soundItem: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: 'transparent',
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 2,
+      flexDirection: 'row',
+      marginBottom: theme.spacing.xs,
+      minHeight: 44,
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: theme.spacing.sm,
+    },
+
+    soundItemActive: {
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.brand.primary,
+      ...theme.shadow('sm'),
+    },
+
+    soundItemPlaying: {
+      backgroundColor: theme.colors.brand.primary + '10',
+    },
+
+    soundList: {
+      maxHeight: 200,
+    },
+
     soundName: {
+      color: theme.colors.text,
       fontSize: rs(13, 'min'),
       fontWeight: fontWeights.medium,
-      color: theme.colors.text,
-    },
-
-    playIndicator: {
-      marginLeft: theme.spacing.sm,
-      width: 24,
-      height: 24,
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-    },
-
-    playIndicatorInner: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-
-    playIcon: {
-      fontSize: rs(16, 'min'),
-      color: theme.colors.brand.primary,
-    },
-
-    loader: {
-      padding: theme.spacing.lg,
-      alignItems: 'center',
     },
   });
 
