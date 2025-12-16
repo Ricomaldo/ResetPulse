@@ -215,7 +215,6 @@ function TimerScreenContent() {
           animatedDots={animatedDots}
           displayMessage={displayMessage}
           isCompleted={isTimerCompleted}
-          color={currentColor}
         />
       )}
 
