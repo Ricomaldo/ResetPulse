@@ -18,7 +18,6 @@ function ActivityLabel({
   animatedDots,
   displayMessage,
   isCompleted,
-  color,
 }) {
   const theme = useTheme();
   const dotsOpacityRef = useRef(new Animated.Value(0)).current;
@@ -50,27 +49,28 @@ function ActivityLabel({
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
-      flexDirection: 'row',
       justifyContent: 'center',
       left: 0,
       position: 'absolute',
       right: 0,
       top: rs(80),
     },
+    content: {
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
     dots: {
-      color: color || theme.colors.brand.primary,
+      color: theme.colors.brand.primary,
       fontSize: rs(24),
       fontWeight: '600',
       letterSpacing: 0.5,
-      width: rs(24),
+      marginLeft: rs(2),
     },
     label: {
-      color: color || theme.colors.brand.primary,
-      flex: 0,
+      color: theme.colors.brand.primary,
       fontSize: rs(24),
       fontWeight: '600',
       letterSpacing: 0.5,
-      textAlign: 'center',
     },
   });
 
@@ -80,28 +80,29 @@ function ActivityLabel({
 
   return (
     <Animated.View style={styles.container}>
-      <Animated.Text style={styles.label}>
-        {displayText}
-      </Animated.Text>
-      {shouldShowDots && (
-        <Animated.Text
-          style={[
-            styles.dots,
-            {
-              opacity: dotsOpacityRef,
-            },
-          ]}
-        >
-          {animatedDots}
+      <Animated.View style={styles.content}>
+        <Animated.Text style={styles.label}>
+          {displayText}
         </Animated.Text>
-      )}
+        {shouldShowDots && (
+          <Animated.Text
+            style={[
+              styles.dots,
+              {
+                opacity: dotsOpacityRef,
+              },
+            ]}
+          >
+            {animatedDots}
+          </Animated.Text>
+        )}
+      </Animated.View>
     </Animated.View>
   );
 }
 
 ActivityLabel.propTypes = {
   animatedDots: PropTypes.string.isRequired,
-  color: PropTypes.string,
   displayMessage: PropTypes.string,
   emoji: PropTypes.string,
   isCompleted: PropTypes.bool,
@@ -109,7 +110,6 @@ ActivityLabel.propTypes = {
 };
 
 ActivityLabel.defaultProps = {
-  color: undefined,
   displayMessage: '',
   emoji: '',
   isCompleted: false,
