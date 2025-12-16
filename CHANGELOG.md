@@ -41,7 +41,7 @@ status: active
 
 ---
 
-### 🎯 Scale/Duration Separation
+### 🎯 Scale/Duration Separation + UI Clarity
 
 #### Added
 - **Dial scale and timer duration now separate concerns**
@@ -51,8 +51,12 @@ status: active
   - Drag on dial = adjust duration (within current scale)
   - Reset = restore initial duration
 
-- **Improved UX terminology**
-  - "Taille du cadran" → "Échelle" (clearer, more precise)
+- **Improved UX terminology & visual feedback**
+  - "Taille du cadran" → "Cadran" (more concrete, less cryptic)
+  - Display current duration below preset pills
+  - Format: "Durée · MM:SS" (monospace, updates in real-time)
+  - User always sees both scale and duration simultaneously
+  - No more "what does this button do?" confusion
 
 #### Technical Details
 - PresetPills now passes scale mode + preset minutes to parent
