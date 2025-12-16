@@ -6,6 +6,41 @@ status: active
 
 ## [Unreleased - Current Sprint]
 
+### 📦 2-Level Drawer Architecture (Options + Settings Modal)
+
+#### Added
+- **Simplified Options Drawer (Level 1)**
+  - 3 core sections: Couleur, Activité, Échelle
+  - Discrete "Réglages" button at bottom
+  - Reduced cognitive load vs dual-state expandable drawer
+  - Drawer closes automatically when settings opens
+
+- **Separate Settings Modal (Level 2)**
+  - Existing SettingsModal.jsx powers this
+  - All advanced options: Sons, Thème, Haptics, Minimal Interface, Scale Modes
+  - Independent modal architecture (not nested in drawer)
+  - Full-featured settings experience without drawer limitations
+
+- **Handle Styling (iOS Standard)**
+  - 36px width × 4px height
+  - Border color (light gray)
+  - 2px borderRadius
+  - Centered positioning
+
+#### Changed
+- ExpandableDrawerContent now pass-through to OptionsDrawerContent
+- Removed complexity of nested ScrollView + dual state
+- Settings button is now primary access point to advanced options
+- No more "expand drawer" to see more settings
+
+#### Benefits
+1. Clearer mental model: Drawer = quick options, Modal = settings
+2. Less scrolling in main interface
+3. Better UX alignment with mobile standards (Gmail, Maps, etc)
+4. Reduced complexity in drawer state management
+
+---
+
 ### 🎯 Scale/Duration Separation
 
 #### Added
