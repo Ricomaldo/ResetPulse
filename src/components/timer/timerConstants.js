@@ -10,12 +10,15 @@
 
 /**
  * Dial modes configuration with magnetic snap granularity
- * magneticSnapSeconds: Snap increment in seconds for each scale mode
- * - 1min scale: 5s snap (12 positions per revolution)
- * - 5min scale: 10s snap (30 positions)
- * - 10min scale: 15s snap (40 positions)
- * - 25min scale: 30s snap (50 positions)
- * - 45min/60min scale: 60s snap (45/60 positions)
+ * magneticSnapSeconds: Snap increment aligned to major tick marks
+ * - 1min scale: 60s snap (aligns to 1min mark = majorTickInterval)
+ * - 5min scale: 60s snap (aligns to 1min marks = majorTickInterval)
+ * - 10min scale: 120s snap (aligns to 2min major marks = majorTickInterval × 60)
+ * - 25min scale: 300s snap (aligns to 5min major marks = majorTickInterval × 60)
+ * - 45min scale: 300s snap (aligns to 5min major marks = majorTickInterval × 60)
+ * - 60min scale: 300s snap (aligns to 5min major marks = majorTickInterval × 60)
+ *
+ * Rationale: Snap points now align with visible major marks, providing predictable feedback
  */
 export const DIAL_MODES = {
   '1min': {
@@ -27,7 +30,7 @@ export const DIAL_MODES = {
     numberInterval: 1,
     defaultDuration: 60,
     useSeconds: true,
-    magneticSnapSeconds: 5,
+    magneticSnapSeconds: 60,
   },
   '5min': {
     maxMinutes: 5,
@@ -37,7 +40,7 @@ export const DIAL_MODES = {
     majorTickInterval: 1,
     numberInterval: 1,
     defaultDuration: 5 * 60,
-    magneticSnapSeconds: 10,
+    magneticSnapSeconds: 60,
   },
   '10min': {
     maxMinutes: 10,
@@ -47,7 +50,7 @@ export const DIAL_MODES = {
     majorTickInterval: 2,
     numberInterval: 2,
     defaultDuration: 10 * 60,
-    magneticSnapSeconds: 15,
+    magneticSnapSeconds: 120,
   },
   '25min': {
     maxMinutes: 25,
@@ -57,7 +60,7 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 25 * 60,
-    magneticSnapSeconds: 30,
+    magneticSnapSeconds: 300,
   },
   '45min': {
     maxMinutes: 45,
@@ -67,7 +70,7 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 45 * 60,
-    magneticSnapSeconds: 60,
+    magneticSnapSeconds: 300,
   },
   '60min': {
     maxMinutes: 60,
@@ -77,7 +80,7 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 30 * 60,
-    magneticSnapSeconds: 60,
+    magneticSnapSeconds: 300,
   }
 };
 
