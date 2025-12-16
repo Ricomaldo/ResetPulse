@@ -51,6 +51,8 @@ const createStyles = (theme) => {
       fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
       letterSpacing: 0.5,
+      minWidth: rs(100), // Reserve space so label doesn't shift
+      textAlign: 'center',
     },
 
     digitalTimerContainer: {
