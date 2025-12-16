@@ -14,6 +14,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
+import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TimeTimer, Drawer, CircularToggle, SwipeUpHint } from '../components/layout';
 import { ExpandableDrawerContent } from '../components/drawers';
 import DigitalTimer from '../components/timer/DigitalTimer';
@@ -37,14 +38,27 @@ const createStyles = (theme) => {
       justifyContent: 'center',
     },
 
-    activityLabel: {
+    activityLabelContainer: {
       position: 'absolute',
       top: rs(80),
       alignSelf: 'center',
+      alignItems: 'center',
+    },
+
+    activityLabel: {
       fontSize: rs(16),
       fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
       letterSpacing: 0.5,
+    },
+
+    activityDots: {
+      fontSize: rs(16),
+      fontWeight: fontWeights.medium,
+      color: theme.colors.textSecondary,
+      letterSpacing: 0.5,
+      marginTop: rs(4),
+      minHeight: rs(16),
     },
 
     digitalTimerContainer: {
@@ -106,6 +120,7 @@ function TimerScreenContent() {
   const dialWrapperRef = useRef(null);
   const dialLayoutRef = useRef(null);
   const activityLabelAnimRef = useRef(new Animated.Value(0)).current;
+  const animatedDots = useAnimatedDots();
 
   // Animate activity label on timer start
   useEffect(() => {
@@ -226,9 +241,9 @@ function TimerScreenContent() {
       {...panResponder.panHandlers}
     >
       {/* Activity label - en haut (dynamic based on timer state) */}
-      <Animated.Text
+      <Animated.View
         style={[
-          styles.activityLabel,
+          styles.activityLabelContainer,
           {
             transform: [
               {
@@ -238,17 +253,42 @@ function TimerScreenContent() {
                 }),
               },
             ],
-            opacity: activityLabelAnimRef.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 1],
-            }),
           },
         ]}
       >
-        {isTimerRunning && currentActivity && currentActivity.id !== 'none'
-          ? `${currentActivity.emoji} ${currentActivity.label}`
-          : 'Tap sur le cadran pour démarrer'}
-      </Animated.Text>
+        <Animated.Text
+          style={[
+            styles.activityLabel,
+            {
+              opacity: activityLabelAnimRef.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 1],
+              }),
+            },
+          ]}
+        >
+          {isTimerRunning && currentActivity && currentActivity.id !== 'none'
+            ? `${currentActivity.emoji} ${currentActivity.label}`
+            : 'Tap sur le cadran pour démarrer'}
+        </Animated.Text>
+
+        {/* Animated dots below activity label */}
+        {isTimerRunning && currentActivity && currentActivity.id !== 'none' && (
+          <Animated.Text
+            style={[
+              styles.activityDots,
+              {
+                opacity: activityLabelAnimRef.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 1],
+                }),
+              },
+            ]}
+          >
+            {animatedDots}
+          </Animated.Text>
+        )}
+      </Animated.View>
 
       {/* Timer - center, zen */}
       <View style={styles.timerContainer}>
