@@ -49,6 +49,9 @@ function ActivityLabel({
 
   const styles = StyleSheet.create({
     container: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
       left: 0,
       position: 'absolute',
       right: 0,
@@ -58,20 +61,15 @@ function ActivityLabel({
       color: color || theme.colors.brand.primary,
       fontSize: rs(24),
       fontWeight: '600',
-      left: '50%',
       letterSpacing: 0.5,
-      marginLeft: rs(18), // Position dots closer to label
-      position: 'absolute',
       width: rs(24),
     },
     label: {
       color: color || theme.colors.brand.primary,
+      flex: 0,
       fontSize: rs(24),
       fontWeight: '600',
-      left: 0,
       letterSpacing: 0.5,
-      position: 'absolute',
-      right: 0,
       textAlign: 'center',
     },
   });
