@@ -3,6 +3,18 @@ import { renderHook, act } from '../test-utils';
 import useTimer from '../../src/hooks/useTimer';
 import { TIMER } from '../../src/components/timer/timerConstants';
 
+// Mock i18n/useTranslation to return predictable values
+jest.mock('../../src/hooks/useTranslation', () => ({
+  useTranslation: () => (key) => {
+    // Mock timerMessages for testing
+    const messages = {
+      'timerMessages.none.startMessage': 'Ready',
+      'timerMessages.none.endMessage': 'Done',
+    };
+    return messages[key] || key;
+  },
+}));
+
 // Mock TimerOptionsContext
 jest.mock('../../src/contexts/TimerOptionsContext', () => ({
   useTimerOptions: () => ({
@@ -96,7 +108,7 @@ describe('useTimer - Core functionality', () => {
       });
 
       expect(result.current.running).toBe(true);
-      expect(result.current.displayMessage).toBe("Ça commence.");
+      expect(result.current.displayMessage).toBe("Ready");
 
       unmount(); // Clean up
     });
@@ -120,15 +132,20 @@ describe('useTimer - Core functionality', () => {
       unmount(); // Clean up
     });
 
-    it('resets timer to zero', () => {
+    it('resets timer to initial duration', () => {
       const { result, unmount } = renderHook(() => useTimer(300));
 
-      // Don't start the timer, just test reset directly
+      // Start and run for a bit
+      act(() => {
+        result.current.toggleRunning();
+      });
+
+      // Reset should restore remaining to initial duration (300)
       act(() => {
         result.current.resetTimer();
       });
 
-      expect(result.current.remaining).toBe(0);
+      expect(result.current.remaining).toBe(300);
       expect(result.current.running).toBe(false);
       expect(result.current.displayMessage).toBe('');
 

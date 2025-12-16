@@ -13,7 +13,8 @@ import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
 import TimerDial from '../timer/TimerDial';
 import haptics from '../../utils/haptics';
-import { TIMER, getDialMode } from '../timer/timerConstants';
+import { TIMER, TEXT, getDialMode } from '../timer/timerConstants';
+import { fontWeights } from '../../theme/tokens';
 
 export default function TimeTimer({
   onRunningChange,
@@ -109,6 +110,25 @@ export default function TimeTimer({
       justifyContent: 'center',
       position: 'relative',
     },
+
+    messageOverlay: {
+      position: 'absolute',
+      top: '70%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.background,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.borderRadius.md,
+    },
+
+    messageText: {
+      fontSize: rs(18, 'min'),
+      fontWeight: fontWeights.bold,
+      color: currentColor || theme.colors.brand.primary,
+      textAlign: 'center',
+      letterSpacing: TEXT.LETTER_SPACING,
+    },
   });
 
   /**
@@ -169,7 +189,9 @@ export default function TimeTimer({
           showActivityEmoji={showActivityEmoji}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}
+          onDialLongPress={timer.resetTimer}
           isCompleted={timer.isCompleted}
+          isPaused={!timer.running && timer.remaining > 0}
           currentActivity={currentActivity}
           showNumbers={true}
           showGraduations={true}

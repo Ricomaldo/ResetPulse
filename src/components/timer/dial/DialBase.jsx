@@ -3,10 +3,28 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { TIMER_VISUAL } from '../timerConstants';
+
+/**
+ * Convert hex color to rgba with opacity
+ * @param {string} hex - Hex color (e.g., '#c17a71')
+ * @param {number} opacity - Opacity value 0-1
+ * @returns {string} rgba color string
+ */
+const hexToRgba = (hex, opacity) => {
+  // Remove # if present
+  const cleanHex = hex.replace('#', '');
+  
+  // Parse RGB values
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
 
 /**
  * DialBase - Static SVG elements (circles, graduations, numbers)
@@ -36,6 +54,12 @@ const DialBase = React.memo(({
 }) => {
   const theme = useTheme();
 
+  // Convert color to rgba with 50% opacity for graduations
+  const graduationColor = useMemo(() => {
+    const baseColor = color || theme.colors.brand.primary;
+    return hexToRgba(baseColor, 0.5);
+  }, [color, theme.colors.brand.primary]);
+
   return (
     <Svg
       width={svgSize}
@@ -62,9 +86,8 @@ const DialBase = React.memo(({
           y1={mark.y1}
           x2={mark.x2}
           y2={mark.y2}
-          stroke={color || theme.colors.brand.primary}
+          stroke={graduationColor}
           strokeWidth={mark.strokeWidth}
-          opacity={mark.opacity}
         />
       ))}
 

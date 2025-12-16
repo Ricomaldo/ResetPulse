@@ -1,9 +1,8 @@
 /**
- * @fileoverview Center display with activity emoji and pulse animations
+ * @fileoverview Center display with activity emoji, pulse animations, or play/pause button
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
-import PropTypes from 'prop-types';
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Animated } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
@@ -11,8 +10,8 @@ import PlayPauseButton from '../PlayPauseButton';
 import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
 
 /**
- * DialCenter - Activity emoji and pulse animations
- * Handles center display and pulsing effects during timer operation
+ * DialCenter - Activity emoji, pulse animations, or play/pause button
+ * Handles center display with priority: emoji > pulse > play/pause button
  * @param {number} circleSize - Size of the dial
  * @param {string} activityEmoji - Emoji to display
  * @param {boolean} isRunning - Whether timer is running
@@ -20,9 +19,9 @@ import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
  * @param {boolean} showActivityEmoji - Whether to show the emoji
  * @param {string} color - Color for pulse effects
  * @param {number} pulseDuration - Duration of pulse animation
- * @param {boolean} isCompleted - Whether timer is completed
+ * @param {boolean} isCompleted - Whether timer has completed
  * @param {boolean} isPaused - Whether timer is paused
- * @param {function} onDialTap - Callback when center is tapped
+ * @param {Function} onPress - Callback when play/pause button is pressed
  */
 const DialCenter = React.memo(({
   circleSize,
@@ -31,10 +30,11 @@ const DialCenter = React.memo(({
   shouldPulse,
   showActivityEmoji = true,
   color,
-  pulseDuration = PULSE_ANIMATION.DURATION, // Default from constants
+  pulseDuration = PULSE_ANIMATION.DURATION,
   isCompleted = false,
   isPaused = false,
-  onDialTap = null,
+  onPress,
+  onLongPress,
 }) => {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -149,8 +149,8 @@ const DialCenter = React.memo(({
     );
   }
 
-  // Show pulse effect for "none" activity during running
-  if (!activityEmoji && isRunning && shouldPulse) {
+  // Show pulse effect ONLY when running with pulse enabled and emoji disabled
+  if (!showActivityEmoji && isRunning && shouldPulse) {
     return (
       <View
         style={{
@@ -198,8 +198,9 @@ const DialCenter = React.memo(({
     );
   }
 
-  // Show play/pause button when no emoji
-  if (!activityEmoji) {
+  // Fallback: Show play/pause button when emoji is disabled (regardless of pulse setting)
+  // This covers: at rest, paused, completed - basically when not running
+  if (!showActivityEmoji && !isRunning) {
     return (
       <View
         style={{
@@ -216,7 +217,8 @@ const DialCenter = React.memo(({
           isRunning={isRunning}
           isCompleted={isCompleted}
           isPaused={isPaused}
-          onPress={onDialTap}
+          onPress={onPress}
+          onLongPress={onLongPress}
         />
       </View>
     );
@@ -226,28 +228,5 @@ const DialCenter = React.memo(({
 });
 
 DialCenter.displayName = 'DialCenter';
-
-DialCenter.propTypes = {
-  activityEmoji: PropTypes.string,
-  circleSize: PropTypes.number.isRequired,
-  color: PropTypes.string,
-  isCompleted: PropTypes.bool,
-  isPaused: PropTypes.bool,
-  isRunning: PropTypes.bool.isRequired,
-  onDialTap: PropTypes.func,
-  pulseDuration: PropTypes.number,
-  shouldPulse: PropTypes.bool.isRequired,
-  showActivityEmoji: PropTypes.bool,
-};
-
-DialCenter.defaultProps = {
-  activityEmoji: null,
-  color: undefined,
-  isCompleted: false,
-  isPaused: false,
-  onDialTap: null,
-  pulseDuration: PULSE_ANIMATION.DURATION,
-  showActivityEmoji: true,
-};
 
 export default DialCenter;

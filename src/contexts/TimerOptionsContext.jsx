@@ -9,6 +9,7 @@ const TimerOptionsContext = createContext(null);
 
 export const TimerOptionsProvider = ({ children }) => {
   const hasLoadedOnboardingConfig = useRef(false);
+  const hasFixedRotationToggle = useRef(false);
 
   // Utiliser un seul objet persisté pour toutes les options
   const { values, updateValue, isLoading } = usePersistedObject('@ResetPulse:timerOptions', {

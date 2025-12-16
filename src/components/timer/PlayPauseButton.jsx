@@ -1,78 +1,78 @@
 /**
  * @fileoverview Play/Pause button icon for timer center
- * Displays context-aware icon based on timer state
+ * Displays context-aware Ionicons based on timer state
+ * Supports tap and long-press for reset functionality
+ * @created 2025-12-14
+ * @updated 2025-12-16
  */
-import PropTypes from 'prop-types';
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
 
 /**
- * PlayPauseButton - Shows play/pause/reset icon based on timer state
+ * PlayPauseButton - Shows play/pause/refresh icon based on timer state
+ * - Tap: Play/Pause/Reset based on state
+ * - Long-press (500ms): Reset timer (when running or paused)
  */
-const PlayPauseButton = React.memo(({
-  isRunning,
-  isCompleted,
-  isPaused,
-  onPress,
-}) => {
+const PlayPauseButton = React.memo(({ isRunning, isCompleted, isPaused, onPress, onLongPress }) => {
   const theme = useTheme();
 
-  const styles = StyleSheet.create({
-    container: {
-      alignItems: 'center',
-      height: rs(44),
-      justifyContent: 'center',
-      width: rs(44),
-    },
-    icon: {
-      color: theme.colors.brand.primary,
-      fontSize: rs(36),
-      textAlign: 'center',
-      textAlignVertical: 'center',
-    },
-  });
+  // Determine which icon and label to show
+  let iconName = 'play';
+  let label = 'Play';
 
-  // Determine which icon to show
-  let icon = '▶'; // Default: play
   if (isRunning) {
-    icon = '⏸'; // Pause
+    iconName = 'pause';
+    label = 'Pause';
   } else if (isCompleted) {
-    icon = '↺'; // Reset
+    iconName = 'refresh';
+    label = 'Reset';
   } else if (isPaused) {
-    icon = '▶'; // Play (resume)
+    iconName = 'play';
+    label = 'Play';
   }
+
+  // Border color: primary brand color at 50% opacity
+  const borderColorWithOpacity = theme.colors.brand.primary.includes('#')
+    ? `${theme.colors.brand.primary}80`
+    : theme.colors.brand.primary;
+
+  // Handle long press with haptic feedback
+  const handleLongPress = () => {
+    if (onLongPress) {
+      haptics.selection();
+      onLongPress();
+    }
+  };
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      hitSlop={{ top: 22, bottom: 22, left: 22, right: 22 }}
-      style={styles.container}
+      onLongPress={handleLongPress}
+      delayLongPress={500}
+      hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+      style={{
+        width: rs(56),
+        height: rs(56),
+        borderRadius: rs(28),
+        backgroundColor: theme.colors.background,
+        borderWidth: 2,
+        borderColor: borderColorWithOpacity,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
       accessible
       accessibilityRole="button"
-      accessibilityLabel={
-        isRunning ? 'Pause' : isCompleted ? 'Reset' : 'Play'
-      }
+      accessibilityLabel={label}
     >
-      <Text style={styles.icon}>
-        {icon}
-      </Text>
+      <Ionicons name={iconName} size={rs(28)} color={theme.colors.brand.primary} />
     </TouchableOpacity>
   );
 });
 
 PlayPauseButton.displayName = 'PlayPauseButton';
-
-PlayPauseButton.propTypes = {
-  isCompleted: PropTypes.bool.isRequired,
-  isPaused: PropTypes.bool.isRequired,
-  isRunning: PropTypes.bool.isRequired,
-  onPress: PropTypes.func,
-};
-
-PlayPauseButton.defaultProps = {
-  onPress: null,
-};
 
 export default PlayPauseButton;

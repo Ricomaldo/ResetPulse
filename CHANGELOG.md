@@ -1,6 +1,6 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-14'
+updated: '2025-12-16'
 status: active
 ---
 
@@ -175,6 +175,37 @@ All audit reports available in:
   - Suppression de `height: "100%"` qui causait l'étirement
   - Carrousel prend maintenant sa hauteur naturelle
   - Drawer content bien espacé et scrollable
+
+### ⏱️ Timer Affordances & Reset Functionality
+
+#### Added
+- **Play/Pause button in dial center** - Affordance visuelle pour interaction immédiate
+  - Icon Ionicons: play (repos), pause (running), refresh (completed)
+  - Couleur corail (brand.primary), 36px circle with 2px border at 50% opacity
+  - Affichage conditionnel: emoji > pulse > button (priorité hiérarchique)
+  - Bouton s'affiche quand: emoji désactivé ET timer au repos
+
+- **Border styling** - Feedback visuel amélioré
+  - PlayPauseButton: 2px border primary à 50% d'opacity (56px diameter)
+  - DigitalTimer: 2px border identique pour cohérence
+  - Améliore l'affordance et la visibilité de ces éléments interactifs
+
+- **Reset timer via long-press** - Réinitialisation intuitive
+  - Long-press (500ms) n'importe où sur le dial → reset
+  - Restaure la durée initiale (pas 0)
+  - Feedback haptique (selection pulse)
+  - Fonctionne sur PlayPauseButton ET sur toute la surface du dial
+
+#### Changed
+- **Timer dial long-press detection** - Gesture-wide support
+  - Implémentation dans PanResponder pour couverture complète
+  - Distinction tap (<200ms) vs long-press (>=500ms) via timeDelta
+  - Mouvement minimal required (<10px) pour éviter les faux positifs
+
+- **useTimer.js resetTimer()** - Comportement amélioré
+  - Restaure `remaining = duration` (au lieu de 0)
+  - État "ready to restart" plus clair
+  - Haptic feedback sur triggering
 
 ## [1.2.5] - 2025-12-05
 
