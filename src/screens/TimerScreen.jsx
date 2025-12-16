@@ -42,7 +42,6 @@ const createStyles = (theme) => {
       position: 'absolute',
       top: rs(80),
       alignSelf: 'center',
-      alignItems: 'center',
     },
 
     activityLabel: {
@@ -50,6 +49,8 @@ const createStyles = (theme) => {
       fontWeight: fontWeights.medium,
       color: theme.colors.textSecondary,
       letterSpacing: 0.5,
+      minWidth: rs(130), // Reserve space to align with dots layout
+      textAlign: 'center',
     },
 
     activityDots: {
