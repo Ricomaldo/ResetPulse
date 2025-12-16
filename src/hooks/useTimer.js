@@ -22,8 +22,6 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // UI states
   const [isPaused, setIsPaused] = useState(false);
-  const [showParti, setShowParti] = useState(false);
-  const [showReparti, setShowReparti] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
 
   // Get selected sound and activity durations from context
@@ -284,22 +282,24 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Display message logic
   const displayTime = () => {
-    if (remaining === 0) {
-      if (hasTriggeredCompletion.current && duration > 0) {
-        return "C'est fini";
-      }
-      // If at zero without having completed, show ready state
-      return "";
+    const activityId = currentActivityRef.current?.id || 'none';
+
+    // Show completion message if timer finished
+    if (remaining === 0 && hasTriggeredCompletion.current && duration > 0) {
+      return t(`timerMessages.${activityId}.endMessage`);
     }
+
+    // Show running message while timer is running
+    if (running) {
+      return t(`timerMessages.${activityId}.startMessage`);
+    }
+
+    // Show pause message when paused
     if (!running && isPaused) {
       return "Pause";
     }
-    if (showParti) {
-      return "Ça commence.";
-    }
-    if (showReparti) {
-      return "C'est reparti";
-    }
+
+    // Show nothing at rest
     return "";
   };
 
@@ -312,18 +312,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
       // Start or resume
       if (isPaused) {
         // Resume after pause
-        setShowReparti(true);
-        setShowParti(false);
-        setTimeout(() => setShowReparti(false), TIMER.MESSAGE_DISPLAY_DURATION);
-
         // Re-programmer notification avec temps restant
         scheduleTimerNotification(remaining, currentActivityRef.current);
       } else {
         // First start
-        setShowParti(true);
-        setShowReparti(false);
-        setTimeout(() => setShowParti(false), TIMER.MESSAGE_DISPLAY_DURATION);
-
         // Programmer notification pour la fin
         scheduleTimerNotification(remaining, currentActivityRef.current);
 
@@ -367,8 +359,6 @@ export default function useTimer(initialDuration = 240, onComplete) {
       // Pause
       setRunning(false);
       setIsPaused(true);
-      setShowParti(false);
-      setShowReparti(false);
 
       // Track timer paused (only if timer was actually running)
       if (startTime) {
@@ -396,8 +386,6 @@ export default function useTimer(initialDuration = 240, onComplete) {
     setRunning(false);
     setStartTime(null);
     setIsPaused(false);
-    setShowParti(false);
-    setShowReparti(false);
 
     // Annuler notification si programmée
     cancelTimerNotification();

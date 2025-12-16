@@ -6,14 +6,19 @@ import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 
 /**
- * ActivityLabel - Displays emoji + label with animated dots
- * Layout: Fixed label + variable dots (no reflow of label)
+ * ActivityLabel - Dynamic header that changes based on timer state
+ *
+ * States:
+ * - REST: emoji + label (no dots)
+ * - START/RUNNING/PAUSE: message with animated dots
+ * - COMPLETE: end message (no dots)
  */
 function ActivityLabel({
   emoji,
   label,
   animatedDots,
-  isRunning,
+  displayMessage,
+  isCompleted,
 }) {
   const theme = useTheme();
   const dotsOpacityRef = useRef(new Animated.Value(0)).current;
@@ -71,34 +76,43 @@ function ActivityLabel({
     },
   });
 
+  // Determine what to display based on state
+  const shouldShowDots = displayMessage && !isCompleted; // Dots for messages, not for completion
+  const displayText = displayMessage || (emoji && label ? `${emoji} ${label}` : '');
+
   return (
     <Animated.View style={styles.container}>
       <Animated.Text style={styles.label}>
-        {emoji && label ? `${emoji} ${label}` : ''}
+        {displayText}
       </Animated.Text>
-      <Animated.Text
-        style={[
-          styles.dots,
-          {
-            opacity: dotsOpacityRef,
-          },
-        ]}
-      >
-        {isRunning ? animatedDots : ''}
-      </Animated.Text>
+      {shouldShowDots && (
+        <Animated.Text
+          style={[
+            styles.dots,
+            {
+              opacity: dotsOpacityRef,
+            },
+          ]}
+        >
+          {animatedDots}
+        </Animated.Text>
+      )}
     </Animated.View>
   );
 }
 
 ActivityLabel.propTypes = {
   animatedDots: PropTypes.string.isRequired,
+  displayMessage: PropTypes.string,
   emoji: PropTypes.string,
-  isRunning: PropTypes.bool.isRequired,
+  isCompleted: PropTypes.bool,
   label: PropTypes.string,
 };
 
 ActivityLabel.defaultProps = {
+  displayMessage: '',
   emoji: '',
+  isCompleted: false,
   label: '',
 };
 
