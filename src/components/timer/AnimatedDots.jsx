@@ -18,7 +18,7 @@ export default function AnimatedDots({ opacity }) {
         letterSpacing: 0.5,
         marginTop: rs(4),
         minWidth: rs(65), // Reserve space for 4 spaced dots
-        textAlign: 'left', // Align dots to left so they don't shift
+        textAlign: 'center', // Center dots within their space
         opacity,
       }}
     >

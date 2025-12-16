@@ -55,11 +55,14 @@ export default function ExpandableDrawerContent({
         onOpenSettings={onOpenSettings}
       />
 
-      {/* Hint pour slider up (seulement si pas étendu) */}
+      {/* Hint pour slider up (seulement si pas étendu) - moved up from bottom */}
       {!isExpanded && (
-        <View style={styles.expandHint}>
-          <Text style={styles.expandHintText}>↑ Glissez pour plus d'options</Text>
-        </View>
+        <>
+          <View style={styles.divider} />
+          <View style={styles.expandHint}>
+            <Text style={styles.expandHintText}>↑ Glissez pour plus d'options</Text>
+          </View>
+        </>
       )}
 
       {/* Settings - visibles seulement quand étendu */}
