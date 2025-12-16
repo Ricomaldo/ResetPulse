@@ -14,6 +14,7 @@ import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
+import { getDialMode } from '../components/timer/timerConstants';
 
 const SWIPE_THRESHOLD = 50;
 
@@ -31,6 +32,8 @@ function TimerScreenContent() {
     incrementCompletedTimers,
     hasSeenTwoTimersModal,
     setHasSeenTwoTimersModal,
+    scaleMode,
+    setScaleMode,
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
   const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
@@ -146,11 +149,23 @@ function TimerScreenContent() {
   };
 
   // Handle preset selection from drawer
-  const handlePresetSelect = (seconds) => {
+  // New behavior: tap preset = change scale, preserve duration (capped to new scale max)
+  const handlePresetSelect = (presetData) => {
+    const { scalePresetMinutes, newScaleMode } = presetData;
+
+    // Update scale mode
+    setScaleMode(newScaleMode);
+
+    // Calculate new duration: keep current duration but cap to new scale max
+    const dialMode = getDialMode(newScaleMode);
+    const maxSecondsForNewScale = dialMode.maxMinutes * 60;
+    const cappedDuration = Math.min(currentDuration, maxSecondsForNewScale);
+
+    // Apply the capped duration
     if (timerRef.current) {
-      timerRef.current.setDuration(seconds);
-      setTimerRemaining(seconds);
-      setCurrentDuration(seconds);
+      timerRef.current.setDuration(cappedDuration);
+      setTimerRemaining(cappedDuration);
+      setCurrentDuration(cappedDuration);
     }
   };
 

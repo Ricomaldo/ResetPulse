@@ -51,9 +51,9 @@ export default function OptionsDrawerContent({
         <ActivityCarousel isTimerRunning={false} drawerVisible={drawerVisible} />
       </View>
 
-      {/* Taille du cadran */}
+      {/* Échelle du cadran */}
       <View style={styles.sectionFullWidth}>
-        <Text style={styles.sectionLabel}>Taille du cadran</Text>
+        <Text style={styles.sectionLabel}>Échelle</Text>
         <PresetPills
           currentDuration={currentDuration}
           onSelectPreset={onSelectPreset}
