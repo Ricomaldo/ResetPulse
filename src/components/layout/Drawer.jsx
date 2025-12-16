@@ -1,8 +1,8 @@
 /**
- * @fileoverview Animated drawer component - clean two-state system
- * Position animation only (native) - height changes via React re-render
+ * @fileoverview Modern draggable bottom sheet with real-time gesture tracking
+ * Follows finger during drag (like Spotify/Google Maps), snaps to positions on release
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import React, { useRef, useEffect, useState } from 'react';
 import { View, StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
@@ -12,6 +12,7 @@ import { rs } from '../../styles/responsive';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 50;
 const VELOCITY_THRESHOLD = 0.5;
+const SNAP_THRESHOLD = 0.3; // Snap if past 30% of the way to next point
 
 export default function Drawer({
   visible,
@@ -25,6 +26,7 @@ export default function Drawer({
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const scrollOffsetRef = useRef(0);
+  const dragStartYRef = useRef(0);
 
   // Heights in pixels (let React handle these, not animations)
   const collapsedHeightPx = SCREEN_HEIGHT * height;
@@ -33,6 +35,16 @@ export default function Drawer({
 
   // Only animate position (translateY) - native driver safe
   const translateY = useRef(new Animated.Value(direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT)).current;
+
+  // Helper to animate to specific position
+  const animateToPosition = (toValue, onComplete) => {
+    Animated.spring(translateY, {
+      toValue,
+      useNativeDriver: true,
+      tension: 65,
+      friction: 11,
+    }).start(onComplete);
+  };
 
   // Open/close animation - ONLY translateY (native safe)
   useEffect(() => {
@@ -54,28 +66,54 @@ export default function Drawer({
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dy) > 3,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        const { dy } = gestureState;
+        const isScrolledDown = scrollOffsetRef.current > 0;
+
+        // If scrolled down in content AND dragging down, let ScrollView handle it
+        if (isScrolledDown && dy > 0) return false;
+
+        // Otherwise, capture gesture if threshold met
+        return Math.abs(dy) > 3;
+      },
+      onPanResponderGrant: () => {
+        // Capture current position of translateY
+        dragStartYRef.current = translateY._value;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (direction === 'bottom') {
+          const { dy } = gestureState;
+          const newTranslateY = dragStartYRef.current + dy;
+
+          // Clamp between 0 (open) and SCREEN_HEIGHT (closed)
+          const clampedY = Math.max(0, Math.min(SCREEN_HEIGHT, newTranslateY));
+
+          // Update in real-time - drawer follows finger
+          translateY.setValue(clampedY);
+        }
+      },
       onPanResponderRelease: (_, gestureState) => {
         if (direction === 'bottom') {
           const { dy, vy } = gestureState;
+          const finalY = translateY._value;
           const isQuickSwipeDown = vy > VELOCITY_THRESHOLD;
-          const isQuickSwipeUp = vy < -VELOCITY_THRESHOLD;
-          const isAtTopOfScroll = scrollOffsetRef.current <= 0;
 
-          // DOWN: collapse or close
-          if (dy > SWIPE_THRESHOLD || isQuickSwipeDown) {
-            if (isExpanded) {
-              // If at top of scroll, collapse. If scrolled down, still collapse (not close)
-              setIsExpanded(false);
-            } else {
-              // Collapsed: swipe down = close
-              onClose();
-            }
-          }
-          // UP: expand (only if collapsed)
-          else if ((dy < -SWIPE_THRESHOLD || isQuickSwipeUp) && !isExpanded) {
+          // Determine snap target based on final position and velocity
+          if (finalY > SCREEN_HEIGHT * 0.5 || isQuickSwipeDown) {
+            // Close drawer
+            animateToPosition(SCREEN_HEIGHT, onClose);
+          } else if (dy < -SWIPE_THRESHOLD && !isExpanded) {
+            // Expand drawer (collapsed → expanded)
             setIsExpanded(true);
+            animateToPosition(0);
             if (onExpand) onExpand();
+          } else if (dy > SWIPE_THRESHOLD && isExpanded) {
+            // Collapse drawer (expanded → collapsed)
+            setIsExpanded(false);
+            animateToPosition(0);
+          } else {
+            // Snap back to current state position (0)
+            animateToPosition(0);
           }
         }
       },
