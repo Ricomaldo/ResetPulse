@@ -4,6 +4,38 @@ updated: '2025-12-16'
 status: active
 ---
 
+## [Unreleased - Current Sprint]
+
+### 🎯 Scale/Duration Separation
+
+#### Added
+- **Dial scale and timer duration now separate concerns**
+  - Tap preset button = change **scale only**, preserve duration (capped if needed)
+  - Example: 3 min on 60-scale → tap "5" → 3 min stays on 5-scale
+  - Example: 45 min on 60-scale → tap "5" → capped to 5 min on 5-scale
+  - Drag on dial = adjust duration (within current scale)
+  - Reset = restore initial duration
+
+- **Improved UX terminology**
+  - "Taille du cadran" → "Échelle" (clearer, more precise)
+
+#### Technical Details
+- PresetPills now passes scale mode + preset minutes to parent
+- TimerScreen calculates capped duration intelligently
+- Scale updates via setScaleMode in TimerOptionsContext
+- Duration updates independent of scale selection
+
+#### Behavior Table
+```
+Action          | Scale        | Duration
+Tap preset      | ✅ change    | ✅ preserve (cap)
+Drag dial       | –            | ✅ adjust
+Long-press      | –            | ✅ reset
+Change activity | –            | ✅ per-activity
+```
+
+---
+
 # Changelog
 
 All notable changes to ResetPulse will be documented in this file.
