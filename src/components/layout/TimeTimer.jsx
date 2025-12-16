@@ -145,7 +145,8 @@ export default function TimeTimer({
     } else {
       // Clamp to current scale mode's max
       const clampedMinutes = Math.min(dialMode.maxMinutes, minutes);
-      newDuration = clampedMinutes * 60;
+      // Round to nearest second to avoid floating point precision issues
+      newDuration = Math.round(clampedMinutes * 60);
     }
 
     timer.setDuration(newDuration);
