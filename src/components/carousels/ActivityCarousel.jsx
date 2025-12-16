@@ -10,7 +10,10 @@ import {
   StyleSheet,
   Text,
   Animated,
+  TouchableOpacity,
+  Dimensions,
 } from "react-native";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from "../../theme/ThemeProvider";
 import { useTranslation } from "../../hooks/useTranslation";
 import { useTimerOptions } from "../../contexts/TimerOptionsContext";
@@ -44,6 +47,10 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
   const scaleAnims = useRef({}).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const toastAnim = useRef(new Animated.Value(0)).current;
+  const scrollContentWidthRef = useRef(0);
+  const [scrollOffset, setScrollOffset] = useState(0);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
   const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
@@ -167,6 +174,35 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
     showToast(t('customActivities.toast.deleted'));
   }, [currentActivity, activities, setCurrentActivity, setCurrentDuration, showToast, t]);
 
+  // Update arrow visibility based on scroll position
+  const updateArrowVisibility = useCallback((offset) => {
+    setScrollOffset(offset);
+    // Show left arrow if not at start
+    setShowLeftArrow(offset > 10);
+    // Show right arrow if not at end (account for scroll content width)
+    const screenWidth = Dimensions.get('window').width;
+    const scrollableWidth = scrollContentWidthRef.current - screenWidth;
+    setShowRightArrow(offset < scrollableWidth - 10);
+  }, []);
+
+  const handleScroll = useCallback((event) => {
+    updateArrowVisibility(event.nativeEvent.contentOffset.x);
+  }, [updateArrowVisibility]);
+
+  const scrollLeft = useCallback(() => {
+    const newOffset = Math.max(0, scrollOffset - 100);
+    scrollViewRef.current?.scrollTo({ x: newOffset, animated: true });
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+  }, [scrollOffset]);
+
+  const scrollRight = useCallback(() => {
+    const screenWidth = Dimensions.get('window').width;
+    const maxScroll = scrollContentWidthRef.current - screenWidth;
+    const newOffset = Math.min(maxScroll, scrollOffset + 100);
+    scrollViewRef.current?.scrollTo({ x: newOffset, animated: true });
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+  }, [scrollOffset]);
+
   const styles = StyleSheet.create({
     container: { position: "relative", alignItems: "center", justifyContent: "center" },
     scrollView: { flexGrow: 0 },
@@ -174,6 +210,24 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       paddingHorizontal: rs(30, "width"),
       alignItems: "center",
       gap: theme.spacing.md,
+    },
+    arrowButton: {
+      position: "absolute",
+      top: "50%",
+      transform: [{ translateY: -12 }],
+      zIndex: 10,
+      width: rs(44),
+      height: rs(44),
+      borderRadius: rs(22),
+      backgroundColor: theme.colors.background,
+      alignItems: "center",
+      justifyContent: "center",
+      ...theme.shadow("md"),
+    },
+    leftArrow: { left: rs(8) },
+    rightArrow: { right: rs(8) },
+    arrowIcon: {
+      color: theme.colors.brand.primary,
     },
     activityNameBadge: {
       position: "absolute", top: -35, backgroundColor: theme.colors.background,
@@ -223,6 +277,12 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         scrollEventThrottle={16}
+        onScroll={handleScroll}
+        onContentSizeChange={(width) => {
+          scrollContentWidthRef.current = width;
+          // Initial arrow visibility check
+          updateArrowVisibility(0);
+        }}
       >
         {activities.map((activity) => {
           const isActive = currentActivity?.id === activity.id;
@@ -258,6 +318,37 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
           }
         />
       </ScrollView>
+
+      {/* Left Arrow */}
+      {showLeftArrow && (
+        <TouchableOpacity
+          style={[styles.arrowButton, styles.leftArrow]}
+          onPress={scrollLeft}
+          activeOpacity={0.7}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Scroll left"
+          accessibilityHint="Scroll carousel to the left"
+        >
+          <Ionicons name="chevron-back" size={rs(24)} style={styles.arrowIcon} />
+        </TouchableOpacity>
+      )}
+
+      {/* Right Arrow */}
+      {showRightArrow && (
+        <TouchableOpacity
+          style={[styles.arrowButton, styles.rightArrow]}
+          onPress={scrollRight}
+          activeOpacity={0.7}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Scroll right"
+          accessibilityHint="Scroll carousel to the right"
+        >
+          <Ionicons name="chevron-forward" size={rs(24)} style={styles.arrowIcon} />
+        </TouchableOpacity>
+      )}
+
       <PremiumModal
         visible={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}

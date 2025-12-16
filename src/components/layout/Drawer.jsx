@@ -13,6 +13,7 @@ import { rs } from '../../styles/responsive';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = 50;
 const VELOCITY_THRESHOLD = 0.5;
+const EXPAND_ZONE_HEIGHT = 80; // Swipe-up zone height (handle + buffer)
 
 export default function Drawer({
   visible,
@@ -27,6 +28,7 @@ export default function Drawer({
   const [isExpanded, setIsExpanded] = useState(false);
   const scrollOffsetRef = useRef(0);
   const dragStartYRef = useRef(0);
+  const touchStartYRef = useRef(0); // Track initial touch position for expansion zone
 
   // Heights in pixels (let React handle these, not animations)
   const collapsedHeightPx = SCREEN_HEIGHT * height;
@@ -78,9 +80,11 @@ export default function Drawer({
         // Otherwise, capture gesture if threshold met
         return Math.abs(dy) > 3;
       },
-      onPanResponderGrant: () => {
+      onPanResponderGrant: (evt) => {
         // Capture current position of translateY
         dragStartYRef.current = translateY._value;
+        // Capture initial touch Y position for expansion zone check
+        touchStartYRef.current = evt.nativeEvent.locationY;
       },
       onPanResponderMove: (_, gestureState) => {
         if (direction === 'bottom') {
@@ -99,20 +103,21 @@ export default function Drawer({
           const { dy, vy } = gestureState;
           const finalY = translateY._value;
           const isQuickSwipeDown = vy > VELOCITY_THRESHOLD;
+          const isInExpandZone = touchStartYRef.current < EXPAND_ZONE_HEIGHT;
 
           // Determine snap target based on final position and velocity
           if (finalY > SCREEN_HEIGHT * 0.5 || isQuickSwipeDown) {
             // Close drawer
             animateToPosition(SCREEN_HEIGHT, onClose);
-          } else if (dy < -SWIPE_THRESHOLD && !isExpanded) {
-            // Expand drawer (collapsed → expanded)
+          } else if (dy < -SWIPE_THRESHOLD && !isExpanded && isInExpandZone) {
+            // Expand drawer only if gesture started in expansion zone (handle area)
             setIsExpanded(true);
             animateToPosition(0);
             if (onExpand) {
               onExpand();
             }
           } else if (dy > SWIPE_THRESHOLD && isExpanded) {
-            // Collapse drawer (expanded → collapsed)
+            // Collapse drawer (expanded → collapsed) - allowed anywhere
             setIsExpanded(false);
             animateToPosition(0);
           } else {
