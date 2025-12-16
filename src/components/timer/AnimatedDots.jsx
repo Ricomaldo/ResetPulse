@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Animated } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
@@ -17,6 +17,8 @@ export default function AnimatedDots({ opacity }) {
         color: theme.colors.textSecondary,
         letterSpacing: 0.5,
         marginTop: rs(4),
+        minWidth: rs(65), // Reserve space for 4 spaced dots
+        textAlign: 'left', // Align dots to left so they don't shift
         opacity,
       }}
     >
