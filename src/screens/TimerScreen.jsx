@@ -313,6 +313,7 @@ function TimerScreenContent() {
             isRunning={isTimerRunning}
             color={currentColor}
             mini={!showDigitalTimer}
+            pulseDuration={currentActivity?.pulseDuration || 800}
           />
         </TouchableOpacity>
       </View>

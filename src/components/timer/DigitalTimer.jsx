@@ -12,34 +12,36 @@ import { fontWeights } from '../../theme/tokens';
 
 /**
  * DigitalTimer - Displays remaining time in MM:SS format
- * Features subtle pulse animation when running
+ * Features subtle pulse animation when running, synced to activity rhythm
  * Fully accessible with live region announcements
  * @param {number} remaining - Remaining time in seconds
  * @param {boolean} isRunning - Whether timer is running
  * @param {string} color - Text color
  * @param {boolean} mini - Whether to use mini display mode
+ * @param {number} pulseDuration - Milliseconds for each pulse cycle (activity rhythm)
  */
-const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, color, mini = false }) {
+const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, color, mini = false, pulseDuration = 800 }) {
   const theme = useTheme();
   const t = useTranslation();
   const fadeAnim = useRef(new Animated.Value(1)).current; // Start at 1 (visible)
   const translateYAnim = useRef(new Animated.Value(0)).current; // Start at 0 (no offset)
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  // Subtle pulse animation when timer is running
+  // Subtle pulse animation when timer is running, synced to activity pulseDuration
   useEffect(() => {
     if (isRunning) {
-      // Subtle scale pulse every second
+      // Scale pulse synced to activity rhythm
+      const halfDuration = pulseDuration / 2;
       const pulseAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(scaleAnim, {
             toValue: 1.02,
-            duration: 500,
+            duration: halfDuration,
             useNativeDriver: true,
           }),
           Animated.timing(scaleAnim, {
             toValue: 1,
-            duration: 500,
+            duration: halfDuration,
             useNativeDriver: true,
           }),
         ])
@@ -50,7 +52,7 @@ const DigitalTimer = React.memo(function DigitalTimer({ remaining, isRunning, co
       // Reset scale when not running
       scaleAnim.setValue(1);
     }
-  }, [isRunning]);
+  }, [isRunning, pulseDuration]);
 
   // Format time as MM:SS
   const formatTime = (seconds) => {
