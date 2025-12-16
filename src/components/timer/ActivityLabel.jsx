@@ -65,6 +65,7 @@ function ActivityLabel({
       fontWeight: '600',
       letterSpacing: 0.5,
       marginLeft: rs(2),
+      width: rs(28), // Fixed width for "..." (3 dots)
     },
     label: {
       color: theme.colors.brand.primary,
