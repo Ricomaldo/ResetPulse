@@ -86,10 +86,23 @@ function TimerScreenContent() {
     digitalTimerContainer: {
       alignItems: 'center',
       alignSelf: 'center',
-      bottom: rs(40),
+      bottom: rs(50),
       height: rs(48),
       justifyContent: 'center',
       position: 'absolute',
+    },
+    drawerHandleContainer: {
+      alignItems: 'center',
+      bottom: rs(8),
+      justifyContent: 'center',
+      position: 'absolute',
+      width: '100%',
+    },
+    drawerHandle: {
+      backgroundColor: theme.colors.border,
+      borderRadius: rs(2),
+      height: rs(4),
+      width: rs(36),
     },
     rotationToggleContainer: {
       alignSelf: 'center',
@@ -259,13 +272,16 @@ function TimerScreenContent() {
             remaining={timerRemaining}
             isRunning={isTimerRunning}
             color={currentColor}
-            mini={!showDigitalTimer}
+            isCollapsed={!showDigitalTimer}
             pulseDuration={currentActivity?.pulseDuration || 800}
-            showIcon
           />
         </TouchableOpacity>
       </Animated.View>
 
+      {/* Drawer Handle - Visual affordance for drawer at bottom */}
+      <View style={styles.drawerHandleContainer}>
+        <View style={styles.drawerHandle} />
+      </View>
 
       {/* Options Drawer (from bottom) - 3 sections + Settings button */}
       <Drawer

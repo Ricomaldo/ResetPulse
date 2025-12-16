@@ -244,6 +244,7 @@ describe('TimerScreen', () => {
     expect(digitalTimer.props.remaining).toBeDefined();
     expect(digitalTimer.props.isRunning).toBeDefined();
     expect(digitalTimer.props.color).toBe('#007AFF');
-    expect(digitalTimer.props.mini).toBe(false); // showDigitalTimer is true in mock
+    expect(digitalTimer.props.isCollapsed).toBe(false); // showDigitalTimer is true in mock
+    expect(digitalTimer.props.pulseDuration).toBeDefined();
   });
 });
