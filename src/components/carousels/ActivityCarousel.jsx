@@ -268,7 +268,8 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
     scrollContent: {
       alignItems: 'center',
       gap: theme.spacing.md,
-      paddingHorizontal: rs(30, 'width'),
+      paddingHorizontal: rs(6, 'width'),
+      paddingVertical: theme.spacing.xs,
     },
     carouselContainer: {
       flex: 1,
