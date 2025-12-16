@@ -6,4 +6,3 @@
 
 export { default as ExpandableDrawerContent } from './ExpandableDrawerContent';
 export { default as OptionsDrawerContent } from './OptionsDrawerContent';
-export { default as SettingsDrawerContent } from './SettingsDrawerContent';

@@ -151,7 +151,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       minWidth: 44,
       minHeight: 44,
       borderRadius: rs(16, "min"),
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.background,
       alignItems: "center",
       justifyContent: "center",
       marginHorizontal: theme.spacing.xs,
@@ -164,7 +164,7 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
 
     chevronText: {
       fontSize: rs(18, "min"),
-      color: theme.colors.text,
+      color: theme.colors.textSecondary,
       fontWeight: fontWeights.semibold,
     },
 

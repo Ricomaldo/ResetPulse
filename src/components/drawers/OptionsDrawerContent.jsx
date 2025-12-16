@@ -13,7 +13,6 @@ import { ActivityCarousel, PaletteCarousel, PresetPills } from '../carousels';
 import { fontWeights } from '../../theme/tokens';
 
 export default function OptionsDrawerContent({
-  currentDuration = 0,
   onSelectPreset,
   drawerVisible = false,
   onOpenSettings,
@@ -34,25 +33,6 @@ export default function OptionsDrawerContent({
       color: theme.colors.textSecondary,
       marginBottom: rs(8),
       fontWeight: fontWeights.medium,
-    },
-    durationDisplay: {
-      marginTop: rs(12),
-      paddingHorizontal: rs(4),
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: rs(8),
-    },
-    durationLabel: {
-      fontSize: rs(12),
-      color: theme.colors.textSecondary,
-      fontWeight: fontWeights.medium,
-    },
-    durationValue: {
-      fontSize: rs(16),
-      color: theme.colors.text,
-      fontWeight: fontWeights.semibold,
-      fontFamily: 'Menlo',
-      minWidth: rs(50),
     },
     settingsButtonContainer: {
       position: 'absolute',
@@ -97,17 +77,7 @@ export default function OptionsDrawerContent({
       {/* Cadran (Scale) */}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>Cadran</Text>
-        <PresetPills
-          currentDuration={currentDuration}
-          onSelectPreset={onSelectPreset}
-        />
-        {/* Display current duration */}
-        <View style={styles.durationDisplay}>
-          <Text style={styles.durationLabel}>Durée</Text>
-          <Text style={styles.durationValue}>
-            {Math.floor(currentDuration / 60)}:{String(currentDuration % 60).padStart(2, '0')}
-          </Text>
-        </View>
+        <PresetPills onSelectPreset={onSelectPreset} />
       </View>
 
       {/* Settings Button - Discrete bottom button */}
