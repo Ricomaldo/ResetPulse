@@ -1,6 +1,8 @@
 /**
  * @fileoverview Modern draggable bottom sheet with real-time gesture tracking
  * Follows finger during drag (like Spotify/Google Maps), snaps to positions on release
+ * Animation: ONLY translateY is animated (native driver)
+ * Height changes via state (instant, not animated - avoids driver conflicts)
  * Gesture model: No handle drag. Opening is via swipe-up on TimerScreen.
  * Handle visibility toggled by TAP on DigitalTimer (in TimerScreen).
  * Drawer manages internal expand/collapse when already visible.
@@ -36,15 +38,13 @@ export default function Drawer({
   const touchStartYRef = useRef(0);
   const isDraggingRef = useRef(false);
 
-  // Heights in pixels
+  // Heights in pixels (calculated, not animated)
   const collapsedHeightPx = SCREEN_HEIGHT * height;
   const expandedHeightPx = SCREEN_HEIGHT * expandedHeight;
+  const currentHeightPx = isExpanded ? expandedHeightPx : collapsedHeightPx;
 
-  // Animate position (translateY) - native driver safe
+  // Animate position (translateY) - native driver safe, ONLY animation
   const translateY = useRef(new Animated.Value(direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT)).current;
-
-  // Animate height smoothly - NOT native driver, but performant enough for height
-  const animatedHeight = useRef(new Animated.Value(collapsedHeightPx)).current;
 
   // Animate handle opacity for drag feedback
   const handleOpacity = useRef(new Animated.Value(1)).current;
@@ -59,17 +59,7 @@ export default function Drawer({
     }).start(onComplete);
   };
 
-  // Animate height with spring
-  const animateHeight = (toValue) => {
-    Animated.spring(animatedHeight, {
-      toValue,
-      useNativeDriver: false,
-      tension: SPRING_TENSION,
-      friction: SPRING_FRICTION,
-    }).start();
-  };
-
-  // Open/close animation - translateY + height
+  // Open/close animation - ONLY translateY (native driver)
   useEffect(() => {
     Animated.spring(translateY, {
       toValue: visible ? 0 : (direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT),
@@ -78,12 +68,6 @@ export default function Drawer({
       friction: SPRING_FRICTION,
     }).start();
   }, [visible, direction, translateY]);
-
-  // Animate height when expansion state changes
-  useEffect(() => {
-    const targetHeight = isExpanded ? expandedHeightPx : collapsedHeightPx;
-    animateHeight(targetHeight);
-  }, [isExpanded, collapsedHeightPx, expandedHeightPx]);
 
   // Reset on close
   useEffect(() => {
@@ -225,7 +209,7 @@ export default function Drawer({
         style={[
           styles.drawer,
           {
-            height: animatedHeight,
+            height: currentHeightPx,
             transform: [{ translateY }],
           },
         ]}
