@@ -14,7 +14,6 @@ import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
-import { fontWeights } from '../theme/tokens';
 
 const SWIPE_THRESHOLD = 50;
 
@@ -39,6 +38,8 @@ function TimerScreenContent() {
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerRemaining, setTimerRemaining] = useState(0);
+  const [displayMessage, setDisplayMessage] = useState('');
+  const [isTimerCompleted, setIsTimerCompleted] = useState(false);
   const timerRef = useRef(null);
   const dialWrapperRef = useRef(null);
   const dialLayoutRef = useRef(null);
@@ -49,7 +50,7 @@ function TimerScreenContent() {
   useEffect(() => {
     Animated.sequence([
       Animated.timing(pillBounceRef, {
-        toValue: -8,
+        toValue: -15,
         duration: 150,
         useNativeDriver: true,
       }),
@@ -63,6 +64,18 @@ function TimerScreenContent() {
 
   // Keep screen awake during timer
   useTimerKeepAwake();
+
+  // Sync timer state to local states for re-renders
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timerRef.current) {
+        setDisplayMessage(timerRef.current.displayMessage || '');
+        // isPaused isn't exposed, but we can check from displayMessage
+        setIsTimerCompleted(timerRef.current.isCompleted || false);
+      }
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
 
   // Define styles (moved inside component so linter can track usage)
   const styles = StyleSheet.create({
@@ -194,13 +207,14 @@ function TimerScreenContent() {
       edges={['top', 'bottom']}
       {...panResponder.panHandlers}
     >
-      {/* Activity label with animated dots */}
+      {/* Activity label - shows emoji+label at rest, message with dots during running */}
       {currentActivity && currentActivity.id !== 'none' && (
         <ActivityLabel
           emoji={currentActivity.emoji}
           label={currentActivity.label}
           animatedDots={animatedDots}
-          isRunning={isTimerRunning}
+          displayMessage={displayMessage}
+          isCompleted={isTimerCompleted}
         />
       )}
 
