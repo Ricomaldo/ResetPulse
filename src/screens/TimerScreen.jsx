@@ -272,6 +272,7 @@ function TimerScreenContent() {
               inputRange: [0, 1],
               outputRange: [1, 1],
             })}
+            color={currentColor}
           />
         )}
       </Animated.View>
