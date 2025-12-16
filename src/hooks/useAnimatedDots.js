@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
  * Hook for animated dots with show/hide states
  * Returns array of 4 opacity values that cycle sequentially
  * Each dot lights up one after another in infinite loop
- * Animation speed is tied to activity's pulseDuration
+ * Animation speed is tied to activity's pulseDuration (interval between each dot)
  */
 export default function useAnimatedDots(pulseDuration = 800) {
   const [dotStates, setDotStates] = useState([1, 0, 0, 0]); // 4 dots, first one visible
@@ -18,13 +18,11 @@ export default function useAnimatedDots(pulseDuration = 800) {
     ];
     let index = 0;
 
-    // Divide pulseDuration by 4 to get timing per dot
-    const dotDuration = pulseDuration / 4;
-
+    // pulseDuration is the interval between each dot
     const interval = setInterval(() => {
       setDotStates(cycle[index]);
       index = (index + 1) % cycle.length;
-    }, dotDuration);
+    }, pulseDuration);
 
     return () => clearInterval(interval);
   }, [pulseDuration]);
