@@ -15,7 +15,7 @@ import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { TimeTimer, Drawer, CircularToggle, SwipeUpHint } from '../components/layout';
 import { ExpandableDrawerContent } from '../components/drawers';
 import DigitalTimer from '../components/timer/DigitalTimer';
-import AnimatedDots from '../components/timer/AnimatedDots';
+import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TwoTimersModal, PremiumModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
@@ -48,6 +48,7 @@ function TimerScreenContent() {
   const dialWrapperRef = useRef(null);
   const dialLayoutRef = useRef(null);
   const activityLabelAnimRef = useRef(new Animated.Value(0)).current;
+  const animatedDots = useAnimatedDots(currentActivity?.pulseDuration || 800);
 
   // Animate activity label on timer start
   useEffect(() => {
@@ -101,8 +102,8 @@ function TimerScreenContent() {
     },
     swipeHintContainer: {
       alignSelf: 'center',
-      bottom: rs(20),
       position: 'absolute',
+      top: rs(140),
     },
     timerContainer: {
       alignItems: 'center',
@@ -244,21 +245,9 @@ function TimerScreenContent() {
           ]}
         >
           {isTimerRunning && currentActivity && currentActivity.id !== 'none'
-            ? `${currentActivity.emoji} ${currentActivity.label}`
+            ? `${currentActivity.emoji} ${currentActivity.label}${animatedDots}`
             : 'Tap sur le cadran pour démarrer'}
         </Animated.Text>
-
-        {/* Animated dots below activity label */}
-        {isTimerRunning && currentActivity && currentActivity.id !== 'none' && (
-          <AnimatedDots
-            opacity={activityLabelAnimRef.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 1],
-            })}
-            color={currentColor}
-            pulseDuration={currentActivity.pulseDuration}
-          />
-        )}
       </Animated.View>
 
       {/* Timer - center, zen */}
