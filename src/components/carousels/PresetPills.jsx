@@ -38,7 +38,7 @@ export default function PresetPills({ onSelectPreset }) {
 
   const styles = StyleSheet.create({
     container: {
-      gap: rs(theme.spacing.sm),
+      gap: theme.spacing.sm,
     },
     pill: {
       alignItems: 'center',
@@ -46,15 +46,15 @@ export default function PresetPills({ onSelectPreset }) {
       borderRadius: theme.borderRadius.lg,
       flex: 1,
       justifyContent: 'center',
-      paddingHorizontal: rs(theme.spacing.lg),
-      paddingVertical: rs(theme.spacing.md),
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
     },
     pillActive: {
       backgroundColor: theme.colors.brand.primary,
     },
     pillText: {
       color: theme.colors.textSecondary,
-      fontSize: rs(15),
+      fontSize: rs(14, 'min'),
       fontWeight: fontWeights.medium,
     },
     pillTextActive: {
@@ -63,7 +63,7 @@ export default function PresetPills({ onSelectPreset }) {
     },
     row: {
       flexDirection: 'row',
-      gap: rs(theme.spacing.sm),
+      gap: theme.spacing.sm,
     },
   });
 

@@ -11,6 +11,7 @@ import ActivityItem from '../../src/components/carousels/activity-items/Activity
 jest.mock('../../src/theme/ThemeProvider', () => ({
   useTheme: () => ({
     colors: { surface: '#FFFFFF', brand: { primary: '#007AFF' } },
+    borderRadius: { full: 9999, lg: 12 },
     shadow: () => ({}),
   }),
 }));

@@ -1,7 +1,9 @@
 /**
  * @fileoverview Modern draggable bottom sheet with real-time gesture tracking
  * Follows finger during drag (like Spotify/Google Maps), snaps to positions on release
- * Polish improvements: animated height, adaptive padding, handle feedback, responsive springs
+ * Gesture model: No handle drag. Opening is via swipe-up on TimerScreen.
+ * Handle visibility toggled by TAP on DigitalTimer (in TimerScreen).
+ * Drawer manages internal expand/collapse when already visible.
  * @created 2025-12-14
  * @updated 2025-12-16
  */
@@ -174,7 +176,6 @@ export default function Drawer({
 
   // Calculate adaptive padding based on expansion state
   const paddingBottomValue = isExpanded ? rs(20) : rs(12);
-  const paddingTopValue = isExpanded ? rs(12) : rs(8);
 
   const styles = StyleSheet.create({
     contentWrapper: {
@@ -190,24 +191,13 @@ export default function Drawer({
       left: 0,
       overflow: 'hidden',
       paddingBottom: direction === 'bottom' ? paddingBottomValue : rs(20),
-      paddingTop: direction === 'top' ? rs(50) : paddingTopValue,
+      // No top padding - drawer content starts right at top edge
+      paddingTop: direction === 'top' ? rs(50) : 0,
       position: 'absolute',
       right: 0,
       top: direction === 'top' ? 0 : undefined,
       zIndex: 1001,
       ...theme.shadow('xl'),
-    },
-    handle: {
-      backgroundColor: theme.colors.border,
-      borderRadius: rs(2),
-      height: rs(4),
-      width: rs(40),
-    },
-    handleContainer: {
-      alignSelf: 'center',
-      marginBottom: rs(12),
-      paddingHorizontal: rs(80),
-      paddingVertical: rs(12),
     },
     overlay: {
       backgroundColor: theme.colors.overlay,
@@ -241,17 +231,6 @@ export default function Drawer({
         ]}
         {...panResponder.panHandlers}
       >
-        <Animated.View
-          style={[
-            styles.handleContainer,
-            {
-              opacity: handleOpacity,
-            },
-          ]}
-        >
-          <View style={styles.handle} />
-        </Animated.View>
-
         <ScrollView
           style={styles.contentWrapper}
           scrollEnabled={isExpanded}

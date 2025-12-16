@@ -1,7 +1,7 @@
 /**
  * @fileoverview Single activity item for the activity carousel
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-16
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, Animated, Platform, StyleSheet } from 'react-native';
@@ -60,7 +60,7 @@ const ActivityItem = React.memo(
 
       activityWrapper: {
         backgroundColor: 'transparent',
-        borderRadius: rs(30, 'min'),
+        borderRadius: theme.borderRadius.full,
         height: rs(60, 'min'),
         opacity: isLocked ? 0.5 : 1,
         overflow: 'visible',
