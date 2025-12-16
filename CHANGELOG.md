@@ -176,7 +176,7 @@ All audit reports available in:
   - Carrousel prend maintenant sa hauteur naturelle
   - Drawer content bien espacé et scrollable
 
-### ⏱️ Timer Affordances & Reset Functionality
+### ⏱️ Timer Affordances & Intelligent Gesture Handling
 
 #### Added
 - **Play/Pause button in dial center** - Affordance visuelle pour interaction immédiate
@@ -196,6 +196,19 @@ All audit reports available in:
   - Feedback haptique (selection pulse)
   - Fonctionne sur PlayPauseButton ET sur toute la surface du dial
 
+- **Drawer expansion zone** - Smart gesture detection
+  - Expansion trigger limitée à zone du handle (80px du haut)
+  - Prévient l'expansion accidentelle du contenu
+  - Collapse fonctionne partout (comportement standard)
+  - ScrollView conflict resolution maintenue
+
+- **Activity carousel navigation arrows** - Affordance de scroll bidirectionnel
+  - Flèches chevron (← →) visibles seulement si scrollable
+  - Auto-hide au début/fin du carousel
+  - Smooth 100px scroll animation
+  - 44pt touch targets (WCAG AA)
+  - Haptic feedback sur interaction
+
 #### Changed
 - **Timer dial long-press detection** - Gesture-wide support
   - Implémentation dans PanResponder pour couverture complète
@@ -206,6 +219,11 @@ All audit reports available in:
   - Restaure `remaining = duration` (au lieu de 0)
   - État "ready to restart" plus clair
   - Haptic feedback sur triggering
+
+- **ActivityCarousel** - Enhanced scroll awareness
+  - Tracks scroll position via onScroll event
+  - Intelligent arrow visibility based on content width
+  - Dynamic updates when drawer opens/closes
 
 ## [1.2.5] - 2025-12-05
 
