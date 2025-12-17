@@ -4,7 +4,7 @@
  * @created 2025-12-14
  */
 import React from 'react';
-import { View, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 
 /**
@@ -13,6 +13,39 @@ import { useTheme } from '../../theme/ThemeProvider';
  */
 export default function SplashScreen() {
   const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
+    loader: {
+      marginTop: 16,
+    },
+    logo: {
+      alignItems: 'center',
+      borderRadius: 20,
+      elevation: 3,
+      height: 100,
+      justifyContent: 'center',
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+      width: 100,
+    },
+    logoContainer: {
+      marginBottom: 32,
+    },
+    logoInner: {
+      backgroundColor: theme.colors.fixed.white,
+      borderRadius: 12,
+      height: 60,
+      opacity: 0.3,
+      width: 60,
+    },
+  });
 
   return (
     <View style={[
@@ -38,35 +71,3 @@ export default function SplashScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  loader: {
-    marginTop: 16,
-  },
-  logo: {
-    alignItems: 'center',
-    borderRadius: 20,
-    elevation: 3,
-    height: 100,
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    width: 100,
-  },
-  logoContainer: {
-    marginBottom: 32,
-  },
-  logoInner: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 12,
-    height: 60,
-    width: 60,
-  },
-});

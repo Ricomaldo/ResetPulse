@@ -29,7 +29,7 @@ const colors = {
 };
 
 function log(message, color = colors.reset) {
-  console.log(`${color}${message}${colors.reset}`);
+  console.warn(`${color}${message}${colors.reset}`);
 }
 
 function readJSON(filePath) {
@@ -66,14 +66,14 @@ function bumpVersion(version, type) {
   const parsed = parseVersion(version);
 
   switch (type) {
-    case 'major':
-      return `${parsed.major + 1}.0.0`;
-    case 'minor':
-      return `${parsed.major}.${parsed.minor + 1}.0`;
-    case 'patch':
-      return `${parsed.major}.${parsed.minor}.${parsed.patch + 1}`;
-    default:
-      throw new Error(`Invalid bump type: ${type}`);
+  case 'major':
+    return `${parsed.major + 1}.0.0`;
+  case 'minor':
+    return `${parsed.major}.${parsed.minor + 1}.0`;
+  case 'patch':
+    return `${parsed.major}.${parsed.minor}.${parsed.patch + 1}`;
+  default:
+    throw new Error(`Invalid bump type: ${type}`);
   }
 }
 
@@ -248,11 +248,11 @@ function main() {
     updateDocumentation(newVersion);
 
     log(`\n✨ Success! Version bumped to ${newVersion}`, colors.bright + colors.green);
-    log(`\nNext steps:`, colors.yellow);
-    log(`  1. Review changes: git diff`);
-    log(`  2. Update CHANGELOG.md manually`);
+    log('\nNext steps:', colors.yellow);
+    log('  1. Review changes: git diff');
+    log('  2. Update CHANGELOG.md manually');
     log(`  3. Commit: git add . && git commit -m "chore: bump version to ${newVersion}"`);
-    log(`  4. Build: cd android && ./gradlew bundleRelease\n`);
+    log('  4. Build: cd android && ./gradlew bundleRelease\n');
 
   } catch (error) {
     log(`\n❌ Error: ${error.message}`, colors.red);

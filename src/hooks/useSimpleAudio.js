@@ -4,7 +4,6 @@
 
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { useAudioPlayer, setAudioModeAsync } from 'expo-audio';
-import { Platform } from 'react-native';
 import { getSoundById } from '../config/sounds';
 
 // Configuration audio globale (une seule fois)
@@ -57,11 +56,11 @@ export default function useSimpleAudio(defaultSoundId = 'bell_classic') {
           setIsPlaying(true);
 
           if (__DEV__) {
-            console.log('🔊 Playing sound:', lastSoundIdRef.current || 'preview');
+            console.warn('🔊 Playing sound:', lastSoundIdRef.current || 'preview');
           }
         } catch (error) {
           if (__DEV__) {
-            console.log('🔇 Playback error:', error.message);
+            console.warn('🔇 Playback error:', error.message);
           }
           setIsPlaying(false);
         }
@@ -81,7 +80,7 @@ export default function useSimpleAudio(defaultSoundId = 'bell_classic') {
         setCurrentSoundFile(null); // Reset pour pouvoir rejouer le même son
 
         if (__DEV__) {
-          console.log('✅ Sound finished');
+          console.warn('✅ Sound finished');
         }
       }
     });
@@ -129,7 +128,7 @@ export default function useSimpleAudio(defaultSoundId = 'bell_classic') {
 
     } catch (error) {
       if (__DEV__) {
-        console.error('🔇 Sound error:', error);
+        console.warn('🔇 Sound error:', error);
       }
     }
   }, [defaultSoundId, player, isPlaying]);
@@ -145,7 +144,7 @@ export default function useSimpleAudio(defaultSoundId = 'bell_classic') {
         setCurrentSoundFile(null);
       } catch (error) {
         if (__DEV__) {
-          console.log('Stop error:', error.message);
+          console.warn('Stop error:', error.message);
         }
       }
     }

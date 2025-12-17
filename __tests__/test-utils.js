@@ -11,7 +11,7 @@ import React from 'react';
  * @param {React.ComponentType} options.wrapper - Optional wrapper component (for Context providers)
  */
 export function renderHook(callback, options = {}) {
-  let result = { current: null };
+  const result = { current: null };
   let error = null;
   let renderer;
   const { wrapper: Wrapper } = options;
@@ -33,7 +33,9 @@ export function renderHook(callback, options = {}) {
     renderer = create(<ComponentToRender />);
   });
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
   return {
     result,

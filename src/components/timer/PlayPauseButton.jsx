@@ -5,11 +5,12 @@
  * @created 2025-12-14
  * @updated 2025-12-16
  */
+import PropTypes from 'prop-types';
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
 import haptics from '../../utils/haptics';
 
 /**
@@ -17,7 +18,13 @@ import haptics from '../../utils/haptics';
  * - Tap: Play/Pause/Reset based on state
  * - Long-press (500ms): Reset timer (when running or paused)
  */
-const PlayPauseButton = React.memo(({ isRunning, isCompleted, isPaused, onPress, onLongPress }) => {
+const PlayPauseButton = React.memo(function PlayPauseButton({
+  isCompleted,
+  isPaused,
+  isRunning,
+  onLongPress,
+  onPress,
+}) {
   const theme = useTheme();
 
   // Determine which icon and label to show
@@ -54,16 +61,14 @@ const PlayPauseButton = React.memo(({ isRunning, isCompleted, isPaused, onPress,
       onLongPress={handleLongPress}
       delayLongPress={500}
       hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-      style={{
-        width: rs(56),
-        height: rs(56),
-        borderRadius: rs(28),
-        backgroundColor: theme.colors.background,
-        borderWidth: 2,
-        borderColor: borderColorWithOpacity,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      style={[
+        styles.button,
+        {
+          width: rs(56),
+          height: rs(56),
+          borderColor: borderColorWithOpacity,
+        },
+      ]}
       accessible
       accessibilityRole="button"
       accessibilityLabel={label}
@@ -74,5 +79,21 @@ const PlayPauseButton = React.memo(({ isRunning, isCompleted, isPaused, onPress,
 });
 
 PlayPauseButton.displayName = 'PlayPauseButton';
+PlayPauseButton.propTypes = {
+  isCompleted: PropTypes.bool,
+  isPaused: PropTypes.bool,
+  isRunning: PropTypes.bool.isRequired,
+  onLongPress: PropTypes.func,
+  onPress: PropTypes.func.isRequired,
+};
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    borderRadius: 28,
+    borderWidth: 2,
+    justifyContent: 'center',
+  },
+});
 
 export default PlayPauseButton;

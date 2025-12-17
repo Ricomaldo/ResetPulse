@@ -3,11 +3,12 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React, { useMemo, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
-import { useTheme } from '../../../theme/ThemeProvider';
 import { useDialOrientation } from '../../../hooks/useDialOrientation';
+import { useTheme } from '../../../theme/ThemeProvider';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -27,19 +28,19 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
  * @param {Animated.Value} animatedColor - Animated color for completion
  * @param {boolean} isRunning - Whether timer is running
  */
-const DialProgress = React.memo(({
-  svgSize,
+const DialProgress = React.memo(function DialProgress({
+  animatedColor,
   centerX,
   centerY,
-  radius,
-  strokeWidth,
-  progress,
   color,
   isClockwise,
-  scaleMode,
-  animatedColor,
   isRunning = false,
-}) => {
+  progress,
+  radius,
+  scaleMode,
+  strokeWidth,
+  svgSize,
+}) {
   const theme = useTheme();
   const dial = useDialOrientation(isClockwise, scaleMode);
 
@@ -86,7 +87,7 @@ const DialProgress = React.memo(({
     <Svg
       width={svgSize}
       height={svgSize}
-      style={{ position: 'absolute' }}
+      style={styles.svg}
       pointerEvents="none"
       accessible={false}
       importantForAccessibility="no"
@@ -122,5 +123,24 @@ const DialProgress = React.memo(({
 });
 
 DialProgress.displayName = 'DialProgress';
+DialProgress.propTypes = {
+  animatedColor: PropTypes.any,
+  centerX: PropTypes.number.isRequired,
+  centerY: PropTypes.number.isRequired,
+  color: PropTypes.string,
+  isClockwise: PropTypes.bool.isRequired,
+  isRunning: PropTypes.bool,
+  progress: PropTypes.number.isRequired,
+  radius: PropTypes.number.isRequired,
+  scaleMode: PropTypes.string.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  svgSize: PropTypes.number.isRequired,
+};
+
+const styles = {
+  svg: {
+    position: 'absolute',
+  },
+};
 
 export default DialProgress;

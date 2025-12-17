@@ -99,7 +99,6 @@ jest.mock('react-native', () => {
 
 // Mock react-native-svg (used in timer dial)
 jest.mock('react-native-svg', () => {
-  const React = require('react');
   return {
     Svg: 'Svg',
     Circle: 'Circle',

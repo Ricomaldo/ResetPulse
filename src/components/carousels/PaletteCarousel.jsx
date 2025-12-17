@@ -3,7 +3,7 @@
  * @created 2025-12-14
  * @updated 2025-12-16
  */
-import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import {
   View,
   ScrollView,
@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes';
@@ -22,38 +23,42 @@ import haptics from '../../utils/haptics';
 import { PremiumModal, MoreColorsModal } from '../modals';
 import { fontWeights } from '../../theme/tokens';
 
-// Couleurs extraites pour respecter la règle no-color-literals
-const OVERLAY_DARK = 'rgba(0, 0, 0, 0.85)';
-
-export default function PaletteCarousel({ isTimerRunning = false }) {
+export default function PaletteCarousel() {
   const theme = useTheme();
   const t = useTranslation();
   const {
     currentPalette,
     setPalette,
-    paletteColors,
     currentColor,
-    selectedColorIndex,
     setColorIndex,
-    getAvailablePalettes,
   } = useTimerPalette();
+  const { favoritePalettes = [] } = useTimerOptions();
   const scrollViewRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const toastAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showColorsModal, setShowColorsModal] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
 
   const { isPremium: isPremiumUser } = usePremiumStatus();
 
   // En freemium : seulement les palettes gratuites + bouton "+"
-  // En premium : toutes les palettes
+  // En premium : toutes les palettes (triées par favoris)
   const FREE_PALETTE_NAMES = getFreePalettes();
   const ALL_PALETTE_NAMES = useMemo(() => Object.keys(TIMER_PALETTES), []);
-  const DISPLAY_PALETTES = useMemo(() =>
-    isPremiumUser ? ALL_PALETTE_NAMES : FREE_PALETTE_NAMES,
-  [isPremiumUser, ALL_PALETTE_NAMES, FREE_PALETTE_NAMES]
-  );
+  const DISPLAY_PALETTES = useMemo(() => {
+    const basePalettes = isPremiumUser ? ALL_PALETTE_NAMES : FREE_PALETTE_NAMES;
+
+    // Trier par favoris (favoris en premier)
+    return [...basePalettes].sort((a, b) => {
+      const aIsFavorite = favoritePalettes.includes(a);
+      const bIsFavorite = favoritePalettes.includes(b);
+      if (aIsFavorite && !bIsFavorite) {return -1;}
+      if (!aIsFavorite && bIsFavorite) {return 1;}
+      if (aIsFavorite && bIsFavorite) {
+        return favoritePalettes.indexOf(a) - favoritePalettes.indexOf(b);
+      }
+      return 0;
+    });
+  }, [isPremiumUser, ALL_PALETTE_NAMES, FREE_PALETTE_NAMES, favoritePalettes]);
 
   const currentPaletteIndex = useMemo(() =>
     DISPLAY_PALETTES.indexOf(currentPalette),
@@ -93,26 +98,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
     ]).start();
   };
 
-  // Show toast message for onboarding
-  const showToast = (message) => {
-    setToastMessage(message);
-    Animated.sequence([
-      Animated.timing(toastAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.delay(2000),
-      Animated.timing(toastAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => setToastMessage(''));
-  };
-
-  // Calcul de la largeur totale (palettes + bouton "+" en freemium)
-  const totalSlides = isPremiumUser ? DISPLAY_PALETTES.length : DISPLAY_PALETTES.length + 1;
 
   // Handle scroll end to show palette name (no color change)
   const handleScrollEnd = (event) => {
@@ -153,43 +138,15 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       width: rs(32, 'min'),
       ...theme.shadows.sm,
     },
-
     chevronDisabled: {
       opacity: 0.3,
       pointerEvents: 'none',
     },
-
     chevronText: {
       color: theme.colors.textSecondary,
       fontSize: rs(18, 'min'),
       fontWeight: fontWeights.semibold,
     },
-
-    outerContainer: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      position: 'relative',
-    },
-
-    scrollView: {
-      maxWidth: rs(280, 'width'),
-    },
-
-    scrollContent: {
-      paddingHorizontal: 0,
-    },
-
-    paletteContainer: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: theme.spacing.md,
-      justifyContent: 'center',
-      paddingHorizontal: rs(6, 'width'),
-      paddingVertical: theme.spacing.xs,
-      width: rs(280, 'width'),
-    },
-
     colorButton: {
       backgroundColor: theme.colors.background,
       borderRadius: theme.borderRadius.round,
@@ -201,46 +158,15 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       width: rs(50, 'min'),
       ...theme.shadows.md,
     },
-
+    colorButtonActive: {
+      elevation: 5,
+      transform: [{ scale: 1.1 }],
+      ...theme.shadows.lg,
+    },
     colorButtonInner: {
       borderRadius: theme.borderRadius.round,
       flex: 1,
     },
-
-    colorButtonActive: {
-      transform: [{ scale: 1.1 }],
-      ...theme.shadows.lg,
-      elevation: 5,
-    },
-
-    paletteLabel: {
-      alignSelf: 'center',
-      backgroundColor: theme.colors.background,
-      borderRadius: theme.borderRadius.lg,
-      paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.xs,
-      position: 'absolute',
-      top: -30,
-      ...theme.shadows.md,
-    },
-
-    paletteLabelText: {
-      color: theme.colors.text,
-      fontSize: rs(13, 'min'),
-      fontWeight: fontWeights.semibold,
-      letterSpacing: 0.5,
-    },
-
-    // Bouton "Discover Colors" pour mode freemium
-    moreButtonContainer: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      paddingHorizontal: rs(6, 'width'),
-      paddingVertical: theme.spacing.xs,
-      width: rs(280, 'width'),
-    },
-
     moreButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
@@ -253,35 +179,58 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
       paddingVertical: theme.spacing.sm,
       ...theme.shadows.md,
     },
-
+    moreButtonContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingHorizontal: rs(6, 'width'),
+      paddingVertical: theme.spacing.xs,
+      width: rs(280, 'width'),
+    },
     moreButtonIcon: {
       fontSize: rs(20, 'min'),
     },
-
     moreButtonText: {
       color: theme.colors.fixed.white,
       fontSize: rs(14, 'min'),
       fontWeight: fontWeights.semibold,
     },
-
-    onboardingToast: {
-      alignSelf: 'center',
-      backgroundColor: OVERLAY_DARK,
-      borderRadius: theme.borderRadius.lg,
-      bottom: rs(50, 'height'),
-      maxWidth: '80%',
-      paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.md,
-      position: 'absolute',
-      ...theme.shadows.lg,
-      zIndex: 100,
+    outerContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      position: 'relative',
     },
-
-    onboardingToastText: {
-      color: theme.colors.fixed.white,
+    paletteContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.md,
+      justifyContent: 'center',
+      paddingHorizontal: rs(6, 'width'),
+      paddingVertical: theme.spacing.xs,
+      width: rs(280, 'width'),
+    },
+    paletteLabel: {
+      alignSelf: 'center',
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.lg,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.xs,
+      position: 'absolute',
+      top: -30,
+      ...theme.shadows.md,
+    },
+    paletteLabelText: {
+      color: theme.colors.text,
       fontSize: rs(13, 'min'),
       fontWeight: fontWeights.semibold,
-      textAlign: 'center',
+      letterSpacing: 0.5,
+    },
+    scrollContent: {
+      paddingHorizontal: 0,
+    },
+    scrollView: {
+      maxWidth: rs(280, 'width'),
     },
   });
 
@@ -471,26 +420,6 @@ export default function PaletteCarousel({ isTimerRunning = false }) {
         onOpenPaywall={() => setShowPremiumModal(true)}
       />
 
-      {/* Onboarding Toast */}
-      {toastMessage !== '' && (
-        <Animated.View
-          style={[
-            styles.onboardingToast,
-            {
-              opacity: toastAnim,
-              transform: [{
-                translateY: toastAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0]
-                })
-              }]
-            }
-          ]}
-          pointerEvents="none"
-        >
-          <Text style={styles.onboardingToastText}>{toastMessage}</Text>
-        </Animated.View>
-      )}
     </View>
   );
 }

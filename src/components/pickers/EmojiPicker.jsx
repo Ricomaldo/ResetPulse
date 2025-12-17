@@ -1,17 +1,21 @@
 // src/components/pickers/EmojiPicker.jsx
 // Grid selector for emoji selection in custom activities
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   FlatList,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
+import { useTheme } from '../../theme/ThemeProvider';
 import haptics from '../../utils/haptics';
+
+// Color constants for emoji picker
+const TRANSPARENT = 'transparent';
 
 // Curated list of emojis suitable for activities
 // Organized by implicit categories for user convenience
@@ -37,8 +41,8 @@ const ACTIVITY_EMOJIS = [
 const NUM_COLUMNS = 6;
 
 const EmojiPicker = React.memo(function EmojiPicker({
-  selectedEmoji,
   onSelectEmoji,
+  selectedEmoji,
   style,
 }) {
   const theme = useTheme();
@@ -51,17 +55,21 @@ const EmojiPicker = React.memo(function EmojiPicker({
   const renderEmoji = ({ item: emoji }) => {
     const isSelected = selectedEmoji === emoji;
 
+    // Determine background and border colors
+    const backgroundColor = isSelected
+      ? theme.colors.brand.primary + '20'
+      : TRANSPARENT;
+    const borderColor = isSelected
+      ? theme.colors.brand.primary
+      : TRANSPARENT;
+
     return (
       <TouchableOpacity
         style={[
           styles.emojiButton,
           {
-            backgroundColor: isSelected
-              ? theme.colors.brand.primary + '20'
-              : 'transparent',
-            borderColor: isSelected
-              ? theme.colors.brand.primary
-              : 'transparent',
+            backgroundColor,
+            borderColor,
           },
         ]}
         onPress={() => handleEmojiPress(emoji)}
@@ -115,6 +123,13 @@ const EmojiPicker = React.memo(function EmojiPicker({
     </View>
   );
 });
+
+EmojiPicker.displayName = 'EmojiPicker';
+EmojiPicker.propTypes = {
+  onSelectEmoji: PropTypes.func.isRequired,
+  selectedEmoji: PropTypes.string,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+};
 
 export default EmojiPicker;
 

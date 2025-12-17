@@ -10,7 +10,7 @@ import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter4Branch({ onContinue }) {
+export default function Filter060Branch({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
 
@@ -85,18 +85,6 @@ const createStyles = (colors, spacing, borderRadius) =>
       justifyContent: 'center',
       minHeight: rs(160),
       padding: rs(spacing.xl),
-    },
-    choiceIcon: {
-      fontSize: rs(32),
-    },
-    choiceIconContainer: {
-      alignItems: 'center',
-      backgroundColor: colors.brand.primary + '20',
-      borderRadius: rs(32),
-      height: rs(64),
-      justifyContent: 'center',
-      marginBottom: rs(spacing.md),
-      width: rs(64),
     },
     choiceSubtitle: {
       color: colors.textSecondary,

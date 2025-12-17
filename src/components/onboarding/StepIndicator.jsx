@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../screens/onboarding/onboardingConstants';
 import { fontWeights } from '../../theme/tokens';
@@ -37,6 +38,11 @@ const StepIndicator = React.memo(function StepIndicator({ current, total }) {
     </View>
   );
 });
+
+StepIndicator.propTypes = {
+  current: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
+};
 
 export default StepIndicator;
 

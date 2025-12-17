@@ -51,7 +51,7 @@ describe('timerPalettes Configuration', () => {
 
   describe('Palette Structure & Validation', () => {
     test('Each palette should have required properties', () => {
-      Object.entries(TIMER_PALETTES).forEach(([key, palette]) => {
+      Object.entries(TIMER_PALETTES).forEach(([_key, palette]) => {
         expect(palette).toHaveProperty('colors');
         expect(palette).toHaveProperty('name');
         expect(palette).toHaveProperty('isPremium');
@@ -60,7 +60,7 @@ describe('timerPalettes Configuration', () => {
     });
 
     test('Colors array should have exactly 4 colors', () => {
-      Object.entries(TIMER_PALETTES).forEach(([key, palette]) => {
+      Object.entries(TIMER_PALETTES).forEach(([_key, palette]) => {
         expect(Array.isArray(palette.colors)).toBe(true);
         expect(palette.colors).toHaveLength(4);
       });
@@ -69,7 +69,7 @@ describe('timerPalettes Configuration', () => {
     test('Colors should be valid hex values', () => {
       const hexRegex = /^#[0-9A-F]{6}$/i;
 
-      Object.entries(TIMER_PALETTES).forEach(([key, palette]) => {
+      Object.entries(TIMER_PALETTES).forEach(([_key, palette]) => {
         palette.colors.forEach((color) => {
           expect(hexRegex.test(color)).toBe(true);
         });
@@ -77,7 +77,7 @@ describe('timerPalettes Configuration', () => {
     });
 
     test('Palette name getter should return a string', () => {
-      Object.entries(TIMER_PALETTES).forEach(([key, palette]) => {
+      Object.entries(TIMER_PALETTES).forEach(([_key, palette]) => {
         const name = palette.name;
         expect(typeof name).toBe('string');
         expect(name.length).toBeGreaterThan(0);
@@ -85,7 +85,7 @@ describe('timerPalettes Configuration', () => {
     });
 
     test('Description should be a non-empty string', () => {
-      Object.entries(TIMER_PALETTES).forEach(([key, palette]) => {
+      Object.entries(TIMER_PALETTES).forEach(([_key, palette]) => {
         expect(typeof palette.description).toBe('string');
         expect(palette.description.length).toBeGreaterThan(0);
       });
@@ -217,7 +217,7 @@ describe('timerPalettes Configuration', () => {
 
   describe('Palette Consistency', () => {
     test('All color arrays should have unique values', () => {
-      Object.entries(TIMER_PALETTES).forEach(([key, palette]) => {
+      Object.entries(TIMER_PALETTES).forEach(([_key, palette]) => {
         const uniqueColors = new Set(palette.colors);
         expect(uniqueColors.size).toBe(palette.colors.length);
       });

@@ -1,6 +1,7 @@
 // src/components/modals/settings/SettingsAppearanceSection.jsx
 import React from 'react';
-import { View, Text, Switch, TouchableOpacity, Platform, TouchableNativeFeedback } from 'react-native';
+import { View, Text, Switch, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
 import { PalettePreview } from '../../pickers';
 import { TIMER_PALETTES, isPalettePremium } from '../../../config/timer-palettes';
 import haptics from '../../../utils/haptics';
@@ -45,7 +46,7 @@ const SettingsAppearanceSection = React.memo(function SettingsAppearanceSection(
 
       {/* Thème */}
       <View style={styles.optionRow}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.appearance.theme')}</Text>
           <Text style={styles.optionDescription}>
             {theme.mode === 'auto'
@@ -121,7 +122,7 @@ const SettingsAppearanceSection = React.memo(function SettingsAppearanceSection(
 
       {/* Palettes de couleurs */}
       <View style={[styles.optionRow, { marginTop: theme.spacing.md }]}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.appearance.showPalettes')}</Text>
           <Text style={styles.optionDescription}>
             {showPalettes
@@ -200,8 +201,8 @@ const SettingsAppearanceSection = React.memo(function SettingsAppearanceSection(
       )}
 
       {/* Activités favorites */}
-      <View style={[styles.optionRow, { marginTop: theme.spacing.md, borderBottomWidth: 0 }]}>
-        <View style={{ flex: 1 }}>
+      <View style={[styles.optionRow, styles.lastOptionRow, { marginTop: theme.spacing.md }]}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.appearance.showActivities')}</Text>
           <Text style={styles.optionDescription}>
             {showActivities
@@ -282,7 +283,7 @@ const SettingsAppearanceSection = React.memo(function SettingsAppearanceSection(
                 activeOpacity={0.7}
               >
                 <Text style={styles.discoverActivityIcon}>+</Text>
-                <Text style={styles.discoverActivityText}>Plus{'\n'}d'activités</Text>
+                <Text style={styles.discoverActivityText}>Plus{'\n'}d&apos;activités</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -291,5 +292,31 @@ const SettingsAppearanceSection = React.memo(function SettingsAppearanceSection(
     </View>
   );
 });
+
+SettingsAppearanceSection.propTypes = {
+  theme: PropTypes.shape({
+    mode: PropTypes.string.isRequired,
+    spacing: PropTypes.object.isRequired,
+    setTheme: PropTypes.func.isRequired,
+    styles: PropTypes.object.isRequired,
+  }).isRequired,
+  currentPalette: PropTypes.string.isRequired,
+  setPalette: PropTypes.func.isRequired,
+  showPalettes: PropTypes.bool.isRequired,
+  setShowPalettes: PropTypes.func.isRequired,
+  showActivities: PropTypes.bool.isRequired,
+  setShowActivities: PropTypes.func.isRequired,
+  favoriteActivities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  toggleFavorite: PropTypes.func.isRequired,
+  allActivities: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setCurrentActivity: PropTypes.func.isRequired,
+  isPremiumUser: PropTypes.bool.isRequired,
+  setShowMoreColorsModal: PropTypes.func.isRequired,
+  setShowMoreActivitiesModal: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
+  Touchable: PropTypes.func.isRequired,
+  touchableProps: PropTypes.object.isRequired,
+};
 
 export default SettingsAppearanceSection;

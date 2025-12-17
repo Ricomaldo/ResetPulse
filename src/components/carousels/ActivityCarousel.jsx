@@ -34,7 +34,7 @@ import { fontWeights } from '../../theme/tokens';
 // Couleurs extraites pour respecter la règle no-color-literals
 const OVERLAY_DARK = 'rgba(0, 0, 0, 0.85)';
 
-export default function ActivityCarousel({ isTimerRunning = false, drawerVisible = false }) {
+export default function ActivityCarousel({ drawerVisible = false }) {
   const theme = useTheme();
   const t = useTranslation();
   const {
@@ -220,6 +220,9 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       fontSize: rs(14, 'min'),
       fontWeight: fontWeights.semibold,
     },
+    carouselContainer: {
+      maxWidth: rs(280, 'width'),
+    },
     chevronButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.background,
@@ -241,7 +244,6 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       fontSize: rs(18, 'min'),
       fontWeight: fontWeights.semibold,
     },
-
     onboardingToast: {
       alignSelf: 'center',
       backgroundColor: OVERLAY_DARK,
@@ -270,9 +272,6 @@ export default function ActivityCarousel({ isTimerRunning = false, drawerVisible
       gap: theme.spacing.md,
       paddingHorizontal: rs(6, 'width'),
       paddingVertical: theme.spacing.xs,
-    },
-    carouselContainer: {
-      maxWidth: rs(280, 'width'),
     },
     scrollView: {
       flexGrow: 0,

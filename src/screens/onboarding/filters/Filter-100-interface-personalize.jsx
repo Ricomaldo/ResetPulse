@@ -17,7 +17,7 @@ import { rs } from '../onboardingConstants';
 import haptics from '../../../utils/haptics';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter5cInterface({ onContinue }) {
+export default function Filter100InterfacePersonalize({ onContinue }) {
   const { colors, spacing, borderRadius, setTheme: applyTheme } = useTheme();
   const t = useTranslation();
 

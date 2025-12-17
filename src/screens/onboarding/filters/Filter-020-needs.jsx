@@ -15,7 +15,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, NEEDS_OPTIONS } from '../onboardingConstants';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter1Needs({ onContinue }) {
+export default function Filter020Needs({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
   const [selected, setSelected] = useState([]);

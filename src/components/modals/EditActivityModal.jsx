@@ -187,8 +187,8 @@ export default function EditActivityModal({
 
     deleteButton: {
       alignItems: 'center',
-      backgroundColor: 'transparent',
-      borderColor: theme.colors.fixed?.red || '#FF3B30',
+      backgroundColor: theme.colors.fixed.transparent,
+      borderColor: theme.colors.fixed.red,
       borderRadius: theme.borderRadius.lg,
       borderWidth: 1,
       justifyContent: 'center',
@@ -197,7 +197,7 @@ export default function EditActivityModal({
     },
 
     deleteButtonText: {
-      color: theme.colors.fixed?.red || '#FF3B30',
+      color: theme.colors.fixed.red,
       fontSize: rs(16, 'min'),
       fontWeight: fontWeights.semibold,
     },
@@ -304,7 +304,7 @@ export default function EditActivityModal({
     },
 
     saveButtonText: {
-      color: '#FFFFFF',
+      color: theme.colors.fixed.white,
       fontSize: rs(16, 'min'),
       fontWeight: fontWeights.semibold,
     },

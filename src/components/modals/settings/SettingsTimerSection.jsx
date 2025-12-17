@@ -1,6 +1,7 @@
 // src/components/modals/settings/SettingsTimerSection.jsx
 import React from 'react';
 import { View, Text, Switch, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
 import { SoundPicker } from '../../pickers';
 import haptics from '../../../utils/haptics';
 
@@ -42,8 +43,8 @@ const SettingsTimerSection = React.memo(function SettingsTimerSection({
       />
 
       {/* Mode Cadran */}
-      <View style={[styles.optionRow, { marginTop: theme.spacing.md, flexDirection: 'column', alignItems: 'stretch' }]}>
-        <View>
+      <View style={[styles.optionRow, styles.dialModeContainer, { marginTop: theme.spacing.md }]}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.timer.dialMode')}</Text>
           <Text style={styles.optionDescription}>
             {scaleMode === '1min' && t('settings.timer.dialMode1')}
@@ -83,7 +84,7 @@ const SettingsTimerSection = React.memo(function SettingsTimerSection({
 
       {/* Sens de Rotation */}
       <View style={styles.optionRow}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.timer.rotationDirection')}</Text>
           <Text style={styles.optionDescription}>
             {clockwise ? t('settings.timer.rotationClockwise') : t('settings.timer.rotationCounterClockwise')}
@@ -104,8 +105,8 @@ const SettingsTimerSection = React.memo(function SettingsTimerSection({
       </View>
 
       {/* Écran Toujours Allumé */}
-      <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
-        <View style={{ flex: 1 }}>
+      <View style={[styles.optionRow, styles.lastOptionRow]}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.timer.keepAwake')}</Text>
           <Text style={styles.optionDescription}>
             {keepAwakeEnabled
@@ -129,5 +130,22 @@ const SettingsTimerSection = React.memo(function SettingsTimerSection({
     </View>
   );
 });
+
+SettingsTimerSection.propTypes = {
+  selectedSoundId: PropTypes.string.isRequired,
+  scaleMode: PropTypes.string.isRequired,
+  clockwise: PropTypes.bool.isRequired,
+  keepAwakeEnabled: PropTypes.bool.isRequired,
+  setSelectedSoundId: PropTypes.func.isRequired,
+  setScaleMode: PropTypes.func.isRequired,
+  setClockwise: PropTypes.func.isRequired,
+  setKeepAwakeEnabled: PropTypes.func.isRequired,
+  theme: PropTypes.shape({
+    spacing: PropTypes.object.isRequired,
+    styles: PropTypes.object.isRequired,
+  }).isRequired,
+  t: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
+};
 
 export default SettingsTimerSection;

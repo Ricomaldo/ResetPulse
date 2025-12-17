@@ -4,6 +4,7 @@
  * @updated 2025-12-14
  */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import * as Updates from 'expo-updates';
 import Logger from '../../utils/logger';
@@ -15,7 +16,7 @@ class ErrorBoundary extends Component {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(_error) {
     return { hasError: true };
   }
 
@@ -43,9 +44,9 @@ class ErrorBoundary extends Component {
         <SafeAreaView style={styles.container}>
           <View style={styles.content}>
             <Text style={styles.emoji}>😵</Text>
-            <Text style={styles.title}>Oups !</Text>
+            <Text style={styles.title}>Oups&nbsp;!</Text>
             <Text style={styles.message}>
-              L'application a rencontré un problème
+              L&apos;application a rencontré un problème
             </Text>
 
             <TouchableOpacity
@@ -63,6 +64,10 @@ class ErrorBoundary extends Component {
   }
 }
 
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 const COLORS = {
   background: '#1a1a1a',
   white: '#ffffff',
@@ -71,43 +76,43 @@ const COLORS = {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  content: {
-    alignItems: 'center',
-    padding: 20
-  },
-  emoji: {
-    fontSize: 72,
-    marginBottom: 20
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: fontWeights.bold,
-    color: COLORS.white,
-    marginBottom: 10
-  },
-  message: {
-    fontSize: 16,
-    color: COLORS.gray,
-    textAlign: 'center',
-    marginBottom: 30
-  },
   button: {
     backgroundColor: COLORS.button,
+    borderRadius: 25,
     paddingHorizontal: 30,
     paddingVertical: 15,
-    borderRadius: 25
   },
   buttonText: {
     color: COLORS.white,
     fontSize: 16,
-    fontWeight: fontWeights.semibold
-  }
+    fontWeight: fontWeights.semibold,
+  },
+  container: {
+    alignItems: 'center',
+    backgroundColor: COLORS.background,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  content: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  emoji: {
+    fontSize: 72,
+    marginBottom: 20,
+  },
+  message: {
+    color: COLORS.gray,
+    fontSize: 16,
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  title: {
+    color: COLORS.white,
+    fontSize: 24,
+    fontWeight: fontWeights.bold,
+    marginBottom: 10,
+  },
 });
 
 export default ErrorBoundary;

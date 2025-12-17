@@ -390,7 +390,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
     },
 
     primaryButtonText: {
-      color: '#FFFFFF',
+      color: theme.colors.fixed.white,
       fontSize: rs(17, 'min'),
       fontWeight: fontWeights.semibold,
     },
@@ -412,7 +412,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
 
     secondaryButton: {
       alignItems: 'center',
-      backgroundColor: 'transparent',
+      backgroundColor: theme.colors.fixed.transparent,
       borderRadius: 12,
       justifyContent: 'center',
       minHeight: 44,
@@ -496,7 +496,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
               accessibilityState={{ disabled: isAnyOperationInProgress }}
             >
               {isPurchasing ? (
-                <ActivityIndicator color="#FFFFFF" size="small" />
+                <ActivityIndicator color={theme.colors.fixed.white} size="small" />
               ) : (
                 <Text style={styles.primaryButtonText}>
                   {t('premium.startTrial')}

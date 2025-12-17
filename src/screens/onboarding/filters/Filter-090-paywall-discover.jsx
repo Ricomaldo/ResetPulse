@@ -10,7 +10,7 @@ import { rs } from '../onboardingConstants';
 import PremiumModal from '../../../components/modals/PremiumModal';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter5Paywall({ onComplete }) {
+export default function Filter090PaywallDiscover({ onComplete }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);

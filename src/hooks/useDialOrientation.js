@@ -42,9 +42,9 @@ export function useDialOrientation(isClockwise, scaleMode) {
     const normalizedAngle = ((numAngle + 360) % 360);
 
     if (isClockwise) {
-      minutes = Math.round(normalizedAngle / config.degreesPerMinute);
+      minutes = normalizedAngle / config.degreesPerMinute;
     } else {
-      minutes = Math.round((360 - normalizedAngle) / config.degreesPerMinute);
+      minutes = (360 - normalizedAngle) / config.degreesPerMinute;
     }
 
     // Clamp to valid range [0, maxMinutes]

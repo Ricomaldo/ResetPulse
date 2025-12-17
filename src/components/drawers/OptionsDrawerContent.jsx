@@ -23,18 +23,18 @@ export default function OptionsDrawerContent({
   const theme = useTheme();
 
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: rs(20),
-      paddingTop: rs(16),
-      paddingBottom: rs(60), // Extra space for settings button
-    },
-    section: {
-      marginBottom: rs(16),
-    },
     carouselWrapper: {
       marginBottom: rs(24),
       overflow: 'visible',
+    },
+    container: {
+      flex: 1,
+      paddingBottom: rs(60),
+      paddingHorizontal: rs(20),
+      paddingTop: rs(16),
+    },
+    section: {
+      marginBottom: rs(16),
     },
     sectionLabel: {
       color: theme.colors.textSecondary,

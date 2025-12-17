@@ -298,7 +298,7 @@ export default function OnboardingFlow({ onComplete }) {
   const styles = createStyles(colors, spacing);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.container}>
       <DevBar />
       {/* Back button header - hidden on first screen */}
       {currentFilter > 0 && (
@@ -334,6 +334,10 @@ const createStyles = (colors, spacing) =>
       color: colors.text,
       fontSize: rs(32),
       fontWeight: fontWeights.light,
+    },
+    container: {
+      backgroundColor: colors.background,
+      flex: 1,
     },
     header: {
       borderBottomColor: colors.border,

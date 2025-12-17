@@ -18,7 +18,7 @@ import useSimpleAudio from '../../../hooks/useSimpleAudio';
 import { TIMER_SOUNDS } from '../../../config/sounds';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter5bSound({ onContinue }) {
+export default function Filter080SoundPersonalize({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
   const { playSound, stopSound } = useSimpleAudio('preview');

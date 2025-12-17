@@ -194,5 +194,10 @@
     },
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "더 많은 색상",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
   }
 }

@@ -9,7 +9,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { rs, getJourneyScenarios } from '../onboardingConstants';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter5aVision({ needs = [], onContinue }) {
+export default function Filter070VisionDiscover({ needs = [], onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
   const scenarios = getJourneyScenarios(needs, colors, t);

@@ -2,6 +2,7 @@
 // Contexte dédié aux palettes du timer (séparé du thème global)
 
 import React, { createContext, useContext, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePersistedState } from '../hooks/usePersistedState';
@@ -9,6 +10,11 @@ import { TIMER_PALETTES, getTimerColors } from '../config/timer-palettes';
 
 const TimerPaletteContext = createContext(null);
 
+/**
+ * Provider for timer palette (colors and palettes)
+ * @param {React.ReactNode} children - Components to wrap
+ * @returns {React.ReactElement}
+ */
 export const TimerPaletteProvider = ({ children }) => {
   const hasLoadedOnboardingConfig = useRef(false);
 
@@ -121,6 +127,10 @@ export const TimerPaletteProvider = ({ children }) => {
       {children}
     </TimerPaletteContext.Provider>
   );
+};
+
+TimerPaletteProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useTimerPalette = () => {

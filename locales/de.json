@@ -194,5 +194,10 @@
     },
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "Noch mehr Farben",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
   }
 }

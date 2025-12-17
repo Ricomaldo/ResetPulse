@@ -227,6 +227,21 @@ function TimerDial({
         // Detect long press: held (>=500ms) with minimal movement (<10px)
         const isLongPress = timeDelta >= 500 && movementDistance < 10;
 
+        // Intelligent snap: only snap if it was a meaningful swipe (momentum-driven)
+        // Slow deliberate drag = exact position, Normal swipe+ = snap to major mark
+        const FAST_SWIPE_THRESHOLD = 0.8; // pixels per millisecond (more permissive)
+        const swipeVelocity = timeDelta > 0 ? movementDistance / timeDelta : 0;
+
+        const isFastSwipe = swipeVelocity > FAST_SWIPE_THRESHOLD && !isTap && !isLongPress;
+
+        // Apply snap if fast swipe detected
+        if (isFastSwipe && onGraduationTap && lastMinutesRef.current !== null) {
+          // Snap to nearest major mark using majorTickInterval
+          const snapInterval = dial.config.majorTickInterval;
+          const snappedMinutes = Math.round(lastMinutesRef.current / snapInterval) * snapInterval;
+          onGraduationTap(snappedMinutes);
+        }
+
         // Handle tap or long press
         if (isLongPress && onDialLongPress) {
           onDialLongPress();

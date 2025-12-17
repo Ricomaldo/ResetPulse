@@ -4,9 +4,8 @@
  * @updated 2025-12-14
  */
 import React from 'react';
-import { Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../../../styles/responsive';
 import { fontWeights } from '../../../theme/tokens';
 
@@ -28,26 +27,6 @@ const PlusButton = React.memo(function PlusButton({
   const theme = useTheme();
 
   const styles = StyleSheet.create({
-    // Bouton "+" pour mode freemium
-    moreButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.brand.primary,
-      borderRadius: theme.borderRadius.lg,
-      height: rs(60, 'min'),
-      justifyContent: 'center',
-      minHeight: 44,
-      minWidth: 44,
-      width: rs(60, 'min'),
-      ...theme.shadows.md,
-    },
-
-    moreButtonText: {
-      color: theme.colors.fixed.white,
-      fontSize: rs(32, 'min'),
-      fontWeight: fontWeights.semibold,
-    },
-
-    // Bouton "+" pour mode premium (création)
     createButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.brand.primary + '15',
@@ -62,11 +41,26 @@ const PlusButton = React.memo(function PlusButton({
       width: rs(60, 'min'),
       ...theme.shadows.sm,
     },
-
     createButtonText: {
       color: theme.colors.brand.primary,
       fontSize: rs(24, 'min'),
       fontWeight: fontWeights.light,
+    },
+    moreButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.brand.primary,
+      borderRadius: theme.borderRadius.lg,
+      height: rs(60, 'min'),
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: 44,
+      width: rs(60, 'min'),
+      ...theme.shadows.md,
+    },
+    moreButtonText: {
+      color: theme.colors.fixed.white,
+      fontSize: rs(32, 'min'),
+      fontWeight: fontWeights.semibold,
     },
   });
 

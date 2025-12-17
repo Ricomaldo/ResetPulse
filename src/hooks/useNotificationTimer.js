@@ -19,7 +19,7 @@ try {
 } catch (error) {
   // Silent fail sur iOS Simulator - les notifications ne sont pas disponibles
   if (__DEV__) {
-    console.log('ℹ️ Notifications not available (iOS Simulator or missing module)');
+    console.warn('ℹ️ Notifications not available (iOS Simulator or missing module)');
   }
 }
 
@@ -42,7 +42,7 @@ const setupAndroidChannel = async () => {
     });
 
     if (__DEV__) {
-      console.log('✅ Android notification channel "timer" created');
+      console.warn('✅ Android notification channel "timer" created');
     }
   } catch (error) {
     console.warn('⚠️ Failed to create Android notification channel:', error.message);
@@ -63,7 +63,7 @@ export default function useNotificationTimer() {
         const { status } = await Notifications.requestPermissionsAsync();
 
         if (status !== 'granted') {
-          console.log('Notification permissions not granted');
+          console.warn('Notification permissions not granted');
         }
       } catch (error) {
         console.warn('⚠️ Failed to request notification permissions:', error.message);
@@ -83,7 +83,10 @@ export default function useNotificationTimer() {
   }, []);
 
   // Programmer une notification pour la fin du timer
-  const scheduleTimerNotification = async (seconds, activity) => {
+  // @param {number} seconds - Temps avant fin en secondes
+  // @param {Object} activity - Activité avec emoji et label
+  // @param {string} endMessage - Message de fin depuis timerMessages (ex: "Centré 🪷")
+  const scheduleTimerNotification = async (seconds, activity, endMessage) => {
     // Skip si notifications non disponibles (iOS Simulator)
     if (!notificationsAvailable) {
       return null;
@@ -95,25 +98,15 @@ export default function useNotificationTimer() {
         await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
       }
 
-      // Calculer l'heure de fin
-      const now = new Date();
-      const endTime = new Date(now.getTime() + seconds * 1000);
-      const timeString = endTime.toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
-
-      // Construire le titre avec emoji + label de l'activité
+      // Format 2: emoji + endMessage (sans durée)
       const activityEmoji = activity?.emoji || '⏰';
-      const activityLabel = activity?.label || 'Timer';
-      const title = `${activityEmoji} ${activityLabel} terminé !`;
+      const title = `${activityEmoji} ${endMessage || 'Terminé'}`;
 
       // Programmer nouvelle notification
       const id = await Notifications.scheduleNotificationAsync({
         content: {
           title,
-          body: `Votre timer de ${Math.floor(seconds/60)}min ${seconds%60}s est terminé`,
+          body: '', // Corps vide - tout est dans le titre
           sound: 'bell_short.wav', // Son bell_classic
           // Pour Android 8+ le son du channel est utilisé
         },
@@ -127,9 +120,16 @@ export default function useNotificationTimer() {
       notificationIdRef.current = id;
 
       if (__DEV__) {
+        const now = new Date();
         const minutes = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        console.log(`📱 [${now.toLocaleTimeString('fr-FR')}] Notification programmée dans ${minutes}min ${secs}s → déclenchement prévu à ${timeString}`);
+        const endTime = new Date(now.getTime() + seconds * 1000);
+        const timeString = endTime.toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        console.warn(`📱 [${now.toLocaleTimeString('fr-FR')}] Notif programmée dans ${minutes}min ${secs}s → "${title}" à ${timeString}`);
       }
 
       return id;
@@ -153,7 +153,7 @@ export default function useNotificationTimer() {
         notificationIdRef.current = null;
 
         if (__DEV__) {
-          console.log('📱 Notification annulée');
+          console.warn('📱 Notification annulée');
         }
       }
     } catch (error) {

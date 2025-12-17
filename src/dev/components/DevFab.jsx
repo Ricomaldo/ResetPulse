@@ -9,9 +9,18 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { SHOW_DEV_FAB } from '../../config/test-mode';
 import { fontWeights } from '../../theme/tokens';
+import { colors } from '../../theme/colors';
 
+/**
+ * Dev FAB component for toggling premium mode during testing
+ * @param {boolean} isPremiumMode - Current premium mode state
+ * @param {Function} onPremiumChange - Callback to change premium mode
+ * @param {Function} onResetOnboarding - Callback to reset onboarding
+ * @param {Function} onGoToApp - Callback to go to app
+ */
 export default function DevFab({
   isPremiumMode,
   onPremiumChange,
@@ -158,7 +167,7 @@ const styles = StyleSheet.create({
   },
 
   actionText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 13,
     fontWeight: fontWeights.semibold,
   },
@@ -178,14 +187,14 @@ const styles = StyleSheet.create({
 
   fab: {
     alignItems: 'center',
-    backgroundColor: '#1a1a2e',
-    borderColor: '#333',
+    backgroundColor: colors.devBg,
+    borderColor: colors.devBorder,
     borderRadius: 28,
     borderWidth: 2,
     elevation: 8,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -197,31 +206,31 @@ const styles = StyleSheet.create({
   },
 
   fabOpen: {
-    backgroundColor: '#333',
-    borderColor: '#555',
+    backgroundColor: colors.devBorderLight,
+    borderColor: colors.devBorderDark,
   },
 
   goToAppButton: {
-    backgroundColor: '#5cb85c',
+    backgroundColor: colors.success,
   },
 
   menu: {
-    backgroundColor: '#1a1a2e',
-    borderColor: '#333',
+    backgroundColor: colors.devBg,
+    borderColor: colors.devBorder,
     borderRadius: 16,
     borderWidth: 1,
     elevation: 10,
     marginTop: 12,
     minWidth: 180,
     padding: 16,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 12,
   },
 
   menuLabel: {
-    color: '#888',
+    color: colors.textSecondary,
     fontSize: 11,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
@@ -234,25 +243,25 @@ const styles = StyleSheet.create({
   },
 
   resetButton: {
-    backgroundColor: '#d9534f',
+    backgroundColor: colors.danger,
   },
 
   statusRow: {
     alignItems: 'center',
-    borderTopColor: '#333',
+    borderTopColor: colors.devBorder,
     borderTopWidth: 1,
     marginTop: 4,
     paddingTop: 8,
   },
 
   statusText: {
-    color: '#ccc',
+    color: colors.textTertiary,
     fontSize: 14,
   },
 
   toggleButton: {
     alignItems: 'center',
-    backgroundColor: '#2d2d3d',
+    backgroundColor: colors.devBgSecondary,
     borderRadius: 8,
     flex: 1,
     paddingHorizontal: 12,
@@ -260,7 +269,7 @@ const styles = StyleSheet.create({
   },
 
   toggleButtonActive: {
-    backgroundColor: '#4a6fa5',
+    backgroundColor: colors.primary,
   },
 
   toggleRow: {
@@ -269,12 +278,19 @@ const styles = StyleSheet.create({
   },
 
   toggleText: {
-    color: '#888',
+    color: colors.textSecondary,
     fontSize: 13,
     fontWeight: fontWeights.semibold,
   },
 
   toggleTextActive: {
-    color: '#fff',
+    color: colors.white,
   },
 });
+
+DevFab.propTypes = {
+  isPremiumMode: PropTypes.bool.isRequired,
+  onPremiumChange: PropTypes.func.isRequired,
+  onResetOnboarding: PropTypes.func,
+  onGoToApp: PropTypes.func,
+};
