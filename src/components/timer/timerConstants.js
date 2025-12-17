@@ -9,17 +9,9 @@
 // ============================================
 
 /**
- * Dial modes configuration with magnetic snap granularity (for tap precision)
- * magneticSnapSeconds: Snap increment for tap-on-graduation precision (not drag)
- * - 1min scale: 10s snap (6 positions: 0, 10, 20, 30, 40, 50, 60s) - useSeconds display
- * - 5min scale: 60s snap (5 positions per minute, aligns to 1min marks)
- * - 10min scale: 120s snap (aligns to 2min major marks)
- * - 25min scale: 300s snap (aligns to 5min major marks)
- * - 45min scale: 300s snap (aligns to 5min major marks)
- * - 60min scale: 300s snap (aligns to 5min major marks)
- *
- * Rationale: Tap snap provides precision landing on visual marks. Continuous drag
- * bypasses snap for smooth exploration (no snap applied during drag).
+ * Dial modes configuration
+ * No magnetic snap - smooth exploration throughout all scales
+ * Graduation marks are visual references only, not snap targets
  */
 export const DIAL_MODES = {
   '1min': {
@@ -31,7 +23,6 @@ export const DIAL_MODES = {
     numberInterval: 1,
     defaultDuration: 60,
     useSeconds: true,
-    magneticSnapSeconds: 10,
   },
   '5min': {
     maxMinutes: 5,
@@ -41,7 +32,6 @@ export const DIAL_MODES = {
     majorTickInterval: 1,
     numberInterval: 1,
     defaultDuration: 5 * 60,
-    magneticSnapSeconds: 60,
   },
   '10min': {
     maxMinutes: 10,
@@ -51,7 +41,6 @@ export const DIAL_MODES = {
     majorTickInterval: 2,
     numberInterval: 2,
     defaultDuration: 10 * 60,
-    magneticSnapSeconds: 120,
   },
   '25min': {
     maxMinutes: 25,
@@ -61,7 +50,6 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 25 * 60,
-    magneticSnapSeconds: 300,
   },
   '45min': {
     maxMinutes: 45,
@@ -71,7 +59,6 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 45 * 60,
-    magneticSnapSeconds: 300,
   },
   '60min': {
     maxMinutes: 60,
@@ -81,7 +68,6 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 30 * 60,
-    magneticSnapSeconds: 300,
   }
 };
 
