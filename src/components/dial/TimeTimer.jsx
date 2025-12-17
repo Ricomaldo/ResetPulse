@@ -12,9 +12,9 @@ import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
-import TimerDial from '../timer/TimerDial';
+import TimerDial from './TimerDial';
 import haptics from '../../utils/haptics';
-import { TIMER, getDialMode } from '../timer/timerConstants';
+import { TIMER, getDialMode } from './timerConstants';
 
 export default function TimeTimer({
   onRunningChange,
@@ -113,30 +113,29 @@ export default function TimeTimer({
 
   /**
    * Handle drag/tap on dial to set duration
-   * No magnetic snap - just smooth exploration with natural precision
+   * Smooth drag during interaction, subtle snap on release
    * @param {number} minutes - Raw minutes value from dial interaction
+   * @param {boolean} isRelease - True if this is the final value (release), false if dragging
    */
-  const handleGraduationTap = useCallback((minutes) => {
+  const handleGraduationTap = useCallback((minutes, isRelease = false) => {
     if (timer.running) {return;}
 
     const dialMode = getDialMode(scaleMode);
 
-    // Snap to 0 if very close (natural center gravitational feel)
-    if (minutes <= TIMER.GRADUATION_SNAP_THRESHOLD) {
-      minutes = 0;
-      haptics.impact('light').catch(() => { /* Optional operation - failure is non-critical */ }); // Light feedback for reaching zero
-    }
+    // Clamp to current scale mode's max (0 to maxMinutes)
+    const clampedMinutes = Math.max(0, Math.min(dialMode.maxMinutes, minutes));
 
-    // Convert minutes to seconds and handle 0 specially
-    let newDuration;
-    if (minutes === 0) {
-      // Setting to 0 means reset state
-      newDuration = 0;
+    // Convert to seconds (keep float precision during drag)
+    let newDuration = clampedMinutes * 60;
+
+    // On release: apply subtle snap to nearest interval
+    // During drag: keep raw value for fluid motion
+    if (isRelease) {
+      const { snapToInterval } = require('./timerConstants');
+      newDuration = snapToInterval(newDuration, scaleMode);
     } else {
-      // Clamp to current scale mode's max
-      const clampedMinutes = Math.min(dialMode.maxMinutes, minutes);
-      // Round to nearest second to avoid floating point precision issues
-      newDuration = Math.round(clampedMinutes * 60);
+      // During drag: round to nearest second for display consistency
+      newDuration = Math.round(newDuration);
     }
 
     timer.setDuration(newDuration);

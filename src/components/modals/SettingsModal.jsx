@@ -13,7 +13,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import PremiumModal from './PremiumModal';
@@ -26,9 +25,13 @@ import { useTranslation } from '../../hooks/useTranslation';
 
 // Import section components
 import {
-  SettingsInterfaceSection,
-  SettingsTimerSection,
-  SettingsAppearanceSection,
+  SettingsCommandBarSection,
+  SettingsCarouselBarSection,
+  SettingsFavoritesSection,
+  SettingsDialSection,
+  SettingsSoundSection,
+  SettingsGeneralSection,
+  SettingsThemeSection,
   SettingsAboutSection,
 } from './settings';
 
@@ -41,34 +44,31 @@ export default function SettingsModal({ visible, onClose }) {
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
   const t = useTranslation();
   const theme = useTheme();
-  const { currentPalette, setPalette } = useTimerPalette();
   const {
     shouldPulse,
     setShouldPulse,
-    showActivities,
-    setShowActivities,
-    showPalettes,
-    setShowPalettes,
-    useMinimalInterface,
-    setUseMinimalInterface,
-    showDigitalTimer,
-    setShowDigitalTimer,
+    showActivityEmoji,
+    setShowActivityEmoji,
     keepAwakeEnabled,
     setKeepAwakeEnabled,
     clockwise,
     setClockwise,
-    scaleMode,
-    setScaleMode,
     favoriteActivities,
     setFavoriteActivities,
+    favoritePalettes,
+    toggleFavoritePalette,
     selectedSoundId,
     setSelectedSoundId,
+    commandBarConfig,
+    setCommandBarConfig,
+    carouselBarConfig,
+    setCarouselBarConfig,
   } = useTimerOptions();
 
   const allActivities = getAllActivities();
   const { isPremium: isPremiumUser } = usePremiumStatus();
 
-  const toggleFavorite = (activityId) => {
+  const toggleFavoriteActivity = (activityId) => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     const newFavorites = favoriteActivities.includes(activityId)
       ? favoriteActivities.filter((id) => id !== activityId)
@@ -107,6 +107,48 @@ export default function SettingsModal({ visible, onClose }) {
       };
 
   const styles = StyleSheet.create({
+    activityEmoji: {
+      fontSize: rs(24, 'min'),
+      marginBottom: theme.spacing.xs / 2,
+      textAlign: 'center',
+    },
+
+    activityItem: {
+      alignItems: 'center',
+      aspectRatio: 1,
+      backgroundColor: theme.colors.surface,
+      borderColor: 'transparent',
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 2,
+      justifyContent: 'center',
+      width: '22%',
+      ...theme.shadow('sm'),
+      padding: theme.spacing.xs,
+    },
+
+    activityItemDisabled: {
+      opacity: 0.4,
+    },
+
+    activityItemFavorite: {
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.brand.primary,
+      ...theme.shadow('md'),
+    },
+
+    activityItemLabel: {
+      color: theme.colors.textLight,
+      fontSize: rs(9, 'min'),
+      fontWeight: fontWeights.medium,
+      textAlign: 'center',
+      width: '100%',
+    },
+
+    activityItemLabelFavorite: {
+      color: theme.colors.brand.primary,
+      fontWeight: fontWeights.semibold,
+    },
+
     closeButton: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -119,6 +161,79 @@ export default function SettingsModal({ visible, onClose }) {
     closeText: {
       color: theme.colors.text,
       fontSize: rs(20, 'min'),
+    },
+
+    discoverActivityButton: {
+      alignItems: 'center',
+      aspectRatio: 1,
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '40',
+      borderRadius: theme.borderRadius.md,
+      borderStyle: 'dashed',
+      borderWidth: 2,
+      gap: theme.spacing.xs / 2,
+      justifyContent: 'center',
+      padding: theme.spacing.xs,
+      width: '22%',
+    },
+
+    discoverActivityIcon: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(24),
+      fontWeight: fontWeights.semibold,
+    },
+
+    discoverActivityText: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(8, 'min'),
+      fontWeight: fontWeights.semibold,
+      lineHeight: rs(10),
+      textAlign: 'center',
+    },
+
+    discoverButton: {
+      alignItems: 'center',
+      aspectRatio: 1.5,
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '40',
+      borderRadius: theme.borderRadius.md,
+      borderStyle: 'dashed',
+      borderWidth: 2,
+      gap: theme.spacing.xs,
+      justifyContent: 'center',
+      marginBottom: theme.spacing.sm,
+      padding: theme.spacing.xs,
+      width: '30%',
+    },
+
+    discoverIcon: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(20),
+      fontWeight: fontWeights.semibold,
+    },
+
+    discoverIconContainer: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.brand.primary + '20',
+      borderRadius: rs(16),
+      height: rs(32),
+      justifyContent: 'center',
+      width: rs(32),
+    },
+
+    discoverText: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(9, 'min'),
+      fontWeight: fontWeights.semibold,
+      lineHeight: rs(11),
+      textAlign: 'center',
+    },
+
+    favoritesGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
     },
 
     header: {
@@ -139,7 +254,7 @@ export default function SettingsModal({ visible, onClose }) {
     },
 
     modalContainer: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.surface,
       borderRadius: Platform.select({
         ios: 16,
         android: 12,
@@ -151,24 +266,142 @@ export default function SettingsModal({ visible, onClose }) {
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + '30',
+          borderColor: theme.colors.brand.primary + '30',
         },
         android: {},
       }),
     },
 
+    optionDescription: {
+      color: theme.colors.textLight,
+      fontSize: rs(11, 'min'),
+      marginTop: theme.spacing.xs / 2,
+    },
+
+    optionLabel: {
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(14, 'min'),
+    },
+
+    optionRow: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: theme.spacing.sm,
+    },
+
     overlay: {
       alignItems: 'center',
-      backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
-      }),
+      backgroundColor: theme.colors.overlay,
       flex: 1,
       justifyContent: 'center',
     },
 
+    paletteGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
+    },
+
+    paletteItem: {
+      aspectRatio: 1.5,
+      backgroundColor: theme.colors.surface,
+      borderColor: 'transparent',
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 2,
+      marginBottom: theme.spacing.sm,
+      padding: theme.spacing.xs,
+      width: '30%',
+      ...theme.shadow('sm'),
+    },
+
+    paletteItemActive: {
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.brand.primary,
+      ...theme.shadow('md'),
+    },
+
+    paletteItemDisabled: {
+      opacity: 0.4,
+    },
+
+    paletteName: {
+      color: theme.colors.text,
+      fontSize: rs(10, 'min'),
+      fontWeight: fontWeights.medium,
+      marginTop: theme.spacing.xs / 2,
+      textAlign: 'center',
+    },
+
+    paletteNameActive: {
+      color: theme.colors.brand.primary,
+      fontWeight: fontWeights.semibold,
+    },
+
     scrollContent: {
       paddingBottom: theme.spacing.md,
+    },
+
+    sectionCard: {
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '30',
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      marginBottom: theme.spacing.md,
+      padding: theme.spacing.md,
+      ...theme.shadow('sm'),
+    },
+
+    sectionCardPrimary: {
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '15',
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      marginBottom: theme.spacing.sm,
+      padding: theme.spacing.md,
+      ...theme.shadow('md'),
+    },
+
+    sectionTitle: {
+      color: theme.colors.text,
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginBottom: theme.spacing.sm,
+    },
+
+    segmentButton: {
+      alignItems: 'center',
+      borderRadius: theme.borderRadius.md - 2,
+      flex: 1,
+      minWidth: 60,
+      paddingHorizontal: theme.spacing.xs,
+      paddingVertical: theme.spacing.xs,
+    },
+
+    segmentButtonActive: {
+      backgroundColor: theme.colors.brand.primary,
+    },
+
+    segmentText: {
+      color: theme.colors.text,
+      fontSize: rs(11, 'min'),
+      fontWeight: fontWeights.medium,
+      textAlign: 'center',
+    },
+
+    segmentTextActive: {
+      color: theme.colors.fixed.white,
+    },
+
+    segmentedControl: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.md,
+      flexDirection: 'row',
+      padding: 2,
     },
 
     title: {
@@ -219,27 +452,65 @@ export default function SettingsModal({ visible, onClose }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            {/* 1. Interface Section */}
-            <SettingsInterfaceSection
-              useMinimalInterface={useMinimalInterface}
-              showDigitalTimer={showDigitalTimer}
+            {/* 1. Zone commandes (haut) */}
+            <SettingsCommandBarSection
+              commandBarConfig={commandBarConfig}
+              setCommandBarConfig={setCommandBarConfig}
+              theme={theme}
+              t={t}
+              styles={styles}
+            />
+
+            {/* 2. Zone carrousels (bas) */}
+            <SettingsCarouselBarSection
+              carouselBarConfig={carouselBarConfig}
+              setCarouselBarConfig={setCarouselBarConfig}
+              theme={theme}
+              t={t}
+              styles={styles}
+            />
+
+            {/* 3. Favoris */}
+            <SettingsFavoritesSection
+              favoriteActivities={favoriteActivities}
+              toggleFavoriteActivity={toggleFavoriteActivity}
+              allActivities={allActivities}
+              isPremiumUser={isPremiumUser}
+              setShowMoreActivitiesModal={setShowMoreActivitiesModal}
+              favoritePalettes={favoritePalettes}
+              toggleFavoritePalette={toggleFavoritePalette}
+              setShowMoreColorsModal={setShowMoreColorsModal}
+              theme={theme}
+              t={t}
+              styles={styles}
+              Touchable={Touchable}
+              touchableProps={touchableProps}
+            />
+
+            {/* 4. Dial */}
+            <SettingsDialSection
+              showActivityEmoji={showActivityEmoji}
               shouldPulse={shouldPulse}
-              setUseMinimalInterface={setUseMinimalInterface}
-              setShowDigitalTimer={setShowDigitalTimer}
+              setShowActivityEmoji={setShowActivityEmoji}
               setShouldPulse={setShouldPulse}
               theme={theme}
               t={t}
               styles={styles}
             />
 
-            {/* 2. Timer Section */}
-            <SettingsTimerSection
+            {/* 5. Son */}
+            <SettingsSoundSection
               selectedSoundId={selectedSoundId}
-              scaleMode={scaleMode}
+              setSelectedSoundId={setSelectedSoundId}
+              theme={theme}
+              t={t}
+              styles={styles}
+            />
+
+            {/* 6. Général */}
+            <SettingsGeneralSection
               clockwise={clockwise}
               keepAwakeEnabled={keepAwakeEnabled}
-              setSelectedSoundId={setSelectedSoundId}
-              setScaleMode={setScaleMode}
               setClockwise={setClockwise}
               setKeepAwakeEnabled={setKeepAwakeEnabled}
               theme={theme}
@@ -247,21 +518,9 @@ export default function SettingsModal({ visible, onClose }) {
               styles={styles}
             />
 
-            {/* 3. Appearance Section */}
-            <SettingsAppearanceSection
+            {/* 7. Thème */}
+            <SettingsThemeSection
               theme={theme}
-              currentPalette={currentPalette}
-              setPalette={setPalette}
-              showPalettes={showPalettes}
-              setShowPalettes={setShowPalettes}
-              showActivities={showActivities}
-              setShowActivities={setShowActivities}
-              favoriteActivities={favoriteActivities}
-              toggleFavorite={toggleFavorite}
-              allActivities={allActivities}
-              isPremiumUser={isPremiumUser}
-              setShowMoreColorsModal={setShowMoreColorsModal}
-              setShowMoreActivitiesModal={setShowMoreActivitiesModal}
               t={t}
               styles={styles}
               Touchable={Touchable}
@@ -271,7 +530,7 @@ export default function SettingsModal({ visible, onClose }) {
             {/* Divider avant À propos */}
             <View style={styles.levelDivider} />
 
-            {/* 4. About Section */}
+            {/* 8. À propos */}
             <SettingsAboutSection
               resetOnboarding={resetOnboarding}
               onClose={onClose}

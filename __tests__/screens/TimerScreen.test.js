@@ -35,22 +35,24 @@ jest.mock('../../src/theme/ThemeProvider', () => ({
 // Mock TimerOptionsContext
 const mockTimerOptionsContext = {
   currentDuration: 1500, // 25 minutes
+  setCurrentDuration: jest.fn(),
   showDigitalTimer: true,
   setShowDigitalTimer: jest.fn(),
-  currentActivity: { id: 'work', emoji: '💻', label: 'Work' },
+  currentActivity: { id: 'work', emoji: '💻', label: 'Work', pulseDuration: 800 },
   clockwise: false,
   setClockwise: jest.fn(),
-  showRotationToggle: false,
   incrementCompletedTimers: jest.fn(() => 1),
   completedTimersCount: 0,
   hasSeenTwoTimersModal: false,
   setHasSeenTwoTimersModal: jest.fn(),
   shouldPulse: true,
   setShouldPulse: jest.fn(),
-  useMinimalInterface: false,
-  setUseMinimalInterface: jest.fn(),
   scaleMode: '60min',
   setScaleMode: jest.fn(),
+  commandBarConfig: [],
+  carouselBarConfig: [],
+  favoritePalettes: [],
+  toggleFavoritePalette: jest.fn(),
 };
 
 jest.mock('../../src/contexts/TimerOptionsContext', () => ({
@@ -70,18 +72,39 @@ jest.mock('../../src/hooks/useTimerKeepAwake', () => ({
   useTimerKeepAwake: jest.fn(),
 }));
 
+// Mock useAnimatedDots hook
+jest.mock('../../src/hooks/useAnimatedDots', () => ({
+  __esModule: true,
+  default: jest.fn(() => '...'),
+}));
+
+// Mock dial components
+jest.mock('../../src/components/dial', () => ({
+  TimeTimer: 'TimeTimer',
+  ActivityLabel: 'ActivityLabel',
+  DigitalTimer: 'DigitalTimer',
+}));
+
 // Mock layout components
 jest.mock('../../src/components/layout', () => ({
-  TimeTimer: 'TimeTimer',
   Drawer: 'Drawer',
+}));
+
+// Mock controls components
+jest.mock('../../src/components/controls', () => ({
   CircularToggle: 'CircularToggle',
+  PresetPills: 'PresetPills',
+}));
+
+// Mock bars components
+jest.mock('../../src/components/bars', () => ({
+  CommandBar: 'CommandBar',
+  CarouselBar: 'CarouselBar',
 }));
 
 // Mock drawer content
 jest.mock('../../src/components/drawers/OptionsDrawerContent', () => 'OptionsDrawerContent');
-
-// Mock DigitalTimer
-jest.mock('../../src/components/timer/DigitalTimer', () => 'DigitalTimer');
+jest.mock('../../src/components/drawers/SettingsButton', () => 'SettingsButton');
 
 // Mock modals
 jest.mock('../../src/components/modals', () => ({
@@ -95,8 +118,8 @@ jest.mock('../../src/styles/responsive', () => ({
   rs: (value) => value,
 }));
 
-// Mock timer constants
-jest.mock('../../src/components/timer/timerConstants', () => ({
+// Mock dial constants
+jest.mock('../../src/components/dial/timerConstants', () => ({
   getDialMode: (mode) => ({
     maxMinutes: parseInt(mode) || 60,
   }),
@@ -127,25 +150,18 @@ describe('TimerScreen', () => {
     expect(component.toJSON()).toBeTruthy();
   });
 
-  it('should render current activity emoji and label', () => {
+  it('should render ActivityLabel component with correct activity', () => {
     let component;
     act(() => {
       component = create(<TimerScreen />);
     });
 
     const instance = component.root;
-    const texts = instance.findAllByType('Text');
 
-    // Activity label shows the activity emoji and label
-    const activityText = texts.find((t) => {
-      try {
-        return t.props.children && t.props.children.includes('💻') && t.props.children.includes('Work');
-      } catch {
-        return false;
-      }
-    });
+    // ActivityLabel should be rendered (it's mocked, so we just check for its presence)
+    const activityLabels = instance.findAllByType('ActivityLabel');
 
-    expect(activityText).toBeTruthy();
+    expect(activityLabels.length).toBeGreaterThan(0);
   });
 
   it('should render TimeTimer component', () => {

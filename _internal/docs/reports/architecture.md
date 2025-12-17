@@ -1,6 +1,6 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-14'
+updated: '2025-12-17'
 status: active
 audit: '#7 - Architecture Review'
 source: '_internal/cockpit/knowledge/findings/2025-12-14_07-architecture.md'
@@ -32,10 +32,14 @@ source: '_internal/cockpit/knowledge/findings/2025-12-14_07-architecture.md'
 ```
 src/
 ├── components/     # Grouped by feature
+│   ├── bars/       # Screen orchestrators (CommandBar, CarouselBar)
 │   ├── carousels/  # ActivityCarousel, PaletteCarousel
-│   ├── modals/     # PremiumModal, DiscoveryModal, More*Modal
+│   ├── controls/   # Reusable UI controls (CircularToggle, PresetPills)
+│   ├── dial/       # Timer dial (TimeTimer, TimerDial, DialBase, etc.)
+│   ├── drawers/    # Drawer components (OptionsDrawerContent, SettingsButton)
+│   ├── layout/     # ErrorBoundary, Drawer, Icons
+│   ├── modals/     # PremiumModal, DiscoveryModal, SettingsModal
 │   ├── onboarding/ # OnboardingController, WelcomeScreen, Tooltip
-│   └── timer/      # TimerDial, DialBase, DialProgress, DialCenter
 ├── config/         # Configuration & constants
 │   ├── activities.js       # 4 FREE + 14 PREMIUM activities
 │   ├── timerPalettes.js    # 2 FREE + 13 PREMIUM palettes

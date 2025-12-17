@@ -159,7 +159,7 @@ export const createCardStyle = (theme) => ({
   ...Platform.select({
     ios: {
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.colors.border + '20',
+      borderColor: theme.colors.brand.primary + '20',
     },
     android: {},
   }),
@@ -187,7 +187,7 @@ export const createModalStyle = (theme) => ({
     ...Platform.select({
       ios: {
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: theme.colors.border + '30',
+        borderColor: theme.colors.brand.primary + '30',
       },
       android: {},
     }),
@@ -261,7 +261,7 @@ export const getSwitchProps = (theme, value) => ({
     },
     android: {
       trackColor: {
-        false: theme.colors.border + '50',
+        false: theme.colors.brand.primary + '50',
         true: theme.colors.brand.primary + '50',
       },
       thumbColor: value ? theme.colors.brand.primary : '#FFFFFF',

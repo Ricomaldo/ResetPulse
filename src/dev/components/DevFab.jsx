@@ -12,7 +12,7 @@ import {
 import PropTypes from 'prop-types';
 import { SHOW_DEV_FAB } from '../../config/test-mode';
 import { fontWeights } from '../../theme/tokens';
-import { colors } from '../../theme/colors';
+import { devColors } from '../../theme/colors';
 
 /**
  * Dev FAB component for toggling premium mode during testing
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
 
   actionText: {
-    color: colors.white,
+    color: devColors.white,
     fontSize: 13,
     fontWeight: fontWeights.semibold,
   },
@@ -187,14 +187,14 @@ const styles = StyleSheet.create({
 
   fab: {
     alignItems: 'center',
-    backgroundColor: colors.devBg,
-    borderColor: colors.devBorder,
+    backgroundColor: devColors.devBg,
+    borderColor: devColors.devBorder,
     borderRadius: 28,
     borderWidth: 2,
     elevation: 8,
     height: 56,
     justifyContent: 'center',
-    shadowColor: colors.black,
+    shadowColor: devColors.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -206,31 +206,31 @@ const styles = StyleSheet.create({
   },
 
   fabOpen: {
-    backgroundColor: colors.devBorderLight,
-    borderColor: colors.devBorderDark,
+    backgroundColor: devColors.devBorderLight,
+    borderColor: devColors.devBorderDark,
   },
 
   goToAppButton: {
-    backgroundColor: colors.success,
+    backgroundColor: devColors.success,
   },
 
   menu: {
-    backgroundColor: colors.devBg,
-    borderColor: colors.devBorder,
+    backgroundColor: devColors.devBg,
+    borderColor: devColors.devBorder,
     borderRadius: 16,
     borderWidth: 1,
     elevation: 10,
     marginTop: 12,
     minWidth: 180,
     padding: 16,
-    shadowColor: colors.black,
+    shadowColor: devColors.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 12,
   },
 
   menuLabel: {
-    color: colors.textSecondary,
+    color: devColors.textSecondary,
     fontSize: 11,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
@@ -243,25 +243,25 @@ const styles = StyleSheet.create({
   },
 
   resetButton: {
-    backgroundColor: colors.danger,
+    backgroundColor: devColors.danger,
   },
 
   statusRow: {
     alignItems: 'center',
-    borderTopColor: colors.devBorder,
+    borderTopColor: devColors.devBorder,
     borderTopWidth: 1,
     marginTop: 4,
     paddingTop: 8,
   },
 
   statusText: {
-    color: colors.textTertiary,
+    color: devColors.textTertiary,
     fontSize: 14,
   },
 
   toggleButton: {
     alignItems: 'center',
-    backgroundColor: colors.devBgSecondary,
+    backgroundColor: devColors.devBgSecondary,
     borderRadius: 8,
     flex: 1,
     paddingHorizontal: 12,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
 
   toggleButtonActive: {
-    backgroundColor: colors.primary,
+    backgroundColor: devColors.primary,
   },
 
   toggleRow: {
@@ -278,13 +278,13 @@ const styles = StyleSheet.create({
   },
 
   toggleText: {
-    color: colors.textSecondary,
+    color: devColors.textSecondary,
     fontSize: 13,
     fontWeight: fontWeights.semibold,
   },
 
   toggleTextActive: {
-    color: colors.white,
+    color: devColors.white,
   },
 });
 

@@ -256,7 +256,7 @@ export default function CreateActivityModal({
     },
 
     modalContainer: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.surface,
       borderTopLeftRadius: Platform.select({
         ios: 24,
         android: 20,
@@ -270,17 +270,14 @@ export default function CreateActivityModal({
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + '30',
+          borderColor: theme.colors.brand.primary + '30',
         },
         android: {},
       }),
     },
 
     overlay: {
-      backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
-      }),
+      backgroundColor: theme.colors.overlay,
       flex: 1,
       justifyContent: 'flex-end',
     },

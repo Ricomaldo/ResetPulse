@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
-import TimerDial from '../../../components/timer/TimerDial';
+import TimerDial from '../../../components/dial/TimerDial';
 import { TIMER_PALETTES, getFreePalettes } from '../../../config/timer-palettes';
 import {
   rs,
@@ -332,7 +332,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       gap: rs(spacing.md),
     },
     paletteSelected: {
-      backgroundColor: colors.surfaceElevated,
+      backgroundColor: colors.surface,
       borderColor: colors.brand.primary,
     },
     previewContainer: {

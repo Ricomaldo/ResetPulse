@@ -339,7 +339,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
     },
 
     modalContainer: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.surface,
       borderRadius: Platform.select({
         ios: 16,
         android: 12,
@@ -351,7 +351,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
       ...Platform.select({
         ios: {
           borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.border + '30',
+          borderColor: theme.colors.brand.primary + '30',
         },
         android: {},
       }),
@@ -359,10 +359,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
 
     overlay: {
       alignItems: 'center',
-      backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
-      }),
+      backgroundColor: theme.colors.overlay,
       flex: 1,
       justifyContent: 'center',
     },

@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
-  Animated,
 } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
@@ -34,7 +33,6 @@ export default function PaletteCarousel() {
   } = useTimerPalette();
   const { favoritePalettes = [] } = useTimerOptions();
   const scrollViewRef = useRef(null);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showColorsModal, setShowColorsModal] = useState(false);
 
@@ -44,7 +42,9 @@ export default function PaletteCarousel() {
   // En premium : toutes les palettes (triées par favoris)
   const FREE_PALETTE_NAMES = getFreePalettes();
   const ALL_PALETTE_NAMES = useMemo(() => Object.keys(TIMER_PALETTES), []);
-  const DISPLAY_PALETTES = useMemo(() => {
+
+  // Base palettes (without clones)
+  const BASE_PALETTES = useMemo(() => {
     const basePalettes = isPremiumUser ? ALL_PALETTE_NAMES : FREE_PALETTE_NAMES;
 
     // Trier par favoris (favoris en premier)
@@ -60,15 +60,42 @@ export default function PaletteCarousel() {
     });
   }, [isPremiumUser, ALL_PALETTE_NAMES, FREE_PALETTE_NAMES, favoritePalettes]);
 
-  const currentPaletteIndex = useMemo(() =>
-    DISPLAY_PALETTES.indexOf(currentPalette),
-  [DISPLAY_PALETTES, currentPalette]
-  );
-  const effectiveIndex = currentPaletteIndex >= 0 ? currentPaletteIndex : 0;
+  // Infinite carousel: clone first and last items (only in premium)
+  // Freemium has a "+" button at the end, so no infinite loop needed
+  // [CLONE_LAST, ...BASE_PALETTES, CLONE_FIRST] (premium)
+  // [...BASE_PALETTES] (freemium)
+  const DISPLAY_PALETTES = useMemo(() => {
+    if (BASE_PALETTES.length === 0) {return [];}
+    if (BASE_PALETTES.length === 1) {return BASE_PALETTES;} // No cloning for single item
 
-  const [viewedPaletteIndex, setViewedPaletteIndex] = useState(effectiveIndex);
+    // Only use infinite carousel in premium (no "+" button)
+    if (isPremiumUser) {
+      const lastPalette = BASE_PALETTES[BASE_PALETTES.length - 1];
+      const firstPalette = BASE_PALETTES[0];
+      return [lastPalette, ...BASE_PALETTES, firstPalette];
+    }
 
-  // Scroll to current palette on mount and sync viewed index when currentPalette changes
+    // Freemium: no cloning (has "+" button instead)
+    return BASE_PALETTES;
+  }, [BASE_PALETTES, isPremiumUser]);
+
+  const currentPaletteIndex = useMemo(() => {
+    // Find the index of current palette
+    const baseIndex = BASE_PALETTES.indexOf(currentPalette);
+    if (baseIndex < 0) {return isPremiumUser && BASE_PALETTES.length > 1 ? 1 : 0;}
+
+    // Premium: offset by 1 because we added a clone at the start
+    // Freemium: no offset
+    if (isPremiumUser && BASE_PALETTES.length > 1) {
+      return baseIndex + 1;
+    }
+
+    return baseIndex;
+  }, [BASE_PALETTES, currentPalette, isPremiumUser]);
+
+  const effectiveIndex = currentPaletteIndex;
+
+  // Scroll to current palette on mount and when palette changes externally
   useEffect(() => {
     if (scrollViewRef.current && effectiveIndex >= 0) {
       setTimeout(() => {
@@ -76,53 +103,46 @@ export default function PaletteCarousel() {
           x: effectiveIndex * rs(280, 'width'),
           animated: false,
         });
-        setViewedPaletteIndex(effectiveIndex);
       }, 100);
     }
   }, [effectiveIndex]);
 
-  // Show palette name with animation
-  const showPaletteName = () => {
-    Animated.sequence([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.delay(1500),
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
-
-  // Handle scroll end to show palette name (no color change)
+  // Handle scroll end to sync palette state and handle infinite loop (premium only)
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const containerWidth = rs(280, 'width');
     const newIndex = Math.round(offsetX / containerWidth);
 
-    // Si on est sur le bouton "+" (dernière slide en freemium), ne rien faire
-    if (!isPremiumUser && newIndex >= DISPLAY_PALETTES.length) {
-      return;
+    // Handle infinite carousel clones (premium only)
+    if (isPremiumUser && BASE_PALETTES.length > 1) {
+      // If we're at the cloned last item (index 0), teleport to real last item
+      if (newIndex === 0) {
+        const realLastIndex = DISPLAY_PALETTES.length - 2; // length-2 = last real item
+        scrollViewRef.current?.scrollTo({
+          x: realLastIndex * containerWidth,
+          animated: false, // Instant teleport
+        });
+        return;
+      }
+
+      // If we're at the cloned first item (last index), teleport to real first item
+      if (newIndex === DISPLAY_PALETTES.length - 1) {
+        scrollViewRef.current?.scrollTo({
+          x: 1 * containerWidth, // Index 1 = first real item
+          animated: false, // Instant teleport
+        });
+        return;
+      }
     }
 
-    if (
-      newIndex >= 0 &&
-      newIndex < DISPLAY_PALETTES.length
-    ) {
-      // Update viewed palette index and show name
-      setViewedPaletteIndex(newIndex);
-      showPaletteName();
+    // Update palette if changed
+    if (newIndex >= 0 && newIndex < DISPLAY_PALETTES.length) {
+      const newPalette = DISPLAY_PALETTES[newIndex];
+      if (newPalette !== currentPalette) {
+        setPalette(newPalette);
+        setColorIndex(0); // Reset to first color of new palette
+      }
     }
-  };
-
-  // Format palette name for display
-  const formatPaletteName = (name) => {
-    return TIMER_PALETTES[name]?.name || name;
   };
 
   const styles = StyleSheet.create({
@@ -137,10 +157,6 @@ export default function PaletteCarousel() {
       minWidth: 44,
       width: rs(32, 'min'),
       ...theme.shadows.sm,
-    },
-    chevronDisabled: {
-      opacity: 0.3,
-      pointerEvents: 'none',
     },
     chevronText: {
       color: theme.colors.textSecondary,
@@ -175,7 +191,7 @@ export default function PaletteCarousel() {
       flexDirection: 'row',
       gap: theme.spacing.xs,
       justifyContent: 'center',
-      paddingHorizontal: theme.spacing.md,
+      paddingHorizontal: theme.spacing.lg,
       paddingVertical: theme.spacing.sm,
       ...theme.shadows.md,
     },
@@ -198,8 +214,8 @@ export default function PaletteCarousel() {
     outerContainer: {
       alignItems: 'center',
       flexDirection: 'row',
+      gap: theme.spacing.xs, // Match ActivityCarousel spacing
       justifyContent: 'center',
-      position: 'relative',
     },
     paletteContainer: {
       alignItems: 'center',
@@ -210,22 +226,6 @@ export default function PaletteCarousel() {
       paddingVertical: theme.spacing.xs,
       width: rs(280, 'width'),
     },
-    paletteLabel: {
-      alignSelf: 'center',
-      backgroundColor: theme.colors.background,
-      borderRadius: theme.borderRadius.lg,
-      paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.xs,
-      position: 'absolute',
-      top: -30,
-      ...theme.shadows.md,
-    },
-    paletteLabelText: {
-      color: theme.colors.text,
-      fontSize: rs(13, 'min'),
-      fontWeight: fontWeights.semibold,
-      letterSpacing: 0.5,
-    },
     scrollContent: {
       paddingHorizontal: 0,
     },
@@ -234,40 +234,35 @@ export default function PaletteCarousel() {
     },
   });
 
-  // Navigation functions
+  // Navigation functions with infinite carousel behavior
   const scrollToPrevious = () => {
-    if (viewedPaletteIndex > 0) {
-      const newIndex = viewedPaletteIndex - 1;
+    const currentIndex = effectiveIndex;
 
-      scrollViewRef.current?.scrollTo({
-        x: newIndex * rs(280, 'width'),
-        animated: true,
-      });
+    // Simply go to previous index - handleScrollEnd will handle wrap
+    const newIndex = currentIndex - 1;
 
-      // Update viewed palette and show name
-      setViewedPaletteIndex(newIndex);
-      showPaletteName();
-    }
+    // Scroll with animation
+    scrollViewRef.current?.scrollTo({
+      x: newIndex * rs(280, 'width'),
+      animated: true,
+    });
+
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
   };
 
   const scrollToNext = () => {
-    // Permettre de scroller vers le bouton "+" en freemium
-    const maxIndex = isPremiumUser ? DISPLAY_PALETTES.length - 1 : DISPLAY_PALETTES.length;
+    const currentIndex = effectiveIndex;
 
-    if (viewedPaletteIndex < maxIndex) {
-      const newIndex = viewedPaletteIndex + 1;
+    // Simply go to next index - handleScrollEnd will handle wrap
+    const newIndex = currentIndex + 1;
 
-      scrollViewRef.current?.scrollTo({
-        x: newIndex * rs(280, 'width'),
-        animated: true,
-      });
+    // Scroll with animation
+    scrollViewRef.current?.scrollTo({
+      x: newIndex * rs(280, 'width'),
+      animated: true,
+    });
 
-      // Si on arrive sur une vraie palette, update viewed index et afficher le nom
-      if (newIndex < DISPLAY_PALETTES.length) {
-        setViewedPaletteIndex(newIndex);
-        showPaletteName();
-      }
-    }
+    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
   };
 
   const handleMorePress = () => {
@@ -275,47 +270,19 @@ export default function PaletteCarousel() {
     setShowColorsModal(true);
   };
 
-  const maxIndex = isPremiumUser ? DISPLAY_PALETTES.length - 1 : DISPLAY_PALETTES.length;
-  const isAtStart = viewedPaletteIndex === 0;
-  const isAtEnd = viewedPaletteIndex >= maxIndex;
-
   return (
     <View style={styles.outerContainer}>
-      {/* Left chevron */}
+      {/* Left chevron - always enabled for circular navigation */}
       <TouchableOpacity
-        style={[styles.chevronButton, isAtStart && styles.chevronDisabled]}
+        style={styles.chevronButton}
         onPress={scrollToPrevious}
         activeOpacity={0.7}
-        disabled={isAtStart}
       >
         <Text style={styles.chevronText}>‹</Text>
       </TouchableOpacity>
 
       {/* Palette carousel */}
       <View>
-        {/* Palette name label */}
-        <Animated.View
-          style={[
-            styles.paletteLabel,
-            {
-              opacity: fadeAnim,
-              transform: [
-                {
-                  translateY: fadeAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [5, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-          pointerEvents="none"
-        >
-          <Text style={styles.paletteLabelText}>
-            {formatPaletteName(DISPLAY_PALETTES[viewedPaletteIndex])}
-          </Text>
-        </Animated.View>
-
         {/* Scrollable color pills */}
         <ScrollView
           ref={scrollViewRef}
@@ -328,8 +295,9 @@ export default function PaletteCarousel() {
           contentContainerStyle={styles.scrollContent}
           snapToInterval={rs(280, 'width')}
           decelerationRate="fast"
+          scrollEnabled={false} // Disable manual scrolling, only chevrons control navigation
         >
-          {DISPLAY_PALETTES.map((paletteName, paletteIndex) => {
+          {DISPLAY_PALETTES.map((paletteName, _paletteIndex) => {
             const paletteInfo = TIMER_PALETTES[paletteName];
             const colors = paletteInfo.colors;
             const isCurrentPalette = paletteName === currentPalette;
@@ -356,11 +324,9 @@ export default function PaletteCarousel() {
                       if (isCurrentPalette) {
                         setColorIndex(colorIndex);
                       } else {
-                      // Change palette + color, and sync viewed index
+                        // Change palette + color
                         setPalette(paletteName);
                         setColorIndex(colorIndex);
-                        setViewedPaletteIndex(paletteIndex);
-                        showPaletteName();
                       }
                     }}
                     activeOpacity={0.7}
@@ -389,19 +355,18 @@ export default function PaletteCarousel() {
                 accessibilityRole="button"
               >
                 <Text style={styles.moreButtonIcon}>💎</Text>
-                <Text style={styles.moreButtonText}>{t('moreColors.title')}</Text>
+                <Text style={styles.moreButtonText}>{t('discovery.moreColors.title')}</Text>
               </TouchableOpacity>
             </View>
           )}
         </ScrollView>
       </View>
 
-      {/* Right chevron */}
+      {/* Right chevron - always enabled for circular navigation */}
       <TouchableOpacity
-        style={[styles.chevronButton, isAtEnd && styles.chevronDisabled]}
+        style={styles.chevronButton}
         onPress={scrollToNext}
         activeOpacity={0.7}
-        disabled={isAtEnd}
       >
         <Text style={styles.chevronText}>›</Text>
       </TouchableOpacity>

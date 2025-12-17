@@ -7,18 +7,17 @@ jest.mock('../../src/hooks/usePersistedState', () => ({
   usePersistedObject: jest.fn(() => ({
     values: {
       shouldPulse: false,
-      showActivities: true,
-      showPalettes: true,
-      useMinimalInterface: true,
       showDigitalTimer: false,
       showActivityEmoji: true,
       keepAwakeEnabled: true,
-      showRotationToggle: true,
       clockwise: false,
       scaleMode: '45min',
       currentActivity: 'work',
       currentDuration: 2700,
       favoriteActivities: ['work', 'break', 'meditation'],
+      favoritePalettes: ['terre', 'softLaser'],
+      commandBarConfig: [],
+      carouselBarConfig: [],
       selectedSoundId: 'bell_classic',
       activityDurations: {},
       completedTimersCount: 0,
@@ -51,12 +50,12 @@ describe('TimerOptionsContext', () => {
       const { result } = renderHook(() => useTimerOptions(), { wrapper });
 
       expect(result.current.shouldPulse).toBe(false);
-      expect(result.current.showActivities).toBe(true);
-      expect(result.current.showPalettes).toBe(true);
-      expect(result.current.useMinimalInterface).toBe(true);
       expect(result.current.showDigitalTimer).toBe(false);
       expect(result.current.clockwise).toBe(false);
       expect(result.current.scaleMode).toBe('45min');
+      expect(result.current.commandBarConfig).toEqual([]);
+      expect(result.current.carouselBarConfig).toEqual([]);
+      expect(result.current.favoritePalettes).toEqual(['terre', 'softLaser']);
     });
 
     it('provides timer defaults', () => {
@@ -80,15 +79,13 @@ describe('TimerOptionsContext', () => {
       const { result } = renderHook(() => useTimerOptions(), { wrapper });
 
       expect(typeof result.current.setShouldPulse).toBe('function');
-      expect(typeof result.current.setShowActivities).toBe('function');
-      expect(typeof result.current.setShowPalettes).toBe('function');
-      expect(typeof result.current.setUseMinimalInterface).toBe('function');
       expect(typeof result.current.setShowDigitalTimer).toBe('function');
       expect(typeof result.current.setClockwise).toBe('function');
       expect(typeof result.current.setScaleMode).toBe('function');
       expect(typeof result.current.setCurrentActivity).toBe('function');
       expect(typeof result.current.setCurrentDuration).toBe('function');
       expect(typeof result.current.setSelectedSoundId).toBe('function');
+      expect(typeof result.current.toggleFavoritePalette).toBe('function');
     });
 
     it('calls updateValue when setter is called', () => {
@@ -96,18 +93,17 @@ describe('TimerOptionsContext', () => {
       require('../../src/hooks/usePersistedState').usePersistedObject.mockReturnValue({
         values: {
           shouldPulse: false,
-          showActivities: true,
-          showPalettes: true,
-          useMinimalInterface: true,
           showDigitalTimer: false,
           showActivityEmoji: true,
           keepAwakeEnabled: true,
-          showRotationToggle: true,
           clockwise: false,
           scaleMode: '45min',
           currentActivity: 'work',
           currentDuration: 2700,
           favoriteActivities: ['work', 'break', 'meditation'],
+          favoritePalettes: ['terre', 'softLaser'],
+          commandBarConfig: [],
+          carouselBarConfig: [],
           selectedSoundId: 'bell_classic',
           activityDurations: {},
           completedTimersCount: 0,

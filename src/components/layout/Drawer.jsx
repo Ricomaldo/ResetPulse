@@ -2,23 +2,29 @@
  * @fileoverview Modern draggable bottom sheet with real-time gesture tracking
  * Follows finger during drag (like Spotify/Google Maps), snaps to positions on release
  * Animation: ONLY translateY is animated (native driver)
- * Height changes via state (instant, not animated - avoids driver conflicts)
- * Gesture model: No handle drag. Opening is via swipe-up on TimerScreen.
- * Handle visibility toggled by TAP on DigitalTimer (in TimerScreen).
- * Drawer manages internal expand/collapse when already visible.
+ * Gesture model: Opening is via swipe-up on TimerScreen.
+ * Drawer manages close gesture (swipe down).
+ * Architecture: Header (optional) → Scrollable Content → Footer (optional)
  * @created 2025-12-14
- * @updated 2025-12-16
+ * @updated 2025-12-17
  */
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Animated,
+  PanResponder,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+  View,
+  Platform,
+} from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SWIPE_THRESHOLD = 50;
 const VELOCITY_THRESHOLD = 0.5;
-const EXPAND_ZONE_HEIGHT = 80; // Swipe-up zone height (handle + buffer)
 const SPRING_TENSION = 80; // More responsive
 const SPRING_FRICTION = 10; // Snappier feel
 
@@ -26,25 +32,22 @@ export default function Drawer({
   visible,
   onClose,
   children,
+  footerContent = null,
   direction = 'top',
   height = 0.5,
-  expandedHeight = 0.85,
-  onExpand,
 }) {
   const theme = useTheme();
-  const [isExpanded, setIsExpanded] = useState(false);
   const scrollOffsetRef = useRef(0);
   const dragStartYRef = useRef(0);
-  const touchStartYRef = useRef(0);
   const isDraggingRef = useRef(false);
 
-  // Heights in pixels (calculated, not animated)
-  const collapsedHeightPx = SCREEN_HEIGHT * height;
-  const expandedHeightPx = SCREEN_HEIGHT * expandedHeight;
-  const currentHeightPx = isExpanded ? expandedHeightPx : collapsedHeightPx;
+  // Height in pixels (calculated)
+  const drawerHeightPx = SCREEN_HEIGHT * height;
 
   // Animate position (translateY) - native driver safe, ONLY animation
-  const translateY = useRef(new Animated.Value(direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT)).current;
+  const translateY = useRef(
+    new Animated.Value(direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT)
+  ).current;
 
   // Animate handle opacity for drag feedback
   const handleOpacity = useRef(new Animated.Value(1)).current;
@@ -62,7 +65,7 @@ export default function Drawer({
   // Open/close animation - ONLY translateY (native driver)
   useEffect(() => {
     Animated.spring(translateY, {
-      toValue: visible ? 0 : (direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT),
+      toValue: visible ? 0 : direction === 'bottom' ? SCREEN_HEIGHT : -SCREEN_HEIGHT,
       useNativeDriver: true,
       tension: SPRING_TENSION,
       friction: SPRING_FRICTION,
@@ -72,7 +75,6 @@ export default function Drawer({
   // Reset on close
   useEffect(() => {
     if (!visible) {
-      setIsExpanded(false);
       handleOpacity.setValue(1);
     }
   }, [visible]);
@@ -92,10 +94,9 @@ export default function Drawer({
         // Otherwise, capture gesture if threshold met
         return Math.abs(dy) > 3;
       },
-      onPanResponderGrant: (evt) => {
+      onPanResponderGrant: () => {
         // Capture current position
         dragStartYRef.current = translateY._value;
-        touchStartYRef.current = evt.nativeEvent.locationY;
         isDraggingRef.current = true;
 
         // Fade handle on drag start for visual feedback
@@ -119,10 +120,9 @@ export default function Drawer({
       },
       onPanResponderRelease: (_, gestureState) => {
         if (direction === 'bottom') {
-          const { dy, vy } = gestureState;
+          const { vy } = gestureState;
           const finalY = translateY._value;
           const isQuickSwipeDown = vy > VELOCITY_THRESHOLD;
-          const isInExpandZone = touchStartYRef.current < EXPAND_ZONE_HEIGHT;
 
           isDraggingRef.current = false;
 
@@ -137,29 +137,14 @@ export default function Drawer({
           if (finalY > SCREEN_HEIGHT * 0.5 || isQuickSwipeDown) {
             // Close drawer
             animateToPosition(SCREEN_HEIGHT, onClose);
-          } else if (dy < -SWIPE_THRESHOLD && !isExpanded && isInExpandZone) {
-            // Expand drawer only if gesture started in expansion zone (handle area)
-            setIsExpanded(true);
-            animateToPosition(0);
-            if (onExpand) {
-              onExpand();
-            }
-          } else if (dy > SWIPE_THRESHOLD && isExpanded) {
-            // Collapse drawer (expanded → collapsed) - allowed anywhere
-            setIsExpanded(false);
-            animateToPosition(0);
           } else {
-            // Snap back to current state position (0)
+            // Snap back to open position
             animateToPosition(0);
           }
         }
       },
     })
   ).current;
-
-
-  // Calculate adaptive padding based on expansion state
-  const paddingBottomValue = isExpanded ? rs(20) : rs(12);
 
   const styles = StyleSheet.create({
     contentWrapper: {
@@ -168,20 +153,33 @@ export default function Drawer({
     drawer: {
       ...(direction === 'top'
         ? { borderBottomLeftRadius: rs(20), borderBottomRightRadius: rs(20) }
-        : { borderTopLeftRadius: rs(20), borderTopRightRadius: rs(20) }
-      ),
-      backgroundColor: theme.colors.background,
+        : { borderTopLeftRadius: rs(20), borderTopRightRadius: rs(20) }),
+      backgroundColor: theme.colors.surface,
       bottom: direction === 'bottom' ? 0 : undefined,
       left: 0,
       overflow: 'hidden',
-      paddingBottom: direction === 'bottom' ? paddingBottomValue : rs(20),
-      // No top padding - drawer content starts right at top edge
       paddingTop: direction === 'top' ? rs(50) : 0,
       position: 'absolute',
       right: 0,
       top: direction === 'top' ? 0 : undefined,
       zIndex: 1001,
       ...theme.shadow('xl'),
+      // Brand-first border for visual distinction
+      ...Platform.select({
+        ios: {
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: theme.colors.border, // Now = brand.primary + '40' (coral)
+        },
+        android: {}, // Android relies on elevation/shadow only
+      }),
+    },
+    footer: {
+      alignItems: 'center',
+      borderTopColor: theme.colors.divider, // Now = brand.neutral + '20' (subtle)
+      borderTopWidth: StyleSheet.hairlineWidth,
+      justifyContent: 'center',
+      paddingBottom: theme.spacing.md, // 13px (Golden Ratio) - reduced from 20px
+      paddingTop: theme.spacing.md, // 13px - reduced from 16px
     },
     overlay: {
       backgroundColor: theme.colors.overlay,
@@ -200,16 +198,12 @@ export default function Drawer({
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.overlay}
-        activeOpacity={1}
-        onPress={onClose}
-      />
+      {/* No overlay - drawer is non-modal, allows full interaction with dial */}
       <Animated.View
         style={[
           styles.drawer,
           {
-            height: currentHeightPx,
+            height: drawerHeightPx,
             transform: [{ translateY }],
           },
         ]}
@@ -217,18 +211,19 @@ export default function Drawer({
       >
         <ScrollView
           style={styles.contentWrapper}
-          scrollEnabled={isExpanded}
+          scrollEnabled={true}
           showsVerticalScrollIndicator={false}
           bounces={false}
           onScroll={(e) => {
             scrollOffsetRef.current = e.nativeEvent.contentOffset.y;
           }}
+          scrollEventThrottle={16}
         >
-          {React.isValidElement(children)
-            ? React.cloneElement(children, { isExpanded })
-            : children
-          }
+          {children}
         </ScrollView>
+
+        {/* Footer - Fixed at bottom if provided */}
+        {footerContent && <View style={styles.footer}>{footerContent}</View>}
       </Animated.View>
     </>
   );
@@ -237,9 +232,8 @@ export default function Drawer({
 Drawer.propTypes = {
   children: PropTypes.node,
   direction: PropTypes.oneOf(['top', 'bottom']),
-  expandedHeight: PropTypes.number,
+  footerContent: PropTypes.node,
   height: PropTypes.number,
   onClose: PropTypes.func.isRequired,
-  onExpand: PropTypes.func,
   visible: PropTypes.bool.isRequired,
 };

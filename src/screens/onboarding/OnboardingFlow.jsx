@@ -357,7 +357,7 @@ const createDevStyles = (colors, spacing) =>
     },
     devButton: {
       alignItems: 'center',
-      backgroundColor: colors.surfaceElevated,
+      backgroundColor: colors.surface,
       borderRadius: rs(18),
       height: rs(36),
       justifyContent: 'center',

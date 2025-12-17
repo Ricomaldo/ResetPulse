@@ -64,7 +64,7 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
         : hasNeuro
           ? t('onboarding.v2.filter4.morningNeuro')
           : t('onboarding.v2.filter4.morningGentle'),
-      color: colors?.success || '#6B8E23',
+      color: colors?.brand?.secondary || colors?.brand?.primary, // Peach for morning
     },
     {
       emoji: '\u{1F4BC}',
@@ -74,7 +74,7 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
         : hasNeuro
           ? t('onboarding.v2.filter4.dayNeuro')
           : t('onboarding.v2.filter4.dayFocus'),
-      color: colors?.accent || '#FF6B6B',
+      color: colors?.brand?.primary, // Coral for day
     },
     {
       emoji: '\u2615',
@@ -82,7 +82,7 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
       sublabel: hasNeuro
         ? t('onboarding.v2.filter4.breakNeuro')
         : t('onboarding.v2.filter4.breakRelax'),
-      color: colors?.primary || '#8B7355',
+      color: colors?.brand?.deep, // Anthracite for break
     },
     {
       emoji: '\u{1F319}',
@@ -92,7 +92,7 @@ export const getJourneyScenarios = (needs = [], colors, t) => {
         : hasMeditation
           ? t('onboarding.v2.filter4.eveningMeditation')
           : t('onboarding.v2.filter4.eveningRelax'),
-      color: colors?.info || '#4ECDC4',
+      color: colors?.brand?.neutral, // Gray for evening
     },
   ];
 };

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { create, act } from 'react-test-renderer';
-import CircularToggle from '../../src/components/layout/CircularToggle';
+import CircularToggle from '../../src/components/controls/CircularToggle';
 
 jest.mock('../../src/theme/ThemeProvider', () => ({
   useTheme: () => ({
