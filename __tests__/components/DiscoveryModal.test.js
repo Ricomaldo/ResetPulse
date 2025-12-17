@@ -13,6 +13,7 @@ jest.mock('../../src/theme/ThemeProvider', () => ({
       background: '#FFFFFF',
       text: '#000000',
       brand: { primary: '#007AFF' },
+      fixed: { white: '#FFFFFF' },
     },
     spacing: { sm: 4, md: 12, lg: 16, xl: 24 },
     shadow: () => ({}),

@@ -197,8 +197,8 @@ function TimerDial({
         // Critical: Clamp to valid range to prevent any jumps
         newMinutes = Math.max(0, Math.min(maxMinutes, newMinutes));
 
-        // Update the timer with smooth position (no snap)
-        onGraduationTap(newMinutes);
+        // Update the timer with smooth position (no snap during drag)
+        onGraduationTap(newMinutes, false); // false = dragging, no snap
 
         // Update references
         lastMinutesRef.current = newMinutes;
@@ -227,26 +227,38 @@ function TimerDial({
         // Detect long press: held (>=500ms) with minimal movement (<10px)
         const isLongPress = timeDelta >= 500 && movementDistance < 10;
 
-        // Intelligent snap: only snap if it was a meaningful swipe (momentum-driven)
-        // Slow deliberate drag = exact position, Normal swipe+ = snap to major mark
-        const FAST_SWIPE_THRESHOLD = 0.8; // pixels per millisecond (more permissive)
-        const swipeVelocity = timeDelta > 0 ? movementDistance / timeDelta : 0;
+        // Calculate distance from center for tap zone detection
+        const tapX = evt.nativeEvent.locationX;
+        const tapY = evt.nativeEvent.locationY;
+        const distanceFromCenter = Math.sqrt(
+          Math.pow(tapX - centerX, 2) + Math.pow(tapY - centerY, 2)
+        );
 
-        const isFastSwipe = swipeVelocity > FAST_SWIPE_THRESHOLD && !isTap && !isLongPress;
+        // Define tap zones
+        const centerZoneRadius = radiusBackground * 0.35; // 35% of dial = center zone
+        const outerZoneMinRadius = radiusBackground * 0.65; // 65%+ = graduations zone
+        const isTapOnCenter = distanceFromCenter < centerZoneRadius;
+        const isTapOnGraduation = distanceFromCenter > outerZoneMinRadius;
 
-        // Apply snap if fast swipe detected
-        if (isFastSwipe && onGraduationTap && lastMinutesRef.current !== null) {
-          // Snap to nearest major mark using majorTickInterval
-          const snapInterval = dial.config.majorTickInterval;
-          const snappedMinutes = Math.round(lastMinutesRef.current / snapInterval) * snapInterval;
-          onGraduationTap(snappedMinutes);
+        // Apply snap on release (but not for tap or long press)
+        if (!isTap && !isLongPress && onGraduationTap && lastMinutesRef.current !== null) {
+          // This is a drag release - apply subtle snap
+          onGraduationTap(lastMinutesRef.current, true); // true = release, apply snap
         }
 
-        // Handle tap or long press
+        // Handle tap or long press based on zone
         if (isLongPress && onDialLongPress) {
           onDialLongPress();
-        } else if (isTap && onDialTap) {
-          onDialTap();
+        } else if (isTap) {
+          if (isTapOnGraduation && onGraduationTap) {
+            // Tap on graduation/number - set duration to that time
+            const tappedMinutes = dial.coordinatesToMinutes(tapX, tapY, centerX, centerY);
+            onGraduationTap(tappedMinutes, true); // true = apply snap
+          } else if (isTapOnCenter && onDialTap) {
+            // Tap on center - start/pause timer
+            onDialTap();
+          }
+          // Middle zone (between center and graduations) - do nothing
         }
 
         setIsDragging(false);
@@ -258,7 +270,7 @@ function TimerDial({
         gestureStartPosRef.current = null;
       },
     }),
-  [dial, isRunning, onGraduationTap, onDialTap]
+  [dial, isRunning, onGraduationTap, onDialTap, centerX, centerY, radiusBackground]
   );
 
   // Animated color for completion
@@ -342,10 +354,10 @@ function TimerDial({
           const { actionName } = event.nativeEvent;
           if (actionName === 'increment' && onGraduationTap && !isRunning) {
             const newDuration = Math.min(duration + 60, getDialMode(scaleMode).maxMinutes * 60);
-            onGraduationTap(newDuration / 60);
+            onGraduationTap(newDuration / 60, true); // true = apply snap (increment is discrete action)
           } else if (actionName === 'decrement' && onGraduationTap && !isRunning) {
             const newDuration = Math.max(0, duration - 60);
-            onGraduationTap(newDuration / 60);
+            onGraduationTap(newDuration / 60, true); // true = apply snap (decrement is discrete action)
           } else if (actionName === 'activate' && onDialTap) {
             onDialTap();
           }

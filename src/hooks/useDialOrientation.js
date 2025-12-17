@@ -1,6 +1,6 @@
 // src/hooks/useDialOrientation.js
 import { useMemo, useCallback } from 'react';
-import { getDialMode } from '../components/timer/timerConstants';
+import { getDialMode } from '../components/dial/timerConstants';
 
 /**
  * Hook centralisant toute la logique d'orientation et de calcul du cadran
@@ -46,6 +46,9 @@ export function useDialOrientation(isClockwise, scaleMode) {
     } else {
       minutes = (360 - normalizedAngle) / config.degreesPerMinute;
     }
+
+    // Round to nearest integer (timer displays whole minutes)
+    minutes = Math.round(minutes);
 
     // Clamp to valid range [0, maxMinutes]
     return Math.max(0, Math.min(config.maxMinutes, minutes));

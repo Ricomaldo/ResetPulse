@@ -57,7 +57,7 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
       textAlign: 'center',
     },
     modalContainer: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.surface,
       borderRadius: 16,
       padding: theme.spacing.xl,
       width: '85%',
@@ -65,10 +65,7 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
     },
     overlay: {
       alignItems: 'center',
-      backgroundColor: Platform.select({
-        ios: 'rgba(0, 0, 0, 0.4)',
-        android: 'rgba(0, 0, 0, 0.5)',
-      }),
+      backgroundColor: theme.colors.overlay,
       flex: 1,
       justifyContent: 'center',
     },

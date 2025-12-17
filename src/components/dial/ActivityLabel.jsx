@@ -54,11 +54,10 @@ function ActivityLabel({
   const dotWidth = rs(24);
   const styles = StyleSheet.create({
     container: {
+      alignItems: 'center',
       height: rs(32),
-      left: 0,
-      position: 'absolute',
-      right: 0,
-      top: rs(80),
+      justifyContent: 'center',
+      width: '100%',
     },
     dotsContainer: {
       includeFontPadding: false,

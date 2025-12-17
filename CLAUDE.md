@@ -1,6 +1,6 @@
 ---
 created: '2025-12-07'
-updated: '2025-12-15'
+updated: '2025-12-17'
 status: active
 type: project-framework
 ---
@@ -139,6 +139,72 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 - iOS build nécessite Xcode (pas EAS Build) pour support IAP
 - Le hook `useTimer` est critique - bien testé dans `__tests__/`
 - Les palettes utilisent un système séparé du thème global (voir `timerPalettes.js`)
+
+---
+
+## 🎨 Color System Architecture
+
+ResetPulse utilise un système de couleurs à 3 niveaux pour garantir cohérence visuelle et maintenabilité.
+
+### Architecture (src/theme/colors.js)
+
+| Niveau | Nom | Usage | Mutabilité |
+|--------|-----|-------|-----------|
+| **1** | `baseColors` | Constantes brand (coral, fixed colors) | Jamais changé |
+| **2** | `lightTheme`/`darkTheme` | Tokens sémantiques contextuels | Adaptatif au thème |
+| **3** | `devColors` | Dev-only (DevFab uniquement) | Dev/testing seulement |
+
+### Visual Hierarchy (Light Mode)
+
+| Couleur | Token | Usage | Exemples Composants |
+|---------|-------|-------|---------------------|
+| **Cream** (#ebe8e3) | `theme.colors.background` | Containers/screen backgrounds | TimerScreen, Drawer, Onboarding, Carousel navigation |
+| **White** (#FFFFFF) | `theme.colors.surface` | Interactive surfaces | Activity items, command buttons, preset pills |
+| **Coral** | `theme.colors.brand.primary` | Active/highlighted states | Selected pill, active button, highlights |
+
+### Usage Guidelines
+
+**Utiliser `theme.colors.background` pour:**
+- Backgrounds d'écrans (TimerScreen, Onboarding)
+- Containers non-interactifs (Drawer, Modals)
+- Boutons de navigation de carrousel
+- Labels de feedback
+
+**Utiliser `theme.colors.surface` pour:**
+- Items interactifs (ActivityItem, CommandButton)
+- Pills et cards (PresetPills, PaletteItems)
+- Surfaces qui "flottent" au-dessus du background
+
+**Utiliser `theme.colors.brand.primary` pour:**
+- États actifs/sélectionnés
+- Highlights utilisateur
+- Accents de marque
+
+### Platform-Specific Patterns
+
+**Borders subtiles (iOS uniquement):**
+```javascript
+...Platform.select({
+  ios: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.border + '30', // 30% opacity
+  },
+  android: {}, // Rely on shadow/elevation
+})
+```
+
+**Utilisé dans:** Drawer, Modals (SettingsModal, PremiumModal)
+
+### Accessibility
+
+Tous les ratios de contraste respectent **WCAG AA** :
+- `brand.primary` sur cream: **5.1:1**
+- `textSecondary` sur cream: **5.2:1**
+- `textLight` sur cream: **4.8:1**
+
+### Source de vérité
+
+→ `src/theme/colors.js` (documentation complète inline)
 
 ---
 

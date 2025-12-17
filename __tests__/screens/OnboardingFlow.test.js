@@ -23,7 +23,7 @@ jest.mock('../../src/theme/ThemeProvider', () => ({
       text: '#000000',
       textSecondary: '#8E8E93',
       border: '#E5E5EA',
-      surfaceElevated: '#FFFFFF',
+      surface: '#FFFFFF',
     },
     spacing: { xs: 4, sm: 8, md: 12, lg: 16 },
   }),

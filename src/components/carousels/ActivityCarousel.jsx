@@ -3,6 +3,7 @@
  * @created 2025-12-14
  * @updated 2025-12-16
  */
+import PropTypes from 'prop-types';
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import {
   View,
@@ -11,7 +12,6 @@ import {
   Text,
   Animated,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -51,8 +51,6 @@ export default function ActivityCarousel({ drawerVisible = false }) {
   const toastAnim = useRef(new Animated.Value(0)).current;
   const scrollContentWidthRef = useRef(0);
   const [scrollOffset, setScrollOffset] = useState(0);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
   const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
@@ -85,6 +83,22 @@ export default function ActivityCarousel({ drawerVisible = false }) {
     isPremiumUser ? [...builtInActivities, ...customActivities] : builtInActivities,
   [isPremiumUser, builtInActivities, customActivities]
   );
+
+  // Organize activities into pages: max 4 activities per page, favorites first
+  const activityPages = useMemo(() => {
+    const MAX_ITEMS_PER_PAGE = 4;
+
+    // Sort activities: favorites first (already sorted in builtInActivities)
+    const sortedActivities = [...activities];
+
+    // Split into pages of max 4 items
+    const pages = [];
+    for (let i = 0; i < sortedActivities.length; i += MAX_ITEMS_PER_PAGE) {
+      pages.push(sortedActivities.slice(i, i + MAX_ITEMS_PER_PAGE));
+    }
+
+    return pages.length > 0 ? pages : [[]]; // Return at least one empty page
+  }, [activities]);
 
   useEffect(() => {
     if (drawerVisible && scrollViewRef.current) {
@@ -176,15 +190,9 @@ export default function ActivityCarousel({ drawerVisible = false }) {
     showToast(t('customActivities.toast.deleted'));
   }, [currentActivity, activities, setCurrentActivity, setCurrentDuration, showToast, t]);
 
-  // Update arrow visibility based on scroll position
+  // Update scroll offset for circular navigation
   const updateArrowVisibility = useCallback((offset) => {
     setScrollOffset(offset);
-    // Show left arrow if not at start
-    setShowLeftArrow(offset > 10);
-    // Show right arrow if not at end (account for scroll content width)
-    const screenWidth = Dimensions.get('window').width;
-    const scrollableWidth = scrollContentWidthRef.current - screenWidth;
-    setShowRightArrow(offset < scrollableWidth - 10);
   }, []);
 
   const handleScroll = useCallback((event) => {
@@ -192,18 +200,22 @@ export default function ActivityCarousel({ drawerVisible = false }) {
   }, [updateArrowVisibility]);
 
   const scrollLeft = useCallback(() => {
-    const newOffset = Math.max(0, scrollOffset - 100);
-    scrollViewRef.current?.scrollTo({ x: newOffset, animated: true });
+    const pageWidth = rs(280, 'width');
+    const currentPage = Math.round(scrollOffset / pageWidth);
+    // Wrap to last page if at first page
+    const newPage = currentPage === 0 ? activityPages.length - 1 : currentPage - 1;
+    scrollViewRef.current?.scrollTo({ x: newPage * pageWidth, animated: true });
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-  }, [scrollOffset]);
+  }, [scrollOffset, activityPages.length]);
 
   const scrollRight = useCallback(() => {
-    const screenWidth = Dimensions.get('window').width;
-    const maxScroll = scrollContentWidthRef.current - screenWidth;
-    const newOffset = Math.min(maxScroll, scrollOffset + 100);
-    scrollViewRef.current?.scrollTo({ x: newOffset, animated: true });
+    const pageWidth = rs(280, 'width');
+    const currentPage = Math.round(scrollOffset / pageWidth);
+    // Wrap to first page if at last page
+    const newPage = currentPage === activityPages.length - 1 ? 0 : currentPage + 1;
+    scrollViewRef.current?.scrollTo({ x: newPage * pageWidth, animated: true });
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-  }, [scrollOffset]);
+  }, [scrollOffset, activityPages.length]);
 
   const styles = StyleSheet.create({
     activityNameBadge: {
@@ -235,10 +247,6 @@ export default function ActivityCarousel({ drawerVisible = false }) {
       width: rs(32, 'min'),
       ...theme.shadows.sm,
     },
-    chevronDisabled: {
-      opacity: 0.3,
-      pointerEvents: 'none',
-    },
     chevronText: {
       color: theme.colors.textSecondary,
       fontSize: rs(18, 'min'),
@@ -267,11 +275,18 @@ export default function ActivityCarousel({ drawerVisible = false }) {
       gap: theme.spacing.xs,
       justifyContent: 'center',
     },
-    scrollContent: {
+    pageContainer: {
       alignItems: 'center',
+      flexDirection: 'row',
       gap: theme.spacing.md,
+      justifyContent: 'center',
       paddingHorizontal: rs(6, 'width'),
       paddingVertical: theme.spacing.xs,
+      width: rs(280, 'width'), // Fixed width per page for paging
+    },
+    scrollContent: {
+      alignItems: 'center',
+      paddingHorizontal: 0,
     },
     scrollView: {
       flexGrow: 0,
@@ -280,12 +295,11 @@ export default function ActivityCarousel({ drawerVisible = false }) {
 
   return (
     <View style={styles.outerContainer}>
-      {/* Left chevron */}
+      {/* Left chevron - always enabled for circular navigation */}
       <TouchableOpacity
-        style={[styles.chevronButton, !showLeftArrow && styles.chevronDisabled]}
+        style={styles.chevronButton}
         onPress={scrollLeft}
         activeOpacity={0.7}
-        disabled={!showLeftArrow}
         accessible={true}
         accessibilityRole="button"
         accessibilityLabel={t('accessibility.scrollLeft')}
@@ -319,6 +333,7 @@ export default function ActivityCarousel({ drawerVisible = false }) {
         <ScrollView
           ref={scrollViewRef}
           horizontal
+          pagingEnabled
           showsHorizontalScrollIndicator={false}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -328,49 +343,58 @@ export default function ActivityCarousel({ drawerVisible = false }) {
             scrollContentWidthRef.current = width;
             updateArrowVisibility(0);
           }}
+          snapToInterval={rs(280, 'width')}
+          decelerationRate="fast"
+          scrollEnabled={false} // Disable manual scrolling, only chevrons control navigation
         >
-          {activities.map((activity) => {
-            const isActive = currentActivity?.id === activity.id;
-            const isLocked = activity.isPremium && !isPremiumUser && !activity.isCustom;
-            const isCustom = activity.isCustom;
+          {activityPages.map((pageActivities, pageIndex) => (
+            <View key={`page-${pageIndex}`} style={styles.pageContainer}>
+              {pageActivities.map((activity) => {
+                const isActive = currentActivity?.id === activity.id;
+                const isLocked = activity.isPremium && !isPremiumUser && !activity.isCustom;
+                const isCustom = activity.isCustom;
 
-            return (
-              <ActivityItem
-                key={activity.id}
-                activity={activity}
-                isActive={isActive}
-                isLocked={isLocked}
-                isCustom={isCustom}
-                currentColor={currentColor}
-                onPress={() => handleActivityPress(activity)}
-                onLongPress={() => handleActivityLongPress(activity)}
-                scaleAnim={getScaleAnim(activity.id)}
-              />
-            );
-          })}
-          <PlusButton
-            isPremium={isPremiumUser}
-            onPress={isPremiumUser ? handleCreatePress : handleMorePress}
-            accessibilityLabel={
-              isPremiumUser
-                ? t('customActivities.addButton')
-                : t('accessibility.moreActivities')
-            }
-            accessibilityHint={
-              isPremiumUser
-                ? t('customActivities.addButtonHint')
-                : t('accessibility.discoverPremium')
-            }
-          />
+                return (
+                  <ActivityItem
+                    key={activity.id}
+                    activity={activity}
+                    isActive={isActive}
+                    isLocked={isLocked}
+                    isCustom={isCustom}
+                    currentColor={currentColor}
+                    onPress={() => handleActivityPress(activity)}
+                    onLongPress={() => handleActivityLongPress(activity)}
+                    scaleAnim={getScaleAnim(activity.id)}
+                  />
+                );
+              })}
+              {/* Plus button on last page */}
+              {pageIndex === activityPages.length - 1 && (
+                <PlusButton
+                  isPremium={isPremiumUser}
+                  onPress={isPremiumUser ? handleCreatePress : handleMorePress}
+                  accessibilityLabel={
+                    isPremiumUser
+                      ? t('customActivities.addButton')
+                      : t('accessibility.moreActivities')
+                  }
+                  accessibilityHint={
+                    isPremiumUser
+                      ? t('customActivities.addButtonHint')
+                      : t('accessibility.discoverPremium')
+                  }
+                />
+              )}
+            </View>
+          ))}
         </ScrollView>
       </View>
 
-      {/* Right chevron */}
+      {/* Right chevron - always enabled for circular navigation */}
       <TouchableOpacity
-        style={[styles.chevronButton, !showRightArrow && styles.chevronDisabled]}
+        style={styles.chevronButton}
         onPress={scrollRight}
         activeOpacity={0.7}
-        disabled={!showRightArrow}
         accessible={true}
         accessibilityRole="button"
         accessibilityLabel={t('accessibility.scrollRight')}
@@ -428,3 +452,7 @@ export default function ActivityCarousel({ drawerVisible = false }) {
     </View>
   );
 }
+
+ActivityCarousel.propTypes = {
+  drawerVisible: PropTypes.bool,
+};

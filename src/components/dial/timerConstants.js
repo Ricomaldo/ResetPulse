@@ -76,7 +76,6 @@ export function getDialMode(mode) {
 }
 
 export const DIAL_INTERACTION = {
-  SNAP_THRESHOLD: 2,
   WRAP_THRESHOLD: 0.5,
   DRAG_THROTTLE: 16,
   HAPTIC_DEBOUNCE: 100,
@@ -149,7 +148,6 @@ export const TOUCH = {
 };
 
 export const TIMER = {
-  GRADUATION_SNAP_THRESHOLD: 0.5,
   MESSAGE_DISPLAY_DURATION: 2000,
   DEFAULT_DURATION: 5 * 60,
   MODES: {
@@ -168,6 +166,30 @@ export const DRAG = {
   VELOCITY_REDUCTION: 0.25, // Lower = less reduction at high velocity (was 0.3)
   WRAP_THRESHOLD: 0.4,
 };
+
+/**
+ * Snap intervals adapted to scale mode
+ * Applied ONLY on release for subtle precision assistance
+ */
+export const SNAP_INTERVALS = {
+  '1min': 1,      // 1 second for 1min scale
+  '5min': 5,      // 5 seconds for 5min scale
+  '10min': 15,    // 15 seconds for 10min scale
+  '25min': 20,    // 20 seconds for 25min scale
+  '45min': 30,    // 30 seconds for 45min scale
+  '60min': 30,    // 30 seconds for 60min scale
+};
+
+/**
+ * Snap seconds to nearest interval based on scale mode
+ * @param {number} seconds - Raw seconds value from drag
+ * @param {string} scaleMode - Current scale mode ('1min', '5min', etc.)
+ * @returns {number} Snapped seconds value
+ */
+export function snapToInterval(seconds, scaleMode) {
+  const interval = SNAP_INTERVALS[scaleMode] || 1;
+  return Math.round(seconds / interval) * interval;
+}
 
 export const VISUAL = {
   CENTER_DOT_OUTER_RATIO: 0.08,

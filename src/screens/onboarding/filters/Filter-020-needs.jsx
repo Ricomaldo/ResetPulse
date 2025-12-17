@@ -152,7 +152,7 @@ const createStyles = (colors, spacing, borderRadius) =>
       padding: rs(spacing.md),
     },
     needSelected: {
-      backgroundColor: colors.surfaceElevated,
+      backgroundColor: colors.surface,
       borderColor: colors.brand.primary,
     },
     screen: {

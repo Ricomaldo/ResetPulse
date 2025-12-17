@@ -1,9 +1,9 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-14'
+updated: '2025-12-17'
 status: active
 type: architecture
-source: 'Audit #7 + Legacy comparison'
+source: 'Audit #7 + Legacy comparison + Dec 2025 refactor (dial/bars/controls)'
 ---
 
 # Source Code Architecture - ResetPulse
@@ -21,11 +21,14 @@ ResetPulse suit une architecture **React Native modulaire** avec separation clai
 ```
 src/
 ├── components/           # UI Components (PascalCase)
+│   ├── bars/            # Screen orchestrators (CommandBar, CarouselBar)
 │   ├── carousels/       # ActivityCarousel, PaletteCarousel
-│   ├── layout/          # ErrorBoundary, Layout components
-│   ├── modals/          # PremiumModal, DiscoveryModal, More*Modal
+│   ├── controls/        # Reusable UI controls (CircularToggle, PresetPills)
+│   ├── dial/            # Timer dial components (TimerDial, DialBase, DialProgress)
+│   ├── drawers/         # Drawer components (OptionsDrawerContent, SettingsButton)
+│   ├── layout/          # ErrorBoundary, Drawer, Icons
+│   ├── modals/          # PremiumModal, DiscoveryModal, SettingsModal
 │   ├── onboarding/      # OnboardingController, WelcomeScreen, Tooltip
-│   └── timer/           # TimerDial, DialBase, DialProgress, DialCenter
 │
 ├── config/              # Configuration & Constants
 │   ├── activities.js    # Activity definitions (FREE: 4, PREMIUM: 14)
@@ -166,12 +169,16 @@ components/modals/*     →  Discovery/Premium modals
 
 ### TimerDial Component
 
-**Location**: `src/components/timer/`
+**Location**: `src/components/dial/`
 **Structure**:
-- `TimerDial.jsx` - Orchestrator
+- `TimeTimer.jsx` - Main orchestrator (timer logic + dial integration)
+- `TimerDial.jsx` - Visual dial orchestrator
 - `DialBase.jsx` - Static elements (graduations)
 - `DialProgress.jsx` - Animated arc
 - `DialCenter.jsx` - Emoji + pulse
+- `ActivityLabel.jsx` - Activity emoji + label display
+- `DigitalTimer.jsx` - Digital countdown display
+- `timerConstants.js` - Dial modes and constants
 
 ### Onboarding Flow
 

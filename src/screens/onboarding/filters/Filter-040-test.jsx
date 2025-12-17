@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
-import TimerDial from '../../../components/timer/TimerDial';
+import TimerDial from '../../../components/dial/TimerDial';
 import { rs } from '../onboardingConstants';
 import { fontWeights } from '../../../theme/tokens';
 
