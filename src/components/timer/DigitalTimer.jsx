@@ -9,7 +9,6 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
-import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 
 /**
@@ -19,11 +18,11 @@ import { rs } from '../../styles/responsive';
  * Fully accessible with live region announcements
  */
 const DigitalTimer = React.memo(function DigitalTimer({
-  remaining,
-  isRunning,
   color,
   isCollapsed,
-  pulseDuration,
+  isRunning,
+  remaining,
+  _pulseDuration, // Reserved for future use
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -108,14 +107,14 @@ DigitalTimer.propTypes = {
   color: PropTypes.string,
   isCollapsed: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,
-  pulseDuration: PropTypes.number,
   remaining: PropTypes.number.isRequired,
+  _pulseDuration: PropTypes.number,
 };
 
 DigitalTimer.defaultProps = {
   color: undefined,
   isCollapsed: false,
-  pulseDuration: 800,
+  _pulseDuration: 800,
 };
 
 export default DigitalTimer;

@@ -11,7 +11,7 @@ import { fontWeights } from '../../../theme/tokens';
 const BREATH_CYCLES = 5;
 const BREATH_DURATION = 1500;
 
-export default function Filter0Opening({ onContinue }) {
+export default function Filter010Opening({ onContinue }) {
   const { colors, spacing } = useTheme();
   const t = useTranslation();
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -90,8 +90,10 @@ const createStyles = (colors, spacing) =>
       paddingHorizontal: rs(spacing.lg),
     },
     fullScreen: {
+      alignItems: 'center',
       backgroundColor: colors.background,
       flex: 1,
+      justifyContent: 'center',
     },
     tapHint: {
       bottom: rs(100),

@@ -1,6 +1,6 @@
 // App.js
 import React, { useEffect, useRef, useState } from 'react';
-import { StatusBar, Animated, View } from 'react-native';
+import { StatusBar, Animated, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ========== DEV MODE ==========
@@ -56,7 +56,6 @@ function AppContent() {
 
   // Callback quand l'onboarding V2 est terminé
   const handleOnboardingComplete = async (data) => {
-    setOnboardingResult(data);
     setOnboardingCompleted(true);
 
     // Persister
@@ -80,10 +79,10 @@ function AppContent() {
   };
 
   return (
-    <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
+    <Animated.View style={[styles.fadeWrapper, { opacity: fadeAnim }]}>
       <TimerPaletteProvider>
         <StatusBar
-          barStyle={theme.isDark ? "light-content" : "dark-content"}
+          barStyle={theme.isDark ? 'light-content' : 'dark-content'}
           backgroundColor={theme.colors.background}
         />
 
@@ -128,7 +127,6 @@ export default function App() {
       await AsyncStorage.removeItem('user_sound_config');
       await AsyncStorage.removeItem('user_interface_config');
       setResetTrigger(prev => prev + 1); // Force AppContent remount
-      console.log('[DevFab] Onboarding reset');
     } catch (error) {
       console.warn('[DevFab] Failed to reset onboarding:', error);
     }
@@ -139,7 +137,6 @@ export default function App() {
     try {
       await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, 'true');
       setResetTrigger(prev => prev + 1); // Force AppContent remount
-      console.log('[DevFab] Jumped to app');
     } catch (error) {
       console.warn('[DevFab] Failed to skip to app:', error);
     }
@@ -164,7 +161,7 @@ export default function App() {
   // En mode dev avec FAB activé, afficher le FAB + contenu
   if (DEV_MODE && SHOW_DEV_FAB) {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         {renderContent()}
         <DevFab
           isPremiumMode={isPremiumMode}
@@ -179,3 +176,12 @@ export default function App() {
   // Production ou dev sans FAB: app normale
   return renderContent();
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  fadeWrapper: {
+    flex: 1,
+  },
+});

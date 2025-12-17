@@ -194,5 +194,10 @@
     },
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "Ainda mais cores",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
   }
 }

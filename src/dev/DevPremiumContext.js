@@ -2,10 +2,16 @@
 // Contexte pour override le mode premium en dev
 
 import React, { createContext, useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import { DEFAULT_PREMIUM, DEV_MODE } from '../config/test-mode';
 
 const DevPremiumContext = createContext(null);
 
+/**
+ * Provider for dev premium override context
+ * @param {React.ReactNode} children - Components to wrap
+ * @returns {React.ReactElement}
+ */
 export function DevPremiumProvider({ children }) {
   const [devPremiumOverride, setDevPremiumOverride] = useState(
     DEV_MODE ? DEFAULT_PREMIUM : null
@@ -17,6 +23,10 @@ export function DevPremiumProvider({ children }) {
     </DevPremiumContext.Provider>
   );
 }
+
+DevPremiumProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export function useDevPremium() {
   const context = useContext(DevPremiumContext);

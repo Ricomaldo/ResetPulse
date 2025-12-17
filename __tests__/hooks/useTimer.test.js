@@ -1,7 +1,6 @@
 // Minimaliste useTimer tests for SDK 54
 import { renderHook, act } from '../test-utils';
 import useTimer from '../../src/hooks/useTimer';
-import { TIMER } from '../../src/components/timer/timerConstants';
 
 // Mock i18n/useTranslation to return predictable values
 jest.mock('../../src/hooks/useTranslation', () => ({
@@ -108,7 +107,7 @@ describe('useTimer - Core functionality', () => {
       });
 
       expect(result.current.running).toBe(true);
-      expect(result.current.displayMessage).toBe("Ready");
+      expect(result.current.displayMessage).toBe('Ready');
 
       unmount(); // Clean up
     });

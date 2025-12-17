@@ -6,7 +6,7 @@
  * @updated 2025-12-16
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Platform, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { rs } from '../../styles/responsive';
@@ -51,6 +51,9 @@ export default function PresetPills({ onSelectPreset }) {
     },
     pillActive: {
       backgroundColor: theme.colors.brand.primary,
+      borderColor: theme.colors.brand.secondary,
+      borderWidth: 2,
+      ...(Platform.OS === 'ios' ? theme.shadow('md') : {}),
     },
     pillText: {
       color: theme.colors.textSecondary,
@@ -81,21 +84,15 @@ export default function PresetPills({ onSelectPreset }) {
         onPress={() => handlePresetSelect(preset)}
         activeOpacity={0.7}
       >
-        <Text style={[styles.pillText, isActive && styles.pillTextActive]}>
-          {preset.label}
-        </Text>
+        <Text style={[styles.pillText, isActive && styles.pillTextActive]}>{preset.label}</Text>
       </TouchableOpacity>
     );
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        {firstRow.map(renderPreset)}
-      </View>
-      <View style={styles.row}>
-        {secondRow.map(renderPreset)}
-      </View>
+      <View style={styles.row}>{firstRow.map(renderPreset)}</View>
+      <View style={styles.row}>{secondRow.map(renderPreset)}</View>
     </View>
   );
 }

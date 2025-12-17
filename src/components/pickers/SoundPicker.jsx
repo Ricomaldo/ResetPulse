@@ -3,26 +3,30 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  View,
+  Animated,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Animated
+  View,
 } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { useTheme } from '../../theme/ThemeProvider';
-import { rs } from '../../styles/responsive';
 import { TIMER_SOUNDS, getSoundById } from '../../config/sounds';
-import haptics from '../../utils/haptics';
-import useSimpleAudio from '../../hooks/useSimpleAudio';
-import { PlayIcon, PauseIcon } from '../layout/Icons';
+import { PauseIcon, PlayIcon } from '../layout/Icons';
 import { fontWeights } from '../../theme/tokens';
+import { useTheme } from '../../theme/ThemeProvider';
+import useSimpleAudio from '../../hooks/useSimpleAudio';
+import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
+
+// Color constants
+const TRANSPARENT = 'transparent';
 
 // Composant de loader circulaire style iOS
-const CircularProgress = React.memo(({ duration, size = 24, strokeWidth = 2, color }) => {
+const CircularProgress = React.memo(function CircularProgress({ color, duration, size = 24, strokeWidth = 2 }) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -69,7 +73,15 @@ const CircularProgress = React.memo(({ duration, size = 24, strokeWidth = 2, col
   );
 });
 
-export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
+CircularProgress.displayName = 'CircularProgress';
+CircularProgress.propTypes = {
+  color: PropTypes.string.isRequired,
+  duration: PropTypes.number.isRequired,
+  size: PropTypes.number,
+  strokeWidth: PropTypes.number,
+};
+
+export default function SoundPicker({ onSoundSelect, selectedSoundId }) {
   const theme = useTheme();
   const { playSound, stopSound, isPlaying } = useSimpleAudio('preview');
   const [playingId, setPlayingId] = useState(null);
@@ -119,7 +131,7 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
         setPlayingId(null);
       }, duration * 1000);
     } catch (error) {
-      console.log('Error playing sound preview:', error);
+      // Silent error handling - preview failure is non-critical
       setPlayingId(null);
     }
   }, [playingId, isPlaying, onSoundSelect, playSound, stopSound]);
@@ -136,11 +148,6 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
   const styles = StyleSheet.create({
     container: {
       marginTop: theme.spacing.sm,
-    },
-
-    loader: {
-      alignItems: 'center',
-      padding: theme.spacing.lg,
     },
 
     playIcon: {
@@ -179,7 +186,7 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
     soundItem: {
       alignItems: 'center',
       backgroundColor: theme.colors.surface,
-      borderColor: 'transparent',
+      borderColor: TRANSPARENT,
       borderRadius: theme.borderRadius.md,
       borderWidth: 2,
       flexDirection: 'row',
@@ -269,3 +276,9 @@ export default function SoundPicker({ selectedSoundId, onSoundSelect }) {
     </View>
   );
 }
+
+SoundPicker.displayName = 'SoundPicker';
+SoundPicker.propTypes = {
+  onSoundSelect: PropTypes.func.isRequired,
+  selectedSoundId: PropTypes.string.isRequired,
+};

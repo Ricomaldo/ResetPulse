@@ -65,7 +65,10 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
     },
     overlay: {
       alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: Platform.select({
+        ios: 'rgba(0, 0, 0, 0.4)',
+        android: 'rgba(0, 0, 0, 0.5)',
+      }),
       flex: 1,
       justifyContent: 'center',
     },

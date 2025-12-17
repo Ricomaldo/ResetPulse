@@ -13,7 +13,7 @@ import { fontWeights } from '../../../theme/tokens';
 const TEST_DURATION = 60; // seconds
 const UPDATE_INTERVAL = 50; // ms (20 fps)
 
-export default function Filter3Test({ timerConfig, onContinue }) {
+export default function Filter040Test({ timerConfig, onContinue }) {
   const { colors, spacing } = useTheme();
   const t = useTranslation();
   const [progress, setProgress] = useState(1);

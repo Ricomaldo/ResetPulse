@@ -11,7 +11,7 @@
  */
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, Animated, PanResponder, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 

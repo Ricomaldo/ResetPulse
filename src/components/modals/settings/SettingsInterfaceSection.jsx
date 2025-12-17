@@ -1,6 +1,7 @@
 // src/components/modals/settings/SettingsInterfaceSection.jsx
 import React from 'react';
 import { View, Text, Switch, Alert } from 'react-native';
+import PropTypes from 'prop-types';
 import haptics from '../../../utils/haptics';
 
 /**
@@ -30,7 +31,7 @@ const SettingsInterfaceSection = React.memo(function SettingsInterfaceSection({
 
       {/* Interface minimaliste */}
       <View style={styles.optionRow}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.interface.minimalInterface')}</Text>
           <Text style={styles.optionDescription}>
             {useMinimalInterface
@@ -54,7 +55,7 @@ const SettingsInterfaceSection = React.memo(function SettingsInterfaceSection({
 
       {/* Chrono Numérique */}
       <View style={styles.optionRow}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.interface.digitalTimer')}</Text>
           <Text style={styles.optionDescription}>
             {showDigitalTimer
@@ -73,8 +74,8 @@ const SettingsInterfaceSection = React.memo(function SettingsInterfaceSection({
       </View>
 
       {/* Animation Pulse */}
-      <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
-        <View style={{ flex: 1 }}>
+      <View style={[styles.optionRow, styles.lastOptionRow]}>
+        <View style={styles.inlineView}>
           <Text style={styles.optionLabel}>{t('settings.interface.pulseAnimation')}</Text>
           <Text style={styles.optionDescription}>
             {shouldPulse
@@ -119,5 +120,20 @@ const SettingsInterfaceSection = React.memo(function SettingsInterfaceSection({
     </View>
   );
 });
+
+SettingsInterfaceSection.propTypes = {
+  useMinimalInterface: PropTypes.bool.isRequired,
+  showDigitalTimer: PropTypes.bool.isRequired,
+  shouldPulse: PropTypes.bool.isRequired,
+  setUseMinimalInterface: PropTypes.func.isRequired,
+  setShowDigitalTimer: PropTypes.func.isRequired,
+  setShouldPulse: PropTypes.func.isRequired,
+  theme: PropTypes.shape({
+    spacing: PropTypes.object.isRequired,
+    styles: PropTypes.object.isRequired,
+  }).isRequired,
+  t: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
+};
 
 export default SettingsInterfaceSection;

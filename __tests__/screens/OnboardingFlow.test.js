@@ -180,7 +180,7 @@ describe('OnboardingFlow', () => {
     const instance = component.root;
 
     // Start at Filter010
-    let filter010 = instance.findAllByType('Filter010Opening');
+    const filter010 = instance.findAllByType('Filter010Opening');
     expect(filter010.length).toBe(1);
 
     // Continue to Filter020

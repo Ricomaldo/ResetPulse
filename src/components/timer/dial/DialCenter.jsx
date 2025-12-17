@@ -3,11 +3,12 @@
  * @created 2025-12-14
  * @updated 2025-12-16
  */
-import React, { useRef, useEffect } from 'react';
-import { View, Text, Animated } from 'react-native';
-import { useTheme } from '../../../theme/ThemeProvider';
-import PlayPauseButton from '../PlayPauseButton';
+import PropTypes from 'prop-types';
+import React, { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
+import PlayPauseButton from '../PlayPauseButton';
+import { useTheme } from '../../../theme/ThemeProvider';
 
 /**
  * DialCenter - Activity emoji, pulse animations, or play/pause button
@@ -23,19 +24,19 @@ import { PULSE_ANIMATION, ACTIVITY_DISPLAY } from '../timerConstants';
  * @param {boolean} isPaused - Whether timer is paused
  * @param {Function} onPress - Callback when play/pause button is pressed
  */
-const DialCenter = React.memo(({
-  circleSize,
+const DialCenter = React.memo(function DialCenter({
   activityEmoji,
-  isRunning,
-  shouldPulse,
-  showActivityEmoji = true,
+  circleSize,
   color,
-  pulseDuration = PULSE_ANIMATION.DURATION,
   isCompleted = false,
   isPaused = false,
-  onPress,
+  isRunning,
   onLongPress,
-}) => {
+  onPress,
+  pulseDuration = PULSE_ANIMATION.DURATION,
+  shouldPulse,
+  showActivityEmoji = true,
+}) {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const glowAnim = useRef(new Animated.Value(0.3)).current;
@@ -89,58 +90,56 @@ const DialCenter = React.memo(({
   if (activityEmoji && showActivityEmoji) {
     return (
       <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        style={styles.container}
         pointerEvents="none"
         accessible={false}
         importantForAccessibility="no-hide-descendants"
       >
         <Animated.View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: isRunning && shouldPulse ? [{ scale: pulseAnim }] : [{ scale: 1 }],
-          }}
+          style={[
+            styles.animatedContainer,
+            {
+              transform: isRunning && shouldPulse ? [{ scale: pulseAnim }] : [{ scale: 1 }],
+            },
+          ]}
         >
           {/* Background disc */}
           {isRunning && shouldPulse ? (
             <Animated.View
-              style={{
-                position: 'absolute',
-                width: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO,
-                height: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO,
-                borderRadius: (circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO) / 2,
-                backgroundColor: theme.colors.brand.primary,
-                opacity: glowAnim,
-              }}
+              style={[
+                styles.glow,
+                {
+                  width: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO,
+                  height: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO,
+                  borderRadius: (circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO) / 2,
+                  backgroundColor: theme.colors.brand.primary,
+                  opacity: glowAnim,
+                },
+              ]}
             />
           ) : (
             <View
-              style={{
-                position: 'absolute',
-                width: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8,
-                height: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8,
-                borderRadius: (circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8) / 2,
-                backgroundColor: theme.colors.brand.primary,
-                opacity: 0.2,
-              }}
+              style={[
+                styles.glow,
+                {
+                  width: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8,
+                  height: circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8,
+                  borderRadius: (circleSize * ACTIVITY_DISPLAY.GLOW_SIZE_RATIO * 0.8) / 2,
+                  backgroundColor: theme.colors.brand.primary,
+                },
+              ]}
+              opacity={0.2}
             />
           )}
 
           {/* Emoji */}
           <Text
-            style={{
-              fontSize: circleSize * ACTIVITY_DISPLAY.EMOJI_SIZE_RATIO,
-              opacity: ACTIVITY_DISPLAY.EMOJI_OPACITY,
-              textAlign: 'center',
-            }}
+            style={[
+              styles.emoji,
+              {
+                fontSize: circleSize * ACTIVITY_DISPLAY.EMOJI_SIZE_RATIO,
+              },
+            ]}
           >
             {activityEmoji}
           </Text>
@@ -153,45 +152,42 @@ const DialCenter = React.memo(({
   if (!showActivityEmoji && isRunning && shouldPulse) {
     return (
       <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        style={styles.container}
         pointerEvents="none"
         accessible={false}
         importantForAccessibility="no-hide-descendants"
       >
         <Animated.View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: [{ scale: pulseAnim }],
-          }}
+          style={[
+            styles.animatedContainer,
+            {
+              transform: [{ scale: pulseAnim }],
+            },
+          ]}
         >
           <Animated.View
-            style={{
-              position: 'absolute',
-              width: circleSize * 0.35,
-              height: circleSize * 0.35,
-              borderRadius: (circleSize * 0.35) / 2,
-              backgroundColor: color || theme.colors.brand.primary,
-              opacity: Animated.multiply(glowAnim, 0.8),
-            }}
+            style={[
+              styles.pulseCircle1,
+              {
+                width: circleSize * 0.35,
+                height: circleSize * 0.35,
+                borderRadius: (circleSize * 0.35) / 2,
+                backgroundColor: color || theme.colors.brand.primary,
+                opacity: Animated.multiply(glowAnim, 0.8),
+              },
+            ]}
           />
           <Animated.View
-            style={{
-              position: 'absolute',
-              width: circleSize * 0.2,
-              height: circleSize * 0.2,
-              borderRadius: (circleSize * 0.2) / 2,
-              backgroundColor: color || theme.colors.brand.primary,
-              opacity: Animated.multiply(glowAnim, 1.2),
-            }}
+            style={[
+              styles.pulseCircle2,
+              {
+                width: circleSize * 0.2,
+                height: circleSize * 0.2,
+                borderRadius: (circleSize * 0.2) / 2,
+                backgroundColor: color || theme.colors.brand.primary,
+                opacity: Animated.multiply(glowAnim, 1.2),
+              },
+            ]}
           />
         </Animated.View>
       </View>
@@ -203,15 +199,7 @@ const DialCenter = React.memo(({
   if (!showActivityEmoji && !isRunning) {
     return (
       <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        style={styles.container}
       >
         <PlayPauseButton
           isRunning={isRunning}
@@ -228,5 +216,47 @@ const DialCenter = React.memo(({
 });
 
 DialCenter.displayName = 'DialCenter';
+DialCenter.propTypes = {
+  activityEmoji: PropTypes.string,
+  circleSize: PropTypes.number.isRequired,
+  color: PropTypes.string,
+  isCompleted: PropTypes.bool,
+  isPaused: PropTypes.bool,
+  isRunning: PropTypes.bool.isRequired,
+  onLongPress: PropTypes.func,
+  onPress: PropTypes.func,
+  pulseDuration: PropTypes.number,
+  shouldPulse: PropTypes.bool.isRequired,
+  showActivityEmoji: PropTypes.bool,
+};
+
+const styles = StyleSheet.create({
+  animatedContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  emoji: {
+    opacity: ACTIVITY_DISPLAY.EMOJI_OPACITY,
+    textAlign: 'center',
+  },
+  glow: {
+    position: 'absolute',
+  },
+  pulseCircle1: {
+    position: 'absolute',
+  },
+  pulseCircle2: {
+    position: 'absolute',
+  },
+});
 
 export default DialCenter;

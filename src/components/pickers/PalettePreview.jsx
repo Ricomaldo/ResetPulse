@@ -3,14 +3,15 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
+import PropTypes from 'prop-types';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { StyleSheet, Text, View } from 'react-native';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
 
-export const PalettePreview = React.memo(({ paletteName }) => {
+export const PalettePreview = React.memo(function PalettePreview({ paletteName }) {
   const theme = useTheme();
   const { currentPalette, getAvailablePalettes } = useTimerPalette();
 
@@ -48,6 +49,11 @@ export const PalettePreview = React.memo(({ paletteName }) => {
     </View>
   );
 });
+
+PalettePreview.displayName = 'PalettePreview';
+PalettePreview.propTypes = {
+  paletteName: PropTypes.string,
+};
 
 export default PalettePreview;
 

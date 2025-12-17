@@ -23,7 +23,7 @@ import {
 } from '../onboardingConstants';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter2Creation({ needs, onContinue }) {
+export default function Filter030Creation({ needs, onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
   const freePalettes = getFreePalettes();

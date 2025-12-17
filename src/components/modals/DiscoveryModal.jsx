@@ -116,14 +116,14 @@ export default function DiscoveryModal({
     },
 
     primaryButtonText: {
-      color: '#FFFFFF',
+      color: theme.colors.fixed.white,
       fontSize: rs(16, 'min'),
       fontWeight: fontWeights.semibold,
     },
 
     secondaryButton: {
       alignItems: 'center',
-      backgroundColor: 'transparent',
+      backgroundColor: theme.colors.fixed.transparent,
       borderRadius: 12,
       justifyContent: 'center',
       marginTop: theme.spacing.md,

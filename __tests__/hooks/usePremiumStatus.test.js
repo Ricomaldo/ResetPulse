@@ -1,7 +1,7 @@
 // __tests__/hooks/usePremiumStatus.test.js
 // Test coverage for premium status hook (Phase 4)
 
-import { renderHook, act } from '../test-utils';
+import { renderHook } from '../test-utils';
 import { usePremiumStatus } from '../../src/hooks/usePremiumStatus';
 import React from 'react';
 

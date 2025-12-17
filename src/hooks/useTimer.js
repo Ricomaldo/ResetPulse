@@ -310,14 +310,22 @@ export default function useTimer(initialDuration = 240, onComplete) {
       return;
     } else if (!running) {
       // Start or resume
+      // Get endMessage for notification
+      const currentActivityId = currentActivityRef.current?.id || 'none';
+      const endMessage = t(`timerMessages.${currentActivityId}.endMessage`);
+
       if (isPaused) {
         // Resume after pause
         // Re-programmer notification avec temps restant
-        scheduleTimerNotification(remaining, currentActivityRef.current);
+        scheduleTimerNotification(remaining, currentActivityRef.current, endMessage);
+
+        if (__DEV__) {
+          console.log(`⏱️ [Reprendre] Notif recalculée avec ${Math.floor(remaining / 60)}min ${remaining % 60}s`);
+        }
       } else {
         // First start
         // Programmer notification pour la fin
-        scheduleTimerNotification(remaining, currentActivityRef.current);
+        scheduleTimerNotification(remaining, currentActivityRef.current, endMessage);
 
         // Sauvegarder la durée initiale si elle a changé
         if (currentActivityRef.current?.id && duration > 0 &&
@@ -369,6 +377,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
       // Annuler la notification
       cancelTimerNotification();
 
+      if (__DEV__) {
+        console.log(`⏸️ [Pause] Notif annulée`);
+      }
+
       // Accessibility announcement for timer pause
       AccessibilityInfo.announceForAccessibility(t('accessibility.timer.timerPaused'));
     }
@@ -390,6 +402,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
     // Annuler notification si programmée
     cancelTimerNotification();
+
+    if (__DEV__) {
+      console.log(`🔄 [Reset] Notif annulée, timer réinitialisé`);
+    }
   }, [cancelTimerNotification, running, isPaused, duration, remaining]);
 
   const setPresetDuration = useCallback((minutes) => {

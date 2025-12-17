@@ -194,7 +194,7 @@ export default function CreateActivityModal({
     },
 
     createButtonText: {
-      color: '#FFFFFF',
+      color: theme.colors.fixed.white,
       fontSize: rs(16, 'min'),
       fontWeight: fontWeights.semibold,
     },

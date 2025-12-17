@@ -240,7 +240,7 @@ export default function SettingsScreen() {
           <View style={styles.settingInfo}>
             <Text style={styles.settingLabel}>Sens horaire</Text>
             <Text style={styles.settingDescription}>
-              Le timer tourne dans le sens des aiguilles d'une montre
+              Le timer tourne dans le sens des aiguilles d&apos;une montre
             </Text>
           </View>
           <Switch

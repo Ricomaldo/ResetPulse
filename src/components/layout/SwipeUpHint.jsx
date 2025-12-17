@@ -4,6 +4,7 @@
  * @updated 2025-12-14
  */
 import React, { useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
@@ -72,5 +73,9 @@ const SwipeUpHint = React.memo(function SwipeUpHint({ message = 'Glissez vers le
     </View>
   );
 });
+
+SwipeUpHint.propTypes = {
+  message: PropTypes.string,
+};
 
 export default SwipeUpHint;

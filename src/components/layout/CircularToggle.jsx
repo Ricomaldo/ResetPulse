@@ -4,7 +4,8 @@
  * @updated 2025-12-14
  */
 import React from 'react';
-import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
+import PropTypes from 'prop-types';
+import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
@@ -56,5 +57,11 @@ const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle,
     </TouchableOpacity>
   );
 });
+
+CircularToggle.propTypes = {
+  clockwise: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  size: PropTypes.number,
+};
 
 export default CircularToggle;

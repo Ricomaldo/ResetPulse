@@ -2,18 +2,19 @@
 // Simple duration picker using buttons instead of native slider
 // Avoids adding new dependencies
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  View,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
+  View,
 } from 'react-native';
+import { fontWeights } from '../../theme/tokens';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
-import { fontWeights } from '../../theme/tokens';
 
 // Preset durations in seconds
 const DURATION_PRESETS = [
@@ -28,9 +29,9 @@ const DURATION_PRESETS = [
 ];
 
 const DurationSlider = React.memo(function DurationSlider({
-  value,
   onValueChange,
   style,
+  value,
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -212,6 +213,13 @@ const DurationSlider = React.memo(function DurationSlider({
     </View>
   );
 });
+
+DurationSlider.displayName = 'DurationSlider';
+DurationSlider.propTypes = {
+  onValueChange: PropTypes.func.isRequired,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  value: PropTypes.number.isRequired,
+};
 
 export default DurationSlider;
 

@@ -9,7 +9,6 @@ const fs = require('fs');
 const path = require('path');
 
 function checkForESModules(dir) {
-  const packages = [];
 
   try {
     const packageJson = JSON.parse(
@@ -52,7 +51,9 @@ function scanNodeModules() {
 
   packages.forEach(pkg => {
     // Skip hidden files and .bin
-    if (pkg.startsWith('.')) return;
+    if (pkg.startsWith('.')) {
+      return;
+    }
 
     const pkgPath = path.join(nodeModulesPath, pkg);
 
@@ -65,34 +66,24 @@ function scanNodeModules() {
           packagesNeedingTransform.push(`${pkg}/${scopedPkg}`);
         }
       });
-    } else {
-      if (checkForESModules(pkgPath)) {
-        packagesNeedingTransform.push(pkg);
-      }
+    } else if (checkForESModules(pkgPath)) {
+      packagesNeedingTransform.push(pkg);
     }
   });
 
   return packagesNeedingTransform;
 }
 
-// Patterns that commonly need transformation in React Native
-const commonPatterns = [
-  'react-native',
-  '@react-native',
-  'expo',
-  '@expo',
-  'react-navigation',
-  '@react-navigation'
-];
-
-console.log('🔍 Scanning node_modules for packages needing Jest transformation...\n');
+console.warn('🔍 Scanning node_modules for packages needing Jest transformation...\n');
 
 const detectedPackages = scanNodeModules();
 
-console.log('📦 Detected packages with ES modules:');
-detectedPackages.forEach(pkg => console.log(`  - ${pkg}`));
+if (detectedPackages.length > 0) {
+  console.warn('📦 Detected packages with ES modules:');
+  detectedPackages.forEach(pkg => console.warn(`  - ${pkg}`));
+}
 
-console.log('\n💡 Suggested patterns for transformIgnorePatterns:');
+console.warn('\n💡 Suggested patterns for transformIgnorePatterns:');
 const patterns = new Set();
 
 // Add common patterns
@@ -111,10 +102,12 @@ detectedPackages.forEach(pkg => {
   }
 });
 
-console.log('\nconst packagesToTransform = [');
-Array.from(patterns).sort().forEach(pattern => {
-  console.log(`  '${pattern}',`);
-});
-console.log('];');
+if (patterns.size > 0) {
+  console.warn('\nconst packagesToTransform = [');
+  Array.from(patterns).sort().forEach(pattern => {
+    console.warn(`  '${pattern}',`);
+  });
+  console.warn('];');
+}
 
-console.log('\n✅ Add these to your jest.config.js transformIgnorePatterns');
+console.warn('\n✅ Add these to your jest.config.js transformIgnorePatterns');

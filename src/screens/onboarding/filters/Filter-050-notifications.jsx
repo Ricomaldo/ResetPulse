@@ -12,7 +12,7 @@ import haptics from '../../../utils/haptics';
 import analytics from '../../../services/analytics';
 import { fontWeights } from '../../../theme/tokens';
 
-export default function Filter3_5Notifications({ onContinue }) {
+export default function Filter050Notifications({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
 

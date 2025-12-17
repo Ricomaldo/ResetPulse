@@ -3,10 +3,10 @@
  * @created 2025-12-14
  * @updated 2025-12-14
  */
+import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { TIMER_VISUAL } from '../timerConstants';
 
 /**
  * Convert hex color to rgba with opacity
@@ -40,18 +40,18 @@ const hexToRgba = (hex, opacity) => {
  * @param {boolean} showGraduations - Whether to show graduations
  * @param {string} color - Primary color for the dial
  */
-const DialBase = React.memo(({
-  svgSize,
+const DialBase = React.memo(function DialBase({
   centerX,
   centerY,
-  radius,
-  strokeWidth,
+  color,
   graduationMarks,
   minuteNumbers,
-  showNumbers = true,
+  radius,
   showGraduations = true,
-  color,
-}) => {
+  showNumbers = true,
+  strokeWidth,
+  svgSize,
+}) {
   const theme = useTheme();
 
   // Convert color to rgba with 50% opacity for graduations
@@ -64,7 +64,7 @@ const DialBase = React.memo(({
     <Svg
       width={svgSize}
       height={svgSize}
-      style={{ position: 'absolute' }}
+      style={styles.svg}
       accessible={false}
       importantForAccessibility="no"
     >
@@ -134,5 +134,23 @@ const DialBase = React.memo(({
 });
 
 DialBase.displayName = 'DialBase';
+DialBase.propTypes = {
+  centerX: PropTypes.number.isRequired,
+  centerY: PropTypes.number.isRequired,
+  color: PropTypes.string,
+  graduationMarks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  minuteNumbers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  radius: PropTypes.number.isRequired,
+  showGraduations: PropTypes.bool,
+  showNumbers: PropTypes.bool,
+  strokeWidth: PropTypes.number.isRequired,
+  svgSize: PropTypes.number.isRequired,
+};
+
+const styles = {
+  svg: {
+    position: 'absolute',
+  },
+};
 
 export default DialBase;

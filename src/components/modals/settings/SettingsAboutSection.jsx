@@ -1,6 +1,7 @@
 // src/components/modals/settings/SettingsAboutSection.jsx
 import React from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import PropTypes from 'prop-types';
 import haptics from '../../../utils/haptics';
 
 /**
@@ -53,7 +54,7 @@ const SettingsAboutSection = React.memo(function SettingsAboutSection({
           }}
           activeOpacity={0.7}
         >
-          <View style={{ flex: 1 }}>
+          <View style={styles.inlineView}>
             <Text style={styles.optionLabel}>{t('onboarding.restartGuide')}</Text>
             <Text style={styles.optionDescription}>
               {t('onboarding.restartGuideDescription')}
@@ -94,7 +95,7 @@ const SettingsAboutSection = React.memo(function SettingsAboutSection({
             }}
             activeOpacity={0.7}
           >
-            <View style={{ flex: 1 }}>
+            <View style={styles.inlineView}>
               <Text style={styles.optionLabel}>
                 {t('settings.dev.resetOnboarding')}
               </Text>
@@ -108,5 +109,15 @@ const SettingsAboutSection = React.memo(function SettingsAboutSection({
     </>
   );
 });
+
+SettingsAboutSection.propTypes = {
+  resetOnboarding: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  theme: PropTypes.shape({
+    spacing: PropTypes.object.isRequired,
+  }).isRequired,
+  t: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
+};
 
 export default SettingsAboutSection;
