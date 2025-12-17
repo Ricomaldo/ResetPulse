@@ -197,8 +197,8 @@ function TimerDial({
         // Critical: Clamp to valid range to prevent any jumps
         newMinutes = Math.max(0, Math.min(maxMinutes, newMinutes));
 
-        // Update the timer (no snap during continuous drag for smooth exploration)
-        onGraduationTap(newMinutes, false);
+        // Update the timer with smooth position (no snap)
+        onGraduationTap(newMinutes);
 
         // Update references
         lastMinutesRef.current = newMinutes;
@@ -227,13 +227,7 @@ function TimerDial({
         // Detect long press: held (>=500ms) with minimal movement (<10px)
         const isLongPress = timeDelta >= 500 && movementDistance < 10;
 
-        // Always snap to nearest major mark when releasing (end of drag or tap)
-        // Prevents edge cases like 3min58 on 5min scale
-        if (onGraduationTap && lastMinutesRef.current !== null) {
-          onGraduationTap(lastMinutesRef.current, true); // Snap to nearest major mark
-        }
-
-        // Then handle toggle or long press
+        // Handle tap or long press
         if (isLongPress && onDialLongPress) {
           onDialLongPress();
         } else if (isTap && onDialTap) {

@@ -112,29 +112,19 @@ export default function TimeTimer({
   });
 
   /**
-   * Handle tap/drag on graduation to set duration
-   * Two modes: continuous drag (smooth) vs tap (snapped precision)
+   * Handle drag/tap on dial to set duration
+   * No magnetic snap - just smooth exploration with natural precision
    * @param {number} minutes - Raw minutes value from dial interaction
-   * @param {boolean} shouldSnap - If true, snap to nearest major mark; if false, use raw position
    */
-  const handleGraduationTap = useCallback((minutes, shouldSnap = false) => {
+  const handleGraduationTap = useCallback((minutes) => {
     if (timer.running) {return;}
 
     const dialMode = getDialMode(scaleMode);
 
-    // Apply magnetic snap only if requested (tap precision, not drag exploration)
-    if (shouldSnap) {
-      const magneticSnapMinutes = (dialMode.magneticSnapSeconds || 10) / 60;
-      // Round to nearest snap increment
-      minutes = Math.round(minutes / magneticSnapMinutes) * magneticSnapMinutes;
-    }
-
-    // Magnetic snap to 0 if very close
+    // Snap to 0 if very close (natural center gravitational feel)
     if (minutes <= TIMER.GRADUATION_SNAP_THRESHOLD) {
       minutes = 0;
-      haptics.impact('light').catch(() => { /* Optional operation - failure is non-critical */ }); // Light feedback for snap
-    } else if (shouldSnap) {
-      haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ }); // Selection feedback for snap
+      haptics.impact('light').catch(() => { /* Optional operation - failure is non-critical */ }); // Light feedback for reaching zero
     }
 
     // Convert minutes to seconds and handle 0 specially

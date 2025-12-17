@@ -97,22 +97,9 @@ jest.mock('../../src/styles/responsive', () => ({
 
 // Mock timer constants
 jest.mock('../../src/components/timer/timerConstants', () => ({
-  getDialMode: (mode) => {
-    // Match actual snap values per scale (for tap precision, not drag)
-    const snapByMode = {
-      '1min': 10,
-      '5min': 60,
-      '10min': 120,
-      '25min': 300,
-      '45min': 300,
-      '60min': 300,
-    };
-    const modeStr = String(mode);
-    return {
-      maxMinutes: parseInt(mode) || 60,
-      magneticSnapSeconds: snapByMode[modeStr] || 300,
-    };
-  },
+  getDialMode: (mode) => ({
+    maxMinutes: parseInt(mode) || 60,
+  }),
   TIMER: { DEFAULT_DURATION: 1500 },
 }));
 
