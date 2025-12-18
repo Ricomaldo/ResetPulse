@@ -1,1 +1,1 @@
-../../planning/roadmap/timeline.md
+../../planning/roadmap/go-version-2.md

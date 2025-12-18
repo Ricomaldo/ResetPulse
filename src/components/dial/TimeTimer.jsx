@@ -131,7 +131,7 @@ export default function TimeTimer({
     // On release: apply subtle snap to nearest interval
     // During drag: keep raw value for fluid motion
     if (isRelease) {
-      const { snapToInterval } = require('./timerConstants');
+      const { snapToInterval } = require('../../config/snap-settings');
       newDuration = snapToInterval(newDuration, scaleMode);
     } else {
       // During drag: round to nearest second for display consistency

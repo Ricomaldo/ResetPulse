@@ -17,6 +17,14 @@ export const SHOW_DEV_FAB = true;
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
 export const DEFAULT_PREMIUM = false;
 
+// Config timer par défaut en mode dev
+// Utilisé pour forcer un état initial connu (20min méditation)
+export const DEV_DEFAULT_TIMER_CONFIG = {
+  activity: 'meditation', // 20 minutes par défaut
+  duration: 1200, // 20 minutes en secondes
+  scaleMode: '60min', // Échelle adaptée
+};
+
 // Legacy export pour compatibilité
 export const TEST_MODE = DEV_MODE;
 

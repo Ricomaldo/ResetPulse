@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePersistedObject } from '../hooks/usePersistedState';
-import { getDefaultActivity } from '../config/activities';
+import { getDefaultActivity, getActivityById } from '../config/activities';
+import { DEV_MODE, DEV_DEFAULT_TIMER_CONFIG } from '../config/test-mode';
 
 const TimerOptionsContext = createContext(null);
 
@@ -16,26 +17,57 @@ const TimerOptionsContext = createContext(null);
 export const TimerOptionsProvider = ({ children }) => {
   const hasLoadedOnboardingConfig = useRef(false);
 
+  // Valeurs par défaut : mode production ou dev
+  const getDefaultValues = () => {
+    if (DEV_MODE && DEV_DEFAULT_TIMER_CONFIG) {
+      // Mode dev : forcer config connue (20min méditation)
+      const devActivity = getActivityById(DEV_DEFAULT_TIMER_CONFIG.activity) || getDefaultActivity();
+      return {
+        shouldPulse: false,
+        showDigitalTimer: false,
+        showActivityEmoji: true,
+        keepAwakeEnabled: true,
+        clockwise: false,
+        scaleMode: DEV_DEFAULT_TIMER_CONFIG.scaleMode,
+        currentActivity: devActivity,
+        currentDuration: DEV_DEFAULT_TIMER_CONFIG.duration,
+        favoriteActivities: ['work', 'break', 'meditation'],
+        favoritePalettes: [],
+        selectedSoundId: 'bell_classic',
+        activityDurations: {},
+        completedTimersCount: 0,
+        hasSeenTwoTimersModal: false,
+        commandBarConfig: [],
+        carouselBarConfig: [],
+      };
+    }
+
+    // Mode production : valeurs standard
+    return {
+      shouldPulse: false,
+      showDigitalTimer: false,
+      showActivityEmoji: true,
+      keepAwakeEnabled: true,
+      clockwise: false,
+      scaleMode: '45min',
+      currentActivity: getDefaultActivity(),
+      currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
+      favoriteActivities: ['work', 'break', 'meditation'],
+      favoritePalettes: [],
+      selectedSoundId: 'bell_classic',
+      activityDurations: {},
+      completedTimersCount: 0,
+      hasSeenTwoTimersModal: false,
+      commandBarConfig: [],
+      carouselBarConfig: [],
+    };
+  };
+
   // Utiliser un seul objet persisté pour toutes les options
-  const { values, updateValue, isLoading } = usePersistedObject('@ResetPulse:timerOptions', {
-    shouldPulse: false, // Animation de pulsation désactivée par défaut (conformité épilepsie)
-    showDigitalTimer: false, // Chrono numérique masqué par défaut (mode zen)
-    showActivityEmoji: true, // Affichage de l'emoji d'activité dans le dial activé par défaut
-    keepAwakeEnabled: true, // Maintenir l'écran allumé pendant le timer (ON par défaut - timer visuel TDAH)
-    clockwise: false,
-    scaleMode: '45min',
-    currentActivity: getDefaultActivity(),
-    currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
-    favoriteActivities: ['work', 'break', 'meditation'], // Free activities as default favorites (excluding 'none')
-    favoritePalettes: [], // Palettes favorites (max 4) - affichées en premier dans carrousel
-    selectedSoundId: 'bell_classic', // Son par défaut
-    activityDurations: {}, // { activityId: duration } - Mémorise la durée préférée par activité
-    completedTimersCount: 0, // Compteur de timers complétés (ADR-003: trigger après 2)
-    hasSeenTwoTimersModal: false, // Modal "2 moments créés" déjà affiché
-    // Nouvelle architecture : zones configurables
-    commandBarConfig: [], // Zone commandes (haut) - valeurs possibles: ['playPause', 'reset', 'rotation', 'presets']
-    carouselBarConfig: [], // Zone carrousels (bas) - valeurs possibles: ['activities', 'palettes']
-  });
+  const { values, updateValue, isLoading } = usePersistedObject(
+    '@ResetPulse:timerOptions',
+    getDefaultValues()
+  );
 
   // Load onboarding config once after initial load
   useEffect(() => {

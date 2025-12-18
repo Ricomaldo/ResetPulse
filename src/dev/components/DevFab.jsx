@@ -15,17 +15,21 @@ import { fontWeights } from '../../theme/tokens';
 import { devColors } from '../../theme/colors';
 
 /**
- * Dev FAB component for toggling premium mode during testing
+ * Dev FAB component for dev tools during testing
  * @param {boolean} isPremiumMode - Current premium mode state
  * @param {Function} onPremiumChange - Callback to change premium mode
  * @param {Function} onResetOnboarding - Callback to reset onboarding
- * @param {Function} onGoToApp - Callback to go to app
+ * @param {Function} onGoToApp - Callback to skip to app
+ * @param {Function} onResetTimerConfig - Callback to reset timer config
+ * @param {Function} onResetTooltip - Callback to reset drawer tooltip
  */
 export default function DevFab({
   isPremiumMode,
   onPremiumChange,
   onResetOnboarding,
   onGoToApp,
+  onResetTimerConfig,
+  onResetTooltip,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
@@ -126,30 +130,58 @@ export default function DevFab({
           </Text>
         </View>
 
-        {/* Onboarding Controls */}
-        {(onResetOnboarding || onGoToApp) && (
+        {/* Dev Tools - All resets & shortcuts */}
+        {(onResetOnboarding || onResetTimerConfig || onResetTooltip || onGoToApp) && (
           <View style={styles.menuSection}>
-            <Text style={styles.menuLabel}>Onboarding</Text>
-            <View style={styles.buttonRow}>
-              {onResetOnboarding && (
-                <TouchableOpacity
-                  style={[styles.actionButton, styles.resetButton]}
-                  onPress={() => handleOptionPress(onResetOnboarding)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.actionText}>🔄 Reset</Text>
-                </TouchableOpacity>
-              )}
-              {onGoToApp && (
-                <TouchableOpacity
-                  style={[styles.actionButton, styles.goToAppButton]}
-                  onPress={() => handleOptionPress(onGoToApp)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.actionText}>→ App</Text>
-                </TouchableOpacity>
-              )}
-            </View>
+            <Text style={styles.menuLabel}>Dev Tools</Text>
+
+            {/* Row 1: Onboarding + Timer */}
+            {(onResetOnboarding || onResetTimerConfig) && (
+              <View style={styles.buttonRow}>
+                {onResetOnboarding && (
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.resetOnboardingButton]}
+                    onPress={() => handleOptionPress(onResetOnboarding)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.actionText}>🔄 Onboarding</Text>
+                  </TouchableOpacity>
+                )}
+                {onResetTimerConfig && (
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.timerResetButton]}
+                    onPress={() => handleOptionPress(onResetTimerConfig)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.actionText}>⏱️ Timer</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+
+            {/* Row 2: Tooltip + Go to App */}
+            {(onResetTooltip || onGoToApp) && (
+              <View style={[styles.buttonRow, styles.buttonRowMargin]}>
+                {onResetTooltip && (
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.tooltipResetButton]}
+                    onPress={() => handleOptionPress(onResetTooltip)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.actionText}>💬 Tooltip</Text>
+                  </TouchableOpacity>
+                )}
+                {onGoToApp && (
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.goToAppButton]}
+                    onPress={() => handleOptionPress(onGoToApp)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.actionText}>→ App</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
           </View>
         )}
       </Animated.View>
@@ -175,6 +207,10 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     gap: 8,
+  },
+
+  buttonRowMargin: {
+    marginTop: 8,
   },
 
   container: {
@@ -242,8 +278,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
-  resetButton: {
-    backgroundColor: devColors.danger,
+  resetOnboardingButton: {
+    backgroundColor: devColors.danger, // Rouge
+  },
+
+  timerResetButton: {
+    backgroundColor: '#FF8C00', // Orange
+  },
+
+  tooltipResetButton: {
+    backgroundColor: '#1E90FF', // Bleu
   },
 
   statusRow: {
@@ -293,4 +337,6 @@ DevFab.propTypes = {
   onPremiumChange: PropTypes.func.isRequired,
   onResetOnboarding: PropTypes.func,
   onGoToApp: PropTypes.func,
+  onResetTimerConfig: PropTypes.func,
+  onResetTooltip: PropTypes.func,
 };

@@ -1,0 +1,138 @@
+# ADR-004 : Séparation Durée Timer et Échelle Cadran
+
+## Statut : VALIDÉ
+**Date :** 18 décembre 2025
+**Décideurs :** Eric + Chrysalis
+
+---
+
+## Contexte
+
+ResetPulse est un timer visuel pour neurodivergents. Le dial affiche le temps restant proportionnellement à une échelle (cadran).
+
+**Deux concepts distincts :**
+- **Durée** : combien de temps je veux (ex: 25 min)
+- **Échelle cadran** : graduation max du dial (ex: 30 min ou 60 min)
+
+**Problème identifié :**
+Les presets actuels (1, 5, 10, 25, 45, 60) modifient les deux simultanément, créant :
+1. Un dial toujours plein → perte d'affordance drag
+2. Impossibilité de choisir "25 min sur cadran 60"
+3. Imposition d'une logique unique à des users aux besoins différents
+
+---
+
+## Décision
+
+### Séparer les deux contrôles dans l'UI
+
+**Durée** — Incrémenteur :
+```
+[ − ]  25:00  [ + ]
+```
+
+**Cadran** — 4 boutons échelle :
+```
+[5] [15] [30] [60]
+```
+
+### Comportements
+
+| Action | Résultat |
+|--------|----------|
+| Tap `+` | Durée +1 min (ou +5 si durée > 10 min) |
+| Tap `-` | Durée -1 min (ou -5 si durée > 10 min) |
+| Long press `+/-` | Accélération |
+| Tap sur affichage durée ("25:00") | Durée = échelle cadran (sync, dial plein) |
+| Tap bouton cadran | Échelle change, durée cappée si > nouvelle échelle |
+| Drag dial | Durée libre (comportement existant) |
+
+### Contraintes
+
+- Durée min : 1 min
+- Durée max : échelle cadran actuelle
+- Échelles disponibles : 5, 15, 30, 60 minutes
+
+### Feedback "Sync" (tap sur durée affichée)
+
+- Haptic feedback
+- Animation subtile : le chiffre "saute" vers la nouvelle valeur (200ms)
+- Pas de mode persistant — action ponctuelle
+
+---
+
+## Justification
+
+### Pourquoi deux contrôles séparés ?
+
+Deux populations d'users légitimes :
+- **User A** : "Je veux 25 min, adapte le cadran" → tap cadran "30", drag ou incrémente à 25
+- **User B** : "Je veux 25 min sur MON cadran de 60" → garde cadran 60, incrémente à 25
+
+Imposer une auto-adaptation = frustrer User B.
+
+### Pourquoi tap sur durée = sync ?
+
+- Geste découvrable (tap sur zone centrale)
+- Pas de bouton/texte supplémentaire
+- Cohérent avec UI minimaliste
+- L'user explore naturellement
+
+### Pourquoi 4 échelles (5/15/30/60) ?
+
+- Couvre micro-pauses (1-4 min sur cadran 5)
+- Pomodoro court (5-14 min sur cadran 15)
+- Pomodoro standard (15-29 min sur cadran 30)
+- Sessions longues (30-60 min sur cadran 60)
+
+---
+
+## Emplacement UI
+
+Ces contrôles apparaissent dans :
+1. **Drawer** (swipe up) — accès rapide
+2. **CommandBar** (si configurée visible par l'user)
+
+---
+
+## Conséquences
+
+### Positives
+- Contrôle précis durée ET cadran
+- Respecte les différents besoins neurodivergents
+- UI minimaliste préservée
+- Affordance drag toujours visible (sauf sync volontaire)
+
+### Négatives
+- 2 concepts à comprendre (durée vs cadran)
+- Légère courbe d'apprentissage
+
+### Migration
+- Supprimer les 6 presets actuels (1, 5, 10, 25, 45, 60)
+- Remplacer par incrémenteur + 4 boutons cadran
+- Mettre à jour TimerOptionsContext (scaleMode limité à 4 valeurs)
+
+---
+
+## Implémentation
+
+### Fichiers impactés
+- `TimerOptionsContext.jsx` : scaleMode → enum [5, 15, 30, 60]
+- `OptionsDrawerContent.jsx` : nouveau layout
+- `PresetPills.jsx` → `ScaleButtons.jsx` : 4 boutons
+- Nouveau : `DurationIncrementer.jsx`
+- `TimerScreen.jsx` : intégration
+
+### Tests
+- [ ] Incrémenteur +/- fonctionne
+- [ ] Tap durée = sync avec cadran
+- [ ] Tap cadran = cappée si durée dépasse
+- [ ] Drag dial inchangé
+- [ ] Haptic feedback sur sync
+
+---
+
+## Références
+
+- Session Chrysalis-Eric 17-18 décembre 2025
+- ADR-003 : Stratégie Conversion (contexte monétisation)
