@@ -6,33 +6,134 @@
  * @updated 2025-12-19
  */
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import BottomSheet, { BottomSheetView, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { View, StyleSheet, Dimensions, Text } from 'react-native';
+import BottomSheet, {
+  BottomSheetView,
+  BottomSheetScrollView,
+  useBottomSheet,
+} from '@gorhom/bottom-sheet';
+import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
-import { devColors } from '../../theme/colors';
+import { Layer1Content } from './aside-content';
+
+// Get screen height for responsive calculations
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
+// Calculate responsive heights based on snap points
+// Note: Container heights are slightly smaller than snap points to account for handle + padding
+const LAYER_1_HEIGHT = SCREEN_HEIGHT * 0.08; // Turquoise layer (fixed small height)
+const CONTAINER_SNAP_1 = SCREEN_HEIGHT * 0.1; // Container at snap 1 (15% snap - 5% handle/padding)
+const CONTAINER_SNAP_2 = SCREEN_HEIGHT * 0.32; // Container at snap 2 (38% snap - 6% handle/padding)
+const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8; // Container at snap 3 (90% snap - 10% handle/padding)
 
 /**
- * FavoriteTool Wrapper (Snap 1 - 15%)
- * Contenu: Un seul bouton/action favorite configurable
+ * SheetContent - Internal component with access to BottomSheet context
+ * Handles fade transitions between snap points
  */
-function FavoriteTool() {
-  return <View style={[styles.wrapperFavorite, { backgroundColor: devColors.debug1 }]} />;
-}
+function SheetContent({ currentSnapIndex }) {
+  const theme = useTheme();
+  const { animatedIndex } = useBottomSheet();
 
-/**
- * BaseCommands Wrapper (Snap 2 - 38%)
- * Contenu: CommandBar + CarouselBar (Toolbox)
- */
-function BaseCommands() {
-  return <View style={[styles.wrapperBaseFixed, { backgroundColor: devColors.debug2 }]} />;
-}
+  // Animate container height (responsive based on screen size)
+  const containerHeightStyle = useAnimatedStyle(() => {
+    const height = interpolate(
+      animatedIndex.value,
+      [0, 1, 2, 3], // Snap 0 (5%), 1 (15%), 2 (38%), 3 (90%)
+      [0, CONTAINER_SNAP_1, CONTAINER_SNAP_2, CONTAINER_SNAP_3], // Responsive heights
+      Extrapolation.CLAMP
+    );
+    return { height };
+  });
 
-/**
- * AllOptions Wrapper (Snap 3 - 90%)
- * Contenu: Scrollable avec Settings inline + About
- */
-function AllOptions() {
-  return <View style={[styles.wrapperAll, { backgroundColor: devColors.debug3 }]} />;
+  // Fade out FavoriteTool (turquoise) when moving from snap 1 (15%) to snap 2 (38%)
+  const favoriteOpacityStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animatedIndex.value,
+      [0, 1, 2, 3], // Snap 0 (5%), 1 (15%), 2 (38%), 3 (90%)
+      [0, 1, 0, 0], // Opacity: invisible → visible → invisible → invisible
+      Extrapolation.CLAMP
+    );
+    return { opacity };
+  });
+
+  // Fade in BaseCommands (pourpre) at snap 2 (38%), fade out at snap 3 (90%)
+  const baseOpacityStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animatedIndex.value,
+      [0, 1, 2, 3], // Snap 0 (5%), 1 (15%), 2 (38%), 3 (90%)
+      [0, 0, 1, 0], // Opacity: invisible → invisible → visible → invisible
+      Extrapolation.CLAMP
+    );
+    return { opacity };
+  });
+
+  // Fade in AllOptions (mandarine) at snap 3 (90%)
+  const allOpacityStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animatedIndex.value,
+      [0, 1, 2, 3], // Snap 0 (5%), 1 (15%), 2 (38%), 3 (90%)
+      [0, 0, 0, 1], // Opacity: invisible → invisible → invisible → visible
+      Extrapolation.CLAMP
+    );
+    return { opacity };
+  });
+
+  return (
+    <BottomSheetScrollView
+      contentContainerStyle={styles.scrollContent}
+      scrollEnabled={currentSnapIndex >= 2} // Scroll disabled at snap 0 & 1
+    >
+      {/* All layers superposed (FavoriteTool + BaseCommands + AllOptions) */}
+      <Animated.View style={[styles.layerContainer, containerHeightStyle]}>
+        {/* Layer 1: FavoriteTool - behind, responsive height, dynamic content */}
+        <Animated.View
+          style={[
+            styles.layerAbsolute,
+            { backgroundColor: theme.colors.background, height: LAYER_1_HEIGHT },
+            favoriteOpacityStyle,
+          ]}
+        >
+          <Layer1Content />
+        </Animated.View>
+
+        {/* Layer 2: BaseCommands - middle, 100% container height */}
+        <Animated.View
+          style={[
+            styles.layerAbsolute,
+            { backgroundColor: theme.colors.background },
+            baseOpacityStyle,
+          ]}
+        >
+          <View style={styles.toolContent}>
+            <Text style={{ color: theme.colors.text, fontSize: 16, fontWeight: '600' }}>
+              🛠️ Toolbox
+            </Text>
+            <Text style={{ color: theme.colors.textSecondary, fontSize: 12, marginTop: 8 }}>
+              (Layer 2 - Snap 38%)
+            </Text>
+          </View>
+        </Animated.View>
+
+        {/* Layer 3: AllOptions - on top, 100% container height, scrollable content */}
+        <Animated.View
+          style={[
+            styles.layerAbsolute,
+            { backgroundColor: theme.colors.background },
+            allOpacityStyle,
+          ]}
+        >
+          <View style={styles.toolContent}>
+            <Text style={{ color: theme.colors.text, fontSize: 16, fontWeight: '600' }}>
+              ⚙️ All Options
+            </Text>
+            <Text style={{ color: theme.colors.textSecondary, fontSize: 12, marginTop: 8 }}>
+              (Layer 3 - Snap 90%)
+            </Text>
+          </View>
+        </Animated.View>
+      </Animated.View>
+    </BottomSheetScrollView>
+  );
 }
 
 /**
@@ -78,17 +179,7 @@ export default function AsideZone({ isTimerRunning, onOpenSettings }) {
         ...theme.shadow('xl'),
       }}
     >
-      {/* Single ScrollView with all content - snap points handle visibility naturally */}
-      <BottomSheetScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Section 1: FavoriteTool (visible at snap 1 - 15%) */}
-        <FavoriteTool />
-
-        {/* Section 2: BaseCommands (visible at snap 2+ - 38% and above) */}
-        <BaseCommands />
-
-        {/* Section 3: AllOptions (visible at snap 3 - 90%, scrollable) */}
-        <AllOptions />
-      </BottomSheetScrollView>
+      <SheetContent currentSnapIndex={currentSnapIndex} />
     </BottomSheet>
   );
 }
@@ -99,18 +190,22 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 16,
   },
-  wrapperFavorite: {
-    height: 60, // Snap 1 (15%): turquoise visible
-    borderRadius: 12,
-    marginBottom: 12,
+  layerContainer: {
+    // Height animated: responsive based on screen size
+    position: 'relative',
   },
-  wrapperBaseFixed: {
-    height: 200, // Snap 2 (38%): pourpre visible / Snap 3 (90%): pourpre + scroll
+  layerAbsolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     borderRadius: 12,
-    marginBottom: 12,
   },
-  wrapperAll: {
-    height: 400, // Snap 3 (90%): mandarine scrollable
-    borderRadius: 12,
+  toolContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 8,
   },
 });

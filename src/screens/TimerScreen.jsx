@@ -10,13 +10,10 @@ import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { useScreenOrientation } from '../hooks/useScreenOrientation';
 import { DialZone, AsideZone } from '../components/layout';
 import { TimeTimer, ActivityLabel, DigitalTimer } from '../components/dial';
-import { CommandBar, CarouselBar } from '../components/bars';
 import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TwoTimersModal, PremiumModal, SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
-import { devColors } from '../theme/colors';
-import { getDialMode } from '../components/dial/timerConstants';
 
 function TimerScreenContent() {
   const theme = useTheme();
@@ -30,12 +27,8 @@ function TimerScreenContent() {
     incrementCompletedTimers,
     hasSeenTwoTimersModal,
     setHasSeenTwoTimersModal,
-    setScaleMode,
-    commandBarConfig,
-    carouselBarConfig,
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
-  // Note: optionsDrawerVisible removed - BottomSheet manages its own state now
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
@@ -98,52 +91,9 @@ function TimerScreenContent() {
     }
   };
 
-  // Handle preset selection from drawer
-  // Tap preset → change scale mode
-  // If duration > new scale max → cap duration to max
-  // If duration <= new scale max → keep duration unchanged
-  const handlePresetSelect = (presetData) => {
-    const { newScaleMode } = presetData;
-
-    // Get max duration for new scale mode
-    const dialMode = getDialMode(newScaleMode);
-    const maxSecondsForNewScale = dialMode.maxMinutes * 60;
-
-    // Cap duration if it exceeds new scale max
-    const cappedDuration = Math.min(currentDuration, maxSecondsForNewScale);
-
-    // Update scale mode
-    setScaleMode(newScaleMode);
-
-    // Update duration if capped
-    if (cappedDuration !== currentDuration) {
-      setCurrentDuration(cappedDuration);
-
-      // Also update the timer if it's running
-      if (timerRef.current) {
-        timerRef.current.setDuration(cappedDuration);
-        setTimerRemaining(cappedDuration);
-      }
-    }
-  };
-
   // Toggle digital timer visibility
   const handleToggleDigitalTimer = () => {
     setShowDigitalTimer(!showDigitalTimer);
-  };
-
-  // Handle play/pause from CommandBar
-  const handlePlayPause = () => {
-    if (timerRef.current) {
-      timerRef.current.toggleRunning();
-    }
-  };
-
-  // Handle reset from CommandBar
-  const handleReset = () => {
-    if (timerRef.current) {
-      timerRef.current.resetTimer();
-    }
   };
 
   // Handle timer completion (ADR-003: trigger after 2 timers)

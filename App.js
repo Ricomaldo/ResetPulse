@@ -5,15 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // ========== DEV MODE ==========
-import { DEV_MODE, SHOW_DEV_FAB, DEFAULT_PREMIUM, DEV_DEFAULT_TIMER_CONFIG } from './src/config/test-mode';
+import { DEV_MODE, SHOW_DEV_FAB, DEV_DEFAULT_TIMER_CONFIG } from './src/config/test-mode';
 import DevFab from './src/dev/components/DevFab';
-import { DevPremiumContext } from './src/dev/DevPremiumContext';
+import { DevPremiumProvider } from './src/dev/DevPremiumContext';
 import { getActivityById } from './src/config/activities';
 // ==============================
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
 import { ModalStackProvider } from './src/contexts/ModalStackContext';
+import { UserPreferencesProvider } from './src/contexts/UserPreferencesContext';
 import ModalStackRenderer from './src/components/modals/ModalStackRenderer';
 import TimerScreen from './src/screens/TimerScreen';
 import { OnboardingFlow } from './src/screens/onboarding';
@@ -101,7 +102,6 @@ function AppContent() {
 
 export default function App() {
   // ========== DEV MODE STATE ==========
-  const [isPremiumMode, setIsPremiumMode] = useState(DEFAULT_PREMIUM);
   const [resetTrigger, setResetTrigger] = useState(0);
 
   // Initialize Mixpanel Analytics (M7.5)
@@ -194,10 +194,10 @@ export default function App() {
       <ThemeProvider>
         <PurchaseProvider>
           <ModalStackProvider>
-            <DevPremiumContext.Provider value={{ devPremiumOverride: isPremiumMode, setDevPremiumOverride: setIsPremiumMode }}>
+            <DevPremiumProvider>
               <AppContent key={resetTrigger} />
               <ModalStackRenderer />
-            </DevPremiumContext.Provider>
+            </DevPremiumProvider>
           </ModalStackProvider>
         </PurchaseProvider>
       </ThemeProvider>
@@ -207,25 +207,27 @@ export default function App() {
   // En mode dev avec FAB activé, afficher le FAB + contenu
   if (DEV_MODE && SHOW_DEV_FAB) {
     return (
-      <GestureHandlerRootView style={styles.container}>
-        {renderContent()}
-        <DevFab
-          isPremiumMode={isPremiumMode}
-          onPremiumChange={setIsPremiumMode}
-          onResetOnboarding={handleResetOnboarding}
-          onGoToApp={handleGoToApp}
-          onResetTimerConfig={handleResetTimerConfig}
-          onResetTooltip={handleResetTooltip}
-        />
-      </GestureHandlerRootView>
+      <UserPreferencesProvider>
+        <GestureHandlerRootView style={styles.container}>
+          {renderContent()}
+          <DevFab
+            onResetOnboarding={handleResetOnboarding}
+            onGoToApp={handleGoToApp}
+            onResetTimerConfig={handleResetTimerConfig}
+            onResetTooltip={handleResetTooltip}
+          />
+        </GestureHandlerRootView>
+      </UserPreferencesProvider>
     );
   }
 
   // Production ou dev sans FAB: app normale
   return (
-    <GestureHandlerRootView style={styles.container}>
-      {renderContent()}
-    </GestureHandlerRootView>
+    <UserPreferencesProvider>
+      <GestureHandlerRootView style={styles.container}>
+        {renderContent()}
+      </GestureHandlerRootView>
+    </UserPreferencesProvider>
   );
 }
 
