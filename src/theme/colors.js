@@ -138,6 +138,11 @@ export const devColors = {
   devBgSecondary: '#2d2d3d', // Dev background secondary
   textSecondary: '#888888', // Dev text secondary
   textTertiary: '#cccccc', // Dev text tertiary
+
+  // Debug wrapper colors (high contrast for visibility)
+  debug1: '#00CED1', // Turquoise vif (DarkTurquoise)
+  debug2: '#9932CC', // Pourpre vif (DarkOrchid)
+  debug3: '#FF8C00', // Mandarine vif (DarkOrange)
 };
 
 // Legacy export for backward compatibility

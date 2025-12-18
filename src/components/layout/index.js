@@ -4,6 +4,14 @@
  * @updated 2025-12-17
  */
 
-export { default as Drawer } from './Drawer';
 export { default as ErrorBoundary } from './ErrorBoundary';
-export { default as Icons, PlayIcon, PauseIcon, ResetIcon, ReverseIcon, SettingsIcon } from './Icons';
+export {
+  default as Icons,
+  PlayIcon,
+  PauseIcon,
+  ResetIcon,
+  ReverseIcon,
+  SettingsIcon,
+} from './Icons';
+export { default as DialZone } from './DialZone';
+export { default as AsideZone } from './AsideZone';

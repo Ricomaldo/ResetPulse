@@ -168,28 +168,12 @@ export const DRAG = {
 };
 
 /**
- * Snap intervals adapted to scale mode
- * Applied ONLY on release for subtle precision assistance
+ * Snap intervals and function moved to config/snap-settings.js
+ * for easier configuration and tuning.
+ *
+ * Re-exported here for backward compatibility with existing imports.
  */
-export const SNAP_INTERVALS = {
-  '1min': 1,      // 1 second for 1min scale
-  '5min': 5,      // 5 seconds for 5min scale
-  '10min': 15,    // 15 seconds for 10min scale
-  '25min': 20,    // 20 seconds for 25min scale
-  '45min': 30,    // 30 seconds for 45min scale
-  '60min': 30,    // 30 seconds for 60min scale
-};
-
-/**
- * Snap seconds to nearest interval based on scale mode
- * @param {number} seconds - Raw seconds value from drag
- * @param {string} scaleMode - Current scale mode ('1min', '5min', etc.)
- * @returns {number} Snapped seconds value
- */
-export function snapToInterval(seconds, scaleMode) {
-  const interval = SNAP_INTERVALS[scaleMode] || 1;
-  return Math.round(seconds / interval) * interval;
-}
+export { SNAP_INTERVALS, snapToInterval } from '../../config/snap-settings';
 
 export const VISUAL = {
   CENTER_DOT_OUTER_RATIO: 0.08,

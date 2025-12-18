@@ -2,11 +2,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StatusBar, Animated, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // ========== DEV MODE ==========
-import { DEV_MODE, SHOW_DEV_FAB, DEFAULT_PREMIUM } from './src/config/test-mode';
+import { DEV_MODE, SHOW_DEV_FAB, DEFAULT_PREMIUM, DEV_DEFAULT_TIMER_CONFIG } from './src/config/test-mode';
 import DevFab from './src/dev/components/DevFab';
 import { DevPremiumContext } from './src/dev/DevPremiumContext';
+import { getActivityById } from './src/config/activities';
 // ==============================
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
@@ -142,6 +144,50 @@ export default function App() {
     }
   };
 
+  // ========== DEV: Reset Timer Config ==========
+  const handleResetTimerConfig = async () => {
+    try {
+      // Load current timerOptions from storage
+      const storedOptions = await AsyncStorage.getItem('@ResetPulse:timerOptions');
+      let options = {};
+
+      if (storedOptions) {
+        try {
+          options = JSON.parse(storedOptions);
+        } catch (e) {
+          console.warn('[DevFab] Failed to parse stored options:', e);
+        }
+      }
+
+      // Force dev config
+      const devActivity = getActivityById(DEV_DEFAULT_TIMER_CONFIG.activity);
+      options.currentDuration = DEV_DEFAULT_TIMER_CONFIG.duration;
+      options.scaleMode = DEV_DEFAULT_TIMER_CONFIG.scaleMode;
+      options.currentActivity = devActivity;
+
+      // Save back to storage
+      await AsyncStorage.setItem('@ResetPulse:timerOptions', JSON.stringify(options));
+
+      // Force remount to reload context with new values
+      setResetTrigger(prev => prev + 1);
+
+      console.log('[DevFab] Timer config reset to dev defaults (20min meditation)');
+    } catch (error) {
+      console.warn('[DevFab] Failed to reset timer config:', error);
+    }
+  };
+
+  // ========== DEV: Reset Drawer Tooltip ==========
+  const handleResetTooltip = async () => {
+    try {
+      await AsyncStorage.removeItem('@ResetPulse:hasSeenDrawerHint');
+      setResetTrigger(prev => prev + 1); // Force remount to show tooltip
+      console.log('[DevFab] Drawer tooltip reset - will show on next app view');
+    } catch (error) {
+      console.warn('[DevFab] Failed to reset tooltip:', error);
+    }
+  };
+
   // Contenu principal
   const renderContent = () => (
     <ErrorBoundary>
@@ -161,20 +207,26 @@ export default function App() {
   // En mode dev avec FAB activé, afficher le FAB + contenu
   if (DEV_MODE && SHOW_DEV_FAB) {
     return (
-      <View style={styles.container}>
+      <GestureHandlerRootView style={styles.container}>
         {renderContent()}
         <DevFab
           isPremiumMode={isPremiumMode}
           onPremiumChange={setIsPremiumMode}
           onResetOnboarding={handleResetOnboarding}
           onGoToApp={handleGoToApp}
+          onResetTimerConfig={handleResetTimerConfig}
+          onResetTooltip={handleResetTooltip}
         />
-      </View>
+      </GestureHandlerRootView>
     );
   }
 
   // Production ou dev sans FAB: app normale
-  return renderContent();
+  return (
+    <GestureHandlerRootView style={styles.container}>
+      {renderContent()}
+    </GestureHandlerRootView>
+  );
 }
 
 const styles = StyleSheet.create({

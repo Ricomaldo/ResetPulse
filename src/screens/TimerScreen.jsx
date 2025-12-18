@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
@@ -34,7 +35,7 @@ function TimerScreenContent() {
     carouselBarConfig,
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
-  const [optionsDrawerVisible, setOptionsDrawerVisible] = useState(false);
+  // Note: optionsDrawerVisible removed - BottomSheet manages its own state now
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
   const [premiumModalVisible, setPremiumModalVisible] = useState(false);
@@ -81,6 +82,12 @@ function TimerScreenContent() {
     dialContainer: {
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    messageZone: {
+      height: rs(64), // Hauteur fixe pour ActivityLabel
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.colors.background,
     },
   });
 
@@ -200,30 +207,26 @@ function TimerScreenContent() {
 
             {/* Zone Dial centré - Prend l'espace restant */}
             <View style={styles.dialCenteredZone}>
-              <View style={styles.dialContainer}>
-                <TimeTimer
-                  onRunningChange={setIsTimerRunning}
-                  onTimerRef={(ref) => {
-                    timerRef.current = ref;
-                    if (ref) {
-                      setTimerRemaining(ref.remaining || ref.duration || 0);
-                    }
-                  }}
-                  onDialTap={handleDialTap}
-                  onTimerComplete={handleTimerComplete}
-                />
-              </View>
+              <NativeViewGestureHandler disallowInterruption={true}>
+                <View style={styles.dialContainer}>
+                  <TimeTimer
+                    onRunningChange={setIsTimerRunning}
+                    onTimerRef={(ref) => {
+                      timerRef.current = ref;
+                      if (ref) {
+                        setTimerRemaining(ref.remaining || ref.duration || 0);
+                      }
+                    }}
+                    onDialTap={handleDialTap}
+                    onTimerComplete={handleTimerComplete}
+                  />
+                </View>
+              </NativeViewGestureHandler>
             </View>
           </DialZone>
 
-          {/* ASIDE ZONE - ActivityLabel + Drawer intégré (ADR-005) */}
-          <AsideZone
-            drawerVisible={optionsDrawerVisible}
-            onDrawerClose={() => setOptionsDrawerVisible(false)}
-            onDrawerOpen={() => setOptionsDrawerVisible(true)}
-            onOpenSettings={() => setSettingsModalVisible(true)}
-          >
-            {/* Activity Label - Visible quand drawer fermé */}
+          {/* MESSAGE ZONE - ActivityLabel permanente (ADR-005 v2) */}
+          <View style={styles.messageZone}>
             {currentActivity && currentActivity.id !== 'none' && (
               <ActivityLabel
                 emoji={currentActivity.emoji}
@@ -233,23 +236,13 @@ function TimerScreenContent() {
                 isCompleted={isTimerCompleted}
               />
             )}
+          </View>
 
-            {/* Command Bar - TODO: migrer dans drawer (M3) */}
-            {/* <CommandBar
-              commandBarConfig={commandBarConfig}
-              isTimerRunning={isTimerRunning}
-              onPlayPause={handlePlayPause}
-              onReset={handleReset}
-              onSelectPreset={handlePresetSelect}
-            /> */}
-
-            {/* Carousel Bar - TODO: migrer dans drawer (M3) */}
-            {/* <CarouselBar
-              carouselBarConfig={carouselBarConfig}
-              isTimerRunning={isTimerRunning}
-              drawerVisible={optionsDrawerVisible}
-            /> */}
-          </AsideZone>
+          {/* ASIDE ZONE - BottomSheet 3-Snap (ADR-005 v2) */}
+          <AsideZone
+            isTimerRunning={isTimerRunning}
+            onOpenSettings={() => setSettingsModalVisible(true)}
+          />
         </>
       )}
 
