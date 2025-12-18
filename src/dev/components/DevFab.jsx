@@ -13,6 +13,8 @@ import PropTypes from 'prop-types';
 import { SHOW_DEV_FAB } from '../../config/test-mode';
 import { fontWeights } from '../../theme/tokens';
 import { devColors } from '../../theme/colors';
+import { useDevPremium } from '../DevPremiumContext';
+import { useUserPreferences } from '../../contexts/UserPreferencesContext';
 
 /**
  * Dev FAB component for dev tools during testing
@@ -23,9 +25,16 @@ import { devColors } from '../../theme/colors';
  * @param {Function} onResetTimerConfig - Callback to reset timer config
  * @param {Function} onResetTooltip - Callback to reset drawer tooltip
  */
+const FAVORITE_TOOL_OPTIONS = [
+  { value: 'colors', label: '🎨 Couleurs' },
+  { value: 'activities', label: '💻 Activités' },
+  { value: 'presets', label: '⏱️ Presets' },
+  { value: 'controls', label: '▶️ Controls' },
+  { value: 'none', label: '∅ Rien' },
+  { value: 'combo', label: '⚡ Presets+Controls' },
+];
+
 export default function DevFab({
-  isPremiumMode,
-  onPremiumChange,
   onResetOnboarding,
   onGoToApp,
   onResetTimerConfig,
@@ -33,6 +42,8 @@ export default function DevFab({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
+  const { devPremiumOverride, setDevPremiumOverride } = useDevPremium();
+  const { favoriteToolMode, setFavoriteToolMode } = useUserPreferences();
 
   if (!SHOW_DEV_FAB) {return null;}
 
@@ -91,14 +102,14 @@ export default function DevFab({
             <TouchableOpacity
               style={[
                 styles.toggleButton,
-                !isPremiumMode && styles.toggleButtonActive,
+                !devPremiumOverride && styles.toggleButtonActive,
               ]}
-              onPress={() => handleOptionPress(() => onPremiumChange(false))}
+              onPress={() => handleOptionPress(() => setDevPremiumOverride(false))}
             >
               <Text
                 style={[
                   styles.toggleText,
-                  !isPremiumMode && styles.toggleTextActive,
+                  !devPremiumOverride && styles.toggleTextActive,
                 ]}
               >
                 Free
@@ -107,14 +118,14 @@ export default function DevFab({
             <TouchableOpacity
               style={[
                 styles.toggleButton,
-                isPremiumMode && styles.toggleButtonActive,
+                devPremiumOverride && styles.toggleButtonActive,
               ]}
-              onPress={() => handleOptionPress(() => onPremiumChange(true))}
+              onPress={() => handleOptionPress(() => setDevPremiumOverride(true))}
             >
               <Text
                 style={[
                   styles.toggleText,
-                  isPremiumMode && styles.toggleTextActive,
+                  devPremiumOverride && styles.toggleTextActive,
                 ]}
               >
                 Premium
@@ -126,7 +137,7 @@ export default function DevFab({
         {/* Status */}
         <View style={styles.statusRow}>
           <Text style={styles.statusText}>
-            {isPremiumMode ? '⭐ Premium' : '🆓 Free'}
+            {devPremiumOverride ? '⭐ Premium' : '🆓 Free'}
           </Text>
         </View>
 
@@ -184,6 +195,31 @@ export default function DevFab({
             )}
           </View>
         )}
+
+        {/* Favorite Tool Selector */}
+        <View style={styles.menuSection}>
+          <Text style={styles.menuLabel}>Favorite Tool</Text>
+          <View style={styles.selectRow}>
+            {FAVORITE_TOOL_OPTIONS.map(option => (
+              <TouchableOpacity
+                key={option.value}
+                style={[
+                  styles.selectOption,
+                  favoriteToolMode === option.value && styles.selectOptionActive
+                ]}
+                onPress={() => handleOptionPress(() => setFavoriteToolMode(option.value))}
+                activeOpacity={0.7}
+              >
+                <Text style={[
+                  styles.selectText,
+                  favoriteToolMode === option.value && styles.selectTextActive
+                ]}>
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </Animated.View>
     </View>
   );
@@ -330,11 +366,35 @@ const styles = StyleSheet.create({
   toggleTextActive: {
     color: devColors.white,
   },
+
+  selectRow: {
+    flexDirection: 'column',
+    gap: 6,
+  },
+
+  selectOption: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: devColors.devBgSecondary,
+  },
+
+  selectOptionActive: {
+    backgroundColor: devColors.primary,
+  },
+
+  selectText: {
+    fontSize: 13,
+    color: devColors.textSecondary,
+  },
+
+  selectTextActive: {
+    color: devColors.white,
+    fontWeight: fontWeights.semibold,
+  },
 });
 
 DevFab.propTypes = {
-  isPremiumMode: PropTypes.bool.isRequired,
-  onPremiumChange: PropTypes.func.isRequired,
   onResetOnboarding: PropTypes.func,
   onGoToApp: PropTypes.func,
   onResetTimerConfig: PropTypes.func,
