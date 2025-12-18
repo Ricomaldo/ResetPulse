@@ -1,24 +1,21 @@
 // src/screens/TimerScreen.jsx
 import { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Animated, PanResponder, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../contexts/TimerPaletteContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { useScreenOrientation } from '../hooks/useScreenOrientation';
-import { Drawer } from '../components/layout';
+import { DialZone, AsideZone } from '../components/layout';
 import { TimeTimer, ActivityLabel, DigitalTimer } from '../components/dial';
 import { CommandBar, CarouselBar } from '../components/bars';
-import OptionsDrawerContent from '../components/drawers/OptionsDrawerContent';
-import SettingsButton from '../components/drawers/SettingsButton';
 import useAnimatedDots from '../hooks/useAnimatedDots';
 import { TwoTimersModal, PremiumModal, SettingsModal } from '../components/modals';
 import { rs } from '../styles/responsive';
 import analytics from '../services/analytics';
+import { devColors } from '../theme/colors';
 import { getDialMode } from '../components/dial/timerConstants';
-
-const SWIPE_THRESHOLD = 50;
 
 function TimerScreenContent() {
   const theme = useTheme();
@@ -46,29 +43,10 @@ function TimerScreenContent() {
   const [displayMessage, setDisplayMessage] = useState('');
   const [isTimerCompleted, setIsTimerCompleted] = useState(false);
   const timerRef = useRef(null);
-  const dialWrapperRef = useRef(null);
-  const dialLayoutRef = useRef(null);
-  const pillBounceRef = useRef(new Animated.Value(0)).current;
   const animatedDots = useAnimatedDots(
     currentActivity?.pulseDuration || 800,
     displayMessage !== ''
   );
-
-  // Micro-bounce animation on mount (once only)
-  useEffect(() => {
-    Animated.sequence([
-      Animated.timing(pillBounceRef, {
-        toValue: -15,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(pillBounceRef, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
 
   // Keep screen awake during timer
   useTimerKeepAwake();
@@ -90,63 +68,21 @@ function TimerScreenContent() {
     container: {
       flex: 1,
     },
+    digitalTimerZone: {
+      height: rs(64), // Zone dédiée au digitalTimer (inclut padding)
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    dialCenteredZone: {
+      flex: 1, // Prend l'espace restant de dialZone
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     dialContainer: {
       alignItems: 'center',
-      flex: 1, // Takes remaining space, centers dial naturally
       justifyContent: 'center',
-    },
-    digitalTimerContainer: {
-      alignItems: 'center',
-      alignSelf: 'center',
-      bottom: rs(8),
-      height: rs(48),
-      justifyContent: 'center',
-      position: 'absolute',
-    },
-    footerZone: {
-      alignItems: 'center',
-      height: rs(60, 'height'),
-      justifyContent: 'center',
-      position: 'relative',
-      width: '100%',
     },
   });
-
-  // Helper to check if touch is within dial bounds
-  const isTouchInDial = (evt) => {
-    if (!dialLayoutRef.current) {
-      return false;
-    }
-
-    const { pageX, pageY } = evt.nativeEvent;
-    const { x, y, width: dialWidth, height: dialHeight } = dialLayoutRef.current;
-
-    return pageX >= x && pageX <= x + dialWidth && pageY >= y && pageY <= y + dialHeight;
-  };
-
-  // Swipe up gesture to reveal options drawer (but not when touching dial)
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: (evt) => {
-        if (isTouchInDial(evt)) {
-          return false; // Let dial handle its own gestures
-        }
-        return !isTimerRunning && !optionsDrawerVisible;
-      },
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        if (isTouchInDial(evt)) {
-          return false; // Let dial handle its own gestures
-        }
-        return !isTimerRunning && !optionsDrawerVisible && gestureState.dy < -10; // Swipe UP (negative dy)
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy < -SWIPE_THRESHOLD) {
-          // Swipe UP
-          setOptionsDrawerVisible(true);
-        }
-      },
-    })
-  ).current;
 
   // Handle dial tap = start/pause
   const handleDialTap = () => {
@@ -181,16 +117,6 @@ function TimerScreenContent() {
         timerRef.current.setDuration(cappedDuration);
         setTimerRemaining(cappedDuration);
       }
-    }
-  };
-
-  // Capture dial wrapper layout for gesture detection
-  const handleDialRef = (ref) => {
-    dialWrapperRef.current = ref;
-    if (ref) {
-      ref.measureInWindow((x, y, width, height) => {
-        dialLayoutRef.current = { x, y, width, height };
-      });
     }
   };
 
@@ -249,65 +175,14 @@ function TimerScreenContent() {
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       edges={['top', 'bottom']}
-      {...panResponder.panHandlers}
     >
-      {/* LANDSCAPE MODE: ZEN ABSOLUTE - Only dial visible */}
-      {!isLandscape && (
+        {/* LANDSCAPE MODE: ZEN ABSOLUTE - Only dial visible */}
+        {!isLandscape && (
         <>
-          {/* Activity Label - Top */}
-          {currentActivity && currentActivity.id !== 'none' && (
-            <ActivityLabel
-              emoji={currentActivity.emoji}
-              label={currentActivity.label}
-              animatedDots={animatedDots}
-              displayMessage={displayMessage}
-              isCompleted={isTimerCompleted}
-            />
-          )}
-
-          {/* Dial - Below label (flex: 1, centered) */}
-          <View style={styles.dialContainer}>
-            <TimeTimer
-              onRunningChange={setIsTimerRunning}
-              onTimerRef={(ref) => {
-                timerRef.current = ref;
-                if (ref) {
-                  setTimerRemaining(ref.remaining || ref.duration || 0);
-                }
-              }}
-              onDialRef={handleDialRef}
-              onDialTap={handleDialTap}
-              onTimerComplete={handleTimerComplete}
-            />
-          </View>
-
-          {/* Command Bar - Below dial */}
-          <CommandBar
-            commandBarConfig={commandBarConfig}
-            isTimerRunning={isTimerRunning}
-            onPlayPause={handlePlayPause}
-            onReset={handleReset}
-            onSelectPreset={handlePresetSelect}
-          />
-
-          {/* Carousel Bar - Bottom */}
-          <CarouselBar
-            carouselBarConfig={carouselBarConfig}
-            isTimerRunning={isTimerRunning}
-            drawerVisible={optionsDrawerVisible}
-          />
-
-          {/* Digital Timer - Absolute bottom */}
-          <View style={styles.footerZone}>
-            {/* Digital Timer ou Mini Toggle */}
-            <Animated.View
-              style={[
-                styles.digitalTimerContainer,
-                {
-                  transform: [{ translateY: pillBounceRef }],
-                },
-              ]}
-            >
+          {/* DIAL ZONE - Layout vertical : DigitalTimer (haut) + Dial (centre) */}
+          <DialZone>
+            {/* Zone DigitalTimer - Hauteur fixe */}
+            <View style={styles.digitalTimerZone}>
               <TouchableOpacity
                 onPress={handleToggleDigitalTimer}
                 activeOpacity={0.8}
@@ -321,33 +196,61 @@ function TimerScreenContent() {
                   pulseDuration={currentActivity?.pulseDuration || 800}
                 />
               </TouchableOpacity>
-            </Animated.View>
-          </View>
-        </>
-      )}
+            </View>
 
-      {/* Options Drawer (from bottom) - 2 carousels + Settings footer */}
-      {/* Hidden in landscape mode for zen experience */}
-      {!isLandscape && (
-        <Drawer
-          visible={optionsDrawerVisible}
-          onClose={() => setOptionsDrawerVisible(false)}
-          direction="bottom"
-          height={0.26}
-          footerContent={
-            <SettingsButton
-              onPress={() => {
-                setOptionsDrawerVisible(false);
-                setSettingsModalVisible(true);
-              }}
-            />
-          }
-        >
-          <OptionsDrawerContent
-            onSelectPreset={handlePresetSelect}
+            {/* Zone Dial centré - Prend l'espace restant */}
+            <View style={styles.dialCenteredZone}>
+              <View style={styles.dialContainer}>
+                <TimeTimer
+                  onRunningChange={setIsTimerRunning}
+                  onTimerRef={(ref) => {
+                    timerRef.current = ref;
+                    if (ref) {
+                      setTimerRemaining(ref.remaining || ref.duration || 0);
+                    }
+                  }}
+                  onDialTap={handleDialTap}
+                  onTimerComplete={handleTimerComplete}
+                />
+              </View>
+            </View>
+          </DialZone>
+
+          {/* ASIDE ZONE - ActivityLabel + Drawer intégré (ADR-005) */}
+          <AsideZone
             drawerVisible={optionsDrawerVisible}
-          />
-        </Drawer>
+            onDrawerClose={() => setOptionsDrawerVisible(false)}
+            onDrawerOpen={() => setOptionsDrawerVisible(true)}
+            onOpenSettings={() => setSettingsModalVisible(true)}
+          >
+            {/* Activity Label - Visible quand drawer fermé */}
+            {currentActivity && currentActivity.id !== 'none' && (
+              <ActivityLabel
+                emoji={currentActivity.emoji}
+                label={currentActivity.label}
+                animatedDots={animatedDots}
+                displayMessage={displayMessage}
+                isCompleted={isTimerCompleted}
+              />
+            )}
+
+            {/* Command Bar - TODO: migrer dans drawer (M3) */}
+            {/* <CommandBar
+              commandBarConfig={commandBarConfig}
+              isTimerRunning={isTimerRunning}
+              onPlayPause={handlePlayPause}
+              onReset={handleReset}
+              onSelectPreset={handlePresetSelect}
+            /> */}
+
+            {/* Carousel Bar - TODO: migrer dans drawer (M3) */}
+            {/* <CarouselBar
+              carouselBarConfig={carouselBarConfig}
+              isTimerRunning={isTimerRunning}
+              drawerVisible={optionsDrawerVisible}
+            /> */}
+          </AsideZone>
+        </>
       )}
 
       {/* Two Timers Reminder Modal (ADR-003) */}
