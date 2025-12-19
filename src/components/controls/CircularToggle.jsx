@@ -25,9 +25,10 @@ const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle,
   // Map numeric size to IconButton size preset
   const buttonSize = size < 35 ? 'small' : size < 50 ? 'medium' : 'large';
 
+  // Icon shows current state (témoin): inverted because visual matches timer direction
   return (
     <IconButton
-      icon={clockwise ? 'rotateCw' : 'rotateCcw'}
+      icon={clockwise ? 'rotateCcw' : 'rotateCw'}
       variant="ghost"
       size={buttonSize}
       shape="circular"

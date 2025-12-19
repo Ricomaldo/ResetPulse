@@ -356,19 +356,19 @@ const PulseButton = React.memo(function PulseButton({
     progressOverlay: {
       position: 'absolute',
       // STOP: Inverse direction of timer (rewind effect)
-      // scaleY(-1) mirrors vertically = reverses stroke direction
-      // rotate(-90deg) starts from top
+      // When clockwise=true, timer goes CW, so STOP should go CCW (scaleY=1 = CCW due to stroke direction)
       transform: [
         { rotate: '-90deg' },
-        { scaleY: clockwise ? -1 : 1 }, // Inverse of timer direction
+        { scaleY: clockwise ? 1 : -1 },
       ],
     },
     progressOverlayStart: {
       position: 'absolute',
       // START: Same direction as timer (winding up effect)
+      // When clockwise=true, timer goes CW, so START should go CW (scaleY=-1 = CW due to stroke direction)
       transform: [
         { rotate: '-90deg' },
-        { scaleY: clockwise ? 1 : -1 }, // Same as timer direction
+        { scaleY: clockwise ? -1 : 1 },
       ],
     },
     // Halo styles (expanding rings from center)
