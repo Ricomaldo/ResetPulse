@@ -2,10 +2,12 @@
  * @fileoverview Timer dial component with drag/tap interaction
  * Orchestrates dial sub-components for visual timer display
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-19 - Migrated from PanResponder to Gesture API (RNGH v2)
  */
-import React, { useMemo, useRef, useState } from 'react';
-import { View, PanResponder, StyleSheet } from 'react-native';
+import React, { useMemo, useRef, useState, useCallback } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS } from 'react-native-reanimated';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useDialOrientation } from '../../hooks/useDialOrientation';
@@ -47,7 +49,7 @@ function TimerDial({
   size = null,
   clockwise = false,
   scaleMode = '60min',
-  activityEmoji = null,
+  activityEmoji: _activityEmoji = null, // Legacy prop, now using currentActivity.emoji
   isRunning = false,
   showActivityEmoji = true,
   onGraduationTap = null,
@@ -68,7 +70,7 @@ function TimerDial({
   // Calculate responsive sizes
   const circleSize = size || rs(280, 'min');
   const svgSize = circleSize + TIMER_SVG.PADDING;
-  const radiusOuter = (circleSize / 2); // Radius for graduations (outer)
+  const radiusOuter = circleSize / 2; // Radius for graduations (outer)
   const radiusBackground = radiusOuter - DIAL_LAYOUT.BACKGROUND_OFFSET; // Cercle blanc (laisse espace pour graduations)
   const strokeWidth = TIMER_SVG.STROKE_WIDTH;
   const centerX = svgSize / 2;
@@ -86,7 +88,7 @@ function TimerDial({
   // Get graduation marks and numbers from centralized logic
   const graduationMarks = useMemo(() => {
     const marks = dial.getGraduationMarks(radiusBackground, centerX, centerY); // Sur le cercle blanc
-    return marks.map(mark => ({
+    return marks.map((mark) => ({
       ...mark,
       strokeWidth: mark.isMajor ? TIMER_VISUAL.TICK_WIDTH_MAJOR : TIMER_VISUAL.TICK_WIDTH_MINOR,
       opacity: mark.isMajor ? TIMER_VISUAL.TICK_OPACITY_MAJOR : TIMER_VISUAL.TICK_OPACITY_MINOR,
@@ -101,186 +103,164 @@ function TimerDial({
       x: pos.x,
       y: pos.y,
       minute: pos.value,
-      fontSize: Math.max(TIMER_PROPORTIONS.MIN_NUMBER_FONT, circleSize * TIMER_PROPORTIONS.NUMBER_FONT_RATIO),
+      fontSize: Math.max(
+        TIMER_PROPORTIONS.MIN_NUMBER_FONT,
+        circleSize * TIMER_PROPORTIONS.NUMBER_FONT_RATIO
+      ),
     }));
   }, [dial, radiusBackground, centerX, centerY, circleSize]);
 
-  // Pan responder for drag interaction + tap detection
-  const gestureStartTimeRef = useRef(null);
-  const gestureStartPosRef = useRef(null);
-
   // Calculate center zone for gesture exclusion
   const centerZoneRadius = radiusBackground * DIAL_LAYOUT.CENTER_ZONE_RATIO;
+  const outerZoneMinRadius = radiusBackground * DIAL_LAYOUT.OUTER_ZONE_MIN_RATIO;
 
-  const panResponder = useMemo(() =>
-    PanResponder.create({
-      // Ne pas capturer les touches dans la zone centre (laisse passer à PulseButton)
-      onStartShouldSetPanResponder: (evt) => {
-        const touchX = evt.nativeEvent.locationX;
-        const touchY = evt.nativeEvent.locationY;
-        const distanceFromCenter = Math.sqrt(
-          Math.pow(touchX - centerX, 2) + Math.pow(touchY - centerY, 2)
-        );
-        // Exclure la zone centre pour laisser PulseButton gérer ses propres gestes
-        return distanceFromCenter > centerZoneRadius;
-      },
-      onMoveShouldSetPanResponder: () => !!onGraduationTap, // Allow drag anytime (even when running for skipping ahead)
+  // === JS CALLBACKS (called from worklets via runOnJS) ===
+  // All gesture logic runs on JS thread because dial methods require JS
 
-      onPanResponderGrant: (evt) => {
-        gestureStartTimeRef.current = Date.now();
-        gestureStartPosRef.current = {
-          x: evt.nativeEvent.locationX,
-          y: evt.nativeEvent.locationY,
-        };
+  // Handler for pan gesture start
+  const handlePanStart = useCallback((touchX, touchY) => {
+    const distanceFromCenter = Math.sqrt(
+      Math.pow(touchX - centerX, 2) + Math.pow(touchY - centerY, 2)
+    );
 
-        setIsDragging(true);
+    // Ignore touches in center zone (let PulseButton handle them)
+    if (distanceFromCenter <= centerZoneRadius) {
+      return false;
+    }
 
-        // Calculate where the user touched
-        const touchMinutes = dial.coordinatesToMinutes(
-          evt.nativeEvent.locationX,
-          evt.nativeEvent.locationY,
-          centerX,
-          centerY
-        );
+    setIsDragging(true);
 
-        // Calculate current timer value in minutes
-        const currentMinutesValue = duration / 60;
+    // Calculate where the user touched
+    const touchMinutes = dial.coordinatesToMinutes(touchX, touchY, centerX, centerY);
+    const currentMinutesValue = duration / 60;
 
-        // Store the offset between touch position and current value
-        dragOffsetRef.current = currentMinutesValue - touchMinutes;
+    // Store references for drag tracking
+    dragOffsetRef.current = currentMinutesValue - touchMinutes;
+    lastMinutesRef.current = currentMinutesValue;
+    lastTouchMinutesRef.current = touchMinutes;
+    lastMoveTimeRef.current = Date.now();
 
-        // Store references for wrap-around detection
-        lastMinutesRef.current = currentMinutesValue;
-        lastTouchMinutesRef.current = touchMinutes;
-        lastMoveTimeRef.current = Date.now();
-      },
+    return true;
+  }, [dial, duration, centerX, centerY, centerZoneRadius]);
 
-      onPanResponderMove: (evt) => {
-        // Calculate where the user is touching now
-        const touchMinutes = dial.coordinatesToMinutes(
-          evt.nativeEvent.locationX,
-          evt.nativeEvent.locationY,
-          centerX,
-          centerY
-        );
+  // Handler for pan gesture update (must be in JS thread for dial methods)
+  const handlePanUpdate = useCallback((touchX, touchY) => {
+    // Calculate where the user is touching now
+    const touchMinutes = dial.coordinatesToMinutes(touchX, touchY, centerX, centerY);
+    const maxMinutes = dial.maxMinutes;
 
-        const maxMinutes = dial.maxMinutes;
+    // Check if touch position wrapped around
+    let touchDelta = 0;
+    if (lastTouchMinutesRef.current !== null) {
+      touchDelta = touchMinutes - lastTouchMinutesRef.current;
 
-        // Check if touch position wrapped around
-        let touchDelta = 0;
-        if (lastTouchMinutesRef.current !== null) {
-          touchDelta = touchMinutes - lastTouchMinutesRef.current;
-
-          // If touch jumped more than half the dial, it wrapped
-          if (Math.abs(touchDelta) > maxMinutes / 2) {
-            // Adjust the delta to represent the actual movement
-            if (touchDelta > 0) {
-              // Wrapped counter-clockwise (60→0)
-              touchDelta = touchDelta - maxMinutes;
-            } else {
-              // Wrapped clockwise (0→60)
-              touchDelta = touchDelta + maxMinutes;
-            }
-          }
+      // If touch jumped more than half the dial, it wrapped
+      if (Math.abs(touchDelta) > maxMinutes / 2) {
+        if (touchDelta > 0) {
+          touchDelta = touchDelta - maxMinutes;
+        } else {
+          touchDelta = touchDelta + maxMinutes;
         }
+      }
+    }
 
-        // Calculate velocity for dynamic resistance
-        const now = Date.now();
-        const deltaTime = Math.max(1, now - (lastMoveTimeRef.current || now));
-        const velocity = Math.abs(touchDelta) / (deltaTime / 1000); // minutes per second
+    // Calculate velocity for dynamic resistance
+    const now = Date.now();
+    const deltaTime = Math.max(1, now - (lastMoveTimeRef.current || now));
+    const velocity = Math.abs(touchDelta) / (deltaTime / 1000);
 
-        // Apply dynamic resistance based on velocity
-        // Faster movements get more resistance for smoother control
-        const velocityFactor = Math.min(1, velocity / DRAG.VELOCITY_THRESHOLD);
-        const dynamicResistance = DRAG.BASE_RESISTANCE - (velocityFactor * DRAG.VELOCITY_REDUCTION);
+    // Apply dynamic resistance based on velocity
+    const velocityFactor = Math.min(1, velocity / DRAG.VELOCITY_THRESHOLD);
+    const dynamicResistance = DRAG.BASE_RESISTANCE - velocityFactor * DRAG.VELOCITY_REDUCTION;
 
-        // Apply ease-out curve for natural deceleration
-        const easedResistance = DRAG.BASE_RESISTANCE * easeOut(dynamicResistance / DRAG.BASE_RESISTANCE);
-        const resistedDelta = touchDelta * easedResistance;
+    // Apply ease-out curve for natural deceleration
+    const easedResistance = DRAG.BASE_RESISTANCE * easeOut(dynamicResistance / DRAG.BASE_RESISTANCE);
+    const resistedDelta = touchDelta * easedResistance;
 
-        // Update time reference
-        lastMoveTimeRef.current = now;
+    // Update time reference
+    lastMoveTimeRef.current = now;
 
-        // Calculate new value based on last value plus resisted delta
-        let newMinutes = lastMinutesRef.current + resistedDelta;
+    // Calculate new value based on last value plus resisted delta
+    let newMinutes = lastMinutesRef.current + resistedDelta;
+    newMinutes = Math.max(0, Math.min(maxMinutes, newMinutes));
 
-        // Critical: Clamp to valid range to prevent any jumps
-        newMinutes = Math.max(0, Math.min(maxMinutes, newMinutes));
+    // Update the timer with smooth position (no snap during drag)
+    onGraduationTap?.(newMinutes, false);
 
-        // Update the timer with smooth position (no snap during drag)
-        onGraduationTap?.(newMinutes, false); // false = dragging, no snap
+    // Update references
+    lastMinutesRef.current = newMinutes;
+    lastTouchMinutesRef.current = touchMinutes;
+    dragOffsetRef.current = newMinutes - touchMinutes;
+  }, [dial, centerX, centerY, onGraduationTap]);
 
-        // Update references
-        lastMinutesRef.current = newMinutes;
-        lastTouchMinutesRef.current = touchMinutes;
+  // Handler for pan gesture end
+  const handlePanEnd = useCallback(() => {
+    // Apply snap on release
+    if (lastMinutesRef.current !== null) {
+      onGraduationTap?.(lastMinutesRef.current, true);
+    }
+    setIsDragging(false);
+    lastMinutesRef.current = null;
+    lastTouchMinutesRef.current = null;
+    lastMoveTimeRef.current = null;
+    dragOffsetRef.current = 0;
+  }, [onGraduationTap]);
 
-        // Adjust offset to maintain the drag relationship
-        dragOffsetRef.current = newMinutes - touchMinutes;
-      },
+  // Handler for tap on graduations
+  const handleTapOnGraduation = useCallback((tapX, tapY) => {
+    const distanceFromCenter = Math.sqrt(
+      Math.pow(tapX - centerX, 2) + Math.pow(tapY - centerY, 2)
+    );
 
-      onPanResponderRelease: (evt) => {
-        const now = Date.now();
-        const timeDelta = now - (gestureStartTimeRef.current || now);
-        const startPos = gestureStartPosRef.current;
+    // Only handle taps on graduation zone (outer ring)
+    if (distanceFromCenter > outerZoneMinRadius && onGraduationTap) {
+      const tappedMinutes = dial.coordinatesToMinutes(tapX, tapY, centerX, centerY);
+      onGraduationTap(tappedMinutes, true);
+    }
+  }, [dial, centerX, centerY, outerZoneMinRadius, onGraduationTap]);
 
-        // Calculate movement distance
-        let movementDistance = 0;
-        if (startPos) {
-          const dx = evt.nativeEvent.locationX - startPos.x;
-          const dy = evt.nativeEvent.locationY - startPos.y;
-          movementDistance = Math.sqrt(dx * dx + dy * dy);
-        }
+  // === GESTURE: Pan (Drag to adjust duration) ===
+  // All logic runs on JS thread via runOnJS (dial methods require JS)
 
-        // Detect tap: quick release (<200ms) with minimal movement (<10px)
-        const isTap = timeDelta < 200 && movementDistance < 10;
+  const panGesture = useMemo(() =>
+    Gesture.Pan()
+      .minDistance(10) // Minimum distance to start pan (differentiates from tap)
+      .onStart((event) => {
+        'worklet';
+        runOnJS(handlePanStart)(event.x, event.y);
+      })
+      .onUpdate((event) => {
+        'worklet';
+        runOnJS(handlePanUpdate)(event.x, event.y);
+      })
+      .onEnd(() => {
+        'worklet';
+        runOnJS(handlePanEnd)();
+      })
+      .onFinalize(() => {
+        'worklet';
+        runOnJS(handlePanEnd)();
+      }),
+  [handlePanStart, handlePanUpdate, handlePanEnd]
+  );
 
-        // Detect long press: held (>=500ms) with minimal movement (<10px)
-        const isLongPress = timeDelta >= 500 && movementDistance < 10;
+  // === GESTURE: Tap (on graduations to set duration) ===
 
-        // Calculate distance from center for tap zone detection
-        const tapX = evt.nativeEvent.locationX;
-        const tapY = evt.nativeEvent.locationY;
-        const distanceFromCenter = Math.sqrt(
-          Math.pow(tapX - centerX, 2) + Math.pow(tapY - centerY, 2)
-        );
+  const tapGesture = useMemo(() =>
+    Gesture.Tap()
+      .maxDuration(200) // Quick tap only
+      .onEnd((event) => {
+        'worklet';
+        runOnJS(handleTapOnGraduation)(event.x, event.y);
+      }),
+  [handleTapOnGraduation]
+  );
 
-        // Define tap zones
-        const centerZoneRadius = radiusBackground * DIAL_LAYOUT.CENTER_ZONE_RATIO;
-        const outerZoneMinRadius = radiusBackground * DIAL_LAYOUT.OUTER_ZONE_MIN_RATIO;
-        const isTapOnCenter = distanceFromCenter < centerZoneRadius;
-        const isTapOnGraduation = distanceFromCenter > outerZoneMinRadius;
-
-        // Apply snap on release (but not for tap or long press)
-        if (!isTap && !isLongPress && onGraduationTap && lastMinutesRef.current !== null) {
-          // This is a drag release - apply subtle snap
-          onGraduationTap(lastMinutesRef.current, true); // true = release, apply snap
-        }
-
-        // Handle tap or long press based on zone
-        if (isLongPress && onDialLongPress) {
-          onDialLongPress();
-        } else if (isTap) {
-          if (isTapOnGraduation && onGraduationTap) {
-            // Tap on graduation/number - set duration to that time
-            const tappedMinutes = dial.coordinatesToMinutes(tapX, tapY, centerX, centerY);
-            onGraduationTap(tappedMinutes, true); // true = apply snap
-          } else if (isTapOnCenter && onDialTap) {
-            // Tap on center - start/pause timer
-            onDialTap();
-          }
-          // Middle zone (between center and graduations) - do nothing
-        }
-
-        setIsDragging(false);
-        lastMinutesRef.current = null;
-        lastTouchMinutesRef.current = null;
-        lastMoveTimeRef.current = null;
-        dragOffsetRef.current = 0;
-        gestureStartTimeRef.current = null;
-        gestureStartPosRef.current = null;
-      },
-    }),
-  [dial, isRunning, onGraduationTap, onDialTap, onDialLongPress, duration, clockwise, centerX, centerY, radiusBackground, centerZoneRadius]
+  // === COMPOSED GESTURE ===
+  // Race: First gesture to activate wins, others are cancelled
+  const composedGesture = useMemo(() =>
+    Gesture.Race(panGesture, tapGesture),
+  [panGesture, tapGesture]
   );
 
   // Use provided color or default energy color
@@ -293,7 +273,7 @@ function TimerDial({
   // Build accessibility label
   const dialAccessibilityLabel = t('accessibility.timer.dial', {
     minutes: durationMinutes,
-    activity: activityName
+    activity: activityName,
   });
 
   // Build accessibility hint
@@ -307,16 +287,22 @@ function TimerDial({
   const scaledProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
   const isZeroState = !isRunning && remaining === 0;
 
-  // Compute handle position on the draggable side of the arc
-  // Place the handle on the outer edge (radiusBackground) where graduation marks end
+  // Compute needle and handle position on the draggable side of the arc
   const handleAngleDeg = scaledProgress * 360;
   const handleAngleRad = (handleAngleDeg * Math.PI) / 180;
-  // Position on the outer edge (radiusBackground) for better visibility and affordance
-  const handleDistance = radiusBackground;
+  // Needle extends to the edge of the dial (minus stroke width)
+  const needleDistance = radiusBackground - strokeWidth;
+  // Handle positioned at 2/3 of the radius
+  const handleDistance = needleDistance * (2 / 3);
   const handleX = clockwise
     ? centerX + handleDistance * Math.sin(handleAngleRad)
     : centerX - handleDistance * Math.sin(handleAngleRad);
   const handleY = centerY - handleDistance * Math.cos(handleAngleRad);
+  // Needle endpoint (for visual reference)
+  const needleEndX = clockwise
+    ? centerX + needleDistance * Math.sin(handleAngleRad)
+    : centerX - needleDistance * Math.sin(handleAngleRad);
+  const needleEndY = centerY - needleDistance * Math.cos(handleAngleRad);
 
   // Static styles (moved outside render for performance)
   const staticStyles = StyleSheet.create({
@@ -329,178 +315,205 @@ function TimerDial({
   });
 
   // Dynamic style memoized
-  const svgContainerStyle = useMemo(() => ({
-    alignItems: 'center',
-    height: svgSize,
-    justifyContent: 'center',
-    width: svgSize,
-  }), [svgSize]);
+  const svgContainerStyle = useMemo(
+    () => ({
+      alignItems: 'center',
+      height: svgSize,
+      justifyContent: 'center',
+      width: svgSize,
+    }),
+    [svgSize]
+  );
 
   return (
     <View style={staticStyles.root}>
-      <View
-        {...panResponder.panHandlers}
-        style={svgContainerStyle}
-        accessible={true}
-        accessibilityRole={isRunning ? 'timer' : 'adjustable'}
-        accessibilityLabel={dialAccessibilityLabel}
-        accessibilityHint={dialAccessibilityHint}
-        accessibilityValue={{
-          min: 0,
-          max: getDialMode(scaleMode).maxMinutes,
-          now: durationMinutes,
-          text: `${durationMinutes} minutes`
-        }}
-        accessibilityActions={!isRunning ? [
-          { name: 'increment', label: 'Increase duration' },
-          { name: 'decrement', label: 'Decrease duration' },
-          { name: 'activate', label: 'Start timer' },
-        ] : [
-          { name: 'activate', label: 'Pause timer' },
-        ]}
-        onAccessibilityAction={(event) => {
-          const { actionName } = event.nativeEvent;
-          if (actionName === 'increment' && onGraduationTap && !isRunning) {
-            const newDuration = Math.min(duration + 60, getDialMode(scaleMode).maxMinutes * 60);
-            onGraduationTap(newDuration / 60, true); // true = apply snap (increment is discrete action)
-          } else if (actionName === 'decrement' && onGraduationTap && !isRunning) {
-            const newDuration = Math.max(0, duration - 60);
-            onGraduationTap(newDuration / 60, true); // true = apply snap (decrement is discrete action)
-          } else if (actionName === 'activate' && onDialTap) {
-            onDialTap();
+      <GestureDetector gesture={composedGesture}>
+        <View
+          style={svgContainerStyle}
+          accessible={true}
+          accessibilityRole={isRunning ? 'timer' : 'adjustable'}
+          accessibilityLabel={dialAccessibilityLabel}
+          accessibilityHint={dialAccessibilityHint}
+          accessibilityValue={{
+            min: 0,
+            max: getDialMode(scaleMode).maxMinutes,
+            now: durationMinutes,
+            text: `${durationMinutes} minutes`,
+          }}
+          accessibilityActions={
+            !isRunning
+              ? [
+                { name: 'increment', label: 'Increase duration' },
+                { name: 'decrement', label: 'Decrease duration' },
+                { name: 'activate', label: 'Start timer' },
+              ]
+              : [{ name: 'activate', label: 'Pause timer' }]
           }
-        }}
-      >
-        {/* Base layer: static elements (background circle + numbers) */}
-        <DialBase
-          svgSize={svgSize}
-          centerX={centerX}
-          centerY={centerY}
-          radius={radiusBackground}
-          strokeWidth={strokeWidth}
-          minuteNumbers={minuteNumbers}
-          showNumbers={showNumbers}
-          color={color}
-        />
+          onAccessibilityAction={(event) => {
+            const { actionName } = event.nativeEvent;
+            if (actionName === 'increment' && onGraduationTap && !isRunning) {
+              const newDuration = Math.min(duration + 60, getDialMode(scaleMode).maxMinutes * 60);
+              onGraduationTap(newDuration / 60, true);
+            } else if (actionName === 'decrement' && onGraduationTap && !isRunning) {
+              const newDuration = Math.max(0, duration - 60);
+              onGraduationTap(newDuration / 60, true);
+            } else if (actionName === 'activate' && onDialTap) {
+              onDialTap();
+            }
+          }}
+        >
+          {/* Base layer: static elements (background circle + numbers) */}
+          <DialBase
+            svgSize={svgSize}
+            centerX={centerX}
+            centerY={centerY}
+            radius={radiusBackground}
+            strokeWidth={strokeWidth}
+            minuteNumbers={minuteNumbers}
+            showNumbers={showNumbers}
+            color={color}
+          />
 
-        {/* Progress layer: animated arc */}
-        {/* IMPORTANT: Scale progress based on dial mode */}
-        <DialProgress
-          svgSize={svgSize}
-          centerX={centerX}
-          centerY={centerY}
-          outerRadius={radiusBackground}
-          strokeWidth={strokeWidth}
-          progress={scaledProgress}
-          color={arcColor}
-          isClockwise={clockwise}
-          scaleMode={scaleMode}
-          animatedColor={isCompleted ? COLORS.COMPLETION_GREEN : null}
-          isRunning={isRunning}
-        />
+          {/* Progress layer: animated arc */}
+          {/* IMPORTANT: Scale progress based on dial mode */}
+          <DialProgress
+            svgSize={svgSize}
+            centerX={centerX}
+            centerY={centerY}
+            outerRadius={radiusBackground}
+            strokeWidth={strokeWidth}
+            progress={scaledProgress}
+            color={arcColor}
+            isClockwise={clockwise}
+            scaleMode={scaleMode}
+            animatedColor={isCompleted ? COLORS.COMPLETION_GREEN : null}
+            isRunning={isRunning}
+          />
 
-        {/* Graduation marks overlay: rendered above progress arc */}
-        <DialGraduations
-          svgSize={svgSize}
-          graduationMarks={graduationMarks}
-          showGraduations={showGraduations}
-        />
+          {/* Graduation marks overlay: rendered above progress arc */}
+          <DialGraduations
+            svgSize={svgSize}
+            graduationMarks={graduationMarks}
+            showGraduations={showGraduations}
+          />
 
-        {/* Zero-state radial segment from center to 12 o'clock (visual cue) */}
-        {isZeroState && (
-          <Svg width={svgSize} height={svgSize} style={staticStyles.absoluteOverlay} pointerEvents="none" accessible={false} importantForAccessibility="no">
-            <Line
-              x1={centerX}
-              y1={centerY}
-              x2={centerX}
-              y2={centerY - radiusBackground}
-              stroke={theme.colors.textSecondary}
-              strokeOpacity={0.5}
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-          </Svg>
-        )}
+          {/* Zero-state radial segment from center to 12 o'clock (visual cue) */}
+          {isZeroState && (
+            <Svg
+              width={svgSize}
+              height={svgSize}
+              style={staticStyles.absoluteOverlay}
+              pointerEvents="none"
+              accessible={false}
+              importantForAccessibility="no"
+            >
+              <Line
+                x1={centerX}
+                y1={centerY}
+                x2={centerX}
+                y2={centerY - radiusBackground}
+                stroke={theme.colors.textSecondary}
+                strokeOpacity={0.5}
+                strokeWidth={2}
+                strokeLinecap="round"
+              />
+            </Svg>
+          )}
 
-        {/* Drag handle indicator at the movable end of the arc */}
-        {!isRunning && (
-          <Svg width={svgSize} height={svgSize} style={staticStyles.absoluteOverlay} pointerEvents="none" accessible={false} importantForAccessibility="no">
-            {/* Needle/radius line from center to handle */}
-            <Line
-              x1={centerX}
-              y1={centerY}
-              x2={handleX}
-              y2={handleY}
-              stroke={theme.colors.brand.secondary}
-              strokeWidth={2}
-              strokeLinecap="round"
-              opacity={isDragging ? 1 : 0.7}
-            />
+          {/* Drag handle indicator at the movable end of the arc */}
+          {!isRunning && (
+            <Svg
+              width={svgSize}
+              height={svgSize}
+              style={staticStyles.absoluteOverlay}
+              pointerEvents="none"
+              accessible={false}
+              importantForAccessibility="no"
+            >
+              {/* Needle/radius line from center to edge of dial */}
+              <Line
+                x1={centerX}
+                y1={centerY}
+                x2={needleEndX}
+                y2={needleEndY}
+                stroke={theme.colors.brand.primary}
+                strokeWidth={2}
+                strokeLinecap="round"
+                opacity={isDragging ? 1 : 0.7}
+              />
 
-            {/* Glow / Shadow effect when dragging */}
-            {isDragging && (
+              {/* Glow / Shadow effect when dragging */}
+              {isDragging && (
+                <Circle
+                  cx={handleX}
+                  cy={handleY}
+                  r={rs(DIAL_LAYOUT.HANDLE_GLOW_SIZE)}
+                  fill={theme.colors.brand.secondary}
+                  opacity={0.2}
+                />
+              )}
+
+              {/* Outer border of the handle */}
               <Circle
                 cx={handleX}
                 cy={handleY}
-                r={rs(DIAL_LAYOUT.HANDLE_GLOW_SIZE)}
-                fill={theme.colors.brand.secondary}
-                opacity={0.2}
+                r={rs(DIAL_LAYOUT.HANDLE_SIZE)}
+                fill={theme.colors.fixed.transparent}
+                stroke={theme.colors.fixed.transparent}
+                strokeWidth={4}
+                opacity={1}
               />
-            )}
 
-            {/* Outer border of the handle */}
-            <Circle
-              cx={handleX}
-              cy={handleY}
-              r={rs(DIAL_LAYOUT.HANDLE_SIZE)}
-              fill={theme.colors.surface}
-              stroke={theme.colors.brand.secondary}
-              strokeWidth={2.5}
-              opacity={1}
-            />
+              {/* Inner dot for brand consistency */}
+              <Circle
+                cx={handleX}
+                cy={handleY}
+                r={rs(DIAL_LAYOUT.HANDLE_INNER_SIZE)}
+                fill={theme.colors.fixed.transparent}
+                opacity={isDragging ? 1 : 0.8}
+              />
+            </Svg>
+          )}
 
-            {/* Inner dot for brand consistency */}
-            <Circle
-              cx={handleX}
-              cy={handleY}
-              r={rs(DIAL_LAYOUT.HANDLE_INNER_SIZE)}
-              fill={theme.colors.brand.secondary}
-              opacity={isDragging ? 1 : 0.8}
-            />
-          </Svg>
-        )}
+          {/* Physical fixation dots - hide when PulseButton is displayed */}
+          {(showActivityEmoji || isRunning) && (
+            <Svg
+              width={svgSize}
+              height={svgSize}
+              style={staticStyles.absoluteOverlay}
+              pointerEvents="none"
+              accessible={false}
+              importantForAccessibility="no"
+            >
+              <Circle
+                cx={centerX}
+                cy={centerY}
+                r={radiusBackground * 0.08}
+                fill={theme.colors.neutral}
+                opacity={0.8}
+              />
+              <Circle
+                cx={centerX}
+                cy={centerY}
+                r={radiusBackground * 0.04}
+                fill={theme.colors.text}
+                opacity={0.4}
+              />
+            </Svg>
+          )}
 
-        {/* Physical fixation dots - hide when PulseButton is displayed */}
-        {(showActivityEmoji || isRunning) && (
-          <Svg width={svgSize} height={svgSize} style={staticStyles.absoluteOverlay} pointerEvents="none" accessible={false} importantForAccessibility="no">
-            <Circle
-              cx={centerX}
-              cy={centerY}
-              r={radiusBackground * 0.08}
-              fill={theme.colors.neutral}
-              opacity={0.8}
-            />
-            <Circle
-              cx={centerX}
-              cy={centerY}
-              r={radiusBackground * 0.04}
-              fill={theme.colors.text}
-              opacity={0.4}
-            />
-          </Svg>
-        )}
-
-        {/* Center layer: PulseButton (ADR-007) */}
-        <DialCenter
-          activityEmoji={showActivityEmoji ? activityEmoji : null}
-          isRunning={isRunning}
-          isCompleted={isCompleted}
-          onTap={onDialTap}
-          onLongPressComplete={onDialLongPress}
-          clockwise={clockwise}
-          size={circleSize * 0.25}
-        />
-      </View>
+          {/* Center layer: PulseButton (ADR-007) */}
+          <DialCenter
+            activity={showActivityEmoji ? currentActivity : null}
+            isRunning={isRunning}
+            isCompleted={isCompleted}
+            onTap={onDialTap}
+            onLongPressComplete={onDialLongPress}
+            clockwise={clockwise}
+            size={circleSize * 0.25}
+          />
+        </View>
+      </GestureDetector>
     </View>
   );
 }

@@ -5,8 +5,8 @@
  * @created 2025-12-19
  * @updated 2025-12-19
  */
-import React, { useRef, useMemo, useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import BottomSheet, {
   BottomSheetScrollView,
   useBottomSheet,
@@ -14,6 +14,9 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import useAnimatedDots from '../../hooks/useAnimatedDots';
+import { ActivityLabel } from '../dial';
 import { FavoriteToolBox, ToolBox } from './aside-content';
 import { SettingsPanel } from '../settings';
 
@@ -90,7 +93,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
         <Animated.View
           style={[
             styles.layerAbsolute,
-            { backgroundColor: 'transparent', height: LAYER_1_HEIGHT },
+            { backgroundColor: theme.colors.fixed.transparent, height: LAYER_1_HEIGHT },
             favoriteOpacityStyle,
           ]}
         >
@@ -107,7 +110,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
         <Animated.View
           style={[
             styles.layerAbsolute,
-            { backgroundColor: 'transparent' },
+            { backgroundColor: theme.colors.fixed.transparent },
             baseOpacityStyle,
           ]}
         >
@@ -126,7 +129,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
         <Animated.View
           style={[
             styles.layerAbsolute,
-            { backgroundColor: 'transparent' },
+            { backgroundColor: theme.colors.fixed.transparent },
             allOpacityStyle,
           ]}
         >
@@ -138,11 +141,18 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
 }
 
 /**
- * AsideZone - BottomSheet 3-snap (0=favorite, 1=toolbox, 2=all)
+ * AsideZone - BottomSheet 3-snap (0=favorite, 1=toolbox, 2=all) + ActivityLabel overlay
  */
-export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings }) {
+export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onSnapChange }) {
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
+  const { currentActivity } = useTimerOptions();
+
+  // Animated dots for activity label (pulses when timer running)
+  const animatedDots = useAnimatedDots(
+    currentActivity?.pulseDuration || 800,
+    displayMessage !== ''
+  );
 
   // Refs for carousels (for simultaneousHandlers)
   const activityCarouselRef = useRef(null);
@@ -171,60 +181,97 @@ export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, on
   }, [isTimerRunning]);
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      snapPoints={snapPoints}
-      index={0} // Start at 15% (favorite)
-      enablePanDownToClose={false} // Drawer permanent (no close state)
-      enableDynamicSizing={false} // Force snap points to be respected
-      onChange={(index) => {
-        console.log('[AsideZone] Snap changed to index:', index);
-        setCurrentSnapIndex(index);
-      }}
-      handleIndicatorStyle={{
-        backgroundColor: theme.colors.textSecondary,
-        width: 50,
-        height: 5,
-      }}
-      backgroundStyle={{
-        backgroundColor: theme.colors.surfaceElevated,
-      }}
-      style={{
-        ...theme.shadow('xl'),
-      }}
-      animationConfigs={animationConfigs}
-      simultaneousHandlers={[activityCarouselRef, paletteCarouselRef]}
-    >
-      <SheetContent
-        currentSnapIndex={currentSnapIndex}
-        isTimerRunning={isTimerRunning}
-        isTimerCompleted={isTimerCompleted}
-        onPlay={onPlay}
-        onReset={onReset}
-        onStop={onStop}
-        activityCarouselRef={activityCarouselRef}
-        paletteCarouselRef={paletteCarouselRef}
-      />
-    </BottomSheet>
+    <View style={styles.asideContainer}>
+      {/* ActivityLabel positioned at ~25% from bottom (absolute, outside BottomSheet) */}
+      {currentActivity && currentActivity.id !== 'none' && (
+        <View style={styles.labelOverlay}>
+          <ActivityLabel
+            label={currentActivity.label}
+            animatedDots={animatedDots}
+            displayMessage={displayMessage}
+            isCompleted={isCompleted}
+            flashActivity={flashActivity}
+          />
+        </View>
+      )}
+
+      {/* BottomSheet */}
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        index={0} // Start at 15% (favorite)
+        enablePanDownToClose={false} // Drawer permanent (no close state)
+        enableDynamicSizing={false} // Force snap points to be respected
+        onChange={(index) => {
+          if (__DEV__) {
+            console.warn('[AsideZone] Snap changed to index:', index);
+          }
+          setCurrentSnapIndex(index);
+          onSnapChange?.();
+        }}
+        handleIndicatorStyle={{
+          backgroundColor: theme.colors.textSecondary,
+          width: 50,
+          height: 5,
+        }}
+        backgroundStyle={{
+          backgroundColor: theme.colors.surfaceElevated,
+        }}
+        style={{
+          ...theme.shadow('xl'),
+        }}
+        animationConfigs={animationConfigs}
+        simultaneousHandlers={[activityCarouselRef, paletteCarouselRef]}
+      >
+        <SheetContent
+          currentSnapIndex={currentSnapIndex}
+          isTimerRunning={isTimerRunning}
+          isTimerCompleted={isTimerCompleted}
+          onPlay={onPlay}
+          onReset={onReset}
+          onStop={onStop}
+          activityCarouselRef={activityCarouselRef}
+          paletteCarouselRef={paletteCarouselRef}
+        />
+      </BottomSheet>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 16,
+  asideContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 50, // Above DialZone (which has no zIndex = default 0)
+    pointerEvents: 'box-none', // Let touches pass through to DialZone underneath
+  },
+  labelOverlay: {
+    alignItems: 'center',
+    bottom: SCREEN_HEIGHT * 0.28, // 28% from bottom (balanced between 25% too low, 32% too high)
+    justifyContent: 'center',
+    pointerEvents: 'none', // Don't capture touches (label is display-only)
+    position: 'absolute',
+    width: '100%',
+    zIndex: 0, // Behind BottomSheet (appears as background)
+  },
+  layerAbsolute: {
+    borderRadius: 12,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   layerContainer: {
     // Height animated: responsive based on screen size
     position: 'relative',
   },
-  layerAbsolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderRadius: 12,
+  scrollContent: {
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+    paddingTop: 8,
   },
 });
