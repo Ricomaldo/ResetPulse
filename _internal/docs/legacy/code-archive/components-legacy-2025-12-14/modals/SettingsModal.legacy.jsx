@@ -562,3 +562,5 @@ export default function SettingsModal({ visible, onClose }) {
     </Modal>
   );
 }
+
+

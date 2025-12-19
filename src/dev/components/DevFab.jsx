@@ -26,12 +26,10 @@ import { useUserPreferences } from '../../contexts/UserPreferencesContext';
  * @param {Function} onResetTooltip - Callback to reset drawer tooltip
  */
 const FAVORITE_TOOL_OPTIONS = [
-  { value: 'colors', label: '🎨 Couleurs' },
+  { value: 'commands', label: '⚡ Commandes' },
   { value: 'activities', label: '💻 Activités' },
-  { value: 'presets', label: '⏱️ Presets' },
-  { value: 'controls', label: '▶️ Controls' },
+  { value: 'colors', label: '🎨 Couleurs' },
   { value: 'none', label: '∅ Rien' },
-  { value: 'combo', label: '⚡ Presets+Controls' },
 ];
 
 export default function DevFab({
@@ -42,8 +40,13 @@ export default function DevFab({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
-  const { devPremiumOverride, setDevPremiumOverride } = useDevPremium();
+  const { devPremiumOverride, setDevPremiumOverride: setDevPremiumOverrideOriginal } = useDevPremium();
   const { favoriteToolMode, setFavoriteToolMode } = useUserPreferences();
+
+  // Wrapper for setting premium override
+  const setDevPremiumOverride = (value) => {
+    setDevPremiumOverrideOriginal(value);
+  };
 
   if (!SHOW_DEV_FAB) {return null;}
 

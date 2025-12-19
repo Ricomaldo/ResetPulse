@@ -194,10 +194,8 @@ export default function App() {
       <ThemeProvider>
         <PurchaseProvider>
           <ModalStackProvider>
-            <DevPremiumProvider>
-              <AppContent key={resetTrigger} />
-              <ModalStackRenderer />
-            </DevPremiumProvider>
+            <AppContent key={resetTrigger} />
+            <ModalStackRenderer />
           </ModalStackProvider>
         </PurchaseProvider>
       </ThemeProvider>
@@ -208,15 +206,17 @@ export default function App() {
   if (DEV_MODE && SHOW_DEV_FAB) {
     return (
       <UserPreferencesProvider>
-        <GestureHandlerRootView style={styles.container}>
-          {renderContent()}
-          <DevFab
-            onResetOnboarding={handleResetOnboarding}
-            onGoToApp={handleGoToApp}
-            onResetTimerConfig={handleResetTimerConfig}
-            onResetTooltip={handleResetTooltip}
-          />
-        </GestureHandlerRootView>
+        <DevPremiumProvider>
+          <GestureHandlerRootView style={styles.container}>
+            {renderContent()}
+            <DevFab
+              onResetOnboarding={handleResetOnboarding}
+              onGoToApp={handleGoToApp}
+              onResetTimerConfig={handleResetTimerConfig}
+              onResetTooltip={handleResetTooltip}
+            />
+          </GestureHandlerRootView>
+        </DevPremiumProvider>
       </UserPreferencesProvider>
     );
   }
@@ -224,9 +224,11 @@ export default function App() {
   // Production ou dev sans FAB: app normale
   return (
     <UserPreferencesProvider>
-      <GestureHandlerRootView style={styles.container}>
-        {renderContent()}
-      </GestureHandlerRootView>
+      <DevPremiumProvider>
+        <GestureHandlerRootView style={styles.container}>
+          {renderContent()}
+        </GestureHandlerRootView>
+      </DevPremiumProvider>
     </UserPreferencesProvider>
   );
 }

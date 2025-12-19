@@ -9,6 +9,7 @@ import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { rs } from '../../../styles/responsive';
 import haptics from '../../../utils/haptics';
+import Icons from '../../layout/Icons';
 
 /**
  * CircularToggle - Circular toggle button for rotation direction
@@ -51,9 +52,11 @@ const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle,
       accessibilityState={{ checked: clockwise }}
       accessibilityLabel={clockwise ? 'Sens horaire' : 'Sens anti-horaire'}
     >
-      <Text style={styles.icon}>
-        {clockwise ? '↻' : '↺'}
-      </Text>
+      <Icons
+        name={clockwise ? 'rotateCw' : 'rotateCcw'}
+        size={rs(size * 0.5, 'min')}
+        color={theme.colors.textSecondary}
+      />
     </TouchableOpacity>
   );
 });

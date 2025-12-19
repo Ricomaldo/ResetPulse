@@ -1,8 +1,8 @@
-# ADR-004 : Séparation Durée Timer et Échelle Cadran
+# ADR-004 : Gestion Durée et Cadran
 
-## Statut : VALIDÉ
-**Date :** 18 décembre 2025
-**Décideurs :** Eric + Chrysalis
+## Statut : VALIDÉ (v2)
+**Date :** 18 décembre 2025 (v1) → 19 décembre 2025 (v2)
+**Décideurs :** Eric + Claude
 
 ---
 
@@ -14,125 +14,145 @@ ResetPulse est un timer visuel pour neurodivergents. Le dial affiche le temps re
 - **Durée** : combien de temps je veux (ex: 25 min)
 - **Échelle cadran** : graduation max du dial (ex: 30 min ou 60 min)
 
-**Problème identifié :**
-Les presets actuels (1, 5, 10, 25, 45, 60) modifient les deux simultanément, créant :
-1. Un dial toujours plein → perte d'affordance drag
-2. Impossibilité de choisir "25 min sur cadran 60"
-3. Imposition d'une logique unique à des users aux besoins différents
+**Problème v1 :**
+La v1 proposait deux contrôles séparés visibles (incrémenteur + 4 boutons échelle), créant une complexité cognitive inutile.
+
+**Solution v2 :**
+Simplifier en exposant uniquement les presets de durée, avec adaptation du cadran via bouton FIT.
 
 ---
 
-## Décision
+## Décision (v2)
 
-### Séparer les deux contrôles dans l'UI
+### ControlBar - Layout unifié
 
-**Durée** — Incrémenteur :
 ```
-[ − ]  25:00  [ + ]
+┌────────────────────────────────────────────────────────────┐
+│  [5][15][30][60]   [−] ══25:00══ [+]   [▶]   [⊡]   [↻]    │
+│     PRESETS           DURÉE           RUN   FIT   ROTATE   │
+└────────────────────────────────────────────────────────────┘
 ```
 
-**Cadran** — 4 boutons échelle :
-```
-[5] [15] [30] [60]
-```
+### Composants
+
+| Composant | Rôle | Fichier |
+|-----------|------|---------|
+| `DurationPresets` | 4 boutons durée (5, 15, 30, 60 min) | `controls/DurationPresets.jsx` |
+| `DigitalTimer` | Affichage + contrôles +/- | `controls/DigitalTimer.jsx` |
+| `PulseButton` | Run/Stop/Reset unifié (ADR-007) | `buttons/PulseButton.jsx` |
+| `FitButton` | Adapter cadran à durée | `controls/FitButton.jsx` |
+| `CircularToggle` | Sens horaire/anti-horaire | `toolbox/controls/CircularToggle.jsx` |
+| `ControlBar` | Container horizontal | `controls/ControlBar.jsx` |
 
 ### Comportements
 
 | Action | Résultat |
 |--------|----------|
-| Tap `+` | Durée +1 min (ou +5 si durée > 10 min) |
-| Tap `-` | Durée -1 min (ou -5 si durée > 10 min) |
+| Tap preset [15] | Durée = 15 min |
+| Tap `+` | Durée +1 min (ou +5 si > 10 min) |
+| Tap `-` | Durée -1 min (ou -5 si > 10 min) |
 | Long press `+/-` | Accélération |
-| Tap sur affichage durée ("25:00") | Durée = échelle cadran (sync, dial plein) |
-| Tap bouton cadran | Échelle change, durée cappée si > nouvelle échelle |
-| Drag dial | Durée libre (comportement existant) |
+| Tap FIT [⊡] | Cadran s'adapte à la durée (optimal) |
+| Tap RUN [▶] | Start timer (ADR-007) |
+| Long press RUN | Stop timer (ADR-007) |
+| Tap ROTATE [↻] | Toggle sens horaire |
+
+### Logique FIT (adaptation cadran)
+
+```javascript
+// Trouve l'échelle optimale pour la durée
+if (duration <= 5min)  → scale = 5min
+if (duration <= 15min) → scale = 15min
+if (duration <= 30min) → scale = 30min
+else                   → scale = 60min
+```
 
 ### Contraintes
 
 - Durée min : 1 min
 - Durée max : échelle cadran actuelle
 - Échelles disponibles : 5, 15, 30, 60 minutes
-
-### Feedback "Sync" (tap sur durée affichée)
-
-- Haptic feedback
-- Animation subtile : le chiffre "saute" vers la nouvelle valeur (200ms)
-- Pas de mode persistant — action ponctuelle
+- Presets = durées fixes (pas d'auto-adaptation cadran)
 
 ---
 
 ## Justification
 
-### Pourquoi deux contrôles séparés ?
+### Pourquoi simplifier vs v1 ?
 
-Deux populations d'users légitimes :
-- **User A** : "Je veux 25 min, adapte le cadran" → tap cadran "30", drag ou incrémente à 25
-- **User B** : "Je veux 25 min sur MON cadran de 60" → garde cadran 60, incrémente à 25
+La v1 exposait deux contrôles (durée + échelle) créant une charge cognitive. La plupart des users veulent juste "25 min" sans penser au cadran.
 
-Imposer une auto-adaptation = frustrer User B.
+**v2 :** Presets = durée. Le cadran s'adapte manuellement via FIT si besoin.
 
-### Pourquoi tap sur durée = sync ?
+### Pourquoi 4 presets (5/15/30/60) ?
 
-- Geste découvrable (tap sur zone centrale)
-- Pas de bouton/texte supplémentaire
-- Cohérent avec UI minimaliste
-- L'user explore naturellement
+- **5 min** : micro-pauses, respirations
+- **15 min** : Pomodoro court, focus rapide
+- **30 min** : Pomodoro standard
+- **60 min** : sessions longues, deep work
 
-### Pourquoi 4 échelles (5/15/30/60) ?
+### Pourquoi un bouton FIT explicite ?
 
-- Couvre micro-pauses (1-4 min sur cadran 5)
-- Pomodoro court (5-14 min sur cadran 15)
-- Pomodoro standard (15-29 min sur cadran 30)
-- Sessions longues (30-60 min sur cadran 60)
+- Action intentionnelle (pas d'auto-magic confusant)
+- Icône Focus (Lucide) = ajuster/cibler
+- L'user power comprend, le casual n'en a pas besoin
 
 ---
 
 ## Emplacement UI
 
-Ces contrôles apparaissent dans :
-1. **Drawer** (swipe up) — accès rapide
-2. **CommandBar** (si configurée visible par l'user)
+Le `ControlBar` apparaît dans :
+1. **AsideZone Layer 1** (snap 15%) — mode compact
+2. **AsideZone Layer 2** (snap 38%) — mode compact
 
 ---
 
-## Conséquences
+## Migration v1 → v2
 
-### Positives
-- Contrôle précis durée ET cadran
-- Respecte les différents besoins neurodivergents
-- UI minimaliste préservée
-- Affordance drag toujours visible (sauf sync volontaire)
+### Fichiers supprimés (archivés)
+- `CommandsPanel.jsx` → remplacé par `ControlBar.jsx`
+- `ScaleButtons.jsx` → remplacé par `DurationPresets.jsx`
+- `DurationIncrementer.jsx` → fusionné dans `DigitalTimer.jsx`
+- `PlaybackButtons.jsx` → remplacé par `ControlBar.jsx`
 
-### Négatives
-- 2 concepts à comprendre (durée vs cadran)
-- Légère courbe d'apprentissage
+### Nouveau dossier
+```
+src/components/controls/
+├── index.js
+├── ControlBar.jsx
+├── DigitalTimer.jsx
+├── DurationPresets.jsx
+└── FitButton.jsx
+```
 
-### Migration
-- Supprimer les 6 presets actuels (1, 5, 10, 25, 45, 60)
-- Remplacer par incrémenteur + 4 boutons cadran
-- Mettre à jour TimerOptionsContext (scaleMode limité à 4 valeurs)
+### Archive
+```
+_internal/docs/legacy/code-archive/components-legacy-2025-12-19/
+```
 
 ---
 
 ## Implémentation
 
 ### Fichiers impactés
-- `TimerOptionsContext.jsx` : scaleMode → enum [5, 15, 30, 60]
-- `OptionsDrawerContent.jsx` : nouveau layout
-- `PresetPills.jsx` → `ScaleButtons.jsx` : 4 boutons
-- Nouveau : `DurationIncrementer.jsx`
-- `TimerScreen.jsx` : intégration
+- `src/components/controls/*` : nouveaux composants
+- `src/components/layout/aside-content/Layer1.jsx` : utilise ControlBar
+- `src/components/layout/aside-content/Layer2.jsx` : utilise ControlBar
+- `src/components/layout/AsideZone.jsx` : props isCompleted, onPlay
+- `src/screens/TimerScreen.jsx` : passe isTimerCompleted
 
 ### Tests
-- [ ] Incrémenteur +/- fonctionne
-- [ ] Tap durée = sync avec cadran
-- [ ] Tap cadran = cappée si durée dépasse
-- [ ] Drag dial inchangé
-- [ ] Haptic feedback sur sync
+- [x] Presets sélectionnent durée
+- [x] Incrémenteur +/- fonctionne
+- [x] FIT adapte cadran
+- [x] PulseButton états REST/RUNNING/COMPLETE
+- [x] DigitalTimer mode remaining (dial zone)
+- [x] DigitalTimer mode duration (ControlBar)
 
 ---
 
 ## Références
 
-- Session Chrysalis-Eric 17-18 décembre 2025
-- ADR-003 : Stratégie Conversion (contexte monétisation)
+- Session Eric-Claude 19 décembre 2025
+- ADR-007 : PulseButton et suppression PAUSED
+- ADR-003 : Stratégie Conversion

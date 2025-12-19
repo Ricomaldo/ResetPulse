@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = '@ResetPulse:favoriteToolMode';
-const DEFAULT_FAVORITE_TOOL = 'colors';
+const DEFAULT_FAVORITE_TOOL = 'commands'; // Options: activities, colors, commands, none
 
 const UserPreferencesContext = createContext(null);
 
@@ -26,11 +26,10 @@ export function UserPreferencesProvider({ children }) {
       try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
         if (stored) {
-          console.log('[UserPreferences] Loaded favorite tool:', stored);
           setFavoriteToolModeState(stored);
         }
-      } catch (error) {
-        console.warn('[UserPreferences] Failed to load preferences:', error);
+      } catch {
+        // Silently fail - use default
       } finally {
         setIsLoaded(true);
       }
@@ -43,9 +42,8 @@ export function UserPreferencesProvider({ children }) {
     try {
       setFavoriteToolModeState(newMode);
       await AsyncStorage.setItem(STORAGE_KEY, newMode);
-      console.log('[UserPreferences] Saved favorite tool:', newMode);
-    } catch (error) {
-      console.warn('[UserPreferences] Failed to save preference:', error);
+    } catch {
+      // Silently fail
     }
   };
 

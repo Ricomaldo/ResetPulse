@@ -49,10 +49,10 @@ const DigitalTimer = React.memo(function DigitalTimer({
       paddingHorizontal: isCollapsed ? rs(12) : rs(16),
     },
     icon: {
-      color: theme.colors.brand.primary,
+      color: theme.colors.brand.secondary,
     },
     timeText: {
-      color: theme.colors.brand.primary,
+      color: theme.colors.brand.secondary,
       fontFamily: Platform.select({
         ios: 'Menlo',
         android: 'monospace',

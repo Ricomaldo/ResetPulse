@@ -22,7 +22,7 @@ export const DEFAULT_PREMIUM = false;
 export const DEV_DEFAULT_TIMER_CONFIG = {
   activity: 'meditation', // 20 minutes par défaut
   duration: 1200, // 20 minutes en secondes
-  scaleMode: '60min', // Échelle adaptée
+  scaleMode: '30min', // Échelle adaptée
 };
 
 // Legacy export pour compatibilité

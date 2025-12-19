@@ -8,6 +8,7 @@ import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { rs } from '../../../../styles/responsive';
 import { fontWeights } from '../../../../theme/tokens';
+import Icons from '../../../layout/Icons';
 
 /**
  * PlusButton - Dumb component for "+" button in carousel
@@ -29,8 +30,8 @@ const PlusButton = React.memo(function PlusButton({
   const styles = StyleSheet.create({
     createButton: {
       alignItems: 'center',
-      backgroundColor: theme.colors.brand.primary + '15',
-      borderColor: theme.colors.brand.primary + '40',
+      backgroundColor: theme.colors.brandAccent15,
+      borderColor: theme.colors.brandAccent40,
       borderRadius: theme.borderRadius.lg,
       borderStyle: 'dashed',
       borderWidth: 2,
@@ -73,9 +74,11 @@ const PlusButton = React.memo(function PlusButton({
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
     >
-      <Text style={isPremium ? styles.createButtonText : styles.moreButtonText}>
-        +
-      </Text>
+      {isPremium ? (
+        <Icons name="plus" size={rs(24, 'min')} color={theme.colors.brand.primary} />
+      ) : (
+        <Icons name="plus" size={rs(32, 'min')} color={theme.colors.fixed.white} />
+      )}
     </TouchableOpacity>
   );
 });

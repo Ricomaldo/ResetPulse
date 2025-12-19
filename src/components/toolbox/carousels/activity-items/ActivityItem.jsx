@@ -4,10 +4,12 @@
  * @updated 2025-12-14
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StyleSheet, Image } from 'react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { useTranslation } from '../../../../hooks/useTranslation';
 import { rs } from '../../../../styles/responsive';
+import Icons from '../../../layout/Icons';
+import timerPng from '../../../../../assets/icons/timer.png';
 
 // Color constants for transparency overlays
 const TRANSPARENT = 'transparent';
@@ -37,19 +39,20 @@ const ActivityItem = React.memo(function ActivityItem({
 
   const styles = StyleSheet.create({
     activityButtonActive: {
-      backgroundColor: theme.colors.brand.primary,
-      borderColor: theme.colors.brand.secondary,
+      backgroundColor: theme.colors.brand.accent,
+      borderColor: theme.colors.brand.accent,
       borderWidth: 2,
       ...(Platform.OS === 'ios' ? theme.shadow('md') : {}),
     },
     activityButtonInner: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
+      backgroundColor: 'transparent',
+      borderColor: theme.colors.brand.neutral,
       borderRadius: rs(20, 'min'),
+      borderWidth: 2,
       height: '100%',
       justifyContent: 'center',
       width: '100%',
-      ...(Platform.OS === 'ios' ? theme.shadow('sm') : {}),
     },
     activityEmoji: {
       fontSize: rs(34, 'min'),
@@ -123,20 +126,28 @@ const ActivityItem = React.memo(function ActivityItem({
         disabled={false}
       >
         <View style={styles.activityInner}>
-          <Text style={styles.activityEmoji}>
-            {activity.id === 'none' ? '⏱️' : activity.emoji}
-          </Text>
+          {activity.id === 'none' ? (
+            <Image
+              source={timerPng}
+              style={{ width: rs(32, 'min'), height: rs(32, 'min') }}
+              resizeMode="contain"
+            />
+          ) : (
+            <Text style={styles.activityEmoji}>
+              {activity.emoji}
+            </Text>
+          )}
         </View>
 
         {isLocked && (
           <View style={styles.premiumBadge}>
-            <Text style={styles.lockIcon}>🔒</Text>
+            <Icons name="lock" size={rs(16, 'min')} color={theme.colors.textSecondary} />
           </View>
         )}
 
         {isCustom && !isActive && (
           <View style={styles.customBadge}>
-            <Text style={styles.customIcon}>✎</Text>
+            <Icons name="edit" size={rs(14, 'min')} color={theme.colors.textSecondary} />
           </View>
         )}
       </TouchableOpacity>

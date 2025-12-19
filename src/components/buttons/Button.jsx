@@ -13,7 +13,6 @@ import { fontWeights } from '../../theme/tokens';
 
 // Couleurs extraites pour respecter la règle no-color-literals
 const TRANSPARENT = 'transparent';
-const DANGER_RED = '#D94040';
 
 /**
  * Primary Button - Brand color, filled
@@ -97,7 +96,7 @@ export const SecondaryButton = React.memo(function SecondaryButton({
         styles.base,
         styles.outlined,
         {
-          borderColor: colors.brand.primary,
+          borderColor: colors.brand.secondary,
           borderRadius: borderRadius.lg,
           paddingVertical: spacing.md,
           paddingHorizontal: spacing.lg,
@@ -116,7 +115,7 @@ export const SecondaryButton = React.memo(function SecondaryButton({
         style={[
           styles.text,
           {
-            color: colors.brand.primary,
+            color: colors.brand.secondary,
           },
           textStyle,
         ]}
@@ -154,7 +153,7 @@ export const DestructiveButton = React.memo(function DestructiveButton({
       style={[
         styles.base,
         {
-          backgroundColor: DANGER_RED, // Error red
+          backgroundColor: colors.danger, // Error red
           borderRadius: borderRadius.lg,
           paddingVertical: spacing.md,
           paddingHorizontal: spacing.lg,

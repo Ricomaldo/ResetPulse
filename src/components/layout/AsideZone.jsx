@@ -30,7 +30,7 @@ const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8; // Container at snap 2 (90% snap -
  * SheetContent - Internal component with access to BottomSheet context
  * Handles fade transitions between snap points
  */
-function SheetContent({ currentSnapIndex, isTimerRunning, onPlayPause, onReset, activityCarouselRef, paletteCarouselRef }) {
+function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, activityCarouselRef, paletteCarouselRef }) {
   const theme = useTheme();
   const { animatedIndex } = useBottomSheet();
 
@@ -95,8 +95,10 @@ function SheetContent({ currentSnapIndex, isTimerRunning, onPlayPause, onReset, 
         >
           <Layer1
             isTimerRunning={isTimerRunning}
-            onPlayPause={onPlayPause}
+            isTimerCompleted={isTimerCompleted}
+            onPlay={onPlay}
             onReset={onReset}
+            onStop={onStop}
           />
         </Animated.View>
 
@@ -110,8 +112,10 @@ function SheetContent({ currentSnapIndex, isTimerRunning, onPlayPause, onReset, 
         >
           <Layer2
             isTimerRunning={isTimerRunning}
-            onPlayPause={onPlayPause}
+            isTimerCompleted={isTimerCompleted}
+            onPlay={onPlay}
             onReset={onReset}
+            onStop={onStop}
             activityCarouselRef={activityCarouselRef}
             paletteCarouselRef={paletteCarouselRef}
           />
@@ -135,7 +139,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, onPlayPause, onReset, 
 /**
  * AsideZone - BottomSheet 3-snap (0=favorite, 1=toolbox, 2=all)
  */
-export default function AsideZone({ isTimerRunning, onPlayPause, onReset, onOpenSettings }) {
+export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings }) {
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
 
@@ -193,8 +197,10 @@ export default function AsideZone({ isTimerRunning, onPlayPause, onReset, onOpen
       <SheetContent
         currentSnapIndex={currentSnapIndex}
         isTimerRunning={isTimerRunning}
-        onPlayPause={onPlayPause}
+        isTimerCompleted={isTimerCompleted}
+        onPlay={onPlay}
         onReset={onReset}
+        onStop={onStop}
         activityCarouselRef={activityCarouselRef}
         paletteCarouselRef={paletteCarouselRef}
       />

@@ -212,9 +212,12 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
     scrollContent: {
       paddingHorizontal: 0,
     },
-    scrollView: {
+    carouselContainer: {
       maxWidth: rs(280, 'width'),
-      height: rs(100, 'min'), // CRITICAL: Explicit height for horizontal scroll in BottomSheet
+    },
+    scrollView: {
+      flexGrow: 0, // CRITICAL: Prevent flex expansion in BottomSheet
+      height: rs(65, 'min'), // Compact height for BottomSheet
     },
   });
 
@@ -226,7 +229,7 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   return (
     <View style={styles.outerContainer}>
       {/* Palette carousel */}
-      <View>
+      <View style={styles.carouselContainer}>
         {/* Scrollable color pills */}
         <ScrollView
           ref={scrollViewRef}

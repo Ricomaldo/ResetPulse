@@ -2,7 +2,7 @@
 
 ## Statut : VALIDÉ
 
-**Date :** 18 décembre 2025
+**Date :** 18 décembre 2025 (mis à jour 19 décembre 2025)
 **Décideurs :** Eric + Chrysalis
 
 ---
@@ -41,7 +41,7 @@ ResetPulse nécessite une UI où le timer reste visible en permanence, même pen
 │                                     │
 │  SNAP 38% — Toolbox                 │
 │  ━━━━ handle                        │
-│  [−] 25:00 [+]   [5][15][30][60]    │
+│  [5][15][30][60] [−]25:00[+] [▶][⊡][↻]│
 │  [😀][💻][☕][🧘] →                 │
 │  [🔴][🟢][🔵][🟡] →                 │
 │                                     │
@@ -54,21 +54,20 @@ ResetPulse nécessite une UI où le timer reste visible en permanence, même pen
 
 ### 3 Niveaux de Profondeur BottomSheet
 
-| Snap    | Hauteur                                      | Contenu                                                       | Comportement                                 |
-| ------- | -------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------- |
-| **15%** | Handle + Favorite Tool (TBD via wrapper dev) | Couleur / Activité / Presets / Controls / Rien (configurable) | **Défaut repos** + **auto-collapse running** |
-| **38%** | Toolbox standard                             | Incrémenteur + Cadran + Carousels (activités, couleurs)       | Swipe up depuis 15%                          |
-| **90%** | All Options scrollable                       | Toolbox + Settings + About + autres                           | Swipe up depuis 38%                          |
+| Snap    | Hauteur                 | Contenu                                                  | Comportement                                 |
+| ------- | ----------------------- | -------------------------------------------------------- | -------------------------------------------- |
+| **15%** | Handle + Favorite Tool  | commands / activities / colors / none (configurable)     | **Défaut repos** + **auto-collapse running** |
+| **38%** | Toolbox standard        | ControlBar + Activités + Couleurs (ordre dynamique)      | Swipe up depuis 15%                          |
+| **90%** | All Options scrollable  | Toolbox + Settings + About + autres                      | Swipe up depuis 38%                          |
 
-### Favorite Tool — 5 Options Configurables
+### Favorite Tool — 4 Options
 
-| Option       | Snap 15% affiche         | Usage                                  |
-| ------------ | ------------------------ | -------------------------------------- |
-| **Couleur**  | Carrousel couleurs mini  | Quick color change sans ouvrir Toolbox |
-| **Activité** | Carrousel activités mini | Quick activity change                  |
-| **Presets**  | `[5] [15] [30] [60]`     | Quick duration presets                 |
-| **Controls** | `[▶/⏸] [↺]`              | Quick start/pause/reset                |
-| **Rien**     | Handle seul              | Minimaliste absolu                     |
+| Option         | Snap 15% affiche                    | Usage                                  |
+| -------------- | ----------------------------------- | -------------------------------------- |
+| **commands**   | ControlBar (presets/duration/run)   | Contrôles rapides du timer             |
+| **activities** | Carrousel activités                 | Quick activity change                  |
+| **colors**     | Carrousel couleurs                  | Quick color change                     |
+| **none**       | Handle seul                         | Minimaliste absolu                     |
 
 **Configuration** : Dans All Options (snap 90%), section "Favorite Tool"
 
@@ -78,16 +77,22 @@ ResetPulse nécessite une UI où le timer reste visible en permanence, même pen
 
 - Handle (5px)
 - Contenu dynamique selon config :
-  - Carrousel couleurs mini (si option "Couleur")
-  - Carrousel activités mini (si option "Activité")
-  - Presets buttons (si option "Presets")
-  - Controls (si option "Controls")
-  - Vide (si option "Rien")
+  - ControlBar (si `commands`)
+  - Carrousel activités (si `activities`)
+  - Carrousel couleurs (si `colors`)
+  - Vide (si `none`)
 
 **Snap 38% — Toolbox** :
 
-- **Durée** : incrémenteur [ − ] 25:00 [ + ]
-- **Cadran** : [5] [15] [30] [60]
+- **Ordre dynamique** : Favorite tool en premier pour continuité visuelle avec Layer1
+  - Si favorite = commands : ControlBar → Activités → Couleurs
+  - Si favorite = activities : Activités → ControlBar → Couleurs
+  - Si favorite = colors : Couleurs → ControlBar → Activités
+  - Si favorite = none : ControlBar → Activités → Couleurs (défaut)
+- **ControlBar** (layout horizontal) :
+  - Presets : [5] [15] [30] [60]
+  - Durée : [ − ] 25:00 [ + ]
+  - Actions : [▶ Play] [⊡ Fit] [↻ Rotate]
 - **Activités** : carrousel horizontal (favoris en premier)
 - **Couleurs** : carrousel horizontal (favoris en premier)
 
@@ -124,8 +129,8 @@ ResetPulse nécessite une UI où le timer reste visible en permanence, même pen
 
 **Après** : 3 niveaux clairs :
 
-1. **Favorite Tool (15%)** — ton raccourci perso (1 tool au choix)
-2. **Toolbox (38%)** — les 4 outils standard (durée, cadran, activités, couleurs)
+1. **Favorite Tool (15%)** — 1 outil au choix (commands / activities / colors / none)
+2. **Toolbox (38%)** — les 3 outils standard (CommandsPanel, activités, couleurs) ordre fixe
 3. **All Options (90%)** — tout le reste (settings, about, config avancée)
 
 → Plus de débat "où mettre quoi". User choisit son niveau de profondeur.
@@ -184,8 +189,8 @@ ResetPulse nécessite une UI où le timer reste visible en permanence, même pen
 **Modifiés** :
 
 - `TimerScreen.jsx` → découpage Dial (62%) / Message Zone / BottomSheet
-- `CommandBar.jsx` → migre dans snap 38% (Toolbox)
-- `CarouselBar.jsx` → migre dans snap 38% (Toolbox)
+- `ControlBar.jsx` → nouveau composant horizontal (presets + duration + actions)
+- `Layer1.jsx` / `Layer2.jsx` → orchestration snap 15% et 38%
 
 ---
 
@@ -195,5 +200,6 @@ ResetPulse nécessite une UI où le timer reste visible en permanence, même pen
 - ADR-006 : Stack Gestes (@gorhom/bottom-sheet migration)
 - Session Chrysalis-Eric 18 décembre 2025 (version initiale 2-zones)
 - Session Chrysalis-Eric 19 décembre 2025 (révision 3-zones + BottomSheet 3-snap)
+- Session Chrysalis-Eric 19 décembre 2025 (ControlBar layout horizontal)
 - Research doc : `_internal/cockpit/knowledge/findings/2025-12-19_gorhom-bottomsheet-doc-research.md`
 - Migration plan : `_internal/cockpit/knowledge/findings/2025-12-18_drawer-bottomsheet-migration-plan.md`

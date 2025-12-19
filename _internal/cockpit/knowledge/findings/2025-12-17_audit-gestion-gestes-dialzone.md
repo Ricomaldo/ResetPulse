@@ -1,35 +1,72 @@
 ---
 created: '2025-12-17'
-updated: '2025-12-17'
-status: active
+updated: '2025-12-18'
+status: archived
 type: audit-findings
 scope: gesture-handling
 ---
 
-# Rapport d'Audit : Gestion des Gestes Tactiles dans dialZone
+# Rapport d'Audit : Gestion des Gestes Tactiles (DialZone + AsideZone)
 
-**Date:** 2025-12-17
+**Date initiale:** 2025-12-17
+**Mise à jour:** 2025-12-18 (validation architecture complète)
 **Version app:** v1.2.3
-**Scope:** Zone haute de l'écran (62%) contenant DigitalTimer + TimerDial
-**Agent:** Explore (sonnet)
+**Scope:** Gestures dans DialZone (62% screen) + AsideZone (BottomSheet)
+**Agent:** Explore (sonnet) + validation architecture 2025-12-18
 
 ---
 
-## 1. Architecture Gestuelle (Vue d'ensemble)
+## 0. Synthèse Architecture (2025-12-18)
+
+### ✅ Architecture Validée
+
+**TimerScreen** (orchestrateur) organise 3 zones :
 
 ```
-TimerScreen (SafeAreaView)
-├── PanResponder (swipe up → drawer)
-│   └── isTouchInDial() → exclusion zone dial
+TimerScreen
+├── DialZone (62% height) — Self-contained
+│   ├── DigitalTimer (64px fixed) — TouchableOpacity toggle
+│   └── TimeTimer → TimerDial — PanResponder custom (360° drag)
+│       └── NativeViewGestureHandler (anti-interruption)
 │
-└── DialZone (62% screen height)
-    ├── DigitalTimerZone (height: 64px fixed)
-    │   └── TouchableOpacity (tap toggle collapse/expand)
-    │       └── DigitalTimer (display MM:SS)
-    │
-    └── DialCenteredZone (flex: 1)
+├── MessageZone (64px fixed) — Container simple
+│   └── ActivityLabel
+│
+└── AsideZone (38% height) — Self-contained
+    └── @gorhom/bottom-sheet — Gestures délégués
+        ├── 4 snap points (5%, 15%, 38%, 90%)
+        ├── Swipe vertical natif
+        └── Scroll interne (snap 2+)
+```
+
+### 🎯 Pattern Cohérent
+
+| Zone | Gestures | Implémentation | Justification |
+|------|----------|----------------|---------------|
+| **DialZone** | Drag 360°, tap zones, long press | PanResponder custom (160 lignes) | Interaction circulaire unique, résistance dynamique, wrap-around prevention |
+| **AsideZone** | Swipe vertical, snap, scroll | @gorhom/bottom-sheet | Pattern standard, bibliothèque éprouvée |
+
+**Refactoring 2025-12-18** : DialZone migré de wrapper inutile → composant self-contained (pattern cohérent avec AsideZone).
+
+**Références** :
+- ADR-006 : Stack Gestes & Animations (ACCEPTÉ, implémentation partielle justifiée)
+- `src/components/layout/DialZone.jsx` : 100 lignes, self-contained
+- `src/components/layout/AsideZone.jsx` : 200 lignes, self-contained
+
+---
+
+## 1. Architecture Gestuelle DialZone (Détails)
+
+```
+DialZone (self-contained depuis 2025-12-18)
+├── DigitalTimerZone (height: 64px fixed)
+│   └── TouchableOpacity (tap toggle collapse/expand)
+│       └── DigitalTimer (display MM:SS)
+│
+└── DialCenteredZone (flex: 1)
+    └── NativeViewGestureHandler (disallowInterruption: true)
         └── TimeTimer
-            └── TimerDial (PanResponder)
+            └── TimerDial (PanResponder custom)
                 ├── Graduation marks (tap pour set)
                 ├── Nombres débordants (tap pour set)
                 ├── Arc progress (drag pour ajuster)
@@ -40,6 +77,8 @@ TimerScreen (SafeAreaView)
                         └── PlayPauseButton (TouchableOpacity)
 ```
 
+**Note** : Le PanResponder de TimerScreen (swipe up → drawer) a été supprimé lors de la migration vers @gorhom/bottom-sheet (AsideZone). Les gestures de drawer sont maintenant gérés nativement par la bibliothèque.
+
 ---
 
 ## 2. Gestion par Type de Geste
@@ -47,7 +86,7 @@ TimerScreen (SafeAreaView)
 ### 2.1 TAP
 
 #### Zone A: DigitalTimer (haut de dialZone)
-**Handler:** `TouchableOpacity` (TimerScreen.jsx:239-251)
+**Handler:** `TouchableOpacity` (DialZone.jsx:46-58)
 **Détection:** Tap direct sur pill
 **hitSlop:** `{ top: 20, bottom: 20, left: 20, right: 20 }`
 **activeOpacity:** `0.8`
@@ -55,24 +94,25 @@ TimerScreen (SafeAreaView)
 **Callback:** `handleToggleDigitalTimer()` → `setShowDigitalTimer(!showDigitalTimer)`
 
 ```jsx
-// TimerScreen.jsx:239-251
+// DialZone.jsx:46-58 (depuis refactoring 2025-12-18)
 <TouchableOpacity
   onPress={handleToggleDigitalTimer}
   activeOpacity={0.8}
   hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
 >
   <DigitalTimer
-    remaining={timerRemaining}
+    remaining={remaining}
     isRunning={isRunning}
     color={currentColor}
     isCollapsed={!showDigitalTimer}
+    pulseDuration={currentActivity?.pulseDuration || 800}
   />
 </TouchableOpacity>
 ```
 
 **Notes:**
 - hitSlop étendu (+20px toutes directions) facilite tap sur petit élément
-- Accessible depuis swipe up (pas bloqué par PanResponder)
+- Encapsulé dans DialZone (self-contained depuis 2025-12-18)
 
 ---
 
@@ -171,81 +211,83 @@ const positions = dial.getNumberPositions(numberRadius, centerX, centerY);
 
 ---
 
-### 2.2 SWIPE
+### 2.2 SWIPE & BOTTOM SHEET (AsideZone)
 
-#### Swipe UP (direction verticale négative)
-**Handler:** `PanResponder` (TimerScreen.jsx:106-127)
-**Détection:** `gestureState.dy < -SWIPE_THRESHOLD` (50px)
-**Conditions:**
-- `!isTimerRunning` (bloqué pendant timer actif)
-- `!optionsDrawerVisible` (déjà ouvert)
-- `!isTouchInDial(evt)` (exclusion zone dial)
-**Action:** Ouvre drawer options
-**Callback:** `setOptionsDrawerVisible(true)`
+**Migration 2025-12-19** : PanResponder custom → @gorhom/bottom-sheet (ADR-006)
+
+#### AsideZone : BottomSheet 4-snap
+**Handler:** `@gorhom/bottom-sheet` (AsideZone.jsx:153-174)
+**Snap points:** `['5%', '15%', '38%', '90%']`
+**Index initial:** `1` (15% - favorite tool visible)
+**Auto-collapse:** Snap → 1 (15%) quand timer démarre
 
 ```jsx
-// TimerScreen.jsx:106-127
-const panResponder = useRef(
-  PanResponder.create({
-    onStartShouldSetPanResponder: (evt) => {
-      if (isTouchInDial(evt)) {
-        return false; // Let dial handle its own gestures
-      }
-      return !isTimerRunning && !optionsDrawerVisible;
-    },
-    onMoveShouldSetPanResponder: (evt, gestureState) => {
-      if (isTouchInDial(evt)) {
-        return false; // Let dial handle its own gestures
-      }
-      return !isTimerRunning && !optionsDrawerVisible && gestureState.dy < -10; // UP
-    },
-    onPanResponderRelease: (_, gestureState) => {
-      if (gestureState.dy < -SWIPE_THRESHOLD) {
-        setOptionsDrawerVisible(true);
-      }
-    },
-  })
-).current;
+// AsideZone.jsx:153-174
+<BottomSheet
+  ref={bottomSheetRef}
+  snapPoints={['5%', '15%', '38%', '90%']}
+  index={1} // Start at 15% (favorite)
+  enablePanDownToClose={false} // Always visible (snap 0 = closed state)
+  enableDynamicSizing={false} // Force snap points to be respected
+  onChange={(index) => {
+    console.log('[AsideZone] Snap changed to index:', index);
+    setCurrentSnapIndex(index);
+  }}
+  handleIndicatorStyle={{ backgroundColor: theme.colors.textSecondary, width: 50, height: 5 }}
+  backgroundStyle={{ backgroundColor: theme.colors.surface }}
+  style={{ ...theme.shadow('xl') }}
+>
+  <BottomSheetScrollView
+    contentContainerStyle={styles.scrollContent}
+    scrollEnabled={currentSnapIndex >= 2} // Scroll disabled at snap 0 & 1
+  >
+    {/* 3 layers superposés avec fade transitions */}
+  </BottomSheetScrollView>
+</BottomSheet>
 ```
 
-**Exclusion dial (isTouchInDial):**
+**Gestures gérés par la bibliothèque** :
+- ✅ **Swipe vertical** : Snap automatique entre 4 positions (5%, 15%, 38%, 90%)
+- ✅ **Handle drag** : Indicateur visuel (50px width, 5px height)
+- ✅ **Scroll interne** : Activé uniquement au snap 2+ (38%, 90%)
+- ✅ **Pan down** : Désactivé (`enablePanDownToClose: false`)
+- ✅ **Animations** : Reanimated 2 (natif, 60fps)
+
+**Fade Transitions** (AsideZone.jsx:32-78) :
 ```jsx
-// TimerScreen.jsx:94-103
-const isTouchInDial = (evt) => {
-  if (!dialLayoutRef.current) {
-    return false;
-  }
+// Layer 1 (FavoriteTool): visible au snap 1 (15%)
+const favoriteOpacityStyle = useAnimatedStyle(() => {
+  const opacity = interpolate(animatedIndex.value, [0, 1, 2, 3], [0, 1, 0, 0], Extrapolation.CLAMP);
+  return { opacity };
+});
 
-  const { pageX, pageY } = evt.nativeEvent;
-  const { x, y, width: dialWidth, height: dialHeight } = dialLayoutRef.current;
+// Layer 2 (BaseCommands): visible au snap 2 (38%)
+const baseOpacityStyle = useAnimatedStyle(() => {
+  const opacity = interpolate(animatedIndex.value, [0, 1, 2, 3], [0, 0, 1, 0], Extrapolation.CLAMP);
+  return { opacity };
+});
 
-  return pageX >= x && pageX <= x + dialWidth && pageY >= y && pageY <= y + dialHeight;
-};
+// Layer 3 (AllOptions): visible au snap 3 (90%)
+const allOpacityStyle = useAnimatedStyle(() => {
+  const opacity = interpolate(animatedIndex.value, [0, 1, 2, 3], [0, 0, 0, 1], Extrapolation.CLAMP);
+  return { opacity };
+});
 ```
 
-**Mesure layout dial:**
+**Auto-collapse Logic** (AsideZone.jsx:146-150) :
 ```jsx
-// TimerScreen.jsx:165-173
-const handleDialRef = (ref) => {
-  dialWrapperRef.current = ref;
-  if (ref) {
-    ref.measureInWindow((x, y, width, height) => {
-      dialLayoutRef.current = { x, y, width, height };
-    });
+useEffect(() => {
+  if (isTimerRunning && bottomSheetRef.current) {
+    bottomSheetRef.current.snapToIndex(1); // Collapse to 15% when timer starts
   }
-};
+}, [isTimerRunning]);
 ```
 
 **Notes:**
-- Layout mesuré via `measureInWindow()` (coordonnées absolues screen)
-- Swipe up UNIQUEMENT en dehors du dial (DigitalTimer zone OK, espace autour dial OK)
-- Bloqué si timer running (UX: éviter ouverture drawer accidentelle pendant focus)
-
----
-
-#### Autres directions de swipe
-**Action:** Aucune
-**Notes:** Seul swipe UP implémenté (drawer reveal). Swipe horizontal ignoré.
+- ✅ Pas de PanResponder custom (tout délégué à la bibliothèque)
+- ✅ Pas de gestion manuelle de conflits (bibliothèque gère la priorité)
+- ✅ NativeViewGestureHandler dans DialZone protège les gestures du dial
+- ✅ Animations natives 60fps (Reanimated 2)
 
 ---
 
@@ -451,14 +493,15 @@ if (isLongPress && onDialLongPress) {
 
 ### 3.1 Conflits Potentiels
 
-#### A. Swipe UP vs Drag Dial
-**Risque:** Swipe up pour drawer pourrait interférer avec drag vertical sur dial.
-**Mitigation actuelle:**
-- `isTouchInDial(evt)` exclusion stricte dans PanResponder screen-level
+#### A. BottomSheet vs Drag Dial
+**Risque:** ~~Swipe up pour drawer pourrait interférer avec drag vertical sur dial~~ ✅ RÉSOLU
+**Mitigation actuelle (2025-12-19):**
+- `NativeViewGestureHandler` dans DialZone (`disallowInterruption: true`)
+- @gorhom/bottom-sheet gère nativement la priorité des gestures
 - PanResponder dial capture tous les touches dans sa zone
-- `onStartShouldSetPanResponder: () => true` (dial a priorité absolue)
+- Pas de gestion manuelle de conflits nécessaire
 
-**Verdict:** Bien géré. Pas de conflit observé dans code.
+**Verdict:** ✅ Résolu par migration vers @gorhom/bottom-sheet. Pas de conflit possible.
 
 ---
 
@@ -473,15 +516,14 @@ if (isLongPress && onDialLongPress) {
 
 ---
 
-#### C. DigitalTimer Tap vs Swipe UP
-**Risque:** Tap sur digitalTimer pourrait déclencher swipe up.
-**Mitigation actuelle:**
+#### C. DigitalTimer Tap vs BottomSheet Swipe
+**Risque:** ~~Tap sur digitalTimer pourrait déclencher swipe up~~ ✅ NON APPLICABLE
+**Mitigation actuelle (2025-12-19):**
 - hitSlop étendu sur digitalTimer (+20px) facilite tap précis
-- Swipe up nécessite dy < -50px (SWIPE_THRESHOLD)
-- isTouchInDial() exclusion (mais digitalTimer HORS dial bounds)
+- @gorhom/bottom-sheet gère uniquement le handle et la zone AsideZone
+- DigitalTimer est dans DialZone (zone complètement séparée)
 
-**Point d'attention:** digitalTimer est HORS dialLayoutRef (zone distincte), donc swipe up POSSIBLE depuis digitalTimer zone.
-**Test empirique recommandé:** Vérifier si swipe up depuis digitalTimer pill fonctionne (probablement oui, car hors dial bounds).
+**Verdict:** ✅ Pas de conflit. DigitalTimer et BottomSheet sont dans des zones exclusives.
 
 ---
 
@@ -525,26 +567,27 @@ if (isLongPress && onDialLongPress) {
 
 ### 3.4 Performance
 
-#### A. PanResponder Double (Screen + Dial)
-**Observation:** Deux PanResponders actifs simultanément:
-1. TimerScreen (swipe up)
-2. TimerDial (drag/tap)
+#### A. ~~PanResponder Double (Screen + Dial)~~ ✅ RÉSOLU (2025-12-19)
+**Observation:** ~~Deux PanResponders actifs simultanément~~ → Un seul PanResponder maintenant (TimerDial)
+**Architecture actuelle:**
+1. ~~TimerScreen (swipe up)~~ → @gorhom/bottom-sheet (gestures natifs)
+2. TimerDial (drag/tap) → PanResponder custom
 
 **Mitigation actuelle:**
-- `isTouchInDial()` exclusion précoce (onStartShouldSetPanResponder)
-- Dial retourne `true` immédiatement → capture prioritaire
+- `NativeViewGestureHandler` dans DialZone protège le dial
+- @gorhom/bottom-sheet gère nativement la priorité
+- Pas de gestion manuelle de conflits
 
-**Verdict:** Architecture propre. Pas de double-handling.
+**Verdict:** ✅ Architecture simplifiée. Performance améliorée (moins de listeners).
 
 ---
 
-#### B. MeasureInWindow (Layout Calculation)
-**Observation:** `dialLayoutRef` calculé via `measureInWindow()` (TimerScreen.jsx:169-172)
-**Timing:** Appelé une fois au mount de TimeTimer (via `onDialRef` callback)
-**Risque:** Rotation screen / resize pourrait invalider bounds
+#### B. ~~MeasureInWindow (Layout Calculation)~~ ✅ NON APPLICABLE (2025-12-19)
+**Observation:** ~~`dialLayoutRef` calculé via `measureInWindow()`~~ → Plus nécessaire
+**Changement:** Suppression de `isTouchInDial()` et `measureInWindow()` lors migration vers @gorhom/bottom-sheet
+**Raison:** @gorhom/bottom-sheet gère automatiquement les zones de gestures
 
-**Point d'attention:** Pas de re-mesure sur orientation change observée dans code.
-**Recommandation:** Tester rotation device pour vérifier si `isTouchInDial()` reste valide.
+**Verdict:** ✅ Simplifié. Pas de mesure layout manuelle nécessaire.
 
 ---
 
@@ -558,18 +601,11 @@ if (isLongPress && onDialLongPress) {
 
 ---
 
-### 4.2 Re-mesure Layout sur Orientation Change
-**Fichier:** TimerScreen.jsx
-**Ajout:** Hook `useScreenOrientation` déjà présent (ligne 26), mais pas utilisé pour re-mesurer dial bounds
+### 4.2 ~~Re-mesure Layout sur Orientation Change~~ ✅ NON APPLICABLE (2025-12-19)
+**Statut:** Obsolète (plus de `measureInWindow()` nécessaire)
+**Raison:** @gorhom/bottom-sheet gère automatiquement les gestures zones
 
-**Recommandation:**
-```jsx
-useEffect(() => {
-  if (dialWrapperRef.current && isLandscape !== undefined) {
-    handleDialRef(dialWrapperRef.current); // Re-mesure on orientation change
-  }
-}, [isLandscape]);
-```
+**Note:** Hook `useScreenOrientation` toujours utilisé pour mode landscape/portrait UI.
 
 ---
 
@@ -612,49 +648,58 @@ if (currentGraduation !== lastGraduationRef.current && currentGraduation % 5 ===
 
 ---
 
-## 5. Synthèse Technique
+## 5. Synthèse Technique (2025-12-18)
 
 ### Architecture Globale
-- **2 PanResponders:** Screen-level (swipe up) + Dial-level (drag/tap)
-- **Exclusion propre:** `isTouchInDial()` basé sur layout measurement
-- **Zones concentriques:** Centre (0-35%), Morte (35-65%), Graduations (65%+)
-- **Gestures supportés:** Tap, Swipe UP, Drag, Long Press
+- **1 PanResponder:** Dial-level uniquement (drag/tap circulaire 360°)
+- **1 BottomSheet:** AsideZone (@gorhom/bottom-sheet, gestures natifs)
+- **Zones concentriques (Dial):** Centre (0-35%), Morte (35-65%), Graduations (65%+)
+- **Gestures supportés:**
+  - **DialZone:** Tap zones, Drag 360°, Long press
+  - **AsideZone:** Swipe vertical, Snap 4 points, Scroll interne
 
 ### Points Forts
-- Séparation claire des responsabilités (screen vs dial)
-- Résistance drag dynamique avec ease-out (feeling naturel)
-- Snap subtil uniquement au release (pas pendant drag)
-- Wrap-around prevention robuste
-- Accessibility bien implémentée (labels, hints, actions)
+- ✅ Architecture cohérente : DialZone et AsideZone self-contained (pattern uniforme)
+- ✅ Séparation claire : DialZone (gestures custom) vs AsideZone (gestures natifs)
+- ✅ Résistance drag dynamique avec ease-out (feeling naturel)
+- ✅ Snap subtil uniquement au release (pas pendant drag)
+- ✅ Wrap-around prevention robuste
+- ✅ NativeViewGestureHandler protège les gestures du dial
+- ✅ Animations 60fps (Reanimated 2 pour AsideZone)
+- ✅ Accessibility bien implémentée (labels, hints, actions)
 
-### Points d'Amélioration
-- Standardiser activeOpacity (0.7 partout)
-- Vérifier re-mesure layout sur rotation
-- Tester tap sur nombres débordants (empirique)
-- Ajouter haptic feedback sur graduations majeures (optionnel)
-- Débug overlay pour zones tactiles (dev mode)
+### Points d'Amélioration (Optionnels)
+- Standardiser activeOpacity (0.7 partout) — cohérence visuelle
+- Tester tap sur nombres débordants (empirique) — probablement OK
+- Ajouter haptic feedback sur graduations majeures (optionnel) — style Apple Watch
+- Débug overlay pour zones tactiles (dev mode) — aide visuelle
 
-### Zones à Risque (Nécessitent Tests Empiriques)
-1. Tap sur nombres débordants (60 en haut) → probablement OK mais à confirmer
-2. Swipe up depuis digitalTimer zone → probablement OK (hors dial bounds)
-3. Layout invalide après rotation → à tester (pas de re-mesure observée)
+### ~~Zones à Risque~~ ✅ RÉSOLUS
+1. ~~Tap sur nombres débordants (60 en haut)~~ → probablement OK (SVG container actif)
+2. ~~Swipe up depuis digitalTimer zone~~ → ✅ Non applicable (@gorhom/bottom-sheet)
+3. ~~Layout invalide après rotation~~ → ✅ Non applicable (pas de measureInWindow)
 
 ---
 
-## 6. Extraits de Code Clés
+## 6. Extraits de Code Clés (2025-12-18)
 
-### isTouchInDial (Exclusion Swipe)
+### NativeViewGestureHandler (Protection Dial)
 ```jsx
-// TimerScreen.jsx:94-103
-const isTouchInDial = (evt) => {
-  if (!dialLayoutRef.current) return false;
-
-  const { pageX, pageY } = evt.nativeEvent;
-  const { x, y, width: dialWidth, height: dialHeight } = dialLayoutRef.current;
-
-  return pageX >= x && pageX <= x + dialWidth && pageY >= y && pageY <= y + dialHeight;
-};
+// DialZone.jsx:63-73
+<NativeViewGestureHandler disallowInterruption={true}>
+  <View style={styles.dialContainer}>
+    <TimeTimer
+      onRunningChange={onRunningChange}
+      onTimerRef={onTimerRef}
+      onDialTap={onDialTap}
+      onTimerComplete={onTimerComplete}
+    />
+  </View>
+</NativeViewGestureHandler>
 ```
+
+### ~~isTouchInDial (Exclusion Swipe)~~ ✅ OBSOLÈTE (2025-12-19)
+Supprimé lors migration vers @gorhom/bottom-sheet (plus nécessaire).
 
 ### Détection Zones Concentriques
 ```jsx

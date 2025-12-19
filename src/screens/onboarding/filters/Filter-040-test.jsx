@@ -76,7 +76,6 @@ export default function Filter040Test({ timerConfig, onContinue }) {
             scaleMode="1min"
             activityEmoji={emoji}
             isRunning={started}
-            shouldPulse={true}
             currentActivity={timerConfig?.activity}
             showNumbers={false}
           />

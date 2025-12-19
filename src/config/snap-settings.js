@@ -14,27 +14,25 @@
  */
 
 /**
- * Snap intervals (in seconds) for each scale mode
+ * Snap intervals (in seconds) for each scale mode (ADR-004)
  * Applied when user releases drag gesture or taps on graduations
  */
 export const SNAP_INTERVALS = {
-  '1min': 1, // 1 second for 1min scale (most precise)
-  '5min': 5, // 5 seconds for 5min scale
-  '10min': 5, // 15 seconds for 10min scale
-  '25min': 60, // 20 seconds for 25min scale (Pomodoro)
-  '45min': 60, // 30 seconds for 45min scale
-  '60min': 60, // 30 seconds for 60min scale
+  '5min': 5,   // 5 seconds
+  '15min': 15, // 15 seconds
+  '30min': 30, // 30 seconds
+  '60min': 60, // 60 seconds
 };
 
 /**
  * Snap seconds to nearest interval based on scale mode
  * @param {number} seconds - Raw seconds value from drag
- * @param {string} scaleMode - Current scale mode ('1min', '5min', '10min', '25min', '45min', '60min')
+ * @param {string} scaleMode - Current scale mode ('5min', '15min', '30min', '60min')
  * @returns {number} Snapped seconds value
  *
  * @example
- * snapToInterval(127, '25min') // Returns 120 (snapped to 20s interval)
- * snapToInterval(127, '60min') // Returns 120 (snapped to 30s interval)
+ * snapToInterval(127, '30min') // Returns 120 (snapped to 30s interval)
+ * snapToInterval(127, '60min') // Returns 120 (snapped to 60s interval)
  */
 export function snapToInterval(seconds, scaleMode) {
   const interval = SNAP_INTERVALS[scaleMode] || 1;

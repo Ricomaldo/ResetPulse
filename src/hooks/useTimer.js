@@ -21,7 +21,6 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const [startTime, setStartTime] = useState(null);
 
   // UI states
-  const [isPaused, setIsPaused] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
 
   // Get selected sound and activity durations from context
@@ -83,7 +82,6 @@ export default function useTimer(initialDuration = 240, onComplete) {
       // Timer finished - reset states properly
       setRunning(false);
       setStartTime(null);
-      setIsPaused(false);
 
       // Trigger completion feedback (only once)
       if (!hasTriggeredCompletion.current) {
@@ -202,13 +200,13 @@ export default function useTimer(initialDuration = 240, onComplete) {
     };
   }, [running, startTime, updateTimer]);
 
-  // Update remaining when duration changes (only if not running and not paused)
+  // Update remaining when duration changes (only if not running)
   // BUT: Don't reset if timer just completed (remaining is already at 0)
   useEffect(() => {
-    if (!running && !isPaused && remaining !== 0) {
+    if (!running && remaining !== 0) {
       setRemaining(duration);
     }
-  }, [duration, running, isPaused, remaining]);
+  }, [duration, running, remaining]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -280,133 +278,127 @@ export default function useTimer(initialDuration = 240, onComplete) {
     };
   }, [running, remaining, startTime, updateTimer]);
 
-  // Display message logic
+  // Display message logic (ADR-007: REST/RUNNING/COMPLETE only, no PAUSED)
   const displayTime = () => {
     const activityId = currentActivityRef.current?.id || 'none';
 
-    // Show completion message if timer finished
+    // COMPLETE: Show completion message if timer finished
     if (remaining === 0 && hasTriggeredCompletion.current && duration > 0) {
       return t(`timerMessages.${activityId}.endMessage`);
     }
 
-    // Show running message while timer is running
+    // RUNNING: Show running message while timer is running
     if (running) {
       return t(`timerMessages.${activityId}.startMessage`);
     }
 
-    // Show pause message when paused
-    if (!running && isPaused) {
-      return 'Pause';
-    }
-
-    // Show nothing at rest
+    // REST: Show nothing (or activity label handled elsewhere)
     return '';
   };
 
-  // Controls
-  const toggleRunning = useCallback(() => {
-    if (remaining === 0) {
-      // Timer at zero - do nothing (user must use Reset or set duration)
+  // Controls (ADR-007: startTimer only starts, stopTimer for long-press abandon)
+  const startTimer = useCallback(() => {
+    // Can't start if already running or at zero
+    if (running || remaining === 0) {
       return;
-    } else if (!running) {
-      // Start or resume
-      // Get endMessage for notification
-      const currentActivityId = currentActivityRef.current?.id || 'none';
-      const endMessage = t(`timerMessages.${currentActivityId}.endMessage`);
-
-      if (isPaused) {
-        // Resume after pause
-        // Re-programmer notification avec temps restant
-        scheduleTimerNotification(remaining, currentActivityRef.current, endMessage);
-
-        if (__DEV__) {
-          console.log(`⏱️ [Reprendre] Notif recalculée avec ${Math.floor(remaining / 60)}min ${remaining % 60}s`);
-        }
-      } else {
-        // First start
-        // Programmer notification pour la fin
-        scheduleTimerNotification(remaining, currentActivityRef.current, endMessage);
-
-        // Sauvegarder la durée initiale si elle a changé
-        if (currentActivityRef.current?.id && duration > 0 &&
-            activityDurations[currentActivityRef.current.id] !== duration) {
-          saveActivityDuration(currentActivityRef.current.id, duration);
-        }
-
-        // Track timer start
-        analytics.trackTimerStarted(duration, currentActivityRef.current, currentColorRef.current, currentPaletteRef.current);
-
-        // Track custom activity usage (increment counter done separately in carousel/context)
-        if (currentActivityRef.current?.isCustom) {
-          analytics.trackCustomActivityUsed(
-            currentActivityRef.current.id,
-            (currentActivityRef.current.timesUsed || 0) + 1
-          );
-        }
-
-        if (__DEV__) {
-          const now = new Date();
-          const minutes = Math.floor(remaining / 60);
-          const secs = remaining % 60;
-          console.log(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
-        }
-      }
-      setIsPaused(false);
-      setRunning(true);
-
-      // Light haptic feedback on timer start (fire-and-forget)
-      haptics.timerStart();
-
-      // Accessibility announcement for timer start
-      const activityLabel = currentActivityRef.current?.label || t('activities.none');
-      const startMessage = currentActivityRef.current?.label
-        ? t('accessibility.timer.activityStarted', { activity: activityLabel })
-        : t('accessibility.timer.timerRunning');
-      AccessibilityInfo.announceForAccessibility(startMessage);
-    } else {
-      // Pause
-      setRunning(false);
-      setIsPaused(true);
-
-      // Track timer paused (only if timer was actually running)
-      if (startTime) {
-        const elapsed = duration - remaining;
-        analytics.trackTimerAbandoned(duration, elapsed, 'paused', currentActivityRef.current);
-      }
-
-      // Annuler la notification
-      cancelTimerNotification();
-
-      if (__DEV__) {
-        console.log(`⏸️ [Pause] Notif annulée`);
-      }
-
-      // Accessibility announcement for timer pause
-      AccessibilityInfo.announceForAccessibility(t('accessibility.timer.timerPaused'));
     }
-  }, [remaining, duration, isPaused, running, scheduleTimerNotification, cancelTimerNotification,
-    activityDurations, saveActivityDuration, startTime, t]);
 
+    // Get endMessage for notification
+    const currentActivityId = currentActivityRef.current?.id || 'none';
+    const endMessage = t(`timerMessages.${currentActivityId}.endMessage`);
+
+    // Schedule notification for completion
+    scheduleTimerNotification(remaining, currentActivityRef.current, endMessage);
+
+    // Save duration if changed
+    if (currentActivityRef.current?.id && duration > 0 &&
+        activityDurations[currentActivityRef.current.id] !== duration) {
+      saveActivityDuration(currentActivityRef.current.id, duration);
+    }
+
+    // Track timer start
+    analytics.trackTimerStarted(duration, currentActivityRef.current, currentColorRef.current, currentPaletteRef.current);
+
+    // Track custom activity usage
+    if (currentActivityRef.current?.isCustom) {
+      analytics.trackCustomActivityUsed(
+        currentActivityRef.current.id,
+        (currentActivityRef.current.timesUsed || 0) + 1
+      );
+    }
+
+    if (__DEV__) {
+      const now = new Date();
+      const minutes = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      console.log(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
+    }
+
+    setRunning(true);
+
+    // Light haptic feedback on timer start
+    haptics.timerStart();
+
+    // Accessibility announcement
+    const activityLabel = currentActivityRef.current?.label || t('activities.none');
+    const startMessage = currentActivityRef.current?.label
+      ? t('accessibility.timer.activityStarted', { activity: activityLabel })
+      : t('accessibility.timer.timerRunning');
+    AccessibilityInfo.announceForAccessibility(startMessage);
+  }, [remaining, duration, running, scheduleTimerNotification,
+    activityDurations, saveActivityDuration, t]);
+
+  // stopTimer: Called by long-press "rewind" gesture (ADR-007)
+  const stopTimer = useCallback(() => {
+    // Can only stop if running
+    if (!running) {
+      return;
+    }
+
+    // Track timer abandoned
+    const elapsed = duration - remaining;
+    analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivityRef.current);
+
+    // Reset to initial state
+    setRemaining(duration);
+    setRunning(false);
+    setStartTime(null);
+    setHasCompleted(false);
+
+    // Cancel notification
+    cancelTimerNotification();
+
+    // Heavy haptic feedback for abandon (ADR-007: warning feedback)
+    haptics.notification('warning').catch(() => {});
+
+    // Accessibility announcement
+    AccessibilityInfo.announceForAccessibility(t('accessibility.timer.timerStopped'));
+
+    if (__DEV__) {
+      console.log(`⏹️ [Stop] Timer abandonné après ${elapsed}s`);
+    }
+  }, [running, duration, remaining, cancelTimerNotification, t]);
+
+  // resetTimer: Reset to initial state (used for COMPLETE → REST transition)
   const resetTimer = useCallback(() => {
-    // Track timer reset (only if timer had started and not completed)
-    if (running || isPaused) {
+    // Track timer reset only if was running
+    if (running) {
       const elapsed = duration - remaining;
       analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivityRef.current);
     }
 
-    setRemaining(duration); // Reset to initial duration
+    setRemaining(duration);
     setRunning(false);
     setStartTime(null);
-    setIsPaused(false);
     setHasCompleted(false);
 
-    // Annuler notification si programmée
+    // Cancel notification if scheduled
     cancelTimerNotification();
 
     if (__DEV__) {
-      console.log(`🔄 [Reset] Notif annulée, timer réinitialisé`);
+      console.log(`🔄 [Reset] Timer réinitialisé`);
     }
-  }, [cancelTimerNotification, running, isPaused, duration, remaining]);
+  }, [cancelTimerNotification, running, duration, remaining]);
 
   const setPresetDuration = useCallback((minutes) => {
     const newDuration = minutes * 60;
@@ -422,7 +414,6 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const setDurationSync = useCallback((newDuration) => {
     setDuration(newDuration);
     if (!running) {
-      // Allow updating remaining when paused or stopped
       setRemaining(newDuration);
     }
   }, [running]);
@@ -436,10 +427,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
     displayMessage: displayTime(),
     isCompleted: hasCompleted,
 
-    // Controls
-    toggleRunning,
+    // Controls (ADR-007: startTimer/stopTimer replace toggleRunning)
+    startTimer,
+    stopTimer,
     resetTimer,
     setDuration: setDurationSync,
-    setPresetDuration
+    setPresetDuration,
+
+    // Legacy alias for compatibility during migration
+    toggleRunning: startTimer,
   };
 }

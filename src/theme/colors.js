@@ -7,6 +7,7 @@
 // 1. brandLight/brandDark: Core brand palette (5 colors each)
 // 2. lightTheme/darkTheme: Semantic tokens derived from brand
 // 3. devColors: Development-only colors (DevFab only)
+// 4. DEBUG MODE: High-saturation audit colors (see devlog 2025-12-19)
 //
 // PHILOSOPHY:
 // All semantic tokens (background, text, border) DERIVE from brand colors.
@@ -22,15 +23,52 @@
 // ============================================================================
 
 // ============================================================================
-// Brand Colors - Light Mode Optimized
+// DEBUG MODE - Design System Audit
 // ============================================================================
-const brandLight = {
-  primary: 'rgba(193, 122, 113, 1)', // Coral rosé foncé (5.1:1 WCAG AA)
-  secondary: 'rgba(149, 83, 74, 1)', // Pêche doré
-  accent: '#ebe8e3', // Cream (lightest) - backgrounds
+// Set to true to use high-saturation colors for visual audit
+// See: _internal/cockpit/knowledge/devlog/2025-12-19_color-system-debug-audit.md
+//
+// IMPORTANT - User-Selected Color (Palette Timer):
+// The timer dial color comes from TimerPaletteContext (currentColor prop).
+// It is NOT part of the design system tokens - it's USER CONTENT.
+// In DEBUG mode, this color stays UNCHANGED (blue/green/red/yellow per user choice).
+// This is INTENTIONAL: it distinguishes CONTENT from SYSTEM colors.
+//
+// Result in DEBUG mode:
+// - Screen background: Noir (#121212)
+// - Dial fill: Noir (#121212)
+// - Dial arc progress: USER COLOR (unchanged, e.g., blue from palette)
+// - Dial border: USER COLOR (unchanged)
+// - Everything else: DEBUG colors (vert, jaune, bleu, violet, orange)
+//
+// This allows visual audit of system roles while preserving content integrity.
+// ============================================================================
+const DEBUG_MODE = true;
+
+// ============================================================================
+// PRODUCTION Colors - Final Brand Palette
+// ============================================================================
+const brandLightProd = {
+  primary: 'rgba(193, 122, 113, 1)', // Coral rosé foncé (5.1:1 WCAG AA) - CTA primaires
+  secondary: 'rgba(149, 83, 74, 1)', // Pêche foncé - Actions secondaires, outlined buttons
+  accent: '#f5dfc9', // Beige clair - Badges, highlights subtils, soft fills
   deep: '#5A5A5A', // Anthracite grey (darkest) - text
   neutral: '#9CA3AF', // Mid grey - secondary text
 };
+
+// ============================================================================
+// DEBUG Colors - Design System Audit (High Saturation)
+// ============================================================================
+const brandLightDebug = {
+  primary: '#0066FF', // Bleu électrique - Action principale (Play)
+  secondary: '#7B2CFF', // Violet saturé - Action secondaire (Stop, Reset)
+  accent: '#FF8A00', // Orange vif - État actif, sélection, highlight
+  deep: '#5A5A5A', // Keep same (text readability)
+  neutral: '#9CA3AF', // Keep same (icons, secondary text)
+};
+
+// Active brand palette (conditional)
+const brandLight = DEBUG_MODE ? brandLightDebug : brandLightProd;
 
 // ============================================================================
 // Brand Colors - Dark Mode Optimized
@@ -56,21 +94,37 @@ const fixed = {
 // ============================================================================
 // Light Theme - All Tokens Derive From Brand
 // ============================================================================
-// PHILOSOPHY: 2-tier hierarchy (background/surface) - no pure white except dial
+// PHILOSOPHY: 3-tier hierarchy (background/surface/surfaceElevated)
 //
 // BUTTON STATES (semantic naming):
-// - Resting: surface (#F3F4F6) + transparent border
-// - Hover: surface + border (brand.primary + '30')
-// - Active: brand.secondary (#95534A) + border brand.primary (2px)
+// - Primary: brand.primary filled + white text
+// - Secondary: surface + brand.secondary border/text
+// - Ghost: background + brand.primary text
 //
 // ============================================================================
+
+// Production color values (preserved)
+const lightThemeProd = {
+  background: '#ebe8e3', // Cream - Screens, large containers, dial fill
+  surface: '#FFFFFF', // Pure white - Cards, buttons, interactive items
+  surfaceElevated: '#F8F6F3', // Off-white - Modals, overlays, premium features
+};
+
+// Debug color values (Design System Audit)
+const lightThemeDebug = {
+  background: '#121212', // Noir charbon - Monde passif
+  surface: '#1AFF6A', // Vert fluo - Conteneurs (cards, buttons)
+  surfaceElevated: '#FFF200', // Jaune acide - Au-dessus (modals, AsideZone)
+};
+
 export const lightTheme = {
   brand: brandLight,
   fixed,
 
-  // Backgrounds (2-tier hierarchy - simplified)
-  background: brandLight.accent, // Cream (#ebe8e3) - Screen backgrounds
-  surface: '#E8E5E0', // Warm gray (darker than cream) - Cards, items, drawers, modals
+  // Backgrounds (3-tier hierarchy) - Conditional DEBUG/PROD
+  background: DEBUG_MODE ? lightThemeDebug.background : lightThemeProd.background,
+  surface: DEBUG_MODE ? lightThemeDebug.surface : lightThemeProd.surface,
+  surfaceElevated: DEBUG_MODE ? lightThemeDebug.surfaceElevated : lightThemeProd.surfaceElevated,
 
   // Typography
   text: '#1F2937', // Primary text (darker than brand.deep for readability)
@@ -84,26 +138,36 @@ export const lightTheme = {
   // Effects
   shadow: 'rgba(0, 0, 0, 0.08)', // Shadow color
   overlay: 'rgba(0, 0, 0, 0.5)', // Modal overlays
+  overlayDark: 'rgba(0, 0, 0, 0.85)', // Dark overlay for toasts
+
+  // Semantic Colors
+  danger: '#D94040', // Destructive actions
+
+  // Brand Opacity Variants (named tokens)
+  brandAccent15: brandLight.primary + '15', // Subtle fills
+  brandAccent20: brandLight.primary + '20', // Active states
+  brandAccent40: brandLight.primary + '40', // Strong borders
 };
 
 // ============================================================================
 // Dark Theme - All Tokens Derive From Brand
 // ============================================================================
-// PHILOSOPHY: 2-tier hierarchy (background/surface) - simplified
+// PHILOSOPHY: 3-tier hierarchy (background/surface/surfaceElevated)
 //
 // BUTTON STATES (semantic naming):
-// - Resting: surface (#2D2D2D) + transparent border
-// - Hover: surface + border (brand.primary + '40')
-// - Active: brand.secondary + border brand.primary
+// - Primary: brand.primary filled + white text
+// - Secondary: surface + brand.secondary border/text
+// - Ghost: background + brand.primary text
 //
 // ============================================================================
 export const darkTheme = {
   brand: brandDark,
   fixed,
 
-  // Backgrounds (2-tier hierarchy - simplified)
-  background: '#1A1A1A', // Dark container - Screen backgrounds
-  surface: '#2D2D2D', // Mid-dark gray - Cards, items, drawers, modals
+  // Backgrounds (3-tier hierarchy)
+  background: '#1A1A1A', // Dark container - Screens, dial fill
+  surface: '#2D2D2D', // Mid-dark gray - Cards, buttons, interactive items
+  surfaceElevated: '#3A3A3A', // Lighter dark - Modals, overlays, premium features
 
   // Typography
   text: '#FEFEFE', // Primary text
@@ -117,6 +181,15 @@ export const darkTheme = {
   // Effects
   shadow: 'rgba(0, 0, 0, 0.3)', // Stronger shadow for dark mode
   overlay: 'rgba(0, 0, 0, 0.7)', // Darker overlay
+  overlayDark: 'rgba(0, 0, 0, 0.9)', // Very dark overlay for toasts
+
+  // Semantic Colors
+  danger: '#FF6B6B', // Destructive actions (lighter for dark mode)
+
+  // Brand Opacity Variants (named tokens)
+  brandAccent15: brandDark.primary + '15', // Subtle fills
+  brandAccent20: brandDark.primary + '20', // Active states
+  brandAccent40: brandDark.primary + '40', // Strong borders
 };
 
 // ============================================================================

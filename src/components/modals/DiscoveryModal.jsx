@@ -77,7 +77,7 @@ export default function DiscoveryModal({
     },
 
     modalContainer: {
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.surfaceElevated,
       borderRadius: Platform.select({
         ios: 20,
         android: 16,

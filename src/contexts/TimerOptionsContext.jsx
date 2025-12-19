@@ -39,6 +39,8 @@ export const TimerOptionsProvider = ({ children }) => {
         hasSeenTwoTimersModal: false,
         commandBarConfig: [],
         carouselBarConfig: [],
+        longPressConfirmDuration: 2500, // ADR-007: Default 2.5s (range: 1000-5000ms)
+        startAnimationDuration: 1200, // Default 1.2s for start animation (range: 300-2000ms)
       };
     }
 
@@ -49,9 +51,9 @@ export const TimerOptionsProvider = ({ children }) => {
       showActivityEmoji: true,
       keepAwakeEnabled: true,
       clockwise: false,
-      scaleMode: '45min',
+      scaleMode: '30min',
       currentActivity: getDefaultActivity(),
-      currentDuration: 2700, // 45 minutes par défaut (45 * 60 = 2700s)
+      currentDuration: 1500, // 25 minutes par défaut (25 * 60 = 1500s)
       favoriteActivities: ['work', 'break', 'meditation'],
       favoritePalettes: [],
       selectedSoundId: 'bell_classic',
@@ -60,6 +62,8 @@ export const TimerOptionsProvider = ({ children }) => {
       hasSeenTwoTimersModal: false,
       commandBarConfig: [],
       carouselBarConfig: [],
+      longPressConfirmDuration: 2500, // ADR-007: Default 2.5s (range: 1000-5000ms)
+      startAnimationDuration: 1200, // Default 1.2s for start animation (range: 300-2000ms)
     };
   };
 
@@ -167,6 +171,8 @@ export const TimerOptionsProvider = ({ children }) => {
     hasSeenTwoTimersModal: values.hasSeenTwoTimersModal,
     commandBarConfig: values.commandBarConfig,
     carouselBarConfig: values.carouselBarConfig,
+    longPressConfirmDuration: values.longPressConfirmDuration,
+    startAnimationDuration: values.startAnimationDuration,
 
     // Actions
     setShouldPulse: (val) => updateValue('shouldPulse', val),
@@ -185,6 +191,16 @@ export const TimerOptionsProvider = ({ children }) => {
     setHasSeenTwoTimersModal: (val) => updateValue('hasSeenTwoTimersModal', val),
     setCommandBarConfig: (val) => updateValue('commandBarConfig', val),
     setCarouselBarConfig: (val) => updateValue('carouselBarConfig', val),
+    setLongPressConfirmDuration: (val) => {
+      // ADR-007: Clamp value to valid range (1000-5000ms)
+      const clamped = Math.max(1000, Math.min(5000, val));
+      updateValue('longPressConfirmDuration', clamped);
+    },
+    setStartAnimationDuration: (val) => {
+      // Clamp value to valid range (300-2000ms)
+      const clamped = Math.max(300, Math.min(2000, val));
+      updateValue('startAnimationDuration', clamped);
+    },
 
     // Helper pour sauvegarder la durée d'une activité spécifique
     saveActivityDuration: (activityId, duration) => {
