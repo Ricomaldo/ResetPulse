@@ -6,8 +6,7 @@
  */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TimeTimer, ActivityBadgeOverlay } from '../dial';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { TimeTimer } from '../dial';
 
 /**
  * DialZone - Solo dial display (centered)
@@ -26,8 +25,6 @@ export default function DialZone({
   onTimerComplete,
   isLandscape = false,
 }) {
-  const { flashActivity } = useTimerOptions();
-
   // Dynamic container style based on orientation
   const containerStyle = [
     styles.container,
@@ -47,9 +44,6 @@ export default function DialZone({
           />
         </View>
       </View>
-
-      {/* Activity Badge Overlay - Bottom of DialZone with negative margin to overlap AsideZone */}
-      <ActivityBadgeOverlay flashActivity={flashActivity} />
     </View>
   );
 }

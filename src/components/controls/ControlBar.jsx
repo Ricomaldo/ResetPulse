@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { rs } from '../../styles/responsive';
+import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import DigitalTimer from './DigitalTimer';
 import FitButton from './FitButton';
 import { PulseButton } from '../buttons';
@@ -139,35 +140,38 @@ const ControlBar = React.memo(function ControlBar({
     }
   };
 
-  // Sizes (using theme tokens)
-  const gap = compact ? theme.spacing.sm : theme.spacing.md;
-  const columnGap = compact ? theme.spacing.md : theme.spacing.lg; // Écart des colonnes par rapport au centre
-  const pulseSize = compact ? rs(44) : rs(52);
+  // Sizes (using harmonized responsive sizing)
+  const sizes = harmonizedSizes.controlBar;
+  const gap = compact ? rs(8) : rs(13);
+  const pulseSize = compact ? sizes.pulseButton.compact : sizes.pulseButton.normal;
 
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
+      paddingHorizontal: sizes.containerPadding.horizontal,
+      position: 'relative',
     },
     columnLeft: {
-      flex: 1,
+      position: 'absolute',
+      left: 0,
       alignItems: 'flex-start',
       justifyContent: 'center',
-      marginRight: columnGap,
+      paddingLeft: sizes.containerPadding.horizontal,
     },
     columnCenter: {
-      flex: 0,
       alignItems: 'center',
       justifyContent: 'center',
     },
     columnRight: {
-      flex: 1,
+      position: 'absolute',
+      right: 0,
       alignItems: 'flex-end',
       justifyContent: 'center',
       flexDirection: 'row',
       gap: gap,
-      marginLeft: columnGap,
+      paddingRight: sizes.containerPadding.horizontal,
     },
   });
 
@@ -190,11 +194,10 @@ const ControlBar = React.memo(function ControlBar({
         />
       </View>
 
-      {/* CENTER: PulseButton [▶] - Always centered */}
+      {/* CENTER: PulseButton [▶] - Always centered, icons only (no emoji) */}
       <View style={styles.columnCenter}>
         <PulseButton
           state={getPulseState()}
-          activity={currentActivity}
           onTap={handlePulseTap}
           clockwise={clockwise}
           size={pulseSize}
@@ -209,7 +212,7 @@ const ControlBar = React.memo(function ControlBar({
         <CircularToggle
           clockwise={clockwise}
           onToggle={setClockwise}
-          size={compact ? 32 : 40}
+          size={compact ? sizes.rotateToggle.compact : sizes.rotateToggle.normal}
         />
       </View>
     </View>

@@ -11,6 +11,7 @@ const BASE_UNIT = 8;
 
 // Système d'espacement basé sur le nombre d'or
 export const spacing = {
+  xxs: BASE_UNIT * 0.25,                  // 2
   xs: BASE_UNIT * 0.5,                    // 4
   sm: BASE_UNIT,                          // 8
   md: BASE_UNIT * GOLDEN_RATIO,           // ~13

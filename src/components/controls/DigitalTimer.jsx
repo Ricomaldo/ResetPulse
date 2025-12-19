@@ -371,7 +371,7 @@ const DigitalTimer = React.memo(function DigitalTimer({
         onPress={() => {}} // No-op, actual action handled via press handlers
         disabled={!shouldShowControls || !showTime}
         accessibilityLabel="Diminuer la durée"
-        style={[(!shouldShowControls || !showTime) && { opacity: 0 }]}
+        style={(!shouldShowControls || !showTime) && { opacity: 0 }}
       />
 
       <TouchableOpacity
@@ -409,7 +409,7 @@ const DigitalTimer = React.memo(function DigitalTimer({
         onPress={() => {}} // No-op, actual action handled via press handlers
         disabled={!shouldShowControls || !showTime}
         accessibilityLabel="Augmenter la durée"
-        style={[(!shouldShowControls || !showTime) && { opacity: 0 }]}
+        style={(!shouldShowControls || !showTime) && { opacity: 0 }}
       />
     </View>
   );

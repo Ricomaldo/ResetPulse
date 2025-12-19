@@ -17,6 +17,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { rs } from '../../styles/responsive';
+import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import { getAllActivities, getFreeActivities } from '../../config/activities';
 import haptics from '../../utils/haptics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
@@ -217,16 +218,16 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     outerContainer: {
       alignItems: 'center',
       flexDirection: 'column',
-      gap: theme.spacing.xs,
+      gap: harmonizedSizes.carouselSpacing.stackGap,
       justifyContent: 'center',
     },
     pageContainer: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: theme.spacing.md,
+      gap: harmonizedSizes.carouselSpacing.itemGap,
       justifyContent: 'center',
-      paddingHorizontal: rs(6, 'width'),
-      paddingVertical: theme.spacing.xs,
+      paddingHorizontal: harmonizedSizes.carouselSpacing.containerPadding.horizontal,
+      paddingVertical: harmonizedSizes.carouselSpacing.containerPadding.vertical,
       width: rs(280, 'width'), // Fixed width per page for paging
     },
     scrollContent: {
@@ -235,7 +236,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     },
     scrollView: {
       flexGrow: 0,
-      height: rs(70, 'min'), // Standardized height for BottomSheet
+      height: harmonizedSizes.scrollView.height,
     },
   });
 

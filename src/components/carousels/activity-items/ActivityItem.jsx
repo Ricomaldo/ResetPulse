@@ -8,6 +8,7 @@ import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../../../styles/responsive';
+import { harmonizedSizes } from '../../../styles/harmonized-sizes';
 import Icons from '../../layout/Icons';
 
 // Color constants for transparency overlays
@@ -53,8 +54,8 @@ const ActivityItem = React.memo(function ActivityItem({
       width: '100%',
     },
     activityEmoji: {
-      fontSize: rs(34, 'min'),
-      lineHeight: rs(36, 'min'),
+      fontSize: harmonizedSizes.carouselItem.iconSize,
+      lineHeight: harmonizedSizes.carouselItem.iconSize,
       textAlign: 'center',
     },
     activityInner: {
@@ -66,10 +67,10 @@ const ActivityItem = React.memo(function ActivityItem({
     activityWrapper: {
       backgroundColor: theme.colors.fixed.transparent,
       borderRadius: theme.borderRadius.full,
-      height: rs(60, 'min'),
+      height: harmonizedSizes.carouselItem.size,
       opacity: isLocked ? 0.5 : 1,
       overflow: 'visible',
-      width: rs(60, 'min'),
+      width: harmonizedSizes.carouselItem.size,
     },
     customBadge: {
       alignItems: 'center',
