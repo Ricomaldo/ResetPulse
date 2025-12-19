@@ -14,7 +14,8 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
-import { Layer1, Layer2, Layer3 } from './aside-content';
+import { FavoriteToolBox, ToolBox } from './aside-content';
+import { SettingsPanel } from '../settings';
 
 // Get screen height for responsive calculations
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -85,7 +86,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
     >
       {/* All layers superposed (FavoriteTool + BaseCommands + AllOptions) */}
       <Animated.View style={[styles.layerContainer, containerHeightStyle]}>
-        {/* Layer 1: FavoriteTool - behind, responsive height, dynamic content */}
+        {/* Snap 15%: FavoriteToolBox */}
         <Animated.View
           style={[
             styles.layerAbsolute,
@@ -93,7 +94,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
             favoriteOpacityStyle,
           ]}
         >
-          <Layer1
+          <FavoriteToolBox
             isTimerRunning={isTimerRunning}
             isTimerCompleted={isTimerCompleted}
             onPlay={onPlay}
@@ -102,7 +103,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
           />
         </Animated.View>
 
-        {/* Layer 2: BaseCommands - middle, 100% container height */}
+        {/* Snap 38%: ToolBox (all 3 tools) */}
         <Animated.View
           style={[
             styles.layerAbsolute,
@@ -110,7 +111,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
             baseOpacityStyle,
           ]}
         >
-          <Layer2
+          <ToolBox
             isTimerRunning={isTimerRunning}
             isTimerCompleted={isTimerCompleted}
             onPlay={onPlay}
@@ -121,7 +122,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
           />
         </Animated.View>
 
-        {/* Layer 3: AllOptions - on top, 100% container height, scrollable content */}
+        {/* Snap 90%: SettingsPanel */}
         <Animated.View
           style={[
             styles.layerAbsolute,
@@ -129,7 +130,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
             allOpacityStyle,
           ]}
         >
-          <Layer3 />
+          <SettingsPanel />
         </Animated.View>
       </Animated.View>
     </BottomSheetScrollView>

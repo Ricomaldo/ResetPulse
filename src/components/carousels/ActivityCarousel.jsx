@@ -13,23 +13,23 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
-import { useTheme } from '../../../theme/ThemeProvider';
-import { useTranslation } from '../../../hooks/useTranslation';
-import { useTimerOptions } from '../../../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../../../contexts/TimerPaletteContext';
-import { rs } from '../../../styles/responsive';
-import { getAllActivities, getFreeActivities } from '../../../config/activities';
-import haptics from '../../../utils/haptics';
-import { usePremiumStatus } from '../../../hooks/usePremiumStatus';
-import { useCustomActivities } from '../../../hooks/useCustomActivities';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { rs } from '../../styles/responsive';
+import { getAllActivities, getFreeActivities } from '../../config/activities';
+import haptics from '../../utils/haptics';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useCustomActivities } from '../../hooks/useCustomActivities';
 import {
   PremiumModal,
   MoreActivitiesModal,
   CreateActivityModal,
   EditActivityModal,
-} from '../../modals';
-import { ActivityItem, PlusButton } from './activity-items';
-import { fontWeights } from '../../../theme/tokens';
+} from '../modals/index';
+import { ActivityItem, PlusButton } from './activity-items/index';
+import { fontWeights } from '../../theme/tokens';
 
 const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = false }, ref) {
   const theme = useTheme();
@@ -38,6 +38,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     currentActivity,
     setCurrentActivity,
     setCurrentDuration,
+    handleActivitySelect,
     favoriteActivities = [],
     activityDurations = {},
   } = useTimerOptions();
@@ -141,13 +142,18 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     }
 
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+
+    // Trigger flash feedback (ADR-007 messaging)
+    handleActivitySelect(activity);
+
+    // Update current activity and duration
     setCurrentActivity(activity);
     const savedDuration = activityDurations[activity.id];
     if (savedDuration) {setCurrentDuration(savedDuration);}
     else if (activity.defaultDuration) {setCurrentDuration(activity.defaultDuration);}
     animateSelection(activity.id);
     showActivityName();
-  }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration]);
+  }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration, handleActivitySelect]);
 
   const handleMorePress = useCallback(() => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
@@ -252,7 +258,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     },
     scrollView: {
       flexGrow: 0,
-      height: rs(75, 'min'), // Compact height for BottomSheet
+      height: rs(70, 'min'), // Standardized height for BottomSheet
     },
   });
 

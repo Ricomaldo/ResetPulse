@@ -35,7 +35,7 @@ const FitButton = React.memo(function FitButton({
   const styles = StyleSheet.create({
     button: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.surfaceElevated, // Same as parent (BottomSheet)
       borderColor: theme.colors.border,
       borderRadius: buttonSize / 2,
       borderWidth: 1.5,

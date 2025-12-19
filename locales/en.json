@@ -7,6 +7,7 @@
     "ok": "OK",
     "skip": "Skip"
   },
+  "invitation": "Ready?",
   "welcome": {
     "title": "Welcome to ResetPulse",
     "subtitle": "Choose an activity, adjust the duration, start.",

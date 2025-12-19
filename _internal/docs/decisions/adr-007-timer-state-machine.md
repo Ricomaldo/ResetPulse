@@ -119,6 +119,138 @@ Timer sens anti-horaire :
 
 ---
 
+## Messaging System
+
+### Principes
+
+Le système de messaging guide l'utilisateur à travers chaque étape du timer avec des messages clairs et contextuels.
+
+### States et Messages
+
+| État Timer | Trigger | Message affiché | Durée | Comportement |
+|-----------|---------|-----------------|-------|-------------|
+| **REST** | Défaut | `t('invitation')` = "Prêt ?" | Permanent | Invite à sélectionner une activité |
+| **SÉLECTION** | Tap activité carousel | `"🎯 {emoji} {label}"` flash | 2s → REST | Confirme le choix, retourne auto à "Prêt ?" |
+| **RUNNING** | Tap play | `timerMessages.{activityId}.startMessage` + dots animés | Permanent | Message motivant adapté à l'activité (ex: "Focus...", "Détente...", "Respire...") |
+| **COMPLETE** | Timer = 0s | `timerMessages.{activityId}.endMessage` + NO dots | 3500ms | Message de célébration (ex: "Accompli ✨", "Rechargé 🔋") |
+| **TRANSITION** | Après COMPLETE | Silence / vide | 300ms | Espace de respiration visuelle |
+| **RESET** | Tap reset ou auto après délai | `t('invitation')` = "Prêt ?" | Permanent | Retour au repos |
+
+### Comportement détaillé
+
+**1. Au démarrage (REST)**
+- Affiche: `t('invitation')` ("Prêt ?", "Ready?", "Bereit?", etc. selon langue)
+- User peut sélectionner une activité dans ActivityCarousel
+
+**2. Sélection d'activité (SÉLECTION)**
+- User tap une activité → déclenche le **flash state**
+- Affiche: `"{emoji} {label}"` (ex: "☕ Pause")
+- Durée: 2s
+- Auto-retour: "Prêt ?"
+- Charge la durée sauvegardée pour cette activité
+
+**3. Pendant le countdown (RUNNING)**
+- User tap play → timer lance et affiche le startMessage
+- Affiche: `timerMessages.{activityId}.startMessage` + points animés (".", "..", "...")
+- Points tournent selon `activity.pulseDuration` (400-800ms par défaut)
+- Le message change JAMAIS pendant la session, pour focus max
+
+**4. Timer terminé (COMPLETE)**
+- Affiche: `timerMessages.{activityId}.endMessage` (ex: "Accomplished ✨")
+- Points disparaissent (importé isCompleted supprime les dots)
+- Visible pendant 3500ms
+- User peut taper dial pour retourner REST
+
+**5. Transition (RESET)**
+- Après les 3500ms de COMPLETE, délai de 300ms de silence
+- Aucun message affiché = espace de respiration
+- Puis retour auto à "Prêt ?"
+
+### Traductions (i18n)
+
+**Clés i18n requises:**
+
+```json
+{
+  "invitation": "Prêt ?",  // NEW - invitation au repos
+  "timerMessages": {
+    "none": {
+      "startMessage": "Ready",
+      "endMessage": "Well done 🎉"
+    },
+    "work": {
+      "startMessage": "Focus",
+      "endMessage": "Accomplished ✨"
+    },
+    "break": {
+      "startMessage": "Rest",
+      "endMessage": "Recharged 🔋"
+    },
+    // ... 12 autres activités
+  }
+}
+```
+
+**Couverts: 15 langues**
+- EN, FR, ES, DE, IT, PT, NL, JA, KO, ZH-Hans, ZH-Hant, AR, RU, SV, NO
+
+### States et Props
+
+**Dans TimerOptionsContext:**
+```javascript
+// NEW - Flash state pour sélection activité
+const [flashActivity, setFlashActivity] = useState(null);
+const [flashTimeout, setFlashTimeout] = useState(null);
+
+// Déclencher le flash
+const handleActivitySelect = (activity) => {
+  setFlashActivity(activity);
+  if (flashTimeout) clearTimeout(flashTimeout);
+  setFlashTimeout(
+    setTimeout(() => {
+      setFlashActivity(null);
+    }, 2000)  // 2 secondes
+  );
+};
+```
+
+**Dans ActivityLabel:**
+```javascript
+const getMessage = (timerState, currentActivity, flashActivity) => {
+  // 1. Flash state prioritaire (sélection activité)
+  if (flashActivity) {
+    return `${flashActivity.emoji} ${flashActivity.label}`;
+  }
+
+  // 2. États du timer
+  if (timerState === 'REST') return t('invitation');      // "Prêt ?"
+  if (timerState === 'RUNNING') return displayMessage;    // startMessage + dots
+  if (timerState === 'COMPLETE') return displayMessage;   // endMessage, no dots
+
+  return '';  // Défaut
+};
+```
+
+### Fichiers à modifier
+
+| # | Fichier | Changement |
+|---|---------|-----------|
+| 1 | `locales/*.json` | ADD clé `invitation` (pour "Prêt ?" i18n) |
+| 2 | `TimerOptionsContext.jsx` | ADD `flashActivity` + `setFlashActivity` + `handleActivitySelect()` |
+| 3 | `ActivityCarousel.jsx` | Utiliser `handleActivitySelect()` au lieu de `setCurrentActivity()` directement |
+| 4 | `ActivityLabel.jsx` | Utiliser `getMessage()` avec flashActivity en priorité |
+| 5 | `useTimer.js` | Renommer `displayTime()` → `getDisplayMessage()` (clarté) |
+
+### Timings de confirmation
+
+| Élément | Délai | Raison |
+|--------|-------|--------|
+| COMPLETE message visible | 3500ms | Laisser l'utilisateur savourer l'accomplissement |
+| Délai de transition | 300ms | Espace de respiration visuelle |
+| Flash sélection activité | 2000ms | Assez long pour confirmer, pas trop pour bloquer |
+
+---
+
 ## Implementation technique
 
 ### Composant nouveau : LongPressStopButton

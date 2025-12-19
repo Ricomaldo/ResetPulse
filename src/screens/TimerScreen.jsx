@@ -17,6 +17,7 @@ function TimerScreenContent() {
     incrementCompletedTimers,
     hasSeenTwoTimersModal,
     setHasSeenTwoTimersModal,
+    flashActivity,
   } = useTimerOptions();
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
@@ -111,31 +112,30 @@ function TimerScreenContent() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       edges={['top', 'bottom']}
     >
-      {/* LANDSCAPE MODE: ZEN ABSOLUTE - Only dial visible */}
-      {!isLandscape && (
-        <>
-          {/* DIAL ZONE - Self-contained: ActivityLabel (top) + TimeTimer (center) */}
-          <DialZone
-            displayMessage={displayMessage}
-            isCompleted={isTimerCompleted}
-            onRunningChange={setIsTimerRunning}
-            onTimerRef={(ref) => {
-              timerRef.current = ref;
-            }}
-            onDialTap={handleDialTap}
-            onTimerComplete={handleTimerComplete}
-          />
+      {/* DIAL ZONE - Always visible (portrait & landscape) */}
+      <DialZone
+        displayMessage={displayMessage}
+        isCompleted={isTimerCompleted}
+        flashActivity={flashActivity}
+        onRunningChange={setIsTimerRunning}
+        onTimerRef={(ref) => {
+          timerRef.current = ref;
+        }}
+        onDialTap={handleDialTap}
+        onTimerComplete={handleTimerComplete}
+        isLandscape={isLandscape}
+      />
 
-          {/* ASIDE ZONE - BottomSheet 3-Snap (ADR-005 v2) */}
-          <AsideZone
-            isTimerRunning={isTimerRunning}
-            isTimerCompleted={isTimerCompleted}
-            onPlay={handlePlayPause}
-            onReset={handleReset}
-            onStop={handleStop}
-            onOpenSettings={() => setSettingsModalVisible(true)}
-          />
-        </>
+      {/* ASIDE ZONE - Portrait only (hidden in landscape for zen mode) */}
+      {!isLandscape && (
+        <AsideZone
+          isTimerRunning={isTimerRunning}
+          isTimerCompleted={isTimerCompleted}
+          onPlay={handlePlayPause}
+          onReset={handleReset}
+          onStop={handleStop}
+          onOpenSettings={() => setSettingsModalVisible(true)}
+        />
       )}
 
       {/* Two Timers Reminder Modal (ADR-003) */}

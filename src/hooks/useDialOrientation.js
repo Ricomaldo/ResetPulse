@@ -47,8 +47,9 @@ export function useDialOrientation(isClockwise, scaleMode) {
       minutes = (360 - normalizedAngle) / config.degreesPerMinute;
     }
 
-    // Round to nearest integer (timer displays whole minutes)
-    minutes = Math.round(minutes);
+    // IMPORTANT:
+    // Do NOT round here. Keep fractional minutes during drag for smooth motion.
+    // Rounding/snap is applied on release in TimeTimer via snap-settings.js.
 
     // Clamp to valid range [0, maxMinutes]
     return Math.max(0, Math.min(config.maxMinutes, minutes));

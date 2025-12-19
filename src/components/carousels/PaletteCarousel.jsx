@@ -11,17 +11,17 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
-import { useTheme } from '../../../theme/ThemeProvider';
-import { useTimerPalette } from '../../../contexts/TimerPaletteContext';
-import { useTimerOptions } from '../../../contexts/TimerOptionsContext';
-import { useTranslation } from '../../../hooks/useTranslation';
-import { rs } from '../../../styles/responsive';
-import { TIMER_PALETTES, getFreePalettes } from '../../../config/timer-palettes';
-import { usePremiumStatus } from '../../../hooks/usePremiumStatus';
-import haptics from '../../../utils/haptics';
-import { PremiumModal, MoreColorsModal } from '../../modals';
-import { fontWeights } from '../../../theme/tokens';
-import Icons from '../../layout/Icons';
+import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTranslation } from '../../hooks/useTranslation';
+import { rs } from '../../styles/responsive';
+import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import haptics from '../../utils/haptics';
+import { PremiumModal, MoreColorsModal } from '../modals/index';
+import { fontWeights } from '../../theme/tokens';
+import Icons from '../layout/Icons';
 
 const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   const theme = useTheme();
@@ -216,8 +216,8 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
       maxWidth: rs(280, 'width'),
     },
     scrollView: {
-      flexGrow: 0, // CRITICAL: Prevent flex expansion in BottomSheet
-      height: rs(65, 'min'), // Compact height for BottomSheet
+      flexGrow: 0,
+      height: rs(70, 'min'), // Standardized height for BottomSheet
     },
   });
 

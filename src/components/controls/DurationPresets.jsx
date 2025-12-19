@@ -58,7 +58,7 @@ const DurationPresets = React.memo(function DurationPresets({
     },
     presetButton: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.surfaceElevated, // Same as parent (BottomSheet)
       borderColor: theme.colors.border,
       borderRadius: rs(8),
       borderWidth: 1.5,

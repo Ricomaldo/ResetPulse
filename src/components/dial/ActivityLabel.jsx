@@ -8,8 +8,9 @@ import { rs } from '../../styles/responsive';
  * ActivityLabel - Dynamic header that changes based on timer state
  *
  * States:
- * - REST: emoji + label (no dots)
- * - START/RUNNING/PAUSE: message with animated dots
+ * - REST: invitation message ("Ready?", "Prêt?")
+ * - FLASH (activity select): emoji + label + "flash" feedback (2s)
+ * - RUNNING: message with animated dots
  * - COMPLETE: end message (no dots)
  *
  * Layout: Flexbox with balance
@@ -22,6 +23,7 @@ function ActivityLabel({
   animatedDots,
   displayMessage,
   isCompleted,
+  flashActivity,
 }) {
   const theme = useTheme();
   const dotsOpacityRef = useRef(new Animated.Value(0)).current;
@@ -84,9 +86,21 @@ function ActivityLabel({
     },
   });
 
-  // Determine what to display based on state
-  const shouldShowDots = displayMessage && !isCompleted; // Dots for messages, not for completion
-  const displayText = displayMessage || label || '';
+  // Determine what to display based on state (ADR-007 messaging)
+  // Priority: flashActivity > displayMessage > label > ''
+  let displayText = '';
+  if (flashActivity) {
+    // Flash state (activity selection): show emoji + label (2s feedback)
+    displayText = `${flashActivity.emoji} ${flashActivity.label}`;
+  } else if (displayMessage) {
+    // Running or completed message
+    displayText = displayMessage;
+  } else {
+    // Default: label (REST state)
+    displayText = label || '';
+  }
+
+  const shouldShowDots = displayMessage && !isCompleted && !flashActivity; // Dots for running messages only, not flash or completion
 
   return (
     <View style={styles.container}>
@@ -122,12 +136,17 @@ ActivityLabel.propTypes = {
   displayMessage: PropTypes.string,
   isCompleted: PropTypes.bool,
   label: PropTypes.string,
+  flashActivity: PropTypes.shape({
+    emoji: PropTypes.string,
+    label: PropTypes.string,
+  }),
 };
 
 ActivityLabel.defaultProps = {
   displayMessage: '',
   isCompleted: false,
   label: '',
+  flashActivity: null,
 };
 
 export default ActivityLabel;

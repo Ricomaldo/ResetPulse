@@ -1,5 +1,5 @@
 // src/contexts/TimerOptionsContext.jsx
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,6 +16,13 @@ const TimerOptionsContext = createContext(null);
  */
 export const TimerOptionsProvider = ({ children }) => {
   const hasLoadedOnboardingConfig = useRef(false);
+
+  // Transient state for timer remaining (not persisted)
+  const [timerRemaining, setTimerRemaining] = useState(0);
+
+  // Flash state for activity selection feedback (ADR-007 messaging)
+  const [flashActivity, setFlashActivity] = useState(null);
+  const flashTimeoutRef = useRef(null);
 
   // Valeurs par défaut : mode production ou dev
   const getDefaultValues = () => {
@@ -153,7 +160,27 @@ export const TimerOptionsProvider = ({ children }) => {
     loadOnboardingConfig();
   }, [isLoading, updateValue]);
 
+  // Handle activity selection with flash feedback (ADR-007 messaging)
+  const handleActivitySelect = useCallback((activity) => {
+    // Clear any existing timeout
+    if (flashTimeoutRef.current) {
+      clearTimeout(flashTimeoutRef.current);
+    }
+    // Show activity flash for 2 seconds
+    setFlashActivity(activity);
+    flashTimeoutRef.current = setTimeout(() => {
+      setFlashActivity(null);
+    }, 2000);
+  }, []);
+
   const value = {
+    // Transient state (not persisted)
+    timerRemaining,
+    setTimerRemaining,
+    flashActivity,
+    setFlashActivity,
+    handleActivitySelect,
+
     // States
     shouldPulse: values.shouldPulse,
     showDigitalTimer: values.showDigitalTimer,

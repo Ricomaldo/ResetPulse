@@ -4,12 +4,11 @@
  * @updated 2025-12-14
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet, Image } from 'react-native';
-import { useTheme } from '../../../../theme/ThemeProvider';
-import { useTranslation } from '../../../../hooks/useTranslation';
-import { rs } from '../../../../styles/responsive';
-import Icons from '../../../layout/Icons';
-import timerPng from '../../../../../assets/icons/timer.png';
+import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { useTheme } from '../../../theme/ThemeProvider';
+import { useTranslation } from '../../../hooks/useTranslation';
+import { rs } from '../../../styles/responsive';
+import Icons from '../../layout/Icons';
 
 // Color constants for transparency overlays
 const TRANSPARENT = 'transparent';
@@ -127,10 +126,10 @@ const ActivityItem = React.memo(function ActivityItem({
       >
         <View style={styles.activityInner}>
           {activity.id === 'none' ? (
-            <Image
-              source={timerPng}
-              style={{ width: rs(32, 'min'), height: rs(32, 'min') }}
-              resizeMode="contain"
+            <Icons
+              name="timer"
+              size={rs(32, 'min')}
+              color={isActive ? theme.colors.fixed.white : theme.colors.textSecondary}
             />
           ) : (
             <Text style={styles.activityEmoji}>

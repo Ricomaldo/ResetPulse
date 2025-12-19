@@ -19,6 +19,7 @@ import {
   Lock as LucideLock,
   Pencil as LucidePencil,
   Gem as LucideGem,
+  Timer as LucideTimer,
 } from 'lucide-react-native';
 
 export const PlayIcon = React.memo(function PlayIcon({ size = 24, color }) {
@@ -135,6 +136,7 @@ const iconMap = {
   premium: LucideGem,
   rotateCw: LucideRotateCw,
   rotateCcw: LucideRotateCcw,
+  timer: LucideTimer,
 };
 
 const Icons = function Icons({ name, size = 24, color }) {
