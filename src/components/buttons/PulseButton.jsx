@@ -39,6 +39,11 @@ const PULSE_DURATION = 1500; // 1.5s per half-cycle = 3s full cycle
 // State transition constants
 const STATE_TRANSITION_DURATION = 250;
 
+// Halo animation constants (RUNNING state elaborate pulse)
+const HALO_DURATION = 1200; // Duration for one halo expansion
+const HALO_SCALE_MAX = 1.8; // Max scale (expands to 1.8x button size)
+const HALO_DELAY = 600; // Delay between halos (stagger)
+
 // Animated Circle component
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -101,6 +106,73 @@ const PulseButton = React.memo(function PulseButton({
       pulseScale.value = withTiming(1, { duration: 200, easing: Easing.out(Easing.quad) });
     }
   }, [shouldPulse, state]);
+
+  // === HALO ANIMATION (RUNNING state, when enabled) ===
+  // Two halos with staggered timing for continuous ripple effect
+  const halo1Scale = useSharedValue(1);
+  const halo1Opacity = useSharedValue(0);
+  const halo2Scale = useSharedValue(1);
+  const halo2Opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (shouldPulse && state === 'running') {
+      // Start halo 1 animation (repeating)
+      halo1Scale.value = withRepeat(
+        withTiming(HALO_SCALE_MAX, { duration: HALO_DURATION, easing: Easing.out(Easing.quad) }),
+        -1,
+        false
+      );
+      halo1Opacity.value = withRepeat(
+        withSequence(
+          withTiming(0.6, { duration: 100, easing: Easing.out(Easing.quad) }), // Quick fade in
+          withTiming(0, { duration: HALO_DURATION - 100, easing: Easing.in(Easing.quad) }) // Slow fade out
+        ),
+        -1,
+        false
+      );
+
+      // Start halo 2 animation (staggered by HALO_DELAY)
+      const startHalo2 = () => {
+        halo2Scale.value = withRepeat(
+          withTiming(HALO_SCALE_MAX, { duration: HALO_DURATION, easing: Easing.out(Easing.quad) }),
+          -1,
+          false
+        );
+        halo2Opacity.value = withRepeat(
+          withSequence(
+            withTiming(0.6, { duration: 100, easing: Easing.out(Easing.quad) }),
+            withTiming(0, { duration: HALO_DURATION - 100, easing: Easing.in(Easing.quad) })
+          ),
+          -1,
+          false
+        );
+      };
+      const halo2Timer = setTimeout(startHalo2, HALO_DELAY);
+
+      return () => clearTimeout(halo2Timer);
+    } else {
+      // Stop halo animations
+      cancelAnimation(halo1Scale);
+      cancelAnimation(halo1Opacity);
+      cancelAnimation(halo2Scale);
+      cancelAnimation(halo2Opacity);
+      halo1Scale.value = 1;
+      halo1Opacity.value = 0;
+      halo2Scale.value = 1;
+      halo2Opacity.value = 0;
+    }
+  }, [shouldPulse, state]);
+
+  // Animated styles for halos
+  const halo1Style = useAnimatedStyle(() => ({
+    opacity: halo1Opacity.value,
+    transform: [{ scale: halo1Scale.value }],
+  }));
+
+  const halo2Style = useAnimatedStyle(() => ({
+    opacity: halo2Opacity.value,
+    transform: [{ scale: halo2Scale.value }],
+  }));
 
   // === STATE TRANSITION ANIMATION ===
   const stateProgress = useSharedValue(state === 'running' ? 1 : 0);
@@ -283,13 +355,36 @@ const PulseButton = React.memo(function PulseButton({
     },
     progressOverlay: {
       position: 'absolute',
-      // Inverse rotation for "rewind" effect (opposite of timer direction)
-      transform: [{ rotate: clockwise ? '-90deg' : '90deg' }],
+      // STOP: Inverse direction of timer (rewind effect)
+      // scaleY(-1) mirrors vertically = reverses stroke direction
+      // rotate(-90deg) starts from top
+      transform: [
+        { rotate: '-90deg' },
+        { scaleY: clockwise ? -1 : 1 }, // Inverse of timer direction
+      ],
     },
     progressOverlayStart: {
       position: 'absolute',
-      // Same rotation as timer direction for "winding up" effect
-      transform: [{ rotate: clockwise ? '90deg' : '-90deg' }],
+      // START: Same direction as timer (winding up effect)
+      transform: [
+        { rotate: '-90deg' },
+        { scaleY: clockwise ? 1 : -1 }, // Same as timer direction
+      ],
+    },
+    // Halo styles (expanding rings from center)
+    haloContainer: {
+      alignItems: 'center',
+      height: buttonSize,
+      justifyContent: 'center',
+      position: 'absolute',
+      width: buttonSize,
+    },
+    halo: {
+      backgroundColor: theme.colors.brand.secondary,
+      borderRadius: buttonSize / 2,
+      height: buttonSize,
+      position: 'absolute',
+      width: buttonSize,
     },
   });
 
@@ -470,6 +565,14 @@ const PulseButton = React.memo(function PulseButton({
   return (
     <GestureDetector gesture={longPressStopGesture}>
       <Animated.View style={[styles.container, animatedButtonStyle]}>
+        {/* Halos (expanding rings behind button - only when shouldPulse) */}
+        {shouldPulse && (
+          <View style={styles.haloContainer}>
+            <Animated.View style={[styles.halo, halo1Style]} />
+            <Animated.View style={[styles.halo, halo2Style]} />
+          </View>
+        )}
+
         <Animated.View style={[styles.buttonAnimated, animatedColorStyle]}>
           {renderContent()}
         </Animated.View>

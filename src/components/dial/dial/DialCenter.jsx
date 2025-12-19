@@ -50,6 +50,7 @@ const DialCenter = React.memo(function DialCenter({
         clockwise={clockwise}
         size={size}
         stopRequiresLongPress={true}
+        startRequiresLongPress={true}
         shouldPulse={shouldPulse}
       />
     </View>

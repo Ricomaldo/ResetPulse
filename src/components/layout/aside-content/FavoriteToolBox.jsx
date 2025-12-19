@@ -5,11 +5,11 @@
  * @updated 2025-12-19
  */
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
+import ToolboxItem from './ToolboxItem';
 
 /**
  * FavoriteToolBox - Snap 15% (favorite tool only)
@@ -20,25 +20,31 @@ export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPl
   // Map favorite modes to components (activities, colors, commands, none)
   const favoriteTools = {
     commands: (
-      <ControlBar
-        isRunning={isTimerRunning}
-        isCompleted={isTimerCompleted}
-        onPlay={onPlay}
-        onReset={onReset}
-        onStop={onStop}
-        compact
-      />
+      <ToolboxItem>
+        <ControlBar
+          isRunning={isTimerRunning}
+          isCompleted={isTimerCompleted}
+          onPlay={onPlay}
+          onReset={onReset}
+          onStop={onStop}
+          compact
+        />
+      </ToolboxItem>
     ),
-    activities: <ActivityCarousel />,
-    colors: <PaletteCarousel />,
+    activities: (
+      <ToolboxItem>
+        <ActivityCarousel />
+      </ToolboxItem>
+    ),
+    colors: (
+      <ToolboxItem>
+        <PaletteCarousel />
+      </ToolboxItem>
+    ),
     none: null,
   };
 
-  return (
-    <View style={styles.container}>
-      {Object.prototype.hasOwnProperty.call(favoriteTools, favoriteToolMode) ? favoriteTools[favoriteToolMode] : favoriteTools.commands}
-    </View>
-  );
+  return Object.prototype.hasOwnProperty.call(favoriteTools, favoriteToolMode) ? favoriteTools[favoriteToolMode] : favoriteTools.commands;
 }
 
 FavoriteToolBox.propTypes = {
@@ -48,11 +54,3 @@ FavoriteToolBox.propTypes = {
   onReset: PropTypes.func.isRequired,
   onStop: PropTypes.func,
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-});
