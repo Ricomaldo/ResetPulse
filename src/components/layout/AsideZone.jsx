@@ -12,7 +12,7 @@ import BottomSheet, {
   useBottomSheet,
   useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming, interpolate, interpolateColor, Extrapolation } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { MessageZone } from '../messaging';
@@ -159,30 +159,9 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
   // Track current snap index (0=favorite, 1=toolbox, 2=all)
   const [currentSnapIndex, setCurrentSnapIndex] = useState(0); // Default: 15% (favorite)
 
-  // Animated snap index for smooth background color transition
-  const animatedSnapIndex = useSharedValue(0);
-
-  // Extract colors for worklet (avoid accessing frozen context objects in worklets)
-  const surfaceColor = theme.colors.surface;
-  const surfaceElevatedColor = theme.colors.surfaceElevated;
-
-  // Animate background color based on snap index
-  // Snap 0-1 (collapsed/half): surface (vert)
-  // Snap 2 (expanded): surfaceElevated (jaune)
-  const animatedBackgroundStyle = useAnimatedStyle(() => {
-    'worklet';
-    const bgColor = interpolateColor(
-      animatedSnapIndex.value,
-      [0, 1, 2],
-      [surfaceColor, surfaceColor, surfaceElevatedColor]
-    );
-    return { backgroundColor: bgColor };
-  }, [surfaceColor, surfaceElevatedColor]);
-
-  // Update animated snap index when it changes
-  useEffect(() => {
-    animatedSnapIndex.value = withTiming(currentSnapIndex, { duration: 300 });
-  }, [currentSnapIndex, animatedSnapIndex]);
+  // TODO: Re-add animated background once frozen object error is fixed
+  // For now, use static background
+  const staticBackgroundStyle = { backgroundColor: theme.colors.surface };
 
   // Custom spring animation (smooth, less bouncy)
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -235,7 +214,7 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
           width: 50,
           height: 5,
         }}
-        backgroundStyle={animatedBackgroundStyle}
+        backgroundStyle={staticBackgroundStyle}
         style={{
           ...theme.shadow('xl'),
         }}

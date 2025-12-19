@@ -147,12 +147,8 @@ const ControlBar = React.memo(function ControlBar({
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
-      backgroundColor: theme.colors.fixed.transparent, // Ghost mode: no fill, shows parent (surfaceElevated)
-      borderRadius: theme.borderRadius.lg,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingHorizontal: compact ? theme.spacing.sm : theme.spacing.md,
-      paddingVertical: compact ? theme.spacing.sm : theme.spacing.sm,
     },
     columnLeft: {
       flex: 1,

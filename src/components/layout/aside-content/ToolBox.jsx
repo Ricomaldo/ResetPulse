@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
+import ToolboxItem from './ToolboxItem';
 
 /**
  * ToolBox - Snap 38% (all 3 tools)
@@ -39,18 +40,27 @@ export default function ToolBox({
   // Tool components map
   const toolComponents = {
     commands: (
-      <ControlBar
-        key="commands"
-        isRunning={isTimerRunning}
-        isCompleted={isTimerCompleted}
-        onPlay={onPlay}
-        onReset={onReset}
-        onStop={onStop}
-        compact
-      />
+      <ToolboxItem key="commands">
+        <ControlBar
+          isRunning={isTimerRunning}
+          isCompleted={isTimerCompleted}
+          onPlay={onPlay}
+          onReset={onReset}
+          onStop={onStop}
+          compact
+        />
+      </ToolboxItem>
     ),
-    activities: <ActivityCarousel key="activities" ref={activityCarouselRef} />,
-    colors: <PaletteCarousel key="colors" ref={paletteCarouselRef} />,
+    activities: (
+      <ToolboxItem key="activities">
+        <ActivityCarousel ref={activityCarouselRef} />
+      </ToolboxItem>
+    ),
+    colors: (
+      <ToolboxItem key="colors">
+        <PaletteCarousel ref={paletteCarouselRef} />
+      </ToolboxItem>
+    ),
   };
 
   return (
