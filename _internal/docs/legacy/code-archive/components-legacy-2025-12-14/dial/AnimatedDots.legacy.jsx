@@ -82,3 +82,5 @@ AnimatedDots.defaultProps = {
 };
 
 export default AnimatedDots;
+
+

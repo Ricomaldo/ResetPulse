@@ -75,7 +75,6 @@ export default function Filter030Creation({ needs, onContinue }) {
             scaleMode={duration > 25 ? '60min' : '25min'}
             activityEmoji={selectedActivity.emoji}
             isRunning={false}
-            shouldPulse={false}
             showGraduations={false}
             showNumbers={false}
           />

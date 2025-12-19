@@ -252,7 +252,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     },
     scrollView: {
       flexGrow: 0,
-      height: rs(120, 'min'), // CRITICAL: Explicit height for horizontal scroll in BottomSheet
+      height: rs(75, 'min'), // Compact height for BottomSheet
     },
   });
 

@@ -3,18 +3,42 @@
  * Stack: @gorhom/bottom-sheet (ADR-006)
  * Pattern: BottomSheet detached avec index contrôlé
  * @created 2025-12-18
+ * @updated 2025-12-19 (ADR-007: added longPressConfirmDuration setting)
  */
 import React, { useMemo, useCallback } from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import { StyleSheet, View, Platform, Text, TouchableOpacity } from 'react-native';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTranslation } from '../../hooks/useTranslation';
+import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
+
+// Long press duration presets in milliseconds (ADR-007)
+const LONG_PRESS_PRESETS = [
+  { label: '1s', value: 1000 },
+  { label: '1.5s', value: 1500 },
+  { label: '2s', value: 2000 },
+  { label: '2.5s', value: 2500 }, // Default
+  { label: '3s', value: 3000 },
+  { label: '4s', value: 4000 },
+  { label: '5s', value: 5000 },
+];
 
 export default function SettingsModal({ visible, onClose }) {
   const theme = useTheme();
+  const t = useTranslation();
+  const { longPressConfirmDuration, setLongPressConfirmDuration } = useTimerOptions();
 
   // Snap points: Un seul point à 90%
   const snapPoints = useMemo(() => ['90%'], []);
+
+  // Handle preset selection for long press duration
+  const handleLongPressPresetSelect = useCallback((value) => {
+    haptics.selection().catch(() => {});
+    setLongPressConfirmDuration(value);
+  }, [setLongPressConfirmDuration]);
 
   // Gérer la fermeture
   const handleSheetChanges = useCallback((index) => {
@@ -39,11 +63,7 @@ export default function SettingsModal({ visible, onClose }) {
   );
 
   const styles = StyleSheet.create({
-    sheetContainer: {
-      marginHorizontal: theme.spacing.md,
-      borderRadius: rs(20),
-      ...theme.shadow('xl'),
-    },
+    // Alphabetically sorted for react-native/sort-styles
     container: {
       flex: 1,
       padding: theme.spacing.lg,
@@ -54,8 +74,59 @@ export default function SettingsModal({ visible, onClose }) {
       borderRadius: rs(2.5),
       height: rs(5),
       marginBottom: theme.spacing.md,
-      width: rs(50),
       opacity: 0.8,
+      width: rs(50),
+    },
+    presetButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 1,
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: rs(60, 'min'),
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.sm,
+    },
+    presetButtonActive: {
+      backgroundColor: theme.colors.brand.primary + '20',
+      borderColor: theme.colors.brand.primary,
+    },
+    presetText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.medium,
+    },
+    presetTextActive: {
+      color: theme.colors.brand.primary,
+      fontWeight: fontWeights.semibold,
+    },
+    presetsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.sm,
+      justifyContent: 'center',
+    },
+    section: {
+      marginBottom: theme.spacing.xl,
+    },
+    sectionDescription: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      lineHeight: rs(20, 'min'),
+      marginBottom: theme.spacing.md,
+    },
+    sectionTitle: {
+      color: theme.colors.text,
+      fontSize: rs(18, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginBottom: theme.spacing.sm,
+    },
+    sheetContainer: {
+      borderRadius: rs(20),
+      marginHorizontal: theme.spacing.md,
+      ...theme.shadow('xl'),
     },
   });
 
@@ -72,7 +143,7 @@ export default function SettingsModal({ visible, onClose }) {
       backdropComponent={renderBackdrop}
       handleIndicatorStyle={{ display: 'none' }}
       backgroundStyle={{
-        backgroundColor: theme.colors.surface,
+        backgroundColor: theme.colors.surfaceElevated,
         ...Platform.select({
           ios: {
             borderWidth: StyleSheet.hairlineWidth,
@@ -82,12 +153,46 @@ export default function SettingsModal({ visible, onClose }) {
         }),
       }}
     >
-      <BottomSheetView style={styles.container}>
+      <BottomSheetScrollView style={styles.container}>
         {/* Handle custom */}
         <View style={styles.handle} />
 
-        {/* TODO M3+: Contenu settings (8 sections) */}
-      </BottomSheetView>
+        {/* Accessibility Section: Long Press Duration (ADR-007) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            {t('settings.accessibility.stopDuration.title') || 'Stop Confirmation'}
+          </Text>
+          <Text style={styles.sectionDescription}>
+            {t('settings.accessibility.stopDuration.description') ||
+              'Adjust how long you need to press to stop the timer. Longer durations prevent accidental stops.'}
+          </Text>
+          <View style={styles.presetsContainer}>
+            {LONG_PRESS_PRESETS.map((preset) => {
+              const isActive = longPressConfirmDuration === preset.value;
+              return (
+                <TouchableOpacity
+                  key={preset.value}
+                  style={[
+                    styles.presetButton,
+                    isActive && styles.presetButtonActive,
+                  ]}
+                  onPress={() => handleLongPressPresetSelect(preset.value)}
+                  activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${preset.label} stop duration`}
+                  accessibilityState={{ selected: isActive }}
+                >
+                  <Text style={[styles.presetText, isActive && styles.presetTextActive]}>
+                    {preset.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
+        {/* TODO M3+: Other settings sections (7 more) */}
+      </BottomSheetScrollView>
     </BottomSheet>
   );
 }

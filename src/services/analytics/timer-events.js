@@ -1,12 +1,16 @@
 // src/services/analytics/timer-events.js
 /**
- * Timer Usage Analytics Events
+ * Timer Usage Analytics Events (ADR-007 compliant)
  * Core timer tracking - started, completed, abandoned
  *
  * Methods: 3
- * - Timer Started
- * - Timer Completed
- * - Timer Abandoned
+ * - Timer Started: when user starts a timer
+ * - Timer Completed: when timer reaches 0 naturally
+ * - Timer Abandoned: when user stops/resets before completion
+ *
+ * ADR-007 Changes:
+ * - Removed 'paused' reason from abandonment (no pause state)
+ * - Added 'stop' reason for long-press stop action
  *
  * @module timer-events
  */
@@ -52,13 +56,16 @@ export const timerEvents = {
   },
 
   /**
-   * Event: Timer Abandoned
-   * Trigger: useTimer - when user pauses, resets, or closes app before completion
+   * Event: Timer Abandoned (ADR-007: removed 'paused' reason)
+   * Trigger: useTimer - when user stops, resets, or closes app before completion
    * KPI: Abandonment points, friction detection
    *
    * @param {number} duration - Original duration in seconds
    * @param {number} elapsedSeconds - Time elapsed before abandon
-   * @param {string} reason - Reason for abandonment ('paused', 'reset', 'app_background')
+   * @param {string} reason - Reason for abandonment ('stop', 'reset', 'app_background')
+   *   - 'stop': User long-pressed to stop while running (ADR-007)
+   *   - 'reset': User reset timer at rest
+   *   - 'app_background': App went to background during timer
    * @param {Object} activity - Activity object
    */
   trackTimerAbandoned(duration, elapsedSeconds, reason = 'unknown', activity = null) {

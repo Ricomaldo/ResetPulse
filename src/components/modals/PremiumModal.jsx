@@ -314,7 +314,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
     },
 
     features: {
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.surfaceElevated,
       borderColor: theme.colors.brand.primary + '30',
       borderRadius: 12,
       borderWidth: 2,
@@ -339,7 +339,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
     },
 
     modalContainer: {
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.surfaceElevated,
       borderRadius: Platform.select({
         ios: 16,
         android: 12,

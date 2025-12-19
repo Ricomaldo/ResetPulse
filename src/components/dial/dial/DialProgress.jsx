@@ -19,7 +19,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
  * @param {number} svgSize - SVG container size
  * @param {number} centerX - Center X coordinate
  * @param {number} centerY - Center Y coordinate
- * @param {number} radius - Arc radius
+ * @param {number} outerRadius - Outer radius where the arc should extend to (accounts for strokeWidth internally)
  * @param {number} strokeWidth - Stroke width
  * @param {number} progress - Progress value 0-1
  * @param {string} color - Arc color
@@ -36,7 +36,7 @@ const DialProgress = React.memo(function DialProgress({
   isClockwise,
   isRunning = false,
   progress,
-  radius,
+  outerRadius,
   scaleMode,
   strokeWidth,
   svgSize,
@@ -48,14 +48,17 @@ const DialProgress = React.memo(function DialProgress({
   const startGlowAnim = useRef(new Animated.Value(0)).current;
   const wasRunningRef = useRef(false);
 
+  // Calculate center radius (where the stroke center is positioned)
+  // The outer edge of the arc will be at outerRadius
+  const centerRadius = outerRadius - strokeWidth / 2;
+
   // Calculate progress path
   const progressPath = useMemo(() => {
     if (progress <= 0) {return '';}
     if (progress >= 0.9999) {return null;} // Full circle
 
-    const progressRadius = radius - strokeWidth / 2;
-    return dial.getProgressPath(progress, centerX, centerY, progressRadius);
-  }, [progress, dial, centerX, centerY, radius, strokeWidth]);
+    return dial.getProgressPath(progress, centerX, centerY, centerRadius);
+  }, [progress, dial, centerX, centerY, centerRadius]);
 
   // Use provided animated color or default
   const fillColor = animatedColor || color || theme.colors.energy;
@@ -97,7 +100,7 @@ const DialProgress = React.memo(function DialProgress({
         <AnimatedCircle
           cx={centerX}
           cy={centerY}
-          r={radius - strokeWidth / 2}
+          r={centerRadius}
           fill={fillColor}
           opacity={arcOpacity}
         />
@@ -131,7 +134,7 @@ DialProgress.propTypes = {
   isClockwise: PropTypes.bool.isRequired,
   isRunning: PropTypes.bool,
   progress: PropTypes.number.isRequired,
-  radius: PropTypes.number.isRequired,
+  outerRadius: PropTypes.number.isRequired,
   scaleMode: PropTypes.string.isRequired,
   strokeWidth: PropTypes.number.isRequired,
   svgSize: PropTypes.number.isRequired,

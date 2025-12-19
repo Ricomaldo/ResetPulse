@@ -20,8 +20,9 @@ const SCALES = [5, 15, 30, 60]; // minutes
  * ScaleButtons - 4 échelles de cadran (5, 15, 30, 60 minutes)
  * @param {number} currentScale - Scale actuelle en minutes
  * @param {function} onSelectScale - Callback avec (scaleMinutes)
+ * @param {boolean} compact - Compact mode for AsideZone
  */
-export default function ScaleButtons({ currentScale, onSelectScale }) {
+export default function ScaleButtons({ currentScale, onSelectScale, compact = false }) {
   const theme = useTheme();
   const { currentDuration, setCurrentDuration } = useTimerOptions();
 
@@ -38,34 +39,34 @@ export default function ScaleButtons({ currentScale, onSelectScale }) {
   };
 
   const styles = StyleSheet.create({
+    activeButton: {
+      backgroundColor: theme.colors.brand.accent + '20',
+      borderColor: theme.colors.brand.accent,
+    },
+    activeScaleText: {
+      color: theme.colors.brand.accent,
+      fontWeight: '700',
+    },
     container: {
       flexDirection: 'row',
-      gap: rs(8),
+      gap: compact ? rs(6) : rs(8), // Smaller gap in compact
       justifyContent: 'center',
     },
     scaleButton: {
-      paddingHorizontal: rs(13),
-      paddingVertical: rs(8),
-      borderRadius: theme.borderRadius.lg,
-      backgroundColor: theme.colors.surface,
-      borderWidth: 2,
-      borderColor: 'transparent',
-      minWidth: rs(48),
       alignItems: 'center',
+      backgroundColor: 'transparent',
+      borderColor: theme.colors.brand.neutral,
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 2,
       justifyContent: 'center',
-      ...theme.shadow('sm'),
-    },
-    activeButton: {
-      backgroundColor: theme.colors.brand.primary,
-      borderColor: theme.colors.brand.secondary,
+      minWidth: compact ? rs(40) : rs(48), // Smaller in compact
+      paddingHorizontal: compact ? rs(10) : rs(13), // Smaller in compact
+      paddingVertical: compact ? rs(6) : rs(8), // Smaller in compact
     },
     scaleText: {
-      fontSize: rs(15),
+      color: theme.colors.brand.neutral,
+      fontSize: compact ? rs(13) : rs(15), // Smaller in compact
       fontWeight: '600',
-      color: theme.colors.textSecondary,
-    },
-    activeScaleText: {
-      color: theme.colors.fixed.white,
     },
   });
 
@@ -92,6 +93,7 @@ export default function ScaleButtons({ currentScale, onSelectScale }) {
 }
 
 ScaleButtons.propTypes = {
+  compact: PropTypes.bool,
   currentScale: PropTypes.oneOf([5, 15, 30, 60]).isRequired,
   onSelectScale: PropTypes.func.isRequired,
 };

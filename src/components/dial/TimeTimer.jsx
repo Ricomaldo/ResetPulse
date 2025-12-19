@@ -24,7 +24,6 @@ export default function TimeTimer({
   onTimerComplete,
 }) {
   const {
-    shouldPulse,
     clockwise,
     scaleMode,
     currentActivity,
@@ -159,13 +158,11 @@ export default function TimeTimer({
             currentActivity?.id === 'none' ? null : currentActivity?.emoji
           }
           isRunning={timer.running}
-          shouldPulse={shouldPulse}
           showActivityEmoji={showActivityEmoji}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}
-          onDialLongPress={timer.resetTimer}
+          onDialLongPress={timer.stopTimer}
           isCompleted={timer.isCompleted}
-          isPaused={!timer.running && timer.remaining > 0}
           currentActivity={currentActivity}
           showNumbers={true}
           showGraduations={true}

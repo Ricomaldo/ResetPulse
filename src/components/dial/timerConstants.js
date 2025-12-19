@@ -9,61 +9,42 @@
 // ============================================
 
 /**
- * Dial modes configuration
+ * Dial modes configuration (ADR-004)
  * No magnetic snap - smooth exploration throughout all scales
  * Graduation marks are visual references only, not snap targets
  */
 export const DIAL_MODES = {
-  '1min': {
-    maxMinutes: 1,
-    label: '1 minute',
-    description: 'Quick timer',
-    graduationInterval: 1,
-    majorTickInterval: 1,
-    numberInterval: 1,
-    defaultDuration: 60,
-    useSeconds: true,
-  },
   '5min': {
     maxMinutes: 5,
     label: '5 minutes',
-    description: 'Short timer',
+    description: 'Micro-pauses',
     graduationInterval: 1,
     majorTickInterval: 1,
     numberInterval: 1,
     defaultDuration: 5 * 60,
   },
-  '10min': {
-    maxMinutes: 10,
-    label: '10 minutes',
-    description: 'Medium timer',
+  '15min': {
+    maxMinutes: 15,
+    label: '15 minutes',
+    description: 'Pomodoro court',
     graduationInterval: 1,
-    majorTickInterval: 2,
-    numberInterval: 2,
-    defaultDuration: 10 * 60,
+    majorTickInterval: 3,
+    numberInterval: 3,
+    defaultDuration: 15 * 60,
   },
-  '25min': {
-    maxMinutes: 25,
-    label: 'Pomodoro',
-    description: '25 minutes focus',
+  '30min': {
+    maxMinutes: 30,
+    label: '30 minutes',
+    description: 'Pomodoro standard',
     graduationInterval: 1,
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 25 * 60,
   },
-  '45min': {
-    maxMinutes: 45,
-    label: '45 minutes',
-    description: 'Extended focus',
-    graduationInterval: 1,
-    majorTickInterval: 5,
-    numberInterval: 5,
-    defaultDuration: 45 * 60,
-  },
   '60min': {
     maxMinutes: 60,
     label: '1 heure',
-    description: 'Full hour timer',
+    description: 'Sessions longues',
     graduationInterval: 1,
     majorTickInterval: 5,
     numberInterval: 5,
@@ -72,7 +53,7 @@ export const DIAL_MODES = {
 };
 
 export function getDialMode(mode) {
-  return DIAL_MODES[mode] || DIAL_MODES['60min'];
+  return DIAL_MODES[mode] || DIAL_MODES['30min'];
 }
 
 export const DIAL_INTERACTION = {
@@ -256,4 +237,17 @@ export const TRANSITION = {
 export const SPRING = {
   TENSION: 40,
   FRICTION: 7
+};
+
+// ============================================
+// DIAL LAYOUT CONSTANTS
+// ============================================
+
+export const DIAL_LAYOUT = {
+  BACKGROUND_OFFSET: 30, // Space between outer radius and background circle
+  CENTER_ZONE_RATIO: 0.35, // 35% of dial = center tap zone
+  OUTER_ZONE_MIN_RATIO: 0.65, // 65%+ = graduations tap zone
+  HANDLE_SIZE: 10, // Outer handle circle radius
+  HANDLE_INNER_SIZE: 4, // Inner handle dot radius
+  HANDLE_GLOW_SIZE: 14, // Glow effect radius when dragging
 };

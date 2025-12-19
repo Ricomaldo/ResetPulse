@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { rs } from '../../../styles/responsive';
 import haptics from '../../../utils/haptics';
+import Icons from '../../layout/Icons';
 
 /**
  * Format duration from seconds to MM:SS
@@ -29,8 +30,11 @@ function formatDuration(seconds) {
  * @param {number} duration - Durée actuelle en secondes
  * @param {number} maxDuration - Durée max (échelle cadran) en secondes
  * @param {function} onDurationChange - Callback avec (newDuration)
+ * @param {function} onScaleUpgrade - Callback pour upgrade cadran quand durée = max
+ * @param {function} onScaleAdaptToDuration - Callback pour adapter cadran à la durée (tap sur affichage)
+ * @param {boolean} compact - Compact mode for AsideZone
  */
-export default function DurationIncrementer({ duration, maxDuration, onDurationChange }) {
+export default function DurationIncrementer({ duration, maxDuration, onDurationChange, onScaleUpgrade, onScaleAdaptToDuration, compact = false }) {
   const theme = useTheme();
   const intervalRef = useRef(null);
   const repeatCountRef = useRef(0);
@@ -39,6 +43,17 @@ export default function DurationIncrementer({ duration, maxDuration, onDurationC
   const increment = duration <= 600 ? 60 : 300;
 
   const handleIncrement = () => {
+    // Si déjà au max et qu'on a un callback d'upgrade
+    if (duration >= maxDuration && onScaleUpgrade) {
+      const upgraded = onScaleUpgrade(); // Upgrade cadran
+      if (upgraded) {
+        // Le cadran a été upgradé, on peut incrémenter
+        onDurationChange(duration + increment);
+        haptics.selection();
+      }
+      return;
+    }
+
     const newDuration = Math.min(duration + increment, maxDuration);
     if (newDuration !== duration) {
       onDurationChange(newDuration);
@@ -55,10 +70,13 @@ export default function DurationIncrementer({ duration, maxDuration, onDurationC
   };
 
   const handleSyncToMax = () => {
-    if (duration !== maxDuration) {
-      onDurationChange(maxDuration); // Sync to scale (dial plein)
-      haptics.impact('medium');
-      // TODO: Add scale animation (200ms)
+    // Adapter le cadran à la durée actuelle
+    if (onScaleAdaptToDuration) {
+      const adapted = onScaleAdaptToDuration(duration);
+      if (adapted) {
+        haptics.impact('medium');
+        // TODO: Add scale animation (200ms)
+      }
     }
   };
 
@@ -89,38 +107,40 @@ export default function DurationIncrementer({ duration, maxDuration, onDurationC
   };
 
   const styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: rs(16),
-    },
     button: {
-      width: rs(48),
-      height: rs(48),
-      borderRadius: rs(24),
-      backgroundColor: theme.colors.surface,
       alignItems: 'center',
+      backgroundColor: 'transparent',
+      borderColor: theme.colors.brand.neutral,
+      borderRadius: compact ? rs(18) : rs(24), // Smaller in compact
+      borderWidth: 2,
+      height: compact ? rs(36) : rs(48), // Smaller in compact
       justifyContent: 'center',
-      ...theme.shadow('sm'),
+      width: compact ? rs(36) : rs(48), // Smaller in compact
     },
     buttonText: {
-      fontSize: rs(24),
-      fontWeight: '600',
       color: theme.colors.textSecondary,
+      fontSize: compact ? rs(20) : rs(24), // Smaller in compact
+      fontWeight: '600',
+    },
+    container: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: compact ? rs(10) : rs(16), // Smaller gap in compact
+      justifyContent: 'center',
     },
     durationContainer: {
-      paddingHorizontal: rs(20),
-      paddingVertical: rs(12),
+      backgroundColor: 'transparent',
+      borderColor: theme.colors.brand.neutral,
       borderRadius: theme.borderRadius.md,
-      backgroundColor: theme.colors.surface,
-      ...theme.shadow('sm'),
+      borderWidth: 2,
+      paddingHorizontal: compact ? rs(14) : rs(20), // Smaller in compact
+      paddingVertical: compact ? rs(8) : rs(12), // Smaller in compact
     },
     durationText: {
-      fontSize: rs(24),
-      fontWeight: '700',
       color: theme.colors.text,
+      fontSize: compact ? rs(20) : rs(24), // Smaller in compact
       fontVariant: ['tabular-nums'],
+      fontWeight: '700',
     },
   });
 
@@ -137,7 +157,7 @@ export default function DurationIncrementer({ duration, maxDuration, onDurationC
         accessibilityRole="button"
         accessibilityLabel="Diminuer la durée"
       >
-        <Text style={styles.buttonText}>−</Text>
+        <Icons name="minus" size={compact ? rs(20) : rs(24)} color={theme.colors.brand.neutral} />
       </TouchableOpacity>
 
       {/* Duration Display (tap to sync) */}
@@ -164,14 +184,17 @@ export default function DurationIncrementer({ duration, maxDuration, onDurationC
         accessibilityRole="button"
         accessibilityLabel="Augmenter la durée"
       >
-        <Text style={styles.buttonText}>+</Text>
+        <Icons name="plus" size={compact ? rs(20) : rs(24)} color={theme.colors.brand.neutral} />
       </TouchableOpacity>
     </View>
   );
 }
 
 DurationIncrementer.propTypes = {
+  compact: PropTypes.bool,
   duration: PropTypes.number.isRequired,
   maxDuration: PropTypes.number.isRequired,
   onDurationChange: PropTypes.func.isRequired,
+  onScaleAdaptToDuration: PropTypes.func,
+  onScaleUpgrade: PropTypes.func,
 };

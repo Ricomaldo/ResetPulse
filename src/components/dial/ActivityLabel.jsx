@@ -18,7 +18,6 @@ import { rs } from '../../styles/responsive';
  * - Dots right (adjacent to message)
  */
 function ActivityLabel({
-  emoji,
   label,
   animatedDots,
   displayMessage,
@@ -60,6 +59,7 @@ function ActivityLabel({
       width: '100%',
     },
     dotsContainer: {
+      color: theme.colors.text,
       includeFontPadding: false,
       lineHeight: rs(24),
       textAlign: 'left',
@@ -72,7 +72,7 @@ function ActivityLabel({
       justifyContent: 'center',
     },
     message: {
-      color: theme.colors.brand.primary,
+      color: theme.colors.text,
       fontSize: rs(24),
       fontWeight: '600',
       includeFontPadding: false,
@@ -86,7 +86,7 @@ function ActivityLabel({
 
   // Determine what to display based on state
   const shouldShowDots = displayMessage && !isCompleted; // Dots for messages, not for completion
-  const displayText = displayMessage || (emoji && label ? `${emoji} ${label}` : '');
+  const displayText = displayMessage || label || '';
 
   return (
     <View style={styles.container}>
@@ -120,14 +120,12 @@ function ActivityLabel({
 ActivityLabel.propTypes = {
   animatedDots: PropTypes.string.isRequired,
   displayMessage: PropTypes.string,
-  emoji: PropTypes.string,
   isCompleted: PropTypes.bool,
   label: PropTypes.string,
 };
 
 ActivityLabel.defaultProps = {
   displayMessage: '',
-  emoji: '',
   isCompleted: false,
   label: '',
 };

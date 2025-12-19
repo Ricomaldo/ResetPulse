@@ -6,6 +6,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Svg, { Path } from 'react-native-svg';
+import {
+  Play as LucidePlay,
+  Pause as LucidePause,
+  RotateCw as LucideRotateCw,
+  RotateCcw as LucideRotateCcw,
+  Settings as LucideSettings,
+  ChevronLeft as LucideChevronLeft,
+  ChevronRight as LucideChevronRight,
+  Plus as LucidePlus,
+  Minus as LucideMinus,
+  Lock as LucideLock,
+  Pencil as LucidePencil,
+  Gem as LucideGem,
+} from 'lucide-react-native';
 
 export const PlayIcon = React.memo(function PlayIcon({ size = 24, color }) {
   return (
@@ -35,6 +49,22 @@ export const PauseIcon = React.memo(function PauseIcon({ size = 24, color }) {
 });
 
 PauseIcon.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.number,
+};
+
+export const StopIcon = React.memo(function StopIcon({ size = 24, color }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M6 6h12v12H6V6z"
+        fill={color}
+      />
+    </Svg>
+  );
+});
+
+StopIcon.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.number,
 };
@@ -91,9 +121,20 @@ SettingsIcon.propTypes = {
 const iconMap = {
   pause: PauseIcon,
   play: PlayIcon,
+  stop: StopIcon,
   reset: ResetIcon,
   reverse: ReverseIcon,
   settings: SettingsIcon,
+  // Lucide mapped icons
+  chevronLeft: LucideChevronLeft,
+  chevronRight: LucideChevronRight,
+  plus: LucidePlus,
+  minus: LucideMinus,
+  lock: LucideLock,
+  edit: LucidePencil,
+  premium: LucideGem,
+  rotateCw: LucideRotateCw,
+  rotateCcw: LucideRotateCcw,
 };
 
 const Icons = function Icons({ name, size = 24, color }) {
