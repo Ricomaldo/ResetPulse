@@ -42,7 +42,9 @@ export default function SettingsModal({ visible, onClose }) {
 
   // Gérer la fermeture
   const handleSheetChanges = useCallback((index) => {
-    console.log('[SettingsModal] index:', index);
+    if (__DEV__) {
+      console.warn('[SettingsModal] index:', index);
+    }
     if (index === -1 && onClose) {
       onClose();
     }

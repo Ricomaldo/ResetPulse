@@ -22,6 +22,7 @@ import haptics from '../../utils/haptics';
 import { PremiumModal, MoreColorsModal } from '../modals/index';
 import { fontWeights } from '../../theme/tokens';
 import Icons from '../layout/Icons';
+import { IconButton } from '../buttons';
 
 const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   const theme = useTheme();
@@ -147,8 +148,11 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   };
 
   const styles = StyleSheet.create({
+    carouselContainer: {
+      maxWidth: rs(280, 'width'),
+    },
     colorButton: {
-      backgroundColor: 'transparent',
+      backgroundColor: theme.colors.fixed.transparent,
       borderRadius: theme.borderRadius.round,
       borderWidth: 2,
       height: rs(50, 'min'),
@@ -211,9 +215,6 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
     },
     scrollContent: {
       paddingHorizontal: 0,
-    },
-    carouselContainer: {
-      maxWidth: rs(280, 'width'),
     },
     scrollView: {
       flexGrow: 0,
@@ -295,17 +296,16 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
           {/* Bouton "Discover Colors" en freemium */}
           {!isPremiumUser && (
             <View style={styles.moreButtonContainer}>
-              <TouchableOpacity
-                style={styles.moreButton}
+              <IconButton
+                icon="premium"
+                label={t('discovery.moreColors.title')}
+                labelPosition="right"
+                variant="primary"
+                size="medium"
+                shape="rounded"
                 onPress={handleMorePress}
-                activeOpacity={0.7}
-                accessible={true}
                 accessibilityLabel={t('accessibility.discoverMorePalettes')}
-                accessibilityRole="button"
-              >
-                <Icons name="premium" size={rs(20, 'min')} color={theme.colors.fixed.white} />
-                <Text style={styles.moreButtonText}>{t('discovery.moreColors.title')}</Text>
-              </TouchableOpacity>
+              />
             </View>
           )}
         </ScrollView>

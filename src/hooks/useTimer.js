@@ -95,7 +95,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         const skipSound = wasInBackgroundRef.current;
 
         if (__DEV__) {
-          console.log(`🔔 Timer terminé. App était en background: ${skipSound}`);
+          console.warn(`🔔 Timer terminé. App était en background: ${skipSound}`);
         }
 
         // Feedback synchronisé : Audio + Haptic en parallèle
@@ -156,7 +156,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         const now = new Date();
         const minutes = Math.floor(duration / 60);
         const secs = duration % 60;
-        console.log(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé!`);
+        console.warn(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé!`);
       }
     }
   }, [startTime, duration, running]);
@@ -228,7 +228,6 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Track app state to detect background/foreground transitions
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
-      const wasInForeground = isInForegroundRef.current;
       const nowInForeground = nextAppState === 'active';
 
       // Update foreground state
@@ -332,10 +331,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
 
     if (__DEV__) {
-      const now = new Date();
-      const minutes = Math.floor(remaining / 60);
-      const secs = remaining % 60;
-      console.log(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
+      if (__DEV__) {
+        const now = new Date();
+        const minutes = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        console.warn(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
+      }
     }
 
     setRunning(true);
@@ -379,7 +380,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     AccessibilityInfo.announceForAccessibility(t('accessibility.timer.timerStopped'));
 
     if (__DEV__) {
-      console.log(`⏹️ [Stop] Timer abandonné après ${elapsed}s`);
+      console.warn(`⏹️ [Stop] Timer abandonné après ${elapsed}s`);
     }
   }, [running, duration, remaining, cancelTimerNotification, t]);
 
@@ -400,7 +401,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     cancelTimerNotification();
 
     if (__DEV__) {
-      console.log(`🔄 [Reset] Timer réinitialisé`);
+      console.warn('🔄 [Reset] Timer réinitialisé');
     }
   }, [cancelTimerNotification, running, duration, remaining]);
 

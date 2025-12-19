@@ -25,6 +25,7 @@ function TimerScreenContent() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [displayMessage, setDisplayMessage] = useState('');
   const [isTimerCompleted, setIsTimerCompleted] = useState(false);
+  const [timerState, setTimerState] = useState('REST'); // 'REST' | 'RUNNING' | 'COMPLETE'
   const timerRef = useRef(null);
 
   // Keep screen awake during timer
@@ -40,6 +41,24 @@ function TimerScreenContent() {
     }, 50);
     return () => clearInterval(interval);
   }, []);
+
+  // Update timerState based on isTimerRunning and isTimerCompleted (source of truth for animations)
+  useEffect(() => {
+    if (isTimerCompleted) {
+      setTimerState('COMPLETE');
+    } else if (isTimerRunning) {
+      setTimerState('RUNNING');
+    } else {
+      setTimerState('REST');
+    }
+  }, [isTimerRunning, isTimerCompleted]);
+
+  // Clear displayMessage when activity is selected (flashActivity changes)
+  useEffect(() => {
+    if (flashActivity) {
+      setDisplayMessage('');
+    }
+  }, [flashActivity]);
 
   // Define styles (moved inside component so linter can track usage)
   const styles = StyleSheet.create({
@@ -114,9 +133,6 @@ function TimerScreenContent() {
     >
       {/* DIAL ZONE - Always visible (portrait & landscape) */}
       <DialZone
-        displayMessage={displayMessage}
-        isCompleted={isTimerCompleted}
-        flashActivity={flashActivity}
         onRunningChange={setIsTimerRunning}
         onTimerRef={(ref) => {
           timerRef.current = ref;
@@ -129,12 +145,17 @@ function TimerScreenContent() {
       {/* ASIDE ZONE - Portrait only (hidden in landscape for zen mode) */}
       {!isLandscape && (
         <AsideZone
+          timerState={timerState}
+          displayMessage={displayMessage}
+          isCompleted={isTimerCompleted}
+          flashActivity={flashActivity}
           isTimerRunning={isTimerRunning}
           isTimerCompleted={isTimerCompleted}
           onPlay={handlePlayPause}
           onReset={handleReset}
           onStop={handleStop}
           onOpenSettings={() => setSettingsModalVisible(true)}
+          onSnapChange={() => setDisplayMessage('')}
         />
       )}
 

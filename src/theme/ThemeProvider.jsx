@@ -2,11 +2,11 @@
 // Provider simplifié pour la gestion light/dark mode avec support platform-adaptive
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Appearance, Platform } from 'react-native';
+import { Appearance } from 'react-native';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { lightTheme, darkTheme } from './colors';
 import { spacing, borderRadius, shadows, typography, layout, animation, zIndex } from './tokens';
-import { shadow, themedShadow, componentShadows } from '../styles/shadows';
+import { themedShadow, componentShadows } from '../styles/shadows';
 import {
   createButtonStyle,
   createCardStyle,

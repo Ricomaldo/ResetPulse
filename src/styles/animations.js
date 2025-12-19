@@ -109,17 +109,17 @@ export const createAnimation = {
   },
 
   // Scale animations
-  scaleIn: (value = new Animated.Value(0), duration = 'normal') => {
+  scaleIn: (value = new Animated.Value(0), _duration = 'normal') => {
     return Animated.spring(value, {
       toValue: 1,
       ...platformConfig.spring.default,
     });
   },
 
-  scaleOut: (value, duration = 'normal') => {
+  scaleOut: (value, _duration = 'normal') => {
     return Animated.timing(value, {
       toValue: 0,
-      duration: platformConfig.timing[duration] || platformConfig.timing.normal,
+      duration: platformConfig.timing[_duration] || platformConfig.timing.normal,
       easing: platformConfig.easing.in,
       useNativeDriver: true,
     });
@@ -165,28 +165,28 @@ export const createAnimation = {
   },
 
   // Slide animations
-  slideInLeft: (value = new Animated.Value(-100), duration = 'normal') => {
+  slideInLeft: (value = new Animated.Value(-100), _duration = 'normal') => {
     return Animated.spring(value, {
       toValue: 0,
       ...platformConfig.spring.default,
     });
   },
 
-  slideInRight: (value = new Animated.Value(100), duration = 'normal') => {
+  slideInRight: (value = new Animated.Value(100), _duration = 'normal') => {
     return Animated.spring(value, {
       toValue: 0,
       ...platformConfig.spring.default,
     });
   },
 
-  slideInUp: (value = new Animated.Value(100), duration = 'normal') => {
+  slideInUp: (value = new Animated.Value(100), _duration = 'normal') => {
     return Animated.spring(value, {
       toValue: 0,
       ...platformConfig.spring.default,
     });
   },
 
-  slideInDown: (value = new Animated.Value(-100), duration = 'normal') => {
+  slideInDown: (value = new Animated.Value(-100), _duration = 'normal') => {
     return Animated.spring(value, {
       toValue: 0,
       ...platformConfig.spring.default,

@@ -26,31 +26,125 @@ function ActivityLabel({
   flashActivity,
 }) {
   const theme = useTheme();
+
+  // Dots animation
   const dotsOpacityRef = useRef(new Animated.Value(0)).current;
+  const dotsScaleRef = useRef(new Animated.Value(0.8)).current;
   const prevDotsLengthRef = useRef(0);
 
-  // Animate dots opacity when animatedDots string length changes
+  // Message entry animation
+  const messageScaleRef = useRef(new Animated.Value(0.9)).current;
+  const messageOpacityRef = useRef(new Animated.Value(0)).current;
+  const messageTranslateYRef = useRef(new Animated.Value(12)).current; // Start 12px below
+  const prevMessageRef = useRef('');
+
+  // Micro-bounce animation (happens after entry completes)
+  const messageBounceScaleRef = useRef(new Animated.Value(1)).current;
+
+  // Animate message with multi-step flow: opacity → translate + scale → micro-bounce
+  useEffect(() => {
+    const hasMessage = displayMessage && displayMessage.trim().length > 0;
+    const hadMessage = prevMessageRef.current && prevMessageRef.current.trim().length > 0;
+
+    if (hasMessage && !hadMessage) {
+      // ENTERING RUNNING: Smooth arrival with stagger
+      // 1. Opacity fade in immediately (300ms)
+      // 2. Translate Y + Scale in parallel (400ms easeOut) - creates "arrival" feel
+      // 3. Micro-bounce after arrival (200ms) - gives tactile feedback
+
+      Animated.sequence([
+        // Step 1: Opacity + TranslateY + Scale in parallel (staggered entry)
+        Animated.parallel([
+          Animated.timing(messageOpacityRef, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(messageTranslateYRef, {
+            toValue: 0, // Move from 12px down to 0 (arrival)
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(messageScaleRef, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Step 2: Micro-bounce (scale pulse) after arrival
+        Animated.sequence([
+          Animated.timing(messageBounceScaleRef, {
+            toValue: 1.05, // Slight scale up
+            duration: 150,
+            useNativeDriver: true,
+          }),
+          Animated.timing(messageBounceScaleRef, {
+            toValue: 1, // Back to normal
+            duration: 150,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    } else if (!hasMessage && hadMessage) {
+      // LEAVING RUNNING: Smooth exit (inverse of entry)
+      Animated.parallel([
+        Animated.timing(messageOpacityRef, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(messageTranslateYRef, {
+          toValue: -12, // Move up (opposite of entry)
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(messageScaleRef, {
+          toValue: 0.9,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Reset for next message
+        messageTranslateYRef.setValue(12);
+        messageScaleRef.setValue(0.9);
+        messageBounceScaleRef.setValue(1);
+      });
+    }
+
+    prevMessageRef.current = displayMessage;
+  }, [displayMessage, messageScaleRef, messageOpacityRef, messageTranslateYRef, messageBounceScaleRef]);
+
+  // Animate dots opacity + scale when animatedDots string length changes
   useEffect(() => {
     const currentLength = animatedDots.length;
 
     if (currentLength > 0 && prevDotsLengthRef.current === 0) {
-      // Dots appearing: fade in
-      Animated.timing(dotsOpacityRef, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }).start();
+      // Dots appearing: staggered fade in + scale (with 100ms delay after message entry)
+      setTimeout(() => {
+        Animated.parallel([
+          Animated.timing(dotsOpacityRef, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(dotsScaleRef, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      }, 100); // Delay for stagger effect
     } else if (currentLength === 0 && prevDotsLengthRef.current > 0) {
-      // Dots disappearing: fade out
+      // Dots disappearing: quick fade out
       Animated.timing(dotsOpacityRef, {
         toValue: 0,
-        duration: 100,
+        duration: 150,
         useNativeDriver: true,
       }).start();
     }
 
     prevDotsLengthRef.current = currentLength;
-  }, [animatedDots, dotsOpacityRef]);
+  }, [animatedDots, dotsOpacityRef, dotsScaleRef]);
 
   const dotWidth = rs(24);
   const styles = StyleSheet.create({
@@ -87,12 +181,9 @@ function ActivityLabel({
   });
 
   // Determine what to display based on state (ADR-007 messaging)
-  // Priority: flashActivity > displayMessage > label > ''
+  // Priority: displayMessage > label > '' (flashActivity disabled - redundant)
   let displayText = '';
-  if (flashActivity) {
-    // Flash state (activity selection): show emoji + label (2s feedback)
-    displayText = `${flashActivity.emoji} ${flashActivity.label}`;
-  } else if (displayMessage) {
+  if (displayMessage) {
     // Running or completed message
     displayText = displayMessage;
   } else {
@@ -100,7 +191,7 @@ function ActivityLabel({
     displayText = label || '';
   }
 
-  const shouldShowDots = displayMessage && !isCompleted && !flashActivity; // Dots for running messages only, not flash or completion
+  const shouldShowDots = displayMessage && !isCompleted; // Dots for running messages only, not completion
 
   return (
     <View style={styles.container}>
@@ -108,18 +199,30 @@ function ActivityLabel({
         {/* Invisible spacer left (balances dots on right) */}
         <View style={styles.spacerLeft} />
 
-        {/* Message centered */}
-        <Animated.Text style={styles.message}>
+        {/* Message centered with multi-step animation: opacity → translate + scale → bounce */}
+        <Animated.Text
+          style={[
+            styles.message,
+            {
+              opacity: messageOpacityRef,
+              transform: [
+                { translateY: messageTranslateYRef },
+                { scale: Animated.multiply(messageScaleRef, messageBounceScaleRef) }, // Combined scale: base + bounce
+              ],
+            },
+          ]}
+        >
           {displayText}
         </Animated.Text>
 
-        {/* Dots right, adjacent to message */}
+        {/* Dots right, adjacent to message (staggered entry with scale) */}
         {shouldShowDots && (
           <Animated.Text
             style={[
               styles.dotsContainer,
               {
                 opacity: dotsOpacityRef,
+                transform: [{ scale: dotsScaleRef }],
               },
             ]}
           >

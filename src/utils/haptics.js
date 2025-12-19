@@ -106,7 +106,9 @@ class HapticManager {
       }
     } catch (e) {
       // Fallback to Vibration API if haptic library not available
-      console.log('Expo Haptics not available, using fallback');
+      if (__DEV__) {
+        console.warn('Expo Haptics not available, using fallback');
+      }
       this.fallbackVibration(type);
     }
   }
@@ -157,7 +159,9 @@ class HapticManager {
       }
     } catch (e) {
       // Fallback to native vibration patterns
-      console.log('Expo Haptics not supported on this Android device, using vibration fallback');
+      if (__DEV__) {
+        console.warn('Expo Haptics not supported on this Android device, using vibration fallback');
+      }
       const pattern = androidPatterns[type];
 
       if (Array.isArray(pattern)) {

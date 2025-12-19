@@ -7,11 +7,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Svg, { Path } from 'react-native-svg';
 import {
-  Play as LucidePlay,
-  Pause as LucidePause,
   RotateCw as LucideRotateCw,
   RotateCcw as LucideRotateCcw,
-  Settings as LucideSettings,
   ChevronLeft as LucideChevronLeft,
   ChevronRight as LucideChevronRight,
   Plus as LucidePlus,
@@ -20,6 +17,9 @@ import {
   Pencil as LucidePencil,
   Gem as LucideGem,
   Timer as LucideTimer,
+  Focus as LucideFocus,
+  Eye as LucideEye,
+  EyeOff as LucideEyeOff,
 } from 'lucide-react-native';
 
 export const PlayIcon = React.memo(function PlayIcon({ size = 24, color }) {
@@ -137,6 +137,9 @@ const iconMap = {
   rotateCw: LucideRotateCw,
   rotateCcw: LucideRotateCcw,
   timer: LucideTimer,
+  focus: LucideFocus,
+  eye: LucideEye,
+  eyeOff: LucideEyeOff,
 };
 
 const Icons = function Icons({ name, size = 24, color }) {

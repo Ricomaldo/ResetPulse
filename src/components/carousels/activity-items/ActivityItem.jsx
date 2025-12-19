@@ -11,7 +11,6 @@ import { rs } from '../../../styles/responsive';
 import Icons from '../../layout/Icons';
 
 // Color constants for transparency overlays
-const TRANSPARENT = 'transparent';
 const TEXT_SHADOW_DARK = 'rgba(0, 0, 0, 0.3)';
 
 /**
@@ -45,7 +44,7 @@ const ActivityItem = React.memo(function ActivityItem({
     },
     activityButtonInner: {
       alignItems: 'center',
-      backgroundColor: 'transparent',
+      backgroundColor: theme.colors.fixed.transparent,
       borderColor: theme.colors.brand.neutral,
       borderRadius: rs(20, 'min'),
       borderWidth: 2,
@@ -65,7 +64,7 @@ const ActivityItem = React.memo(function ActivityItem({
       width: '100%',
     },
     activityWrapper: {
-      backgroundColor: TRANSPARENT,
+      backgroundColor: theme.colors.fixed.transparent,
       borderRadius: theme.borderRadius.full,
       height: rs(60, 'min'),
       opacity: isLocked ? 0.5 : 1,
@@ -74,7 +73,7 @@ const ActivityItem = React.memo(function ActivityItem({
     },
     customBadge: {
       alignItems: 'center',
-      backgroundColor: TRANSPARENT,
+      backgroundColor: theme.colors.fixed.transparent,
       justifyContent: 'center',
       position: 'absolute',
       right: -2,
@@ -93,7 +92,7 @@ const ActivityItem = React.memo(function ActivityItem({
     },
     premiumBadge: {
       alignItems: 'center',
-      backgroundColor: TRANSPARENT,
+      backgroundColor: theme.colors.fixed.transparent,
       justifyContent: 'center',
       position: 'absolute',
       right: -2,

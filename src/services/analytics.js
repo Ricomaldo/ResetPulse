@@ -66,8 +66,10 @@ class AnalyticsService {
    * À appeler dans App.js au startup
    */
   async init() {
-    console.log('🔄 [Analytics] Initializing Mixpanel SDK...');
-    console.log(`   Token: ${MIXPANEL_TOKEN.substring(0, 8)}...`);
+    if (__DEV__) {
+      console.warn('🔄 [Analytics] Initializing Mixpanel SDK...');
+      console.warn(`   Token: ${MIXPANEL_TOKEN.substring(0, 8)}...`);
+    }
 
     try {
       // Mixpanel v3+ API: new Mixpanel() then .init()
@@ -92,12 +94,14 @@ class AnalyticsService {
         app_version: appVersion,
       });
 
-      console.log('✅ [Analytics] Mixpanel initialized successfully');
-      console.log(`   Platform: ${Platform.OS}`);
-      console.log(`   App Version: ${appVersion}`);
-      console.log(`   Token: ${MIXPANEL_TOKEN.substring(0, 12)}...`);
-      console.log('   Server URL: https://api-eu.mixpanel.com');
-      console.log('   Ready to track events');
+      if (__DEV__) {
+        console.warn('✅ [Analytics] Mixpanel initialized successfully');
+        console.warn(`   Platform: ${Platform.OS}`);
+        console.warn(`   App Version: ${appVersion}`);
+        console.warn(`   Token: ${MIXPANEL_TOKEN.substring(0, 12)}...`);
+        console.warn('   Server URL: https://api-eu.mixpanel.com');
+        console.warn('   Ready to track events');
+      }
     } catch (error) {
       // Graceful fallback for Expo Go (native module unavailable)
       if (error.message?.includes('initialize') && __DEV__) {
@@ -135,8 +139,8 @@ class AnalyticsService {
     // Flush immediately in dev for debugging
     if (__DEV__) {
       this.mixpanel.flush();
-      console.log('📊 [Analytics]', eventName, enrichedProperties);
-      console.log('   ✈️  Event flushed to server');
+      console.warn('📊 [Analytics]', eventName, enrichedProperties);
+      console.warn('   ✈️  Event flushed to server');
     }
   }
 
@@ -150,7 +154,7 @@ class AnalyticsService {
     this.mixpanel.identify(userId);
 
     if (__DEV__) {
-      console.log('👤 [Analytics] User identified:', userId);
+      console.warn('👤 [Analytics] User identified:', userId);
     }
   }
 

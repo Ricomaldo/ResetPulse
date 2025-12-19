@@ -4,10 +4,19 @@
  * @created 2025-12-14
  * @updated 2025-12-19 - Migrated from PanResponder to Gesture API (RNGH v2)
  */
-import React, { useMemo, useRef, useState, useCallback } from 'react';
+import React, { useMemo, useRef, useState, useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import Animated, {
+  runOnJS,
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedReaction,
+  withTiming,
+  withSequence,
+  withDelay,
+  Easing,
+} from 'react-native-reanimated';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useDialOrientation } from '../../hooks/useDialOrientation';
@@ -63,6 +72,64 @@ function TimerDial({
   const theme = useTheme();
   const t = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
+
+  // === HINT ANIMATION (fade-in/pulse on mount) ===
+  const hintOpacity = useSharedValue(0);
+  const [hintAnimationDone, setHintAnimationDone] = useState(false);
+
+  useEffect(() => {
+    // Animate handle on mount: fade-in → pulse → settle
+    hintOpacity.value = withSequence(
+      // Fade in
+      withTiming(1, { duration: 400, easing: Easing.out(Easing.ease) }),
+      // Pulse (2x)
+      withDelay(100, withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) })),
+      withTiming(1, { duration: 300, easing: Easing.inOut(Easing.ease) }),
+      withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) }),
+      withTiming(0.7, { duration: 300, easing: Easing.out(Easing.ease) })
+    );
+    // Mark animation as done after total duration (~1.7s)
+    const timer = setTimeout(() => setHintAnimationDone(true), 1700);
+    return () => clearTimeout(timer);
+  }, [hintOpacity]);
+
+  const handleHintStyle = useAnimatedStyle(() => ({
+    opacity: hintOpacity.value,
+  }));
+
+  // === SMOOTH GRADUATION TAP ANIMATION ===
+  // Pre-calc scaled progress (needed early for animation)
+  const maxMinutesForScale = getDialMode(scaleMode).maxMinutes;
+  const currentMinutesForScale = duration / 60;
+  const targetProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
+
+  // Shared value for animating progress on graduation taps
+  const animatedProgress = useSharedValue(targetProgress);
+  const [displayProgress, setDisplayProgress] = useState(targetProgress);
+
+  // Animate progress when graduation is tapped (not running, not dragging)
+  useEffect(() => {
+    if (!isRunning && !isDragging) {
+      // Graduation tap or external change - animate smoothly
+      // Using ease-in-out for natural, unhurried motion
+      animatedProgress.value = withTiming(targetProgress, {
+        duration: 300,
+        easing: Easing.inOut(Easing.quad),
+      });
+    } else {
+      // Running timer or dragging - instant update
+      animatedProgress.value = targetProgress;
+    }
+  }, [targetProgress, isRunning, isDragging]);
+
+  // Sync animated value to JS state for rendering
+  useAnimatedReaction(
+    () => animatedProgress.value,
+    (value) => {
+      runOnJS(setDisplayProgress)(value);
+    },
+    [animatedProgress]
+  );
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);
@@ -281,14 +348,12 @@ function TimerDial({
     ? t('accessibility.timer.dialTapToToggle')
     : t('accessibility.timer.dialAdjustable') + ' ' + t('accessibility.timer.dialTapToToggle');
 
-  // Pre-calc scaled progress (0..1) based on current scale mode
-  const maxMinutesForScale = getDialMode(scaleMode).maxMinutes;
-  const currentMinutesForScale = duration / 60;
-  const scaledProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
+  // isZeroState uses displayProgress for animation-aware rendering
   const isZeroState = !isRunning && remaining === 0;
 
   // Compute needle and handle position on the draggable side of the arc
-  const handleAngleDeg = scaledProgress * 360;
+  // Uses displayProgress for smooth animation on graduation taps
+  const handleAngleDeg = displayProgress * 360;
   const handleAngleRad = (handleAngleDeg * Math.PI) / 180;
   // Needle extends to the edge of the dial (minus stroke width)
   const needleDistance = radiusBackground - strokeWidth;
@@ -375,14 +440,14 @@ function TimerDial({
           />
 
           {/* Progress layer: animated arc */}
-          {/* IMPORTANT: Scale progress based on dial mode */}
+          {/* Uses displayProgress for smooth graduation tap animation */}
           <DialProgress
             svgSize={svgSize}
             centerX={centerX}
             centerY={centerY}
             outerRadius={radiusBackground}
             strokeWidth={strokeWidth}
-            progress={scaledProgress}
+            progress={displayProgress}
             color={arcColor}
             isClockwise={clockwise}
             scaleMode={scaleMode}
@@ -421,58 +486,65 @@ function TimerDial({
           )}
 
           {/* Drag handle indicator at the movable end of the arc */}
+          {/* Wrapped in Animated.View for hint animation on mount */}
           {!isRunning && (
-            <Svg
-              width={svgSize}
-              height={svgSize}
-              style={staticStyles.absoluteOverlay}
+            <Animated.View
+              style={[
+                staticStyles.absoluteOverlay,
+                !hintAnimationDone && handleHintStyle,
+              ]}
               pointerEvents="none"
-              accessible={false}
-              importantForAccessibility="no"
             >
-              {/* Needle/radius line from center to edge of dial */}
-              <Line
-                x1={centerX}
-                y1={centerY}
-                x2={needleEndX}
-                y2={needleEndY}
-                stroke={theme.colors.brand.primary}
-                strokeWidth={2}
-                strokeLinecap="round"
-                opacity={isDragging ? 1 : 0.7}
-              />
+              <Svg
+                width={svgSize}
+                height={svgSize}
+                accessible={false}
+                importantForAccessibility="no"
+              >
+                {/* Needle/radius line from center to edge of dial */}
+                <Line
+                  x1={centerX}
+                  y1={centerY}
+                  x2={needleEndX}
+                  y2={needleEndY}
+                  stroke={theme.colors.brand.primary}
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  opacity={hintAnimationDone ? (isDragging ? 1 : 0.7) : 1}
+                />
 
-              {/* Glow / Shadow effect when dragging */}
-              {isDragging && (
+                {/* Glow / Shadow effect when dragging */}
+                {isDragging && (
+                  <Circle
+                    cx={handleX}
+                    cy={handleY}
+                    r={rs(DIAL_LAYOUT.HANDLE_GLOW_SIZE)}
+                    fill={theme.colors.brand.secondary}
+                    opacity={0.2}
+                  />
+                )}
+
+                {/* Outer border of the handle */}
                 <Circle
                   cx={handleX}
                   cy={handleY}
-                  r={rs(DIAL_LAYOUT.HANDLE_GLOW_SIZE)}
-                  fill={theme.colors.brand.secondary}
-                  opacity={0.2}
+                  r={rs(DIAL_LAYOUT.HANDLE_SIZE)}
+                  fill={theme.colors.fixed.transparent}
+                  stroke={theme.colors.fixed.transparent}
+                  strokeWidth={4}
+                  opacity={1}
                 />
-              )}
 
-              {/* Outer border of the handle */}
-              <Circle
-                cx={handleX}
-                cy={handleY}
-                r={rs(DIAL_LAYOUT.HANDLE_SIZE)}
-                fill={theme.colors.fixed.transparent}
-                stroke={theme.colors.fixed.transparent}
-                strokeWidth={4}
-                opacity={1}
-              />
-
-              {/* Inner dot for brand consistency */}
-              <Circle
-                cx={handleX}
-                cy={handleY}
-                r={rs(DIAL_LAYOUT.HANDLE_INNER_SIZE)}
-                fill={theme.colors.fixed.transparent}
-                opacity={isDragging ? 1 : 0.8}
-              />
-            </Svg>
+                {/* Inner dot for brand consistency */}
+                <Circle
+                  cx={handleX}
+                  cy={handleY}
+                  r={rs(DIAL_LAYOUT.HANDLE_INNER_SIZE)}
+                  fill={theme.colors.fixed.transparent}
+                  opacity={hintAnimationDone ? (isDragging ? 1 : 0.8) : 1}
+                />
+              </Svg>
+            </Animated.View>
           )}
 
           {/* Physical fixation dots - hide when PulseButton is displayed */}

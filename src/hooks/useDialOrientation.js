@@ -5,7 +5,7 @@ import { getDialMode } from '../components/dial/timerConstants';
 /**
  * Hook centralisant toute la logique d'orientation et de calcul du cadran
  * @param {boolean} isClockwise - Direction de rotation
- * @param {string} scaleMode - Mode '5min', '15min', '30min' ou '60min' (ADR-004)
+ * @param {string} scaleMode - Mode '1min', '5min', '10min', '25min', '45min' ou '60min' (ADR-004)
  * @returns {Object} Fonctions de calcul et de rendu
  */
 export function useDialOrientation(isClockwise, scaleMode) {
@@ -154,7 +154,8 @@ export function useDialOrientation(isClockwise, scaleMode) {
 
     for (let i = 0; i < count; i++) {
       const minute = i * interval;
-      if (minute > config.maxMinutes) {break;}
+      // Skip maxMinutes - it overlaps with 0 at top position
+      if (minute >= config.maxMinutes) {break;}
 
       const angle = minutesToAngle(minute) - 90; // -90 to start from top
       const x = centerX + radius * Math.cos((angle * Math.PI) / 180);

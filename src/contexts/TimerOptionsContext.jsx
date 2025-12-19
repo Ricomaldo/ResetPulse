@@ -1,5 +1,5 @@
 // src/contexts/TimerOptionsContext.jsx
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -46,8 +46,10 @@ export const TimerOptionsProvider = ({ children }) => {
         hasSeenTwoTimersModal: false,
         commandBarConfig: [],
         carouselBarConfig: [],
-        longPressConfirmDuration: 2500, // ADR-007: Default 2.5s (range: 1000-5000ms)
+        longPressConfirmDuration: 2500, // ADR-007: Default 2.5s for stop (range: 1000-5000ms)
+        longPressStartDuration: 3000, // ADR-007: Default 3s for deliberate start (range: 1000-5000ms)
         startAnimationDuration: 1200, // Default 1.2s for start animation (range: 300-2000ms)
+        showTime: true, // Eye toggle state for DigitalTimer (ADR-007: persist across FavoriteToolBox/ToolBox)
       };
     }
 
@@ -58,7 +60,7 @@ export const TimerOptionsProvider = ({ children }) => {
       showActivityEmoji: true,
       keepAwakeEnabled: true,
       clockwise: false,
-      scaleMode: '30min',
+      scaleMode: '25min',
       currentActivity: getDefaultActivity(),
       currentDuration: 1500, // 25 minutes par défaut (25 * 60 = 1500s)
       favoriteActivities: ['work', 'break', 'meditation'],
@@ -69,8 +71,10 @@ export const TimerOptionsProvider = ({ children }) => {
       hasSeenTwoTimersModal: false,
       commandBarConfig: [],
       carouselBarConfig: [],
-      longPressConfirmDuration: 2500, // ADR-007: Default 2.5s (range: 1000-5000ms)
+      longPressConfirmDuration: 2500, // ADR-007: Default 2.5s for stop (range: 1000-5000ms)
+      longPressStartDuration: 3000, // ADR-007: Default 3s for deliberate start (range: 1000-5000ms)
       startAnimationDuration: 1200, // Default 1.2s for start animation (range: 300-2000ms)
+      showTime: true, // Eye toggle state for DigitalTimer (ADR-007: persist across FavoriteToolBox/ToolBox)
     };
   };
 
@@ -199,7 +203,9 @@ export const TimerOptionsProvider = ({ children }) => {
     commandBarConfig: values.commandBarConfig,
     carouselBarConfig: values.carouselBarConfig,
     longPressConfirmDuration: values.longPressConfirmDuration,
+    longPressStartDuration: values.longPressStartDuration,
     startAnimationDuration: values.startAnimationDuration,
+    showTime: values.showTime,
 
     // Actions
     setShouldPulse: (val) => updateValue('shouldPulse', val),
@@ -218,10 +224,16 @@ export const TimerOptionsProvider = ({ children }) => {
     setHasSeenTwoTimersModal: (val) => updateValue('hasSeenTwoTimersModal', val),
     setCommandBarConfig: (val) => updateValue('commandBarConfig', val),
     setCarouselBarConfig: (val) => updateValue('carouselBarConfig', val),
+    setShowTime: (val) => updateValue('showTime', val),
     setLongPressConfirmDuration: (val) => {
       // ADR-007: Clamp value to valid range (1000-5000ms)
       const clamped = Math.max(1000, Math.min(5000, val));
       updateValue('longPressConfirmDuration', clamped);
+    },
+    setLongPressStartDuration: (val) => {
+      // ADR-007: Clamp value to valid range (1000-5000ms)
+      const clamped = Math.max(1000, Math.min(5000, val));
+      updateValue('longPressStartDuration', clamped);
     },
     setStartAnimationDuration: (val) => {
       // Clamp value to valid range (300-2000ms)

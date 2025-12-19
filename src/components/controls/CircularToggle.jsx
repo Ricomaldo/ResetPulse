@@ -1,63 +1,39 @@
 /**
  * @fileoverview Circular toggle button for clockwise/counter-clockwise rotation
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-19 - Refactored to use IconButton
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../../theme/ThemeProvider';
-import { rs } from '../../styles/responsive';
+import { IconButton } from '../buttons';
 import haptics from '../../utils/haptics';
-import Icons from '../layout/Icons';
 
 /**
  * CircularToggle - Circular toggle button for rotation direction
+ * Refactored to use IconButton for consistency and code reduction
+ *
  * @param {boolean} clockwise - Current rotation direction
  * @param {function} onToggle - Callback when toggle is pressed
- * @param {number} size - Size of the toggle button
+ * @param {number} size - Size of the toggle button (32, 40, 60)
  */
-const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle, size = 60 }) {
-  const theme = useTheme();
-
+const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle, size = 40 }) {
   const handlePress = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onToggle(!clockwise);
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.surfaceElevated, // Same as parent (BottomSheet)
-      borderColor: theme.colors.border,
-      borderRadius: rs(size / 2, 'min'),
-      borderWidth: 2,
-      height: rs(size, 'min'),
-      justifyContent: 'center',
-      width: rs(size, 'min'),
-      ...theme.shadows.sm,
-    },
-    icon: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(size * 0.5, 'min'),
-    },
-  });
+  // Map numeric size to IconButton size preset
+  const buttonSize = size < 35 ? 'small' : size < 50 ? 'medium' : 'large';
 
   return (
-    <TouchableOpacity
-      style={styles.container}
+    <IconButton
+      icon={clockwise ? 'rotateCw' : 'rotateCcw'}
+      variant="ghost"
+      size={buttonSize}
+      shape="circular"
       onPress={handlePress}
-      activeOpacity={0.7}
-      accessibilityRole="switch"
-      accessibilityState={{ checked: clockwise }}
       accessibilityLabel={clockwise ? 'Sens horaire' : 'Sens anti-horaire'}
-    >
-      <Icons
-        name={clockwise ? 'rotateCw' : 'rotateCcw'}
-        size={rs(size * 0.5, 'min')}
-        color={theme.colors.textSecondary}
-      />
-    </TouchableOpacity>
+    />
   );
 });
 

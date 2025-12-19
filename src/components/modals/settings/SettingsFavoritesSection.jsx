@@ -22,12 +22,12 @@ const SettingsFavoritesSection = React.memo(function SettingsFavoritesSection({
   setShowMoreColorsModal,
   // Theme & i18n
   theme,
-  t,
+  t: _t,
   // Styles
   styles,
   // Platform touchable
-  Touchable,
-  touchableProps,
+  Touchable: _Touchable,
+  touchableProps: _touchableProps,
 }) {
   const allPaletteNames = Object.keys(TIMER_PALETTES);
   const availablePalettes = isPremiumUser

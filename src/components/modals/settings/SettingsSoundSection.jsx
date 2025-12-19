@@ -13,7 +13,7 @@ const SettingsSoundSection = React.memo(function SettingsSoundSection({
   // Setters
   setSelectedSoundId,
   // Theme & i18n
-  theme,
+  theme: _theme,
   t,
   // Styles
   styles,

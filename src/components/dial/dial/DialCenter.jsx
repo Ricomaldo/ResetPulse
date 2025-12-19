@@ -8,11 +8,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PulseButton } from '../../buttons';
+import { useTimerOptions } from '../../../contexts/TimerOptionsContext';
 
 /**
  * DialCenter - Affiche PulseButton au centre du dial
  *
- * @param {string} activityEmoji - Emoji à afficher (remplace l'icône)
+ * @param {Object} activity - Objet activité (contient emoji et propriétés)
  * @param {boolean} isRunning - Timer en cours
  * @param {boolean} isCompleted - Timer terminé
  * @param {function} onTap - Callback tap (REST → start, COMPLETE → reset)
@@ -21,7 +22,7 @@ import { PulseButton } from '../../buttons';
  * @param {number} size - Taille du bouton
  */
 const DialCenter = React.memo(function DialCenter({
-  activityEmoji,
+  activity,
   isRunning,
   isCompleted = false,
   onTap,
@@ -29,10 +30,13 @@ const DialCenter = React.memo(function DialCenter({
   clockwise = false,
   size = 72,
 }) {
+  // Get pulse setting from context
+  const { shouldPulse } = useTimerOptions();
+
   // Déterminer l'état du bouton
   const getState = () => {
-    if (isRunning) return 'running';
-    if (isCompleted) return 'complete';
+    if (isRunning) {return 'running';}
+    if (isCompleted) {return 'complete';}
     return 'rest';
   };
 
@@ -40,12 +44,13 @@ const DialCenter = React.memo(function DialCenter({
     <View style={styles.container}>
       <PulseButton
         state={getState()}
-        emoji={activityEmoji}
+        activity={activity}
         onTap={onTap}
         onLongPressComplete={onLongPressComplete}
         clockwise={clockwise}
         size={size}
         stopRequiresLongPress={true}
+        shouldPulse={shouldPulse}
       />
     </View>
   );
@@ -53,7 +58,9 @@ const DialCenter = React.memo(function DialCenter({
 
 DialCenter.displayName = 'DialCenter';
 DialCenter.propTypes = {
-  activityEmoji: PropTypes.string,
+  activity: PropTypes.shape({
+    emoji: PropTypes.string,
+  }),
   clockwise: PropTypes.bool,
   isCompleted: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,

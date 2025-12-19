@@ -5,7 +5,7 @@
  * @created 2025-12-19
  * @updated 2025-12-19
  */
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -13,7 +13,10 @@ import Animated, {
   useAnimatedStyle,
   useAnimatedProps,
   withTiming,
+  withSequence,
+  withRepeat,
   cancelAnimation,
+  interpolateColor,
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
@@ -28,6 +31,13 @@ import haptics from '../../utils/haptics';
 // Constants
 const DEFAULT_LONG_PRESS_DURATION = 2500;
 const STROKE_WIDTH = 3;
+
+// Pulse animation constants (Apple-friendly: subtle, slow, non-distracting)
+const PULSE_SCALE_MAX = 1.04; // Very subtle scale increase
+const PULSE_DURATION = 1500; // 1.5s per half-cycle = 3s full cycle
+
+// State transition constants
+const STATE_TRANSITION_DURATION = 250;
 
 // Animated Circle component
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -44,21 +54,80 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
  *   - REST: tap → start
  *   - RUNNING: tap ignoré, long press 2.5s avec animation → stop
  *   - COMPLETE: tap → reset
+ *
+ * Si activity.emoji est fourni, affiche l'emoji de l'activité à la place des icônes
+ * (play, stop, reset) tout en gardant le même fonctionnement
  */
 const PulseButton = React.memo(function PulseButton({
   state = 'rest', // 'rest' | 'running' | 'complete'
   emoji = null,
+  activity = null,
   onTap,
   onLongPressComplete,
   clockwise = false,
   size = 72,
   compact = false,
   // Mode simple = tap partout, pas d'animation
-  // Mode sophisticated = long press pour stop avec animation
+  // Mode sophisticated = long press pour stop/start avec animation
   stopRequiresLongPress = true,
+  startRequiresLongPress = false, // New: deliberate start mode
+  // Pulse animation (from settings)
+  shouldPulse = false,
 }) {
   const theme = useTheme();
-  const { longPressConfirmDuration = DEFAULT_LONG_PRESS_DURATION } = useTimerOptions();
+  const timerOptions = useTimerOptions();
+  // Ensure defaults even if context values are undefined during initial load
+  const longPressConfirmDuration = timerOptions?.longPressConfirmDuration ?? DEFAULT_LONG_PRESS_DURATION;
+  const longPressStartDuration = timerOptions?.longPressStartDuration ?? DEFAULT_LONG_PRESS_DURATION;
+
+  // === PULSE ANIMATION (REST state only, when enabled) ===
+  const pulseScale = useSharedValue(1);
+
+  useEffect(() => {
+    if (shouldPulse && state === 'rest') {
+      // Start subtle breathing animation (sine-like curve via bezier)
+      const breatheEasing = Easing.bezier(0.37, 0, 0.63, 1); // Smooth sine-like curve
+      pulseScale.value = withRepeat(
+        withSequence(
+          withTiming(PULSE_SCALE_MAX, { duration: PULSE_DURATION, easing: breatheEasing }),
+          withTiming(1, { duration: PULSE_DURATION, easing: breatheEasing })
+        ),
+        -1, // Infinite repeat
+        false // No reverse (we handle it in sequence)
+      );
+    } else {
+      // Stop pulse and return to normal
+      cancelAnimation(pulseScale);
+      pulseScale.value = withTiming(1, { duration: 200, easing: Easing.out(Easing.quad) });
+    }
+  }, [shouldPulse, state]);
+
+  // === STATE TRANSITION ANIMATION ===
+  const stateProgress = useSharedValue(state === 'running' ? 1 : 0);
+  const scaleTransition = useSharedValue(1);
+  const prevStateRef = useRef(state);
+
+  useEffect(() => {
+    const prevState = prevStateRef.current;
+    prevStateRef.current = state;
+
+    // Animate color transition
+    stateProgress.value = withTiming(
+      state === 'running' ? 1 : 0,
+      { duration: STATE_TRANSITION_DURATION, easing: Easing.inOut(Easing.quad) }
+    );
+
+    // Bounce only on complete state (celebration) or when stopping
+    // Skip bounce for rest→running to avoid visual glitch when starting timer
+    const shouldBounce = state === 'complete' || (prevState === 'running' && state === 'rest');
+    if (shouldBounce) {
+      scaleTransition.value = withSequence(
+        withTiming(0.92, { duration: 80, easing: Easing.out(Easing.quad) }),
+        withTiming(1.05, { duration: 120, easing: Easing.out(Easing.quad) }),
+        withTiming(1, { duration: 150, easing: Easing.inOut(Easing.quad) })
+      );
+    }
+  }, [state]);
 
   // Dimensions
   const buttonSize = compact ? rs(48, 'min') : rs(size, 'min');
@@ -69,9 +138,11 @@ const PulseButton = React.memo(function PulseButton({
   const center = buttonSize / 2;
 
   // Animation values (seulement pour mode sophisticated)
-  const progress = useSharedValue(0);
+  const progressStop = useSharedValue(0); // For stop long press
+  const progressStart = useSharedValue(0); // For start long press
   const isPressed = useSharedValue(false);
-  const completedRef = useRef(false);
+  const completedStopRef = useRef(false);
+  const completedStartRef = useRef(false);
 
   // === CALLBACKS ===
 
@@ -80,21 +151,59 @@ const PulseButton = React.memo(function PulseButton({
     onTap?.();
   }, [onTap]);
 
-  const handleLongPressComplete = useCallback(() => {
-    if (completedRef.current) {
+  // Long press stop callback
+  const handleLongPressStop = useCallback(() => {
+    if (completedStopRef.current) {
       return;
     }
-    completedRef.current = true;
+    completedStopRef.current = true;
     haptics.notification('warning').catch(() => {});
     onLongPressComplete?.();
   }, [onLongPressComplete]);
 
-  const resetCompletion = useCallback(() => {
-    completedRef.current = false;
+  // Long press start callback
+  const handleLongPressStart = useCallback(() => {
+    if (completedStartRef.current) {
+      return;
+    }
+    completedStartRef.current = true;
+    haptics.notification('success').catch(() => {});
+    onTap?.(); // Start uses same callback as tap
+  }, [onTap]);
+
+  const resetStopCompletion = useCallback(() => {
+    completedStopRef.current = false;
   }, []);
+
+  const resetStartCompletion = useCallback(() => {
+    completedStartRef.current = false;
+  }, []);
+
+  // === ANIMATED STYLES ===
+
+  // Combined scale animation (pulse + transition + press)
+  const animatedButtonStyle = useAnimatedStyle(() => {
+    const combinedScale = pulseScale.value * scaleTransition.value * (isPressed.value ? 0.95 : 1);
+    return {
+      transform: [{ scale: combinedScale }],
+    };
+  });
+
+  // Animated background color (smooth transition between states)
+  const animatedColorStyle = useAnimatedStyle(() => {
+    const bgColor = interpolateColor(
+      stateProgress.value,
+      [0, 1],
+      [theme.colors.brand.primary, theme.colors.brand.secondary]
+    );
+    return {
+      backgroundColor: bgColor,
+    };
+  });
 
   // === COULEUR & CONTENU ===
 
+  // Static color for non-animated modes (simple mode)
   const getButtonColor = () => {
     switch (state) {
     case 'running':
@@ -107,14 +216,18 @@ const PulseButton = React.memo(function PulseButton({
   };
 
   const renderContent = () => {
-    if (emoji) {
+    // Priorité: emoji prop > activity.emoji > icons
+    const displayEmoji = emoji || activity?.emoji;
+
+    if (displayEmoji) {
       return (
         <Text style={[styles.emoji, { fontSize: emojiSize }]}>
-          {emoji}
+          {displayEmoji}
         </Text>
       );
     }
 
+    // Fallback: afficher les icônes standard (play, stop, reset)
     const iconColor = theme.colors.fixed.white;
     switch (state) {
     case 'running':
@@ -140,9 +253,19 @@ const PulseButton = React.memo(function PulseButton({
   // === STYLES ===
 
   const styles = StyleSheet.create({
+    // Base button style (for static color mode)
     button: {
       alignItems: 'center',
       backgroundColor: getButtonColor(),
+      borderRadius: buttonSize / 2,
+      height: buttonSize,
+      justifyContent: 'center',
+      width: buttonSize,
+      ...theme.shadow('md'),
+    },
+    // Animated button style (without backgroundColor - applied via animatedColorStyle)
+    buttonAnimated: {
+      alignItems: 'center',
       borderRadius: buttonSize / 2,
       height: buttonSize,
       justifyContent: 'center',
@@ -160,6 +283,12 @@ const PulseButton = React.memo(function PulseButton({
     },
     progressOverlay: {
       position: 'absolute',
+      // Inverse rotation for "rewind" effect (opposite of timer direction)
+      transform: [{ rotate: clockwise ? '-90deg' : '90deg' }],
+    },
+    progressOverlayStart: {
+      position: 'absolute',
+      // Same rotation as timer direction for "winding up" effect
       transform: [{ rotate: clockwise ? '90deg' : '-90deg' }],
     },
   });
@@ -183,89 +312,169 @@ const PulseButton = React.memo(function PulseButton({
   }
 
   // ==========================================================
-  // MODE SOPHISTICATED: Long press pour stop (DialCenter)
+  // MODE SOPHISTICATED: Long press pour stop/start (DialCenter)
   // ==========================================================
 
-  // Animated props
-  const animatedCircleProps = useAnimatedProps(() => ({
-    strokeDashoffset: circumference * (1 - progress.value),
+  // Animated props for long press progress circles
+  const animatedStopCircleProps = useAnimatedProps(() => ({
+    strokeDashoffset: circumference * (1 - progressStop.value),
   }));
 
-  const animatedButtonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: isPressed.value ? 0.95 : 1 }],
+  const animatedStartCircleProps = useAnimatedProps(() => ({
+    strokeDashoffset: circumference * (1 - progressStart.value),
   }));
 
-  // --- REST: Tap simple ---
-  if (state === 'rest') {
-    return (
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleTap}
-        activeOpacity={0.7}
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel={getAccessibilityLabel()}
-      >
-        {renderContent()}
-      </TouchableOpacity>
-    );
-  }
-
-  // --- COMPLETE: Tap simple ---
-  if (state === 'complete') {
-    return (
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleTap}
-        activeOpacity={0.7}
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel={getAccessibilityLabel()}
-      >
-        {renderContent()}
-      </TouchableOpacity>
-    );
-  }
-
-  // --- RUNNING: Long press avec animation cercle ---
-  const longPressGesture = Gesture.LongPress()
-    .minDuration(longPressConfirmDuration) // Gesture recognized after full duration
+  // Tap gesture for REST (when startRequiresLongPress=false) and COMPLETE states
+  const tapGesture = Gesture.Tap()
     .onBegin(() => {
       'worklet';
-      // Visual feedback starts immediately
       isPressed.value = true;
-      runOnJS(resetCompletion)();
+    })
+    .onEnd(() => {
+      'worklet';
+      runOnJS(handleTap)();
+    })
+    .onFinalize(() => {
+      'worklet';
+      isPressed.value = false;
+    });
 
-      // Animation synced with minDuration
-      progress.value = withTiming(1, {
+  // Long press gesture for START (when startRequiresLongPress=true)
+  const longPressStartGesture = Gesture.LongPress()
+    .minDuration(longPressStartDuration)
+    .onBegin(() => {
+      'worklet';
+      isPressed.value = true;
+      runOnJS(resetStartCompletion)();
+      progressStart.value = withTiming(1, {
+        duration: longPressStartDuration,
+        easing: Easing.linear,
+      });
+    })
+    .onStart(() => {
+      'worklet';
+      runOnJS(handleLongPressStart)();
+    })
+    .onFinalize(() => {
+      'worklet';
+      isPressed.value = false;
+      cancelAnimation(progressStart);
+      progressStart.value = withTiming(0, {
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+      });
+    });
+
+  // Long press gesture for STOP
+  const longPressStopGesture = Gesture.LongPress()
+    .minDuration(longPressConfirmDuration)
+    .onBegin(() => {
+      'worklet';
+      isPressed.value = true;
+      runOnJS(resetStopCompletion)();
+      progressStop.value = withTiming(1, {
         duration: longPressConfirmDuration,
         easing: Easing.linear,
       });
     })
     .onStart(() => {
       'worklet';
-      // Gesture recognized (minDuration passed) → trigger action
-      runOnJS(handleLongPressComplete)();
+      runOnJS(handleLongPressStop)();
     })
     .onFinalize(() => {
       'worklet';
-      // Reset visual state
       isPressed.value = false;
-      cancelAnimation(progress);
-      progress.value = withTiming(0, {
+      cancelAnimation(progressStop);
+      progressStop.value = withTiming(0, {
         duration: 150,
         easing: Easing.out(Easing.ease),
       });
     });
 
-  return (
-    <GestureDetector gesture={longPressGesture}>
-      <Animated.View style={[styles.container, animatedButtonStyle]}>
-        <View style={styles.button}>
-          {renderContent()}
-        </View>
+  // --- REST: Tap or Long Press depending on startRequiresLongPress ---
+  if (state === 'rest') {
+    if (startRequiresLongPress) {
+      // Deliberate start mode: long press to start
+      return (
+        <GestureDetector gesture={longPressStartGesture}>
+          <Animated.View style={[styles.container, animatedButtonStyle]}>
+            <Animated.View style={[styles.buttonAnimated, animatedColorStyle]}>
+              {renderContent()}
+            </Animated.View>
 
-        {/* Cercle animation rembobinage */}
+            {/* Progress circle for start (follows timer direction) */}
+            <View style={styles.progressOverlayStart}>
+              <Svg width={buttonSize} height={buttonSize}>
+                <Circle
+                  cx={center}
+                  cy={center}
+                  r={radius}
+                  stroke={theme.colors.fixed.white + '30'}
+                  strokeWidth={STROKE_WIDTH}
+                  fill="transparent"
+                />
+                <AnimatedCircle
+                  cx={center}
+                  cy={center}
+                  r={radius}
+                  stroke={theme.colors.fixed.white}
+                  strokeWidth={STROKE_WIDTH}
+                  fill="transparent"
+                  strokeDasharray={circumference}
+                  animatedProps={animatedStartCircleProps}
+                  strokeLinecap="round"
+                />
+              </Svg>
+            </View>
+          </Animated.View>
+        </GestureDetector>
+      );
+    }
+
+    // Quick start mode: simple tap
+    return (
+      <GestureDetector gesture={tapGesture}>
+        <Animated.View
+          style={[styles.container, animatedButtonStyle]}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel={getAccessibilityLabel()}
+        >
+          <Animated.View style={[styles.buttonAnimated, animatedColorStyle]}>
+            {renderContent()}
+          </Animated.View>
+        </Animated.View>
+      </GestureDetector>
+    );
+  }
+
+  // --- COMPLETE: Tap with transition animation ---
+  if (state === 'complete') {
+    return (
+      <GestureDetector gesture={tapGesture}>
+        <Animated.View
+          style={[styles.container, animatedButtonStyle]}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel={getAccessibilityLabel()}
+        >
+          <Animated.View style={[styles.buttonAnimated, animatedColorStyle]}>
+            {renderContent()}
+          </Animated.View>
+        </Animated.View>
+      </GestureDetector>
+    );
+  }
+
+  // --- RUNNING: Long press avec animation cercle (inverse rotation) ---
+  return (
+    <GestureDetector gesture={longPressStopGesture}>
+      <Animated.View style={[styles.container, animatedButtonStyle]}>
+        <Animated.View style={[styles.buttonAnimated, animatedColorStyle]}>
+          {renderContent()}
+        </Animated.View>
+
+        {/* Progress circle for stop (inverse rotation = rewind effect) */}
         <View style={styles.progressOverlay}>
           <Svg width={buttonSize} height={buttonSize}>
             <Circle
@@ -284,7 +493,7 @@ const PulseButton = React.memo(function PulseButton({
               strokeWidth={STROKE_WIDTH}
               fill="transparent"
               strokeDasharray={circumference}
-              animatedProps={animatedCircleProps}
+              animatedProps={animatedStopCircleProps}
               strokeLinecap="round"
             />
           </Svg>
@@ -298,12 +507,17 @@ PulseButton.displayName = 'PulseButton';
 PulseButton.propTypes = {
   state: PropTypes.oneOf(['rest', 'running', 'complete']),
   emoji: PropTypes.string,
+  activity: PropTypes.shape({
+    emoji: PropTypes.string,
+  }),
   onTap: PropTypes.func,
   onLongPressComplete: PropTypes.func,
   clockwise: PropTypes.bool,
   size: PropTypes.number,
   compact: PropTypes.bool,
   stopRequiresLongPress: PropTypes.bool,
+  startRequiresLongPress: PropTypes.bool,
+  shouldPulse: PropTypes.bool,
 };
 
 export default PulseButton;

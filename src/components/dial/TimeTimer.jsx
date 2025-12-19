@@ -13,7 +13,6 @@ import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
 import TimerDial from './TimerDial';
-import haptics from '../../utils/haptics';
 import { TIMER, getDialMode } from './timerConstants';
 
 export default function TimeTimer({
@@ -45,6 +44,16 @@ export default function TimeTimer({
 
   // Initialize timer with current duration or default
   const timer = useTimer(currentDuration || TIMER.DEFAULT_DURATION, onTimerComplete);
+
+  // Refs for stable access to timer methods (avoid recreating callbacks on timer object changes)
+  const timerRef = useRef(timer);
+  // Sync timer ref on every render
+  timerRef.current = timer;
+
+  // Stable stopTimer reference that doesn't change on every render
+  const handleStopTimer = useCallback(() => {
+    timerRef.current.stopTimer();
+  }, []);
 
   // Refs for onboarding
   const dialWrapperRef = useRef(null);
@@ -124,7 +133,8 @@ export default function TimeTimer({
    * @param {boolean} isRelease - True if this is the final value (release), false if dragging
    */
   const handleGraduationTap = useCallback((minutes, isRelease = false) => {
-    if (timer.running) {return;}
+    // Use ref to access latest timer without including it in dependencies
+    if (timerRef.current.running) {return;}
 
     const dialMode = getDialMode(scaleMode);
 
@@ -144,12 +154,12 @@ export default function TimeTimer({
       newDuration = Math.round(newDuration);
     }
 
-    timer.setDuration(newDuration);
+    timerRef.current.setDuration(newDuration);
 
     // Sync to context so DigitalTimer in ControlBar updates
     setCurrentDuration(newDuration);
     lastSyncedContextDurationRef.current = newDuration;
-  }, [timer, scaleMode, setCurrentDuration]);
+  }, [scaleMode, setCurrentDuration]);
 
   return (
     <View style={styles.container}>
@@ -170,7 +180,7 @@ export default function TimeTimer({
           showActivityEmoji={showActivityEmoji}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}
-          onDialLongPress={timer.stopTimer}
+          onDialLongPress={handleStopTimer}
           isCompleted={timer.isCompleted}
           currentActivity={currentActivity}
           showNumbers={true}

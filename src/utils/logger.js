@@ -11,6 +11,7 @@ class Logger {
   // Log simple en dev
   log(message, data) {
     if (this.isDev) {
+      // eslint-disable-next-line no-console
       console.log(`[ResetPulse] ${message}`, data || '');
     }
   }
