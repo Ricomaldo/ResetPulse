@@ -1,7 +1,7 @@
 /**
  * @fileoverview Circular toggle button for clockwise/counter-clockwise rotation
  * @created 2025-12-14
- * @updated 2025-12-19 - Refactored to use IconButton
+ * @updated 2025-12-20 - Updated to handle responsive sizes
  */
 import React from 'react';
 import PropTypes from 'prop-types';

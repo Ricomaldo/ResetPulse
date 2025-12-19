@@ -16,6 +16,7 @@ import { useTimerPalette } from '../../contexts/TimerPaletteContext';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
+import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import haptics from '../../utils/haptics';
@@ -155,11 +156,11 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
       backgroundColor: theme.colors.fixed.transparent,
       borderRadius: theme.borderRadius.round,
       borderWidth: 2,
-      height: rs(50, 'min'),
+      height: harmonizedSizes.carouselItem.size,
       minHeight: 44,
       minWidth: 44,
-      padding: rs(4, 'min'),
-      width: rs(50, 'min'),
+      padding: harmonizedSizes.colorButton.padding,
+      width: harmonizedSizes.carouselItem.size,
     },
     colorButtonActive: {
       elevation: 5,
@@ -186,8 +187,8 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'center',
-      paddingHorizontal: rs(6, 'width'),
-      paddingVertical: theme.spacing.xs,
+      paddingHorizontal: harmonizedSizes.carouselSpacing.containerPadding.horizontal,
+      paddingVertical: harmonizedSizes.carouselSpacing.containerPadding.vertical,
       width: rs(280, 'width'),
     },
     moreButtonIcon: {
@@ -201,16 +202,16 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
     outerContainer: {
       alignItems: 'center',
       flexDirection: 'column',
-      gap: theme.spacing.xs, // Match ActivityCarousel spacing
+      gap: harmonizedSizes.carouselSpacing.stackGap,
       justifyContent: 'center',
     },
     paletteContainer: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: theme.spacing.md,
+      gap: harmonizedSizes.carouselSpacing.itemGap,
       justifyContent: 'center',
-      paddingHorizontal: rs(6, 'width'),
-      paddingVertical: theme.spacing.xs,
+      paddingHorizontal: harmonizedSizes.carouselSpacing.containerPadding.horizontal,
+      paddingVertical: harmonizedSizes.carouselSpacing.containerPadding.vertical,
       width: rs(280, 'width'),
     },
     scrollContent: {
@@ -218,7 +219,7 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
     },
     scrollView: {
       flexGrow: 0,
-      height: rs(70, 'min'), // Standardized height for BottomSheet
+      height: harmonizedSizes.scrollView.height,
     },
   });
 
