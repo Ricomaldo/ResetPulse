@@ -1,20 +1,20 @@
 /**
- * @fileoverview Layer 1 - Favorite Tool (snap 15%)
+ * @fileoverview FavoriteToolBox - Snap 15% content
  * @description Renders only the favorite tool selected by user
  * @created 2025-12-19
- * @updated 2025-12-19 (ControlBar replaces CommandsPanel)
+ * @updated 2025-12-19
  */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
-import { ActivityCarousel, PaletteCarousel } from '../../toolbox/carousels';
+import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
 
 /**
- * Layer1 - Favorite tool selector (orchestrator)
+ * FavoriteToolBox - Snap 15% (favorite tool only)
  */
-export default function Layer1({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop }) {
+export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop }) {
   const { favoriteToolMode } = useUserPreferences();
 
   // Map favorite modes to components (activities, colors, commands, none)
@@ -42,7 +42,7 @@ export default function Layer1({ isTimerRunning, isTimerCompleted, onPlay, onRes
   );
 }
 
-Layer1.propTypes = {
+FavoriteToolBox.propTypes = {
   isTimerCompleted: PropTypes.bool,
   isTimerRunning: PropTypes.bool.isRequired,
   onPlay: PropTypes.func.isRequired,

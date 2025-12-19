@@ -229,23 +229,27 @@ const PulseButton = React.memo(function PulseButton({
 
   // --- RUNNING: Long press avec animation cercle ---
   const longPressGesture = Gesture.LongPress()
-    .minDuration(50)
+    .minDuration(longPressConfirmDuration) // Gesture recognized after full duration
     .onBegin(() => {
       'worklet';
+      // Visual feedback starts immediately
       isPressed.value = true;
       runOnJS(resetCompletion)();
 
+      // Animation synced with minDuration
       progress.value = withTiming(1, {
         duration: longPressConfirmDuration,
         easing: Easing.linear,
-      }, (finished) => {
-        if (finished && isPressed.value) {
-          runOnJS(handleLongPressComplete)();
-        }
       });
+    })
+    .onStart(() => {
+      'worklet';
+      // Gesture recognized (minDuration passed) → trigger action
+      runOnJS(handleLongPressComplete)();
     })
     .onFinalize(() => {
       'worklet';
+      // Reset visual state
       isPressed.value = false;
       cancelAnimation(progress);
       progress.value = withTiming(0, {

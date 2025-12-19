@@ -5,11 +5,11 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { useTheme } from '../../../theme/ThemeProvider';
-import { rs } from '../../../styles/responsive';
-import haptics from '../../../utils/haptics';
-import Icons from '../../layout/Icons';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme } from '../../theme/ThemeProvider';
+import { rs } from '../../styles/responsive';
+import haptics from '../../utils/haptics';
+import Icons from '../layout/Icons';
 
 /**
  * CircularToggle - Circular toggle button for rotation direction
@@ -28,14 +28,14 @@ const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle,
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.surfaceElevated, // Same as parent (BottomSheet)
       borderColor: theme.colors.border,
       borderRadius: rs(size / 2, 'min'),
       borderWidth: 2,
       height: rs(size, 'min'),
       justifyContent: 'center',
       width: rs(size, 'min'),
-      ...theme.shadow('sm'),
+      ...theme.shadows.sm,
     },
     icon: {
       color: theme.colors.textSecondary,

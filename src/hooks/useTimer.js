@@ -140,12 +140,16 @@ export default function useTimer(initialDuration = 240, onComplete) {
         }
 
         // Reset completion state after animation
+        // First delay: show COMPLETE message and let user savor it
         setTimeout(() => {
           if (isMountedRef.current) {
-            setHasCompleted(false);
-            hasTriggeredCompletion.current = false;
+            // Second delay: breathing room (blank state) before REST state
+            setTimeout(() => {
+              setHasCompleted(false);
+              hasTriggeredCompletion.current = false;
+            }, TIMER.COMPLETE_TO_REST_TRANSITION_DELAY);
           }
-        }, TIMER.MESSAGE_DISPLAY_DURATION);
+        }, TIMER.COMPLETE_MESSAGE_DISPLAY_DURATION);
       }
       // Log timer completion avec timecode
       if (__DEV__) {
@@ -279,7 +283,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
   }, [running, remaining, startTime, updateTimer]);
 
   // Display message logic (ADR-007: REST/RUNNING/COMPLETE only, no PAUSED)
-  const displayTime = () => {
+  const getDisplayMessage = () => {
     const activityId = currentActivityRef.current?.id || 'none';
 
     // COMPLETE: Show completion message if timer finished
@@ -292,8 +296,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
       return t(`timerMessages.${activityId}.startMessage`);
     }
 
-    // REST: Show nothing (or activity label handled elsewhere)
-    return '';
+    // REST: Show invitation message
+    return t('invitation'); // "Ready?", "Prêt?", etc.
   };
 
   // Controls (ADR-007: startTimer only starts, stopTimer for long-press abandon)
@@ -424,7 +428,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     remaining,
     running,
     progress,
-    displayMessage: displayTime(),
+    displayMessage: getDisplayMessage(),
     isCompleted: hasCompleted,
 
     // Controls (ADR-007: startTimer/stopTimer replace toggleRunning)

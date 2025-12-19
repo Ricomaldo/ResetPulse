@@ -22,6 +22,7 @@ import { rs } from '../../styles/responsive';
  * @param {Function} props.onTimerRef - Callback to expose timer ref to parent
  * @param {Function} props.onDialTap - Callback when dial is tapped (start/pause)
  * @param {Function} props.onTimerComplete - Callback when timer completes
+ * @param {boolean} props.isLandscape - Landscape orientation (uses full screen)
  */
 export default function DialZone({
   displayMessage,
@@ -30,6 +31,7 @@ export default function DialZone({
   onTimerRef,
   onDialTap,
   onTimerComplete,
+  isLandscape = false,
 }) {
   const { currentActivity } = useTimerOptions();
 
@@ -39,19 +41,27 @@ export default function DialZone({
     displayMessage !== ''
   );
 
+  // Dynamic container style based on orientation
+  const containerStyle = [
+    styles.container,
+    isLandscape && styles.containerLandscape,
+  ];
+
   return (
-    <View style={styles.container}>
-      {/* Zone ActivityLabel - Fixed height at top */}
-      <View style={styles.activityLabelZone}>
-        {currentActivity && currentActivity.id !== 'none' && (
-          <ActivityLabel
-            label={currentActivity.label}
-            animatedDots={animatedDots}
-            displayMessage={displayMessage}
-            isCompleted={isCompleted}
-          />
-        )}
-      </View>
+    <View style={containerStyle}>
+      {/* Zone ActivityLabel - Portrait only (hidden in landscape for zen mode) */}
+      {!isLandscape && (
+        <View style={styles.activityLabelZone}>
+          {currentActivity && currentActivity.id !== 'none' && (
+            <ActivityLabel
+              label={currentActivity.label}
+              animatedDots={animatedDots}
+              displayMessage={displayMessage}
+              isCompleted={isCompleted}
+            />
+          )}
+        </View>
+      )}
 
       {/* Zone Dial - Centered, takes remaining space */}
       <View style={styles.dialCenteredZone}>
@@ -79,8 +89,13 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'column', // Explicit vertical stacking
-    height: '62%', // 62% to accommodate dial + numbers + activityLabel
+    height: '62%', // Portrait: 62% to accommodate dial + AsideZone below
     justifyContent: 'flex-start', // Vertical layout from top to bottom
+  },
+  containerLandscape: {
+    flex: 1, // Landscape: take full remaining space (no AsideZone)
+    height: '100%',
+    justifyContent: 'center', // Center dial vertically in landscape
   },
   dialCenteredZone: {
     alignItems: 'center',

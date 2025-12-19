@@ -28,6 +28,8 @@ export default function TimeTimer({
     scaleMode,
     currentActivity,
     currentDuration,
+    setCurrentDuration,
+    setTimerRemaining,
     showActivityEmoji,
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
@@ -76,6 +78,11 @@ export default function TimeTimer({
       onRunningChange(timer.running);
     }
   }, [timer.running, onRunningChange]);
+
+  // Sync timer remaining to context for ControlBar display
+  useEffect(() => {
+    setTimerRemaining(timer.remaining);
+  }, [timer.remaining, setTimerRemaining]);
 
   // Increment custom activity usage when timer starts
   useEffect(() => {
@@ -139,8 +146,10 @@ export default function TimeTimer({
 
     timer.setDuration(newDuration);
 
-    // Duration will be saved when user presses play (useTimer.js handles this)
-  }, [timer, scaleMode]);
+    // Sync to context so DigitalTimer in ControlBar updates
+    setCurrentDuration(newDuration);
+    lastSyncedContextDurationRef.current = newDuration;
+  }, [timer, scaleMode, setCurrentDuration]);
 
   return (
     <View style={styles.container}>

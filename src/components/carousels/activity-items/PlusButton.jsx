@@ -4,11 +4,11 @@
  * @updated 2025-12-14
  */
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../../../../theme/ThemeProvider';
-import { rs } from '../../../../styles/responsive';
-import { fontWeights } from '../../../../theme/tokens';
-import Icons from '../../../layout/Icons';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme } from '../../../theme/ThemeProvider';
+import { rs } from '../../../styles/responsive';
+import { fontWeights } from '../../../theme/tokens';
+import Icons from '../../layout/Icons';
 
 /**
  * PlusButton - Dumb component for "+" button in carousel
@@ -42,11 +42,6 @@ const PlusButton = React.memo(function PlusButton({
       width: rs(60, 'min'),
       ...theme.shadows.sm,
     },
-    createButtonText: {
-      color: theme.colors.brand.primary,
-      fontSize: rs(24, 'min'),
-      fontWeight: fontWeights.light,
-    },
     moreButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
@@ -57,11 +52,6 @@ const PlusButton = React.memo(function PlusButton({
       minWidth: 44,
       width: rs(60, 'min'),
       ...theme.shadows.md,
-    },
-    moreButtonText: {
-      color: theme.colors.fixed.white,
-      fontSize: rs(32, 'min'),
-      fontWeight: fontWeights.semibold,
     },
   });
 

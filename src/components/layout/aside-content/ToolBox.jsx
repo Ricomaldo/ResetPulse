@@ -1,21 +1,21 @@
 /**
- * @fileoverview Layer 2 - Complete Toolbox (snap 38%)
+ * @fileoverview ToolBox - Snap 38% content
  * @description Renders all 3 tools with dynamic order based on FavoriteTool
  * @created 2025-12-19
- * @updated 2025-12-19 (Dynamic order for visual continuity with Layer1)
+ * @updated 2025-12-19
  */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
-import { ActivityCarousel, PaletteCarousel } from '../../toolbox/carousels';
+import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
 
 /**
- * Layer2 - Complete toolbox (snap 38%)
- * Dynamic order: favorite tool first for visual continuity with Layer1
+ * ToolBox - Snap 38% (all 3 tools)
+ * Dynamic order: favorite tool first for visual continuity
  */
-export default function Layer2({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, activityCarouselRef, paletteCarouselRef }) {
+export default function ToolBox({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, activityCarouselRef, paletteCarouselRef }) {
   const { favoriteToolMode } = useUserPreferences();
 
   // Tool order based on favorite (favorite first for visual continuity)
@@ -58,7 +58,7 @@ export default function Layer2({ isTimerRunning, isTimerCompleted, onPlay, onRes
   );
 }
 
-Layer2.propTypes = {
+ToolBox.propTypes = {
   activityCarouselRef: PropTypes.object,
   isTimerCompleted: PropTypes.bool,
   isTimerRunning: PropTypes.bool.isRequired,

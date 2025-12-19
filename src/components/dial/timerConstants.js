@@ -130,6 +130,8 @@ export const TOUCH = {
 
 export const TIMER = {
   MESSAGE_DISPLAY_DURATION: 2000,
+  COMPLETE_MESSAGE_DISPLAY_DURATION: 3500, // Time to savor completion message (ADR-007)
+  COMPLETE_TO_REST_TRANSITION_DELAY: 300, // Breathing room delay before REST state (ADR-007)
   DEFAULT_DURATION: 5 * 60,
   MODES: {
     POMODORO: 25,

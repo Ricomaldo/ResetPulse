@@ -109,9 +109,21 @@ function TimerDial({
   const gestureStartTimeRef = useRef(null);
   const gestureStartPosRef = useRef(null);
 
+  // Calculate center zone for gesture exclusion
+  const centerZoneRadius = radiusBackground * DIAL_LAYOUT.CENTER_ZONE_RATIO;
+
   const panResponder = useMemo(() =>
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true, // Capture all touches
+      // Ne pas capturer les touches dans la zone centre (laisse passer à PulseButton)
+      onStartShouldSetPanResponder: (evt) => {
+        const touchX = evt.nativeEvent.locationX;
+        const touchY = evt.nativeEvent.locationY;
+        const distanceFromCenter = Math.sqrt(
+          Math.pow(touchX - centerX, 2) + Math.pow(touchY - centerY, 2)
+        );
+        // Exclure la zone centre pour laisser PulseButton gérer ses propres gestes
+        return distanceFromCenter > centerZoneRadius;
+      },
       onMoveShouldSetPanResponder: () => !!onGraduationTap, // Allow drag anytime (even when running for skipping ahead)
 
       onPanResponderGrant: (evt) => {
@@ -268,7 +280,7 @@ function TimerDial({
         gestureStartPosRef.current = null;
       },
     }),
-  [dial, isRunning, onGraduationTap, onDialTap, onDialLongPress, duration, clockwise, centerX, centerY, radiusBackground]
+  [dial, isRunning, onGraduationTap, onDialTap, onDialLongPress, duration, clockwise, centerX, centerY, radiusBackground, centerZoneRadius]
   );
 
   // Use provided color or default energy color
@@ -419,7 +431,7 @@ function TimerDial({
               y1={centerY}
               x2={handleX}
               y2={handleY}
-              stroke={theme.colors.brand.primary}
+              stroke={theme.colors.brand.secondary}
               strokeWidth={2}
               strokeLinecap="round"
               opacity={isDragging ? 1 : 0.7}
@@ -431,7 +443,7 @@ function TimerDial({
                 cx={handleX}
                 cy={handleY}
                 r={rs(DIAL_LAYOUT.HANDLE_GLOW_SIZE)}
-                fill={theme.colors.brand.primary}
+                fill={theme.colors.brand.secondary}
                 opacity={0.2}
               />
             )}
@@ -442,7 +454,7 @@ function TimerDial({
               cy={handleY}
               r={rs(DIAL_LAYOUT.HANDLE_SIZE)}
               fill={theme.colors.surface}
-              stroke={theme.colors.brand.primary}
+              stroke={theme.colors.brand.secondary}
               strokeWidth={2.5}
               opacity={1}
             />
@@ -452,7 +464,7 @@ function TimerDial({
               cx={handleX}
               cy={handleY}
               r={rs(DIAL_LAYOUT.HANDLE_INNER_SIZE)}
-              fill={theme.colors.brand.primary}
+              fill={theme.colors.brand.secondary}
               opacity={isDragging ? 1 : 0.8}
             />
           </Svg>

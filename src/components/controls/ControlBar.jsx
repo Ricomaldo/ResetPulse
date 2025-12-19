@@ -5,7 +5,7 @@
  * @updated 2025-12-19
  */
 import React from 'react';
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
@@ -14,17 +14,17 @@ import DurationPresets from './DurationPresets';
 import DigitalTimer from './DigitalTimer';
 import FitButton from './FitButton';
 import { PulseButton } from '../buttons';
-import { CircularToggle } from '../toolbox/controls';
+import CircularToggle from './CircularToggle';
 
 /**
  * ControlBar - Barre de contrôle horizontale
  *
  * Layouts:
- * - showPresets=false (Layer1): [−] 25:00 [+] [▶] [⊡] [↻]
- * - showPresets=true + landscape: [5][15][30][60] | [−] 25:00 [+] | [▶] [⊡] [↻]
- * - showPresets=true + portrait:
- *     [5] [15] [30] [60]
- *     [−] 25:00 [+] [▶] [⊡] [↻]
+ * - showPresets=false: [−] 25:00 [+] [▶] [⊡] [↻]
+ * - showPresets=true: [5][15][30][60] | [−] 25:00 [+] | [▶] [⊡] [↻]
+ *
+ * NOTE: Portrait vertical layout DISABLED (orientation bug)
+ * TODO: Re-enable when orientation switching is fixed
  *
  * @param {boolean} showPresets - Afficher les presets durée (default: true)
  * @param {boolean} isRunning - Timer en cours
@@ -44,12 +44,14 @@ const ControlBar = React.memo(function ControlBar({
   compact = false,
 }) {
   const theme = useTheme();
-  const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
+  // TODO: Re-add useWindowDimensions when portrait layout is fixed
+  // const { width, height } = useWindowDimensions();
+  // const isLandscape = width > height;
 
   const {
     currentDuration,
     setCurrentDuration,
+    timerRemaining,
     scaleMode,
     setScaleMode,
     clockwise,
@@ -60,8 +62,9 @@ const ControlBar = React.memo(function ControlBar({
   const currentScaleMinutes = parseInt(scaleMode) || 30;
   const maxDuration = currentScaleMinutes * 60;
 
-  // Layout: vertical si presets + portrait
-  const useVerticalLayout = showPresets && !isLandscape;
+  // Layout: ALWAYS horizontal (portrait vertical layout disabled due to orientation bug)
+  // TODO: Re-enable portrait layout when orientation switching is fixed
+  const useVerticalLayout = false;
 
   // Handle preset selection: set duration
   const handlePresetSelect = (durationSeconds) => {
@@ -118,20 +121,20 @@ const ControlBar = React.memo(function ControlBar({
     }
   };
 
-  // Sizes
-  const gap = compact ? rs(8) : rs(12);
+  // Sizes (using theme tokens)
+  const gap = compact ? theme.spacing.sm : theme.spacing.md;
   const pulseSize = compact ? rs(44) : rs(52);
 
   const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
-      backgroundColor: theme.colors.background,
+      backgroundColor: 'transparent', // Ghost mode: no fill, shows parent (surfaceElevated)
       borderRadius: theme.borderRadius.lg,
       flexDirection: useVerticalLayout ? 'column' : 'row',
       gap: gap,
       justifyContent: 'center',
-      paddingHorizontal: compact ? rs(10) : rs(14),
-      paddingVertical: compact ? rs(8) : rs(10),
+      paddingHorizontal: compact ? theme.spacing.sm : theme.spacing.md,
+      paddingVertical: compact ? theme.spacing.sm : theme.spacing.sm,
     },
     controlsRow: {
       alignItems: 'center',
@@ -154,11 +157,13 @@ const ControlBar = React.memo(function ControlBar({
   // Render controls (sans presets)
   const renderControls = () => (
     <>
-      {/* Duration: [−] 25:00 [+] */}
+      {/* Duration or Remaining: [−] 25:00 [+] */}
       <DigitalTimer
         duration={currentDuration}
+        remaining={isRunning ? timerRemaining : undefined}
         maxDuration={maxDuration}
         showControls={!isRunning}
+        scaleMode={scaleMode}
         onDurationChange={setCurrentDuration}
         onScaleUpgrade={handleScaleUpgrade}
         isRunning={isRunning}
@@ -196,23 +201,24 @@ const ControlBar = React.memo(function ControlBar({
     );
   }
 
-  // Avec presets + portrait: 2 lignes
-  if (useVerticalLayout) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.presetsRow}>
-          <DurationPresets
-            currentDuration={currentDuration}
-            onSelectDuration={handlePresetSelect}
-            compact={compact}
-          />
-        </View>
-        <View style={styles.controlsRow}>
-          {renderControls()}
-        </View>
-      </View>
-    );
-  }
+  // DEAD CODE: Portrait 2-line layout (disabled due to orientation bug)
+  // TODO: Re-enable when orientation switching is fixed
+  // if (useVerticalLayout) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <View style={styles.controlsRow}>
+  //         {renderControls()}
+  //       </View>
+  //       <View style={styles.presetsRow}>
+  //         <DurationPresets
+  //           currentDuration={currentDuration}
+  //           onSelectDuration={handlePresetSelect}
+  //           compact={compact}
+  //         />
+  //       </View>
+  //     </View>
+  //   );
+  // }
 
   // Avec presets + landscape: 1 ligne
   return (
