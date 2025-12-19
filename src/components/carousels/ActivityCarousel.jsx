@@ -12,7 +12,6 @@ import {
   Animated,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
@@ -45,9 +44,9 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   const { currentColor } = useTimerPalette();
   const scrollViewRef = ref || useRef(null);
   const scaleAnims = useRef({}).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
   const toastAnim = useRef(new Animated.Value(0)).current;
   const scrollContentWidthRef = useRef(0);
+  // eslint-disable-next-line no-unused-vars
   const [scrollOffset, setScrollOffset] = useState(0);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
@@ -117,13 +116,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     ]).start();
   };
 
-  const showActivityName = () => {
-    Animated.sequence([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true }),
-      Animated.delay(1500),
-      Animated.timing(fadeAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
-    ]).start();
-  };
 
   const showToast = useCallback((message) => {
     setToastMessage(message);
@@ -152,7 +144,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     if (savedDuration) {setCurrentDuration(savedDuration);}
     else if (activity.defaultDuration) {setCurrentDuration(activity.defaultDuration);}
     animateSelection(activity.id);
-    showActivityName();
   }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration, handleActivitySelect]);
 
   const handleMorePress = useCallback(() => {
@@ -203,20 +194,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   }, [updateArrowVisibility]);
 
   const styles = StyleSheet.create({
-    activityNameBadge: {
-      backgroundColor: theme.colors.brand.accent,
-      borderRadius: theme.borderRadius.lg,
-      paddingHorizontal: theme.spacing.md,
-      paddingVertical: theme.spacing.xs,
-      position: 'absolute',
-      top: -35,
-      ...theme.shadow('md'),
-    },
-    activityNameText: {
-      color: theme.colors.fixed.white,
-      fontSize: rs(14, 'min'),
-      fontWeight: fontWeights.semibold,
-    },
     carouselContainer: {
       maxWidth: rs(280, 'width'),
     },
@@ -266,27 +243,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     <View style={styles.outerContainer}>
       {/* Carousel container */}
       <View style={styles.carouselContainer}>
-        {currentActivity && (
-          <Animated.View
-            style={[
-              styles.activityNameBadge,
-              {
-                opacity: fadeAnim,
-                transform: [
-                  {
-                    translateY: fadeAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [5, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}
-            pointerEvents="none"
-          >
-            <Text style={styles.activityNameText}>{currentActivity.label}</Text>
-          </Animated.View>
-        )}
         <ScrollView
           ref={scrollViewRef}
           horizontal

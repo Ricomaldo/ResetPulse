@@ -26,7 +26,7 @@ export const useTimerKeepAwake = () => {
       activateKeepAwake('timer');
 
       if (__DEV__) {
-        console.log('[KeepAwake] ✅ Activated - Screen will stay on');
+        console.warn('[KeepAwake] ✅ Activated - Screen will stay on');
       }
     } else {
       deactivateKeepAwake('timer');

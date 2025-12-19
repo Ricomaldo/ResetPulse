@@ -321,12 +321,30 @@ const styles = StyleSheet.create({
     backgroundColor: devColors.danger, // Rouge
   },
 
-  timerResetButton: {
-    backgroundColor: '#FF8C00', // Orange
+  selectOption: {
+    backgroundColor: devColors.devBgSecondary,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
 
-  tooltipResetButton: {
-    backgroundColor: '#1E90FF', // Bleu
+  selectOptionActive: {
+    backgroundColor: devColors.primary,
+  },
+
+  selectRow: {
+    flexDirection: 'column',
+    gap: 6,
+  },
+
+  selectText: {
+    color: devColors.textSecondary,
+    fontSize: 13,
+  },
+
+  selectTextActive: {
+    color: devColors.white,
+    fontWeight: fontWeights.semibold,
   },
 
   statusRow: {
@@ -340,6 +358,10 @@ const styles = StyleSheet.create({
   statusText: {
     color: devColors.textTertiary,
     fontSize: 14,
+  },
+
+  timerResetButton: {
+    backgroundColor: '#FF8C00', // Orange
   },
 
   toggleButton: {
@@ -370,30 +392,8 @@ const styles = StyleSheet.create({
     color: devColors.white,
   },
 
-  selectRow: {
-    flexDirection: 'column',
-    gap: 6,
-  },
-
-  selectOption: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: devColors.devBgSecondary,
-  },
-
-  selectOptionActive: {
-    backgroundColor: devColors.primary,
-  },
-
-  selectText: {
-    fontSize: 13,
-    color: devColors.textSecondary,
-  },
-
-  selectTextActive: {
-    color: devColors.white,
-    fontWeight: fontWeights.semibold,
+  tooltipResetButton: {
+    backgroundColor: '#1E90FF', // Bleu
   },
 });
 

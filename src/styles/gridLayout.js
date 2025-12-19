@@ -18,9 +18,6 @@ import { rs } from '../styles/responsive';
  * └────────────────────────────────┘
  */
 
-// Golden Ratio
-const PHI = 1.618;
-
 // Fixed heights (in base pixels, will be scaled with rs())
 export const GRID_HEIGHTS = {
   HEADER: 50,

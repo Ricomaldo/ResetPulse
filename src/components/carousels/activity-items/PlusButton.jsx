@@ -1,17 +1,15 @@
 /**
  * @fileoverview Plus button for activity carousel (freemium discovery or premium creation)
  * @created 2025-12-14
- * @updated 2025-12-14
+ * @updated 2025-12-19 - Refactored to use IconButton
  */
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../../../theme/ThemeProvider';
-import { rs } from '../../../styles/responsive';
-import { fontWeights } from '../../../theme/tokens';
-import Icons from '../../layout/Icons';
+import PropTypes from 'prop-types';
+import { IconButton } from '../../buttons';
 
 /**
- * PlusButton - Dumb component for "+" button in carousel
+ * PlusButton - Plus button for carousel (freemium discovery or premium creation)
+ * Refactored to use IconButton for consistency and code reduction
  *
  * @param {Object} props
  * @param {boolean} props.isPremium - Whether user is premium (affects styling)
@@ -25,52 +23,25 @@ const PlusButton = React.memo(function PlusButton({
   accessibilityLabel,
   accessibilityHint,
 }) {
-  const theme = useTheme();
-
-  const styles = StyleSheet.create({
-    createButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.brandAccent15,
-      borderColor: theme.colors.brandAccent40,
-      borderRadius: theme.borderRadius.lg,
-      borderStyle: 'dashed',
-      borderWidth: 2,
-      height: rs(60, 'min'),
-      justifyContent: 'center',
-      minHeight: 44,
-      minWidth: 44,
-      width: rs(60, 'min'),
-      ...theme.shadows.sm,
-    },
-    moreButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.brand.primary,
-      borderRadius: theme.borderRadius.lg,
-      height: rs(60, 'min'),
-      justifyContent: 'center',
-      minHeight: 44,
-      minWidth: 44,
-      width: rs(60, 'min'),
-      ...theme.shadows.md,
-    },
-  });
-
   return (
-    <TouchableOpacity
-      style={isPremium ? styles.createButton : styles.moreButton}
+    <IconButton
+      icon="plus"
+      variant={isPremium ? 'ghost' : 'primary'}
+      size="large"
+      shape="rounded"
       onPress={onPress}
-      activeOpacity={0.7}
-      accessible={true}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-    >
-      {isPremium ? (
-        <Icons name="plus" size={rs(24, 'min')} color={theme.colors.brand.primary} />
-      ) : (
-        <Icons name="plus" size={rs(32, 'min')} color={theme.colors.fixed.white} />
-      )}
-    </TouchableOpacity>
+    />
   );
 });
+
+PlusButton.displayName = 'PlusButton';
+PlusButton.propTypes = {
+  accessibilityHint: PropTypes.string,
+  accessibilityLabel: PropTypes.string,
+  isPremium: PropTypes.bool,
+  onPress: PropTypes.func.isRequired,
+};
 
 export default PlusButton;

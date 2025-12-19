@@ -21,7 +21,6 @@ export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPl
   const favoriteTools = {
     commands: (
       <ControlBar
-        showPresets={false}
         isRunning={isTimerRunning}
         isCompleted={isTimerCompleted}
         onPlay={onPlay}
@@ -37,7 +36,7 @@ export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPl
 
   return (
     <View style={styles.container}>
-      {favoriteTools[favoriteToolMode] || favoriteTools.commands}
+      {Object.prototype.hasOwnProperty.call(favoriteTools, favoriteToolMode) ? favoriteTools[favoriteToolMode] : favoriteTools.commands}
     </View>
   );
 }

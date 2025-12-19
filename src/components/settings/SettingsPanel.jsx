@@ -13,6 +13,7 @@ import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import { SoundPicker } from '../pickers';
+import PresetPills from '../controls/PresetPills';
 
 /**
  * SettingsPanel - All settings sections (scrollable)
@@ -31,6 +32,7 @@ export default function SettingsPanel() {
     setClockwise,
     selectedSoundId,
     setSelectedSoundId,
+    setScaleMode,
   } = useTimerOptions();
   const { favoriteToolMode, setFavoriteToolMode } = useUserPreferences();
 
@@ -174,6 +176,18 @@ export default function SettingsPanel() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
+        {/* Dial Scale Presets (top) */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>🕰️ Échelle du cadran</Text>
+          <PresetPills
+            compact
+            onSelectPreset={({ newScaleMode }) => {
+              haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+              setScaleMode(newScaleMode);
+            }}
+          />
+        </View>
+
         {/* 1. Favorite Tool Section */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>⭐ Outil favori</Text>

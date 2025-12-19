@@ -14,7 +14,7 @@ const SettingsCarouselBarSection = React.memo(function SettingsCarouselBarSectio
   setCarouselBarConfig,
   // Theme & i18n
   theme,
-  t,
+  t: _t,
   // Styles
   styles,
 }) {

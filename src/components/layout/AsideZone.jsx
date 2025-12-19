@@ -12,11 +12,10 @@ import BottomSheet, {
   useBottomSheet,
   useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
-import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming, interpolate, interpolateColor, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
-import useAnimatedDots from '../../hooks/useAnimatedDots';
-import { ActivityLabel } from '../dial';
+import { MessageZone } from '../messaging';
 import { FavoriteToolBox, ToolBox } from './aside-content';
 import { SettingsPanel } from '../settings';
 
@@ -141,18 +140,14 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
 }
 
 /**
- * AsideZone - BottomSheet 3-snap (0=favorite, 1=toolbox, 2=all) + ActivityLabel overlay
+ * AsideZone - BottomSheet 3-snap (0=favorite, 1=toolbox, 2=all) + MessageZone overlay
+ *
+ * @param {string} timerState - 'REST' | 'RUNNING' | 'COMPLETE' (source of truth for animations)
  */
-export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onSnapChange }) {
+export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onSnapChange }) {
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
   const { currentActivity } = useTimerOptions();
-
-  // Animated dots for activity label (pulses when timer running)
-  const animatedDots = useAnimatedDots(
-    currentActivity?.pulseDuration || 800,
-    displayMessage !== ''
-  );
 
   // Refs for carousels (for simultaneousHandlers)
   const activityCarouselRef = useRef(null);
@@ -163,6 +158,31 @@ export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, on
 
   // Track current snap index (0=favorite, 1=toolbox, 2=all)
   const [currentSnapIndex, setCurrentSnapIndex] = useState(0); // Default: 15% (favorite)
+
+  // Animated snap index for smooth background color transition
+  const animatedSnapIndex = useSharedValue(0);
+
+  // Extract colors for worklet (avoid accessing frozen context objects in worklets)
+  const surfaceColor = theme.colors.surface;
+  const surfaceElevatedColor = theme.colors.surfaceElevated;
+
+  // Animate background color based on snap index
+  // Snap 0-1 (collapsed/half): surface (vert)
+  // Snap 2 (expanded): surfaceElevated (jaune)
+  const animatedBackgroundStyle = useAnimatedStyle(() => {
+    'worklet';
+    const bgColor = interpolateColor(
+      animatedSnapIndex.value,
+      [0, 1, 2],
+      [surfaceColor, surfaceColor, surfaceElevatedColor]
+    );
+    return { backgroundColor: bgColor };
+  }, [surfaceColor, surfaceElevatedColor]);
+
+  // Update animated snap index when it changes
+  useEffect(() => {
+    animatedSnapIndex.value = withTiming(currentSnapIndex, { duration: 300 });
+  }, [currentSnapIndex, animatedSnapIndex]);
 
   // Custom spring animation (smooth, less bouncy)
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -182,15 +202,16 @@ export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, on
 
   return (
     <View style={styles.asideContainer}>
-      {/* ActivityLabel positioned at ~25% from bottom (absolute, outside BottomSheet) */}
+      {/* MessageZone positioned at ~28% from bottom (absolute, outside BottomSheet) */}
       {currentActivity && currentActivity.id !== 'none' && (
         <View style={styles.labelOverlay}>
-          <ActivityLabel
+          <MessageZone
+            timerState={timerState}
             label={currentActivity.label}
-            animatedDots={animatedDots}
             displayMessage={displayMessage}
             isCompleted={isCompleted}
             flashActivity={flashActivity}
+            isTimerRunning={isTimerRunning}
           />
         </View>
       )}
@@ -214,9 +235,7 @@ export default function AsideZone({ isTimerRunning, isTimerCompleted, onPlay, on
           width: 50,
           height: 5,
         }}
-        backgroundStyle={{
-          backgroundColor: theme.colors.surfaceElevated,
-        }}
+        backgroundStyle={animatedBackgroundStyle}
         style={{
           ...theme.shadow('xl'),
         }}

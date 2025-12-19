@@ -5,7 +5,7 @@
  */
 import PropTypes from 'prop-types';
 import React from 'react';
-import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
+import Svg, { Circle, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
 
 /**
@@ -26,7 +26,7 @@ const DialBase = React.memo(
   function DialBase({
     centerX,
     centerY,
-    color,
+    color: _color,
     minuteNumbers,
     radius,
     showNumbers = true,
@@ -53,26 +53,24 @@ const DialBase = React.memo(
           fill={theme.colors.surface}
         />
 
-        {/* Minute numbers (masquer le 0) */}
+        {/* Minute numbers (0 always at top) */}
         {showNumbers &&
-          minuteNumbers
-            .filter((num) => num.minute !== 0)
-            .map((num) => (
-              <SvgText
-                key={num.key}
-                x={num.x}
-                y={num.y + num.fontSize * 0.35}
-                textAnchor="middle"
-                dominantBaseline="auto"
-                fill={theme.colors.brand.neutral}
-                fontSize={num.fontSize}
-                fontWeight="500"
-                fontFamily="System"
-                opacity={0.9}
-              >
-                {num.minute}
-              </SvgText>
-            ))}
+          minuteNumbers.map((num) => (
+            <SvgText
+              key={num.key}
+              x={num.x}
+              y={num.y + num.fontSize * 0.35}
+              textAnchor="middle"
+              dominantBaseline="auto"
+              fill={theme.colors.brand.neutral}
+              fontSize={num.fontSize}
+              fontWeight="500"
+              fontFamily="System"
+              opacity={0.9}
+            >
+              {num.minute}
+            </SvgText>
+          ))}
       </Svg>
     );
   },

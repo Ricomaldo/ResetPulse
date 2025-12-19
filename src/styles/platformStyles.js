@@ -138,7 +138,7 @@ export const createButtonStyle = (variant = 'primary', theme) => {
     },
     ghost: {
       ...baseStyle,
-      backgroundColor: 'transparent',
+      backgroundColor: theme.colors.fixed.transparent,
       borderWidth: 1,
       borderColor: theme.colors.brand.primary,
     },

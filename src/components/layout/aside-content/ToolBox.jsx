@@ -15,14 +15,22 @@ import { ControlBar } from '../../controls';
  * ToolBox - Snap 38% (all 3 tools)
  * Dynamic order: favorite tool first for visual continuity
  */
-export default function ToolBox({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, activityCarouselRef, paletteCarouselRef }) {
+export default function ToolBox({
+  isTimerRunning,
+  isTimerCompleted,
+  onPlay,
+  onReset,
+  onStop,
+  activityCarouselRef,
+  paletteCarouselRef,
+}) {
   const { favoriteToolMode } = useUserPreferences();
 
   // Tool order based on favorite (favorite first for visual continuity)
   const toolOrder = {
     commands: ['commands', 'activities', 'colors'],
-    activities: ['activities', 'commands', 'colors'],
-    colors: ['colors', 'commands', 'activities'],
+    activities: ['activities', 'colors', 'commands'],
+    colors: ['colors', 'activities', 'commands'],
     none: ['commands', 'activities', 'colors'], // Default order
   };
 
@@ -33,7 +41,6 @@ export default function ToolBox({ isTimerRunning, isTimerCompleted, onPlay, onRe
     commands: (
       <ControlBar
         key="commands"
-        showPresets
         isRunning={isTimerRunning}
         isCompleted={isTimerCompleted}
         onPlay={onPlay}

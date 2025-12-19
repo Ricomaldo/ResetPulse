@@ -14,7 +14,7 @@ const SettingsCommandBarSection = React.memo(function SettingsCommandBarSection(
   setCommandBarConfig,
   // Theme & i18n
   theme,
-  t,
+  t: _t,
   // Styles
   styles,
 }) {

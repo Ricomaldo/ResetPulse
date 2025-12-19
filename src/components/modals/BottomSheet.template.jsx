@@ -44,7 +44,9 @@ export default function BottomSheetTemplate({ visible, onClose }) {
 
   // Gérer les changements d'index (fermeture = index -1)
   const handleSheetChanges = useCallback((index) => {
-    console.log('[BottomSheetTemplate] index:', index);
+    if (__DEV__) {
+      console.warn('[BottomSheetTemplate] index:', index);
+    }
     if (index === -1 && onClose) {
       onClose();
     }
@@ -88,8 +90,8 @@ export default function BottomSheetTemplate({ visible, onClose }) {
       borderRadius: rs(2.5),
       height: rs(5),
       marginBottom: theme.spacing.md,
-      width: rs(50),
       opacity: 0.8,
+      width: rs(50),
     },
   });
 

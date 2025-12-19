@@ -14,6 +14,15 @@
  * Graduation marks are visual references only, not snap targets
  */
 export const DIAL_MODES = {
+  '1min': {
+    maxMinutes: 1,
+    label: '1 minute',
+    description: 'Très court',
+    graduationInterval: 1,
+    majorTickInterval: 1,
+    numberInterval: 1,
+    defaultDuration: 1 * 60,
+  },
   '5min': {
     maxMinutes: 5,
     label: '5 minutes',
@@ -22,6 +31,15 @@ export const DIAL_MODES = {
     majorTickInterval: 1,
     numberInterval: 1,
     defaultDuration: 5 * 60,
+  },
+  '10min': {
+    maxMinutes: 10,
+    label: '10 minutes',
+    description: 'Sessions courtes',
+    graduationInterval: 1,
+    majorTickInterval: 2,
+    numberInterval: 2,
+    defaultDuration: 10 * 60,
   },
   '15min': {
     maxMinutes: 15,
@@ -32,14 +50,32 @@ export const DIAL_MODES = {
     numberInterval: 3,
     defaultDuration: 15 * 60,
   },
-  '30min': {
-    maxMinutes: 30,
-    label: '30 minutes',
+  '25min': {
+    maxMinutes: 25,
+    label: '25 minutes',
     description: 'Pomodoro standard',
     graduationInterval: 1,
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 25 * 60,
+  },
+  '30min': {
+    maxMinutes: 30,
+    label: '30 minutes',
+    description: 'Sessions standard',
+    graduationInterval: 1,
+    majorTickInterval: 5,
+    numberInterval: 5,
+    defaultDuration: 30 * 60,
+  },
+  '45min': {
+    maxMinutes: 45,
+    label: '45 minutes',
+    description: 'Pomodoro long',
+    graduationInterval: 1,
+    majorTickInterval: 5,
+    numberInterval: 5,
+    defaultDuration: 45 * 60,
   },
   '60min': {
     maxMinutes: 60,
@@ -49,11 +85,11 @@ export const DIAL_MODES = {
     majorTickInterval: 5,
     numberInterval: 5,
     defaultDuration: 30 * 60,
-  }
+  },
 };
 
 export function getDialMode(mode) {
-  return DIAL_MODES[mode] || DIAL_MODES['30min'];
+  return DIAL_MODES[mode] || DIAL_MODES['25min'];
 }
 
 export const DIAL_INTERACTION = {
@@ -78,7 +114,7 @@ export const TIMER_SVG = {
   PADDING: 50,
   RADIUS_OFFSET: 50, // Augmenté pour réduire le dial et laisser respirer les graduations (zen mode)
   STROKE_WIDTH: 4.5,
-  SVG_OFFSET: 25
+  SVG_OFFSET: 25,
 };
 
 export const TIMER_PROPORTIONS = {
@@ -88,14 +124,14 @@ export const TIMER_PROPORTIONS = {
   CENTER_DOT_INNER: 0.08,
   NUMBER_RADIUS: 18,
   NUMBER_FONT_RATIO: 0.045,
-  MIN_NUMBER_FONT: 13
+  MIN_NUMBER_FONT: 13,
 };
 
 export const TIMER_VISUAL = {
   TICK_WIDTH_MAJOR: 2.5,
   TICK_WIDTH_MINOR: 1.5,
   TICK_OPACITY_MAJOR: 0.9,
-  TICK_OPACITY_MINOR: 0.5
+  TICK_OPACITY_MINOR: 0.5,
 };
 
 export const ACTIVITY_DISPLAY = {
@@ -104,19 +140,19 @@ export const ACTIVITY_DISPLAY = {
   GLOW_INNER_RATIO: 0.2,
   GLOW_OPACITY_BASE: 0.8,
   GLOW_OPACITY_INNER: 1.2,
-  EMOJI_OPACITY: 0.9
+  EMOJI_OPACITY: 0.9,
 };
 
 export const TIMER_DURATIONS = {
   MIN: 60,
   MAX_25MIN_MODE: 1500,
   MAX_60MIN_MODE: 3600,
-  DEFAULT: 240
+  DEFAULT: 240,
 };
 
 export const COLORS = {
   COMPLETION_GREEN: '#48BB78',
-  RIPPLE_ANDROID: 'rgba(0,0,0,0.1)'
+  RIPPLE_ANDROID: 'rgba(0,0,0,0.1)',
 };
 
 // ============================================
@@ -131,12 +167,13 @@ export const TOUCH = {
 export const TIMER = {
   MESSAGE_DISPLAY_DURATION: 2000,
   COMPLETE_MESSAGE_DISPLAY_DURATION: 3500, // Time to savor completion message (ADR-007)
-  COMPLETE_TO_REST_TRANSITION_DELAY: 300, // Breathing room delay before REST state (ADR-007)
+  COMPLETE_TO_REST_TRANSITION_DELAY: 600, // Breathing room delay before REST state (increased from 300ms for better pause)
   DEFAULT_DURATION: 5 * 60,
   MODES: {
     POMODORO: 25,
     STANDARD: 60,
   },
+  START_MESSAGE_ANIMATION_DURATION: 300, // Animation when entering RUNNING state (scale + fade in)
 };
 
 /**
@@ -193,29 +230,29 @@ export const PULSE_ANIMATION = {
   SCALE_MAX: 1.15,
   SCALE_MIN: 1,
   GLOW_MAX: 0.6,
-  GLOW_MIN: 0.3
+  GLOW_MIN: 0.3,
 };
 
 export const COMPLETION_ANIMATION = {
   COLOR_DURATION: 300,
   PULSE_DURATION: 200,
   PULSE_SCALES: [1.1, 1, 1.08, 1, 1.05, 1],
-  RESET_DELAY: 500
+  RESET_DELAY: 500,
 };
 
 export const CAROUSEL_ANIMATION = {
   FADE_IN_DURATION: 300,
   FADE_OUT_DURATION: 300,
-  INITIAL_FADE_DELAY: 800
+  INITIAL_FADE_DELAY: 800,
 };
 
 export const MESSAGE_DISPLAY = {
   PARTI_DURATION: 1500,
-  PAUSE_DURATION: 2000
+  PAUSE_DURATION: 2000,
 };
 
 export const INTERACTION = {
-  DOUBLE_TAP_DELAY: 300
+  DOUBLE_TAP_DELAY: 300,
 };
 
 // Screen entrance (used by TimerScreen)
@@ -227,18 +264,18 @@ export const ENTRANCE_ANIMATION = {
   TIMER_DELAY: 600,
   TIMER_DURATION: 600,
   PALETTE_DELAY: 800,
-  PALETTE_DURATION: 400
+  PALETTE_DURATION: 400,
 };
 
 export const TRANSITION = {
   SHORT: 200,
   MEDIUM: 300,
-  LONG: 600
+  LONG: 600,
 };
 
 export const SPRING = {
   TENSION: 40,
-  FRICTION: 7
+  FRICTION: 7,
 };
 
 // ============================================
@@ -250,6 +287,6 @@ export const DIAL_LAYOUT = {
   CENTER_ZONE_RATIO: 0.35, // 35% of dial = center tap zone
   OUTER_ZONE_MIN_RATIO: 0.65, // 65%+ = graduations tap zone
   HANDLE_SIZE: 10, // Outer handle circle radius
-  HANDLE_INNER_SIZE: 4, // Inner handle dot radius
+  HANDLE_INNER_SIZE: 6, // Inner handle dot radius
   HANDLE_GLOW_SIZE: 14, // Glow effect radius when dragging
 };

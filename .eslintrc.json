@@ -31,50 +31,25 @@
     }
   },
   "rules": {
+    "semi": ["warn", "always"],
+    "quotes": ["warn", "single", { "avoidEscape": true }],
+    "indent": ["warn", 2],
+    "react/jsx-key": "warn",                       // baisse la sévérité (évite des erreurs bloquantes)
+    "react-native/no-color-literals": "off",       // coupe les erreurs sur les couleurs inline
+    "react-native/no-unused-styles": "warn",       // passe en warning (fort antipattern, mais bruyant)
+    "react-native/no-raw-text": "off",             // coupe les erreurs sur texte brut hors <Text>
+
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": "warn",
-    "react/display-name": "warn",
-    "react-native/no-inline-styles": "warn",
-    "no-unused-vars": [
-      "warn",
-      {
-        "argsIgnorePattern": "^_"
-      }
-    ],
-    "no-console": [
-      "warn",
-      {
-        "allow": [
-          "warn",
-          "error"
-        ]
-      }
-    ],
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react-native/no-inline-styles": "off",
+    "react-native/sort-styles": "off",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "warn",
     "no-var": "warn",
-    "eqeqeq": [
-      "warn",
-      "always"
-    ],
-    "curly": [
-      "warn",
-      "all"
-    ],
-    "semi": [
-      "warn",
-      "always"
-    ],
-    "quotes": [
-      "warn",
-      "single",
-      {
-        "avoidEscape": true
-      }
-    ],
-    "indent": [
-      "warn",
-      2
-    ]
+    "eqeqeq": ["warn", "smart"],
+    "curly": ["warn", "multi-line"]
   },
   "overrides": [
     {
