@@ -4,15 +4,15 @@
  * @updated 2025-12-16
  */
 import PropTypes from 'prop-types';
-import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useMemo, useCallback, forwardRef } from 'react';
 import {
   View,
-  ScrollView,
   StyleSheet,
   Text,
   Animated,
-  TouchableOpacity,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useTimerOptions } from '../../../contexts/TimerOptionsContext';
@@ -31,10 +31,7 @@ import {
 import { ActivityItem, PlusButton } from './activity-items';
 import { fontWeights } from '../../../theme/tokens';
 
-// Couleurs extraites pour respecter la règle no-color-literals
-const OVERLAY_DARK = 'rgba(0, 0, 0, 0.85)';
-
-export default function ActivityCarousel({ drawerVisible = false }) {
+const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = false }, ref) {
   const theme = useTheme();
   const t = useTranslation();
   const {
@@ -45,7 +42,7 @@ export default function ActivityCarousel({ drawerVisible = false }) {
     activityDurations = {},
   } = useTimerOptions();
   const { currentColor } = useTimerPalette();
-  const scrollViewRef = useRef(null);
+  const scrollViewRef = ref || useRef(null);
   const scaleAnims = useRef({}).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const toastAnim = useRef(new Animated.Value(0)).current;
@@ -199,27 +196,9 @@ export default function ActivityCarousel({ drawerVisible = false }) {
     updateArrowVisibility(event.nativeEvent.contentOffset.x);
   }, [updateArrowVisibility]);
 
-  const scrollLeft = useCallback(() => {
-    const pageWidth = rs(280, 'width');
-    const currentPage = Math.round(scrollOffset / pageWidth);
-    // Wrap to last page if at first page
-    const newPage = currentPage === 0 ? activityPages.length - 1 : currentPage - 1;
-    scrollViewRef.current?.scrollTo({ x: newPage * pageWidth, animated: true });
-    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-  }, [scrollOffset, activityPages.length]);
-
-  const scrollRight = useCallback(() => {
-    const pageWidth = rs(280, 'width');
-    const currentPage = Math.round(scrollOffset / pageWidth);
-    // Wrap to first page if at last page
-    const newPage = currentPage === activityPages.length - 1 ? 0 : currentPage + 1;
-    scrollViewRef.current?.scrollTo({ x: newPage * pageWidth, animated: true });
-    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-  }, [scrollOffset, activityPages.length]);
-
   const styles = StyleSheet.create({
     activityNameBadge: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.brand.accent,
       borderRadius: theme.borderRadius.lg,
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.xs,
@@ -228,33 +207,16 @@ export default function ActivityCarousel({ drawerVisible = false }) {
       ...theme.shadow('md'),
     },
     activityNameText: {
-      color: theme.colors.text,
+      color: theme.colors.fixed.white,
       fontSize: rs(14, 'min'),
       fontWeight: fontWeights.semibold,
     },
     carouselContainer: {
       maxWidth: rs(280, 'width'),
     },
-    chevronButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.background,
-      borderRadius: rs(16, 'min'),
-      height: rs(32, 'min'),
-      justifyContent: 'center',
-      marginHorizontal: theme.spacing.xs,
-      minHeight: 44,
-      minWidth: 44,
-      width: rs(32, 'min'),
-      ...theme.shadows.sm,
-    },
-    chevronText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(18, 'min'),
-      fontWeight: fontWeights.semibold,
-    },
     onboardingToast: {
       alignSelf: 'center',
-      backgroundColor: OVERLAY_DARK,
+      backgroundColor: theme.colors.overlayDark,
       borderRadius: theme.borderRadius.lg,
       bottom: rs(50, 'height'),
       maxWidth: '80%',
@@ -271,7 +233,7 @@ export default function ActivityCarousel({ drawerVisible = false }) {
     },
     outerContainer: {
       alignItems: 'center',
-      flexDirection: 'row',
+      flexDirection: 'column',
       gap: theme.spacing.xs,
       justifyContent: 'center',
     },
@@ -290,23 +252,12 @@ export default function ActivityCarousel({ drawerVisible = false }) {
     },
     scrollView: {
       flexGrow: 0,
+      height: rs(120, 'min'), // CRITICAL: Explicit height for horizontal scroll in BottomSheet
     },
   });
 
   return (
     <View style={styles.outerContainer}>
-      {/* Left chevron - always enabled for circular navigation */}
-      <TouchableOpacity
-        style={styles.chevronButton}
-        onPress={scrollLeft}
-        activeOpacity={0.7}
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel={t('accessibility.scrollLeft')}
-      >
-        <Text style={styles.chevronText}>‹</Text>
-      </TouchableOpacity>
-
       {/* Carousel container */}
       <View style={styles.carouselContainer}>
         {currentActivity && (
@@ -345,7 +296,9 @@ export default function ActivityCarousel({ drawerVisible = false }) {
           }}
           snapToInterval={rs(280, 'width')}
           decelerationRate="fast"
-          scrollEnabled={false} // Disable manual scrolling, only chevrons control navigation
+          scrollEnabled={true}
+          activeOffsetX={[-5, 5]} // Capture gesture only if horizontal swipe > 5px
+          failOffsetY={[-5, 5]} // Fail gesture if vertical swipe > 5px (let BottomSheet handle)
         >
           {activityPages.map((pageActivities, pageIndex) => (
             <View key={`page-${pageIndex}`} style={styles.pageContainer}>
@@ -389,18 +342,6 @@ export default function ActivityCarousel({ drawerVisible = false }) {
           ))}
         </ScrollView>
       </View>
-
-      {/* Right chevron - always enabled for circular navigation */}
-      <TouchableOpacity
-        style={styles.chevronButton}
-        onPress={scrollRight}
-        activeOpacity={0.7}
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel={t('accessibility.scrollRight')}
-      >
-        <Text style={styles.chevronText}>›</Text>
-      </TouchableOpacity>
 
       <PremiumModal
         visible={showPremiumModal}
@@ -451,8 +392,10 @@ export default function ActivityCarousel({ drawerVisible = false }) {
       )}
     </View>
   );
-}
+});
 
 ActivityCarousel.propTypes = {
   drawerVisible: PropTypes.bool,
 };
+
+export default ActivityCarousel;

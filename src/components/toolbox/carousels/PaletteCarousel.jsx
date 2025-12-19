@@ -3,14 +3,14 @@
  * @created 2025-12-14
  * @updated 2025-12-16
  */
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo, forwardRef } from 'react';
 import {
   View,
-  ScrollView,
-  TouchableOpacity,
   StyleSheet,
   Text,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTimerPalette } from '../../../contexts/TimerPaletteContext';
 import { useTimerOptions } from '../../../contexts/TimerOptionsContext';
@@ -21,8 +21,9 @@ import { usePremiumStatus } from '../../../hooks/usePremiumStatus';
 import haptics from '../../../utils/haptics';
 import { PremiumModal, MoreColorsModal } from '../../modals';
 import { fontWeights } from '../../../theme/tokens';
+import Icons from '../../layout/Icons';
 
-export default function PaletteCarousel() {
+const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   const theme = useTheme();
   const t = useTranslation();
   const {
@@ -32,7 +33,7 @@ export default function PaletteCarousel() {
     setColorIndex,
   } = useTimerPalette();
   const { favoritePalettes = [] } = useTimerOptions();
-  const scrollViewRef = useRef(null);
+  const scrollViewRef = ref || useRef(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showColorsModal, setShowColorsModal] = useState(false);
 
@@ -146,25 +147,8 @@ export default function PaletteCarousel() {
   };
 
   const styles = StyleSheet.create({
-    chevronButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.background,
-      borderRadius: rs(16, 'min'),
-      height: rs(32, 'min'),
-      justifyContent: 'center',
-      marginHorizontal: theme.spacing.xs,
-      minHeight: 44,
-      minWidth: 44,
-      width: rs(32, 'min'),
-      ...theme.shadows.sm,
-    },
-    chevronText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(18, 'min'),
-      fontWeight: fontWeights.semibold,
-    },
     colorButton: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: 'transparent',
       borderRadius: theme.borderRadius.round,
       borderWidth: 2,
       height: rs(50, 'min'),
@@ -172,7 +156,6 @@ export default function PaletteCarousel() {
       minWidth: 44,
       padding: rs(4, 'min'),
       width: rs(50, 'min'),
-      ...theme.shadows.md,
     },
     colorButtonActive: {
       elevation: 5,
@@ -213,7 +196,7 @@ export default function PaletteCarousel() {
     },
     outerContainer: {
       alignItems: 'center',
-      flexDirection: 'row',
+      flexDirection: 'column',
       gap: theme.spacing.xs, // Match ActivityCarousel spacing
       justifyContent: 'center',
     },
@@ -231,39 +214,9 @@ export default function PaletteCarousel() {
     },
     scrollView: {
       maxWidth: rs(280, 'width'),
+      height: rs(100, 'min'), // CRITICAL: Explicit height for horizontal scroll in BottomSheet
     },
   });
-
-  // Navigation functions with infinite carousel behavior
-  const scrollToPrevious = () => {
-    const currentIndex = effectiveIndex;
-
-    // Simply go to previous index - handleScrollEnd will handle wrap
-    const newIndex = currentIndex - 1;
-
-    // Scroll with animation
-    scrollViewRef.current?.scrollTo({
-      x: newIndex * rs(280, 'width'),
-      animated: true,
-    });
-
-    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-  };
-
-  const scrollToNext = () => {
-    const currentIndex = effectiveIndex;
-
-    // Simply go to next index - handleScrollEnd will handle wrap
-    const newIndex = currentIndex + 1;
-
-    // Scroll with animation
-    scrollViewRef.current?.scrollTo({
-      x: newIndex * rs(280, 'width'),
-      animated: true,
-    });
-
-    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-  };
 
   const handleMorePress = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
@@ -272,15 +225,6 @@ export default function PaletteCarousel() {
 
   return (
     <View style={styles.outerContainer}>
-      {/* Left chevron - always enabled for circular navigation */}
-      <TouchableOpacity
-        style={styles.chevronButton}
-        onPress={scrollToPrevious}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.chevronText}>‹</Text>
-      </TouchableOpacity>
-
       {/* Palette carousel */}
       <View>
         {/* Scrollable color pills */}
@@ -295,7 +239,9 @@ export default function PaletteCarousel() {
           contentContainerStyle={styles.scrollContent}
           snapToInterval={rs(280, 'width')}
           decelerationRate="fast"
-          scrollEnabled={false} // Disable manual scrolling, only chevrons control navigation
+          scrollEnabled={true}
+          activeOffsetX={[-5, 5]} // Capture gesture only if horizontal swipe > 5px
+          failOffsetY={[-5, 5]} // Fail gesture if vertical swipe > 5px (let BottomSheet handle)
         >
           {DISPLAY_PALETTES.map((paletteName, _paletteIndex) => {
             const paletteInfo = TIMER_PALETTES[paletteName];
@@ -303,7 +249,7 @@ export default function PaletteCarousel() {
             const isCurrentPalette = paletteName === currentPalette;
 
             return (
-              <View key={paletteName} style={styles.paletteContainer}>
+              <View key={`palette-${_paletteIndex}-${paletteName}`} style={styles.paletteContainer}>
                 {colors.map((color, colorIndex) => (
                   <TouchableOpacity
                     key={`${paletteName}-${colorIndex}`}
@@ -354,22 +300,13 @@ export default function PaletteCarousel() {
                 accessibilityLabel={t('accessibility.discoverMorePalettes')}
                 accessibilityRole="button"
               >
-                <Text style={styles.moreButtonIcon}>💎</Text>
+                <Icons name="premium" size={rs(20, 'min')} color={theme.colors.fixed.white} />
                 <Text style={styles.moreButtonText}>{t('discovery.moreColors.title')}</Text>
               </TouchableOpacity>
             </View>
           )}
         </ScrollView>
       </View>
-
-      {/* Right chevron - always enabled for circular navigation */}
-      <TouchableOpacity
-        style={styles.chevronButton}
-        onPress={scrollToNext}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.chevronText}>›</Text>
-      </TouchableOpacity>
 
       {/* Premium Modal (pour achat direct) */}
       <PremiumModal
@@ -387,4 +324,6 @@ export default function PaletteCarousel() {
 
     </View>
   );
-}
+});
+
+export default PaletteCarousel;
