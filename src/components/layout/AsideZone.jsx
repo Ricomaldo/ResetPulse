@@ -203,9 +203,6 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
         enablePanDownToClose={false} // Drawer permanent (no close state)
         enableDynamicSizing={false} // Force snap points to be respected
         onChange={(index) => {
-          if (__DEV__) {
-            console.warn('[AsideZone] Snap changed to index:', index);
-          }
           setCurrentSnapIndex(index);
           onSnapChange?.();
         }}
@@ -270,6 +267,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 16,
     paddingHorizontal: 16,
-    paddingTop: 8,
+    paddingTop: 0,  // Toolbox/FavoriteToolBox containers control their own top padding (rs(4))
   },
 });

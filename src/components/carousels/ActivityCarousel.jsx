@@ -230,6 +230,10 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
       paddingVertical: harmonizedSizes.carouselSpacing.containerPadding.vertical,
       width: rs(280, 'width'), // Fixed width per page for paging
     },
+    // Plus button: pushed left from center (visual hierarchy)
+    plusButtonWrapper: {
+      marginLeft: -harmonizedSizes.carouselSpacing.itemGap,  // Pull left relative to centered layout
+    },
     scrollContent: {
       alignItems: 'center',
       paddingHorizontal: 0,
@@ -284,22 +288,24 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
                   />
                 );
               })}
-              {/* Plus button on last page */}
+              {/* Plus button on last page - pushed left for visual hierarchy */}
               {pageIndex === activityPages.length - 1 && (
-                <PlusButton
-                  isPremium={isPremiumUser}
-                  onPress={isPremiumUser ? handleCreatePress : handleMorePress}
-                  accessibilityLabel={
-                    isPremiumUser
-                      ? t('customActivities.addButton')
-                      : t('accessibility.moreActivities')
-                  }
-                  accessibilityHint={
-                    isPremiumUser
-                      ? t('customActivities.addButtonHint')
-                      : t('accessibility.discoverPremium')
-                  }
-                />
+                <View style={styles.plusButtonWrapper}>
+                  <PlusButton
+                    isPremium={isPremiumUser}
+                    onPress={isPremiumUser ? handleCreatePress : handleMorePress}
+                    accessibilityLabel={
+                      isPremiumUser
+                        ? t('customActivities.addButton')
+                        : t('accessibility.moreActivities')
+                    }
+                    accessibilityHint={
+                      isPremiumUser
+                        ? t('customActivities.addButtonHint')
+                        : t('accessibility.discoverPremium')
+                    }
+                  />
+                </View>
               )}
             </View>
           ))}

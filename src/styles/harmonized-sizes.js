@@ -37,47 +37,57 @@ export const harmonizedSizes = {
   },
 
   // ============================================================================
-  // CONTROLBAR SIZING
+  // CONTROLBAR SIZING (Solution A: True Center Play Button)
   // ============================================================================
+  // Layout Strategy: [Timer (LEFT)] ← ← ← [PLAY CENTER] ← ← ← [Fit + Rotate (RIGHT)]
+  //
+  // Key insight: Play button is the primary action and must be optically centered
+  // Using absolute positioning with marginLeft/marginTop offsets to achieve true centering
+  // Container has fixed height (rs(80, 'min')) to contain all sections
+  //
   controlBar: {
-    // DigitalTimer sizing
-    timerFontSize: {
-      compact: rs(20),             // Compact mode font
-      normal: rs(26),              // Normal mode font
-    },
-    timerPadding: {
-      horizontal: rs(8),           // Responsive horizontal padding
-      vertical: rs(6),             // Responsive vertical padding
-    },
-    timerGap: {
-      compact: rs(4),              // Gap between controls in compact
-      normal: rs(6),               // Gap between controls in normal
+    // Container dimensions
+    containerHeight: rs(80, 'min'),  // Fixed height for absolute positioning layout
+    containerPadding: {
+      horizontal: rs(8),             // Lateral padding for left/right sections
     },
 
-    // PulseButton sizing
+    // DigitalTimer sizing
+    timerFontSize: {
+      compact: rs(20),               // Compact mode font
+      normal: rs(26),                // Normal mode font
+    },
+    timerPadding: {
+      horizontal: rs(8),             // Responsive horizontal padding
+      vertical: rs(6),               // Responsive vertical padding
+    },
+    timerGap: {
+      compact: rs(4),                // Gap between controls in compact
+      normal: rs(6),                 // Gap between controls in normal
+    },
+
+    // PulseButton sizing (PRIMARY ACTION - CENTERED)
     pulseButton: {
-      compact: rs(44),             // 44px in compact mode
-      normal: rs(52),              // 52px in normal mode
+      compact: rs(44),               // 44px in compact mode
+      normal: rs(52),                // 52px in normal mode
+      // Used to calculate marginLeft/marginTop offsets for true centering
+      // offset = -pulseSize / 2
     },
 
     // Icon button sizes
     fitButton: {
-      compact: 'small',            // IconButton size preset
+      compact: 'small',              // IconButton size preset
       normal: 'medium',
     },
     rotateToggle: {
-      compact: rs(32),             // Now responsive
-      normal: rs(40),              // Now responsive
+      compact: rs(32),               // Now responsive
+      normal: rs(40),                // Now responsive
     },
 
-    // Spacing between columns
-    columnGap: {
-      compact: rs(8),              // Gap between columns (compact)
-      normal: rs(13),              // Gap between columns (normal)
-    },
-    containerPadding: {
-      horizontal: rs(8),           // Container horizontal padding
-      vertical: rs(0),             // Minimal vertical padding (flex handles)
+    // Spacing between control buttons (right section)
+    buttonGap: {
+      compact: rs(8),                // Gap between Fit + Rotate (compact)
+      normal: rs(13),                // Gap between Fit + Rotate (normal)
     },
   },
 
@@ -99,15 +109,50 @@ export const harmonizedSizes = {
   },
 
   // ============================================================================
-  // TOOLBOX WRAPPER SIZING
+  // TOOLBOX WRAPPER SIZING - Visual Hierarchy (Solution B)
   // ============================================================================
+  // Different variants create cognitive hierarchy:
+  // - ControlBar: compact, informational (time already set)
+  // - ActivityCarousel: DOMINANT, primary choice (semantic decision)
+  // - PaletteCarousel: secondary, ambiance only (light, optional)
   toolboxItem: {
+    // Default (fallback)
     padding: {
-      horizontal: rs(13),          // Responsive padding
-      vertical: rs(13),            // Responsive padding
+      horizontal: rs(13),
+      vertical: rs(13),
     },
-    minHeight: rs(70, 'min'),      // Matches scrollView height + padding = ~96px
-    borderRadius: 'lg',            // Use theme token
+    minHeight: rs(70, 'min'),
+    borderRadius: 'lg',
+  },
+
+  // Variant: controlBar (compact, squeezed)
+  toolboxControlBar: {
+    padding: {
+      horizontal: rs(8),           // Reduced horizontal
+      vertical: rs(6),             // Reduced vertical - signals "info only"
+    },
+    minHeight: rs(65, 'min'),      // Smaller than others - secondary action zone
+    borderRadius: 'lg',
+  },
+
+  // Variant: activityCarousel (DOMINANT - primary choice)
+  toolboxActivityCarousel: {
+    padding: {
+      horizontal: rs(13),          // Standard horizontal
+      vertical: rs(8),             // Standard vertical - signals "important"
+    },
+    minHeight: rs(80, 'min'),      // Larger than others - visual dominance
+    borderRadius: 'lg',
+  },
+
+  // Variant: paletteCarousel (secondary, light)
+  toolboxPaletteCarousel: {
+    padding: {
+      horizontal: rs(8),           // Reduced horizontal
+      vertical: rs(4),             // Minimal vertical - signals "optional"
+    },
+    minHeight: rs(70, 'min'),      // Standard height
+    borderRadius: 'lg',
   },
 
   // ============================================================================

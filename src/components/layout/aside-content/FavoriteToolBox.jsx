@@ -5,10 +5,12 @@
  * @updated 2025-12-19
  */
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
+import { rs } from '../../../styles/responsive';
 import ToolboxItem from './ToolboxItem';
 
 /**
@@ -17,10 +19,10 @@ import ToolboxItem from './ToolboxItem';
 export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop }) {
   const { favoriteToolMode } = useUserPreferences();
 
-  // Map favorite modes to components (activities, colors, commands, none)
+  // Map favorite modes to components with visual hierarchy variants
   const favoriteTools = {
     commands: (
-      <ToolboxItem>
+      <ToolboxItem variant="controlBar">
         <ControlBar
           isRunning={isTimerRunning}
           isCompleted={isTimerCompleted}
@@ -32,20 +34,33 @@ export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPl
       </ToolboxItem>
     ),
     activities: (
-      <ToolboxItem>
+      <ToolboxItem variant="activityCarousel">
         <ActivityCarousel />
       </ToolboxItem>
     ),
     colors: (
-      <ToolboxItem>
+      <ToolboxItem variant="paletteCarousel">
         <PaletteCarousel />
       </ToolboxItem>
     ),
     none: null,
   };
 
-  return Object.prototype.hasOwnProperty.call(favoriteTools, favoriteToolMode) ? favoriteTools[favoriteToolMode] : favoriteTools.commands;
+  return (
+    <View style={styles.container}>
+      {Object.prototype.hasOwnProperty.call(favoriteTools, favoriteToolMode) ? favoriteTools[favoriteToolMode] : favoriteTools.commands}
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '100%',
+    paddingTop: rs(0),  // No padding - space controlled by scrollContent
+  },
+});
 
 FavoriteToolBox.propTypes = {
   isTimerCompleted: PropTypes.bool,

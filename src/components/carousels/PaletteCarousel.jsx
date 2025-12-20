@@ -4,11 +4,7 @@
  * @updated 2025-12-16
  */
 import React, { useRef, useEffect, useState, useMemo, forwardRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -21,19 +17,12 @@ import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import haptics from '../../utils/haptics';
 import { PremiumModal, MoreColorsModal } from '../modals/index';
-import { fontWeights } from '../../theme/tokens';
-import Icons from '../layout/Icons';
 import { IconButton } from '../buttons';
 
 const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   const theme = useTheme();
   const t = useTranslation();
-  const {
-    currentPalette,
-    setPalette,
-    currentColor,
-    setColorIndex,
-  } = useTimerPalette();
+  const { currentPalette, setPalette, currentColor, setColorIndex } = useTimerPalette();
   const { favoritePalettes = [] } = useTimerOptions();
   const scrollViewRef = ref || useRef(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
@@ -54,8 +43,12 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
     return [...basePalettes].sort((a, b) => {
       const aIsFavorite = favoritePalettes.includes(a);
       const bIsFavorite = favoritePalettes.includes(b);
-      if (aIsFavorite && !bIsFavorite) {return -1;}
-      if (!aIsFavorite && bIsFavorite) {return 1;}
+      if (aIsFavorite && !bIsFavorite) {
+        return -1;
+      }
+      if (!aIsFavorite && bIsFavorite) {
+        return 1;
+      }
       if (aIsFavorite && bIsFavorite) {
         return favoritePalettes.indexOf(a) - favoritePalettes.indexOf(b);
       }
@@ -68,8 +61,12 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   // [CLONE_LAST, ...BASE_PALETTES, CLONE_FIRST] (premium)
   // [...BASE_PALETTES] (freemium)
   const DISPLAY_PALETTES = useMemo(() => {
-    if (BASE_PALETTES.length === 0) {return [];}
-    if (BASE_PALETTES.length === 1) {return BASE_PALETTES;} // No cloning for single item
+    if (BASE_PALETTES.length === 0) {
+      return [];
+    }
+    if (BASE_PALETTES.length === 1) {
+      return BASE_PALETTES;
+    } // No cloning for single item
 
     // Only use infinite carousel in premium (no "+" button)
     if (isPremiumUser) {
@@ -85,7 +82,9 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   const currentPaletteIndex = useMemo(() => {
     // Find the index of current palette
     const baseIndex = BASE_PALETTES.indexOf(currentPalette);
-    if (baseIndex < 0) {return isPremiumUser && BASE_PALETTES.length > 1 ? 1 : 0;}
+    if (baseIndex < 0) {
+      return isPremiumUser && BASE_PALETTES.length > 1 ? 1 : 0;
+    }
 
     // Premium: offset by 1 because we added a clone at the start
     // Freemium: no offset
@@ -171,18 +170,6 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
       borderRadius: theme.borderRadius.round,
       flex: 1,
     },
-    moreButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.brand.primary,
-      borderRadius: theme.borderRadius.lg,
-      flex: 1,
-      flexDirection: 'row',
-      gap: theme.spacing.xs,
-      justifyContent: 'center',
-      paddingHorizontal: theme.spacing.lg,
-      paddingVertical: theme.spacing.sm,
-      ...theme.shadows.md,
-    },
     moreButtonContainer: {
       alignItems: 'center',
       flexDirection: 'row',
@@ -190,14 +177,6 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
       paddingHorizontal: harmonizedSizes.carouselSpacing.containerPadding.horizontal,
       paddingVertical: harmonizedSizes.carouselSpacing.containerPadding.vertical,
       width: rs(280, 'width'),
-    },
-    moreButtonIcon: {
-      fontSize: rs(20, 'min'),
-    },
-    moreButtonText: {
-      color: theme.colors.fixed.white,
-      fontSize: rs(14, 'min'),
-      fontWeight: fontWeights.semibold,
     },
     outerContainer: {
       alignItems: 'center',
@@ -224,7 +203,9 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   });
 
   const handleMorePress = () => {
-    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+    haptics.selection().catch(() => {
+      /* Optional operation - failure is non-critical */
+    });
     setShowColorsModal(true);
   };
 
@@ -267,9 +248,7 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
                     style={[
                       styles.colorButton,
                       { borderColor: color },
-                      isCurrentPalette &&
-                      currentColor === color &&
-                      styles.colorButtonActive,
+                      isCurrentPalette && currentColor === color && styles.colorButtonActive,
                     ]}
                     onPress={() => {
                       if (isCurrentPalette) {
@@ -282,12 +261,7 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
                     }}
                     activeOpacity={0.7}
                   >
-                    <View
-                      style={[
-                        styles.colorButtonInner,
-                        { backgroundColor: color },
-                      ]}
-                    />
+                    <View style={[styles.colorButtonInner, { backgroundColor: color }]} />
                   </TouchableOpacity>
                 ))}
               </View>
@@ -301,7 +275,7 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
                 icon="premium"
                 label={t('discovery.moreColors.title')}
                 labelPosition="right"
-                variant="primary"
+                variant="secondary"
                 size="medium"
                 shape="rounded"
                 onPress={handleMorePress}
@@ -325,7 +299,6 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
         onClose={() => setShowColorsModal(false)}
         onOpenPaywall={() => setShowPremiumModal(true)}
       />
-
     </View>
   );
 });

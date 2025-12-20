@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
+import { rs } from '../../../styles/responsive';
 import ToolboxItem from './ToolboxItem';
 
 /**
@@ -37,10 +38,10 @@ export default function ToolBox({
 
   const order = toolOrder[favoriteToolMode] || toolOrder.commands;
 
-  // Tool components map
+  // Tool components map with visual hierarchy variants
   const toolComponents = {
     commands: (
-      <ToolboxItem key="commands">
+      <ToolboxItem key="commands" variant="controlBar">
         <ControlBar
           isRunning={isTimerRunning}
           isCompleted={isTimerCompleted}
@@ -52,12 +53,12 @@ export default function ToolBox({
       </ToolboxItem>
     ),
     activities: (
-      <ToolboxItem key="activities">
+      <ToolboxItem key="activities" variant="activityCarousel">
         <ActivityCarousel ref={activityCarouselRef} />
       </ToolboxItem>
     ),
     colors: (
-      <ToolboxItem key="colors">
+      <ToolboxItem key="colors" variant="paletteCarousel">
         <PaletteCarousel ref={paletteCarouselRef} />
       </ToolboxItem>
     ),
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: '100%',
+    paddingTop: rs(0),  // No padding - space controlled by scrollContent
   },
   separator: {
     height: 8,

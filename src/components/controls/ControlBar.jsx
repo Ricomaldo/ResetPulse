@@ -145,42 +145,60 @@ const ControlBar = React.memo(function ControlBar({
   const gap = compact ? rs(8) : rs(13);
   const pulseSize = compact ? sizes.pulseButton.compact : sizes.pulseButton.normal;
 
+  // Calculate Play button offset for true centering
+  const playButtonRadius = pulseSize / 2;
+
   const styles = StyleSheet.create({
+    // Root container with fixed height
     container: {
+      width: '100%',
+      height: rs(80, 'min'),
       alignItems: 'center',
-      flexDirection: 'row',
       justifyContent: 'center',
-      paddingHorizontal: sizes.containerPadding.horizontal,
       position: 'relative',
     },
-    columnLeft: {
+
+    // LEFT: Timer section (absolute positioned)
+    timerSection: {
       position: 'absolute',
-      left: 0,
+      left: 0,  // Flush to edge, pushed left
+      top: 0,
+      bottom: 0,
+      justifyContent: 'center',
       alignItems: 'flex-start',
-      justifyContent: 'center',
-      paddingLeft: sizes.containerPadding.horizontal,
+      paddingLeft: rs(2),  // Minimal padding
     },
-    columnCenter: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    columnRight: {
+
+    // CENTER: Play button (absolutely centered using offsets)
+    playSection: {
       position: 'absolute',
-      right: 0,
-      alignItems: 'flex-end',
+      left: '50%',
+      top: '50%',
+      marginLeft: -playButtonRadius,
+      marginTop: -playButtonRadius,
+      zIndex: 10,
+    },
+
+    // RIGHT: Fit button + Rotate toggle section (absolute positioned)
+    controlsSection: {
+      position: 'absolute',
+      right: rs(2),  // Minimal right edge
+      top: 0,
+      bottom: 0,
       justifyContent: 'center',
+      alignItems: 'center',  // Center vertically (not flex-end)
       flexDirection: 'row',
       gap: gap,
-      paddingRight: sizes.containerPadding.horizontal,
+      paddingRight: rs(4),  // Push buttons away from edge
     },
   });
 
-  // Toujours sans presets (extériorisés dans AsideZone)
-  // 3-column layout: Left (time controls) | Center (pulse) | Right (fit + rotate)
+  // Absolutely centered Play button with laterals
+  // Layout: [Timer] ← ← ← [PLAY CENTERED] ← ← ← [Fit + Rotate]
   return (
     <View style={styles.container}>
       {/* LEFT: DigitalTimer [−] 25:00 [+] */}
-      <View style={styles.columnLeft}>
+      <View style={styles.timerSection}>
         <DigitalTimer
           duration={currentDuration}
           remaining={isRunning ? timerRemaining : undefined}
@@ -194,8 +212,8 @@ const ControlBar = React.memo(function ControlBar({
         />
       </View>
 
-      {/* CENTER: PulseButton [▶] - Always centered, icons only (no emoji) */}
-      <View style={styles.columnCenter}>
+      {/* CENTER: PulseButton [▶] - Absolutely centered at 50% / 50% */}
+      <View style={styles.playSection}>
         <PulseButton
           state={getPulseState()}
           onTap={handlePulseTap}
@@ -207,7 +225,7 @@ const ControlBar = React.memo(function ControlBar({
       </View>
 
       {/* RIGHT: FitButton [⊡] + CircularToggle [↻] */}
-      <View style={styles.columnRight}>
+      <View style={styles.controlsSection}>
         <FitButton onFit={handleFit} compact={compact} active={scaleMode !== '60min'} />
         <CircularToggle
           clockwise={clockwise}
