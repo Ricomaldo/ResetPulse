@@ -351,23 +351,27 @@ function TimerDial({
   // isZeroState uses displayProgress for animation-aware rendering
   const isZeroState = !isRunning && remaining === 0;
 
-  // Compute needle and handle position on the draggable side of the arc
+  // Compute handle segment position on the edge of the progress arc
   // Uses displayProgress for smooth animation on graduation taps
   const handleAngleDeg = displayProgress * 360;
   const handleAngleRad = (handleAngleDeg * Math.PI) / 180;
-  // Needle extends to the edge of the dial (minus stroke width)
-  const needleDistance = radiusBackground - strokeWidth;
-  // Handle positioned at 2/3 of the radius
-  const handleDistance = needleDistance * (2 / 3);
-  const handleX = clockwise
-    ? centerX + handleDistance * Math.sin(handleAngleRad)
-    : centerX - handleDistance * Math.sin(handleAngleRad);
-  const handleY = centerY - handleDistance * Math.cos(handleAngleRad);
-  // Needle endpoint (for visual reference)
-  const needleEndX = clockwise
-    ? centerX + needleDistance * Math.sin(handleAngleRad)
-    : centerX - needleDistance * Math.sin(handleAngleRad);
-  const needleEndY = centerY - needleDistance * Math.cos(handleAngleRad);
+
+  // Handle segment: small radial line on the arc edge (parallel to radius)
+  // Positioned at the progress endpoint, within the arc thickness
+  const arcOuterRadius = radiusBackground; // Outer edge of arc
+  const arcInnerRadius = radiusBackground * 0.4; // Inner edge (roughly where arc ends toward center)
+  const segmentLength = rs(12); // Small segment within arc thickness
+
+  // Direction vector (radial - pointing outward from center)
+  const radialX = clockwise ? Math.sin(handleAngleRad) : -Math.sin(handleAngleRad);
+  const radialY = -Math.cos(handleAngleRad);
+
+  // Segment from inner to outer edge of the arc (or partial)
+  const handleInnerRadius = arcOuterRadius - segmentLength;
+  const handleX1 = centerX + radialX * handleInnerRadius;
+  const handleY1 = centerY + radialY * handleInnerRadius;
+  const handleX2 = centerX + radialX * arcOuterRadius;
+  const handleY2 = centerY + radialY * arcOuterRadius;
 
   // Static styles (moved outside render for performance)
   const staticStyles = StyleSheet.create({
@@ -485,9 +489,9 @@ function TimerDial({
             </Svg>
           )}
 
-          {/* Drag handle indicator at the movable end of the arc */}
-          {/* Wrapped in Animated.View for hint animation on mount */}
-          {!isRunning && (
+          {/* Drag handle: small radial segment on the arc edge */}
+          {/* Same color as arc but darker for contrast */}
+          {!isRunning && displayProgress > 0 && (
             <Animated.View
               style={[
                 staticStyles.absoluteOverlay,
@@ -501,47 +505,16 @@ function TimerDial({
                 accessible={false}
                 importantForAccessibility="no"
               >
-                {/* Needle/radius line from center to edge of dial */}
+                {/* Small radial segment within arc thickness - deep color */}
                 <Line
-                  x1={centerX}
-                  y1={centerY}
-                  x2={needleEndX}
-                  y2={needleEndY}
-                  stroke={theme.colors.brand.primary}
-                  strokeWidth={2}
+                  x1={handleX1}
+                  y1={handleY1}
+                  x2={handleX2}
+                  y2={handleY2}
+                  stroke={theme.colors.brand.deep}
+                  strokeWidth={isDragging ? 6 : 5}
                   strokeLinecap="round"
-                  opacity={hintAnimationDone ? (isDragging ? 1 : 0.7) : 1}
-                />
-
-                {/* Glow / Shadow effect when dragging */}
-                {isDragging && (
-                  <Circle
-                    cx={handleX}
-                    cy={handleY}
-                    r={rs(DIAL_LAYOUT.HANDLE_GLOW_SIZE)}
-                    fill={theme.colors.brand.secondary}
-                    opacity={0.2}
-                  />
-                )}
-
-                {/* Outer border of the handle */}
-                <Circle
-                  cx={handleX}
-                  cy={handleY}
-                  r={rs(DIAL_LAYOUT.HANDLE_SIZE)}
-                  fill={theme.colors.fixed.transparent}
-                  stroke={theme.colors.fixed.transparent}
-                  strokeWidth={4}
-                  opacity={1}
-                />
-
-                {/* Inner dot for brand consistency */}
-                <Circle
-                  cx={handleX}
-                  cy={handleY}
-                  r={rs(DIAL_LAYOUT.HANDLE_INNER_SIZE)}
-                  fill={theme.colors.fixed.transparent}
-                  opacity={hintAnimationDone ? (isDragging ? 1 : 0.8) : 1}
+                  opacity={isDragging ? 1 : 0.85}
                 />
               </Svg>
             </Animated.View>

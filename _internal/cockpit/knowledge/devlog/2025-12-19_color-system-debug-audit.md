@@ -1,6 +1,6 @@
 ---
 created: '2025-12-19'
-updated: '2025-12-19'
+updated: '2025-12-20'
 status: active
 type: devlog
 tags: [design-system, color-audit, learnings]
@@ -108,7 +108,7 @@ Arc progression  → user color (contenu)
 
 ---
 
-## Corrections appliquées
+## Corrections appliquées (2025-12-19)
 
 1. ✅ AsideZone layers → `transparent`
 2. ✅ ActivityItem actif → `brand.accent`
@@ -118,8 +118,35 @@ Arc progression  → user color (contenu)
 
 ---
 
+## Corrections appliquées (2025-12-20)
+
+### Corrigés en live durant audit
+6. ✅ AsideZone collapsed → `surface` (était surfaceElevated)
+7. ✅ Carrousels fond → `background` (était surfaceElevated)
+8. ✅ Fond dial → `background` (était surface)
+
+### À traiter
+- [ ] Bouton "+" et "Encore plus de couleurs" → `secondary` (actuellement primary)
+- [ ] Overlay BottomSheet expanded → `overlay` (actuellement background)
+- [ ] Boutons dans sheet expanded → `secondary`/`primary` selon action (actuellement surface)
+
+### Backlog
+- [ ] Modales (Settings, Premium, Discovery)
+- [ ] Onboarding screens
+→ Voir `workflow/backlog/mission-modals-onboarding-style-conformity.md`
+
+---
+
+## Décisions UX (2025-12-20)
+
+1. **Timer arrêté** : Action principale = régler/lancer → Play 🟦
+2. **Timer actif** : Action principale = se concentrer (lâcher l'app) → Stop 🟪 (sortie de secours)
+3. **Dial** : Partie du monde (`background`), pas objet flottant (`surface`)
+
+---
+
 ## Next
 
-- [ ] Simplifier PROD : `surfaceElevated = #FFFFFF` (= surface)
+- [ ] Corriger findings #3, #5, #6
 - [ ] `DEBUG_MODE = false`
-- [ ] Valider visuellement
+- [ ] Valider visuellement en PROD

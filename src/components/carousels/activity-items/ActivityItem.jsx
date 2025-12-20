@@ -45,8 +45,8 @@ const ActivityItem = React.memo(function ActivityItem({
     },
     activityButtonInner: {
       alignItems: 'center',
-      backgroundColor: theme.colors.fixed.transparent,
-      borderColor: theme.colors.brand.neutral,
+      backgroundColor: theme.colors.surfaceElevated,
+      borderColor: theme.colors.brand.deep,
       borderRadius: rs(20, 'min'),
       borderWidth: 2,
       height: '100%',
@@ -114,8 +114,8 @@ const ActivityItem = React.memo(function ActivityItem({
           isLocked
             ? t('accessibility.activityLocked')
             : isCustom
-              ? t('accessibility.customActivityHint')
-              : t('accessibility.activity', { name: activity.label || activity.name })
+            ? t('accessibility.customActivityHint')
+            : t('accessibility.activity', { name: activity.label || activity.name })
         }
         style={[styles.activityButtonInner, isActive && styles.activityButtonActive]}
         onPress={onPress}
@@ -132,9 +132,7 @@ const ActivityItem = React.memo(function ActivityItem({
               color={isActive ? theme.colors.fixed.white : theme.colors.textSecondary}
             />
           ) : (
-            <Text style={styles.activityEmoji}>
-              {activity.emoji}
-            </Text>
+            <Text style={styles.activityEmoji}>{activity.emoji}</Text>
           )}
         </View>
 

@@ -230,9 +230,9 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
       paddingVertical: harmonizedSizes.carouselSpacing.containerPadding.vertical,
       width: rs(280, 'width'), // Fixed width per page for paging
     },
-    // Plus button: pushed left from center (visual hierarchy)
+    // Plus button: uses same gap as other items (from parent's gap property)
     plusButtonWrapper: {
-      marginLeft: -harmonizedSizes.carouselSpacing.itemGap,  // Pull left relative to centered layout
+      // No negative margin - let the gap from pageContainer handle spacing
     },
     scrollContent: {
       alignItems: 'center',

@@ -1,0 +1,201 @@
+# ADR-008 : Personnalisation & Profils Utilisateur
+
+## Statut : VALIDÉ
+
+**Date :** 20 décembre 2025
+**Décideurs :** Eric + Chrysalis
+
+---
+
+## Contexte
+
+ResetPulse s'adresse à des cerveaux neurodivergents. Chaque cerveau fonctionne différemment. L'app doit s'adapter à l'utilisateur, pas l'inverse.
+
+Deux axes de personnalisation identifiés :
+
+1. **Comment l'user interagit** (gestes start/stop)
+2. **Ce que l'user veut voir** (outil favori)
+
+---
+
+## Décision
+
+### Axe 1 : Profils d'interaction (PulseButton)
+
+4 personas basés sur des patterns neuroatypiques réels :
+
+| Persona      | Emoji | Start | Stop | Description                               |
+| ------------ | ----- | ----- | ---- | ----------------------------------------- |
+| Impulsif     | 🚀    | Long  | Tap  | "Je démarre vite, j'ai besoin de freiner" |
+| Abandonniste | 🏃    | Tap   | Long | "J'ai du mal à tenir jusqu'au bout"       |
+| Ritualiste   | 🎯    | Long  | Long | "J'aime les actions délibérées"           |
+| Véloce       | ⚡    | Tap   | Tap  | "Je sais ce que je veux"                  |
+
+**Config appliquée :**
+
+- `startRequiresLongPress`: boolean
+- `stopRequiresLongPress`: boolean
+- `longPressDuration`: number (ms, personnalisable)
+
+**Stockage :** TimerOptionsContext
+
+---
+
+### Axe 2 : Outil favori (Favorite Tool)
+
+4 modes pour le snap 15% du bottomsheet :
+
+| Mode         | Emoji | Label        | Affichage           |
+| ------------ | ----- | ------------ | ------------------- |
+| Créatif      | 🎨    | Créatif      | Carrousel couleurs  |
+| Minimaliste  | ☯     | Minimaliste  | Rien (handle seul)  |
+| Multi-tâches | 🔄    | Multi-tâches | Carrousel activités |
+| Rationnel    | ⏱     | Rationnel    | ControlBar          |
+
+**Stockage :** UserPreferencesContext (`favoriteToolMode`)
+
+---
+
+## Détection comportementale (Onboarding)
+
+Pas de questions déclaratives. On observe l'user pendant 2 écrans ludiques.
+
+### Écran 1 — Test Start
+
+"Quand tu es prêt, appuie"
+
+Mesure :
+
+- Tap rapide (< 500ms) → tendance Véloce/Abandonniste
+- Maintien long (> 1.5s) → tendance Ritualiste/Impulsif
+
+### Écran 2 — Test Stop
+
+"Maintenant, lâche quand tu veux"
+
+Un cercle se remplit. Mesure :
+
+- Lâche tôt (< 2s) → tendance Impulsif/Véloce
+- Attend la fin (> 3s) → tendance Ritualiste/Abandonniste
+
+### Matrice de détection
+
+| Écran 1 (Start) | Écran 2 (Stop) | Profil détecté  |
+| --------------- | -------------- | --------------- |
+| Tap rapide      | Lâche tôt      | ⚡ Véloce       |
+| Tap rapide      | Attend la fin  | 🏃 Abandonniste |
+| Maintien long   | Lâche tôt      | 🚀 Impulsif     |
+| Maintien long   | Attend la fin  | 🎯 Ritualiste   |
+
+---
+
+## Choix Outil Favori (Onboarding)
+
+Question directe, non engageante, au début du flow :
+
+> "Qu'est-ce qui te correspond le mieux ?"
+>
+> [🎨 Créatif] [☯ Minimaliste] [🔄 Multi-tâches] [⏱ Rationnel]
+
+Note : Pomodoro = flow spécial avec activités favorites pré-configurées (hors scope cette ADR)
+
+---
+
+## Settings Panel
+
+Les deux axes modifiables dans Settings, en haut du panel :
+
+```
+── TOI ──
+🎭 Comment tu fonctionnes (4 personas)
+⚙️ Ton raccourci préféré (4 modes)
+
+── TES FAVORIS ──
+⭐ Activités favorites
+🎨 Palettes favorites
+
+── TIMER ──
+🕰️ Échelle du cadran
+⏱️ Options du timer
+🔄 Sens de rotation
+
+── AMBIANCE ──
+🔊 Son de notification
+💡 Keep Awake
+🎨 Thème
+
+── INFO ──
+ℹ️ À propos
+```
+
+Headers légers (texte uppercase, couleur muted) entre les groupes.
+
+---
+
+## Composants
+
+### SelectionCard.jsx (réutilisable)
+
+```jsx
+Props:
+- emoji: string
+- label: string
+- description: string
+- selected: boolean
+- onSelect: () => void
+- compact?: boolean
+```
+
+### SectionHeader.jsx
+
+```jsx
+Props:
+- title: string
+
+Style:
+- uppercase
+- fontSize: 12-13px
+- color: muted
+- marginTop: 24px
+- marginBottom: 8px
+```
+
+---
+
+## Justification
+
+### Pourquoi 4 personas ?
+
+Couvre les patterns principaux sans complexifier. Basé sur retours terrain (famille neuroatypique) et littérature TDAH/TSA.
+
+### Pourquoi comportemental vs déclaratif ?
+
+L'user ne se connaît pas toujours. Observer > demander. Plus ludique, moins "test psy".
+
+### Pourquoi modifiable dans Settings ?
+
+L'user peut se tromper ou évoluer. Pas de prison. L'app reste flexible.
+
+---
+
+## Conséquences
+
+### Positives
+
+- Personnalisation profonde sans friction
+- Chaque cerveau trouve sa config
+- Différenciateur marketing fort
+- Onboarding ludique et rapide
+
+### Négatives
+
+- Complexité implémentation détection
+- 4×4 = 16 combinaisons à tester
+
+---
+
+## Références
+
+- ADR-007 : Gestes & Confirmation Long Press
+- ADR-005 : Architecture DialZone / AsideZone
+- Session Chrysalis-Eric 18-20 décembre 2025

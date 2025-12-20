@@ -6,12 +6,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
+import { Star } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import { getAllActivities } from '../../config/activities';
 import SettingsCard from './SettingsCard';
+import { CardTitle } from './CardTitle';
 
 /**
  * FavoritesActivitySection - Toggle favorite activities (max 4)
@@ -47,7 +49,7 @@ function FavoritesActivitySection({
     item: {
       alignItems: 'center',
       aspectRatio: 1,
-      backgroundColor: theme.colors.background, // Cards use background (not surface)
+      backgroundColor: theme.colors.surfaceElevated,
       borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.md,
       borderWidth: 1,
@@ -56,8 +58,8 @@ function FavoritesActivitySection({
       ...theme.shadow('sm'),
     },
     itemActive: {
-      backgroundColor: theme.colors.background,
-      borderColor: theme.colors.brand.accent, // Selection = accent (orange)
+      backgroundColor: theme.colors.surfaceElevated,
+      borderColor: theme.colors.brand.accent,
       borderWidth: 2,
       ...theme.shadow('md'),
     },
@@ -81,7 +83,7 @@ function FavoritesActivitySection({
     discoverButton: {
       alignItems: 'center',
       aspectRatio: 1,
-      backgroundColor: theme.colors.background, // Cards use background (not surface)
+      backgroundColor: theme.colors.surfaceElevated,
       borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.md,
       borderWidth: 1,
@@ -112,7 +114,7 @@ function FavoritesActivitySection({
 
   return (
     <SettingsCard
-      title="⭐ Activités favorites"
+      title={<CardTitle Icon={Star} label="Activités favorites" theme={theme} />}
       description={`Sélectionnez jusqu'à 4 activités favorites (${favoriteActivities.length}/4)`}
     >
       <View style={styles.grid}>

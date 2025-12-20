@@ -188,7 +188,7 @@ IconButton.propTypes = {
   shape: PropTypes.oneOf(['circular', 'rounded', 'square']),
   size: PropTypes.oneOf(['small', 'medium', 'large']),
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  variant: PropTypes.oneOf(['primary', 'secondary', 'ghost', 'destructive']),
+  variant: PropTypes.oneOf(['primary', 'secondary', 'ghost', 'destructive', 'selection', 'accent']),
 };
 
 const styles = StyleSheet.create({

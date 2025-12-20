@@ -16,15 +16,15 @@ export const harmonizedSizes = {
   // ActivityItem: 60px (primary decision)
   // ColorButton: 50px (secondary, light ambiance)
   carouselItem: {
-    size: rs(60, 'min'),          // 60px responsive (both width & height)
-    iconSize: rs(32, 'min'),      // Icon/emoji size inside item
-    borderRadius: 'full',          // Fully rounded
+    size: rs(60, 'min'), // 60px responsive (both width & height)
+    iconSize: rs(32, 'min'), // Icon/emoji size inside item
+    borderRadius: 'full', // Fully rounded
   },
 
   // Palette-specific (color buttons inside palette carousel)
   colorButton: {
-    size: rs(50, 'min'),          // Reduced from 60px - signals "secondary/light"
-    padding: rs(4, 'min'),         // Inner padding for color preview
+    size: rs(50, 'min'), // Reduced from 60px - signals "secondary/light"
+    padding: rs(4, 'min'), // Inner padding for color preview
   },
 
   // ============================================================================
@@ -32,7 +32,7 @@ export const harmonizedSizes = {
   // ============================================================================
   // Fixed height for scrollable areas - standardized across carousels
   scrollView: {
-    height: rs(70, 'min'),        // Fixed carousel height
+    height: rs(70, 'min'), // Fixed carousel height
     // RATIONALE: On phones (390px base) = 70px
     //            On tablets: scales to ~113px (acceptable for expanded view)
   },
@@ -48,47 +48,47 @@ export const harmonizedSizes = {
   //
   controlBar: {
     // Container dimensions
-    containerHeight: rs(80, 'min'),  // Fixed height for absolute positioning layout
+    containerHeight: rs(80, 'min'), // Fixed height for absolute positioning layout
     containerPadding: {
-      horizontal: rs(8),             // Lateral padding for left/right sections
+      horizontal: rs(8), // Lateral padding for left/right sections
     },
 
     // DigitalTimer sizing
     timerFontSize: {
-      compact: rs(20),               // Compact mode font
-      normal: rs(26),                // Normal mode font
+      compact: rs(20), // Compact mode font
+      normal: rs(26), // Normal mode font
     },
     timerPadding: {
-      horizontal: rs(8),             // Responsive horizontal padding
-      vertical: rs(6),               // Responsive vertical padding
+      horizontal: rs(8), // Responsive horizontal padding
+      vertical: rs(6), // Responsive vertical padding
     },
     timerGap: {
-      compact: rs(4),                // Gap between controls in compact
-      normal: rs(6),                 // Gap between controls in normal
+      compact: rs(4), // Gap between controls in compact
+      normal: rs(6), // Gap between controls in normal
     },
 
     // PulseButton sizing (PRIMARY ACTION - CENTERED)
     pulseButton: {
-      compact: rs(44),               // 44px in compact mode
-      normal: rs(52),                // 52px in normal mode
+      compact: rs(52), // 48px in compact mode (was 44)
+      normal: rs(52), // 52px in normal mode
       // Used to calculate marginLeft/marginTop offsets for true centering
       // offset = -pulseSize / 2
     },
 
     // Icon button sizes
     fitButton: {
-      compact: 'small',              // IconButton size preset
+      compact: 'small', // IconButton size preset
       normal: 'medium',
     },
     rotateToggle: {
-      compact: rs(32),               // Now responsive
-      normal: rs(40),                // Now responsive
+      compact: rs(32), // Now responsive
+      normal: rs(40), // Now responsive
     },
 
     // Spacing between control buttons (right section)
     buttonGap: {
-      compact: rs(8),                // Gap between Fit + Rotate (compact)
-      normal: rs(13),                // Gap between Fit + Rotate (normal)
+      compact: rs(8), // Gap between Fit + Rotate (compact)
+      normal: rs(13), // Gap between Fit + Rotate (normal)
     },
   },
 
@@ -98,15 +98,15 @@ export const harmonizedSizes = {
   carouselSpacing: {
     // Container padding (applies to page/palette containers inside scroll)
     containerPadding: {
-      horizontal: rs(6, 'width'),  // Responsive width-based padding
-      vertical: rs(4),             // Responsive vertical padding (was theme.spacing.xxs)
+      horizontal: rs(6, 'width'), // Responsive width-based padding
+      vertical: rs(4), // Responsive vertical padding (was theme.spacing.xxs)
     },
 
     // Gap between items
-    itemGap: rs(13),               // Responsive gap (was theme.spacing.md hardcoded)
+    itemGap: rs(13), // Responsive gap (was theme.spacing.md hardcoded)
 
     // Gap between outer container elements (carousels stacked)
-    stackGap: rs(4),               // Responsive gap between carousel sections
+    stackGap: rs(4), // Responsive gap between carousel sections
   },
 
   // ============================================================================
@@ -129,30 +129,30 @@ export const harmonizedSizes = {
   // Variant: controlBar (compact, squeezed)
   toolboxControlBar: {
     padding: {
-      horizontal: rs(8),           // Reduced horizontal
-      vertical: rs(6),             // Reduced vertical - signals "info only"
+      horizontal: rs(8), // Reduced horizontal
+      vertical: rs(6), // Reduced vertical - signals "info only"
     },
-    minHeight: rs(55, 'min'),      // Smaller than others - compact info zone
+    minHeight: rs(55, 'min'), // Smaller than others - compact info zone
     borderRadius: 'lg',
   },
 
   // Variant: activityCarousel (DOMINANT - primary choice)
   toolboxActivityCarousel: {
     padding: {
-      horizontal: rs(13),          // Standard horizontal
-      vertical: rs(8),             // Standard vertical - signals "important"
+      horizontal: rs(13), // Standard horizontal
+      vertical: rs(8), // Standard vertical - signals "important"
     },
-    minHeight: rs(80, 'min'),      // Larger than others - visual dominance
+    minHeight: rs(80, 'min'), // Larger than others - visual dominance
     borderRadius: 'lg',
   },
 
   // Variant: paletteCarousel (secondary, light)
   toolboxPaletteCarousel: {
     padding: {
-      horizontal: rs(8),           // Reduced horizontal
-      vertical: rs(4),             // Minimal vertical - signals "optional"
+      horizontal: rs(8), // Reduced horizontal
+      vertical: rs(4), // Minimal vertical - signals "optional"
     },
-    minHeight: rs(65, 'min'),      // Slightly reduced - secondary status
+    minHeight: rs(65, 'min'), // Slightly reduced - secondary status
     borderRadius: 'lg',
   },
 
@@ -185,10 +185,10 @@ export const harmonizedSizes = {
  */
 export const platformSizes = {
   ios: {
-    borderWidth: 'hairline',        // Uses StyleSheet.hairlineWidth
+    borderWidth: 'hairline', // Uses StyleSheet.hairlineWidth
   },
   android: {
-    borderWidth: 1,                 // Standard 1px border
+    borderWidth: 1, // Standard 1px border
   },
 };
 

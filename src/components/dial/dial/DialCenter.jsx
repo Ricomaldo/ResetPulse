@@ -9,6 +9,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PulseButton } from '../../buttons';
 import { useTimerOptions } from '../../../contexts/TimerOptionsContext';
+import { getProfileConfig } from '../../../utils/interactionProfileConfig';
 
 /**
  * DialCenter - Affiche PulseButton au centre du dial
@@ -30,8 +31,9 @@ const DialCenter = React.memo(function DialCenter({
   clockwise = false,
   size = 72,
 }) {
-  // Get pulse setting from context
-  const { shouldPulse } = useTimerOptions();
+  // Get pulse setting and interaction profile from context
+  const { shouldPulse, interactionProfile } = useTimerOptions();
+  const profileConfig = getProfileConfig(interactionProfile);
 
   // Déterminer l'état du bouton
   const getState = () => {
@@ -49,8 +51,8 @@ const DialCenter = React.memo(function DialCenter({
         onLongPressComplete={onLongPressComplete}
         clockwise={clockwise}
         size={size}
-        stopRequiresLongPress={true}
-        startRequiresLongPress={true}
+        stopRequiresLongPress={profileConfig.stopRequiresLongPress}
+        startRequiresLongPress={profileConfig.startRequiresLongPress}
         shouldPulse={shouldPulse}
       />
     </View>

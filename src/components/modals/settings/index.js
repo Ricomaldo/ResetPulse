@@ -3,9 +3,7 @@
 
 export { default as SettingsCommandBarSection } from './SettingsCommandBarSection';
 export { default as SettingsCarouselBarSection } from './SettingsCarouselBarSection';
-export { default as SettingsFavoritesSection } from './SettingsFavoritesSection';
 export { default as SettingsDialSection } from './SettingsDialSection';
 export { default as SettingsSoundSection } from './SettingsSoundSection';
 export { default as SettingsGeneralSection } from './SettingsGeneralSection';
 export { default as SettingsThemeSection } from './SettingsThemeSection';
-export { default as SettingsAboutSection } from './SettingsAboutSection';

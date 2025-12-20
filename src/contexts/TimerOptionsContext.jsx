@@ -50,6 +50,7 @@ export const TimerOptionsProvider = ({ children }) => {
         longPressStartDuration: 3000, // ADR-007: Default 3s for deliberate start (range: 1000-5000ms)
         startAnimationDuration: 1200, // Default 1.2s for start animation (range: 300-2000ms)
         showTime: true, // Eye toggle state for DigitalTimer (ADR-007: persist across FavoriteToolBox/ToolBox)
+        interactionProfile: 'ritualiste', // Persona: 'impulsif' | 'abandonniste' | 'ritualiste' | 'veloce'
       };
     }
 
@@ -75,6 +76,7 @@ export const TimerOptionsProvider = ({ children }) => {
       longPressStartDuration: 3000, // ADR-007: Default 3s for deliberate start (range: 1000-5000ms)
       startAnimationDuration: 1200, // Default 1.2s for start animation (range: 300-2000ms)
       showTime: true, // Eye toggle state for DigitalTimer (ADR-007: persist across FavoriteToolBox/ToolBox)
+      interactionProfile: 'ritualiste', // Persona: 'impulsif' | 'abandonniste' | 'ritualiste' | 'veloce'
     };
   };
 
@@ -206,6 +208,7 @@ export const TimerOptionsProvider = ({ children }) => {
     longPressStartDuration: values.longPressStartDuration,
     startAnimationDuration: values.startAnimationDuration,
     showTime: values.showTime,
+    interactionProfile: values.interactionProfile,
 
     // Actions
     setShouldPulse: (val) => updateValue('shouldPulse', val),
@@ -239,6 +242,13 @@ export const TimerOptionsProvider = ({ children }) => {
       // Clamp value to valid range (300-2000ms)
       const clamped = Math.max(300, Math.min(2000, val));
       updateValue('startAnimationDuration', clamped);
+    },
+    setInteractionProfile: (val) => {
+      // Validate persona: 'impulsif' | 'abandonniste' | 'ritualiste' | 'veloce'
+      const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce'];
+      if (validProfiles.includes(val)) {
+        updateValue('interactionProfile', val);
+      }
     },
 
     // Helper pour sauvegarder la durée d'une activité spécifique

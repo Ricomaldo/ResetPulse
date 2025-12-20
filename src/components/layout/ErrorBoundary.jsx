@@ -26,7 +26,7 @@ class ErrorBoundary extends Component {
     Logger.error('App crashed', {
       error: error.toString(),
       stack: error.stack,
-      componentStack: errorInfo.componentStack
+      componentStack: errorInfo.componentStack,
     });
   }
 
@@ -45,15 +45,10 @@ class ErrorBoundary extends Component {
         <SafeAreaView style={styles.container}>
           <View style={styles.content}>
             <Text style={styles.emoji}>😵</Text>
-            <Text style={styles.title}>Oups&nbsp;!</Text>
-            <Text style={styles.message}>
-              L&apos;application a rencontré un problème
-            </Text>
+            <Text style={styles.title}>Oups !</Text>
+            <Text style={styles.message}>L'application a rencontré un problème</Text>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleRestart()}
-            >
+            <TouchableOpacity style={styles.button} onPress={() => this.handleRestart()}>
               <Text style={styles.buttonText}>Redémarrer</Text>
             </TouchableOpacity>
           </View>

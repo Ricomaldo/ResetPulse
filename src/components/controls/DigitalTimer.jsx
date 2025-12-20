@@ -79,80 +79,44 @@ const DigitalTimer = React.memo(function DigitalTimer({
   const tapStep = 1; // Tap simple = ±1s pour réglage fin
   // const minorStep = SNAP_INTERVALS[scaleMode] ?? 60; // Long-press base step (accéléré ensuite) - unused
 
-  // Accélération long-press : incréments progressifs basés UNIQUEMENT sur le temps
-  // Plus on maintient, plus les incréments sont grands, peu importe la position
+  // Accélération long-press agressive
+  // Plus on maintient, plus les incréments sont grands
   const getAcceleratedStep = () => {
     if (!longPressStartTimeRef.current) {
-      return 1; // Par défaut, toujours +1
-    }
-    
-    const elapsedSeconds = (Date.now() - longPressStartTimeRef.current) / 1000;
-    const current = currentDurationRef.current;
-    const currentSeconds = current % 60; // Secondes dans la minute actuelle
-    
-    // Phase 1 : Début (0-2 secondes) - toujours +1s pour réglage fin
-    if (elapsedSeconds < 2) {
       return 1;
     }
-    
-    // Phase 2 : Transition (2-4 secondes) - +5s si minute entière, sinon +1s
-    if (elapsedSeconds < 4) {
-      return currentSeconds === 0 ? 5 : 1;
+
+    const elapsedSeconds = (Date.now() - longPressStartTimeRef.current) / 1000;
+
+    // Phase 1 (0-0.5s): +1s réglage fin
+    if (elapsedSeconds < 0.5) {
+      return 1;
     }
-    
-    // Phase 3 : Accélération modérée (4-7 secondes) - +5s minimum, +10s si minute entière
-    if (elapsedSeconds < 7) {
-      if (currentSeconds === 0) {
-        return 10; // Minute entière : +10s
-      }
-      return 5; // Sinon : +5s (plus besoin d'attendre un multiple de 10)
+    // Phase 2 (0.5-1.5s): +5s
+    if (elapsedSeconds < 1.5) {
+      return 5;
     }
-    
-    // Phase 4 : Accélération forte (7-10 secondes) - +10s minimum, +30s si minute/30s
-    if (elapsedSeconds < 10) {
-      if (currentSeconds === 0) {
-        return 30; // Minute entière : +30s
-      }
-      if (currentSeconds === 30) {
-        return 30; // 30 secondes : +30s
-      }
-      return 10; // Sinon : +10s (plus besoin d'attendre un multiple de 10)
+    // Phase 3 (1.5-3s): +15s
+    if (elapsedSeconds < 3) {
+      return 15;
     }
-    
-    // Phase 5 : Accélération maximale (10+ secondes) - incréments très grands
-    if (currentSeconds === 0) {
-      return 60; // Minute entière : +60s (1 minute)
+    // Phase 4 (3-5s): +30s
+    if (elapsedSeconds < 5) {
+      return 30;
     }
-    if (currentSeconds === 30) {
-      return 30; // 30 secondes : +30s
-    }
-    return 10; // Sinon : +10s (toujours, pas besoin d'être sur un multiple de 10)
+    // Phase 5 (5s+): +60s
+    return 60;
   };
 
   // Accélération de l'intervalle : plus on maintient, plus c'est rapide
   const getAcceleratedInterval = () => {
     const r = repeatCountRef.current || 0;
-    
-    // Accélération agressive : commence à 80ms et descend rapidement jusqu'à 15ms
-    if (r < 2) {
-      return 80; // Début : assez rapide
-    }
-    if (r < 5) {
-      return 60; // Accélération rapide
-    }
-    if (r < 10) {
-      return 45; // Plus rapide
-    }
-    if (r < 15) {
-      return 35; // Très rapide
-    }
-    if (r < 25) {
-      return 25; // Encore plus rapide
-    }
-    if (r < 40) {
-      return 20; // Maximum rapide
-    }
-    return 15; // Ultra rapide pour maintien très long
+
+    // Accélération très agressive
+    if (r < 3) return 60;  // Début rapide
+    if (r < 8) return 40;  // Accélère vite
+    if (r < 15) return 25; // Très rapide
+    return 15;             // Ultra rapide
   };
 
   // Apply a change with clamp and optional haptic

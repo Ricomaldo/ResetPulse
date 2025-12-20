@@ -1,23 +1,27 @@
 // src/screens/TimerScreen.jsx
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { useScreenOrientation } from '../hooks/useScreenOrientation';
+import { useTranslation } from '../hooks/useTranslation';
 import { DialZone, AsideZone } from '../components/layout';
-import { TwoTimersModal, PremiumModal, SettingsModal } from '../components/modals';
+import { TwoTimersModal, PremiumModal } from '../components/modals';
+import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
 import analytics from '../services/analytics';
 
 function TimerScreenContent() {
   const theme = useTheme();
+  const t = useTranslation();
   const { isLandscape } = useScreenOrientation(); // Detect orientation changes
   const {
     incrementCompletedTimers,
     hasSeenTwoTimersModal,
     setHasSeenTwoTimersModal,
     flashActivity,
+    currentActivity,
   } = useTimerOptions();
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
@@ -31,16 +35,35 @@ function TimerScreenContent() {
   // Keep screen awake during timer
   useTimerKeepAwake();
 
+  // Helper to compute display message dynamically (avoids stale message issue)
+  // Uses explicit activity message linkage (see src/config/activityMessages.js)
+  const computeDisplayMessage = useCallback((running, isComplete) => {
+    const activityId = currentActivity?.id || 'none';
+
+    if (isComplete) {
+      return getActivityEndMessage(activityId, t);
+    }
+    if (running) {
+      return getActivityStartMessage(activityId, t);
+    }
+    return t('invitation');
+  }, [currentActivity, t]);
+
   // Sync timer state to local states for re-renders (ADR-007: no PAUSED state)
   useEffect(() => {
     const interval = setInterval(() => {
       if (timerRef.current) {
-        setDisplayMessage(timerRef.current.displayMessage || '');
-        setIsTimerCompleted(timerRef.current.isCompleted || false);
+        const running = timerRef.current.running || false;
+        const isCompleted = timerRef.current.isCompleted || false;
+
+        setIsTimerRunning(running);
+        setIsTimerCompleted(isCompleted);
+        // Compute message freshly each interval to avoid stale translation
+        setDisplayMessage(computeDisplayMessage(running, isCompleted));
       }
     }, 50);
     return () => clearInterval(interval);
-  }, []);
+  }, [computeDisplayMessage]);
 
   // Update timerState based on isTimerRunning and isTimerCompleted (source of truth for animations)
   useEffect(() => {
@@ -69,7 +92,9 @@ function TimerScreenContent() {
 
   // Handle dial tap (REST→START, RUNNING→toggle stop, COMPLETE→RESET)
   const handleDialTap = () => {
-    if (!timerRef.current) {return;}
+    if (!timerRef.current) {
+      return;
+    }
 
     const { running, isCompleted } = timerRef.current;
 
@@ -87,7 +112,9 @@ function TimerScreenContent() {
 
   // Handle play from controls (REST→START, RUNNING→toggle stop, COMPLETE→RESET)
   const handlePlayPause = () => {
-    if (!timerRef.current) {return;}
+    if (!timerRef.current) {
+      return;
+    }
 
     const { running, isCompleted } = timerRef.current;
 
@@ -171,12 +198,6 @@ function TimerScreenContent() {
         visible={premiumModalVisible}
         onClose={() => setPremiumModalVisible(false)}
         highlightedFeature="toutes les couleurs et activités"
-      />
-
-      {/* Settings Modal */}
-      <SettingsModal
-        visible={settingsModalVisible}
-        onClose={() => setSettingsModalVisible(false)}
       />
     </SafeAreaView>
   );

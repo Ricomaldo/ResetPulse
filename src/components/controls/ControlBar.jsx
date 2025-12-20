@@ -11,6 +11,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { rs } from '../../styles/responsive';
 import { harmonizedSizes } from '../../styles/harmonized-sizes';
+import { getProfileConfig } from '../../utils/interactionProfileConfig';
 import DigitalTimer from './DigitalTimer';
 import FitButton from './FitButton';
 import { PulseButton } from '../buttons';
@@ -55,7 +56,10 @@ const ControlBar = React.memo(function ControlBar({
     clockwise,
     setClockwise,
     saveActivityDuration,
+    interactionProfile,
   } = useTimerOptions();
+
+  const profileConfig = getProfileConfig(interactionProfile);
 
   // Save activity duration when it changes (ADR-007: remember user preferences)
   const previousDurationRef = useRef(currentDuration);
@@ -220,7 +224,8 @@ const ControlBar = React.memo(function ControlBar({
           clockwise={clockwise}
           size={pulseSize}
           compact={compact}
-          stopRequiresLongPress={false}
+          stopRequiresLongPress={profileConfig.stopRequiresLongPress}
+          startRequiresLongPress={profileConfig.startRequiresLongPress}
         />
       </View>
 

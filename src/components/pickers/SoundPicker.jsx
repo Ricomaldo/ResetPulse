@@ -185,10 +185,10 @@ export default function SoundPicker({ onSoundSelect, selectedSoundId }) {
 
     soundItem: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderColor: TRANSPARENT,
+      backgroundColor: theme.colors.background, // Cards use background (not surface)
+      borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.md,
-      borderWidth: 2,
+      borderWidth: 1,
       flexDirection: 'row',
       marginBottom: theme.spacing.xs,
       minHeight: 44,
@@ -198,7 +198,8 @@ export default function SoundPicker({ onSoundSelect, selectedSoundId }) {
 
     soundItemActive: {
       backgroundColor: theme.colors.background,
-      borderColor: theme.colors.brand.primary,
+      borderColor: theme.colors.brand.accent, // Selection = accent (orange)
+      borderWidth: 2,
       ...theme.shadow('sm'),
     },
 
