@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
+import { Heart } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
@@ -13,6 +14,7 @@ import haptics from '../../utils/haptics';
 import { PalettePreview } from '../pickers';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
 import SettingsCard from './SettingsCard';
+import { CardTitle } from './CardTitle';
 
 /**
  * FavoritesPaletteSection - Toggle favorite palettes (max 4)
@@ -46,7 +48,7 @@ function FavoritesPaletteSection({
       width: '48%', // 2 items per row
     },
     item: {
-      backgroundColor: theme.colors.background, // Cards use background (not surface)
+      backgroundColor: theme.colors.surfaceElevated,
       borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.md,
       borderWidth: 1,
@@ -54,8 +56,8 @@ function FavoritesPaletteSection({
       ...theme.shadow('sm'),
     },
     itemActive: {
-      backgroundColor: theme.colors.background,
-      borderColor: theme.colors.brand.accent, // Selection = accent (orange)
+      backgroundColor: theme.colors.surfaceElevated,
+      borderColor: theme.colors.brand.accent,
       borderWidth: 2,
       ...theme.shadow('md'),
     },
@@ -75,7 +77,7 @@ function FavoritesPaletteSection({
     },
     discoverButton: {
       alignItems: 'center',
-      backgroundColor: theme.colors.background, // Cards use background (not surface)
+      backgroundColor: theme.colors.surfaceElevated,
       borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.md,
       borderWidth: 1,
@@ -101,7 +103,7 @@ function FavoritesPaletteSection({
 
   return (
     <SettingsCard
-      title="🎨 Palettes favorites"
+      title={<CardTitle Icon={Heart} label="Palettes favorites" theme={theme} />}
       description={`Sélectionnez jusqu'à 4 palettes favorites (${favoritePalettes.length}/4)`}
     >
       <View style={styles.grid}>

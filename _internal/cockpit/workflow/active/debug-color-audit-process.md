@@ -202,23 +202,45 @@ Aligner 3 screenshots côte à côte.
 
 | # | Phase | Status |
 |---|-------|--------|
-| 0 | Préparation | ⬜ |
-| 1 | Scan macro | ⬜ |
-| 2a | Primary | ⬜ |
-| 2b | Secondary | ⬜ |
-| 2c | Accent | ⬜ |
-| 3a | Surface | ⬜ |
-| 3b | SurfaceElevated | ⬜ |
-| 4 | Blur test | ⬜ |
-| 5 | Test absurdité | ⬜ |
-| 6 | Multi-écrans | ⬜ |
+| 0 | Préparation | ✅ |
+| 1 | Scan macro | ✅ |
+| 2a | Primary | ✅ |
+| 2b | Secondary | ✅ |
+| 2c | Accent | ✅ |
+| 3a | Surface | ✅ |
+| 3b | SurfaceElevated | ✅ |
+| 4 | Blur test | ⬜ (skipped) |
+| 5 | Test absurdité | ✅ 4/4 |
+| 6 | Multi-écrans | ⬜ (backlog: modals/onboarding) |
 
 ---
 
-## Plan d'action consolidé
+## Audit 2025-12-20 — Findings
 
-_À remplir après analyse :_
+### Corrigés en live
+| # | Élément | Avant | Après |
+|---|---------|-------|-------|
+| 1 | AsideZone collapsed | 🟨 surfaceElevated | 🟩 surface |
+| 2 | Carrousels fond | 🟨 surfaceElevated | ⬛ background |
+| 4 | Fond dial | 🟩 surface | ⬛ background |
 
-1. ...
-2. ...
-3. ...
+### À traiter
+| # | Élément | Actuel | Attendu |
+|---|---------|--------|---------|
+| 3 | Bouton "+" et "Encore plus de couleurs" | 🟦 primary | 🟪 secondary |
+| 5 | Overlay BottomSheet expanded | ⬛ background | `overlay` (rgba ~50%) |
+| 6 | Boutons dans sheet expanded | 🟩 surface | 🟪/🟦 selon action |
+
+### Backlog
+- [ ] Modales (Settings, Premium, Discovery)
+- [ ] Onboarding screens
+
+→ Voir `backlog/mission-modals-onboarding-style-conformity.md`
+
+---
+
+## Décisions UX validées
+
+1. **Action principale timer arrêté** = Régler et lancer le timer → 🟦 Play
+2. **Action principale timer actif** = Se concentrer (lâcher l'app) → 🟪 Stop (sortie de secours)
+3. **Dial** = partie du monde (background), pas objet flottant (surface)

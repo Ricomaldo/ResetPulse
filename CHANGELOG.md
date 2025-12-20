@@ -1,10 +1,53 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-16'
+updated: '2025-12-20'
 status: active
 ---
 
 ## [Unreleased - Current Sprint]
+
+### 🎨 UI/UX Review + Color System Refactor (2025-12-20)
+
+#### Changed
+- **Brand Color Palette Refined**
+  - Primary (Coral): #C17A71 (consistent across light + dark modes)
+  - Secondary (Neutral Gray): #78716C (improved contrast, better legibility)
+  - Accent (Golden): #D4A853 (richer gold for visual warmth)
+  - Dark mode primary now matches light for maximum brand cohesion
+
+- **Color Tokens Hierarchy Established**
+  - Screen backgrounds: `background` (#ebe8e3 cream)
+  - Card surfaces: `surface` (#FFFFFF white)
+  - Modal/elevated: `surfaceElevated` (#F8F6F3)
+  - Systematically applied across 25+ components
+
+- **Component Color Updates**
+  - ActivityItem: buttons now use `surfaceElevated` for visibility
+  - SelectionCard: ghost style with secondary/accent borders
+  - SettingsCard/Panel: proper elevation hierarchy
+  - SectionHeader: enhanced with coral primary, uppercase, bold
+  - All Favorites sections: consistent `surfaceElevated` backgrounds
+
+- **Timer Palettes Harmonized**
+  - Palette 1 (Serenity): now uses system brand colors
+  - Palette 2 (Earth): natural tones harmonized with cream background
+
+- **Acceleration Optimization (DigitalTimer)**
+  - Long-press increment phases compressed for faster responsiveness
+  - Intervals: 60ms → 40ms → 25ms → 15ms (aggressive acceleration)
+  - User reported manual +/- too slow, now provides immediate feedback
+
+#### Technical Improvements
+- colors.js condensed by 38% while preserving DEBUG_MODE logic
+- Consistent theme token usage across 37 modified files
+- Proper visual hierarchy in nested surfaces (screens < cards < modals)
+
+#### Quality Assurance
+- Non-modified files inventory created for dead code audit
+- 98 stable files documented for future inspection
+- Dark mode tested and verified
+
+---
 
 ### 📦 2-Level Drawer Architecture (Options + Settings Modal)
 

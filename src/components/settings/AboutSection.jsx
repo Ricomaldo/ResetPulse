@@ -6,12 +6,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
+import { Info } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import SettingsCard from './SettingsCard';
+import { CardTitle } from './CardTitle';
 
 /**
  * AboutSection - App info + Restart onboarding guide + Dev tools
@@ -54,7 +56,7 @@ function AboutSection({ resetOnboarding, onClose }) {
   return (
     <>
       {/* About Section */}
-      <SettingsCard title="ℹ️ À propos">
+      <SettingsCard title={<CardTitle Icon={Info} label="À propos" theme={theme} />}>
         {/* App info */}
         <View style={styles.optionRow}>
           <Text style={styles.label}>{t('settings.about.appName')}</Text>

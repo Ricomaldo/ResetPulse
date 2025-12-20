@@ -1,3 +1,22 @@
+/**
+ * @fileoverview activities - Central activity definitions
+ * @description All activities with metadata: emoji, duration, messages, etc.
+ *
+ * IMPORTANT: Message Linkage
+ * Each activity ID (e.g. 'work', 'meditation') maps to timerMessages in i18n locales.
+ * The mapping is explicit in: src/config/activityMessages.js
+ *
+ * Example:
+ *   - Activity ID: 'work'
+ *   - Start message: timerMessages.work.startMessage ("Focus")
+ *   - End message: timerMessages.work.endMessage ("Accompli ✨")
+ *
+ * To add a new activity:
+ *   1. Add entry to ACTIVITIES array here
+ *   2. Add corresponding entry to ACTIVITY_MESSAGE_KEYS in activityMessages.js
+ *   3. Add translations in locales/en.json, fr.json, etc. (timerMessages section)
+ */
+
 // src/config/activities.js
 import i18n from '../i18n';
 

@@ -50,7 +50,7 @@ const DialBase = React.memo(
           r={radius}
           stroke={theme.colors.brand.neutral}
           strokeWidth={strokeWidth}
-          fill={theme.colors.surface}
+          fill={theme.colors.surfaceElevated}
         />
 
         {/* Minute numbers (0 always at top) */}

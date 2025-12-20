@@ -15,14 +15,21 @@ export function useDialOrientation(isClockwise, scaleMode) {
     const maxMinutes = modeConfig.maxMinutes;
     const degreesPerMinute = 360 / maxMinutes;
 
+    // totalMarks: use override if provided (e.g., 12 for 1min mode = 5-second intervals)
+    // otherwise default to maxMinutes (1 mark per minute)
+    const totalMarks = modeConfig.totalMarksOverride || maxMinutes;
+
     return {
       maxMinutes,
       degreesPerMinute,
       // Graduation marks configuration from mode
       majorTickInterval: modeConfig.majorTickInterval,
       numberInterval: modeConfig.numberInterval,
-      totalMarks: maxMinutes,
+      totalMarks,
       useSeconds: modeConfig.useSeconds || false,
+      // Seconds labels for 1min mode (display as "5s", "10s", etc.)
+      useSecondsLabels: modeConfig.useSecondsLabels || false,
+      secondsPerMark: modeConfig.secondsPerMark || 60, // Default: 1 mark = 1 minute = 60s
     };
   }, [scaleMode]);
 
@@ -145,10 +152,42 @@ export function useDialOrientation(isClockwise, scaleMode) {
    * @param {number} radius - Radius for number placement
    * @param {number} centerX - Center X
    * @param {number} centerY - Center Y
-   * @returns {Array} Array of {value, x, y} for each number
+   * @returns {Array} Array of {value, x, y, isSecondsLabel} for each number
    */
   const getNumberPositions = useCallback((radius, centerX, centerY) => {
     const numbers = [];
+
+    // Special handling for seconds labels (1min mode)
+    if (config.useSecondsLabels) {
+      const totalMarks = config.totalMarks;
+      const interval = config.numberInterval;
+
+      for (let i = 0; i < totalMarks; i++) {
+        // Skip marks based on interval
+        if (i % interval !== 0) continue;
+        // Skip position 0 (overlaps with 60s/0s at top)
+        if (i === 0) continue;
+
+        const seconds = i * config.secondsPerMark;
+        // Skip 60s as it overlaps with 0 at top
+        if (seconds >= 60) continue;
+
+        const angle = (i * (360 / totalMarks)) - 90; // -90 to start at top
+        const x = centerX + radius * Math.cos((angle * Math.PI) / 180);
+        const y = centerY + radius * Math.sin((angle * Math.PI) / 180);
+
+        numbers.push({
+          value: `${seconds}s`,
+          x,
+          y,
+          isSecondsLabel: true,
+        });
+      }
+
+      return numbers;
+    }
+
+    // Standard minutes-based labels
     const interval = config.numberInterval;
     const count = Math.floor(config.maxMinutes / interval) + 1;
 
@@ -163,11 +202,11 @@ export function useDialOrientation(isClockwise, scaleMode) {
 
       // Display value (no useSeconds mode in ADR-004)
       const displayValue = config.useSeconds ? minute * 60 : minute;
-      numbers.push({ value: displayValue, x, y });
+      numbers.push({ value: displayValue, x, y, isSecondsLabel: false });
     }
 
     return numbers;
-  }, [config.maxMinutes, config.numberInterval, config.useSeconds, minutesToAngle]);
+  }, [config, minutesToAngle]);
 
   /**
    * Get graduation marks for the dial

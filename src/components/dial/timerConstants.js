@@ -19,8 +19,11 @@ export const DIAL_MODES = {
     label: '1 minute',
     description: 'Très court',
     graduationInterval: 1,
-    majorTickInterval: 1,
-    numberInterval: 1,
+    majorTickInterval: 2,      // Every 10 seconds is major (at 10s, 20s, 30s, 40s, 50s)
+    numberInterval: 2,         // Show numbers only at major ticks (10s, 20s, 30s, 40s, 50s)
+    totalMarksOverride: 12,    // 12 marks = every 5 seconds (cleaner than 60)
+    useSecondsLabels: true,    // Display as "10s", "20s", etc.
+    secondsPerMark: 5,         // Each mark = 5 seconds
     defaultDuration: 1 * 60,
   },
   '5min': {
@@ -28,7 +31,7 @@ export const DIAL_MODES = {
     label: '5 minutes',
     description: 'Micro-pauses',
     graduationInterval: 1,
-    majorTickInterval: 1,
+    majorTickInterval: 1,      // All 5 marks are major
     numberInterval: 1,
     defaultDuration: 5 * 60,
   },
@@ -37,8 +40,8 @@ export const DIAL_MODES = {
     label: '10 minutes',
     description: 'Sessions courtes',
     graduationInterval: 1,
-    majorTickInterval: 2,
-    numberInterval: 2,
+    majorTickInterval: 1,      // All 10 marks are major
+    numberInterval: 1,         // All numbers: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
     defaultDuration: 10 * 60,
   },
   '15min': {
@@ -286,7 +289,5 @@ export const DIAL_LAYOUT = {
   BACKGROUND_OFFSET: 30, // Space between outer radius and background circle
   CENTER_ZONE_RATIO: 0.35, // 35% of dial = center tap zone
   OUTER_ZONE_MIN_RATIO: 0.65, // 65%+ = graduations tap zone
-  HANDLE_SIZE: 10, // Outer handle circle radius
-  HANDLE_INNER_SIZE: 6, // Inner handle dot radius
-  HANDLE_GLOW_SIZE: 14, // Glow effect radius when dragging
+  // Handle is now a simple segment (see TimerDial.jsx)
 };

@@ -19,11 +19,13 @@ function SectionHeader({ label }) {
 
   const styles = StyleSheet.create({
     header: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(12, 'min'),
-      fontWeight: fontWeights.semibold,
-      marginBottom: rs(12),  // Responsive (was theme.spacing.sm)
-      marginTop: rs(16),     // Responsive (was theme.spacing.md)
+      color: theme.colors.brand.primary,
+      fontSize: rs(11, 'min'),
+      fontWeight: fontWeights.bold,
+      letterSpacing: 1.5,
+      marginBottom: rs(12),
+      marginTop: rs(24),
+      textTransform: 'uppercase',
     },
   });
 

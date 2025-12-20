@@ -8,6 +8,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
+import { useTheme } from '../../../theme/ThemeProvider';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
 import { rs } from '../../../styles/responsive';
@@ -27,6 +28,7 @@ export default function ToolBox({
   paletteCarouselRef,
 }) {
   const { favoriteToolMode } = useUserPreferences();
+  const theme = useTheme();
 
   // Tool order based on favorite (favorite first for visual continuity)
   const toolOrder = {
@@ -59,7 +61,13 @@ export default function ToolBox({
     ),
     colors: (
       <ToolboxItem key="colors" variant="paletteCarousel">
-        <PaletteCarousel ref={paletteCarouselRef} />
+        <View style={{
+          backgroundColor: theme.colors.surfaceElevated,
+          borderRadius: 999,
+          overflow: 'hidden',
+        }}>
+          <PaletteCarousel ref={paletteCarouselRef} />
+        </View>
       </ToolboxItem>
     ),
   };

@@ -77,19 +77,21 @@ export const getButtonBaseStyles = (theme, options = {}) => {
   };
 
   // Variant configuration map
+  // Action buttons: primary (blue), secondary (violet)
+  // Selection buttons: accent (orange for active), selection (background for inactive)
   const variantMap = {
     primary: {
-      backgroundColor: active ? colors.brand.primary : colors.brand.primary,
-      borderColor: active ? colors.brand.primary : 'transparent',
-      borderWidth: active ? 2 : 0,
+      backgroundColor: colors.brand.primary,
+      borderColor: 'transparent',
+      borderWidth: 0,
       textColor: colors.fixed.white,
       overlayColor: 'rgba(0, 0, 0, 0.15)',
     },
     secondary: {
       backgroundColor: colors.brand.secondary,
-      borderColor: active ? colors.text : 'transparent',
-      borderWidth: active ? 2 : 0,
-      textColor: colors.text,
+      borderColor: 'transparent',
+      borderWidth: 0,
+      textColor: colors.fixed.white,
       overlayColor: colors.brand.secondary + '10',
     },
     ghost: {
@@ -105,6 +107,22 @@ export const getButtonBaseStyles = (theme, options = {}) => {
       borderWidth: 0,
       textColor: colors.fixed.white,
       overlayColor: 'rgba(0, 0, 0, 0.15)',
+    },
+    // Selection inactive: background + border
+    selection: {
+      backgroundColor: colors.background,
+      borderColor: colors.border,
+      borderWidth: 1,
+      textColor: colors.text,
+      overlayColor: colors.text + '10',
+    },
+    // Selection active: accent (orange) background
+    accent: {
+      backgroundColor: colors.brand.accent,
+      borderColor: colors.brand.accent,
+      borderWidth: 0,
+      textColor: colors.text,
+      overlayColor: 'rgba(0, 0, 0, 0.10)',
     },
   };
 

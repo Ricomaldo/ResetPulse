@@ -209,7 +209,7 @@ const PulseButton = React.memo(function PulseButton({
   const circumference = 2 * Math.PI * radius;
   const center = buttonSize / 2;
 
-  // Animation values (seulement pour mode sophisticated)
+  // Animation values (pour tous les modes)
   const progressStop = useSharedValue(0); // For stop long press
   const progressStart = useSharedValue(0); // For start long press
   const isPressed = useSharedValue(false);
@@ -222,6 +222,15 @@ const PulseButton = React.memo(function PulseButton({
     haptics.selection().catch(() => {});
     onTap?.();
   }, [onTap]);
+
+  // Animated props for long press progress circles (always created, used conditionally)
+  const animatedStopCircleProps = useAnimatedProps(() => ({
+    strokeDashoffset: circumference * (1 - progressStop.value),
+  }));
+
+  const animatedStartCircleProps = useAnimatedProps(() => ({
+    strokeDashoffset: circumference * (1 - progressStart.value),
+  }));
 
   // Long press stop callback
   const handleLongPressStop = useCallback(() => {
@@ -409,15 +418,6 @@ const PulseButton = React.memo(function PulseButton({
   // ==========================================================
   // MODE SOPHISTICATED: Long press pour stop/start (DialCenter)
   // ==========================================================
-
-  // Animated props for long press progress circles
-  const animatedStopCircleProps = useAnimatedProps(() => ({
-    strokeDashoffset: circumference * (1 - progressStop.value),
-  }));
-
-  const animatedStartCircleProps = useAnimatedProps(() => ({
-    strokeDashoffset: circumference * (1 - progressStart.value),
-  }));
 
   // Tap gesture for REST (when startRequiresLongPress=false) and COMPLETE states
   const tapGesture = Gesture.Tap()

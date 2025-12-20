@@ -8,7 +8,7 @@ import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Purchases from 'react-native-purchases';
 import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
-import { TEST_MODE } from '../config/test-mode';
+// TEST_MODE removed: dev override now handled by DevPremiumContext + usePremiumStatus
 import Analytics from '../services/analytics';
 import logger from '../utils/logger';
 
@@ -327,7 +327,7 @@ export const PurchaseProvider = ({ children }) => {
   };
 
   const value = {
-    isPremium: TEST_MODE || isPremium, // TEST_MODE force premium en dev
+    isPremium, // Dev override handled by usePremiumStatus via DevPremiumContext
     isLoading,
     isPurchasing, // Expose purchasing state
     customerInfo,

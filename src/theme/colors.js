@@ -5,21 +5,21 @@
 // - Timer dial color (user palette) stays UNCHANGED to distinguish CONTENT vs SYSTEM
 // - See: _internal/cockpit/knowledge/devlog/2025-12-19_color-system-debug-audit.md
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 // --- Brand Palettes ---
 const brandLightProd = {
-  primary: 'rgba(193, 122, 113, 1)', // Coral (5.1:1 WCAG AA)
-  secondary: 'rgba(149, 83, 74, 1)', // Pêche foncé
-  accent: '#f5dfc9',
+  primary: '#C17A71', // Coral (5.1:1 WCAG AA)
+  secondary: '#78716C', // Gris chaud (stone-500)
+  accent: '#D4A853', // Or classique
   deep: '#5A5A5A',
   neutral: '#9CA3AF',
 };
 
 const brandLightDebug = {
-  primary: '#0066FF',   // Bleu électrique
+  primary: '#0066FF', // Bleu électrique
   secondary: '#7B2CFF', // Violet saturé
-  accent: '#FF8A00',    // Orange vif
+  accent: '#FF8A00', // Orange vif
   deep: '#5A5A5A',
   neutral: '#9CA3AF',
 };
@@ -27,9 +27,9 @@ const brandLightDebug = {
 const brandLight = DEBUG_MODE ? brandLightDebug : brandLightProd;
 
 const brandDark = {
-  primary: '#f0bdb8',
-  secondary: '#f5dfc9',
-  accent: '#e0d5cb',
+  primary: '#C17A71', // Coral (même que light = cohérence brand)
+  secondary: '#A8A29E', // Gris chaud éclairci (stone-400)
+  accent: '#D4A853', // Or éclairci
   deep: '#8A8A8A',
   neutral: '#6B6B6B',
 };
@@ -44,14 +44,14 @@ const fixed = {
 // --- Light Theme ---
 // Hierarchy: background (screen) < surface (cards) < surfaceElevated (modals)
 const lightThemeProd = {
-  background: '#ebe8e3',     // Cream
-  surface: '#FFFFFF',        // Pure white
+  background: '#ebe8e3', // Cream
+  surface: '#FFFFFF', // Pure white
   surfaceElevated: '#F8F6F3',
 };
 
 const lightThemeDebug = {
-  background: '#121212',     // Noir charbon
-  surface: '#1AFF6A',        // Vert fluo
+  background: '#121212', // Noir charbon
+  surface: '#1AFF6A', // Vert fluo
   surfaceElevated: '#FFF200', // Jaune acide
 };
 

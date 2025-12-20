@@ -51,8 +51,8 @@ function SelectionCard({ emoji, label, description, selected, onSelect, compact 
   const styles = StyleSheet.create({
     card: {
       alignItems: 'center',
-      backgroundColor: theme.colors.background, // Cards use background (not surface)
-      borderColor: selected ? theme.colors.brand.accent : theme.colors.border, // Selection = accent (orange)
+      backgroundColor: theme.colors.fixed.transparent,
+      borderColor: selected ? theme.colors.brand.accent : theme.colors.brand.secondary,
       borderRadius: theme.borderRadius.lg,
       borderWidth: selected ? 2 : 1,
       justifyContent: 'center',
@@ -63,7 +63,9 @@ function SelectionCard({ emoji, label, description, selected, onSelect, compact 
       color: theme.colors.textSecondary,
       fontSize: compact ? rs(9, 'min') : rs(11, 'min'),
       fontWeight: fontWeights.regular,
-      marginTop: rs(8),  // Responsive (was theme.spacing.xs)
+      lineHeight: compact ? rs(12, 'min') : rs(15, 'min'),  // Added for readability
+      marginTop: rs(8),                                     // Responsive (was theme.spacing.xs)
+      opacity: 0.8,                                         // Added opacity for visual recession
       textAlign: 'center',
     },
     emoji: {

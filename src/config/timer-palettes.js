@@ -2,12 +2,12 @@ import i18n from '../i18n';
 
 export const TIMER_PALETTES = {
   serenity: {
-    colors: ['#c17a71', '#edceb1', '#D4A5A0', '#8B6F5C'],
+    colors: ['#C17A71', '#D4A853', '#78716C', '#5A5A5A'],
     get name() {
       return i18n.t('palettes.serenity');
     },
     isPremium: false,
-    description: 'Couleurs douces et apaisantes du logo ResetPulse',
+    description: 'Palette système ResetPulse (brand colors)',
   },
   softLaser: {
     colors: ['#00D17A', '#00B8D9', '#D14AB8', '#E6D500'],
@@ -19,12 +19,12 @@ export const TIMER_PALETTES = {
   },
 
   earth: {
-    colors: ['#3B82A0', '#68752C', '#8B3A3A', '#FFD700'],
+    colors: ['#7C9A92', '#A68B5B', '#9B6B5A', '#6B7F6B'],
     get name() {
       return i18n.t('palettes.earth');
     },
     isPremium: false,
-    description: 'Couleurs naturelles et terrestres',
+    description: 'Tons naturels harmonisés avec cream',
   },
   zen: {
     colors: ['#9DC88D', '#A8DADC', '#E5E5E5', '#B8A9C9'],

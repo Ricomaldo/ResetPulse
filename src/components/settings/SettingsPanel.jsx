@@ -4,7 +4,22 @@
  * @created 2025-12-19
  */
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Platform, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
+import { View, Text, StyleSheet, Switch, Platform, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import {
+  Brain,
+  Zap,
+  Keyboard,
+  Gauge,
+  Clock,
+  Eye,
+  RotateCw,
+  Volume2,
+  Palette,
+  Info,
+  Star,
+  Heart,
+} from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerOptions } from '../../contexts/TimerOptionsContext';
 import { useUserPreferences } from '../../contexts/UserPreferencesContext';
@@ -17,6 +32,7 @@ import PresetPills from '../controls/PresetPills';
 import SettingsCard from './SettingsCard';
 import SelectionCard from './SelectionCard';
 import SectionHeader from './SectionHeader';
+import { CardTitle } from './CardTitle';
 import FavoritesActivitySection from './FavoritesActivitySection';
 import FavoritesPaletteSection from './FavoritesPaletteSection';
 import AboutSection from './AboutSection';
@@ -158,6 +174,13 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       flex: 1,
       fontSize: rs(14, 'min'),
     },
+    optionDescription: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(10, 'min'),           // Reduced from rs(11, 'min') for hierarchy
+      lineHeight: rs(14, 'min'),         // Added for readability
+      marginTop: rs(6),                  // Increased spacing
+      opacity: 0.75,                     // Added opacity for visual recession
+    },
     optionRow: {
       alignItems: 'center',
       borderBottomColor: theme.colors.border,
@@ -190,7 +213,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       color: theme.colors.fixed.white,
     },
     segmentedControl: {
-      backgroundColor: theme.colors.background, // Container uses background (not surface)
+      backgroundColor: theme.colors.surfaceElevated,
       borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.md,
       borderWidth: 1,
@@ -201,7 +224,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
 
   return (
     <View style={styles.container}>
-      <ScrollView
+      <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
@@ -209,7 +232,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         <SectionHeader label="TOI" />
 
         {/* Section 1: Interaction Profile (Comment tu fonctionnes) */}
-        <SettingsCard title="🎭 Comment tu fonctionnes">
+        <SettingsCard title={<CardTitle Icon={Brain} label="Comment tu fonctionnes" theme={theme} />}>
           <View style={styles.grid2x2}>
             {interactionProfiles.map((profile) => (
               <View key={profile.id} style={styles.gridItem2x2}>
@@ -227,7 +250,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         </SettingsCard>
 
         {/* Section 2: Favorite Tool (Ton raccourci préféré) */}
-        <SettingsCard title="⚙️ Ton raccourci préféré">
+        <SettingsCard title={<CardTitle Icon={Keyboard} label="Ton raccourci préféré" theme={theme} />}>
           <View style={styles.grid2x2}>
             {favoriteTools.map((tool) => (
               <View key={tool.id} style={styles.gridItem2x2}>
@@ -271,7 +294,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         <SectionHeader label="TIMER" />
 
         {/* Dial Scale Presets (top) */}
-        <SettingsCard title="🕰️ Échelle du cadran">
+        <SettingsCard title={<CardTitle Icon={Gauge} label="Échelle du cadran" theme={theme} />}>
           <PresetPills
             compact
             onSelectPreset={({ newScaleMode }) => {
@@ -282,15 +305,15 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         </SettingsCard>
 
         {/* 1. Timer Options Section */}
-        <SettingsCard title="⏱️ Options du timer">
+        <SettingsCard title={<CardTitle Icon={Clock} label="Options du timer" theme={theme} />}>
           {/* Emoji activité au centre */}
           <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>Emoji activité au centre</Text>
               <Text style={styles.optionDescription}>
                 {showActivityEmoji
-                  ? 'L&apos;emoji s&apos;affiche au centre du cadran'
-                  : 'L&apos;emoji est masqué'}
+                  ? "L'emoji s'affiche au centre du cadran"
+                  : "L'emoji est masqué"}
               </Text>
             </View>
             <Switch
@@ -325,7 +348,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         </SettingsCard>
 
         {/* 2. Keep Awake Section */}
-        <SettingsCard title="💡 Keep Awake">
+        <SettingsCard title={<CardTitle Icon={Eye} label="Keep Awake" theme={theme} />}>
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>{t('settings.timer.keepAwake')}</Text>
@@ -354,7 +377,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         <SectionHeader label="AMBIANCE" />
 
         {/* 3. Rotation Direction Section */}
-        <SettingsCard title="🔄 Sens de rotation">
+        <SettingsCard title={<CardTitle Icon={RotateCw} label="Sens de rotation" theme={theme} />}>
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>{t('settings.timer.rotationDirection')}</Text>
@@ -379,7 +402,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
 
         {/* 4. Sound Section */}
         <SettingsCard
-          title="🔊 Son de notification"
+          title={<CardTitle Icon={Volume2} label="Son de notification" theme={theme} />}
           description={t('settings.timer.soundDescription')}
         >
           <SoundPicker
@@ -389,7 +412,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         </SettingsCard>
 
         {/* 5. Theme Section */}
-        <SettingsCard title="🎨 Thème">
+        <SettingsCard title={<CardTitle Icon={Palette} label="Thème" theme={theme} />}>
 
           <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
@@ -475,7 +498,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
           resetOnboarding={resetOnboarding}
           onClose={onClose}
         />
-      </ScrollView>
+      </BottomSheetScrollView>
     </View>
   );
 }

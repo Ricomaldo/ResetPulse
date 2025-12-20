@@ -254,14 +254,16 @@ const MessageContent = forwardRef(function MessageContent(
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'center',
+      gap: rs(12),
+      paddingHorizontal: rs(16),
     },
     message: {
       color: theme.colors.text,
-      fontSize: rs(24),
+      fontSize: rs(20),
       fontWeight: '600',
       includeFontPadding: false,
       letterSpacing: 0.5,
-      lineHeight: rs(24),
+      lineHeight: rs(20),
     },
     flashContainer: {
       alignItems: 'center',
@@ -280,8 +282,10 @@ const MessageContent = forwardRef(function MessageContent(
       includeFontPadding: false,
     },
     dotsContainer: {
-      height: rs(24),
+      flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'center',
+      height: rs(24),
     },
   });
 
