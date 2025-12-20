@@ -26,7 +26,7 @@ const PlusButton = React.memo(function PlusButton({
   return (
     <IconButton
       icon="plus"
-      variant={isPremium ? 'ghost' : 'primary'}
+      variant={isPremium ? 'ghost' : 'secondary'}
       size="large"
       shape="rounded"
       onPress={onPress}
