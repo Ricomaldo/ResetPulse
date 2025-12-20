@@ -155,11 +155,11 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
       backgroundColor: theme.colors.fixed.transparent,
       borderRadius: theme.borderRadius.round,
       borderWidth: 2,
-      height: harmonizedSizes.carouselItem.size,
+      height: harmonizedSizes.colorButton.size,
       minHeight: 44,
       minWidth: 44,
       padding: harmonizedSizes.colorButton.padding,
-      width: harmonizedSizes.carouselItem.size,
+      width: harmonizedSizes.colorButton.size,
     },
     colorButtonActive: {
       elevation: 5,

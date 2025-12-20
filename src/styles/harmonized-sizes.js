@@ -13,7 +13,8 @@ export const harmonizedSizes = {
   // ============================================================================
   // CAROUSEL ITEM SIZES (ActivityItem, ColorButton)
   // ============================================================================
-  // Both carousels use 60px items for consistency
+  // ActivityItem: 60px (primary decision)
+  // ColorButton: 50px (secondary, light ambiance)
   carouselItem: {
     size: rs(60, 'min'),          // 60px responsive (both width & height)
     iconSize: rs(32, 'min'),      // Icon/emoji size inside item
@@ -22,7 +23,7 @@ export const harmonizedSizes = {
 
   // Palette-specific (color buttons inside palette carousel)
   colorButton: {
-    size: rs(60, 'min'),          // Match ActivityItem size (60px)
+    size: rs(50, 'min'),          // Reduced from 60px - signals "secondary/light"
     padding: rs(4, 'min'),         // Inner padding for color preview
   },
 
@@ -131,7 +132,7 @@ export const harmonizedSizes = {
       horizontal: rs(8),           // Reduced horizontal
       vertical: rs(6),             // Reduced vertical - signals "info only"
     },
-    minHeight: rs(65, 'min'),      // Smaller than others - secondary action zone
+    minHeight: rs(55, 'min'),      // Smaller than others - compact info zone
     borderRadius: 'lg',
   },
 
@@ -151,7 +152,7 @@ export const harmonizedSizes = {
       horizontal: rs(8),           // Reduced horizontal
       vertical: rs(4),             // Minimal vertical - signals "optional"
     },
-    minHeight: rs(70, 'min'),      // Standard height
+    minHeight: rs(65, 'min'),      // Slightly reduced - secondary status
     borderRadius: 'lg',
   },
 
