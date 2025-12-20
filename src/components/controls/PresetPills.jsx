@@ -61,7 +61,7 @@ const PresetPills = React.memo(function PresetPills({ onSelectPreset, compact = 
       <IconButton
         key={preset.minutes}
         label={preset.label}
-        variant={isActive ? 'primary' : 'secondary'}
+        variant={isActive ? 'accent' : 'selection'} // Selection state: accent (active) / selection (inactive)
         size={compact ? 'small' : 'medium'}
         shape="rounded"
         active={isActive}

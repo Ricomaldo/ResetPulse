@@ -159,9 +159,11 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
   // Track current snap index (0=favorite, 1=toolbox, 2=all)
   const [currentSnapIndex, setCurrentSnapIndex] = useState(0); // Default: 15% (favorite)
 
-  // TODO: Re-add animated background once frozen object error is fixed
-  // For now, use static background
-  const staticBackgroundStyle = { backgroundColor: theme.colors.surface };
+  // Dynamic background based on snap index (no animation to avoid frozen object error)
+  // Snap 0-1: surface | Snap 2 (expanded): surfaceElevated
+  const dynamicBackgroundStyle = {
+    backgroundColor: currentSnapIndex === 2 ? theme.colors.surfaceElevated : theme.colors.surface,
+  };
 
   // Custom spring animation (smooth, less bouncy)
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -211,7 +213,7 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
           width: 50,
           height: 5,
         }}
-        backgroundStyle={staticBackgroundStyle}
+        backgroundStyle={dynamicBackgroundStyle}
         style={{
           ...theme.shadow('xl'),
         }}

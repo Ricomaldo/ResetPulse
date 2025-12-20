@@ -8,7 +8,6 @@
 // 3. Devlog: _internal/cockpit/knowledge/devlog/2025-12-18_bottomsheet-modal-pattern.md
 
 export { default as PremiumModal } from './PremiumModal';
-export { default as SettingsModal } from './SettingsModal';
 export { default as DiscoveryModal } from './DiscoveryModal';
 export { default as MoreActivitiesModal } from './MoreActivitiesModal';
 export { default as MoreColorsModal } from './MoreColorsModal';

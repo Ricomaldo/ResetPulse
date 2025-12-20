@@ -152,7 +152,7 @@ const ControlBar = React.memo(function ControlBar({
     // Root container with fixed height
     container: {
       width: '100%',
-      height: rs(80, 'min'),
+      height: rs(65, 'min'),
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
