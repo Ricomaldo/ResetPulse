@@ -5,7 +5,8 @@
     "cancel": "Abbrechen",
     "confirm": "Bestätigen",
     "ok": "OK",
-    "skip": "Überspringen"
+    "skip": "Überspringen",
+    "retry": "Erneut versuchen"
   },
   "welcome": {
     "title": "Willkommen bei ResetPulse",
@@ -111,7 +112,9 @@
     "restoreNone": "Kein Kauf gefunden",
     "restoreNoneMessage": "Für dieses Konto wurde kein vorheriger Kauf gefunden.",
     "restoreError": "Käufe konnten nicht wiederhergestellt werden.",
-    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten."
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
+    "contactSupport": "Support kontaktieren",
+    "tooManyAttempts": "Bitte kontaktieren Sie den Support, wenn das Problem weiterhin besteht."
   },
   "activities": {
     "none": "Basis",

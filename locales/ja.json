@@ -5,7 +5,8 @@
     "cancel": "キャンセル",
     "confirm": "確認",
     "ok": "OK",
-    "skip": "スキップ"
+    "skip": "スキップ",
+    "retry": "再試行"
   },
   "welcome": {
     "title": "ResetPulseへようこそ",
@@ -111,7 +112,9 @@
     "restoreNone": "購入が見つかりません",
     "restoreNoneMessage": "このアカウントの購入履歴が見つかりませんでした。",
     "restoreError": "購入を復元できませんでした。",
-    "unexpectedError": "予期しないエラーが発生しました。"
+    "unexpectedError": "予期しないエラーが発生しました。",
+    "contactSupport": "サポートに連絡",
+    "tooManyAttempts": "問題が解決しない場合はサポートにお問い合わせください。"
   },
   "activities": {
     "none": "基本",

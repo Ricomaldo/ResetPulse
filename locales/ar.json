@@ -5,7 +5,8 @@
     "cancel": "إلغاء",
     "confirm": "تأكيد",
     "ok": "حسناً",
-    "skip": "تخطي"
+    "skip": "تخطي",
+    "retry": "إعادة محاولة"
   },
   "welcome": {
     "title": "مرحباً بك في ResetPulse",
@@ -111,7 +112,9 @@
     "restoreNone": "لم يتم العثور على مشتريات",
     "restoreNoneMessage": "لم يتم العثور على مشتريات سابقة لهذا الحساب.",
     "restoreError": "تعذرت استعادة مشترياتك.",
-    "unexpectedError": "حدث خطأ غير متوقع."
+    "unexpectedError": "حدث خطأ غير متوقع.",
+    "contactSupport": "الاتصال بالدعم",
+    "tooManyAttempts": "يرجى الاتصال بالدعم إذا استمرت المشكلة."
   },
   "activities": {
     "none": "أساسي",

@@ -5,7 +5,8 @@
     "cancel": "Annulla",
     "confirm": "Conferma",
     "ok": "OK",
-    "skip": "Salta"
+    "skip": "Salta",
+    "retry": "Riprova"
   },
   "welcome": {
     "title": "Benvenuto in ResetPulse",
@@ -111,7 +112,9 @@
     "restoreNone": "Nessun acquisto trovato",
     "restoreNoneMessage": "Nessun acquisto precedente è stato trovato per questo account.",
     "restoreError": "Impossibile ripristinare i tuoi acquisti.",
-    "unexpectedError": "Si è verificato un errore imprevisto."
+    "unexpectedError": "Si è verificato un errore imprevisto.",
+    "contactSupport": "Contatta il supporto",
+    "tooManyAttempts": "Contatta il supporto se il problema persiste."
   },
   "activities": {
     "none": "Base",

@@ -5,7 +5,8 @@
     "cancel": "取消",
     "confirm": "確認",
     "ok": "確定",
-    "skip": "跳過"
+    "skip": "跳過",
+    "retry": "重試"
   },
   "welcome": {
     "title": "歡迎使用 ResetPulse",
@@ -111,7 +112,9 @@
     "restoreNone": "未找到購買記錄",
     "restoreNoneMessage": "未找到此帳號的購買記錄。",
     "restoreError": "無法恢復您的購買。",
-    "unexpectedError": "發生意外錯誤。"
+    "unexpectedError": "發生意外錯誤。",
+    "contactSupport": "聯絡支援",
+    "tooManyAttempts": "如果問題仍未解決，請聯絡支援。"
   },
   "activities": {
     "none": "基礎",
