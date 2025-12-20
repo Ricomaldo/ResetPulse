@@ -5,7 +5,8 @@
     "cancel": "Annuleren",
     "confirm": "Bevestigen",
     "ok": "OK",
-    "skip": "Overslaan"
+    "skip": "Overslaan",
+    "retry": "Opnieuw proberen"
   },
   "welcome": {
     "title": "Welkom bij ResetPulse",
@@ -111,7 +112,9 @@
     "restoreNone": "Geen aankoop gevonden",
     "restoreNoneMessage": "Er is geen eerdere aankoop gevonden voor dit account.",
     "restoreError": "Kan je aankopen niet herstellen.",
-    "unexpectedError": "Er is een onverwachte fout opgetreden."
+    "unexpectedError": "Er is een onverwachte fout opgetreden.",
+    "contactSupport": "Neem contact op met ondersteuning",
+    "tooManyAttempts": "Neem contact op met de ondersteuning als het probleem aanhoudt."
   },
   "activities": {
     "none": "Basis",

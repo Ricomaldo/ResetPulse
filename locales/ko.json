@@ -5,7 +5,8 @@
     "cancel": "취소",
     "confirm": "확인",
     "ok": "확인",
-    "skip": "건너뛰기"
+    "skip": "건너뛰기",
+    "retry": "다시 시도"
   },
   "welcome": {
     "title": "ResetPulse에 오신 것을 환영합니다",
@@ -111,7 +112,9 @@
     "restoreNone": "구매를 찾을 수 없음",
     "restoreNoneMessage": "이 계정의 이전 구매를 찾을 수 없습니다.",
     "restoreError": "구매를 복원할 수 없습니다.",
-    "unexpectedError": "예기치 않은 오류가 발생했습니다."
+    "unexpectedError": "예기치 않은 오류가 발생했습니다.",
+    "contactSupport": "지원팀에 문의",
+    "tooManyAttempts": "문제가 계속되면 지원팀에 문의하세요."
   },
   "activities": {
     "none": "기본",

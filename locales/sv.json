@@ -5,7 +5,8 @@
     "cancel": "Avbryt",
     "confirm": "Bekräfta",
     "ok": "OK",
-    "skip": "Hoppa över"
+    "skip": "Hoppa över",
+    "retry": "Försök igen"
   },
   "welcome": {
     "title": "Välkommen till ResetPulse",
@@ -111,7 +112,9 @@
     "restoreNone": "Inget köp hittades",
     "restoreNoneMessage": "Inget tidigare köp hittades för detta konto.",
     "restoreError": "Kunde inte återställa dina köp.",
-    "unexpectedError": "Ett oväntat fel uppstod."
+    "unexpectedError": "Ett oväntat fel uppstod.",
+    "contactSupport": "Kontakta support",
+    "tooManyAttempts": "Kontakta supporten om problemet kvarstår."
   },
   "activities": {
     "none": "Grundläggande",

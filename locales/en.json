@@ -5,7 +5,8 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "ok": "OK",
-    "skip": "Skip"
+    "skip": "Skip",
+    "retry": "Retry"
   },
   "invitation": "Ready?",
   "welcome": {
@@ -213,7 +214,9 @@
     "restoreNone": "No purchase found",
     "restoreNoneMessage": "No previous purchase was found for this account.",
     "restoreError": "Unable to restore your purchases.",
-    "unexpectedError": "An unexpected error occurred."
+    "unexpectedError": "An unexpected error occurred.",
+    "contactSupport": "Contact Support",
+    "tooManyAttempts": "Please contact support if the issue persists."
   },
   "activities": {
     "none": "Basic",
