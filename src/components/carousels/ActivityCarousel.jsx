@@ -22,10 +22,6 @@ import haptics from '../../utils/haptics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { useModalStack } from '../../contexts/ModalStackContext';
-import {
-  CreateActivityModal,
-  EditActivityModal,
-} from '../modals/index';
 import analytics from '../../services/analytics';
 import { ActivityItem, PlusButton } from './activity-items/index';
 import { fontWeights } from '../../theme/tokens';
@@ -49,9 +45,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   const scrollContentWidthRef = useRef(0);
   // eslint-disable-next-line no-unused-vars
   const [scrollOffset, setScrollOffset] = useState(0);
-  const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
-  const [showEditActivityModal, setShowEditActivityModal] = useState(false);
-  const [activityToEdit, setActivityToEdit] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
   const { isPremium: isPremiumUser } = usePremiumStatus();
@@ -193,16 +186,27 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
 
   const handleCreatePress = useCallback(() => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-    setShowCreateActivityModal(true);
-  }, []);
+
+    // Push create activity modal to stack
+    modalStack.push('createActivity', {
+      snapPoints: ['90%'],
+      onActivityCreated: handleActivityCreated,
+    });
+  }, [modalStack, handleActivityCreated]);
 
   const handleActivityLongPress = useCallback((activity) => {
     if (activity.isCustom) {
       haptics.impact('medium').catch(() => { /* Optional operation - failure is non-critical */ });
-      setActivityToEdit(activity);
-      setShowEditActivityModal(true);
+
+      // Push edit activity modal to stack
+      modalStack.push('editActivity', {
+        snapPoints: ['90%'],
+        activity,
+        onActivityUpdated: handleActivityUpdated,
+        onActivityDeleted: handleActivityDeleted,
+      });
     }
-  }, []);
+  }, [modalStack, handleActivityUpdated, handleActivityDeleted]);
 
   const handleActivityCreated = useCallback((newActivity) => {
     setCurrentActivity(newActivity);
@@ -351,24 +355,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
         </ScrollView>
       </View>
 
-      <CreateActivityModal
-        visible={showCreateActivityModal}
-        onClose={() => setShowCreateActivityModal(false)}
-        onOpenPaywall={() => modalStack.push('premium', {
-          highlightedFeature: t('discovery.activities')
-        })}
-        onActivityCreated={handleActivityCreated}
-      />
-      <EditActivityModal
-        visible={showEditActivityModal}
-        onClose={() => {
-          setShowEditActivityModal(false);
-          setActivityToEdit(null);
-        }}
-        activity={activityToEdit}
-        onActivityUpdated={handleActivityUpdated}
-        onActivityDeleted={handleActivityDeleted}
-      />
       {toastMessage !== '' && (
         <Animated.View
           style={[

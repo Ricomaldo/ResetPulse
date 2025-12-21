@@ -9,7 +9,6 @@ import { useScreenOrientation } from '../hooks/useScreenOrientation';
 import { useTranslation } from '../hooks/useTranslation';
 import { useModalStack } from '../contexts/ModalStackContext';
 import { DialZone, AsideZone } from '../components/layout';
-import { TwoTimersModal } from '../components/modals';
 import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
 import analytics from '../services/analytics';
 
@@ -26,7 +25,6 @@ function TimerScreenContent() {
     timer: { currentActivity },
   } = useTimerConfig();
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [displayMessage, setDisplayMessage] = useState('');
   const [isTimerCompleted, setIsTimerCompleted] = useState(false);
@@ -149,8 +147,17 @@ function TimerScreenContent() {
 
     if (newCount === 2 && !hasSeenTwoTimersModal) {
       analytics.trackTwoTimersMilestone();
-      setTwoTimersModalVisible(true);
       setHasSeenTwoTimersModal(true);
+
+      // Push two timers modal to stack
+      modalStack.push('twoTimers', {
+        snapPoints: ['50%'],
+        onExplore: () => {
+          modalStack.push('premium', {
+            highlightedFeature: 'toutes les couleurs et activités',
+          });
+        },
+      });
     }
   };
 
@@ -186,15 +193,6 @@ function TimerScreenContent() {
           onSnapChange={() => setDisplayMessage('')}
         />
       )}
-
-      {/* Two Timers Reminder Modal (ADR-003) */}
-      <TwoTimersModal
-        visible={twoTimersModalVisible}
-        onClose={() => setTwoTimersModalVisible(false)}
-        onExplore={() => modalStack.push('premium', {
-          highlightedFeature: 'toutes les couleurs et activités'
-        })}
-      />
     </SafeAreaView>
   );
 }

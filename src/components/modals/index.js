@@ -1,14 +1,14 @@
 /**
  * @fileoverview Modals - Centralized export
- * @updated 2025-12-21 - BottomSheet migration COMPLETE ✅
+ * @updated 2025-12-21 - BottomSheet migration + ModalStack pattern COMPLETE ✅
  *
- * 📋 BOTTOMSHEET MODAL PATTERN:
+ * 📋 BOTTOMSHEET MODAL PATTERN (Unified):
  *
  * Architecture: Wrapper (infrastructure) + Content (business logic)
  * - BottomSheetModal wrapper = BottomSheet config, animations, lifecycle (reusable)
  * - *ModalContent components = Business logic, UI, state (specific)
  *
- * Same pattern as AsideZone drawer (consistency across all bottom-sheets).
+ * ALL modals use ModalStack pattern for consistency.
  *
  * Usage:
  * 1. Create *ModalContent.jsx component (pure content, no BottomSheet logic)
@@ -18,25 +18,36 @@
  * Examples:
  * - modalStack.push('premium', { highlightedFeature: 'activity' })
  * - modalStack.push('discovery', { title: 'More Activities', children: <Grid /> })
+ * - modalStack.push('createActivity', { onActivityCreated: handleCreate })
+ * - modalStack.push('editActivity', { activity, onActivityUpdated, onActivityDeleted })
+ * - modalStack.push('twoTimers', { onExplore: handleExplore })
  *
  * References:
  * - BottomSheetModal wrapper: ./BottomSheetModal.jsx
  * - ModalStackRenderer: ./ModalStackRenderer.jsx
  * - AsideZone pattern: ../layout/AsideZone.jsx
  *
- * 🎉 ALL MODALS MIGRATED TO @gorhom/bottom-sheet v5
+ * 🎉 ALL MODALS MIGRATED TO @gorhom/bottom-sheet v5 + ModalStack pattern
  */
 
 // === BottomSheet Infrastructure ===
 export { default as BottomSheetModal } from './BottomSheetModal';
 
-// === Premium/Discovery Modals (ModalStack pattern) ===
+// === Modal Content Components (All use ModalStack pattern) ===
+// Premium & Discovery
 export { default as PremiumModalContent } from './PremiumModalContent';
 export { default as DiscoveryModalContent } from './DiscoveryModalContent';
 
-// === Custom Activity Modals (Direct usage pattern) ===
+// Custom Activities
+export { default as CreateActivityModalContent } from './CreateActivityModalContent';
+export { default as EditActivityModalContent } from './EditActivityModalContent';
+
+// System
+export { default as TwoTimersModalContent } from './TwoTimersModalContent';
+
+// === Legacy Wrapper Components (DEPRECATED - Will be removed) ===
+// ⚠️ DO NOT USE - Use modalStack.push() instead
+// These are kept temporarily for backward compatibility during migration
 export { default as CreateActivityModal } from './CreateActivityModal';
 export { default as EditActivityModal } from './EditActivityModal';
-
-// === System Modals ===
 export { default as TwoTimersModal } from './TwoTimersModal';
