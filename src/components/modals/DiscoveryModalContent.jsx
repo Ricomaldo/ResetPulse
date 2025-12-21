@@ -77,15 +77,11 @@ export default function DiscoveryModalContent({
   };
 
   const handleClose = () => {
-    console.log('[DiscoveryModalContent] handleClose called');
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
     // Call onClose (ModalStackRenderer handles animation delay + popById)
     if (onClose) {
-      console.log('[DiscoveryModalContent] Calling onClose');
       onClose();
-    } else {
-      console.warn('[DiscoveryModalContent] No onClose provided!');
     }
   };
 

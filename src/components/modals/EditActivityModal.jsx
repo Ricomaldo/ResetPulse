@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Modal,
   View,
   Text,
   TextInput,
@@ -12,11 +11,12 @@ import {
   Platform,
   Alert,
   KeyboardAvoidingView,
-  ScrollView,
 } from 'react-native';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
+import BottomSheetModal from './BottomSheetModal';
 import EmojiPicker from '../pickers/EmojiPicker';
 import DurationSlider from '../pickers/DurationSlider';
 import { rs } from '../../styles/responsive';
@@ -185,6 +185,10 @@ export default function EditActivityModal({
       fontSize: rs(18, 'min'),
     },
 
+    container: {
+      flex: 1,
+    },
+
     deleteButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.fixed.transparent,
@@ -257,33 +261,6 @@ export default function EditActivityModal({
       paddingHorizontal: theme.spacing.md,
     },
 
-    modalContainer: {
-      backgroundColor: theme.colors.surface,
-      borderTopLeftRadius: Platform.select({
-        ios: 24,
-        android: 20,
-      }),
-      borderTopRightRadius: Platform.select({
-        ios: 24,
-        android: 20,
-      }),
-      maxHeight: '90%',
-      ...theme.shadow('xl'),
-      ...Platform.select({
-        ios: {
-          borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.brand.primary + '30',
-        },
-        android: {},
-      }),
-    },
-
-    overlay: {
-      backgroundColor: theme.colors.overlay,
-      flex: 1,
-      justifyContent: 'flex-end',
-    },
-
     saveButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
@@ -350,190 +327,165 @@ export default function EditActivityModal({
   if (!activity) {return null;}
 
   return (
-    <Modal
+    <BottomSheetModal
       visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={handleClose}
-      statusBarTranslucent
-      accessible={true}
-      accessibilityViewIsModal={true}
+      onClose={handleClose}
+      snapPoints={['90%']}
+      enablePanDownToClose={true}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.overlay}
+        style={styles.container}
       >
-        <TouchableOpacity
-          style={styles.overlay}
-          activeOpacity={1}
-          onPress={handleClose}
-          accessible={false}
-          importantForAccessibility="no"
-        >
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={(e) => e.stopPropagation()}
-            accessible={false}
+        {/* Header */}
+        <View style={styles.header}>
+          <Text
+            style={styles.headerTitle}
+            accessibilityRole="header"
           >
-            <View
-              style={styles.modalContainer}
-              accessible={true}
-              accessibilityRole="dialog"
-              accessibilityLabel={t('customActivities.edit.title')}
-              accessibilityHint={t('accessibility.editActivityModalHint')}
-            >
-              {/* Header */}
-              <View style={styles.header}>
-                <Text
-                  style={styles.headerTitle}
-                  accessibilityRole="header"
+            {t('customActivities.edit.title')}
+          </Text>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={handleClose}
+            activeOpacity={0.7}
+            accessibilityLabel={t('accessibility.closeEditActivity')}
+            accessibilityRole="button"
+            accessibilityHint={t('accessibility.closeModalHint')}
+          >
+            <Text style={styles.closeButtonText}>✕</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Content */}
+        <BottomSheetScrollView
+          style={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Emoji Selection */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>
+              {t('customActivities.create.emojiLabel')}
+            </Text>
+            <View style={styles.emojiPickerContainer}>
+              <EmojiPicker
+                selectedEmoji={selectedEmoji}
+                onSelectEmoji={setSelectedEmoji}
+              />
+            </View>
+          </View>
+
+          {/* Name Input */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>
+              {t('customActivities.create.nameLabel')}
+            </Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={activityName}
+                onChangeText={(text) =>
+                  setActivityName(text.slice(0, MAX_NAME_LENGTH))
+                }
+                placeholder={t('customActivities.create.namePlaceholder')}
+                placeholderTextColor={theme.colors.textSecondary}
+                maxLength={MAX_NAME_LENGTH}
+                returnKeyType="done"
+              />
+              <Text style={styles.charCounter}>
+                {activityName.length}/{MAX_NAME_LENGTH}
+              </Text>
+              {activityName.length > 0 && (
+                <TouchableOpacity
+                  style={styles.clearButton}
+                  onPress={() => setActivityName('')}
+                  activeOpacity={0.7}
                 >
-                  {t('customActivities.edit.title')}
+                  <Text style={styles.clearButtonText}>✕</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          {/* Duration Picker */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>
+              {t('customActivities.create.durationLabel')}
+            </Text>
+            <View style={styles.durationContainer}>
+              <DurationSlider
+                value={duration}
+                onValueChange={setDuration}
+              />
+            </View>
+          </View>
+
+          {/* Usage Stats */}
+          {activity.timesUsed > 0 && (
+            <View style={styles.statsSection}>
+              <View style={styles.statsCard}>
+                <Text style={styles.statsIcon}>📊</Text>
+                <Text style={styles.statsText}>
+                  {t('customActivities.edit.usageStats', {
+                    count: activity.timesUsed,
+                  })}
                 </Text>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={handleClose}
-                  activeOpacity={0.7}
-                  accessibilityLabel={t('accessibility.closeEditActivity')}
-                  accessibilityRole="button"
-                  accessibilityHint={t('accessibility.closeModalHint')}
-                >
-                  <Text style={styles.closeButtonText}>X</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Content */}
-              <ScrollView
-                style={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled"
-              >
-                {/* Emoji Selection */}
-                <View style={styles.section}>
-                  <Text style={styles.sectionLabel}>
-                    {t('customActivities.create.emojiLabel')}
-                  </Text>
-                  <View style={styles.emojiPickerContainer}>
-                    <EmojiPicker
-                      selectedEmoji={selectedEmoji}
-                      onSelectEmoji={setSelectedEmoji}
-                    />
-                  </View>
-                </View>
-
-                {/* Name Input */}
-                <View style={styles.section}>
-                  <Text style={styles.sectionLabel}>
-                    {t('customActivities.create.nameLabel')}
-                  </Text>
-                  <View style={styles.inputContainer}>
-                    <TextInput
-                      style={styles.input}
-                      value={activityName}
-                      onChangeText={(text) =>
-                        setActivityName(text.slice(0, MAX_NAME_LENGTH))
-                      }
-                      placeholder={t('customActivities.create.namePlaceholder')}
-                      placeholderTextColor={theme.colors.textSecondary}
-                      maxLength={MAX_NAME_LENGTH}
-                      returnKeyType="done"
-                    />
-                    <Text style={styles.charCounter}>
-                      {activityName.length}/{MAX_NAME_LENGTH}
-                    </Text>
-                    {activityName.length > 0 && (
-                      <TouchableOpacity
-                        style={styles.clearButton}
-                        onPress={() => setActivityName('')}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={styles.clearButtonText}>X</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
-
-                {/* Duration Picker */}
-                <View style={styles.section}>
-                  <Text style={styles.sectionLabel}>
-                    {t('customActivities.create.durationLabel')}
-                  </Text>
-                  <View style={styles.durationContainer}>
-                    <DurationSlider
-                      value={duration}
-                      onValueChange={setDuration}
-                    />
-                  </View>
-                </View>
-
-                {/* Usage Stats */}
-                {activity.timesUsed > 0 && (
-                  <View style={styles.statsSection}>
-                    <View style={styles.statsCard}>
-                      <Text style={styles.statsIcon}>📊</Text>
-                      <Text style={styles.statsText}>
-                        {t('customActivities.edit.usageStats', {
-                          count: activity.timesUsed,
-                        })}
-                      </Text>
-                    </View>
-                  </View>
-                )}
-              </ScrollView>
-
-              {/* Footer */}
-              <View style={styles.footer}>
-                <View style={styles.buttonRow}>
-                  <TouchableOpacity
-                    style={styles.cancelButton}
-                    onPress={handleClose}
-                    activeOpacity={0.7}
-                    accessibilityLabel={t('customActivities.create.buttonCancel')}
-                    accessibilityRole="button"
-                    accessibilityHint={t('accessibility.closeModalHint')}
-                  >
-                    <Text style={styles.cancelButtonText}>
-                      {t('customActivities.create.buttonCancel')}
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[
-                      styles.saveButton,
-                      !isFormValid && styles.saveButtonDisabled,
-                    ]}
-                    onPress={handleSave}
-                    activeOpacity={0.8}
-                    disabled={!isFormValid}
-                    accessibilityLabel={t('customActivities.edit.buttonSave')}
-                    accessibilityRole="button"
-                    accessibilityHint={t('accessibility.saveActivityHint')}
-                    accessibilityState={{ disabled: !isFormValid }}
-                  >
-                    <Text style={styles.saveButtonText}>
-                      {t('customActivities.edit.buttonSave')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-
-                {/* Delete Button */}
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={handleDelete}
-                  activeOpacity={0.7}
-                  accessibilityLabel={t('customActivities.edit.buttonDelete')}
-                  accessibilityRole="button"
-                  accessibilityHint={t('accessibility.deleteActivityHint')}
-                >
-                  <Text style={styles.deleteButtonText}>
-                    {t('customActivities.edit.buttonDelete')}
-                  </Text>
-                </TouchableOpacity>
               </View>
             </View>
+          )}
+        </BottomSheetScrollView>
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={handleClose}
+              activeOpacity={0.7}
+              accessibilityLabel={t('customActivities.create.buttonCancel')}
+              accessibilityRole="button"
+              accessibilityHint={t('accessibility.closeModalHint')}
+            >
+              <Text style={styles.cancelButtonText}>
+                {t('customActivities.create.buttonCancel')}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.saveButton,
+                !isFormValid && styles.saveButtonDisabled,
+              ]}
+              onPress={handleSave}
+              activeOpacity={0.8}
+              disabled={!isFormValid}
+              accessibilityLabel={t('customActivities.edit.buttonSave')}
+              accessibilityRole="button"
+              accessibilityHint={t('accessibility.saveActivityHint')}
+              accessibilityState={{ disabled: !isFormValid }}
+            >
+              <Text style={styles.saveButtonText}>
+                {t('customActivities.edit.buttonSave')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Delete Button */}
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleDelete}
+            activeOpacity={0.7}
+            accessibilityLabel={t('customActivities.edit.buttonDelete')}
+            accessibilityRole="button"
+            accessibilityHint={t('accessibility.deleteActivityHint')}
+          >
+            <Text style={styles.deleteButtonText}>
+              {t('customActivities.edit.buttonDelete')}
+            </Text>
           </TouchableOpacity>
-        </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
-    </Modal>
+    </BottomSheetModal>
   );
 }

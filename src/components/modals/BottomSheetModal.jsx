@@ -54,13 +54,9 @@ export default function BottomSheetModal({
   // Hybrid control: index for opening, ref.close() for closing
   const currentIndex = visible ? initialSnapIndex : -1;
 
-  console.log('[BottomSheetModal] Render:', { visible, currentIndex });
-
   // Use ref.close() for smooth close animation when visible becomes false
   React.useEffect(() => {
-    console.log('[BottomSheetModal] useEffect triggered:', { visible, hasRef: !!bottomSheetRef.current });
     if (!visible && bottomSheetRef.current) {
-      console.log('[BottomSheetModal] Calling ref.close()');
       bottomSheetRef.current.close();
     }
   }, [visible]);
