@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
-import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { useTimerPalette } from '../../contexts/TimerConfigContext';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
 

@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
-import { TimerOptionsProvider, useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../contexts/TimerConfigContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { useScreenOrientation } from '../hooks/useScreenOrientation';
 import { useTranslation } from '../hooks/useTranslation';
@@ -206,9 +206,7 @@ function TimerScreenContent() {
 export default function TimerScreen() {
   return (
     <SafeAreaProvider>
-      <TimerOptionsProvider>
-        <TimerScreenContent />
-      </TimerOptionsProvider>
+      <TimerScreenContent />
     </SafeAreaProvider>
   );
 }

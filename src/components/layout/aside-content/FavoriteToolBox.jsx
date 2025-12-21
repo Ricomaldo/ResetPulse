@@ -7,7 +7,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { useUserPreferences } from '../../../contexts/UserPreferencesContext';
+import { useUserPreferences } from '../../../contexts/TimerConfigContext';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
 import { rs } from '../../../styles/responsive';

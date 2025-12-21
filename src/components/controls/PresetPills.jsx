@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
 import IconButton from '../buttons/IconButton';
 
 // Displayed presets in BottomSheet (curated selection)

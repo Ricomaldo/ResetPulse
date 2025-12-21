@@ -8,7 +8,7 @@ import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import Icons from '../layout/Icons';

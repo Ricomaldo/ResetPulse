@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PulseButton } from '../../buttons';
-import { useTimerOptions } from '../../../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../../../contexts/TimerConfigContext';
 import { getProfileConfig } from '../../../utils/interactionProfileConfig';
 
 /**

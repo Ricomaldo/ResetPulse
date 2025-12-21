@@ -14,23 +14,19 @@ jest.mock('../../src/hooks/useTranslation', () => ({
   },
 }));
 
-// Mock TimerOptionsContext
-jest.mock('../../src/contexts/TimerOptionsContext', () => ({
+// Mock TimerConfigContext
+jest.mock('../../src/contexts/TimerConfigContext', () => ({
   useTimerOptions: () => ({
     selectedSoundId: 'bell_classic',
     shouldPulse: false,
-  })
-}));
-
-// Mock TimerPaletteContext
-jest.mock('../../src/contexts/TimerPaletteContext', () => ({
+  }),
   useTimerPalette: () => ({
     currentPalette: 'terre',
     currentColors: ['#8B4513', '#228B22', '#B22222', '#DAA520'],
     selectedColorIndex: 0,
     selectedColor: '#8B4513',
     setSelectedColorIndex: jest.fn(),
-  })
+  }),
 }));
 
 // Mock haptics

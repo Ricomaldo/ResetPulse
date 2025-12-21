@@ -5,8 +5,8 @@ import haptics from '../utils/haptics';
 import { TIMER } from '../components/dial/timerConstants';
 import useSimpleAudio from './useSimpleAudio';
 import useNotificationTimer from './useNotificationTimer';
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../contexts/TimerPaletteContext';
+import { useTimerOptions } from '../contexts/TimerConfigContext';
+import { useTimerPalette } from '../contexts/TimerConfigContext';
 import { useTranslation } from './useTranslation';
 import analytics from '../services/analytics';
 

@@ -14,7 +14,7 @@
 import { useEffect } from 'react';
 import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 import useTimer from './useTimer'; // Default export, pas named export
-import { useTimerOptions } from '../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../contexts/TimerConfigContext';
 
 export const useTimerKeepAwake = () => {
   const { isRunning } = useTimer();

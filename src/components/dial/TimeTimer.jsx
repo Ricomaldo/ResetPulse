@@ -7,8 +7,8 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 // theme provider not used in this component
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerPalette } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';

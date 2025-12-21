@@ -14,7 +14,7 @@ import { SHOW_DEV_FAB } from '../../config/test-mode';
 import { fontWeights } from '../../theme/tokens';
 import { devColors } from '../../theme/colors';
 import { useDevPremium } from '../DevPremiumContext';
-import { useUserPreferences } from '../../contexts/UserPreferencesContext';
+import { useUserPreferences } from '../../contexts/TimerConfigContext';
 
 /**
  * Dev FAB component for dev tools during testing
