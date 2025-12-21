@@ -1,8 +1,8 @@
 ---
 created: '2025-10-08'
-updated: '2025-10-08'
+updated: '2025-12-22'
 status: active
-milestone: M5
+milestone: M8
 confidence: high
 ---
 
@@ -474,6 +474,169 @@ if (activity.isPremium && !isPremiumUser) {
 
 ---
 
-**Version:** 1.0  
-**Statut:** ACCEPTED - Ready for implementation  
-**Prochain review:** Post-TestFlight v1.1.0 (données conversion réelles)
+## Addendum v1.2 — Custom Activities (Killer Feature)
+
+**Status:** PROPOSED
+**Date:** Décembre 2025 (post-conversion analysis)
+**Contexte:** Analyse conversion approfondie identifie custom activities création comme **strongest upsell signal** avec 5X+ conversion potential vs standard paywall triggers
+
+---
+
+### Découverte Clé
+
+Lors de l'analyse conversion exhaustive (2025-12-21), custom activity creation a été identifiée comme:
+
+1. **Strongest Conversion Signal**: Free user attempting `CreateActivity` = 95%+ intention to personalize (vs generic paywall 30% signal)
+2. **Data Collection Point**: User explicitly reveals use case (emoji + name + duration)
+3. **Momentum Window**: Occurs during onboarding Filter-030 (highest engagement phase)
+4. **Competitive Advantage**: Most timer apps don't offer custom activities at all
+
+**Propension Achat Estimée:** 5X+ conversion vs deux-timers modal ou découverte palettes
+
+---
+
+### Révision Config Freemium v1.2
+
+#### GRATUIT (Revised)
+
+**Palettes:** 2 (identique v1.1)
+- softLaser
+- terre
+
+**Activités Presets:** 4 (identique v1.1)
+- none
+- work
+- break
+- breathing
+
+**Custom Activities:** ✅ **1 slot gratuit** (NEW)
+- Créée pendant onboarding Filter-030
+- Utilisateur révèle profil usage (data collection)
+- Utilisateur crée moment de "ownership" psychologique
+- Tentative 2ème custom → **Premium gate** (nouvelles déclencheur)
+
+**Rationale v1.2:**
+- Free user avec 1 custom déjà personnalisé = meilleure conversion vs 0 custom (sunk cost psychology)
+- Création gratuite en onboarding = momentum maximisé (vs découverte tardive en settings)
+- 1 slot crée gap minimal → 2ème custom = déclencheur conversion naturel
+- Élimine friction perception "premium feature" → normalize custom comme standard
+
+#### PREMIUM (Revised)
+
+**Palettes:** +13 (identique v1.1)
+
+**Activités Presets:** +12 (identique v1.1)
+
+**Custom Activities:** ✅ **Illimitées** (NEW)
+- Créations illimitées post-premium
+- Synchronisation cloud (future v1.3)
+- Partage communauté (future roadmap)
+
+**Updated Messaging:**
+```
+1 création personnalisée gratuit.
+Débloquez créations illimitées en premium.
+
+15 palettes + 16 activités + Créations illimitées
+4,99€ - Une fois, pour toujours
+```
+
+---
+
+### Modified Paywall Triggers
+
+**Nouveau trigger: `custom_activity_create_attempt_free_user_at_limit`**
+
+**Condition:**
+```javascript
+// src/components/modals/CreateActivityModalContent.jsx (updated gate logic)
+
+const customActivitiesCount = useCustomActivities().count;
+const isFreeUser = !isPremium;
+
+if (isFreeUser && customActivitiesCount >= 1) {
+  // User already has 1 free custom, trying to create 2nd
+  // Show paywall with messaging: "Créations illimitées"
+  modalStack.push('premium', {
+    highlightedFeature: 'unlimitedCustomActivities',
+    message: t('premium.unlimitedCreations')
+  });
+  return;
+}
+
+// Allowed: free user creating first custom, or premium user
+createActivity(newActivity);
+```
+
+**Analytics:**
+```javascript
+analytics.trackCustomActivityCreateAttempt(
+  isPremium ? 'premium' : 'free',
+  customActivitiesCount // 0 for first, 1 for second attempt
+);
+
+// Second attempt (free user hitting limit) = high-intent upsell signal
+analytics.trackCustomActivityCreateAttemptFreeUserAtLimit();
+```
+
+---
+
+### Implementation Roadmap
+
+**Phase 1 (Filter-030 Onboarding):**
+- Modify Filter-030 UI to include custom activity creation (already exists)
+- Persist created activity to AsyncStorage
+- Track `trackCustomActivityCreatedDuringOnboarding()` event
+
+**Phase 2 (CreateActivityModalContent Gate):**
+- Query custom activity count from context
+- Replace hard `isPremium` gate with count-based condition
+- Show updated premium modal messaging for 2nd custom
+
+**Phase 3 (Analytics & Metrics):**
+- Add `trackCustomActivityCreateAttemptFreeUserAtLimit()` event
+- Dashboard metric: "Free users hitting 1st custom limit" → "Premium conversion"
+- Expected conversion lift: +2-3% from standard freemium model
+
+---
+
+### Updated Freemium Summary
+
+| Feature | Gratuit | Premium |
+|---------|---------|---------|
+| **Palettes** | 2 | 15 |
+| **Activités Presets** | 4 | 16 |
+| **Custom Activities** | 1 | Illimitées |
+| **Audio** | ✅ | ✅ |
+| **Dark Theme** | ✅ | ✅ |
+| **Animations** | ✅ | ✅ |
+| **Price** | Gratuit | 4,99€ |
+
+---
+
+### Metrics Success v1.2
+
+**New KPIs (post-implementation):**
+- Onboarding custom creation rate: >40% users create custom during Filter-030
+- 2nd custom attempt rate: >15% free users (conversion opportunity)
+- Paywall trigger distribution:
+  - Two-timers modal: 30%
+  - Palette unlock: 25%
+  - Activity unlock: 20%
+  - **Custom 2nd attempt: 25%** (new, highest quality)
+- Premium conversion from custom gate: 4-6% (vs 3-5% baseline)
+
+---
+
+### Related Evidence
+
+**Source:** `_internal/cockpit/knowledge/findings/2025-12-21_conversion-strategy-analysis.md`
+- Section: Custom Activities Killer Feature Analysis
+- Finding: 95%+ intent signal when user creates custom activity
+- Recommendation: Leverage as primary upsell trigger
+
+---
+
+**Version:** 1.2
+**Statut:** PROPOSED - Awaiting implementation validation
+**Prochain review:** Post-v1.2.0 implementation (metrics réelles)
