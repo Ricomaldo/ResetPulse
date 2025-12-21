@@ -1,8 +1,8 @@
-// src/components/modals/settings/SettingsThemeSection.jsx
+// src/components/modals/settings/SettingsThemeSection.jsx (archived 2025-12-21)
 import React from 'react';
 import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import haptics from '../../../utils/haptics';
+import haptics from '../../../src/utils/haptics';
 
 /**
  * Settings section for theme selection (light/dark/auto)
@@ -114,3 +114,5 @@ SettingsThemeSection.propTypes = {
 };
 
 export default SettingsThemeSection;
+
+

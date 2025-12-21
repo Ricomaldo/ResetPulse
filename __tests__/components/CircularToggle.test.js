@@ -6,16 +6,7 @@ import React from 'react';
 import { create, act } from 'react-test-renderer';
 import CircularToggle from '../../src/components/controls/CircularToggle';
 
-jest.mock('../../src/theme/ThemeProvider', () => ({
-  useTheme: () => ({
-    colors: {
-      surface: '#FFFFFF',
-      border: '#E5E5EA',
-      textSecondary: '#8E8E93',
-    },
-    shadow: () => ({}),
-  }),
-}));
+// ThemeProvider and react-native-reanimated are mocked globally in jest.setup.js
 
 describe('CircularToggle', () => {
   it('should render clockwise', () => {

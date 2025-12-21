@@ -1,8 +1,8 @@
-// src/components/modals/settings/SettingsDialSection.jsx
+// src/components/modals/settings/SettingsDialSection.jsx (archived 2025-12-21)
 import React from 'react';
 import { View, Text, Switch, Alert } from 'react-native';
 import PropTypes from 'prop-types';
-import haptics from '../../../utils/haptics';
+import haptics from '../../../src/utils/haptics';
 
 /**
  * Settings section for dial preferences (emoji + pulse)
@@ -103,3 +103,5 @@ SettingsDialSection.propTypes = {
 };
 
 export default SettingsDialSection;
+
+

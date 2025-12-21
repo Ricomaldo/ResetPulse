@@ -1,8 +1,8 @@
-// src/components/modals/settings/SettingsGeneralSection.jsx
+// src/components/modals/settings/SettingsGeneralSection.jsx (archived 2025-12-21)
 import React from 'react';
 import { View, Text, Switch } from 'react-native';
 import PropTypes from 'prop-types';
-import haptics from '../../../utils/haptics';
+import haptics from '../../../src/utils/haptics';
 
 /**
  * Settings section for general preferences (rotation + keep awake)
@@ -84,3 +84,5 @@ SettingsGeneralSection.propTypes = {
 };
 
 export default SettingsGeneralSection;
+
+

@@ -1,8 +1,8 @@
-// src/components/modals/settings/SettingsSoundSection.jsx
+// src/components/modals/settings/SettingsSoundSection.jsx (archived 2025-12-21)
 import React from 'react';
 import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import { SoundPicker } from '../../pickers';
+import { SoundPicker } from '../../../src/components/pickers';
 
 /**
  * Settings section for sound configuration
@@ -41,3 +41,5 @@ SettingsSoundSection.propTypes = {
 };
 
 export default SettingsSoundSection;
+
+

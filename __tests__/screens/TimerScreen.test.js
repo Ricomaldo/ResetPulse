@@ -78,33 +78,21 @@ jest.mock('../../src/hooks/useAnimatedDots', () => ({
   default: jest.fn(() => '...'),
 }));
 
-// Mock dial components
-jest.mock('../../src/components/dial', () => ({
-  TimeTimer: 'TimeTimer',
-  ActivityLabel: 'ActivityLabel',
-  DigitalTimer: 'DigitalTimer',
-}));
-
-// Mock layout components
+// Mock layout components (TimerScreen uses DialZone and AsideZone)
 jest.mock('../../src/components/layout', () => ({
-  Drawer: 'Drawer',
+  DialZone: 'DialZone',
+  AsideZone: 'AsideZone',
 }));
 
-// Mock controls components
-jest.mock('../../src/components/controls', () => ({
-  CircularToggle: 'CircularToggle',
-  PresetPills: 'PresetPills',
+// Mock hooks used by TimerScreen
+jest.mock('../../src/hooks/useScreenOrientation', () => ({
+  useScreenOrientation: () => ({ isLandscape: false }),
 }));
 
-// Mock bars components
-jest.mock('../../src/components/bars', () => ({
-  CommandBar: 'CommandBar',
-  CarouselBar: 'CarouselBar',
+jest.mock('../../src/config/activityMessages', () => ({
+  getActivityStartMessage: () => 'Start',
+  getActivityEndMessage: () => 'Done',
 }));
-
-// Mock drawer content
-jest.mock('../../src/components/drawers/OptionsDrawerContent', () => 'OptionsDrawerContent');
-jest.mock('../../src/components/drawers/SettingsButton', () => 'SettingsButton');
 
 // Mock modals
 jest.mock('../../src/components/modals', () => ({
@@ -150,62 +138,26 @@ describe('TimerScreen', () => {
     expect(component.toJSON()).toBeTruthy();
   });
 
-  it('should render ActivityLabel component with correct activity', () => {
+  it('should render DialZone component', () => {
     let component;
     act(() => {
       component = create(<TimerScreen />);
     });
 
     const instance = component.root;
-
-    // ActivityLabel should be rendered (it's mocked, so we just check for its presence)
-    const activityLabels = instance.findAllByType('ActivityLabel');
-
-    expect(activityLabels.length).toBeGreaterThan(0);
+    const dialZone = instance.findAllByType('DialZone');
+    expect(dialZone.length).toBe(1);
   });
 
-  it('should render TimeTimer component', () => {
+  it('should render AsideZone component in portrait mode', () => {
     let component;
     act(() => {
       component = create(<TimerScreen />);
     });
 
     const instance = component.root;
-    const timeTimer = instance.findAllByType('TimeTimer');
-    expect(timeTimer.length).toBe(1);
-  });
-
-  it('should render DigitalTimer component', () => {
-    let component;
-    act(() => {
-      component = create(<TimerScreen />);
-    });
-
-    const instance = component.root;
-    const digitalTimer = instance.findAllByType('DigitalTimer');
-    expect(digitalTimer.length).toBe(1);
-  });
-
-  it('should render Drawer component', () => {
-    let component;
-    act(() => {
-      component = create(<TimerScreen />);
-    });
-
-    const instance = component.root;
-    const drawer = instance.findAllByType('Drawer');
-    expect(drawer.length).toBe(1);
-  });
-
-  it('should render OptionsDrawerContent inside Drawer', () => {
-    let component;
-    act(() => {
-      component = create(<TimerScreen />);
-    });
-
-    const instance = component.root;
-    const drawerContent = instance.findAllByType('OptionsDrawerContent');
-    expect(drawerContent.length).toBe(1);
+    const asideZone = instance.findAllByType('AsideZone');
+    expect(asideZone.length).toBe(1);
   });
 
 
@@ -231,35 +183,36 @@ describe('TimerScreen', () => {
     expect(premiumModal.length).toBe(1);
   });
 
-  it('should pass correct props to TimeTimer', () => {
+  it('should pass correct props to DialZone', () => {
     let component;
     act(() => {
       component = create(<TimerScreen />);
     });
 
     const instance = component.root;
-    const timeTimer = instance.findByType('TimeTimer');
+    const dialZone = instance.findByType('DialZone');
 
-    expect(timeTimer.props.onRunningChange).toBeDefined();
-    expect(timeTimer.props.onTimerRef).toBeDefined();
-    expect(timeTimer.props.onDialRef).toBeDefined();
-    expect(timeTimer.props.onDialTap).toBeDefined();
-    expect(timeTimer.props.onTimerComplete).toBeDefined();
+    expect(dialZone.props.onRunningChange).toBeDefined();
+    expect(dialZone.props.onTimerRef).toBeDefined();
+    expect(dialZone.props.onDialTap).toBeDefined();
+    expect(dialZone.props.onTimerComplete).toBeDefined();
+    expect(dialZone.props.isLandscape).toBeDefined();
   });
 
-  it('should pass correct props to DigitalTimer', () => {
+  it('should pass correct props to AsideZone', () => {
     let component;
     act(() => {
       component = create(<TimerScreen />);
     });
 
     const instance = component.root;
-    const digitalTimer = instance.findByType('DigitalTimer');
+    const asideZone = instance.findByType('AsideZone');
 
-    expect(digitalTimer.props.remaining).toBeDefined();
-    expect(digitalTimer.props.isRunning).toBeDefined();
-    expect(digitalTimer.props.color).toBe('#007AFF');
-    expect(digitalTimer.props.isCollapsed).toBe(false); // showDigitalTimer is true in mock
-    expect(digitalTimer.props.pulseDuration).toBeDefined();
+    expect(asideZone.props.timerState).toBeDefined();
+    expect(asideZone.props.displayMessage).toBeDefined();
+    expect(asideZone.props.isTimerRunning).toBeDefined();
+    expect(asideZone.props.onPlay).toBeDefined();
+    expect(asideZone.props.onReset).toBeDefined();
+    expect(asideZone.props.onStop).toBeDefined();
   });
 });

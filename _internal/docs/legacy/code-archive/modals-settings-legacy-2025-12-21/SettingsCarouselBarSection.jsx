@@ -1,8 +1,8 @@
-// src/components/modals/settings/SettingsCarouselBarSection.jsx
+// src/components/modals/settings/SettingsCarouselBarSection.jsx (archived 2025-12-21)
 import React from 'react';
 import { View, Text, Switch } from 'react-native';
 import PropTypes from 'prop-types';
-import haptics from '../../../utils/haptics';
+import haptics from '../../../src/utils/haptics';
 
 /**
  * Settings section for CarouselBar configuration (zone carrousels bas)
@@ -71,3 +71,5 @@ SettingsCarouselBarSection.propTypes = {
 };
 
 export default SettingsCarouselBarSection;
+
+
