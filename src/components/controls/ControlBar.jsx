@@ -219,6 +219,7 @@ const ControlBar = React.memo(function ControlBar({
         <PulseButton
           state={getPulseState()}
           onTap={handlePulseTap}
+          onLongPressComplete={handlePulseTap}
           clockwise={clockwise}
           size={pulseSize}
           compact={compact}
