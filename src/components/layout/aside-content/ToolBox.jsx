@@ -7,7 +7,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { useUserPreferences } from '../../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../../contexts/TimerConfigContext';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
@@ -27,7 +27,7 @@ export default function ToolBox({
   activityCarouselRef,
   paletteCarouselRef,
 }) {
-  const { favoriteToolMode } = useUserPreferences();
+  const { layout: { favoriteToolMode } } = useTimerConfig();
   const theme = useTheme();
 
   // Tool order based on favorite (favorite first for visual continuity)

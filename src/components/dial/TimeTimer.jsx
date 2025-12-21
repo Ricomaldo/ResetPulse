@@ -7,8 +7,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 // theme provider not used in this component
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
-import { useTimerPalette } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
@@ -23,15 +22,12 @@ export default function TimeTimer({
   onTimerComplete,
 }) {
   const {
-    clockwise,
-    scaleMode,
-    currentActivity,
-    currentDuration,
+    timer: { clockwise, scaleMode, currentActivity, currentDuration },
     setCurrentDuration,
     setTimerRemaining,
-    showActivityEmoji,
-  } = useTimerOptions();
-  const { currentColor } = useTimerPalette();
+    display: { showActivityEmoji },
+    palette: { currentColor },
+  } = useTimerConfig();
 
   // Get custom activities for incrementing usage
   const { incrementUsage } = useCustomActivities();

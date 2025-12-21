@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import IconButton from '../buttons/IconButton';
 
 // Displayed presets in BottomSheet (curated selection)
@@ -30,7 +30,7 @@ const PRESETS = [
  */
 const PresetPills = React.memo(function PresetPills({ onSelectPreset, compact = false }) {
   const theme = useTheme();
-  const { scaleMode, setScaleMode, setCurrentDuration } = useTimerOptions();
+  const { timer: { scaleMode }, setScaleMode, setCurrentDuration } = useTimerConfig();
 
   const handlePresetSelect = (preset) => {
     // Change both duration and scale mode

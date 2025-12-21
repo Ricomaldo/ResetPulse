@@ -8,7 +8,7 @@ import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import Icons from '../layout/Icons';
@@ -54,7 +54,7 @@ const DigitalTimer = React.memo(function DigitalTimer({
   scaleMode: _scaleMode = '60min',
 }) {
   const theme = useTheme();
-  const { showTime, setShowTime } = useTimerOptions();
+  const { display: { showTime }, setShowTime } = useTimerConfig();
   const intervalRef = useRef(null);
   const repeatCountRef = useRef(0);
   const tapSnapTimeoutRef = useRef(null);

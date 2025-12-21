@@ -14,20 +14,19 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
-import { useTimerPalette } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { rs } from '../../styles/responsive';
 import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import { getAllActivities, getFreeActivities } from '../../config/activities';
 import haptics from '../../utils/haptics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
+import { useModalStack } from '../../contexts/ModalStackContext';
 import {
-  PremiumModal,
-  MoreActivitiesModal,
   CreateActivityModal,
   EditActivityModal,
 } from '../modals/index';
+import analytics from '../../services/analytics';
 import { ActivityItem, PlusButton } from './activity-items/index';
 import { fontWeights } from '../../theme/tokens';
 
@@ -35,22 +34,21 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   const theme = useTheme();
   const t = useTranslation();
   const {
-    currentActivity,
+    timer: { currentActivity },
     setCurrentActivity,
     setCurrentDuration,
     handleActivitySelect,
-    favoriteActivities = [],
-    activityDurations = {},
-  } = useTimerOptions();
-  const { currentColor } = useTimerPalette();
+    favorites: { favoriteActivities = [] },
+    stats: { activityDurations = {} },
+    palette: { currentColor },
+  } = useTimerConfig();
   const scrollViewRef = ref || useRef(null);
+  const modalStack = useModalStack();
   const scaleAnims = useRef({}).current;
   const toastAnim = useRef(new Animated.Value(0)).current;
   const scrollContentWidthRef = useRef(0);
   // eslint-disable-next-line no-unused-vars
   const [scrollOffset, setScrollOffset] = useState(0);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [showMoreActivitiesModal, setShowMoreActivitiesModal] = useState(false);
   const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
   const [showEditActivityModal, setShowEditActivityModal] = useState(false);
   const [activityToEdit, setActivityToEdit] = useState(null);
@@ -130,7 +128,9 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   const handleActivityPress = useCallback((activity) => {
     if (activity.isPremium && !isPremiumUser) {
       haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
-      setShowPremiumModal(true);
+      modalStack.push('premium', {
+        highlightedFeature: t('discovery.activities')
+      });
       return;
     }
 
@@ -145,12 +145,51 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     if (savedDuration) {setCurrentDuration(savedDuration);}
     else if (activity.defaultDuration) {setCurrentDuration(activity.defaultDuration);}
     animateSelection(activity.id);
-  }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration, handleActivitySelect]);
+  }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration, handleActivitySelect, modalStack, t]);
 
   const handleMorePress = useCallback(() => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-    setShowMoreActivitiesModal(true);
-  }, []);
+    analytics.trackDiscoveryModalShown('activities');
+
+    // Create emoji grid for premium activities
+    const premiumActivities = allActivities.filter(activity => activity.isPremium && activity.emoji);
+    const emojiGrid = (
+      <View style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: theme.spacing.md,
+        justifyContent: 'center',
+        paddingHorizontal: theme.spacing.sm,
+      }}>
+        {premiumActivities.map((activity) => (
+          <Text
+            key={activity.id}
+            style={{
+              fontSize: rs(32, 'min'),
+              height: rs(48, 'min'),
+              lineHeight: rs(48, 'min'),
+              textAlign: 'center',
+              width: rs(48, 'min'),
+            }}
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLabel={`${activity.emoji} ${activity.name || activity.label}`}
+          >
+            {activity.emoji}
+          </Text>
+        ))}
+      </View>
+    );
+
+    modalStack.push('discovery', {
+      title: t('discovery.moreActivities.title'),
+      subtitle: t('discovery.moreActivities.subtitle'),
+      tagline: t('discovery.moreActivities.tagline'),
+      highlightedFeature: 'activities',
+      children: emojiGrid,
+      onClose: () => analytics.trackDiscoveryModalDismissed('activities'),
+    });
+  }, [allActivities, theme, t, modalStack]);
 
   const handleCreatePress = useCallback(() => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
@@ -312,20 +351,12 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
         </ScrollView>
       </View>
 
-      <PremiumModal
-        visible={showPremiumModal}
-        onClose={() => setShowPremiumModal(false)}
-        highlightedFeature={t('discovery.activities')}
-      />
-      <MoreActivitiesModal
-        visible={showMoreActivitiesModal}
-        onClose={() => setShowMoreActivitiesModal(false)}
-        onOpenPaywall={() => setShowPremiumModal(true)}
-      />
       <CreateActivityModal
         visible={showCreateActivityModal}
         onClose={() => setShowCreateActivityModal(false)}
-        onOpenPaywall={() => setShowPremiumModal(true)}
+        onOpenPaywall={() => modalStack.push('premium', {
+          highlightedFeature: t('discovery.activities')
+        })}
         onActivityCreated={handleActivityCreated}
       />
       <EditActivityModal

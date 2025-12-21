@@ -7,13 +7,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
-import { useTimerPalette } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
 
 export const PalettePreview = React.memo(function PalettePreview({ paletteName }) {
   const theme = useTheme();
-  const { currentPalette, getAvailablePalettes } = useTimerPalette();
+  const { palette: { currentPalette }, getAvailablePalettes } = useTimerConfig();
 
   // If paletteName is provided, use it for color preview
   if (paletteName) {

@@ -14,11 +14,11 @@
 import { useEffect } from 'react';
 import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 import useTimer from './useTimer'; // Default export, pas named export
-import { useTimerOptions } from '../contexts/TimerConfigContext';
+import { useTimerConfig } from '../contexts/TimerConfigContext';
 
 export const useTimerKeepAwake = () => {
   const { isRunning } = useTimer();
-  const { keepAwakeEnabled } = useTimerOptions();
+  const { system: { keepAwakeEnabled } } = useTimerConfig();
 
   useEffect(() => {
     // Activer keep awake uniquement si timer running ET setting enabled

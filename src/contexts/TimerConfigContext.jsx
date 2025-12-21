@@ -17,7 +17,7 @@
  * - transient: timerRemaining, flashActivity, isLoading
  */
 
-import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -371,14 +371,19 @@ export const TimerConfigProvider = ({ children }) => {
     }, 2000);
   }, []);
 
-  // Compute derived palette state
-  const paletteInfo = TIMER_PALETTES[values.palette.currentPalette] || TIMER_PALETTES.serenity;
-  const paletteColors = paletteInfo.colors;
-  const timerColors = getTimerColors(values.palette.currentPalette);
-  const currentColor = paletteColors[values.palette.selectedColorIndex] || paletteColors[0];
+  // Compute derived palette state (memoized to avoid unnecessary recalculations)
+  const paletteData = useMemo(() => {
+    const info = TIMER_PALETTES[values.palette.currentPalette] || TIMER_PALETTES.serenity;
+    const colors = info.colors;
+    const colors_timer = getTimerColors(values.palette.currentPalette);
+    const color = colors[values.palette.selectedColorIndex] || colors[0];
+    return { paletteInfo: info, paletteColors: colors, timerColors: colors_timer, currentColor: color };
+  }, [values.palette.currentPalette, values.palette.selectedColorIndex]);
 
-  // Context value with grouped namespaces
-  const value = {
+  const { paletteInfo, paletteColors, timerColors, currentColor } = paletteData;
+
+  // Context value with grouped namespaces - MUST BE IN useMemo to trigger updates
+  const value = useMemo(() => ({
     // === STATE NAMESPACES ===
     timer: {
       currentActivity: values.timer.currentActivity,
@@ -432,94 +437,221 @@ export const TimerConfigProvider = ({ children }) => {
 
     // === ACTIONS ===
     // Timer
-    setCurrentActivity: (activity) => updateValue('timer', { ...values.timer, currentActivity: activity }),
-    setCurrentDuration: (duration) => updateValue('timer', { ...values.timer, currentDuration: duration }),
-    setSelectedSoundId: (soundId) => updateValue('timer', { ...values.timer, selectedSoundId: soundId }),
-    setClockwise: (clockwise) => updateValue('timer', { ...values.timer, clockwise }),
-    setScaleMode: (scaleMode) => updateValue('timer', { ...values.timer, scaleMode }),
+    setCurrentActivity: (activity) => {
+      setValues(prev => ({
+        ...prev,
+        timer: { ...prev.timer, currentActivity: activity }
+      }));
+    },
+    setCurrentDuration: (duration) => {
+      setValues(prev => ({
+        ...prev,
+        timer: { ...prev.timer, currentDuration: duration }
+      }));
+    },
+    setSelectedSoundId: (soundId) => {
+      setValues(prev => ({
+        ...prev,
+        timer: { ...prev.timer, selectedSoundId: soundId }
+      }));
+    },
+    setClockwise: (clockwise) => {
+      setValues(prev => ({
+        ...prev,
+        timer: { ...prev.timer, clockwise: clockwise }
+      }));
+    },
+    setScaleMode: (scaleMode) => {
+      setValues(prev => ({
+        ...prev,
+        timer: { ...prev.timer, scaleMode: scaleMode }
+      }));
+    },
 
     // Display
-    setShouldPulse: (shouldPulse) => updateValue('display', { ...values.display, shouldPulse }),
-    setShowDigitalTimer: (showDigitalTimer) => updateValue('display', { ...values.display, showDigitalTimer }),
-    setShowActivityEmoji: (showActivityEmoji) => updateValue('display', { ...values.display, showActivityEmoji }),
-    setShowTime: (showTime) => updateValue('display', { ...values.display, showTime }),
+    setShouldPulse: (shouldPulse) => {
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, shouldPulse }
+      }));
+    },
+    setShowDigitalTimer: (showDigitalTimer) => {
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, showDigitalTimer }
+      }));
+    },
+    setShowActivityEmoji: (showActivityEmoji) => {
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, showActivityEmoji }
+      }));
+    },
+    setShowTime: (showTime) => {
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, showTime }
+      }));
+    },
 
     // Interaction (with validation)
     setInteractionProfile: (profile) => {
       const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce'];
       if (validProfiles.includes(profile)) {
-        updateValue('interaction', { ...values.interaction, interactionProfile: profile });
+        setValues(prev => ({
+          ...prev,
+          interaction: { ...prev.interaction, interactionProfile: profile }
+        }));
       }
     },
     setLongPressConfirmDuration: (duration) => {
       const clamped = Math.max(1000, Math.min(5000, duration));
-      updateValue('interaction', { ...values.interaction, longPressConfirmDuration: clamped });
+      setValues(prev => ({
+        ...prev,
+        interaction: { ...prev.interaction, longPressConfirmDuration: clamped }
+      }));
     },
     setLongPressStartDuration: (duration) => {
       const clamped = Math.max(1000, Math.min(5000, duration));
-      updateValue('interaction', { ...values.interaction, longPressStartDuration: clamped });
+      setValues(prev => ({
+        ...prev,
+        interaction: { ...prev.interaction, longPressStartDuration: clamped }
+      }));
     },
     setStartAnimationDuration: (duration) => {
       const clamped = Math.max(300, Math.min(2000, duration));
-      updateValue('interaction', { ...values.interaction, startAnimationDuration: clamped });
+      setValues(prev => ({
+        ...prev,
+        interaction: { ...prev.interaction, startAnimationDuration: clamped }
+      }));
     },
 
     // System
-    setKeepAwakeEnabled: (enabled) => updateValue('system', { ...values.system, keepAwakeEnabled: enabled }),
+    setKeepAwakeEnabled: (enabled) => {
+      setValues(prev => ({
+        ...prev,
+        system: { ...prev.system, keepAwakeEnabled: enabled }
+      }));
+    },
 
     // Favorites
-    setFavoriteActivities: (activities) => updateValue('favorites', { ...values.favorites, favoriteActivities: activities }),
-    setFavoritePalettes: (palettes) => updateValue('favorites', { ...values.favorites, favoritePalettes: palettes }),
+    setFavoriteActivities: (activities) => {
+      setValues(prev => ({
+        ...prev,
+        favorites: { ...prev.favorites, favoriteActivities: activities }
+      }));
+    },
+    setFavoritePalettes: (palettes) => {
+      setValues(prev => ({
+        ...prev,
+        favorites: { ...prev.favorites, favoritePalettes: palettes }
+      }));
+    },
     toggleFavoritePalette: (paletteId) => {
-      const currentFavorites = values.favorites.favoritePalettes || [];
-      const isFavorite = currentFavorites.includes(paletteId);
-      let newFavorites;
-      if (isFavorite) {
-        newFavorites = currentFavorites.filter((id) => id !== paletteId);
-      } else {
-        if (currentFavorites.length >= 4) {
-          return; // Max 4 favorites
+      setValues(prev => {
+        const currentFavorites = prev.favorites.favoritePalettes || [];
+        const isFavorite = currentFavorites.includes(paletteId);
+        let newFavorites;
+        if (isFavorite) {
+          newFavorites = currentFavorites.filter((id) => id !== paletteId);
+        } else {
+          if (currentFavorites.length >= 4) {
+            return prev; // Max 4 favorites
+          }
+          newFavorites = [...currentFavorites, paletteId];
         }
-        newFavorites = [...currentFavorites, paletteId];
-      }
-      updateValue('favorites', { ...values.favorites, favoritePalettes: newFavorites });
+        return {
+          ...prev,
+          favorites: { ...prev.favorites, favoritePalettes: newFavorites }
+        };
+      });
     },
 
     // Layout
-    setCommandBarConfig: (config) => updateValue('layout', { ...values.layout, commandBarConfig: config }),
-    setCarouselBarConfig: (config) => updateValue('layout', { ...values.layout, carouselBarConfig: config }),
-    setFavoriteToolMode: (mode) => updateValue('layout', { ...values.layout, favoriteToolMode: mode }),
+    setCommandBarConfig: (config) => {
+      setValues(prev => ({
+        ...prev,
+        layout: { ...prev.layout, commandBarConfig: config }
+      }));
+    },
+    setCarouselBarConfig: (config) => {
+      setValues(prev => ({
+        ...prev,
+        layout: { ...prev.layout, carouselBarConfig: config }
+      }));
+    },
+    setFavoriteToolMode: (mode) => {
+      setValues(prev => ({
+        ...prev,
+        layout: { ...prev.layout, favoriteToolMode: mode }
+      }));
+    },
 
     // Stats
-    setActivityDurations: (durations) => updateValue('stats', { ...values.stats, activityDurations: durations }),
+    setActivityDurations: (durations) => {
+      setValues(prev => ({
+        ...prev,
+        stats: { ...prev.stats, activityDurations: durations }
+      }));
+    },
     saveActivityDuration: (activityId, duration) => {
-      const updated = { ...values.stats.activityDurations, [activityId]: duration };
-      updateValue('stats', { ...values.stats, activityDurations: updated });
+      setValues(prev => {
+        const updated = { ...prev.stats.activityDurations, [activityId]: duration };
+        return {
+          ...prev,
+          stats: { ...prev.stats, activityDurations: updated }
+        };
+      });
     },
     incrementCompletedTimers: () => {
-      const newCount = (values.stats.completedTimersCount || 0) + 1;
-      updateValue('stats', { ...values.stats, completedTimersCount: newCount });
+      let newCount;
+      setValues(prev => {
+        newCount = (prev.stats.completedTimersCount || 0) + 1;
+        return {
+          ...prev,
+          stats: { ...prev.stats, completedTimersCount: newCount }
+        };
+      });
       return newCount;
     },
-    setCompletedTimersCount: (count) => updateValue('stats', { ...values.stats, completedTimersCount: count }),
-    setHasSeenTwoTimersModal: (seen) => updateValue('stats', { ...values.stats, hasSeenTwoTimersModal: seen }),
+    setCompletedTimersCount: (count) => {
+      setValues(prev => ({
+        ...prev,
+        stats: { ...prev.stats, completedTimersCount: count }
+      }));
+    },
+    setHasSeenTwoTimersModal: (seen) => {
+      setValues(prev => ({
+        ...prev,
+        stats: { ...prev.stats, hasSeenTwoTimersModal: seen }
+      }));
+    },
 
     // Palette
     setPalette: (paletteName) => {
       if (TIMER_PALETTES[paletteName]) {
-        updateValue('palette', { ...values.palette, currentPalette: paletteName, selectedColorIndex: 0 });
+        setValues(prev => ({
+          ...prev,
+          palette: { ...prev.palette, currentPalette: paletteName, selectedColorIndex: 0 }
+        }));
       }
     },
     setColorIndex: (index) => {
       if (index >= 0 && index < 4) {
-        updateValue('palette', { ...values.palette, selectedColorIndex: index });
+        setValues(prev => ({
+          ...prev,
+          palette: { ...prev.palette, selectedColorIndex: index }
+        }));
       }
     },
     setColorByType: (type) => {
       const typeToIndex = { energy: 0, focus: 1, calm: 2, deep: 3 };
       const index = typeToIndex[type];
       if (index !== undefined) {
-        updateValue('palette', { ...values.palette, selectedColorIndex: index });
+        setValues(prev => ({
+          ...prev,
+          palette: { ...prev.palette, selectedColorIndex: index }
+        }));
       }
     },
     isCurrentPalettePremium: () => paletteInfo.isPremium,
@@ -533,7 +665,7 @@ export const TimerConfigProvider = ({ children }) => {
     setTimerRemaining,
     setFlashActivity,
     handleActivitySelect,
-  };
+  }), [values, setValues, timerRemaining, flashActivity, isLoading, paletteData, setTimerRemaining, setFlashActivity, handleActivitySelect]);
 
   // Block children render until loaded
   if (isLoading) {
@@ -560,133 +692,6 @@ export const useTimerConfig = () => {
 };
 
 // ============================================================================
-// BACKWARD COMPATIBILITY ALIASES (DEPRECATED)
+// EXPORTS
 // ============================================================================
-
-/**
- * @deprecated Use useTimerConfig() instead
- * Alias hook for backward compatibility with old useTimerOptions()
- * Returns flat structure matching old API
- */
-export const useTimerOptions = () => {
-  if (__DEV__) {
-    console.warn('[DEPRECATED] useTimerOptions is deprecated, use useTimerConfig()');
-  }
-  const config = useTimerConfig();
-
-  // Return flat structure matching old API
-  return {
-    // Transient
-    timerRemaining: config.transient.timerRemaining,
-    setTimerRemaining: config.setTimerRemaining,
-    flashActivity: config.transient.flashActivity,
-    setFlashActivity: config.setFlashActivity,
-    handleActivitySelect: config.handleActivitySelect,
-
-    // Timer
-    currentActivity: config.timer.currentActivity,
-    currentDuration: config.timer.currentDuration,
-    selectedSoundId: config.timer.selectedSoundId,
-    clockwise: config.timer.clockwise,
-    scaleMode: config.timer.scaleMode,
-    setCurrentActivity: config.setCurrentActivity,
-    setCurrentDuration: config.setCurrentDuration,
-    setSelectedSoundId: config.setSelectedSoundId,
-    setClockwise: config.setClockwise,
-    setScaleMode: config.setScaleMode,
-
-    // Display
-    shouldPulse: config.display.shouldPulse,
-    showDigitalTimer: config.display.showDigitalTimer,
-    showActivityEmoji: config.display.showActivityEmoji,
-    showTime: config.display.showTime,
-    setShouldPulse: config.setShouldPulse,
-    setShowDigitalTimer: config.setShowDigitalTimer,
-    setShowActivityEmoji: config.setShowActivityEmoji,
-    setShowTime: config.setShowTime,
-
-    // Interaction
-    interactionProfile: config.interaction.interactionProfile,
-    longPressConfirmDuration: config.interaction.longPressConfirmDuration,
-    longPressStartDuration: config.interaction.longPressStartDuration,
-    startAnimationDuration: config.interaction.startAnimationDuration,
-    setInteractionProfile: config.setInteractionProfile,
-    setLongPressConfirmDuration: config.setLongPressConfirmDuration,
-    setLongPressStartDuration: config.setLongPressStartDuration,
-    setStartAnimationDuration: config.setStartAnimationDuration,
-
-    // System
-    keepAwakeEnabled: config.system.keepAwakeEnabled,
-    setKeepAwakeEnabled: config.setKeepAwakeEnabled,
-
-    // Favorites
-    favoriteActivities: config.favorites.favoriteActivities,
-    favoritePalettes: config.favorites.favoritePalettes,
-    setFavoriteActivities: config.setFavoriteActivities,
-    setFavoritePalettes: config.setFavoritePalettes,
-    toggleFavoritePalette: config.toggleFavoritePalette,
-
-    // Layout
-    commandBarConfig: config.layout.commandBarConfig,
-    carouselBarConfig: config.layout.carouselBarConfig,
-    setCommandBarConfig: config.setCommandBarConfig,
-    setCarouselBarConfig: config.setCarouselBarConfig,
-
-    // Stats
-    activityDurations: config.stats.activityDurations,
-    completedTimersCount: config.stats.completedTimersCount,
-    hasSeenTwoTimersModal: config.stats.hasSeenTwoTimersModal,
-    setActivityDurations: config.setActivityDurations,
-    saveActivityDuration: config.saveActivityDuration,
-    incrementCompletedTimers: config.incrementCompletedTimers,
-    setCompletedTimersCount: config.setCompletedTimersCount,
-    setHasSeenTwoTimersModal: config.setHasSeenTwoTimersModal,
-
-    // Loading
-    isLoading: config.transient.isLoading,
-  };
-};
-
-/**
- * @deprecated Use useTimerConfig() instead
- * Alias hook for backward compatibility with old useTimerPalette()
- * Returns palette-only structure
- */
-export const useTimerPalette = () => {
-  if (__DEV__) {
-    console.warn('[DEPRECATED] useTimerPalette is deprecated, use useTimerConfig()');
-  }
-  const config = useTimerConfig();
-
-  return {
-    currentPalette: config.palette.currentPalette,
-    paletteInfo: config.palette.paletteInfo,
-    paletteColors: config.palette.paletteColors,
-    timerColors: config.palette.timerColors,
-    selectedColorIndex: config.palette.selectedColorIndex,
-    currentColor: config.palette.currentColor,
-    setPalette: config.setPalette,
-    setColorIndex: config.setColorIndex,
-    setColorByType: config.setColorByType,
-    isCurrentPalettePremium: config.isCurrentPalettePremium,
-    getAvailablePalettes: config.getAvailablePalettes,
-  };
-};
-
-/**
- * @deprecated Use useTimerConfig() instead
- * Alias hook for backward compatibility with old useUserPreferences()
- * Returns favoriteToolMode only
- */
-export const useUserPreferences = () => {
-  if (__DEV__) {
-    console.warn('[DEPRECATED] useUserPreferences is deprecated, use useTimerConfig()');
-  }
-  const config = useTimerConfig();
-
-  return {
-    favoriteToolMode: config.layout.favoriteToolMode,
-    setFavoriteToolMode: config.setFavoriteToolMode,
-    isLoaded: !config.transient.isLoading,
-  };
-};
+// All deprecated hooks have been removed. Use useTimerConfig() directly.

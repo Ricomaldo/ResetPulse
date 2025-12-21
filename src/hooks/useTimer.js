@@ -5,8 +5,7 @@ import haptics from '../utils/haptics';
 import { TIMER } from '../components/dial/timerConstants';
 import useSimpleAudio from './useSimpleAudio';
 import useNotificationTimer from './useNotificationTimer';
-import { useTimerOptions } from '../contexts/TimerConfigContext';
-import { useTimerPalette } from '../contexts/TimerConfigContext';
+import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from './useTranslation';
 import analytics from '../services/analytics';
 
@@ -23,11 +22,13 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // UI states
   const [hasCompleted, setHasCompleted] = useState(false);
 
-  // Get selected sound and activity durations from context
-  const { selectedSoundId, activityDurations, saveActivityDuration, currentActivity } = useTimerOptions();
-
-  // Get palette info for analytics
-  const { currentPalette, currentColor } = useTimerPalette();
+  // Get selected sound, activity durations, and palette info from context
+  const {
+    timer: { selectedSoundId, currentActivity },
+    stats: { activityDurations },
+    saveActivityDuration,
+    palette: { currentPalette, currentColor },
+  } = useTimerConfig();
 
   // Audio with selected sound - using simple audio hook
   const { playSound } = useSimpleAudio(selectedSoundId);

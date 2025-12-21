@@ -15,7 +15,7 @@ export const SHOW_DEV_FAB = true;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
-export const DEFAULT_PREMIUM = true;
+export const DEFAULT_PREMIUM = false;
 
 // Config timer par défaut en mode dev
 // Utilisé pour forcer un état initial connu (20min méditation)

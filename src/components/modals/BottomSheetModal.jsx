@@ -51,11 +51,22 @@ export default function BottomSheetModal({
     restSpeedThreshold: 0.01,
   });
 
-  // Declarative control: visible prop → snapToIndex/close
+  // Imperative control: visible controls ref.snapToIndex() / ref.close()
   useEffect(() => {
-    if (visible && bottomSheetRef.current) {
+    console.log('[BottomSheetModal] useEffect:', { visible, hasRef: !!bottomSheetRef.current, initialSnapIndex });
+
+    if (!bottomSheetRef.current) {
+      console.warn('[BottomSheetModal] Ref not ready yet');
+      return;
+    }
+
+    if (visible) {
+      // Open to initial snap index
+      console.log('[BottomSheetModal] Opening, snapToIndex:', initialSnapIndex);
       bottomSheetRef.current.snapToIndex(initialSnapIndex);
-    } else if (!visible && bottomSheetRef.current) {
+    } else {
+      // Close with animation
+      console.log('[BottomSheetModal] Closing');
       bottomSheetRef.current.close();
     }
   }, [visible, initialSnapIndex]);
@@ -64,7 +75,7 @@ export default function BottomSheetModal({
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      index={-1} // Start closed (controlled by visible prop via useEffect)
+      index={-1} // Start closed (controlled via useEffect)
       enablePanDownToClose={enablePanDownToClose}
       enableDynamicSizing={enableDynamicSizing}
       onClose={onClose}
@@ -80,8 +91,9 @@ export default function BottomSheetModal({
         ...theme.shadow('xl'),
       }}
       animationConfigs={animationConfigs}
-      detached={true} // Prevent peek bug (modal appears from bottom, not peeking)
-      bottomInset={46}
+      // Temporarily removed detached to debug
+      // detached={true}
+      // bottomInset={46}
       {...restProps}
     >
       {children}

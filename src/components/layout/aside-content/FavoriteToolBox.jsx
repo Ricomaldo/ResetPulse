@@ -7,7 +7,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { useUserPreferences } from '../../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../../contexts/TimerConfigContext';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
 import { ControlBar } from '../../controls';
 import { rs } from '../../../styles/responsive';
@@ -17,7 +17,7 @@ import ToolboxItem from './ToolboxItem';
  * FavoriteToolBox - Snap 15% (favorite tool only)
  */
 export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop }) {
-  const { favoriteToolMode } = useUserPreferences();
+  const { layout: { favoriteToolMode } } = useTimerConfig();
 
   // Map favorite modes to components with visual hierarchy variants
   const favoriteTools = {
