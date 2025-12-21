@@ -51,31 +51,25 @@ export default function BottomSheetModal({
     restSpeedThreshold: 0.01,
   });
 
-  // Imperative control: visible controls ref.snapToIndex() / ref.close()
-  useEffect(() => {
-    console.log('[BottomSheetModal] useEffect:', { visible, hasRef: !!bottomSheetRef.current, initialSnapIndex });
+  // Hybrid control: index for opening, ref.close() for closing
+  const currentIndex = visible ? initialSnapIndex : -1;
 
-    if (!bottomSheetRef.current) {
-      console.warn('[BottomSheetModal] Ref not ready yet');
-      return;
-    }
+  console.log('[BottomSheetModal] Render:', { visible, currentIndex });
 
-    if (visible) {
-      // Open to initial snap index
-      console.log('[BottomSheetModal] Opening, snapToIndex:', initialSnapIndex);
-      bottomSheetRef.current.snapToIndex(initialSnapIndex);
-    } else {
-      // Close with animation
-      console.log('[BottomSheetModal] Closing');
+  // Use ref.close() for smooth close animation when visible becomes false
+  React.useEffect(() => {
+    console.log('[BottomSheetModal] useEffect triggered:', { visible, hasRef: !!bottomSheetRef.current });
+    if (!visible && bottomSheetRef.current) {
+      console.log('[BottomSheetModal] Calling ref.close()');
       bottomSheetRef.current.close();
     }
-  }, [visible, initialSnapIndex]);
+  }, [visible]);
 
   return (
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      index={-1} // Start closed (controlled via useEffect)
+      index={currentIndex} // Declarative: visible controls index (opening)
       enablePanDownToClose={enablePanDownToClose}
       enableDynamicSizing={enableDynamicSizing}
       onClose={onClose}

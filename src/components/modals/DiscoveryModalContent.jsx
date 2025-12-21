@@ -77,11 +77,15 @@ export default function DiscoveryModalContent({
   };
 
   const handleClose = () => {
+    console.log('[DiscoveryModalContent] handleClose called');
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
     // Call onClose (ModalStackRenderer handles animation delay + popById)
     if (onClose) {
+      console.log('[DiscoveryModalContent] Calling onClose');
       onClose();
+    } else {
+      console.warn('[DiscoveryModalContent] No onClose provided!');
     }
   };
 
@@ -151,12 +155,7 @@ export default function DiscoveryModalContent({
   });
 
   return (
-    <BottomSheetView style={[styles.container, { backgroundColor: '#FF0000' }]}>
-      {/* DEBUG: Red background to see if modal is visible */}
-      <Text style={{ color: '#FFFFFF', fontSize: 20, textAlign: 'center', marginBottom: 10 }}>
-        🔴 DEBUG: MODAL IS RENDERED 🔴
-      </Text>
-
+    <BottomSheetView style={styles.container}>
       {/* Title */}
       <Text
         style={styles.title}

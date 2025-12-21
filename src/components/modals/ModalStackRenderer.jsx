@@ -38,12 +38,6 @@ export default function ModalStackRenderer() {
   const { modalStack, popById } = useModalStack();
   const [closingModalIds, setClosingModalIds] = React.useState([]);
 
-  console.log('[ModalStackRenderer] Render:', {
-    modalCount: modalStack.length,
-    modalStack: modalStack.map(m => ({ id: m.id, type: m.Component })),
-    closingModalIds
-  });
-
   if (modalStack.length === 0) {
     return null;
   }
@@ -67,27 +61,33 @@ export default function ModalStackRenderer() {
   const isClosing = closingModalIds.includes(id);
   const isVisible = !isClosing;
 
-  console.log(`[ModalStackRenderer] Rendering top modal ${id}:`, {
-    Component,
-    isClosing,
-    isVisible,
-    totalInStack: modalStack.length
-  });
-
   // onClose handler with animation delay
+  // Wraps props.onClose if it exists (for analytics callbacks)
   const handleClose = () => {
-    console.log(`[ModalStackRenderer] handleClose called for ${id}`);
+    console.log('[ModalStackRenderer] handleClose called for modal:', id);
+
+    // Call user-provided onClose callback first (e.g., analytics)
+    if (props.onClose) {
+      console.log('[ModalStackRenderer] Calling user onClose callback');
+      props.onClose();
+    }
 
     // Mark modal as closing (triggers visible=false → close animation)
-    setClosingModalIds(prev => [...prev, id]);
+    setClosingModalIds(prev => {
+      console.log('[ModalStackRenderer] Adding to closingModalIds:', id);
+      return [...prev, id];
+    });
 
     // Wait for BottomSheet close animation (300ms) before removing from stack
     setTimeout(() => {
-      console.log(`[ModalStackRenderer] Removing ${id} from stack after animation`);
+      console.log('[ModalStackRenderer] Timeout fired, removing from stack:', id);
       popById(id);
       setClosingModalIds(prev => prev.filter(modalId => modalId !== id));
     }, 300);
   };
+
+  // Remove onClose from props to avoid overriding our handleClose
+  const { onClose: userOnClose, ...contentProps } = props;
 
   return (
     <BottomSheetModal
@@ -100,7 +100,7 @@ export default function ModalStackRenderer() {
       <ContentComponent
         modalId={id}
         onClose={handleClose}
-        {...props}
+        {...contentProps}
       />
     </BottomSheetModal>
   );
