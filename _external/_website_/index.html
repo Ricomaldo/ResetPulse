@@ -6,20 +6,25 @@
     <title>ResetPulse - Reprends le contrôle de ton attention</title>
     <meta name="description" content="Timer visuel qui respire avec toi. Conçu pour cerveaux ADHD, utile à tous. Gratuit avec version premium 4,99€ (sans abonnement).">
     <meta name="keywords" content="timer, pomodoro, ADHD, neuroatypique, timer visuel, application mobile, attention, sans abonnement">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://resetpulse.irimwebforge.com/">
     <meta property="og:title" content="ResetPulse - Reprends le contrôle de ton attention">
     <meta property="og:description" content="Timer visuel qui respire avec toi. Conçu pour cerveaux ADHD, utile à tous.">
-    <meta property="og:image" content="https://resetpulse.irimwebforge.com/1.png">
+    <meta property="og:image" content="https://resetpulse.irimwebforge.com/assets/logo.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://resetpulse.irimwebforge.com/">
     <meta property="twitter:title" content="ResetPulse - Reprends le contrôle de ton attention">
     <meta property="twitter:description" content="Timer visuel qui respire avec toi. Conçu pour cerveaux ADHD, utile à tous.">
-    <meta property="twitter:image" content="https://resetpulse.irimwebforge.com/1.png">
+    <meta property="twitter:image" content="https://resetpulse.irimwebforge.com/assets/logo.png">
     
     <style>
         * {
@@ -29,12 +34,13 @@
         }
 
         :root {
-            --color-primary: #00A0A0;
-            --color-primary-dark: #004466;
-            --color-text: #1a1a1a;
-            --color-text-light: #666;
-            --color-bg: #f8f9fa;
-            --color-white: #ffffff;
+            --color-primary: #C17A71;
+            --color-secondary: #78716C;
+            --color-accent: #D4A853;
+            --color-text: #1F2937;
+            --color-text-light: #7A7A7A;
+            --color-bg: #ebe8e3;
+            --color-surface: #FFFFFF;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -112,7 +118,7 @@
         }
 
         .toggle-group button:hover:not(.active) {
-            background: rgba(0, 160, 160, 0.1);
+            background: rgba(193, 122, 113, 0.1);
         }
 
         .device-toggle button {
@@ -123,7 +129,11 @@
 
         /* Hero */
         .hero {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            background: linear-gradient(135deg,
+                #E8A49D 0%,
+                #D4A853 50%,
+                #F4D35E 100%
+            );
             color: white;
             padding: 120px 20px 100px;
             text-align: center;
@@ -158,6 +168,26 @@
             position: relative;
             z-index: 1;
             max-width: 800px;
+        }
+
+        .hero-logo {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 40px;
+            display: block;
+            filter: drop-shadow(0 8px 40px rgba(0, 0, 0, 0.25));
+            animation: logoPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 8px 40px rgba(0, 0, 0, 0.25));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 12px 50px rgba(212, 168, 83, 0.4));
+            }
         }
 
         .hero h1 {
@@ -247,13 +277,13 @@
         }
 
         .section.light {
-            background: linear-gradient(to bottom, var(--color-bg) 0%, var(--color-white) 100%);
+            background: linear-gradient(to bottom, var(--color-bg) 0%, var(--color-surface) 100%);
         }
 
         .section h2 {
             font-size: 3rem;
             margin-bottom: 30px;
-            color: var(--color-primary-dark);
+            color: var(--color-secondary);
             font-weight: 700;
             letter-spacing: -0.02em;
             text-align: center;
@@ -302,7 +332,7 @@
 
         .pricing-tier.premium {
             border-color: var(--color-primary);
-            background: linear-gradient(135deg, rgba(0, 160, 160, 0.05) 0%, rgba(0, 68, 102, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(193, 122, 113, 0.05) 0%, rgba(212, 168, 83, 0.05) 100%);
             transform: scale(1.05);
             position: relative;
         }
@@ -324,7 +354,7 @@
         .pricing-tier strong {
             display: block;
             font-size: 1.2rem;
-            color: var(--color-primary-dark);
+            color: var(--color-secondary);
             margin-bottom: 15px;
             font-weight: 600;
         }
@@ -339,7 +369,7 @@
             margin-top: 30px;
             font-size: 1.1rem;
             font-weight: 600;
-            color: var(--color-primary-dark);
+            color: var(--color-secondary);
         }
 
         /* Screenshots */
@@ -363,7 +393,7 @@
         .screenshots h2 {
             font-size: 3rem;
             margin-bottom: 20px;
-            color: var(--color-primary-dark);
+            color: var(--color-secondary);
             font-weight: 700;
             letter-spacing: -0.02em;
         }
@@ -422,7 +452,7 @@
         /* Features */
         .features {
             padding: 120px 20px;
-            background: linear-gradient(to bottom, var(--color-bg) 0%, var(--color-white) 100%);
+            background: linear-gradient(to bottom, var(--color-bg) 0%, var(--color-surface) 100%);
             position: relative;
         }
 
@@ -440,7 +470,7 @@
             font-size: 3rem;
             text-align: center;
             margin-bottom: 20px;
-            color: var(--color-primary-dark);
+            color: var(--color-secondary);
             font-weight: 700;
             letter-spacing: -0.02em;
         }
@@ -482,7 +512,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+            background: linear-gradient(to right, var(--color-primary), var(--color-accent));
             transform: scaleX(0);
             transition: transform 0.4s ease;
         }
@@ -531,7 +561,7 @@
         .support h2 {
             font-size: 3rem;
             margin-bottom: 20px;
-            color: var(--color-primary-dark);
+            color: var(--color-secondary);
             font-weight: 700;
             letter-spacing: -0.02em;
         }
@@ -554,7 +584,7 @@
         }
 
         .support a:hover {
-            color: var(--color-primary-dark);
+            color: var(--color-secondary);
             transform: translateY(-2px);
         }
 
@@ -630,6 +660,12 @@
                 min-height: auto;
             }
 
+            .hero-logo {
+                width: 160px;
+                height: 160px;
+                margin-bottom: 30px;
+            }
+
             .hero h1 {
                 font-size: 2.8rem;
             }
@@ -681,6 +717,12 @@
         }
 
         @media (max-width: 480px) {
+            .hero-logo {
+                width: 130px;
+                height: 130px;
+                margin-bottom: 25px;
+            }
+
             .hero h1 {
                 font-size: 2.2rem;
             }
@@ -718,6 +760,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
+                <img src="assets/logo.png" alt="ResetPulse - Timer visuel mindful" class="hero-logo">
                 <h1 data-i18n="hero.title">Reprends le contrôle de ton attention</h1>
                 <p class="tagline" data-i18n="hero.tagline">Timer visuel qui respire avec toi.</p>
                 <p class="subtitle" data-i18n="hero.subtitle">Conçu pour cerveaux TDA/H, utile à tous.</p>
