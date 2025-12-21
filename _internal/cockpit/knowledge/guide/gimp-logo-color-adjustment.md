@@ -41,13 +41,19 @@ Name it: "color-adjusted"
 
 ### 3️⃣ **Method A: Hue-Saturation Shift (Recommended)**
 
-**Purpose**: Shift the pink/peach tones → coral while preserving luminance and texture.
+**Purpose**: Shift the pink/peach tones → vibrant coral/orange/sunshine gradient.
 
 ```
 Colors → Hue-Saturation
 ```
 
-**Settings**:
+**Settings (Aggressive "Sunshine" Version)**:
+- **Select**: Red channel (targets pinks/corals)
+- **Hue**: +15 to +25 (shift toward orange/sunshine)
+- **Lightness**: -15 to -20 (darken significantly for contrast)
+- **Saturation**: +30 to +50 (maximum vibrancy - push hard!)
+
+**Settings (Conservative "Coral" Version)**:
 - **Select**: Red channel (targets pinks/corals)
 - **Hue**: +5 to +15 (shift toward coral/orange)
 - **Lightness**: -10 to -15 (darken for better contrast)
@@ -216,7 +222,79 @@ https://webaim.org/resources/contrastchecker/
 1. **Compare original vs new** side-by-side
 2. **Test on cream background** visually
 3. **Check on app icon preview** (if App Store assets folder exists)
-4. **Commit**: `git add assets/logo/logo-1024.png && git commit -m "update: Logo color shift to brand primary coral"`
+4. **Generate icon sizes** (see script below)
+5. **Commit**: `git add assets/ && git commit -m "update: Logo color shift to sunshine gradient"`
+
+---
+
+## Generating Multiple Icon Sizes (macOS)
+
+Once you have your final `splash-icon.png`, use this script to generate all required sizes:
+
+```bash
+#!/bin/bash
+# Save as: assets/generate-icon-sizes.sh
+
+SOURCE="assets/splash-icon.png"
+DEST_DIR="assets/app-icons"
+
+# Create destination directory
+mkdir -p "$DEST_DIR"
+
+# iOS/Android/App Store sizes
+declare -a SIZES=(
+  "1024"  # App Store
+  "512"   # High-res
+  "256"   # Medium
+  "192"   # Android xxxhdpi
+  "180"   # iPhone @3x
+  "167"   # iPad Pro
+  "152"   # iPad @2x
+  "120"   # iPhone @2x
+  "87"    # iPad Pro @3x
+  "80"    # iPad Spotlight
+  "76"    # iPad
+  "60"    # iPhone Spotlight
+  "58"    # Settings @2x
+  "40"    # Spotlight
+  "29"    # Settings
+  "20"    # Notifications
+)
+
+for size in "${SIZES[@]}"; do
+  echo "Generating ${size}x${size}..."
+  sips -z $size $size "$SOURCE" --out "$DEST_DIR/icon-${size}.png"
+done
+
+echo "✅ All icon sizes generated in $DEST_DIR"
+```
+
+**Usage**:
+```bash
+chmod +x assets/generate-icon-sizes.sh
+./assets/generate-icon-sizes.sh
+```
+
+**Result**: 16 icon files from 20x20 to 1024x1024 in `assets/app-icons/`
+
+---
+
+## Real-World Result: Sunshine Version
+
+**What worked** (from splash-icon-2.png):
+- Hue: +20 to +25 (orange/yellow shift)
+- Lightness: -18 to -22 (dark enough for contrast)
+- Saturation: +40 to +50 (maximum vibrancy)
+- **Gradient**: Coral top → Orange middle → Yellow bottom
+- **Effect**: "Sunrise/Sunset" energy instead of soft pastel
+- **Contrast**: ~4.5:1 on cream background (WCAG AA+)
+- **Visual impact**: Icon "pops" in App Store grid
+
+**Why it works**:
+- Warmer tones read as "energetic" not "medical/anatomical"
+- High saturation makes lotus petals clearly visible
+- Gradient suggests movement/time (perfect for timer app)
+- Yellow bottom = optimism, warmth, focus
 
 ---
 
@@ -225,5 +303,6 @@ https://webaim.org/resources/contrastchecker/
 - **Layer safety**: Always work on duplicated layer, keep original as backup
 - **Save as XCF**: Before exporting PNG, save as `logo-1024.xcf` (GIMP native) for future edits
 - **Multiple attempts**: This is iterative. Export → view → adjust → export again is normal
-- **Brand consistency**: Once you're happy, apply same color shift to other logo sizes (512px, 192px, etc.)
+- **Don't be afraid to push**: If it looks "too saturated" in GIMP, it's probably just right for mobile screens
+- **Test with friends**: Show it to others - if they see unintended shapes, push colors further toward warm/energetic tones
 
