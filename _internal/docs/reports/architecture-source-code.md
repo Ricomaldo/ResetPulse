@@ -1,9 +1,9 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-17'
+updated: '2025-12-21'
 status: active
 type: architecture
-source: 'Audit #7 + Legacy comparison + Dec 2025 refactor (dial/bars/controls)'
+source: 'Audit #7 + Legacy comparison + Dec 2025 refactor (dial/bars/controls) + Provider migration (Dec 21)'
 ---
 
 # Source Code Architecture - ResetPulse
@@ -38,8 +38,7 @@ src/
 │   └── testMode.js      # DEV_MODE toggle
 │
 ├── contexts/            # React Context Providers
-│   ├── TimerPaletteContext.jsx   # Timer colors
-│   ├── TimerOptionsContext.jsx   # Timer settings
+│   ├── TimerConfigContext.jsx    # Unified: timer settings + palette + display + interaction + stats + layout
 │   └── PurchaseContext.jsx       # Premium/IAP state
 │
 ├── dev/                 # Development Tools
@@ -112,12 +111,17 @@ src/
 
 ```
 App
-├── ThemeProvider          (UI theme)
-├── TimerPaletteProvider   (Timer colors)
-├── TimerOptionsProvider   (Timer settings)
-├── PurchaseProvider       (Premium state)
-└── [Dev] DevPremiumProvider (Mock premium)
+├── ThemeProvider              (UI theme)
+├── TimerConfigProvider        (Unified: timer + palette + display + interaction + stats + layout)
+├── PurchaseProvider           (Premium state)
+└── [Dev] DevPremiumProvider   (Mock premium)
 ```
+
+**Migration Status**: ✅ COMPLETE (Dec 21, 2025)
+- Consolidated 3 contexts (TimerOptions, TimerPalette, UserPreferences) → 1 unified provider
+- All 18 consuming files updated with proper namespaced destructuring
+- Zero deprecated hooks remaining in codebase
+- Verified in App.js: unified TimerConfigProvider for dev + production paths
 
 **Status**: ✅ Clean separation, no over-engineering
 
@@ -211,19 +215,20 @@ components/modals/*     →  Discovery/Premium modals
 
 ### Implemented from Legacy Recommendations
 
-| Recommendation | Source | Status |
-|----------------|--------|--------|
-| Error Boundaries | M1-M2 Architecture | ✅ Implemented |
-| Logger centralized | M1-M2 Architecture | ✅ Implemented |
-| Premium Context | M3 Code Audit | ✅ Implemented |
-| useCallback/React.memo | M3 Code Audit | ❓ Partial |
+| Recommendation | Source | Status | Date |
+|----------------|--------|--------|------|
+| Error Boundaries | M1-M2 Architecture | ✅ Implemented | Dec 14 |
+| Logger centralized | M1-M2 Architecture | ✅ Implemented | Dec 14 |
+| Premium Context | M3 Code Audit | ✅ Implemented | Dec 14 |
+| Provider Consolidation | Architecture Review | ✅ COMPLETE | Dec 21 |
+| useCallback/React.memo | M3 Code Audit | ✅ Partial | Dec 21 |
 
 ### Still Pending
 
 | Item | Source | Priority |
 |------|--------|----------|
 | React.memo on all components | M3 Code Audit | P2 |
-| useCallback on all handlers | M3 Code Audit | P2 |
+| useCallback on all remaining handlers | M3 Code Audit | P2 |
 | Magic numbers extraction | M3 Code Audit | P2 |
 
 ---
