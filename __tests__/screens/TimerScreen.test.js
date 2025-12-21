@@ -56,6 +56,12 @@ const mockTimerOptionsContext = {
 };
 
 jest.mock('../../src/contexts/TimerConfigContext', () => ({
+  useTimerConfig: () => ({
+    ...mockTimerOptionsContext,
+    currentColor: '#007AFF',
+    flashActivity: null, // Used by TimerScreen (no flash by default)
+  }),
+  // Backward-compatible aliases
   useTimerOptions: () => mockTimerOptionsContext,
   useTimerPalette: () => ({
     currentColor: '#007AFF',

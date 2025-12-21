@@ -1,22 +1,11 @@
 /**
- * @fileoverview PremiumModal - Premium paywall UI (React Native <Modal>)
- * @deprecated Use BottomSheet pattern instead: modalStack.push('premium', { highlightedFeature: 'activity' })
- * @see PremiumModalContent.jsx - New BottomSheet implementation
- * @see BottomSheetModal.jsx - Reusable BottomSheet wrapper
- * @see ModalStackRenderer.jsx - Type-based modal rendering
- *
- * BACKWARD COMPATIBILITY ONLY - Will be removed after migration of:
- * - Filter-090-paywall-discover.jsx (onboarding)
- * - Any other direct PremiumModal usages
- *
- * Migration path:
- * - Before: <PremiumModal visible={show} onClose={...} />
- * - After: modalStack.push('premium', { highlightedFeature: 'source' })
+ * @fileoverview PremiumModalContent - Premium paywall content (BottomSheet)
+ * Extracted from PremiumModal.jsx - Pure content component (no Modal wrapper)
+ * @created 2025-12-21
+ * @updated 2025-12-21
  */
-
 import React, { useState, useEffect } from 'react';
 import {
-  Modal,
   View,
   Text,
   TouchableOpacity,
@@ -25,6 +14,8 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { usePurchases } from '../../contexts/PurchaseContext';
 import { useAnalytics } from '../../hooks/useAnalytics';
@@ -34,7 +25,21 @@ import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import { fontWeights } from '../../theme/tokens';
 
-export default function PremiumModal({ visible, onClose, highlightedFeature, modalId }) {
+/**
+ * PremiumModalContent - Premium paywall UI
+ *
+ * Business logic:
+ * - Fetch dynamic price from RevenueCat
+ * - Handle purchase flow (with retry logic)
+ * - Handle restore purchases
+ * - Track Mixpanel analytics (paywall viewed)
+ * - Network error handling with retry buttons (max 3 attempts)
+ *
+ * @param {Function} onClose - Callback to close modal
+ * @param {string} highlightedFeature - Feature that triggered paywall (for analytics)
+ * @param {string} modalId - Modal ID in ModalStack (for pop)
+ */
+export default function PremiumModalContent({ onClose, highlightedFeature, modalId }) {
   const modalStack = useModalStack();
   const theme = useTheme();
   const analytics = useAnalytics();
@@ -55,17 +60,17 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
 
   // Track paywall viewed once per session (M7.5)
   useEffect(() => {
-    if (visible && !hasTrackedPaywall) {
+    if (!hasTrackedPaywall) {
       const source = highlightedFeature || 'unknown';
       analytics.trackPaywallViewed(source);
       setHasTrackedPaywall(true);
     }
-  }, [visible, hasTrackedPaywall, highlightedFeature]);
+  }, [hasTrackedPaywall, highlightedFeature, analytics]);
 
-  // Fetch dynamic price from RevenueCat when modal opens
+  // Fetch dynamic price from RevenueCat when component mounts
   useEffect(() => {
     const fetchPrice = async () => {
-      if (!visible || dynamicPrice) {return;}
+      if (dynamicPrice) {return;}
 
       setIsLoadingPrice(true);
       try {
@@ -75,7 +80,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
         }
       } catch (error) {
         if (__DEV__) {
-          console.warn('[PremiumModal] Could not fetch dynamic price:', error);
+          console.warn('[PremiumModalContent] Could not fetch dynamic price:', error);
         }
       } finally {
         setIsLoadingPrice(false);
@@ -83,7 +88,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
     };
 
     fetchPrice();
-  }, [visible]);
+  }, [dynamicPrice, getOfferings]);
 
   // Combined loading state (local + context)
   const isAnyOperationInProgress =
@@ -206,7 +211,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
             onPress: () => {
               // Future: open support email or link
               if (__DEV__) {
-                console.warn('[PremiumModal] Contact support requested after 3 failed attempts');
+                console.warn('[PremiumModalContent] Contact support requested after 3 failed attempts');
               }
             }
           });
@@ -243,7 +248,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
             text: t('premium.contactSupport'),
             onPress: () => {
               if (__DEV__) {
-                console.warn('[PremiumModal] Contact support requested after 3 failed attempts');
+                console.warn('[PremiumModalContent] Contact support requested after 3 failed attempts');
               }
             }
           });
@@ -256,7 +261,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
         );
       }
     } catch (error) {
-      console.error('[PremiumModal] Purchase error:', error);
+      console.error('[PremiumModalContent] Purchase error:', error);
       Alert.alert(t('premium.error'), t('premium.errorOfferings'), [
         { text: t('common.ok') },
       ]);
@@ -299,7 +304,7 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
         );
       }
     } catch (error) {
-      console.error('[PremiumModal] Restore error:', error);
+      console.error('[PremiumModalContent] Restore error:', error);
       Alert.alert(t('premium.error'), t('premium.unexpectedError'), [
         { text: t('common.ok') },
       ]);
@@ -343,8 +348,12 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
       gap: theme.spacing.md,
     },
 
+    container: {
+      padding: theme.spacing.xl,
+    },
+
     features: {
-      backgroundColor: theme.colors.surfaceElevated,
+      backgroundColor: theme.colors.surface,
       borderColor: theme.colors.brand.primary + '30',
       borderRadius: 12,
       borderWidth: 2,
@@ -366,32 +375,6 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
 
     loader: {
       marginLeft: theme.spacing.sm,
-    },
-
-    modalContainer: {
-      backgroundColor: theme.colors.surfaceElevated,
-      borderRadius: Platform.select({
-        ios: 16,
-        android: 12,
-      }),
-      maxWidth: 400,
-      padding: theme.spacing.xl,
-      width: '85%',
-      ...theme.shadow('xl'),
-      ...Platform.select({
-        ios: {
-          borderWidth: StyleSheet.hairlineWidth,
-          borderColor: theme.colors.brand.primary + '30',
-        },
-        android: {},
-      }),
-    },
-
-    overlay: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.overlay,
-      flex: 1,
-      justifyContent: 'center',
     },
 
     priceText: {
@@ -463,114 +446,102 @@ export default function PremiumModal({ visible, onClose, highlightedFeature, mod
   });
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={handleClose}
-      statusBarTranslucent
-      accessible={true}
-      accessibilityViewIsModal={true}
-    >
-      <View style={styles.overlay}>
-        <View
-          style={styles.modalContainer}
-          accessible={true}
-          accessibilityRole="dialog"
-          accessibilityLabel={t('premium.title')}
-          accessibilityHint={t('accessibility.premiumModalHint')}
+    <BottomSheetScrollView contentContainerStyle={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text
+          style={styles.title}
+          accessibilityRole="header"
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <Text
-              style={styles.title}
-              accessibilityRole="header"
-            >
-              {t('premium.title')}
-            </Text>
-          </View>
+          {t('premium.title')}
+        </Text>
+      </View>
 
-          {/* Body */}
-          <View style={styles.body}>
-            <Text style={styles.bodyText}>
-              {t('premium.description')}
-            </Text>
+      {/* Body */}
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>
+          {t('premium.description')}
+        </Text>
 
-            {/* Features Box */}
-            <View style={styles.features}>
-              <Text style={styles.featuresText}>
-                {t('premium.features')}
-              </Text>
-              <Text style={styles.priceText}>
-                {t('premium.price', { price: dynamicPrice || '4,99€' })}
-              </Text>
-            </View>
-          </View>
-
-          {/* Buttons */}
-          <View style={styles.buttons}>
-            <TouchableOpacity
-              style={[
-                styles.primaryButton,
-                isAnyOperationInProgress && styles.primaryButtonDisabled,
-              ]}
-              onPress={handlePurchase}
-              disabled={isAnyOperationInProgress}
-              activeOpacity={0.8}
-              accessibilityLabel={t('accessibility.unlockPremium', { price: dynamicPrice || '4,99€' })}
-              accessibilityRole="button"
-              accessibilityHint={t('accessibility.unlockPremiumHint')}
-              accessibilityState={{ disabled: isAnyOperationInProgress }}
-            >
-              {isPurchasing ? (
-                <ActivityIndicator color={theme.colors.fixed.white} size="small" />
-              ) : (
-                <Text style={styles.primaryButtonText}>
-                  {t('premium.startTrial')}
-                </Text>
-              )}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.secondaryButton}
-              onPress={handleClose}
-              disabled={isAnyOperationInProgress}
-              activeOpacity={0.7}
-              accessibilityLabel={t('accessibility.closePremiumModal')}
-              accessibilityRole="button"
-              accessibilityHint={t('accessibility.closeModalHint')}
-            >
-              <Text style={styles.secondaryButtonText}>
-                {t('premium.maybeLater')}
-              </Text>
-            </TouchableOpacity>
-
-            {/* Restore Purchases */}
-            <TouchableOpacity
-              style={styles.restoreButton}
-              onPress={handleRestore}
-              disabled={isAnyOperationInProgress}
-              activeOpacity={0.7}
-              accessibilityLabel={t('accessibility.restorePurchases')}
-              accessibilityRole="button"
-              accessibilityHint={t('accessibility.restorePurchasesHint')}
-              accessibilityState={{ disabled: isAnyOperationInProgress }}
-            >
-              {isRestoring ? (
-                <ActivityIndicator
-                  color={theme.colors.textSecondary}
-                  size="small"
-                  style={styles.loader}
-                />
-              ) : (
-                <Text style={styles.restoreButtonText}>
-                  {t('premium.restore')}
-                </Text>
-              )}
-            </TouchableOpacity>
-          </View>
+        {/* Features Box */}
+        <View style={styles.features}>
+          <Text style={styles.featuresText}>
+            {t('premium.features')}
+          </Text>
+          <Text style={styles.priceText}>
+            {t('premium.price', { price: dynamicPrice || '4,99€' })}
+          </Text>
         </View>
       </View>
-    </Modal>
+
+      {/* Buttons */}
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          style={[
+            styles.primaryButton,
+            isAnyOperationInProgress && styles.primaryButtonDisabled,
+          ]}
+          onPress={handlePurchase}
+          disabled={isAnyOperationInProgress}
+          activeOpacity={0.8}
+          accessibilityLabel={t('accessibility.unlockPremium', { price: dynamicPrice || '4,99€' })}
+          accessibilityRole="button"
+          accessibilityHint={t('accessibility.unlockPremiumHint')}
+          accessibilityState={{ disabled: isAnyOperationInProgress }}
+        >
+          {isPurchasing ? (
+            <ActivityIndicator color={theme.colors.fixed.white} size="small" />
+          ) : (
+            <Text style={styles.primaryButtonText}>
+              {t('premium.startTrial')}
+            </Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.secondaryButton}
+          onPress={handleClose}
+          disabled={isAnyOperationInProgress}
+          activeOpacity={0.7}
+          accessibilityLabel={t('accessibility.closePremiumModal')}
+          accessibilityRole="button"
+          accessibilityHint={t('accessibility.closeModalHint')}
+        >
+          <Text style={styles.secondaryButtonText}>
+            {t('premium.maybeLater')}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Restore Purchases */}
+        <TouchableOpacity
+          style={styles.restoreButton}
+          onPress={handleRestore}
+          disabled={isAnyOperationInProgress}
+          activeOpacity={0.7}
+          accessibilityLabel={t('accessibility.restorePurchases')}
+          accessibilityRole="button"
+          accessibilityHint={t('accessibility.restorePurchasesHint')}
+          accessibilityState={{ disabled: isAnyOperationInProgress }}
+        >
+          {isRestoring ? (
+            <ActivityIndicator
+              color={theme.colors.textSecondary}
+              size="small"
+              style={styles.loader}
+            />
+          ) : (
+            <Text style={styles.restoreButtonText}>
+              {t('premium.restore')}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </BottomSheetScrollView>
   );
 }
+
+PremiumModalContent.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  highlightedFeature: PropTypes.string,
+  modalId: PropTypes.string,
+};
