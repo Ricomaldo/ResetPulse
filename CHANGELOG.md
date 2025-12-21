@@ -1,10 +1,32 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-20'
+updated: '2025-12-21'
 status: active
 ---
 
 ## [Unreleased - Current Sprint]
+
+### 🔧 Provider Migration Completion + Bug Fixes (2025-12-21)
+
+#### Fixed
+- **ControlBar PulseButton Stop Button Not Working**
+  - Added missing `onLongPressComplete` callback to PulseButton
+  - Stop action now correctly routed based on interaction profile settings
+  - Both simple mode (tap) and sophisticated mode (long press) now functional
+
+- **MessageZone Not Displaying**
+  - Removed overly restrictive condition that excluded 'none' activity
+  - Messages now display for all activities including default 'none'
+  - Message animations work correctly on app startup
+
+#### Completed
+- **Provider Migration Finalized**
+  - 3 separate contexts (TimerOptions, TimerPalette, UserPreferences) consolidated into single TimerConfigContext
+  - All 18 consuming files updated with proper namespaced destructuring
+  - Zero deprecated hooks remaining (all old context references removed)
+  - Verified: App.js using unified TimerConfigProvider in dev + production paths
+
+---
 
 ### 🎨 UI/UX Review + Color System Refactor (2025-12-20)
 

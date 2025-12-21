@@ -184,7 +184,7 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
   return (
     <View style={styles.asideContainer}>
       {/* MessageZone positioned at ~28% from bottom (absolute, outside BottomSheet) */}
-      {currentActivity && currentActivity.id !== 'none' && (
+      {currentActivity && (
         <View style={styles.labelOverlay}>
           <MessageZone
             timerState={timerState}
