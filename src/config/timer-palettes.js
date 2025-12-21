@@ -10,12 +10,12 @@ export const TIMER_PALETTES = {
     description: 'Palette système ResetPulse (brand colors)',
   },
   softLaser: {
-    colors: ['#00D17A', '#00B8D9', '#D14AB8', '#E6D500'],
+    colors: ['#5DB88A', '#6BC4C4', '#C584B8', '#D4C65E'],
     get name() {
       return i18n.t('palettes.softLaser');
     },
     isPremium: true,
-    description: 'Palette laser adoucie, plus douce pour les yeux',
+    description: 'Verts menthe, turquoise et roses poudrés harmonisés',
   },
 
   earth: {
@@ -27,100 +27,100 @@ export const TIMER_PALETTES = {
     description: 'Tons naturels harmonisés avec cream',
   },
   zen: {
-    colors: ['#9DC88D', '#A8DADC', '#E5E5E5', '#B8A9C9'],
+    colors: ['#8BB880', '#95C7C9', '#B8B0A8', '#A89BBB'],
     get name() {
       return i18n.t('palettes.zen');
     },
     isPremium: true,
-    description: 'Tons doux pour la méditation',
+    description: 'Vert sauge, turquoise zen et lavande apaisants',
   },
   classic: {
-    colors: ['#2E5090', '#D94040', '#E8B93C', '#5AAA50'],
+    colors: ['#5A7BA8', '#C97070', '#D4A853', '#6B9B6B'],
     get name() {
       return i18n.t('palettes.classic');
     },
     isPremium: true,
-    description: 'Palette traditionnelle harmonieuse',
+    description: 'Bleu gris, rouge brique, or brand et vert olive',
   },
   tropical: {
-    colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA500'],
+    colors: ['#E8857A', '#6DBCB4', '#75B8C4', '#E8A65E'],
     get name() {
       return i18n.t('palettes.tropical');
     },
     isPremium: true,
-    description: 'Couleurs chaudes et exotiques',
+    description: 'Corail tropical, turquoise lagon et orange mangue',
   },
   dusk: {
-    colors: ['#FF6347', '#FF8C00', '#9370DB', '#4B0082'],
+    colors: ['#D97A6A', '#E89F5E', '#9B7FB8', '#6B5580'],
     get name() {
       return i18n.t('palettes.dusk');
     },
     isPremium: true,
-    description: 'Tons chauds du soir',
+    description: 'Coucher de soleil: corail, orange doré et lavande',
   },
   darkLaser: {
-    colors: ['#00C27A', '#00A1BF', '#B0439A', '#C9B200'],
+    colors: ['#5BA880', '#5A9AAF', '#9B6B9A', '#A89B5A'],
     get name() {
       return i18n.t('palettes.darkLaser');
     },
     isPremium: true,
-    description: 'Palette laser atténuée, idéale sur fond sombre',
+    description: 'Émeraude, pétrole, prune et olive mat',
   },
   autumn: {
-    colors: ['#D2691E', '#CD853F', '#8B4513', '#DAA520'],
+    colors: ['#C17A5E', '#B8925E', '#8B6B5A', '#C4A565'],
     get name() {
       return i18n.t('palettes.autumn');
     },
     isPremium: true,
-    description: "Tons chauds d'automne",
+    description: 'Terre cuite, noisette, châtaigne et or automnal',
   },
   dawn: {
-    colors: ['#FFB6C1', '#FFE4B5', '#E6E6FA', '#F0E68C'],
+    colors: ['#E8A4AA', '#E8C49B', '#C4B8D4', '#D4C488'],
     get name() {
       return i18n.t('palettes.dawn');
     },
     isPremium: true,
-    description: 'Couleurs douces du matin',
+    description: 'Aurore: rose matin, beige doré et lavande aube',
   },
   soft: {
-    colors: ['#E8B4B8', '#C5A3C0', '#A7C7E7', '#B8D4B8'],
+    colors: ['#D49B9F', '#B88FB4', '#8FB4D4', '#9BC49B'],
     get name() {
       return i18n.t('palettes.soft');
     },
     isPremium: true,
-    description: 'Pastels délicats',
+    description: 'Rose poudré, mauve, bleu ciel et menthe saturés',
   },
   lavender: {
-    colors: ['#9370DB', '#BA55D3', '#DDA0DD', '#E6E6FA'],
+    colors: ['#8B6BB8', '#A86BB8', '#C49BC4', '#D4C4E0'],
     get name() {
       return i18n.t('palettes.lavender');
     },
     isPremium: true,
-    description: 'Violets doux apaisants',
+    description: 'Lavande chaude, orchidée et plum harmonisés',
   },
   teal: {
-    colors: ['#004D4D', '#008080', '#20B2AA', '#48D1CC'],
+    colors: ['#5A7A7A', '#6B9595', '#7AAFAA', '#95C4C4'],
     get name() {
       return i18n.t('palettes.teal');
     },
     isPremium: true,
-    description: 'Bleus-verts sophistiqués',
+    description: 'Sarcelle anthracite, turquoise mat et lagon chaud',
   },
   forest: {
-    colors: ['#2D5016', '#4A7C2E', '#6FA84A', '#9ED16F'],
+    colors: ['#5A6B4A', '#6B8B5A', '#80A670', '#9BBF88'],
     get name() {
       return i18n.t('palettes.forest');
     },
     isPremium: true,
-    description: 'Verts profonds et naturels',
+    description: 'Mousse, feuillage, prairie et printemps chauds',
   },
   ocean: {
-    colors: ['#003366', '#0066CC', '#3399FF', '#66CCFF'],
+    colors: ['#5A6B88', '#6B8BA8', '#80A8C4', '#9BC4D4'],
     get name() {
       return i18n.t('palettes.ocean');
     },
     isPremium: true,
-    description: 'Bleus apaisants des mers',
+    description: 'Bleu nuit, mer profonde, méditerranée et lagon',
   },
 };
 
