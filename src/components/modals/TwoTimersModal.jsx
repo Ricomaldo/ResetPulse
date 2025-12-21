@@ -3,14 +3,15 @@
 
 import React, { useEffect } from 'react';
 import {
-  Modal,
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
+import BottomSheetModal from './BottomSheetModal';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import analytics from '../../services/analytics';
@@ -43,6 +44,10 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
     buttonContainer: {
       gap: theme.spacing.sm,
     },
+    container: {
+      alignItems: 'center',
+      padding: theme.spacing.xl,
+    },
     emoji: {
       fontSize: rs(48),
       marginBottom: theme.spacing.md,
@@ -55,19 +60,6 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
       marginBottom: theme.spacing.xl,
       textAlign: 'center',
     },
-    modalContainer: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: 16,
-      padding: theme.spacing.xl,
-      width: '85%',
-      ...theme.shadow('xl'),
-    },
-    overlay: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.overlay,
-      flex: 1,
-      justifyContent: 'center',
-    },
     primaryButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
@@ -75,9 +67,10 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
       justifyContent: 'center',
       minHeight: 44,
       paddingVertical: theme.spacing.md,
+      width: '100%',
     },
     primaryButtonText: {
-      color: theme.colors.background,
+      color: theme.colors.fixed.white,
       fontSize: rs(16),
       fontWeight: fontWeights.semibold,
     },
@@ -86,6 +79,7 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
       justifyContent: 'center',
       minHeight: 44,
       paddingVertical: theme.spacing.sm,
+      width: '100%',
     },
     secondaryButtonText: {
       color: theme.colors.textLight,
@@ -101,66 +95,57 @@ export default function TwoTimersModal({ visible, onClose, onExplore }) {
   });
 
   return (
-    <Modal
+    <BottomSheetModal
       visible={visible}
-      animationType="fade"
-      transparent={true}
-      onRequestClose={handleSkip}
-      accessible={true}
-      accessibilityViewIsModal={true}
+      onClose={handleSkip}
+      snapPoints={['50%']}
+      enablePanDownToClose={true}
+      enableDynamicSizing={false}
     >
-      <View style={styles.overlay}>
-        <View
-          style={styles.modalContainer}
+      <BottomSheetView style={styles.container}>
+        <Text
+          style={styles.emoji}
           accessible={true}
-          accessibilityRole="dialog"
-          accessibilityLabel={t('twoTimers.title')}
-          accessibilityHint={t('accessibility.twoTimersModalHint')}
+          accessibilityLabel={t('accessibility.celebrationEmoji')}
         >
-          <Text
-            style={styles.emoji}
-            accessible={true}
-            accessibilityLabel={t('accessibility.celebrationEmoji')}
+          🎉
+        </Text>
+        <Text
+          style={styles.title}
+          accessibilityRole="header"
+        >
+          {t('twoTimers.title')}
+        </Text>
+        <Text style={styles.message}>
+          {t('twoTimers.message')}
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={handleExplore}
+            activeOpacity={0.8}
+            accessibilityLabel={t('twoTimers.explore')}
+            accessibilityRole="button"
+            accessibilityHint={t('accessibility.exploreSettingsHint')}
           >
-            🎉
-          </Text>
-          <Text
-            style={styles.title}
-            accessibilityRole="header"
+            <Text style={styles.primaryButtonText}>
+              {t('twoTimers.explore')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={handleSkip}
+            activeOpacity={0.6}
+            accessibilityLabel={t('twoTimers.dismiss')}
+            accessibilityRole="button"
+            accessibilityHint={t('accessibility.closeModalHint')}
           >
-            {t('twoTimers.title')}
-          </Text>
-          <Text style={styles.message}>
-            {t('twoTimers.message')}
-          </Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={handleExplore}
-              activeOpacity={0.8}
-              accessibilityLabel={t('twoTimers.explore')}
-              accessibilityRole="button"
-              accessibilityHint={t('accessibility.exploreSettingsHint')}
-            >
-              <Text style={styles.primaryButtonText}>
-                {t('twoTimers.explore')}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.secondaryButton}
-              onPress={handleSkip}
-              activeOpacity={0.6}
-              accessibilityLabel={t('twoTimers.dismiss')}
-              accessibilityRole="button"
-              accessibilityHint={t('accessibility.closeModalHint')}
-            >
-              <Text style={styles.secondaryButtonText}>
-                {t('twoTimers.dismiss')}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={styles.secondaryButtonText}>
+              {t('twoTimers.dismiss')}
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    </Modal>
+      </BottomSheetView>
+    </BottomSheetModal>
   );
 }

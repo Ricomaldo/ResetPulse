@@ -1,6 +1,6 @@
 /**
  * @fileoverview Modals - Centralized export
- * @updated 2025-12-21 - BottomSheet wrapper pattern (complete migration)
+ * @updated 2025-12-21 - BottomSheet migration COMPLETE ✅
  *
  * 📋 BOTTOMSHEET MODAL PATTERN:
  *
@@ -23,14 +23,20 @@
  * - BottomSheetModal wrapper: ./BottomSheetModal.jsx
  * - ModalStackRenderer: ./ModalStackRenderer.jsx
  * - AsideZone pattern: ../layout/AsideZone.jsx
+ *
+ * 🎉 ALL MODALS MIGRATED TO @gorhom/bottom-sheet v5
  */
 
-// === BottomSheet wrapper + Content (NEW PATTERN) ===
+// === BottomSheet Infrastructure ===
 export { default as BottomSheetModal } from './BottomSheetModal';
+
+// === Premium/Discovery Modals (ModalStack pattern) ===
 export { default as PremiumModalContent } from './PremiumModalContent';
 export { default as DiscoveryModalContent } from './DiscoveryModalContent';
 
-// === Other modals (not yet migrated to BottomSheet) ===
-export { default as TwoTimersModal } from './TwoTimersModal';
+// === Custom Activity Modals (Direct usage pattern) ===
 export { default as CreateActivityModal } from './CreateActivityModal';
 export { default as EditActivityModal } from './EditActivityModal';
+
+// === System Modals ===
+export { default as TwoTimersModal } from './TwoTimersModal';
