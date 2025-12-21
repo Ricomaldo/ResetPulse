@@ -44,10 +44,3 @@ export { default as EditActivityModalContent } from './EditActivityModalContent'
 
 // System
 export { default as TwoTimersModalContent } from './TwoTimersModalContent';
-
-// === Legacy Wrapper Components (DEPRECATED - Will be removed) ===
-// ⚠️ DO NOT USE - Use modalStack.push() instead
-// These are kept temporarily for backward compatibility during migration
-export { default as CreateActivityModal } from './CreateActivityModal';
-export { default as EditActivityModal } from './EditActivityModal';
-export { default as TwoTimersModal } from './TwoTimersModal';
