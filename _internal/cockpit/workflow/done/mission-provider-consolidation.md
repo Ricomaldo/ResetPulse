@@ -1,11 +1,15 @@
 ---
 created: '2025-12-21'
 updated: '2025-12-21'
+completed: '2025-12-21'
 type: mission
-status: in-progress
+status: completed
 model: sonnet
 priority: P1
 agent_plan: ac99070
+commit: 3b6b774
+duration: ~2h
+tests: 211/211
 ---
 
 # Mission: Consolidation Providers (TimerOptions + TimerPalette + UserPreferences → TimerConfigProvider)
