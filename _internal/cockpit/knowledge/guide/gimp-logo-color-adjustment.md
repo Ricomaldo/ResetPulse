@@ -292,9 +292,60 @@ chmod +x assets/generate-icon-sizes.sh
 
 **Why it works**:
 - Warmer tones read as "energetic" not "medical/anatomical"
-- High saturation makes lotus petals clearly visible
+- High saturation makes circle gradient clearly defined
 - Gradient suggests movement/time (perfect for timer app)
 - Yellow bottom = optimism, warmth, focus
+
+---
+
+## ⚠️ Important: Lotus Visibility at Scale
+
+**Critical Reality Check**: The lotus detail is **only visible at large sizes or high zoom**.
+
+### Visibility Thresholds
+
+| Size/Context | Lotus Visible? | What User Sees |
+|--------------|----------------|----------------|
+| **1024x1024 @ 100% zoom** | ✅ Yes (barely) | Gradient circle + subtle lotus outline |
+| **1024x1024 @ 35% zoom** | ❌ No | Gradient circle only |
+| **512x512** | ❌ No | Gradient circle only |
+| **256x256** | ❌ No | Gradient circle only |
+| **180x180** (iPhone @3x) | ❌ No | Gradient circle only |
+| **120x120** (iPhone @2x) | ❌ No | Gradient circle only |
+| **60x60** (Spotlight) | ❌ No | Gradient circle only |
+
+### What This Means
+
+**On actual devices** (home screen, app drawer, notifications):
+- Users see: **Vibrant coral→orange→yellow gradient circle**
+- Users don't see: Lotus petals (too subtle at small sizes)
+
+**This is OK!** Many successful apps lose detail at icon size:
+- **Instagram**: Gradient circle (no detail)
+- **Headspace**: Solid circle (no detail)
+- **Calm**: Simple circular design
+
+**The gradient itself becomes the identity**:
+- ☀️ Sunrise/sunset energy
+- 🎨 Warm, inviting, optimistic
+- ⏱️ Suggests time/movement (gradient flow)
+- 🧘 Calm center (lighter yellow at bottom)
+
+### Design Decision
+
+The lotus is **conceptual/philosophical** rather than functional at icon size:
+- It exists in the brand DNA (visible in large formats, splash screens, marketing)
+- At icon size, the **gradient shape** carries the visual identity
+- Simplicity at small sizes is a feature, not a bug
+
+### Recommendation
+
+**Don't try to make the lotus more visible** by:
+- Adding harsh outlines (will look clunky)
+- Increasing contrast too much (will break gradient flow)
+- Simplifying to flat colors (will lose the sunrise energy)
+
+**Instead**: Embrace the gradient circle as the icon's primary identity at scale.
 
 ---
 
