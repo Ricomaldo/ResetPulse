@@ -23,7 +23,7 @@ import Animated, {
 import Svg, { Circle } from 'react-native-svg';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
@@ -80,10 +80,10 @@ const PulseButton = React.memo(function PulseButton({
   shouldPulse = false,
 }) {
   const theme = useTheme();
-  const timerOptions = useTimerOptions();
+  const timerConfig = useTimerConfig();
   // Ensure defaults even if context values are undefined during initial load
-  const longPressConfirmDuration = timerOptions?.longPressConfirmDuration ?? DEFAULT_LONG_PRESS_DURATION;
-  const longPressStartDuration = timerOptions?.longPressStartDuration ?? DEFAULT_LONG_PRESS_DURATION;
+  const longPressConfirmDuration = timerConfig?.longPressConfirmDuration ?? DEFAULT_LONG_PRESS_DURATION;
+  const longPressStartDuration = timerConfig?.longPressStartDuration ?? DEFAULT_LONG_PRESS_DURATION;
 
   // === PULSE ANIMATION (REST state only, when enabled) ===
   const pulseScale = useSharedValue(1);

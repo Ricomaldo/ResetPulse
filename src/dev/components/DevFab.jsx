@@ -14,7 +14,7 @@ import { SHOW_DEV_FAB } from '../../config/test-mode';
 import { fontWeights } from '../../theme/tokens';
 import { devColors } from '../../theme/colors';
 import { useDevPremium } from '../DevPremiumContext';
-import { useUserPreferences } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 
 /**
  * Dev FAB component for dev tools during testing
@@ -41,7 +41,7 @@ export default function DevFab({
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
   const { devPremiumOverride, setDevPremiumOverride: setDevPremiumOverrideOriginal } = useDevPremium();
-  const { favoriteToolMode, setFavoriteToolMode } = useUserPreferences();
+  const { layout: { favoriteToolMode }, setFavoriteToolMode } = useTimerConfig();
 
   // Wrapper for setting premium override
   const setDevPremiumOverride = (value) => {

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PulseButton } from '../../buttons';
-import { useTimerOptions } from '../../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../../contexts/TimerConfigContext';
 import { getProfileConfig } from '../../../utils/interactionProfileConfig';
 
 /**
@@ -32,7 +32,7 @@ const DialCenter = React.memo(function DialCenter({
   size = 72,
 }) {
   // Get pulse setting and interaction profile from context
-  const { shouldPulse, interactionProfile } = useTimerOptions();
+  const { display: { shouldPulse }, interaction: { interactionProfile } } = useTimerConfig();
   const profileConfig = getProfileConfig(interactionProfile);
 
   // Déterminer l'état du bouton

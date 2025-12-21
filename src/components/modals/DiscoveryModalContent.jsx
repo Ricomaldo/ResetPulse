@@ -79,12 +79,7 @@ export default function DiscoveryModalContent({
   const handleClose = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
-    // If this modal is in the stack, pop it
-    if (modalId) {
-      modalStack.popById(modalId);
-    }
-
-    // Always call onClose for backward compatibility
+    // Call onClose (ModalStackRenderer handles animation delay + popById)
     if (onClose) {
       onClose();
     }
@@ -156,7 +151,12 @@ export default function DiscoveryModalContent({
   });
 
   return (
-    <BottomSheetView style={styles.container}>
+    <BottomSheetView style={[styles.container, { backgroundColor: '#FF0000' }]}>
+      {/* DEBUG: Red background to see if modal is visible */}
+      <Text style={{ color: '#FFFFFF', fontSize: 20, textAlign: 'center', marginBottom: 10 }}>
+        🔴 DEBUG: MODAL IS RENDERED 🔴
+      </Text>
+
       {/* Title */}
       <Text
         style={styles.title}

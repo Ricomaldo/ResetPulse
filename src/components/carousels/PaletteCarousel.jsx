@@ -8,25 +8,29 @@ import { View, StyleSheet, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerPalette } from '../../contexts/TimerConfigContext';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import { TIMER_PALETTES, getFreePalettes } from '../../config/timer-palettes';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useModalStack } from '../../contexts/ModalStackContext';
 import haptics from '../../utils/haptics';
-import { PremiumModal, MoreColorsModal } from '../modals/index';
 import { IconButton } from '../buttons';
+import analytics from '../../services/analytics';
+import { fontWeights } from '../../theme/tokens';
 
 const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
   const theme = useTheme();
   const t = useTranslation();
-  const { currentPalette, setPalette, currentColor, setColorIndex } = useTimerPalette();
-  const { favoritePalettes = [] } = useTimerOptions();
+  const {
+    palette: { currentPalette, currentColor },
+    favorites: { favoritePalettes = [] },
+    setPalette,
+    setColorIndex,
+  } = useTimerConfig();
   const scrollViewRef = ref || useRef(null);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [showColorsModal, setShowColorsModal] = useState(false);
+  const modalStack = useModalStack();
 
   const { isPremium: isPremiumUser } = usePremiumStatus();
 
@@ -206,7 +210,74 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
     haptics.selection().catch(() => {
       /* Optional operation - failure is non-critical */
     });
-    setShowColorsModal(true);
+    analytics.trackDiscoveryModalShown('colors');
+
+    // Get premium palettes
+    const premiumPalettes = Object.entries(TIMER_PALETTES)
+      .filter(([_, palette]) => palette.isPremium)
+      .map(([key, palette]) => ({
+        key,
+        name: palette.name,
+        colors: palette.colors,
+      }));
+
+    // Create palette grid
+    const paletteGrid = (
+      <View style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: theme.spacing.md,
+        justifyContent: 'center',
+        paddingHorizontal: theme.spacing.xs,
+      }}>
+        {premiumPalettes.map((palette) => (
+          <View
+            key={palette.key}
+            style={{
+              alignItems: 'center',
+              marginBottom: theme.spacing.sm,
+              width: '28%',
+            }}
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLabel={t('accessibility.paletteItem', { name: palette.name })}
+          >
+            <View style={{ flexDirection: 'row', gap: 4, marginBottom: theme.spacing.xs }}>
+              {palette.colors.map((color, index) => (
+                <View
+                  key={index}
+                  style={{
+                    borderRadius: rs(8, 'min'),
+                    height: rs(16, 'min'),
+                    width: rs(16, 'min'),
+                    backgroundColor: color,
+                    ...theme.shadow('sm'),
+                  }}
+                  accessible={false}
+                />
+              ))}
+            </View>
+            <Text style={{
+              color: theme.colors.textSecondary,
+              fontSize: rs(10, 'min'),
+              fontWeight: fontWeights.medium,
+              textAlign: 'center',
+            }} numberOfLines={1}>
+              {palette.name}
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
+
+    modalStack.push('discovery', {
+      title: t('discovery.moreColors.title'),
+      subtitle: t('discovery.moreColors.subtitle'),
+      tagline: t('discovery.moreColors.tagline'),
+      highlightedFeature: 'colors',
+      children: paletteGrid,
+      onClose: () => analytics.trackDiscoveryModalDismissed('colors'),
+    });
   };
 
   return (
@@ -285,20 +356,6 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
           )}
         </ScrollView>
       </View>
-
-      {/* Premium Modal (pour achat direct) */}
-      <PremiumModal
-        visible={showPremiumModal}
-        onClose={() => setShowPremiumModal(false)}
-        highlightedFeature={t('discovery.colors')}
-      />
-
-      {/* More Colors Modal (découverte) */}
-      <MoreColorsModal
-        visible={showColorsModal}
-        onClose={() => setShowColorsModal(false)}
-        onOpenPaywall={() => setShowPremiumModal(true)}
-      />
     </View>
   );
 });

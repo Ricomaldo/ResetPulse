@@ -3,12 +3,13 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
-import { useTimerOptions } from '../contexts/TimerConfigContext';
+import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
 import { useScreenOrientation } from '../hooks/useScreenOrientation';
 import { useTranslation } from '../hooks/useTranslation';
+import { useModalStack } from '../contexts/ModalStackContext';
 import { DialZone, AsideZone } from '../components/layout';
-import { TwoTimersModal, PremiumModal } from '../components/modals';
+import { TwoTimersModal } from '../components/modals';
 import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
 import analytics from '../services/analytics';
 
@@ -16,16 +17,16 @@ function TimerScreenContent() {
   const theme = useTheme();
   const t = useTranslation();
   const { isLandscape } = useScreenOrientation(); // Detect orientation changes
+  const modalStack = useModalStack();
   const {
     incrementCompletedTimers,
-    hasSeenTwoTimersModal,
+    stats: { hasSeenTwoTimersModal },
     setHasSeenTwoTimersModal,
-    flashActivity,
-    currentActivity,
-  } = useTimerOptions();
+    transient: { flashActivity },
+    timer: { currentActivity },
+  } = useTimerConfig();
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [twoTimersModalVisible, setTwoTimersModalVisible] = useState(false);
-  const [premiumModalVisible, setPremiumModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [displayMessage, setDisplayMessage] = useState('');
   const [isTimerCompleted, setIsTimerCompleted] = useState(false);
@@ -190,14 +191,9 @@ function TimerScreenContent() {
       <TwoTimersModal
         visible={twoTimersModalVisible}
         onClose={() => setTwoTimersModalVisible(false)}
-        onExplore={() => setPremiumModalVisible(true)}
-      />
-
-      {/* Premium Modal */}
-      <PremiumModal
-        visible={premiumModalVisible}
-        onClose={() => setPremiumModalVisible(false)}
-        highlightedFeature="toutes les couleurs et activités"
+        onExplore={() => modalStack.push('premium', {
+          highlightedFeature: 'toutes les couleurs et activités'
+        })}
       />
     </SafeAreaView>
   );

@@ -8,7 +8,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { rs } from '../../styles/responsive';
 import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import { getProfileConfig } from '../../utils/interactionProfileConfig';
@@ -47,17 +47,15 @@ const ControlBar = React.memo(function ControlBar({
   // const isLandscape = width > height;
 
   const {
-    currentDuration,
+    timer: { currentDuration, currentActivity, scaleMode, clockwise },
     setCurrentDuration,
-    currentActivity,
-    timerRemaining,
-    scaleMode,
     setScaleMode,
-    clockwise,
     setClockwise,
+    transient: { timerRemaining },
+    interaction: { interactionProfile },
+    stats: { activityDurations },
     saveActivityDuration,
-    interactionProfile,
-  } = useTimerOptions();
+  } = useTimerConfig();
 
   const profileConfig = getProfileConfig(interactionProfile);
 

@@ -320,12 +320,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
     }
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
-    // If this modal is in the stack, pop it from the stack
-    if (modalId) {
-      modalStack.popById(modalId);
-    }
-
-    // Always call onClose for backward compatibility
+    // Call onClose (ModalStackRenderer handles animation delay + popById)
     if (onClose) {
       onClose();
     }

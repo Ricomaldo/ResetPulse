@@ -21,8 +21,7 @@ import {
   Heart,
 } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
-import { useUserPreferences } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
@@ -50,25 +49,23 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = React.useState(false);
   const [showMoreColorsModal, setShowMoreColorsModal] = React.useState(false);
   const {
-    shouldPulse,
+    display: { shouldPulse, showActivityEmoji },
     setShouldPulse,
-    showActivityEmoji,
     setShowActivityEmoji,
-    keepAwakeEnabled,
+    system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
-    clockwise,
+    timer: { clockwise, selectedSoundId },
     setClockwise,
-    selectedSoundId,
     setSelectedSoundId,
     setScaleMode,
-    interactionProfile,
+    interaction: { interactionProfile },
     setInteractionProfile,
-    favoriteActivities,
+    favorites: { favoriteActivities, favoritePalettes },
     setFavoriteActivities,
-    favoritePalettes,
     toggleFavoritePalette,
-  } = useTimerOptions();
-  const { favoriteToolMode, setFavoriteToolMode } = useUserPreferences();
+    layout: { favoriteToolMode },
+    setFavoriteToolMode,
+  } = useTimerConfig();
 
   // Helper to toggle favorite activity
   const toggleFavoriteActivity = (activityId) => {

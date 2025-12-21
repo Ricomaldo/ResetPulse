@@ -14,7 +14,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { MessageZone } from '../messaging';
 import { FavoriteToolBox, ToolBox } from './aside-content';
 import { SettingsPanel } from '../settings';
@@ -147,7 +147,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
 export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onSnapChange }) {
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
-  const { currentActivity } = useTimerOptions();
+  const { timer: { currentActivity } } = useTimerConfig();
 
   // Refs for carousels (for simultaneousHandlers)
   const activityCarouselRef = useRef(null);

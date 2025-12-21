@@ -1,5 +1,5 @@
 // src/hooks/usePersistedState.js
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
@@ -120,12 +120,12 @@ export function usePersistedObject(key, defaultValues) {
   }, [key, values, isLoading]);
 
   // Fonction pour mettre à jour une valeur spécifique
-  const updateValue = (field, newValue) => {
+  const updateValue = useCallback((field, newValue) => {
     setValues(prev => ({
       ...prev,
       [field]: newValue
     }));
-  };
+  }, []);
 
   return { values, setValues, updateValue, isLoading };
 }

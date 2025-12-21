@@ -68,6 +68,19 @@ jest.mock('../../src/contexts/TimerConfigContext', () => ({
   }),
 }));
 
+// Mock ModalStackContext
+jest.mock('../../src/contexts/ModalStackContext', () => ({
+  useModalStack: () => ({
+    push: jest.fn(),
+    pop: jest.fn(),
+    popById: jest.fn(),
+    clear: jest.fn(),
+    depth: 0,
+    isEmpty: true,
+    modalStack: [],
+  }),
+}));
+
 // Mock useTimerKeepAwake hook
 jest.mock('../../src/hooks/useTimerKeepAwake', () => ({
   useTimerKeepAwake: jest.fn(),
@@ -171,17 +184,6 @@ describe('TimerScreen', () => {
     const instance = component.root;
     const twoTimersModal = instance.findAllByType('TwoTimersModal');
     expect(twoTimersModal.length).toBe(1);
-  });
-
-  it('should render PremiumModal component', () => {
-    let component;
-    act(() => {
-      component = create(<TimerScreen />);
-    });
-
-    const instance = component.root;
-    const premiumModal = instance.findAllByType('PremiumModal');
-    expect(premiumModal.length).toBe(1);
   });
 
   it('should pass correct props to DialZone', () => {

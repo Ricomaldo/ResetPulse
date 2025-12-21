@@ -1,8 +1,8 @@
 /**
  * @fileoverview Modals - Centralized export
- * @updated 2025-12-21 - Added BottomSheet wrapper pattern
+ * @updated 2025-12-21 - BottomSheet wrapper pattern (complete migration)
  *
- * 📋 BOTTOMSHEET MODAL PATTERN (NEW - 2025-12-21):
+ * 📋 BOTTOMSHEET MODAL PATTERN:
  *
  * Architecture: Wrapper (infrastructure) + Content (business logic)
  * - BottomSheetModal wrapper = BottomSheet config, animations, lifecycle (reusable)
@@ -25,18 +25,10 @@
  * - AsideZone pattern: ../layout/AsideZone.jsx
  */
 
-// === NEW PATTERN: BottomSheet wrapper + Content ===
+// === BottomSheet wrapper + Content (NEW PATTERN) ===
 export { default as BottomSheetModal } from './BottomSheetModal';
 export { default as PremiumModalContent } from './PremiumModalContent';
 export { default as DiscoveryModalContent } from './DiscoveryModalContent';
-
-// === OLD PATTERN: React Native <Modal> (backward compat, will be deprecated) ===
-export { default as PremiumModal } from './PremiumModal'; // TODO: Migrate usages to 'premium' type
-export { default as DiscoveryModal } from './DiscoveryModal'; // TODO: Migrate usages to 'discovery' type
-
-// === Specialized wrappers (use DiscoveryModal internally, will be migrated) ===
-export { default as MoreActivitiesModal } from './MoreActivitiesModal';
-export { default as MoreColorsModal } from './MoreColorsModal';
 
 // === Other modals (not yet migrated to BottomSheet) ===
 export { default as TwoTimersModal } from './TwoTimersModal';

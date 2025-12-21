@@ -1,29 +1,29 @@
 // src/screens/onboarding/filters/Filter5Paywall.jsx
 // Filtre 5 : Paywall soft (trial / skip)
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { useModalStack } from '../../../contexts/ModalStackContext';
 import { rs } from '../onboardingConstants';
-import PremiumModal from '../../../components/modals/PremiumModal';
 import { fontWeights } from '../../../theme/tokens';
 
 export default function Filter090PaywallDiscover({ onComplete }) {
   const { colors, spacing, borderRadius } = useTheme();
   const t = useTranslation();
-  const [premiumModalVisible, setPremiumModalVisible] = useState(false);
+  const modalStack = useModalStack();
 
   const handleTrial = () => {
     // Open premium paywall modal for actual RevenueCat purchase flow
-    setPremiumModalVisible(true);
-  };
-
-  const handlePremiumModalClose = () => {
-    // Close modal and continue onboarding with trial/premium status
-    setPremiumModalVisible(false);
-    onComplete('trial');
+    modalStack.push('premium', {
+      highlightedFeature: 'onboarding_paywall',
+      onClose: () => {
+        // Continue onboarding with trial/premium status
+        onComplete('trial');
+      }
+    });
   };
 
   const handleSkip = () => {
@@ -49,13 +49,6 @@ export default function Filter090PaywallDiscover({ onComplete }) {
           <Text style={styles.skipText}>{t('onboarding.v2.filter5.ctaSecondary')}</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Premium paywall modal - opens when user taps "Try Premium" */}
-      <PremiumModal
-        visible={premiumModalVisible}
-        onClose={handlePremiumModalClose}
-        highlightedFeature="onboarding_paywall"
-      />
     </SafeAreaView>
   );
 }
