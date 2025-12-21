@@ -1,8 +1,12 @@
+*Ajuste les seuils, nettoie le texte*
+
+---
+
 # ADR-008 : Personnalisation & Profils Utilisateur
 
-## Statut : VALIDÉ
+## Statut : VALIDÉ v1.1
 
-**Date :** 20 décembre 2025
+**Date :** 20 décembre 2025 (révisé 21 décembre 2025)  
 **Décideurs :** Eric + Chrysalis
 
 ---
@@ -66,38 +70,40 @@ Pas de questions déclaratives. On observe l'user pendant 2 écrans ludiques.
 
 Mesure :
 
-- Tap rapide (< 500ms) → tendance Véloce/Abandonniste
-- Maintien long (> 1.5s) → tendance Ritualiste/Impulsif
+- Tap rapide (< 800ms) → tendance Véloce/Abandonniste
+- Maintien long (≥ 800ms) → tendance Ritualiste/Impulsif
 
 ### Écran 2 — Test Stop
 
 "Maintenant, lâche quand tu veux"
 
-Un cercle se remplit. Mesure :
+Un cercle se remplit (5 secondes). Mesure :
 
-- Lâche tôt (< 2s) → tendance Impulsif/Véloce
-- Attend la fin (> 3s) → tendance Ritualiste/Abandonniste
+- Lâche tôt (< 2.5s) → tendance Impulsif/Véloce
+- Attend milieu/fin (≥ 2.5s) → tendance Ritualiste/Abandonniste
 
 ### Matrice de détection
 
 | Écran 1 (Start) | Écran 2 (Stop) | Profil détecté  |
 | --------------- | -------------- | --------------- |
-| Tap rapide      | Lâche tôt      | ⚡ Véloce       |
-| Tap rapide      | Attend la fin  | 🏃 Abandonniste |
-| Maintien long   | Lâche tôt      | 🚀 Impulsif     |
-| Maintien long   | Attend la fin  | 🎯 Ritualiste   |
+| < 800ms         | < 2.5s         | ⚡ Véloce       |
+| < 800ms         | ≥ 2.5s         | 🏃 Abandonniste |
+| ≥ 800ms         | < 2.5s         | 🚀 Impulsif     |
+| ≥ 800ms         | ≥ 2.5s         | 🎯 Ritualiste   |
+
+**Note :** Seuils choisis pour tolérance neuroatypique (fatigue motrice, variabilité attentionnelle).
 
 ---
 
 ## Choix Outil Favori (Onboarding)
 
-Question directe, non engageante, au début du flow :
+Question directe, visuelle, placée **avant** les tests comportementaux :
 
 > "Qu'est-ce qui te correspond le mieux ?"
 >
 > [🎨 Créatif] [☯ Minimaliste] [🔄 Multi-tâches] [⏱ Rationnel]
 
-Note : Pomodoro = flow spécial avec activités favorites pré-configurées (hors scope cette ADR)
+**Raison de l'ordre :** Question légère d'abord, effort cognitif (tests) ensuite. L'utilisateur sait ce qu'il préfère visuellement sans analyse comportementale.
 
 ---
 
@@ -176,6 +182,10 @@ L'user ne se connaît pas toujours. Observer > demander. Plus ludique, moins "te
 
 L'user peut se tromper ou évoluer. Pas de prison. L'app reste flexible.
 
+### Pourquoi Tool avant Tests dans l'onboarding ?
+
+Minimise charge cognitive initiale. Question visuelle simple → effort comportemental après. Pas de storytelling "Tu es X donc Y" style Buzzfeed.
+
 ---
 
 ## Conséquences
@@ -194,8 +204,22 @@ L'user peut se tromper ou évoluer. Pas de prison. L'app reste flexible.
 
 ---
 
+## Hors Scope
+
+- **Pomodoro Flow** : Mode spécial avec activités pré-configurées (feature future)
+- **Settings Discovery Modal** : Invitation post-onboarding à explorer réglages (rétention, pas acquisition)
+
+---
+
 ## Références
 
 - ADR-007 : Gestes & Confirmation Long Press
 - ADR-005 : Architecture DialZone / AsideZone
 - Session Chrysalis-Eric 18-20 décembre 2025
+
+---
+
+**Changelog v1.1 :**
+- Seuils révisés : 500ms→800ms (start), 2s→2.5s (stop)
+- Justification ordre Tool avant Tests ajoutée
+- Hors scope explicité

@@ -1,4 +1,4 @@
-// src/components/modals/settings/index.js
+// src/components/modals/settings/index.js (archived 2025-12-21)
 // Re-export all settings section components
 
 export { default as SettingsCommandBarSection } from './SettingsCommandBarSection';
@@ -7,3 +7,5 @@ export { default as SettingsDialSection } from './SettingsDialSection';
 export { default as SettingsSoundSection } from './SettingsSoundSection';
 export { default as SettingsGeneralSection } from './SettingsGeneralSection';
 export { default as SettingsThemeSection } from './SettingsThemeSection';
+
+

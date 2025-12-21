@@ -1,26 +1,13 @@
 /**
  * @fileoverview PremiumModal component tests
  * Smoke tests for premium paywall modal
- * @jest-environment jsdom
  */
 
 import React from 'react';
 import { create, act } from 'react-test-renderer';
 import PremiumModal from '../../src/components/modals/PremiumModal';
 
-// Mock dependencies
-jest.mock('../../src/theme/ThemeProvider', () => ({
-  useTheme: () => ({
-    colors: {
-      background: '#FFFFFF',
-      text: '#000000',
-      brand: { primary: '#007AFF' },
-      fixed: { white: '#FFFFFF' },
-    },
-    spacing: { sm: 4, md: 12, lg: 16, xl: 24 },
-    shadow: () => ({}),
-  }),
-}));
+// Mock dependencies (ThemeProvider is mocked globally in jest.setup.js)
 
 jest.mock('../../src/contexts/PurchaseContext', () => ({
   usePurchases: () => ({

@@ -15,11 +15,11 @@ describe('useDialOrientation - Core functionality', () => {
     it('converts angles to minutes correctly', () => {
       const { result } = renderHook(() => useDialOrientation(true, '25min'));
 
-      // Key angles - clockwise
+      // Key angles - clockwise (no rounding, returns fractional minutes)
       expect(result.current.angleToMinutes(0)).toBe(0);     // Top
-      expect(result.current.angleToMinutes(90)).toBe(6);    // Right
-      expect(result.current.angleToMinutes(180)).toBe(13);  // Bottom
-      expect(result.current.angleToMinutes(270)).toBe(19);  // Left
+      expect(result.current.angleToMinutes(90)).toBeCloseTo(6.25, 2);    // Right
+      expect(result.current.angleToMinutes(180)).toBeCloseTo(12.5, 2);  // Bottom
+      expect(result.current.angleToMinutes(270)).toBeCloseTo(18.75, 2);  // Left
       expect(result.current.angleToMinutes(360)).toBe(0);   // Full circle
     });
 
@@ -37,11 +37,11 @@ describe('useDialOrientation - Core functionality', () => {
     it('converts angles to minutes correctly', () => {
       const { result } = renderHook(() => useDialOrientation(false, '25min'));
 
-      // Counter-clockwise reverses the direction
+      // Counter-clockwise reverses the direction (no rounding, returns fractional minutes)
       expect(result.current.angleToMinutes(0)).toBe(25);    // Top = max
-      expect(result.current.angleToMinutes(90)).toBe(19);   // Right (reversed)
-      expect(result.current.angleToMinutes(180)).toBe(13);  // Bottom
-      expect(result.current.angleToMinutes(270)).toBe(6);   // Left (reversed)
+      expect(result.current.angleToMinutes(90)).toBeCloseTo(18.75, 2);   // Right (reversed)
+      expect(result.current.angleToMinutes(180)).toBeCloseTo(12.5, 2);  // Bottom
+      expect(result.current.angleToMinutes(270)).toBeCloseTo(6.25, 2);   // Left (reversed)
     });
 
     it('converts minutes to angles correctly', () => {
@@ -97,17 +97,17 @@ describe('useDialOrientation - Core functionality', () => {
     it('handles negative angles', () => {
       const { result } = renderHook(() => useDialOrientation(true, '25min'));
 
-      expect(result.current.angleToMinutes(-90)).toBe(19);  // Normalizes to 270
-      expect(result.current.angleToMinutes(-180)).toBe(13); // Normalizes to 180
+      expect(result.current.angleToMinutes(-90)).toBeCloseTo(18.75, 2);  // Normalizes to 270
+      expect(result.current.angleToMinutes(-180)).toBeCloseTo(12.5, 2); // Normalizes to 180
       expect(result.current.angleToMinutes(-360)).toBe(0);  // Full negative circle
     });
 
     it('handles angles > 360', () => {
       const { result } = renderHook(() => useDialOrientation(true, '25min'));
 
-      expect(result.current.angleToMinutes(450)).toBe(6);   // 450 % 360 = 90
+      expect(result.current.angleToMinutes(450)).toBeCloseTo(6.25, 2);   // 450 % 360 = 90
       expect(result.current.angleToMinutes(720)).toBe(0);   // Two full circles
-      expect(result.current.angleToMinutes(540)).toBe(13);  // 540 % 360 = 180
+      expect(result.current.angleToMinutes(540)).toBeCloseTo(12.5, 2);  // 540 % 360 = 180
     });
 
     it('clamps minutes to valid range', () => {
@@ -124,8 +124,8 @@ describe('useDialOrientation - Core functionality', () => {
     it('handles string inputs for angles', () => {
       const { result } = renderHook(() => useDialOrientation(true, '25min'));
 
-      expect(result.current.angleToMinutes('90')).toBe(6);
-      expect(result.current.angleToMinutes('180')).toBe(13);
+      expect(result.current.angleToMinutes('90')).toBeCloseTo(6.25, 2);
+      expect(result.current.angleToMinutes('180')).toBeCloseTo(12.5, 2);
       expect(result.current.angleToMinutes('invalid')).toBe(0); // NaN fallback
     });
 
@@ -139,13 +139,14 @@ describe('useDialOrientation - Core functionality', () => {
   });
 
   describe('Precision and rounding', () => {
-    it('rounds minutes to nearest integer', () => {
+    it('returns fractional minutes (no rounding during drag)', () => {
       const { result } = renderHook(() => useDialOrientation(true, '25min'));
 
-      expect(result.current.angleToMinutes(89)).toBe(6);   // Round 6.18
-      expect(result.current.angleToMinutes(91)).toBe(6);   // Round 6.32
-      expect(result.current.angleToMinutes(93)).toBe(6);   // Round 6.46
-      expect(result.current.angleToMinutes(95)).toBe(7);   // Round 6.6
+      // Note: angleToMinutes no longer rounds - returns fractional values for smooth drag
+      expect(result.current.angleToMinutes(89)).toBeCloseTo(6.18, 2);
+      expect(result.current.angleToMinutes(91)).toBeCloseTo(6.32, 2);
+      expect(result.current.angleToMinutes(93)).toBeCloseTo(6.46, 2);
+      expect(result.current.angleToMinutes(95)).toBeCloseTo(6.6, 2);
     });
 
     it('handles floating point precision', () => {

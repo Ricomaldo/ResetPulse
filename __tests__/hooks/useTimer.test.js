@@ -120,13 +120,13 @@ describe('useTimer - Core functionality', () => {
         result.current.toggleRunning();
       });
 
-      // Pause
+      // Stop (toggleRunning is now startTimer, use stopTimer to pause)
       act(() => {
-        result.current.toggleRunning();
+        result.current.stopTimer();
       });
 
       expect(result.current.running).toBe(false);
-      expect(result.current.displayMessage).toBe('Pause');
+      expect(result.current.displayMessage).toBe('invitation'); // REST state shows invitation
 
       unmount(); // Clean up
     });
@@ -146,7 +146,7 @@ describe('useTimer - Core functionality', () => {
 
       expect(result.current.remaining).toBe(300);
       expect(result.current.running).toBe(false);
-      expect(result.current.displayMessage).toBe('');
+      expect(result.current.displayMessage).toBe('invitation'); // REST state shows invitation
 
       unmount(); // Clean up
     });

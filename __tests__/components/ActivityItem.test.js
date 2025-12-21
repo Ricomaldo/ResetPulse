@@ -8,13 +8,7 @@ import { create, act } from 'react-test-renderer';
 import { Animated } from 'react-native';
 import ActivityItem from '../../src/components/carousels/activity-items/ActivityItem';
 
-jest.mock('../../src/theme/ThemeProvider', () => ({
-  useTheme: () => ({
-    colors: { surface: '#FFFFFF', brand: { primary: '#007AFF' } },
-    borderRadius: { full: 9999, lg: 12 },
-    shadow: () => ({}),
-  }),
-}));
+// ThemeProvider is mocked globally in jest.setup.js
 
 jest.mock('../../src/hooks/useTranslation', () => ({
   useTranslation: () => (key) => key,

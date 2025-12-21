@@ -30,6 +30,14 @@ jest.mock('../../src/hooks/usePersistedState', () => ({
 
 jest.mock('../../src/config/activities', () => ({
   getDefaultActivity: () => 'work',
+  getActivityById: (id) => {
+    const activities = {
+      work: { id: 'work', emoji: '💻', label: 'Work', isPremium: false },
+      break: { id: 'break', emoji: '☕', label: 'Break', isPremium: false },
+      meditation: { id: 'meditation', emoji: '🧘', label: 'Meditation', isPremium: false },
+    };
+    return activities[id] || activities.work;
+  },
 }));
 
 // Import after mocks
