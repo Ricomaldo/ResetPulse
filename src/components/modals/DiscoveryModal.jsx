@@ -1,5 +1,18 @@
-// src/components/modals/DiscoveryModal.jsx
-// Modale générique de découverte premium (activités, couleurs, etc.)
+/**
+ * @fileoverview DiscoveryModal - Generic premium discovery UI (React Native <Modal>)
+ * @deprecated Use BottomSheet pattern instead: modalStack.push('discovery', { title, children, ... })
+ * @see DiscoveryModalContent.jsx - New BottomSheet implementation
+ * @see BottomSheetModal.jsx - Reusable BottomSheet wrapper
+ * @see ModalStackRenderer.jsx - Type-based modal rendering
+ *
+ * BACKWARD COMPATIBILITY ONLY - Will be removed after migration of:
+ * - MoreActivitiesModal.jsx (uses DiscoveryModal internally)
+ * - MoreColorsModal.jsx (uses DiscoveryModal internally)
+ *
+ * Migration path:
+ * - Before: <DiscoveryModal visible={show} title="..." children={<Grid />} />
+ * - After: modalStack.push('discovery', { title: '...', children: <Grid /> })
+ */
 
 import React from 'react';
 import {
