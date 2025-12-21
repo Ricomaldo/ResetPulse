@@ -8,7 +8,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
 import { rs } from '../../styles/responsive';
 import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import { getProfileConfig } from '../../utils/interactionProfileConfig';

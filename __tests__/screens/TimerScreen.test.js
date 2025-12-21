@@ -55,13 +55,8 @@ const mockTimerOptionsContext = {
   toggleFavoritePalette: jest.fn(),
 };
 
-jest.mock('../../src/contexts/TimerOptionsContext', () => ({
-  TimerOptionsProvider: ({ children }) => children,
+jest.mock('../../src/contexts/TimerConfigContext', () => ({
   useTimerOptions: () => mockTimerOptionsContext,
-}));
-
-// Mock TimerPaletteContext
-jest.mock('../../src/contexts/TimerPaletteContext', () => ({
   useTimerPalette: () => ({
     currentColor: '#007AFF',
   }),

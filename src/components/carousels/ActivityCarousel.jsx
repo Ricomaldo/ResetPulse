@@ -14,8 +14,8 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
-import { useTimerPalette } from '../../contexts/TimerPaletteContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useTimerPalette } from '../../contexts/TimerConfigContext';
 import { rs } from '../../styles/responsive';
 import { harmonizedSizes } from '../../styles/harmonized-sizes';
 import { getAllActivities, getFreeActivities } from '../../config/activities';

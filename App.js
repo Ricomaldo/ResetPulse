@@ -12,9 +12,8 @@ import { getActivityById } from './src/config/activities';
 // ==============================
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
-import { TimerPaletteProvider } from './src/contexts/TimerPaletteContext';
+import { TimerConfigProvider } from './src/contexts/TimerConfigContext';
 import { ModalStackProvider } from './src/contexts/ModalStackContext';
-import { UserPreferencesProvider } from './src/contexts/UserPreferencesContext';
 import ModalStackRenderer from './src/components/modals/ModalStackRenderer';
 import TimerScreen from './src/screens/TimerScreen';
 import { OnboardingFlow } from './src/screens/onboarding';
@@ -83,19 +82,17 @@ function AppContent() {
 
   return (
     <Animated.View style={[styles.fadeWrapper, { opacity: fadeAnim }]}>
-      <TimerPaletteProvider>
-        <StatusBar
-          barStyle={theme.isDark ? 'light-content' : 'dark-content'}
-          backgroundColor={theme.colors.background}
-        />
+      <StatusBar
+        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+        backgroundColor={theme.colors.background}
+      />
 
-        {/* Onboarding V2 pour premier lancement */}
-        {!onboardingCompleted ? (
-          <OnboardingFlow onComplete={handleOnboardingComplete} />
-        ) : (
-          <TimerScreen />
-        )}
-      </TimerPaletteProvider>
+      {/* Onboarding V2 pour premier lancement */}
+      {!onboardingCompleted ? (
+        <OnboardingFlow onComplete={handleOnboardingComplete} />
+      ) : (
+        <TimerScreen />
+      )}
     </Animated.View>
   );
 }
@@ -205,7 +202,7 @@ export default function App() {
   // En mode dev avec FAB activé, afficher le FAB + contenu
   if (DEV_MODE && SHOW_DEV_FAB) {
     return (
-      <UserPreferencesProvider>
+      <TimerConfigProvider>
         <DevPremiumProvider>
           <GestureHandlerRootView style={styles.container}>
             {renderContent()}
@@ -217,19 +214,19 @@ export default function App() {
             />
           </GestureHandlerRootView>
         </DevPremiumProvider>
-      </UserPreferencesProvider>
+      </TimerConfigProvider>
     );
   }
 
   // Production ou dev sans FAB: app normale
   return (
-    <UserPreferencesProvider>
+    <TimerConfigProvider>
       <DevPremiumProvider>
         <GestureHandlerRootView style={styles.container}>
           {renderContent()}
         </GestureHandlerRootView>
       </DevPremiumProvider>
-    </UserPreferencesProvider>
+    </TimerConfigProvider>
   );
 }
 

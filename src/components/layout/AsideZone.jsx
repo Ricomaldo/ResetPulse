@@ -14,7 +14,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
 import { MessageZone } from '../messaging';
 import { FavoriteToolBox, ToolBox } from './aside-content';
 import { SettingsPanel } from '../settings';

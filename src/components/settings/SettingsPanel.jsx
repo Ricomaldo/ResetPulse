@@ -21,8 +21,8 @@ import {
   Heart,
 } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
-import { useUserPreferences } from '../../contexts/UserPreferencesContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
+import { useUserPreferences } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
@@ -127,7 +127,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
     },
   ];
 
-  // Favorite tools modes (mapped from UserPreferencesContext values)
+  // Favorite tools modes (mapped from TimerConfigContext values)
   const favoriteTools = [
     {
       id: 'colors',

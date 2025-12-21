@@ -23,7 +23,7 @@ import Animated, {
 import Svg, { Circle } from 'react-native-svg';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerOptions } from '../../contexts/TimerOptionsContext';
+import { useTimerOptions } from '../../contexts/TimerConfigContext';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
