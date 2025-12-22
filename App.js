@@ -59,7 +59,7 @@ function AppContent() {
 
   // Handler for notification taps (post-skip reminders)
   useEffect(() => {
-    const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       const data = response.notification.request.content.data;
 
       if (data.type === 'reminder_day_3') {
@@ -76,7 +76,7 @@ function AppContent() {
     });
 
     return () => {
-      Notifications.removeNotificationSubscription(responseListener);
+      subscription.remove();
     };
   }, []);
 
