@@ -37,6 +37,15 @@
       "title": "Crée ton premier moment",
       "subtitle": "Choisis un emoji, un nom et une durée"
     },
+    "testStart": {
+      "title": "Quand tu es prêt, appuie",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Maintenant, lâche quand tu veux",
+      "hint": "",
+      "revealTitle": "Tu es"
+    },
     "v2": {
       "filter0": {
         "breathe": "Respire.\nTon temps t'appartient.",
@@ -127,6 +136,24 @@
         "finish": "Terminer",
         "skip": "Passer →"
       }
+    }
+  },
+  "personas": {
+    "veloce": {
+      "label": "Véloce",
+      "description": "Tu sais ce que tu veux. Ton timer répondra instantanément."
+    },
+    "abandonniste": {
+      "label": "Abandonniste",
+      "description": "Tu as du mal à tenir jusqu'au bout. Ton timer te protégera des arrêts impulsifs."
+    },
+    "impulsif": {
+      "label": "Impulsif",
+      "description": "Tu démarres vite, tu as besoin de freiner. Ton timer demandera confirmation pour démarrer."
+    },
+    "ritualiste": {
+      "label": "Ritualiste",
+      "description": "Les actions délibérées te correspondent. Ton timer s'adaptera à ton rythme."
     }
   },
   "timer": {

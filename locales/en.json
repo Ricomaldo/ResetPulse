@@ -34,6 +34,15 @@
       "title": "Create your first moment",
       "subtitle": "Choose an emoji, a name, and a duration"
     },
+    "testStart": {
+      "title": "When you're ready, press",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Now, release when you want",
+      "hint": "",
+      "revealTitle": "You are"
+    },
     "v2": {
       "filter0": {
         "breathe": "Breathe.\nYour time is yours.",
@@ -124,6 +133,24 @@
         "finish": "Finish",
         "skip": "Skip →"
       }
+    }
+  },
+  "personas": {
+    "veloce": {
+      "label": "Quick",
+      "description": "You know what you want. Your timer will respond instantly."
+    },
+    "abandonniste": {
+      "label": "Struggler",
+      "description": "You have trouble seeing things through. Your timer will protect you from impulsive stops."
+    },
+    "impulsif": {
+      "label": "Impulsive",
+      "description": "You start fast, you need to slow down. Your timer will ask for confirmation to start."
+    },
+    "ritualiste": {
+      "label": "Ritualistic",
+      "description": "Deliberate actions suit you. Your timer will adapt to your rhythm."
     }
   },
   "timer": {

@@ -14,18 +14,22 @@ jest.mock('../../src/hooks/useTranslation', () => ({
   },
 }));
 
-// Mock TimerConfigContext (updated for consolidated provider)
+// Mock TimerConfigContext (updated for consolidated provider with namespaced structure)
 jest.mock('../../src/contexts/TimerConfigContext', () => ({
   useTimerConfig: () => ({
-    // Timer options (used by useTimer)
-    selectedSoundId: 'bell_classic',
-    shouldPulse: false,
-    activityDurations: {},
+    // Namespaced structure matching new API
+    timer: {
+      selectedSoundId: 'bell_classic',
+      currentActivity: { id: 'none', label: 'None', emoji: '', defaultDuration: 240 },
+    },
+    stats: {
+      activityDurations: {},
+    },
     saveActivityDuration: jest.fn(),
-    currentActivity: { id: 'none', label: 'None', emoji: '', defaultDuration: 240 },
-    // Palette (used by useTimer)
-    currentPalette: 'terre',
-    currentColor: '#8B4513',
+    palette: {
+      currentPalette: 'terre',
+      currentColor: '#8B4513',
+    },
   }),
   // Backward-compatible aliases (for components not yet migrated)
   useTimerOptions: () => ({
