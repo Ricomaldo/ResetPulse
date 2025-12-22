@@ -176,4 +176,34 @@ export const onboardingEvents = {
       digital_timer: digitalTimer,
     });
   },
+
+  /**
+   * Tool Selected (Onboarding V2.1)
+   * Trigger: Filter-020-tool - User selects favorite tool mode
+   * Analyse des profils utilisateur
+   *
+   * @param {string} tool - Tool selected ('creative' | 'minimalist' | 'multitask' | 'rational')
+   */
+  trackToolSelected(tool) {
+    this.track('tool_selected', {
+      tool,
+    });
+  },
+
+  /**
+   * Custom Activity Created During Onboarding (V2.1)
+   * Trigger: Filter-030-creation - User creates their first custom activity
+   * Mesure engagement freemium (1 activité custom gratuite)
+   *
+   * @param {string} emoji - Emoji selected
+   * @param {number} nameLength - Name length
+   * @param {number} duration - Duration in seconds
+   */
+  trackCustomActivityCreatedOnboarding(emoji, nameLength, duration) {
+    this.track('custom_activity_created_onboarding', {
+      emoji,
+      name_length: nameLength,
+      duration_seconds: duration,
+    });
+  },
 };

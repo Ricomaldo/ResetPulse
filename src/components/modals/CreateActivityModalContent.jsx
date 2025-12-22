@@ -40,10 +40,12 @@ const DEFAULT_DURATION = 1800; // 30 minutes
  *
  * @param {Function} onClose - Callback to close modal
  * @param {Function} onActivityCreated - Callback when activity is created
+ * @param {string} context - Context of use: 'modal' (default) or 'onboarding'
  */
 export default function CreateActivityModalContent({
   onClose,
   onActivityCreated,
+  context = 'modal',
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -429,18 +431,20 @@ export default function CreateActivityModalContent({
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={handleClose}
-          activeOpacity={0.7}
-          accessibilityLabel={t('customActivities.create.buttonCancel')}
-          accessibilityRole="button"
-          accessibilityHint={t('accessibility.closeModalHint')}
-        >
-          <Text style={styles.cancelButtonText}>
-            {t('customActivities.create.buttonCancel')}
-          </Text>
-        </TouchableOpacity>
+        {context !== 'onboarding' && (
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handleClose}
+            activeOpacity={0.7}
+            accessibilityLabel={t('customActivities.create.buttonCancel')}
+            accessibilityRole="button"
+            accessibilityHint={t('accessibility.closeModalHint')}
+          >
+            <Text style={styles.cancelButtonText}>
+              {t('customActivities.create.buttonCancel')}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity
           style={[

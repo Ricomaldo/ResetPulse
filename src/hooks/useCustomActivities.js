@@ -6,6 +6,7 @@ import { usePersistedState } from './usePersistedState';
 // Constants
 const STORAGE_KEY = '@ResetPulse:customActivities';
 const DEFAULT_PULSE_DURATION = 800; // Normal pulse speed
+const FREE_CUSTOM_LIMIT = 1; // Free users can create 1 custom activity (during onboarding)
 
 /**
  * Hook pour gérer les activités personnalisées des utilisateurs premium
@@ -31,9 +32,10 @@ export const useCustomActivities = () => {
    * @param {string} emoji - Emoji sélectionné
    * @param {string} name - Nom de l'activité (max 20 chars)
    * @param {number} defaultDuration - Durée par défaut en secondes
+   * @param {Object} metadata - Métadonnées optionnelles (ex: { createdDuringOnboarding: true })
    * @returns {Object} L'activité créée
    */
-  const createActivity = (emoji, name, defaultDuration) => {
+  const createActivity = (emoji, name, defaultDuration, metadata = {}) => {
     const newActivity = {
       id: `custom_${Date.now()}`,
       emoji,
@@ -46,6 +48,7 @@ export const useCustomActivities = () => {
       timesUsed: 0,
       suggestedColor: 'calm', // Default suggested color
       pulseDuration: DEFAULT_PULSE_DURATION,
+      ...metadata, // Spread metadata to allow createdDuringOnboarding, etc.
     };
 
     setCustomActivities((prev) => [...prev, newActivity]);
@@ -116,6 +119,16 @@ export const useCustomActivities = () => {
     return customActivities.length;
   };
 
+  /**
+   * Vérifie si l'utilisateur peut créer une nouvelle activité personnalisée
+   * @param {boolean} isPremium - Statut premium de l'utilisateur
+   * @returns {boolean} Vrai si création autorisée
+   */
+  const canCreateActivity = (isPremium) => {
+    if (isPremium) return true;
+    return customActivities.length < FREE_CUSTOM_LIMIT;
+  };
+
   return {
     customActivities,
     createActivity,
@@ -124,6 +137,8 @@ export const useCustomActivities = () => {
     incrementUsage,
     getActivityById,
     getCustomActivitiesCount,
+    canCreateActivity,
+    FREE_CUSTOM_LIMIT,
     isLoading,
   };
 };

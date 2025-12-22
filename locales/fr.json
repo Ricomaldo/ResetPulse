@@ -26,6 +26,17 @@
     "skipAll": "Passer tout",
     "next": "Suivant",
     "start": "Commencer",
+    "tool": {
+      "title": "Qu'est-ce qui te correspond le mieux ?",
+      "creative": "Créatif",
+      "minimalist": "Minimaliste",
+      "multitask": "Multi-tâches",
+      "rational": "Rationnel"
+    },
+    "creation": {
+      "title": "Crée ton premier moment",
+      "subtitle": "Choisis un emoji, un nom et une durée"
+    },
     "v2": {
       "filter0": {
         "breathe": "Respire.\nTon temps t'appartient.",

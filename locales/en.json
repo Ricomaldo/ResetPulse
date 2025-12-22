@@ -23,6 +23,17 @@
     "completion": "Enjoy ResetPulse!",
     "restartGuide": "Restart the guide",
     "restartGuideDescription": "Show the welcome screen and tips again",
+    "tool": {
+      "title": "What fits you best?",
+      "creative": "Creative",
+      "minimalist": "Minimalist",
+      "multitask": "Multitasker",
+      "rational": "Rational"
+    },
+    "creation": {
+      "title": "Create your first moment",
+      "subtitle": "Choose an emoji, a name, and a duration"
+    },
     "v2": {
       "filter0": {
         "breathe": "Breathe.\nYour time is yours.",
