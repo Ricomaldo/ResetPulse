@@ -240,5 +240,18 @@
     "title": "更多顏色",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "為自己留出一刻?",
+        "bodyPersonalized": "你的{{name}}在等你 {{emoji}} — {{duration}}分鐘怎麼樣?",
+        "bodyGeneric": "你的計時器在等待 — 為自己留出一刻"
+      },
+      "day7": {
+        "title": "最後機會",
+        "body": "7天免費試用 — 趕在過期前獲取"
+      }
+    }
   }
 }

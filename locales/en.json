@@ -513,5 +513,18 @@
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
     }
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "A moment for yourself?",
+        "bodyPersonalized": "Your {{name}} awaits {{emoji}} — {{duration}} min for you?",
+        "bodyGeneric": "Your timer awaits — take a moment for yourself"
+      },
+      "day7": {
+        "title": "Last chance",
+        "body": "7-day free trial — grab it before it expires"
+      }
+    }
   }
 }

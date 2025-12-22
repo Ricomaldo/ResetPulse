@@ -240,5 +240,18 @@
     "title": "Ещё больше цветов",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Момент для себя?",
+        "bodyPersonalized": "Твой {{name}} тебя ждет {{emoji}} — {{duration}} мин для тебя?",
+        "bodyGeneric": "Твой таймер тебя ждет — возьми момент для себя"
+      },
+      "day7": {
+        "title": "Последний шанс",
+        "body": "7 дней бесплатно — используй это предложение пока не истекло"
+      }
+    }
   }
 }

@@ -16,6 +16,7 @@ import { rs } from '../onboardingConstants';
 import { getPersonaById } from '../personaConstants';
 import { useAnalytics } from '../../../hooks/useAnalytics';
 import haptics from '../../../utils/haptics';
+import { schedulePostSkipReminders } from '../../../services/reminderNotifications';
 import { spacing, typography, fontWeights, borderRadius } from '../../../theme/tokens';
 
 export default function Filter080Paywall({
@@ -101,11 +102,15 @@ export default function Filter080Paywall({
     }
   }, [purchaseProduct, getOfferings, onContinue, analytics, t]);
 
-  const handleSkip = useCallback(() => {
+  const handleSkip = useCallback(async () => {
     haptics.impact('light').catch(() => {});
     analytics.trackPaywallSkipped('onboarding');
+
+    // Schedule post-skip reminder notifications (J+3, J+7)
+    await schedulePostSkipReminders(customActivity);
+
     onContinue({ purchaseResult: 'skipped' });
-  }, [onContinue, analytics]);
+  }, [onContinue, analytics, customActivity]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>

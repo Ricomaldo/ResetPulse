@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StatusBar, Animated, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import * as Notifications from 'expo-notifications';
 
 // ========== DEV MODE ==========
 import { DEV_MODE, SHOW_DEV_FAB, DEV_DEFAULT_TIMER_CONFIG } from './src/config/test-mode';
@@ -54,6 +55,29 @@ function AppContent() {
       }).start();
     }, 100);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Handler for notification taps (post-skip reminders)
+  useEffect(() => {
+    const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
+      const data = response.notification.request.content.data;
+
+      if (data.type === 'reminder_day_3') {
+        // Day 3 reminder: User tapped notification
+        Analytics.track('reminder_day_3_tapped', { activityId: data.activityId });
+        // TODO: Navigate to TimerScreen with pre-selected activity (Phase 6)
+      }
+
+      if (data.type === 'reminder_day_7') {
+        // Day 7 reminder: Open paywall
+        Analytics.track('reminder_day_7_tapped');
+        // TODO: Open PremiumModal via ModalStack (Phase 6)
+      }
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(responseListener);
+    };
   }, []);
 
   // Callback quand l'onboarding V2 est terminé

@@ -240,5 +240,18 @@
     "title": "Nog meer kleuren",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Een moment voor jezelf?",
+        "bodyPersonalized": "Je {{name}} wacht op je {{emoji}} — {{duration}} min voor jezelf?",
+        "bodyGeneric": "Je timer wacht op je — neem een moment voor jezelf"
+      },
+      "day7": {
+        "title": "Laatste kans",
+        "body": "7 dagen gratis proefperiode — grijp het voordat het verloopt"
+      }
+    }
   }
 }

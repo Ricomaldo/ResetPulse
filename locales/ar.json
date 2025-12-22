@@ -240,5 +240,18 @@
     "title": "المزيد من الألوان",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "لحظة لنفسك؟",
+        "bodyPersonalized": "{{name}} الخاص بك ينتظرك {{emoji}} — {{duration}} دقيقة لك؟",
+        "bodyGeneric": "مؤقتك ينتظرك — خذ لحظة لنفسك"
+      },
+      "day7": {
+        "title": "فرصتك الأخيرة",
+        "body": "تجربة مجانية لمدة 7 أيام — احصل عليها قبل انتهاء صلاحيتها"
+      }
+    }
   }
 }

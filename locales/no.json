@@ -240,5 +240,18 @@
     "title": "Enda flere farger",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Et øyeblikk for deg selv?",
+        "bodyPersonalized": "Din {{name}} venter på deg {{emoji}} — {{duration}} min for deg?",
+        "bodyGeneric": "Din timer venter — ta et øyeblikk for deg selv"
+      },
+      "day7": {
+        "title": "Siste sjanse",
+        "body": "7 dagers gratis prøveperiode — ta den før den utløper"
+      }
+    }
   }
 }

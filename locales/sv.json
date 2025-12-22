@@ -240,5 +240,18 @@
     "title": "Ännu fler färger",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "En stund för dig själv?",
+        "bodyPersonalized": "Din {{name}} väntar på dig {{emoji}} — {{duration}} min för dig?",
+        "bodyGeneric": "Din timer väntar — ta en stund för dig själv"
+      },
+      "day7": {
+        "title": "Sista chansen",
+        "body": "7 dagars gratis provperiod — ta den innan den går ut"
+      }
+    }
   }
 }
