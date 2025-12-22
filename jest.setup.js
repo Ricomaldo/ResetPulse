@@ -130,9 +130,28 @@ jest.mock('react-native-reanimated', () => {
     if (!mock.createAnimatedComponent) {
       mock.createAnimatedComponent = (component) => component;
     }
+    // Add FadeIn and FadeOut for onboarding transitions
+    if (!mock.FadeIn) {
+      mock.FadeIn = {
+        duration: () => ({
+          delay: () => ({}),
+        }),
+      };
+    }
+    if (!mock.FadeOut) {
+      mock.FadeOut = {
+        duration: () => ({}),
+      };
+    }
     return mock;
   } catch (e) {
     // Fallback mock if official mock fails
+    const createFadeAnimation = () => ({
+      duration: () => ({
+        delay: () => ({}),
+      }),
+    });
+    
     return {
       default: {
         View: View,
@@ -155,6 +174,10 @@ jest.mock('react-native-reanimated', () => {
       withRepeat: (value) => value,
       withSequence: (...values) => values[values.length - 1],
       interpolate: (value, config) => config.outputRange?.[0] || 0,
+      FadeIn: createFadeAnimation(),
+      FadeOut: {
+        duration: () => ({}),
+      },
       Extrapolation: {
         IDENTITY: 'identity',
         CLAMP: 'clamp',

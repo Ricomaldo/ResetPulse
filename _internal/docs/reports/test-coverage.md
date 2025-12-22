@@ -16,8 +16,8 @@ source: 'Post-refactor test suite restoration (2025-01-XX)'
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| Test Pass Rate | 220/220 (100%) | 100% | ✅ |
-| Test Suites | 20/20 (100%) | 100% | ✅ |
+| Test Pass Rate | 202/202 (100%) | 100% | ✅ |
+| Test Suites | 17/17 (100%) | 100% | ✅ |
 | Coverage - Statements | 44.52% | 80% | ⚠️ |
 | Coverage - Branches | 35.42% | 70% | ⚠️ |
 | Component Tests | 7 files | >5 | ✅ |
@@ -25,13 +25,13 @@ source: 'Post-refactor test suite restoration (2025-01-XX)'
 | Context Tests | 1 file | >1 | ✅ |
 | Screen Tests | 2 files | >1 | ✅ |
 
-**Dernière mise à jour**: Janvier 2025 (après refonte décembre 2025)
+**Dernière mise à jour**: Janvier 2025 (après refonte décembre 2025 et consolidation providers + onboarding v2.1)
 
 ---
 
 ## Test Suite Inventory
 
-### Test Files by Category (20 total)
+### Test Files by Category (17 total)
 
 #### Component Tests (7 files)
 | File | Tests | Status | Notes |
@@ -65,7 +65,7 @@ source: 'Post-refactor test suite restoration (2025-01-XX)'
 | File | Tests | Status | Notes |
 |------|-------|--------|-------|
 | `TimerScreen.test.js` | 5 | ✅ | Main timer screen |
-| `OnboardingFlow.test.js` | ? | ✅ | Onboarding flow |
+| `OnboardingFlow.test.js` | 8 | ✅ | Onboarding v2.1 (9 filters linear flow) |
 
 #### Service Tests (1 file)
 | File | Tests | Status | Notes |
@@ -83,7 +83,7 @@ source: 'Post-refactor test suite restoration (2025-01-XX)'
 |------|-------|--------|-------|
 | `simple.test.js` | 2 | ✅ | Basic smoke tests |
 
-**TOTAL**: **220 tests** across **20 test suites**
+**TOTAL**: **202 tests** across **17 test suites**
 
 ### Coverage Summary (Janvier 2025)
 
@@ -113,7 +113,7 @@ Tous les mocks sont centralisés pour éviter la duplication :
 - ✅ `@react-native-async-storage/async-storage` - Storage
 
 #### React Native Components
-- ✅ `react-native-reanimated` - Animations (avec `createAnimatedComponent`)
+- ✅ `react-native-reanimated` - Animations (avec `createAnimatedComponent`, `FadeIn`, `FadeOut`)
 - ✅ `react-native-gesture-handler` - Gestures
 - ✅ `react-native-svg` - SVG rendering
 - ✅ `react-native-worklets` - Worklets support
@@ -164,6 +164,16 @@ Tous les mocks sont centralisés pour éviter la duplication :
 #### 8. Couleurs de Fallback Manquantes ✅
 **Problème**: `onboardingConstants.test.js` échouait quand `colors` était `undefined`  
 **Solution**: Ajout de couleurs de fallback dans `getJourneyScenarios`
+
+#### 9. Onboarding v2.1 Structure Changes ✅
+**Problème**: `OnboardingFlow.test.js` référençait l'ancienne structure (10 filtres avec branches)  
+**Solution**: 
+- Mise à jour des mocks pour refléter la nouvelle structure linéaire (9 filtres)
+- Ajout du mock `TimerConfigContext` (requis par OnboardingFlow)
+- Ajout du mock `ONBOARDING_TRANSITIONS` pour les animations Reanimated
+- Ajout de `FadeIn` et `FadeOut` dans le mock Reanimated
+- Mise à jour des tests pour refléter la suppression du bouton retour (géré par Android BackHandler)
+- Correction du nombre total de steps (9 au lieu de 8)
 
 ---
 
@@ -286,5 +296,5 @@ jest.mock('../../src/theme/ThemeProvider', () => ({
 ---
 
 **Dernière mise à jour**: Janvier 2025  
-**Statut**: ✅ Tous les tests passent (220/220)  
+**Statut**: ✅ Tous les tests passent (202/202)  
 **Prochaine révision**: Après ajout des tests manquants Phase T1

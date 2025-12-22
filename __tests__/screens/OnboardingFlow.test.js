@@ -29,6 +29,13 @@ jest.mock('../../src/theme/ThemeProvider', () => ({
   }),
 }));
 
+// Mock TimerConfigContext (required by OnboardingFlow)
+jest.mock('../../src/contexts/TimerConfigContext', () => ({
+  useTimerConfig: () => ({
+    setOnboardingCompleted: jest.fn(),
+  }),
+}));
+
 // Mock onboarding constants
 jest.mock('../../src/screens/onboarding/onboardingConstants', () => ({
   rs: (value) => value,
@@ -65,21 +72,29 @@ jest.mock('../../src/config/test-mode', () => ({
   DEV_MODE: false,
 }));
 
+// Mock animations
+jest.mock('../../src/styles/animations', () => ({
+  ONBOARDING_TRANSITIONS: {
+    enterDuration: 300,
+    exitDuration: 200,
+    delayBetween: 100,
+  },
+}));
+
 // Mock StepIndicator
 jest.mock('../../src/components/onboarding/StepIndicator', () => 'StepIndicator');
 
-// Mock filter components
+// Mock filter components (v2.1 - 9 filters linear flow)
 jest.mock('../../src/screens/onboarding/filters', () => ({
   Filter010Opening: 'Filter010Opening',
-  Filter020Needs: 'Filter020Needs',
+  Filter020Tool: 'Filter020Tool',
   Filter030Creation: 'Filter030Creation',
-  Filter040Test: 'Filter040Test',
-  Filter050Notifications: 'Filter050Notifications',
-  Filter060Branch: 'Filter060Branch',
-  Filter070VisionDiscover: 'Filter070VisionDiscover',
-  Filter080SoundPersonalize: 'Filter080SoundPersonalize',
-  Filter090PaywallDiscover: 'Filter090PaywallDiscover',
-  Filter100InterfacePersonalize: 'Filter100InterfacePersonalize',
+  Filter040TestStart: 'Filter040TestStart',
+  Filter050TestStop: 'Filter050TestStop',
+  Filter060Sound: 'Filter060Sound',
+  Filter070Notifications: 'Filter070Notifications',
+  Filter080Paywall: 'Filter080Paywall',
+  Filter090FirstTimer: 'Filter090FirstTimer',
 }));
 
 // Theme tokens are mocked in jest.setup.js
@@ -100,15 +115,16 @@ describe('OnboardingFlow', () => {
     expect(component.toJSON()).toBeTruthy();
   });
 
-  it('should render StepIndicator component', () => {
+  it('should render StepIndicator component (hidden on first step)', () => {
     let component;
     act(() => {
       component = create(<OnboardingFlow onComplete={mockOnComplete} />);
     });
 
     const instance = component.root;
+    // StepIndicator is hidden on first step (currentStep > 0 && currentStep < TOTAL_STEPS - 1)
     const stepIndicator = instance.findAllByType('StepIndicator');
-    expect(stepIndicator.length).toBe(1);
+    expect(stepIndicator.length).toBe(0); // Hidden on step 0
   });
 
   it('should render first filter (Filter010Opening) on mount', () => {
@@ -122,54 +138,8 @@ describe('OnboardingFlow', () => {
     expect(filter010.length).toBe(1);
   });
 
-  it('should hide back button on first screen', () => {
-    let component;
-    act(() => {
-      component = create(<OnboardingFlow onComplete={mockOnComplete} />);
-    });
-
-    const instance = component.root;
-    const touchables = instance.findAllByType('TouchableOpacity');
-
-    // Back button should not exist (only exists on currentFilter > 0)
-    const backButtons = touchables.filter(t => {
-      try {
-        return t.props.accessibilityLabel === 'Go back';
-      } catch {
-        return false;
-      }
-    });
-
-    expect(backButtons.length).toBe(0);
-  });
-
-  it('should show back button on second screen', () => {
-    let component;
-    act(() => {
-      component = create(<OnboardingFlow onComplete={mockOnComplete} />);
-    });
-
-    const instance = component.root;
-    const filter010 = instance.findByType('Filter010Opening');
-
-    // Trigger continue to move to next filter
-    act(() => {
-      filter010.props.onContinue();
-    });
-
-    // Back button should now be visible (render check)
-    // The back button text should exist
-    const texts = component.root.findAllByType('Text');
-    const backText = texts.find(t => {
-      try {
-        return t.props.children === '‹';
-      } catch {
-        return false;
-      }
-    });
-
-    expect(backText).toBeTruthy();
-  });
+  // Note: Back navigation is now handled by Android BackHandler, not a visible button
+  // Back button UI was removed in v2.1 (ADR-010)
 
   it('should navigate forward through filters', () => {
     let component;
@@ -183,13 +153,13 @@ describe('OnboardingFlow', () => {
     const filter010 = instance.findAllByType('Filter010Opening');
     expect(filter010.length).toBe(1);
 
-    // Continue to Filter020
+    // Continue to Filter020Tool
     act(() => {
       filter010[0].props.onContinue();
     });
 
-    // Should now show Filter020
-    const filter020 = component.root.findAllByType('Filter020Needs');
+    // Should now show Filter020Tool
+    const filter020 = component.root.findAllByType('Filter020Tool');
     expect(filter020.length).toBe(1);
   });
 
@@ -208,11 +178,11 @@ describe('OnboardingFlow', () => {
       filter010.props.onContinue();
     });
 
-    // Should be at Filter020
-    const filter020 = component.root.findAllByType('Filter020Needs');
+    // Should be at Filter020Tool
+    const filter020 = component.root.findAllByType('Filter020Tool');
     expect(filter020.length).toBe(1);
 
-    // Note: Back button interaction requires more complex mocking
+    // Note: Back navigation is handled by Android BackHandler in v2.1
     // Testing state management rather than button press
   });
 
@@ -222,19 +192,21 @@ describe('OnboardingFlow', () => {
       component = create(<OnboardingFlow onComplete={mockOnComplete} />);
     });
 
-    // Check initial step
-    let stepIndicator = component.root.findByType('StepIndicator');
-    expect(stepIndicator.props.current).toBe(0);
+    // StepIndicator is hidden on step 0
+    let stepIndicator = component.root.findAllByType('StepIndicator');
+    expect(stepIndicator.length).toBe(0);
 
-    // Move to next step
+    // Move to step 1 (Filter020Tool)
     const filter010 = component.root.findByType('Filter010Opening');
     act(() => {
       filter010.props.onContinue();
     });
 
-    // Check updated step
-    stepIndicator = component.root.findByType('StepIndicator');
-    expect(stepIndicator.props.current).toBe(1);
+    // StepIndicator should now be visible (currentStep > 0 && currentStep < TOTAL_STEPS - 1)
+    stepIndicator = component.root.findAllByType('StepIndicator');
+    expect(stepIndicator.length).toBe(1);
+    // StepIndicator shows currentStep + 1 (so step 1 shows as 2)
+    expect(stepIndicator[0].props.current).toBe(2);
   });
 
   it('should pass total filters count to StepIndicator', () => {
@@ -243,37 +215,19 @@ describe('OnboardingFlow', () => {
       component = create(<OnboardingFlow onComplete={mockOnComplete} />);
     });
 
+    // Move to step 1 to show StepIndicator
+    const filter010 = component.root.findByType('Filter010Opening');
+    act(() => {
+      filter010.props.onContinue();
+    });
+
     const stepIndicator = component.root.findByType('StepIndicator');
-    expect(stepIndicator.props.total).toBe(8);
+    expect(stepIndicator.props.total).toBe(9); // TOTAL_STEPS = 9 in v2.1
   });
 
-  it('should render back button with accessible properties', () => {
-    let component;
-    act(() => {
-      component = create(<OnboardingFlow onComplete={mockOnComplete} />);
-    });
+  // Note: Back button UI was removed in v2.1 - navigation handled by Android BackHandler
 
-    // Move to second screen
-    const filter010 = component.root.findByType('Filter010Opening');
-    act(() => {
-      filter010.props.onContinue();
-    });
-
-    // Back button should be rendered
-    const texts = component.root.findAllByType('Text');
-    const backText = texts.find(t => {
-      try {
-        return t.props.children === '‹';
-      } catch {
-        return false;
-      }
-    });
-
-    // Verify back button text exists (accessibility check)
-    expect(backText).toBeTruthy();
-  });
-
-  it('should render Filter020Needs after first continue', () => {
+  it('should render Filter020Tool after first continue', () => {
     let component;
     act(() => {
       component = create(<OnboardingFlow onComplete={mockOnComplete} />);
@@ -284,7 +238,7 @@ describe('OnboardingFlow', () => {
       filter010.props.onContinue();
     });
 
-    const filter020 = component.root.findAllByType('Filter020Needs');
+    const filter020 = component.root.findAllByType('Filter020Tool');
     expect(filter020.length).toBe(1);
   });
 });
