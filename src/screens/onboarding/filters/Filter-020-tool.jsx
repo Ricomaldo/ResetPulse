@@ -7,6 +7,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { SelectionCard } from '../../../components/settings';
 import { Button } from '../../../components/buttons';
 import { rs } from '../../../styles/responsive';
+import { spacing, typography, fontWeights } from '../../../theme/tokens';
 
 const TOOL_OPTIONS = [
   { id: 'creative', emoji: '🎨', labelKey: 'onboarding.tool.creative' },
@@ -61,8 +62,8 @@ export default function Filter020Tool({ onContinue }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { flex: 1, padding: rs(21), justifyContent: 'center' },
-  title: { fontSize: rs(24), fontWeight: '600', textAlign: 'center', marginBottom: rs(34) },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: rs(13) },
-  footer: { padding: rs(21), paddingBottom: rs(34) },
+  content: { flex: 1, padding: rs(spacing.lg), justifyContent: 'center' },
+  title: { fontSize: rs(typography.xl), fontWeight: fontWeights.semibold, textAlign: 'center', marginBottom: rs(spacing.xl) },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: rs(spacing.md) },
+  footer: { padding: rs(spacing.lg), paddingBottom: rs(spacing.xl) },
 });
