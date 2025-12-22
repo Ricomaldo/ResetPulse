@@ -22,7 +22,44 @@
     "controlsSubtext": "Der Timer läuft im Hintergrund weiter",
     "completion": "Viel Spaß mit ResetPulse!",
     "restartGuide": "Anleitung neu starten",
-    "restartGuideDescription": "Willkommensbildschirm und Tipps erneut anzeigen"
+    "restartGuideDescription": "Willkommensbildschirm und Tipps erneut anzeigen",
+    "tool": {
+      "title": "Was passt am besten zu dir?",
+      "creative": "Kreativ",
+      "minimalist": "Minimalistisch",
+      "multitask": "Multitasking",
+      "rational": "Rational"
+    },
+    "creation": {
+      "title": "Erstelle deinen ersten Moment",
+      "subtitle": "Wähle ein Emoji, einen Namen und eine Dauer"
+    },
+    "testStart": {
+      "title": "Wenn du bereit bist, drücke",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Jetzt loslassen, wann du willst",
+      "hint": "",
+      "revealTitle": "Du bist"
+    },
+    "paywall": {
+      "title": "Du hast deinen ersten Moment erstellt",
+      "profile": "Profil:",
+      "question": "Möchtest du mehr erstellen?",
+      "valueProposition": "15 Paletten · 16 Aktivitäten · Unbegrenzte Kreationen",
+      "price": "4,99€ — Einmalig, für immer",
+      "ctaTrial": "7 Tage kostenlos testen",
+      "ctaSkip": "Vielleicht später"
+    },
+    "firstTimer": {
+      "title": "Dein Timer ist bereit",
+      "profile": "Profil",
+      "tool": "Werkzeug",
+      "moment": "Moment",
+      "startButton": "Meinen ersten Timer starten",
+      "completionMessage": "Gut gemacht! Dein Bereich ist bereit."
+    }
   },
   "settings": {
     "title": "Einstellungen",

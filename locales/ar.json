@@ -22,7 +22,44 @@
     "controlsSubtext": "يستمر المؤقت في الخلفية",
     "completion": "استمتع بـ ResetPulse!",
     "restartGuide": "إعادة تشغيل الدليل",
-    "restartGuideDescription": "عرض شاشة الترحيب والنصائح مرة أخرى"
+    "restartGuideDescription": "عرض شاشة الترحيب والنصائح مرة أخرى",
+    "tool": {
+      "title": "أيهما يناسبك أكثر?",
+      "creative": "مبدع",
+      "minimalist": "بسيط",
+      "multitask": "متعدد المهام",
+      "rational": "عقلاني"
+    },
+    "creation": {
+      "title": "أنشئ لحظتك الأولى",
+      "subtitle": "اختر رموز تعبيري واسم ومدة"
+    },
+    "testStart": {
+      "title": "عندما تكون مستعداً، اضغط",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "الآن، اترك عند اختيارك",
+      "hint": "",
+      "revealTitle": "أنت"
+    },
+    "paywall": {
+      "title": "لقد أنشأت لحظتك الأولى",
+      "profile": "الملف الشخصي:",
+      "question": "هل تريد إنشاء المزيد?",
+      "valueProposition": "15 لوح · 16 نشاط · إنشاءات غير محدودة",
+      "price": "4,99€ — مرة واحدة، إلى الأبد",
+      "ctaTrial": "جرب 7 أيام مجاناً",
+      "ctaSkip": "ربما لاحقاً"
+    },
+    "firstTimer": {
+      "title": "مؤقتك جاهز",
+      "profile": "الملف الشخصي",
+      "tool": "الأداة",
+      "moment": "اللحظة",
+      "startButton": "ابدأ مؤقتي الأول",
+      "completionMessage": "عمل رائع! مساحتك جاهزة."
+    }
   },
   "settings": {
     "title": "الإعدادات",

@@ -22,7 +22,44 @@
     "controlsSubtext": "De timer blijft op de achtergrond lopen",
     "completion": "Geniet van ResetPulse!",
     "restartGuide": "Handleiding opnieuw starten",
-    "restartGuideDescription": "Welkomstscherm en tips opnieuw tonen"
+    "restartGuideDescription": "Welkomstscherm en tips opnieuw tonen",
+    "tool": {
+      "title": "Wat past het beste bij jou?",
+      "creative": "Creatief",
+      "minimalist": "Minimalist",
+      "multitask": "Multi-tasker",
+      "rational": "Rationeel"
+    },
+    "creation": {
+      "title": "Maak je eerste moment",
+      "subtitle": "Kies een emoji, een naam en een duur"
+    },
+    "testStart": {
+      "title": "Wanneer je klaar bent, tik",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Nu, laat los wanneer je wilt",
+      "hint": "",
+      "revealTitle": "Je bent"
+    },
+    "paywall": {
+      "title": "Je hebt je eerste moment gemaakt",
+      "profile": "Profiel:",
+      "question": "Zin om meer te maken?",
+      "valueProposition": "15 paletten · 16 activiteiten · Onbeperkt creatief",
+      "price": "4,99€ — Eenmaal, voor altijd",
+      "ctaTrial": "7 dagen gratis proberen",
+      "ctaSkip": "Misschien later"
+    },
+    "firstTimer": {
+      "title": "Je timer is klaar",
+      "profile": "Profiel",
+      "tool": "Gereedschap",
+      "moment": "Moment",
+      "startButton": "Start mijn eerste timer",
+      "completionMessage": "Prima gedaan! Je ruimte is klaar."
+    }
   },
   "settings": {
     "title": "Instellingen",

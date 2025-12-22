@@ -320,6 +320,13 @@ export const interpolate = {
   },
 };
 
+// Onboarding transitions (Reanimated 2)
+export const ONBOARDING_TRANSITIONS = {
+  enterDuration: 300,
+  exitDuration: 200,
+  delayBetween: 100,
+};
+
 // Export configuration
 export default {
   config: platformConfig,

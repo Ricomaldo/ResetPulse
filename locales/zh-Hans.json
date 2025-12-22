@@ -22,7 +22,44 @@
     "controlsSubtext": "计时器在后台继续运行",
     "completion": "享受 ResetPulse!",
     "restartGuide": "重新开始引导",
-    "restartGuideDescription": "再次显示欢迎屏幕和提示"
+    "restartGuideDescription": "再次显示欢迎屏幕和提示",
+    "tool": {
+      "title": "哪个最适合你?",
+      "creative": "创意型",
+      "minimalist": "极简型",
+      "multitask": "多任务型",
+      "rational": "理性型"
+    },
+    "creation": {
+      "title": "创建你的第一个时刻",
+      "subtitle": "选择一个表情符号、名称和时长"
+    },
+    "testStart": {
+      "title": "准备好后点击",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "现在，随时松开",
+      "hint": "",
+      "revealTitle": "你是"
+    },
+    "paywall": {
+      "title": "你创建了第一个时刻",
+      "profile": "个人资料:",
+      "question": "想要创建更多?",
+      "valueProposition": "15 调色板 · 16 活动 · 无限创建",
+      "price": "4,99€ — 一次性，永久拥有",
+      "ctaTrial": "免费试用 7 天",
+      "ctaSkip": "稍后"
+    },
+    "firstTimer": {
+      "title": "你的计时器已准备好",
+      "profile": "个人资料",
+      "tool": "工具",
+      "moment": "时刻",
+      "startButton": "启动第一个计时器",
+      "completionMessage": "干得好! 你的空间已准备就绪。"
+    }
   },
   "settings": {
     "title": "设置",

@@ -22,7 +22,44 @@
     "controlsSubtext": "O temporizador continua em segundo plano",
     "completion": "Aproveita o ResetPulse!",
     "restartGuide": "Reiniciar o guia",
-    "restartGuideDescription": "Mostrar o ecrã de boas-vindas e dicas novamente"
+    "restartGuideDescription": "Mostrar o ecrã de boas-vindas e dicas novamente",
+    "tool": {
+      "title": "O que te descreve melhor?",
+      "creative": "Criativo",
+      "minimalist": "Minimalista",
+      "multitask": "Multitarefa",
+      "rational": "Racional"
+    },
+    "creation": {
+      "title": "Cria o teu primeiro momento",
+      "subtitle": "Escolhe um emoji, um nome e uma duração"
+    },
+    "testStart": {
+      "title": "Quando estiveres pronto, prime",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Agora, solta quando quiseres",
+      "hint": "",
+      "revealTitle": "És"
+    },
+    "paywall": {
+      "title": "Criaste o teu primeiro momento",
+      "profile": "Perfil:",
+      "question": "Queres criar mais?",
+      "valueProposition": "15 paletas · 16 atividades · Criações ilimitadas",
+      "price": "4,99€ — Uma vez, para sempre",
+      "ctaTrial": "Testa 7 dias grátis",
+      "ctaSkip": "Talvez mais tarde"
+    },
+    "firstTimer": {
+      "title": "O teu temporizador está pronto",
+      "profile": "Perfil",
+      "tool": "Ferramenta",
+      "moment": "Momento",
+      "startButton": "Iniciar o meu primeiro temporizador",
+      "completionMessage": "Muito bem! O teu espaço está pronto."
+    }
   },
   "settings": {
     "title": "Definições",

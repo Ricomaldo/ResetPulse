@@ -14,13 +14,13 @@ export default function Filter040TestStart({ onContinue }) {
 
   const handlePressIn = useCallback(() => {
     pressStartRef.current = Date.now();
-    haptics.light().catch(() => {});
+    haptics.impact('light').catch(() => {});
   }, []);
 
   const handlePressOut = useCallback(() => {
     if (pressStartRef.current) {
       const pressDuration = Date.now() - pressStartRef.current;
-      haptics.medium().catch(() => {});
+      haptics.impact('medium').catch(() => {});
 
       // Pass measured timing to next filter
       onContinue({ startTiming: pressDuration });
@@ -42,8 +42,12 @@ export default function Filter040TestStart({ onContinue }) {
             { backgroundColor: colors.brand.primary },
             pressed && styles.buttonPressed,
           ]}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Press and release to measure your interaction speed"
+          accessibilityHint="Press when ready, release when you want"
         >
-          <View style={styles.buttonInner} />
+          <View style={styles.buttonInner} accessible={false} />
         </Pressable>
 
         {t('onboarding.testStart.hint') && (

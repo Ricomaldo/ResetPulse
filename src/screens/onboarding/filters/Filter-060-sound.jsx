@@ -109,6 +109,11 @@ export default function Filter080SoundPersonalize({ onContinue }) {
               ]}
               onPress={() => handleSoundPress(sound.id)}
               activeOpacity={0.7}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel={t(`sounds.${sound.id}`)}
+              accessibilityHint={`Select ${t(`sounds.${sound.id}`)} as timer completion sound. Tap to preview.`}
+              accessibilityState={{ selected: isSelected }}
             >
               {isSelected && (
                 <View style={styles.checkmark}>
@@ -142,6 +147,10 @@ export default function Filter080SoundPersonalize({ onContinue }) {
           style={styles.primaryButton}
           onPress={handleContinue}
           activeOpacity={0.7}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={t('onboarding.v3.filter5b.continue')}
+          accessibilityHint="Confirm selected sound and continue to next step"
         >
           <Text style={styles.primaryButtonText}>
             {t('onboarding.v3.filter5b.continue')}
@@ -152,6 +161,10 @@ export default function Filter080SoundPersonalize({ onContinue }) {
           style={styles.skipButton}
           onPress={handleSkip}
           activeOpacity={0.7}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={t('onboarding.v3.filter5b.skip')}
+          accessibilityHint="Skip sound selection and use default bell sound"
         >
           <Text style={styles.skipButtonText}>
             {t('onboarding.v3.filter5b.skip')}

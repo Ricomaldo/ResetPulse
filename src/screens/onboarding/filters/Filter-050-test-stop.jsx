@@ -54,7 +54,7 @@ export default function Filter050TestStop({ onContinue, startTiming }) {
 
   const handlePressIn = useCallback(() => {
     pressStartRef.current = Date.now();
-    haptics.light().catch(() => {});
+    haptics.impact('light').catch(() => {});
   }, []);
 
   const handlePressOut = useCallback(() => {
@@ -105,8 +105,12 @@ export default function Filter050TestStop({ onContinue, startTiming }) {
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
             style={styles.circleContainer}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Tap to stop the circle animation when ready"
+            accessibilityHint="Release when you want to reveal your interaction profile"
           >
-            <Svg width={CIRCLE_SIZE} height={CIRCLE_SIZE}>
+            <Svg width={CIRCLE_SIZE} height={CIRCLE_SIZE} accessible={false}>
               {/* Background circle */}
               <Circle
                 cx={CIRCLE_SIZE / 2}
@@ -168,6 +172,7 @@ export default function Filter050TestStop({ onContinue, startTiming }) {
           title={t('common.continue')}
           onPress={handleContinue}
           variant="primary"
+          accessibilityHint="Continue with your detected interaction profile"
         />
       </View>
     </SafeAreaView>

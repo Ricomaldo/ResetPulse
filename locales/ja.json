@@ -22,7 +22,44 @@
     "controlsSubtext": "タイマーはバックグラウンドで動作します",
     "completion": "ResetPulseをお楽しみください",
     "restartGuide": "ガイドを再表示",
-    "restartGuideDescription": "ウェルカム画面とヒントを再度表示"
+    "restartGuideDescription": "ウェルカム画面とヒントを再度表示",
+    "tool": {
+      "title": "どのタイプが合う?",
+      "creative": "クリエイティブ",
+      "minimalist": "ミニマリスト",
+      "multitask": "マルチタスカー",
+      "rational": "論理的"
+    },
+    "creation": {
+      "title": "最初のモーメントを作成",
+      "subtitle": "絵文字、名前、時間を選んで"
+    },
+    "testStart": {
+      "title": "準備ができたら、タップ",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "では、好きなときに放す",
+      "hint": "",
+      "revealTitle": "あなたは"
+    },
+    "paywall": {
+      "title": "最初のモーメントを作成しました",
+      "profile": "プロフィール:",
+      "question": "もっと作りたい?",
+      "valueProposition": "15パレット・16アクティビティ・無制限の作成",
+      "price": "4,99€ — 一度だけ、永遠に",
+      "ctaTrial": "7日間無料で試す",
+      "ctaSkip": "後で"
+    },
+    "firstTimer": {
+      "title": "タイマーの準備ができました",
+      "profile": "プロフィール",
+      "tool": "ツール",
+      "moment": "モーメント",
+      "startButton": "最初のタイマーを開始",
+      "completionMessage": "お疲れ様! あなたのスペースが準備できました。"
+    }
   },
   "settings": {
     "title": "設定",
