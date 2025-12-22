@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTimerConfig } from '../../../contexts/TimerConfigContext';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { SelectionCard } from '../../../components/settings';
-import { Button } from '../../../components/buttons';
+import SelectionCard from '../../../components/settings/SelectionCard';
+import { PrimaryButton } from '../../../components/buttons';
 import { rs } from '../../../styles/responsive';
 import { spacing, typography, fontWeights } from '../../../theme/tokens';
 
@@ -49,11 +49,10 @@ export default function Filter020Tool({ onContinue }) {
         </View>
       </View>
       <View style={styles.footer}>
-        <Button
-          title={t('common.continue')}
+        <PrimaryButton
+          label={t('common.continue')}
           onPress={handleContinue}
           disabled={!selected}
-          variant="primary"
           accessibilityHint="Proceed to next step with selected tool preference"
         />
       </View>
