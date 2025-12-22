@@ -54,6 +54,7 @@ export default function Filter020Tool({ onContinue }) {
           onPress={handleContinue}
           disabled={!selected}
           variant="primary"
+          accessibilityHint="Proceed to next step with selected tool preference"
         />
       </View>
     </SafeAreaView>

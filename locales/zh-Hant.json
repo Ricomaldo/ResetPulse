@@ -22,7 +22,44 @@
     "controlsSubtext": "計時器在背景繼續運作",
     "completion": "享受 ResetPulse!",
     "restartGuide": "重新開始引導",
-    "restartGuideDescription": "再次顯示歡迎畫面和提示"
+    "restartGuideDescription": "再次顯示歡迎畫面和提示",
+    "tool": {
+      "title": "哪個最適合你?",
+      "creative": "創意型",
+      "minimalist": "極簡型",
+      "multitask": "多工型",
+      "rational": "理性型"
+    },
+    "creation": {
+      "title": "建立你的第一個時刻",
+      "subtitle": "選擇一個表情符號、名稱和時長"
+    },
+    "testStart": {
+      "title": "準備好後點擊",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "現在，隨時放開",
+      "hint": "",
+      "revealTitle": "你是"
+    },
+    "paywall": {
+      "title": "你建立了第一個時刻",
+      "profile": "個人資料:",
+      "question": "想要建立更多?",
+      "valueProposition": "15 調色盤 · 16 活動 · 無限建立",
+      "price": "4,99€ — 一次性，永久擁有",
+      "ctaTrial": "免費試用 7 天",
+      "ctaSkip": "稍後"
+    },
+    "firstTimer": {
+      "title": "你的計時器已準備好",
+      "profile": "個人資料",
+      "tool": "工具",
+      "moment": "時刻",
+      "startButton": "啟動第一個計時器",
+      "completionMessage": "做得好! 你的空間已準備就緒。"
+    }
   },
   "settings": {
     "title": "設定",

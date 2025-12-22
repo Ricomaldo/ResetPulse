@@ -6,11 +6,15 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { View, StyleSheet, AppState } from 'react-native';
+import { View, StyleSheet, AppState, BackHandler } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import StepIndicator from '../../components/onboarding/StepIndicator';
 import { useAnalytics } from '../../hooks/useAnalytics';
+import { usePersistedState, usePersistedObject } from '../../hooks/usePersistedState';
+import { ONBOARDING_TRANSITIONS } from '../../styles/animations';
 
 // Import all filters
 import {
@@ -32,11 +36,18 @@ export default function OnboardingFlow({ onComplete }) {
   const analytics = useAnalytics();
   const { setOnboardingCompleted } = useTimerConfig();
 
-  // Current step (1-indexed for display, 0-indexed internally)
-  const [currentStep, setCurrentStep] = useState(0);
+  // Persisted state - resume onboarding if app killed
+  const [currentStep, setCurrentStep, isLoadingStep] = usePersistedState(
+    '@ResetPulse:onboardingStep',
+    0
+  );
 
-  // Collected data from filters
-  const [flowData, setFlowData] = useState({
+  // Collected data from filters (persisted)
+  const {
+    values: flowData,
+    setValues: setFlowData,
+    isLoading: isLoadingData,
+  } = usePersistedObject('@ResetPulse:onboardingData', {
     favoriteToolMode: null,
     customActivity: null,
     startTiming: null,
@@ -83,9 +94,23 @@ export default function OnboardingFlow({ onComplete }) {
     return () => subscription.remove();
   }, [currentStep, analytics]);
 
+  // Handle Android back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (currentStep > 0) {
+        // Go back to previous step
+        setCurrentStep((prev) => prev - 1);
+        return true; // Prevent default (exit app)
+      }
+      return false; // Allow exit on step 0
+    });
+
+    return () => backHandler.remove();
+  }, [currentStep]);
+
   // Generic continue handler
   const handleContinue = useCallback(
-    (stepData = {}) => {
+    async (stepData = {}) => {
       // Merge new data
       setFlowData((prev) => ({ ...prev, ...stepData }));
 
@@ -96,7 +121,16 @@ export default function OnboardingFlow({ onComplete }) {
       if (currentStep < TOTAL_STEPS - 1) {
         setCurrentStep((prev) => prev + 1);
       } else {
-        // Onboarding complete
+        // Onboarding complete - cleanup persisted state
+        try {
+          await AsyncStorage.multiRemove([
+            '@ResetPulse:onboardingStep',
+            '@ResetPulse:onboardingData',
+          ]);
+        } catch (error) {
+          console.warn('Erreur lors du nettoyage de la persistence onboarding:', error);
+        }
+
         setOnboardingCompleted(true);
         analytics.trackOnboardingCompleted({
           result: stepData.purchaseResult || 'completed',
@@ -106,7 +140,7 @@ export default function OnboardingFlow({ onComplete }) {
         onComplete(flowData);
       }
     },
-    [currentStep, flowData, analytics, setOnboardingCompleted, onComplete]
+    [currentStep, flowData, analytics, setOnboardingCompleted, onComplete, setFlowData, setCurrentStep]
   );
 
   // Render current filter
@@ -171,8 +205,15 @@ export default function OnboardingFlow({ onComplete }) {
         <StepIndicator current={currentStep + 1} total={TOTAL_STEPS} />
       )}
 
-      {/* Current Filter */}
-      <View style={styles.filterContainer}>{renderCurrentFilter()}</View>
+      {/* Current Filter with animated transitions */}
+      <Animated.View
+        key={`filter-${currentStep}`}
+        entering={FadeIn.duration(ONBOARDING_TRANSITIONS.enterDuration).delay(ONBOARDING_TRANSITIONS.delayBetween)}
+        exiting={FadeOut.duration(ONBOARDING_TRANSITIONS.exitDuration)}
+        style={styles.filterContainer}
+      >
+        {renderCurrentFilter()}
+      </Animated.View>
     </View>
   );
 }

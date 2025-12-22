@@ -69,6 +69,10 @@ export default function Filter050Notifications({ onContinue }) {
             style={styles.primaryButton}
             onPress={handleRequestPermission}
             activeOpacity={0.7}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={t('onboarding.v3.filter3_5.ctaPrimary')}
+            accessibilityHint="Enable notifications to get alerts when timer completes"
           >
             <Text style={styles.primaryButtonText}>
               {t('onboarding.v3.filter3_5.ctaPrimary')}
@@ -79,6 +83,10 @@ export default function Filter050Notifications({ onContinue }) {
             style={styles.secondaryButton}
             onPress={handleSkip}
             activeOpacity={0.7}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={t('onboarding.v3.filter3_5.ctaSecondary')}
+            accessibilityHint="Skip notification setup and continue without notifications"
           >
             <Text style={styles.secondaryButtonText}>
               {t('onboarding.v3.filter3_5.ctaSecondary')}

@@ -22,7 +22,44 @@
     "controlsSubtext": "Timeren fortsetter i bakgrunnen",
     "completion": "Nyt ResetPulse!",
     "restartGuide": "Start guiden på nytt",
-    "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen"
+    "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen",
+    "tool": {
+      "title": "Hva passer deg best?",
+      "creative": "Kreativ",
+      "minimalist": "Minimalist",
+      "multitask": "Multitasker",
+      "rational": "Rasjonell"
+    },
+    "creation": {
+      "title": "Opprett ditt første moment",
+      "subtitle": "Velg en emoji, et navn og en varighet"
+    },
+    "testStart": {
+      "title": "Når du er klar, trykk",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Nå, slipp når du vil",
+      "hint": "",
+      "revealTitle": "Du er"
+    },
+    "paywall": {
+      "title": "Du opprettet ditt første moment",
+      "profile": "Profil:",
+      "question": "Vil du opprett flere?",
+      "valueProposition": "15 paletter · 16 aktiviteter · Ubegrenset kreativitet",
+      "price": "4,99€ — En gang, for alltid",
+      "ctaTrial": "Prøv 7 dager gratis",
+      "ctaSkip": "Kanskje senere"
+    },
+    "firstTimer": {
+      "title": "Timeren din er klar",
+      "profile": "Profil",
+      "tool": "Verktøy",
+      "moment": "Moment",
+      "startButton": "Start min første timer",
+      "completionMessage": "Bra jobbet! Rommet ditt er klart."
+    }
   },
   "settings": {
     "title": "Innstillinger",

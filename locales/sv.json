@@ -22,7 +22,44 @@
     "controlsSubtext": "Timern fortsätter i bakgrunden",
     "completion": "Njut av ResetPulse!",
     "restartGuide": "Starta om guiden",
-    "restartGuideDescription": "Visa välkomstskärmen och tipsen igen"
+    "restartGuideDescription": "Visa välkomstskärmen och tipsen igen",
+    "tool": {
+      "title": "Vad passar dig bäst?",
+      "creative": "Kreativ",
+      "minimalist": "Minimalist",
+      "multitask": "Multitasker",
+      "rational": "Rationell"
+    },
+    "creation": {
+      "title": "Skapa ditt första moment",
+      "subtitle": "Välj en emoji, ett namn och en varaktighet"
+    },
+    "testStart": {
+      "title": "När du är redo, tryck",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Nu, släpp när du vill",
+      "hint": "",
+      "revealTitle": "Du är"
+    },
+    "paywall": {
+      "title": "Du skapade ditt första moment",
+      "profile": "Profil:",
+      "question": "Vill du skapa mer?",
+      "valueProposition": "15 paletter · 16 aktiviteter · Obegränsad kreativitet",
+      "price": "4,99€ — En gång, för alltid",
+      "ctaTrial": "Prova 7 dagar gratis",
+      "ctaSkip": "Kanske senare"
+    },
+    "firstTimer": {
+      "title": "Din timer är redo",
+      "profile": "Profil",
+      "tool": "Verktyg",
+      "moment": "Moment",
+      "startButton": "Starta min första timer",
+      "completionMessage": "Bra jobbat! Ditt utrymme är redo."
+    }
   },
   "settings": {
     "title": "Inställningar",

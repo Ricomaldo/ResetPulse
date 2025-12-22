@@ -49,6 +49,10 @@ export default function Filter010Opening({ onContinue }) {
       style={styles.fullScreen}
       onPress={onContinue}
       activeOpacity={1}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={t('onboarding.v2.filter0.tapToContinue')}
+      accessibilityHint="Start onboarding flow"
     >
       <View style={styles.centerContent}>
         <Animated.View
@@ -56,11 +60,12 @@ export default function Filter010Opening({ onContinue }) {
             styles.breathingCircle,
             { transform: [{ scale: scaleAnim }] },
           ]}
+          accessible={false}
         />
-        <Text style={styles.breathingText}>
+        <Text style={styles.breathingText} accessibilityLabel={t('onboarding.v2.filter0.breathe')}>
           {t('onboarding.v2.filter0.breathe')}
         </Text>
-        <Text style={styles.tapHint}>{t('onboarding.v2.filter0.tapToContinue')}</Text>
+        <Text style={styles.tapHint} accessible={false}>{t('onboarding.v2.filter0.tapToContinue')}</Text>
       </View>
     </TouchableOpacity>
   );

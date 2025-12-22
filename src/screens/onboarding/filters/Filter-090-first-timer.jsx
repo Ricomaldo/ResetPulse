@@ -15,7 +15,7 @@ import { TimerDial } from '../../../components/dial';
 import useTimer from '../../../hooks/useTimer';
 import { rs } from '../onboardingConstants';
 import { getPersonaById } from '../personaConstants';
-import * as haptics from '../../../utils/haptics';
+import haptics from '../../../utils/haptics';
 import { spacing, typography, fontWeights, borderRadius } from '../../../theme/tokens';
 
 const FIRST_TIMER_DURATION = 60; // 60 seconds
@@ -59,7 +59,7 @@ export default function Filter090FirstTimer({
   });
 
   const handleStartTimer = useCallback(() => {
-    haptics.medium().catch(() => {});
+    haptics.impact('medium').catch(() => {});
     setPhase('timer');
     // Start timer after short delay for transition
     setTimeout(() => {
@@ -121,6 +121,7 @@ export default function Filter090FirstTimer({
           <PrimaryButton
             label={t('onboarding.firstTimer.startButton')}
             onPress={handleStartTimer}
+            accessibilityHint="Start your first 60-second guided timer session"
           />
         </View>
       </SafeAreaView>

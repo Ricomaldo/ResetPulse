@@ -22,7 +22,44 @@
     "controlsSubtext": "Il timer continua in background",
     "completion": "Goditi ResetPulse!",
     "restartGuide": "Riavvia la guida",
-    "restartGuideDescription": "Mostra di nuovo la schermata di benvenuto e i suggerimenti"
+    "restartGuideDescription": "Mostra di nuovo la schermata di benvenuto e i suggerimenti",
+    "tool": {
+      "title": "Cosa ti descrive meglio?",
+      "creative": "Creativo",
+      "minimalist": "Minimalista",
+      "multitask": "Multitasking",
+      "rational": "Razionale"
+    },
+    "creation": {
+      "title": "Crea il tuo primo momento",
+      "subtitle": "Scegli un'emoji, un nome e una durata"
+    },
+    "testStart": {
+      "title": "Quando sei pronto, premi",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Ora rilascia quando vuoi",
+      "hint": "",
+      "revealTitle": "Sei"
+    },
+    "paywall": {
+      "title": "Hai creato il tuo primo momento",
+      "profile": "Profilo:",
+      "question": "Vuoi crearne altri?",
+      "valueProposition": "15 palette · 16 attività · Creazioni illimitate",
+      "price": "4,99€ — Una volta, per sempre",
+      "ctaTrial": "Prova 7 giorni gratis",
+      "ctaSkip": "Forse più tardi"
+    },
+    "firstTimer": {
+      "title": "Il tuo timer è pronto",
+      "profile": "Profilo",
+      "tool": "Strumento",
+      "moment": "Momento",
+      "startButton": "Avvia il mio primo timer",
+      "completionMessage": "Ben fatto! Il tuo spazio è pronto."
+    }
   },
   "settings": {
     "title": "Impostazioni",

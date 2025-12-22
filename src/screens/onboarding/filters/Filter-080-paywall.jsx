@@ -15,7 +15,7 @@ import { PrimaryButton, SecondaryButton } from '../../../components/buttons/Butt
 import { rs } from '../onboardingConstants';
 import { getPersonaById } from '../personaConstants';
 import { useAnalytics } from '../../../hooks/useAnalytics';
-import * as haptics from '../../../utils/haptics';
+import haptics from '../../../utils/haptics';
 import { spacing, typography, fontWeights, borderRadius } from '../../../theme/tokens';
 
 export default function Filter080Paywall({
@@ -102,7 +102,7 @@ export default function Filter080Paywall({
   }, [purchaseProduct, getOfferings, onContinue, analytics, t]);
 
   const handleSkip = useCallback(() => {
-    haptics.light().catch(() => {});
+    haptics.impact('light').catch(() => {});
     analytics.trackPaywallSkipped('onboarding');
     onContinue({ purchaseResult: 'skipped' });
   }, [onContinue, analytics]);
@@ -174,12 +174,14 @@ export default function Filter080Paywall({
           onPress={handleStartTrial}
           disabled={isAnyOperationInProgress}
           style={styles.primaryButton}
+          accessibilityHint="Start 7-day free trial to unlock all premium features"
         />
         <SecondaryButton
           label={t('onboarding.paywall.ctaSkip')}
           onPress={handleSkip}
           disabled={isAnyOperationInProgress}
           style={styles.skipButton}
+          accessibilityHint="Skip premium trial and continue with free version"
         />
       </View>
     </SafeAreaView>
