@@ -9,4 +9,4 @@ export { default as Filter050TestStop } from './Filter-050-test-stop';
 export { default as Filter060Sound } from './Filter-060-sound';
 export { default as Filter070Notifications } from './Filter-070-notifications';
 export { default as Filter080Paywall } from './Filter-080-paywall';
-// export { default as Filter090FirstTimer } from './Filter-090-first-timer'; // Phase 3
+export { default as Filter090FirstTimer } from './Filter-090-first-timer';

@@ -1,388 +1,187 @@
 // src/screens/onboarding/OnboardingFlow.jsx
-// Orchestrateur du funnel onboarding V3
+/**
+ * Onboarding Flow v2.1 - Linear 9-step flow
+ * No branching - single path for all users
+ * ADR-010 implementation
+ */
 
-import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, AppState } from 'react-native';
-import * as Notifications from 'expo-notifications';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { View, StyleSheet, AppState } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { rs, getStepName } from './onboardingConstants';
-import analytics from '../../services/analytics';
-import logger from '../../utils/logger';
-import { DEV_MODE } from '../../config/test-mode';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import StepIndicator from '../../components/onboarding/StepIndicator';
-import { fontWeights } from '../../theme/tokens';
+import { useAnalytics } from '../../hooks/useAnalytics';
+
+// Import all filters
 import {
   Filter010Opening,
-  Filter020Needs,
+  Filter020Tool,
   Filter030Creation,
-  Filter040Test,
-  Filter050Notifications,
-  Filter060Branch,
-  Filter070VisionDiscover,
-  Filter080SoundPersonalize,
-  Filter090PaywallDiscover,
-  Filter100InterfacePersonalize,
+  Filter040TestStart,
+  Filter050TestStop,
+  Filter060Sound,
+  Filter070Notifications,
+  Filter080Paywall,
+  Filter090FirstTimer,
 } from './filters';
 
-const TOTAL_FILTERS = 8;
+const TOTAL_STEPS = 9;
 
 export default function OnboardingFlow({ onComplete }) {
-  const { colors, spacing } = useTheme();
-  const [currentFilter, setCurrentFilter] = useState(0);
-  const [needs, setNeeds] = useState([]);
-  const [timerConfig, setTimerConfig] = useState({});
-  const [branch, setBranch] = useState(null); // 'discover' | 'personalize'
-  const [notificationPermission, setNotificationPermission] = useState(false);
-  const [shouldRequestPermissionLater, setShouldRequestPermissionLater] = useState(false);
-  const [soundConfig, setSoundConfig] = useState(null);
-  const [interfaceConfig, setInterfaceConfig] = useState(null);
-  const appStateRef = useRef(AppState.currentState);
-  const hasTrackedStart = useRef(false);
+  const { colors } = useTheme();
+  const analytics = useAnalytics();
+  const { setOnboardingCompleted } = useTimerConfig();
 
-  // Track onboarding_started au premier mount
+  // Current step (1-indexed for display, 0-indexed internally)
+  const [currentStep, setCurrentStep] = useState(0);
+
+  // Collected data from filters
+  const [flowData, setFlowData] = useState({
+    favoriteToolMode: null,
+    customActivity: null,
+    startTiming: null,
+    stopTiming: null,
+    persona: null,
+    selectedSoundId: null,
+    notificationPermission: null,
+    purchaseResult: null,
+    firstTimerCompleted: false,
+  });
+
+  // Refs for tracking
+  const hasTrackedStart = useRef(false);
+  const appStateRef = useRef(AppState.currentState);
+
+  // Track onboarding_started on mount
   useEffect(() => {
     if (!hasTrackedStart.current) {
       analytics.trackOnboardingStarted();
-      analytics.trackOnboardingStepViewed(0, getStepName(0, branch));
+      analytics.trackOnboardingStepViewed(0, `filter_${currentStep}`);
       hasTrackedStart.current = true;
     }
-  }, []);
+  }, [analytics, currentStep]);
 
-  // Track step_viewed quand currentFilter change
+  // Track step_viewed when currentStep changes
   useEffect(() => {
-    if (currentFilter > 0) {
-      analytics.trackOnboardingStepViewed(currentFilter, getStepName(currentFilter, branch));
+    if (currentStep > 0) {
+      analytics.trackOnboardingStepViewed(currentStep, `filter_${currentStep}`);
     }
-  }, [currentFilter, branch]);
+  }, [currentStep, analytics]);
 
-  // Track onboarding_abandoned si l'app passe en background
+  // Track onboarding_abandoned if app goes to background
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (
         appStateRef.current === 'active' &&
         (nextAppState === 'background' || nextAppState === 'inactive')
       ) {
-        analytics.trackOnboardingAbandoned(currentFilter, getStepName(currentFilter, branch));
+        analytics.trackOnboardingAbandoned(currentStep, `filter_${currentStep}`);
       }
       appStateRef.current = nextAppState;
     });
 
     return () => subscription.remove();
-  }, [currentFilter, branch]);
+  }, [currentStep, analytics]);
 
-  const goToNextFilter = () => {
-    // Track step_completed avant transition
-    analytics.trackOnboardingStepCompleted(currentFilter, getStepName(currentFilter, branch));
-    setCurrentFilter((prev) => prev + 1);
-  };
+  // Generic continue handler
+  const handleContinue = useCallback(
+    (stepData = {}) => {
+      // Merge new data
+      setFlowData((prev) => ({ ...prev, ...stepData }));
 
-  const goToPreviousFilter = () => {
-    // Track back navigation
-    if (currentFilter > 0) {
-      setCurrentFilter((prev) => prev - 1);
-    }
-  };
+      // Track step completion
+      analytics.trackOnboardingStepCompleted(currentStep, `filter_${currentStep}`, stepData);
 
-  const jumpToFilter = (n) => {
-    setCurrentFilter(n);
-  };
+      // Move to next step
+      if (currentStep < TOTAL_STEPS - 1) {
+        setCurrentStep((prev) => prev + 1);
+      } else {
+        // Onboarding complete
+        setOnboardingCompleted(true);
+        analytics.trackOnboardingCompleted({
+          result: stepData.purchaseResult || 'completed',
+          toolMode: flowData.favoriteToolMode,
+          persona: flowData.persona,
+        });
+        onComplete(flowData);
+      }
+    },
+    [currentStep, flowData, analytics, setOnboardingCompleted, onComplete]
+  );
 
-  const reset = () => {
-    setCurrentFilter(0);
-    setNeeds([]);
-    setTimerConfig({});
-    setBranch(null);
-    setNotificationPermission(false);
-    setShouldRequestPermissionLater(false);
-    setSoundConfig(null);
-    setInterfaceConfig(null);
-    hasTrackedStart.current = false;
-  };
+  // Render current filter
+  const renderCurrentFilter = () => {
+    const commonProps = { onContinue: handleContinue };
 
-  const requestNotificationPermissionAfterOnboarding = async () => {
-    if (!shouldRequestPermissionLater) {
-      return;
-    }
+    switch (currentStep) {
+      case 0:
+        return <Filter010Opening {...commonProps} />;
 
-    try {
-      logger.log('[Onboarding] Requesting notification permission after onboarding');
-      const { status } = await Notifications.requestPermissionsAsync();
-      logger.log('[Onboarding] Notification permission result:', status);
-    } catch (error) {
-      logger.error('[Onboarding] Failed to request notification permission:', error);
-    }
-  };
+      case 1:
+        return <Filter020Tool {...commonProps} />;
 
-  const handleComplete = async (result) => {
-    // Track final step completed
-    analytics.trackOnboardingStepCompleted(currentFilter, getStepName(currentFilter, branch), { result });
-    // Track onboarding completed avec résultat et branch
-    analytics.trackOnboardingCompleted(result, needs, branch);
+      case 2:
+        return <Filter030Creation {...commonProps} />;
 
-    // Request notification permission after onboarding completes
-    await requestNotificationPermissionAfterOnboarding();
+      case 3:
+        return <Filter040TestStart {...commonProps} />;
 
-    // Transmet le résultat final et toutes les configs
-    onComplete({
-      result,
-      needs,
-      timerConfig,
-      branch,
-      notificationPermission,
-      soundConfig,
-      interfaceConfig,
-    });
-  };
-
-  // Dev navigation (visible uniquement si DEV_MODE = true)
-  const DevBar = () => {
-    if (!DEV_MODE) {return null;}
-
-    const styles = createDevStyles(colors, spacing);
-    return (
-      <View style={styles.devBar}>
-        <View style={styles.devRow}>
-          {Array.from({ length: TOTAL_FILTERS }).map((_, n) => (
-            <TouchableOpacity
-              key={n}
-              style={[
-                styles.devButton,
-                currentFilter === n && styles.devButtonActive,
-              ]}
-              onPress={() => jumpToFilter(n)}
-            >
-              <Text style={styles.devButtonText}>{n}</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={styles.devResetButton} onPress={reset}>
-            <Text style={styles.devButtonText}>{'\u21BA'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
-  const renderFilter = () => {
-    switch (currentFilter) {
-    case 0:
-      // Filter 010: Opening (breathe)
-      return <Filter010Opening onContinue={goToNextFilter} />;
-
-    case 1:
-      // Filter 020: Needs
-      return (
-        <Filter020Needs
-          onContinue={(selectedNeeds) => {
-            setNeeds(selectedNeeds);
-            // Track step completed avec les needs sélectionnés
-            analytics.trackOnboardingStepCompleted(1, getStepName(1, branch), {
-              needs_selected: selectedNeeds,
-              needs_count: selectedNeeds.length,
-            });
-            setCurrentFilter((prev) => prev + 1);
-          }}
-        />
-      );
-
-    case 2:
-      // Filter 030: Creation
-      return (
-        <Filter030Creation
-          needs={needs}
-          onContinue={(config) => {
-            setTimerConfig(config);
-            // Track timer config saved avec les choix utilisateur
-            analytics.trackTimerConfigSaved(config);
-            // Track step completed avec la config
-            analytics.trackOnboardingStepCompleted(2, getStepName(2, branch), {
-              activity: config.activity,
-              palette: config.palette,
-              duration: config.duration,
-            });
-            setCurrentFilter((prev) => prev + 1);
-          }}
-        />
-      );
-
-    case 3:
-      // Filter 040: Test 60 sec
-      return (
-        <Filter040Test timerConfig={timerConfig} onContinue={goToNextFilter} />
-      );
-
-    case 4:
-      // Filter 050: Notifications Permission
-      return (
-        <Filter050Notifications
-          onContinue={(data) => {
-            setNotificationPermission(data.notificationPermission);
-            setShouldRequestPermissionLater(data.shouldRequestLater || false);
-            analytics.trackOnboardingStepCompleted(4, getStepName(4, branch), {
-              permission_granted: data.notificationPermission,
-            });
-            setCurrentFilter((prev) => prev + 1);
-          }}
-        />
-      );
-
-    case 5:
-      // Filter 060: Branch Choice
-      return (
-        <Filter060Branch
-          onContinue={(data) => {
-            setBranch(data.branch);
-            // Track V3 specific event
-            analytics.trackOnboardingBranchSelected(data.branch);
-            analytics.trackOnboardingStepCompleted(5, getStepName(5, data.branch), {
-              branch_selected: data.branch,
-            });
-            setCurrentFilter((prev) => prev + 1);
-          }}
-        />
-      );
-
-    case 6:
-      // Filter 070 (discover) or 080 (personalize)
-      if (branch === 'discover') {
-        return <Filter070VisionDiscover needs={needs} onContinue={goToNextFilter} />;
-      } else if (branch === 'personalize') {
+      case 4:
         return (
-          <Filter080SoundPersonalize
-            onContinue={(data) => {
-              setSoundConfig(data.selectedSound);
-              // Track V3 specific event
-              analytics.trackOnboardingSoundSelected(data.selectedSound);
-              analytics.trackOnboardingStepCompleted(6, getStepName(6, branch), {
-                sound_selected: data.selectedSound,
-              });
-              setCurrentFilter((prev) => prev + 1);
-            }}
+          <Filter050TestStop
+            {...commonProps}
+            startTiming={flowData.startTiming}
           />
         );
-      }
-      return <Filter010Opening onContinue={goToNextFilter} />;
 
-    case 7:
-      // Filter 6 (paywall for discover) or 5c (interface for personalize)
-      if (branch === 'discover') {
-        return <Filter090PaywallDiscover onComplete={handleComplete} />;
-      } else if (branch === 'personalize') {
+      case 5:
+        return <Filter060Sound {...commonProps} />;
+
+      case 6:
+        return <Filter070Notifications {...commonProps} />;
+
+      case 7:
         return (
-          <Filter100InterfacePersonalize
-            onContinue={(data) => {
-              setInterfaceConfig(data);
-              // Track V3 specific event
-              analytics.trackOnboardingInterfaceConfigured(
-                data.theme,
-                data.minimalInterface,
-                data.digitalTimer
-              );
-              analytics.trackOnboardingStepCompleted(7, getStepName(7, branch), {
-                theme: data.theme,
-                minimal_interface: data.minimalInterface,
-                digital_timer: data.digitalTimer,
-              });
-              // Complete onboarding without paywall
-              handleComplete('skipped');
-            }}
+          <Filter080Paywall
+            {...commonProps}
+            customActivity={flowData.customActivity}
+            persona={flowData.persona}
           />
         );
-      }
-      return <Filter010Opening onContinue={goToNextFilter} />;
 
-    default:
-      return <Filter010Opening onContinue={goToNextFilter} />;
+      case 8:
+        return (
+          <Filter090FirstTimer
+            {...commonProps}
+            customActivity={flowData.customActivity}
+            persona={flowData.persona}
+            favoriteToolMode={flowData.favoriteToolMode}
+          />
+        );
+
+      default:
+        return null;
     }
   };
-
-  const styles = createStyles(colors, spacing);
 
   return (
-    <View style={styles.container}>
-      <DevBar />
-      {/* Back button header - hidden on first screen */}
-      {currentFilter > 0 && (
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={goToPreviousFilter}
-            style={styles.backButton}
-            activeOpacity={0.7}
-            accessibilityLabel="Go back"
-            accessibilityRole="button"
-          >
-            <Text style={styles.backButtonText}>‹</Text>
-          </TouchableOpacity>
-        </View>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Step Indicator - Hidden on first and last step */}
+      {currentStep > 0 && currentStep < TOTAL_STEPS - 1 && (
+        <StepIndicator current={currentStep + 1} total={TOTAL_STEPS} />
       )}
-      <StepIndicator current={currentFilter} total={TOTAL_FILTERS} />
-      {renderFilter()}
+
+      {/* Current Filter */}
+      <View style={styles.filterContainer}>{renderCurrentFilter()}</View>
     </View>
   );
 }
 
-const createStyles = (colors, spacing) =>
-  StyleSheet.create({
-    backButton: {
-      alignItems: 'center',
-      height: rs(44),
-      justifyContent: 'center',
-      minHeight: 44,
-      minWidth: 44,
-      width: rs(44),
-    },
-    backButtonText: {
-      color: colors.text,
-      fontSize: rs(32),
-      fontWeight: fontWeights.light,
-    },
-    container: {
-      backgroundColor: colors.background,
-      flex: 1,
-    },
-    header: {
-      borderBottomColor: colors.border,
-      borderBottomWidth: 1,
-      paddingHorizontal: rs(spacing.md),
-      paddingVertical: rs(spacing.sm),
-    },
-  });
-
-const createDevStyles = (colors, spacing) =>
-  StyleSheet.create({
-    devBar: {
-      backgroundColor: colors.surface,
-      paddingBottom: rs(spacing.sm),
-      paddingHorizontal: rs(spacing.md),
-      paddingTop: 50,
-    },
-    devButton: {
-      alignItems: 'center',
-      backgroundColor: colors.surface,
-      borderRadius: rs(18),
-      height: rs(36),
-      justifyContent: 'center',
-      width: rs(36),
-    },
-    devButtonActive: {
-      backgroundColor: colors.brand.primary,
-    },
-    devButtonText: {
-      color: colors.text,
-      fontSize: rs(14),
-      fontWeight: fontWeights.semibold,
-    },
-    devResetButton: {
-      alignItems: 'center',
-      backgroundColor: colors.brand.accent,
-      borderRadius: rs(18),
-      height: rs(36),
-      justifyContent: 'center',
-      marginLeft: rs(spacing.md),
-      width: rs(36),
-    },
-    devRow: {
-      flexDirection: 'row',
-      gap: rs(spacing.sm),
-      justifyContent: 'center',
-    },
-  });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  filterContainer: {
+    flex: 1,
+  },
+});
