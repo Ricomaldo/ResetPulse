@@ -29,7 +29,7 @@ const RADIUS = (CIRCLE_SIZE - STROKE_WIDTH) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export default function Filter050TestStop({ onContinue, startTiming }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
   const { colors } = useTheme();
   const { setInteractionProfile } = useTimerConfig();
 

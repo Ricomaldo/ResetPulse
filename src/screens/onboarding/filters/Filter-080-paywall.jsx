@@ -24,7 +24,7 @@ export default function Filter080Paywall({
   customActivity, // From Filter-030
   persona, // From Filter-050 (persona object or id)
 }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
   const { colors } = useTheme();
   const { purchaseProduct, getOfferings, isPurchasing: contextPurchasing } = usePurchases();
   const analytics = useAnalytics();

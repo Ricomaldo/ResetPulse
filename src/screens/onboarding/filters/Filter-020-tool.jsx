@@ -17,7 +17,7 @@ const TOOL_OPTIONS = [
 ];
 
 export default function Filter020Tool({ onContinue }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
   const { colors } = useTheme();
   const { setFavoriteToolMode } = useTimerConfig();
   const [selected, setSelected] = useState(null);
