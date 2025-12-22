@@ -79,7 +79,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.creativity');
     },
     defaultDuration: 2700, // 45 minutes
-    isPremium: false, // FREE - activité créative de base
+    isPremium: true, // PREMIUM - Onboarding v2.1 freemium strategy
     suggestedColor: 'focus',
     description: 'Dessin, écriture libre',
     pulseDuration: 750, // Modéré - flow créatif
