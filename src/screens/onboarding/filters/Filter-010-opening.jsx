@@ -34,13 +34,12 @@ export default function Filter010Opening({ onContinue }) {
         cycleCount.current += 1;
         if (cycleCount.current < BREATH_CYCLES) {
           pulse();
-        } else {
-          onContinue();
         }
+        // Removed auto-advance: user must tap to continue (ADHD-friendly)
       });
     };
     pulse();
-  }, [onContinue, scaleAnim]);
+  }, [scaleAnim]);
 
   const styles = createStyles(colors, spacing);
 
