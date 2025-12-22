@@ -84,21 +84,24 @@ function AppContent() {
   const handleOnboardingComplete = async (data) => {
     setOnboardingCompleted(true);
 
-    // Persister
+    // Persister les données onboarding v2.1
     try {
       await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, 'true');
-      // Sauvegarder la config timer choisie (Filter2Creation)
-      if (data.timerConfig) {
-        await AsyncStorage.setItem('user_timer_config', JSON.stringify(data.timerConfig));
-      }
-      // Sauvegarder la config son choisie (Filter5bSound)
-      if (data.soundConfig) {
-        await AsyncStorage.setItem('user_sound_config', JSON.stringify(data.soundConfig));
-      }
-      // Sauvegarder la config interface choisie (Filter5cInterface)
-      if (data.interfaceConfig) {
-        await AsyncStorage.setItem('user_interface_config', JSON.stringify(data.interfaceConfig));
-      }
+
+      // Map flowData to expected storage keys
+      const onboardingConfig = {
+        favoriteToolMode: data.favoriteToolMode || 'commands',
+        customActivity: data.customActivity || null,
+        persona: data.persona || null,
+        selectedSoundId: data.selectedSoundId || 'bell_classic',
+        notificationPermission: data.notificationPermission || false,
+        purchaseResult: data.purchaseResult || 'skipped',
+      };
+
+      // Persist all onboarding data
+      await AsyncStorage.setItem('onboarding_v2_config', JSON.stringify(onboardingConfig));
+
+      console.log('[App] Onboarding v2.1 config saved:', onboardingConfig);
     } catch (error) {
       console.warn('[App] Failed to save onboarding state:', error);
     }
@@ -209,6 +212,27 @@ export default function App() {
     }
   };
 
+  // ========== DEV: Reset to Vanilla (Full Reset) ==========
+  const handleResetToVanilla = async () => {
+    try {
+      // Remove ALL app-related AsyncStorage keys to restore vanilla state
+      await AsyncStorage.multiRemove([
+        ONBOARDING_COMPLETED_KEY,
+        'user_timer_config',
+        'user_sound_config',
+        'user_interface_config',
+        'has_launched_before',
+        '@ResetPulse:timerOptions',
+        '@ResetPulse:hasSeenDrawerHint',
+        '@ResetPulse:themeMode',
+      ]);
+      setResetTrigger(prev => prev + 1); // Force AppContent remount
+      console.log('[DevFab] App reset to vanilla state - all settings cleared');
+    } catch (error) {
+      console.warn('[DevFab] Failed to reset to vanilla:', error);
+    }
+  };
+
   // Contenu principal
   const renderContent = () => (
     <ErrorBoundary>
@@ -235,6 +259,7 @@ export default function App() {
               onGoToApp={handleGoToApp}
               onResetTimerConfig={handleResetTimerConfig}
               onResetTooltip={handleResetTooltip}
+              onResetToVanilla={handleResetToVanilla}
             />
           </GestureHandlerRootView>
         </DevPremiumProvider>
