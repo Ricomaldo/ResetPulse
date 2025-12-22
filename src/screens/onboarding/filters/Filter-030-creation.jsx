@@ -9,7 +9,7 @@ import { rs } from '../../../styles/responsive';
 import { spacing, typography, fontWeights } from '../../../theme/tokens';
 
 export default function Filter030Creation({ onContinue }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
   const { colors } = useTheme();
   const { createActivity } = useCustomActivities();
 

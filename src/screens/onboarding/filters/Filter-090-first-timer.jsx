@@ -33,7 +33,7 @@ export default function Filter090FirstTimer({
   persona,
   favoriteToolMode,
 }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
   const { colors } = useTheme();
 
   const [phase, setPhase] = useState('summary'); // 'summary' | 'timer'

@@ -8,7 +8,7 @@ import { spacing, typography, fontWeights } from '../../../theme/tokens';
 import haptics from '../../../utils/haptics';
 
 export default function Filter040TestStart({ onContinue }) {
-  const { t } = useTranslation();
+  const t = useTranslation();
   const { colors } = useTheme();
   const pressStartRef = useRef(null);
 
