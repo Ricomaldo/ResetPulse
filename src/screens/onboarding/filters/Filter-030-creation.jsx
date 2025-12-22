@@ -6,6 +6,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { useCustomActivities } from '../../../hooks/useCustomActivities';
 import CreateActivityModalContent from '../../../components/modals/CreateActivityModalContent';
 import { rs } from '../../../styles/responsive';
+import { spacing, typography, fontWeights } from '../../../theme/tokens';
 
 export default function Filter030Creation({ onContinue }) {
   const { t } = useTranslation();
@@ -43,8 +44,8 @@ export default function Filter030Creation({ onContinue }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { padding: rs(21), paddingTop: rs(13) },
-  title: { fontSize: rs(24), fontWeight: '600', textAlign: 'center' },
-  subtitle: { fontSize: rs(15), textAlign: 'center', marginTop: rs(8) },
+  header: { padding: rs(spacing.lg), paddingTop: rs(spacing.md) },
+  title: { fontSize: rs(typography.xl), fontWeight: fontWeights.semibold, textAlign: 'center' },
+  subtitle: { fontSize: rs(typography.base), textAlign: 'center', marginTop: rs(spacing.sm) },
   content: { flex: 1 },
 });
