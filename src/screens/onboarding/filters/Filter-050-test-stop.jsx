@@ -11,7 +11,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useTimerConfig } from '../../../contexts/TimerConfigContext';
-import { Button } from '../../../components/buttons';
+import { PrimaryButton } from '../../../components/buttons';
 import { rs } from '../../../styles/responsive';
 import { spacing, typography, fontWeights } from '../../../theme/tokens';
 import haptics from '../../../utils/haptics';
@@ -168,10 +168,9 @@ export default function Filter050TestStop({ onContinue, startTiming }) {
       </View>
 
       <View style={styles.footer}>
-        <Button
-          title={t('common.continue')}
+        <PrimaryButton
+          label={t('common.continue')}
           onPress={handleContinue}
-          variant="primary"
           accessibilityHint="Continue with your detected interaction profile"
         />
       </View>
