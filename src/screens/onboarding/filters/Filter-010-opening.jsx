@@ -1,10 +1,11 @@
 // src/screens/onboarding/filters/Filter0Opening.jsx
-// Filtre 0 : Animation de respiration d'introduction
+// Filtre 0 : Animation de respiration d'introduction avec logo de marque
 
 import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
+import BrandLogo from '../../../components/layout/BrandLogo';
 import { rs } from '../onboardingConstants';
 import { fontWeights } from '../../../theme/tokens';
 
@@ -54,13 +55,14 @@ export default function Filter010Opening({ onContinue }) {
       accessibilityHint="Start onboarding flow"
     >
       <View style={styles.centerContent}>
+        {/* Animated Brand Logo - same as splash screen */}
         <Animated.View
-          style={[
-            styles.breathingCircle,
-            { transform: [{ scale: scaleAnim }] },
-          ]}
+          style={{ transform: [{ scale: scaleAnim }] }}
           accessible={false}
-        />
+        >
+          <BrandLogo size={rs(160)} style={styles.logo} />
+        </Animated.View>
+
         <Text style={styles.breathingText} accessibilityLabel={t('onboarding.v2.filter0.breathe')}>
           {t('onboarding.v2.filter0.breathe')}
         </Text>
@@ -72,20 +74,13 @@ export default function Filter010Opening({ onContinue }) {
 
 const createStyles = (colors, spacing) =>
   StyleSheet.create({
-    breathingCircle: {
-      backgroundColor: colors.brand.primary,
-      borderRadius: rs(80),
-      height: rs(160),
-      marginBottom: rs(spacing.xl),
-      opacity: 0.8,
-      width: rs(160),
-    },
     breathingText: {
       color: colors.text,
       fontSize: rs(26),
       fontWeight: fontWeights.light,
       lineHeight: rs(38),
       textAlign: 'center',
+      marginTop: rs(spacing.xl),
     },
     centerContent: {
       alignItems: 'center',
@@ -98,6 +93,9 @@ const createStyles = (colors, spacing) =>
       backgroundColor: colors.background,
       flex: 1,
       justifyContent: 'center',
+    },
+    logo: {
+      opacity: 0.9,
     },
     tapHint: {
       bottom: rs(100),
