@@ -46,6 +46,23 @@
       "hint": "",
       "revealTitle": "Tu es"
     },
+    "paywall": {
+      "title": "Tu as créé ton premier moment",
+      "profile": "Profil :",
+      "question": "Envie d'en créer d'autres ?",
+      "valueProposition": "15 palettes · 16 activités · Créations illimitées",
+      "price": "4,99€ — Une fois, pour toujours",
+      "ctaTrial": "Essai gratuit 7 jours",
+      "ctaSkip": "Peut-être plus tard"
+    },
+    "firstTimer": {
+      "title": "Ton timer est prêt",
+      "profile": "Profil",
+      "tool": "Outil",
+      "moment": "Moment",
+      "startButton": "Lancer mon premier timer",
+      "completionMessage": "Bien joué ! Ton espace est prêt."
+    },
     "v2": {
       "filter0": {
         "breathe": "Respire.\nTon temps t'appartient.",

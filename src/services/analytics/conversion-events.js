@@ -164,4 +164,17 @@ export const conversionEvents = {
       type,
     });
   },
+
+  /**
+   * Event: Paywall Skipped
+   * Trigger: User skips paywall without purchasing
+   * KPI: Track skip rate from different sources
+   *
+   * @param {string} source - Source of paywall ('onboarding', 'settings', etc.)
+   */
+  trackPaywallSkipped(source = 'unknown') {
+    this.track('paywall_skipped', {
+      source,
+    });
+  },
 };

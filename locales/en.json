@@ -43,6 +43,23 @@
       "hint": "",
       "revealTitle": "You are"
     },
+    "paywall": {
+      "title": "You created your first moment",
+      "profile": "Profile:",
+      "question": "Want to create more?",
+      "valueProposition": "15 palettes · 16 activities · Unlimited creations",
+      "price": "$4.99 — Once, forever",
+      "ctaTrial": "Try 7 days free",
+      "ctaSkip": "Maybe later"
+    },
+    "firstTimer": {
+      "title": "Your timer is ready",
+      "profile": "Profile",
+      "tool": "Tool",
+      "moment": "Moment",
+      "startButton": "Start my first timer",
+      "completionMessage": "Well done! Your space is ready."
+    },
     "v2": {
       "filter0": {
         "breathe": "Breathe.\nYour time is yours.",
