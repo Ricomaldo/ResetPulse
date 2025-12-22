@@ -304,15 +304,15 @@ git add -A && git commit -m "feat(ob): add Tool filter + Creation refactor (Phas
 - [x] Fichiers obsolètes supprimés (4 fichiers)
 - [x] Fichiers renommés correctement
 - [x] `index.js` mis à jour
-- [ ] `Filter-020-tool.jsx` créé et fonctionnel
-- [ ] `CreateActivityModalContent` accepte `context="onboarding"`
-- [ ] `Filter-030-creation.jsx` refactoré
-- [ ] `creativity` passé en premium dans `activities.js`
-- [ ] `canCreateActivity` et `FREE_CUSTOM_LIMIT` ajoutés dans `useCustomActivities`
-- [ ] Analytics events ajoutés (`tool_selected`, `custom_activity_created_onboarding`)
-- [ ] i18n (FR/EN) ajouté pour les nouveaux textes
-- [ ] App compile sans erreurs
-- [ ] Tests unitaires passent (si applicable)
+- [x] `Filter-020-tool.jsx` créé et fonctionnel
+- [x] `CreateActivityModalContent` accepte `context="onboarding"`
+- [x] `Filter-030-creation.jsx` refactoré
+- [x] `creativity` passé en premium dans `activities.js`
+- [x] `canCreateActivity` et `FREE_CUSTOM_LIMIT` ajoutés dans `useCustomActivities`
+- [x] Analytics events ajoutés (`tool_selected`, `custom_activity_created_onboarding`)
+- [x] i18n (FR/EN) ajouté pour les nouveaux textes
+- [x] App compile sans erreurs
+- [x] Tests unitaires passent (si applicable)
 
 ---
 
