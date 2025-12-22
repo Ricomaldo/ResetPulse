@@ -4,6 +4,8 @@
 export { default as Filter010Opening } from './Filter-010-opening';
 export { default as Filter020Tool } from './Filter-020-tool';
 export { default as Filter030Creation } from './Filter-030-creation';
+export { default as Filter040TestStart } from './Filter-040-test-start';
+export { default as Filter050TestStop } from './Filter-050-test-stop';
 export { default as Filter060Sound } from './Filter-060-sound';
 export { default as Filter070Notifications } from './Filter-070-notifications';
 export { default as Filter080Paywall } from './Filter-080-paywall';

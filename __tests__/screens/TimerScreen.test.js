@@ -32,37 +32,71 @@ jest.mock('../../src/theme/ThemeProvider', () => ({
   }),
 }));
 
-// Mock TimerOptionsContext
-const mockTimerOptionsContext = {
-  currentDuration: 1500, // 25 minutes
-  setCurrentDuration: jest.fn(),
-  showDigitalTimer: true,
-  setShowDigitalTimer: jest.fn(),
-  currentActivity: { id: 'work', emoji: '💻', label: 'Work', pulseDuration: 800 },
-  clockwise: false,
-  setClockwise: jest.fn(),
-  incrementCompletedTimers: jest.fn(() => 1),
-  completedTimersCount: 0,
-  hasSeenTwoTimersModal: false,
-  setHasSeenTwoTimersModal: jest.fn(),
-  shouldPulse: true,
-  setShouldPulse: jest.fn(),
-  scaleMode: '60min',
-  setScaleMode: jest.fn(),
-  commandBarConfig: [],
-  carouselBarConfig: [],
-  favoritePalettes: [],
-  toggleFavoritePalette: jest.fn(),
-};
-
+// Mock TimerConfigContext (consolidated provider with namespaced structure)
 jest.mock('../../src/contexts/TimerConfigContext', () => ({
   useTimerConfig: () => ({
-    ...mockTimerOptionsContext,
-    currentColor: '#007AFF',
-    flashActivity: null, // Used by TimerScreen (no flash by default)
+    // Namespaced structure matching new API
+    timer: {
+      currentActivity: { id: 'work', emoji: '💻', label: 'Work', pulseDuration: 800 },
+      currentDuration: 1500, // 25 minutes
+      clockwise: false,
+      scaleMode: '60min',
+      selectedSoundId: 'bell_classic',
+    },
+    display: {
+      showDigitalTimer: true,
+      shouldPulse: true,
+      showActivityEmoji: true,
+    },
+    stats: {
+      completedTimersCount: 0,
+      hasSeenTwoTimersModal: false,
+    },
+    transient: {
+      flashActivity: null, // Used by TimerScreen (no flash by default)
+    },
+    layout: {
+      commandBarConfig: [],
+      carouselBarConfig: [],
+    },
+    favorites: {
+      favoritePalettes: [],
+    },
+    palette: {
+      currentColor: '#007AFF',
+    },
+    // Actions
+    incrementCompletedTimers: jest.fn(() => 1),
+    setHasSeenTwoTimersModal: jest.fn(),
+    setCurrentDuration: jest.fn(),
+    setShowDigitalTimer: jest.fn(),
+    setClockwise: jest.fn(),
+    setShouldPulse: jest.fn(),
+    setScaleMode: jest.fn(),
+    toggleFavoritePalette: jest.fn(),
   }),
   // Backward-compatible aliases
-  useTimerOptions: () => mockTimerOptionsContext,
+  useTimerOptions: () => ({
+    currentDuration: 1500,
+    setCurrentDuration: jest.fn(),
+    showDigitalTimer: true,
+    setShowDigitalTimer: jest.fn(),
+    currentActivity: { id: 'work', emoji: '💻', label: 'Work', pulseDuration: 800 },
+    clockwise: false,
+    setClockwise: jest.fn(),
+    incrementCompletedTimers: jest.fn(() => 1),
+    completedTimersCount: 0,
+    hasSeenTwoTimersModal: false,
+    setHasSeenTwoTimersModal: jest.fn(),
+    shouldPulse: true,
+    setShouldPulse: jest.fn(),
+    scaleMode: '60min',
+    setScaleMode: jest.fn(),
+    commandBarConfig: [],
+    carouselBarConfig: [],
+    favoritePalettes: [],
+    toggleFavoritePalette: jest.fn(),
+  }),
   useTimerPalette: () => ({
     currentColor: '#007AFF',
   }),
@@ -174,17 +208,9 @@ describe('TimerScreen', () => {
     expect(asideZone.length).toBe(1);
   });
 
-
-  it('should render TwoTimersModal component', () => {
-    let component;
-    act(() => {
-      component = create(<TimerScreen />);
-    });
-
-    const instance = component.root;
-    const twoTimersModal = instance.findAllByType('TwoTimersModal');
-    expect(twoTimersModal.length).toBe(1);
-  });
+  // Note: TwoTimersModal and PremiumModal are now managed by ModalStack
+  // They are pushed to the stack programmatically via modalStack.push()
+  // Testing modal stack behavior is covered by ModalStackContext tests
 
   it('should pass correct props to DialZone', () => {
     let component;

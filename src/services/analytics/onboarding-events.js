@@ -206,4 +206,47 @@ export const onboardingEvents = {
       duration_seconds: duration,
     });
   },
+
+  /**
+   * Behavior Start Measured (Onboarding V2.1 Phase 2)
+   * Trigger: Filter-040-test-start - User press duration measured
+   * Behavioral detection for persona identification
+   *
+   * @param {number} timingMs - Press duration in milliseconds
+   */
+  trackBehaviorStartMeasured(timingMs) {
+    const behavior = timingMs < 800 ? 'rapid' : 'deliberate';
+    this.track('behavior_start_measured', {
+      timing_ms: timingMs,
+      behavior,
+    });
+  },
+
+  /**
+   * Behavior Stop Measured (Onboarding V2.1 Phase 2)
+   * Trigger: Filter-050-test-stop - User release timing measured
+   * Behavioral detection for persona identification
+   *
+   * @param {number} timingMs - Release timing in milliseconds
+   */
+  trackBehaviorStopMeasured(timingMs) {
+    const behavior = timingMs < 2500 ? 'early' : 'patient';
+    this.track('behavior_stop_measured', {
+      timing_ms: timingMs,
+      behavior,
+    });
+  },
+
+  /**
+   * Persona Detected (Onboarding V2.1 Phase 2)
+   * Trigger: Filter-050-test-stop - Persona detection complete
+   * Maps to ADR-008 persona matrix (veloce, abandonniste, impulsif, ritualiste)
+   *
+   * @param {string} personaId - Detected persona ID
+   */
+  trackPersonaDetected(personaId) {
+    this.track('persona_detected', {
+      persona: personaId,
+    });
+  },
 };
