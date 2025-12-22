@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
+import BrandLogo from './BrandLogo';
 
 /**
  * SplashScreen - Branded loading screen
@@ -23,27 +24,8 @@ export default function SplashScreen() {
     loader: {
       marginTop: 16,
     },
-    logo: {
-      alignItems: 'center',
-      borderRadius: 20,
-      elevation: 3,
-      height: 100,
-      justifyContent: 'center',
-      shadowColor: theme.colors.shadow,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 1,
-      shadowRadius: 8,
-      width: 100,
-    },
     logoContainer: {
       marginBottom: 32,
-    },
-    logoInner: {
-      backgroundColor: theme.colors.fixed.white,
-      borderRadius: 12,
-      height: 60,
-      opacity: 0.3,
-      width: 60,
     },
   });
 
@@ -52,14 +34,9 @@ export default function SplashScreen() {
       styles.container,
       { backgroundColor: theme.colors.background }
     ]}>
-      {/* Logo/Icon placeholder */}
+      {/* Brand Logo */}
       <View style={styles.logoContainer}>
-        <View style={[
-          styles.logo,
-          { backgroundColor: theme.colors.brand.primary }
-        ]}>
-          <View style={styles.logoInner} />
-        </View>
+        <BrandLogo size={100} />
       </View>
 
       {/* Loading indicator */}
