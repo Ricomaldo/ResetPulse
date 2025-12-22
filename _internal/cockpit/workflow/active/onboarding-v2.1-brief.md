@@ -23,15 +23,15 @@
 
 | Tâche                            | Fichier/Action                                                                  | ✅  |
 | -------------------------------- | ------------------------------------------------------------------------------- | --- |
-| Supprimer les fichiers obsolètes | `src/screens/onboarding/filters/Filter-020-needs.jsx`                           | []  |
-|                                  | `src/screens/onboarding/filters/Filter-060-branch.jsx`                          | []  |
-|                                  | `src/screens/onboarding/filters/Filter-070-vision-discover.jsx`                 | []  |
-|                                  | `src/screens/onboarding/filters/Filter-100-interface-personalize.jsx`           | []  |
-| Renommer les fichiers existants  | `Filter-040-test.jsx` → `Filter-090-first-timer.jsx` (à implémenter en Phase 3) | []  |
-|                                  | `Filter-050-notifications.jsx` → `Filter-070-notifications.jsx`                 | []  |
-|                                  | `Filter-080-sound-personalize.jsx` → `Filter-060-sound.jsx`                     | []  |
-|                                  | `Filter-090-paywall-discover.jsx` → `Filter-080-paywall.jsx`                    | []  |
-| Mettre à jour `index.js`         | Exporter uniquement les filtres v2.1 (voir code ci-dessous)                     | []  |
+| Supprimer les fichiers obsolètes | `src/screens/onboarding/filters/Filter-020-needs.jsx`                           | [x] |
+|                                  | `src/screens/onboarding/filters/Filter-060-branch.jsx`                          | [x] |
+|                                  | `src/screens/onboarding/filters/Filter-070-vision-discover.jsx`                 | [x] |
+|                                  | `src/screens/onboarding/filters/Filter-100-interface-personalize.jsx`           | [x] |
+| Renommer les fichiers existants  | `Filter-040-test.jsx` → `Filter-090-first-timer.jsx` (à implémenter en Phase 3) | [x] |
+|                                  | `Filter-050-notifications.jsx` → `Filter-070-notifications.jsx`                 | [x] |
+|                                  | `Filter-080-sound-personalize.jsx` → `Filter-060-sound.jsx`                     | [x] |
+|                                  | `Filter-090-paywall-discover.jsx` → `Filter-080-paywall.jsx`                    | [x] |
+| Mettre à jour `index.js`         | Exporter uniquement les filtres v2.1 (voir code ci-dessous)                     | [x] |
 
 **Code pour `src/screens/onboarding/filters/index.js`** :
 
@@ -301,9 +301,9 @@ git add -A && git commit -m "feat(ob): add Tool filter + Creation refactor (Phas
 
 ## ✅ Validation Checklist
 
-- [ ] Fichiers obsolètes supprimés (4 fichiers)
-- [ ] Fichiers renommés correctement
-- [ ] `index.js` mis à jour
+- [x] Fichiers obsolètes supprimés (4 fichiers)
+- [x] Fichiers renommés correctement
+- [x] `index.js` mis à jour
 - [ ] `Filter-020-tool.jsx` créé et fonctionnel
 - [ ] `CreateActivityModalContent` accepte `context="onboarding"`
 - [ ] `Filter-030-creation.jsx` refactoré
