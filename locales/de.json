@@ -240,5 +240,18 @@
     "title": "Noch mehr Farben",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Ein Moment für dich?",
+        "bodyPersonalized": "Deine {{name}} wartet {{emoji}} — {{duration}} Min für dich?",
+        "bodyGeneric": "Dein Timer wartet — nimm dir einen Moment für dich"
+      },
+      "day7": {
+        "title": "Letzte Chance",
+        "body": "7 Tage kostenlos testen — nutze es bevor es abläuft"
+      }
+    }
   }
 }

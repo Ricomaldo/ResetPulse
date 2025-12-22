@@ -479,5 +479,18 @@
       "startMessage": "Écris",
       "endMessage": "Libéré ✍️"
     }
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Un moment pour toi ?",
+        "bodyPersonalized": "Ta {{name}} t'attend {{emoji}} — {{duration}} min pour toi ?",
+        "bodyGeneric": "Ton timer t'attend — prends un moment pour toi"
+      },
+      "day7": {
+        "title": "Dernière chance",
+        "body": "Essai gratuit 7 jours — profites-en avant qu'il expire"
+      }
+    }
   }
 }

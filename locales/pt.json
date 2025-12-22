@@ -240,5 +240,18 @@
     "title": "Ainda mais cores",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Um momento para ti?",
+        "bodyPersonalized": "A tua {{name}} espera por ti {{emoji}} — {{duration}} min para ti?",
+        "bodyGeneric": "O teu temporizador espera por ti — tira um momento para ti"
+      },
+      "day7": {
+        "title": "Última oportunidade",
+        "body": "Teste gratuito de 7 dias — aproveita antes de expirar"
+      }
+    }
   }
 }

@@ -1,13 +1,14 @@
 // src/services/analytics/conversion-events.js
 /**
  * Conversion & Discovery Analytics Events
- * Tracks monetization funnel: Two Timers Milestone + Discovery Modals
- * Based on ADR-003 conversion strategy
+ * Tracks monetization funnel: Two Timers Milestone + Discovery Modals + Post-Skip Reminders
+ * Based on ADR-003 conversion strategy & ADR-010 post-skip tactics
  *
- * Methods: 8
+ * Methods: 11
  * - Two Timers Milestone tracking (4 events)
  * - Discovery Modals tracking (3 events)
  * - Paywall Viewed (1 event)
+ * - Post-Skip Reminders tracking (3 events - ADR-010)
  *
  * @module conversion-events
  */
@@ -175,6 +176,51 @@ export const conversionEvents = {
   trackPaywallSkipped(source = 'unknown') {
     this.track('paywall_skipped', {
       source,
+    });
+  },
+
+  // ============================================
+  // POST-SKIP REMINDER NOTIFICATIONS (ADR-010)
+  // ============================================
+
+  /**
+   * Event: Reminder Scheduled
+   * Trigger: Post-skip notifications programmed (J+3, J+7)
+   * KPI: Track percentage of skip users getting reminders
+   *
+   * @param {string} type - 'day_3' | 'day_7'
+   */
+  trackReminderScheduled(type) {
+    this.track('reminder_scheduled', {
+      type,
+    });
+  },
+
+  /**
+   * Event: Reminder Tapped
+   * Trigger: User taps on reminder notification
+   * KPI: Track engagement rate with reminders
+   *
+   * @param {string} type - 'day_3' | 'day_7'
+   * @param {string|null} activityId - Activity ID (for day_3 personalized reminders)
+   */
+  trackReminderTapped(type, activityId = null) {
+    this.track('reminder_tapped', {
+      type,
+      activity_id: activityId,
+    });
+  },
+
+  /**
+   * Event: Reminder Converted
+   * Trigger: User becomes premium after tapping a reminder
+   * KPI: Measure reminder conversion effectiveness
+   *
+   * @param {string} type - 'day_3' | 'day_7'
+   */
+  trackReminderConverted(type) {
+    this.track('reminder_converted', {
+      type,
     });
   },
 };

@@ -240,5 +240,18 @@
     "title": "더 많은 색상",
     "subtitle": "(subtitle)",
     "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "자신을 위한 시간?",
+        "bodyPersonalized": "당신의 {{name}}이 기다리고 있어요 {{emoji}} — {{duration}}분 어때요?",
+        "bodyGeneric": "당신의 타이머가 기다리고 있습니다 — 자신을 위한 시간을 가져보세요"
+      },
+      "day7": {
+        "title": "마지막 기회",
+        "body": "7일 무료 체험 — 만료되기 전에 지금 받으세요"
+      }
+    }
   }
 }
