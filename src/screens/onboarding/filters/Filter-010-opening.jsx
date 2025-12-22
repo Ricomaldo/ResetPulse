@@ -47,7 +47,7 @@ export default function Filter010Opening({ onContinue }) {
   return (
     <TouchableOpacity
       style={styles.fullScreen}
-      onPress={onContinue}
+      onPress={() => onContinue()}
       activeOpacity={1}
       accessible={true}
       accessibilityRole="button"

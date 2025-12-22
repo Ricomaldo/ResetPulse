@@ -34,7 +34,11 @@ const TOTAL_STEPS = 9;
 export default function OnboardingFlow({ onComplete }) {
   const { colors } = useTheme();
   const analytics = useAnalytics();
-  const { setOnboardingCompleted } = useTimerConfig();
+  const {
+    setOnboardingCompleted,
+    setCurrentActivity,
+    setCurrentDuration
+  } = useTimerConfig();
 
   // Persisted state - resume onboarding if app killed
   const [currentStep, setCurrentStep, isLoadingStep] = usePersistedState(
@@ -111,17 +115,29 @@ export default function OnboardingFlow({ onComplete }) {
   // Generic continue handler
   const handleContinue = useCallback(
     async (stepData = {}) => {
+      // Guard: Filter out React Native events (prevent cyclical structure errors)
+      const isPlainObject = stepData && typeof stepData === 'object' && !stepData.nativeEvent;
+      const sanitizedData = isPlainObject ? stepData : {};
+
       // Merge new data
-      setFlowData((prev) => ({ ...prev, ...stepData }));
+      setFlowData((prev) => ({ ...prev, ...sanitizedData }));
 
       // Track step completion
-      analytics.trackOnboardingStepCompleted(currentStep, `filter_${currentStep}`, stepData);
+      analytics.trackOnboardingStepCompleted(currentStep, `filter_${currentStep}`, sanitizedData);
 
       // Move to next step
       if (currentStep < TOTAL_STEPS - 1) {
         setCurrentStep((prev) => prev + 1);
       } else {
-        // Onboarding complete - cleanup persisted state
+        // Onboarding complete - pre-select custom activity (IKEA effect)
+        const mergedData = { ...flowData, ...sanitizedData };
+        if (mergedData.customActivity) {
+          setCurrentActivity(mergedData.customActivity);
+          setCurrentDuration(mergedData.customActivity.defaultDuration);
+          console.log('[OnboardingFlow] Pre-selected custom activity:', mergedData.customActivity);
+        }
+
+        // Cleanup persisted state
         try {
           await AsyncStorage.multiRemove([
             '@ResetPulse:onboardingStep',
@@ -133,14 +149,24 @@ export default function OnboardingFlow({ onComplete }) {
 
         setOnboardingCompleted(true);
         analytics.trackOnboardingCompleted({
-          result: stepData.purchaseResult || 'completed',
-          toolMode: flowData.favoriteToolMode,
-          persona: flowData.persona,
+          result: sanitizedData.purchaseResult || 'completed',
+          toolMode: mergedData.favoriteToolMode,
+          persona: mergedData.persona,
         });
-        onComplete(flowData);
+        onComplete(mergedData);
       }
     },
-    [currentStep, flowData, analytics, setOnboardingCompleted, onComplete, setFlowData, setCurrentStep]
+    [
+      currentStep,
+      flowData,
+      analytics,
+      setOnboardingCompleted,
+      setCurrentActivity,
+      setCurrentDuration,
+      onComplete,
+      setFlowData,
+      setCurrentStep
+    ]
   );
 
   // Render current filter
