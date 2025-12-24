@@ -30,7 +30,7 @@ const FitButton = React.memo(function FitButton({
 
   return (
     <IconButton
-      icon="focus"
+      icon="circle-gauge"
       variant="ghost"
       size={compact ? 'small' : 'medium'}
       shape="circular"

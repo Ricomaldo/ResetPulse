@@ -43,12 +43,30 @@ const MessageContent = forwardRef(function MessageContent(
 ) {
   const theme = useTheme();
   const [showFlash, setShowFlash] = useState(false);
-  const prevTimerStateRef = useRef(timerState);
+  const prevTimerStateRef = useRef(null); // Start null to detect first render
 
-  // Message animations
-  const messageOpacityRef = useRef(new Animated.Value(0)).current;
-  const messageTranslateYRef = useRef(new Animated.Value(12)).current; // Start 12px below
-  const messageScaleRef = useRef(new Animated.Value(0.9)).current;
+  // Message animations - initialize based on initial timerState
+  const getInitialOpacity = () => {
+    if (timerState === 'REST') return 0.5;
+    if (timerState === 'RUNNING' || timerState === 'COMPLETE') return 1;
+    return 0;
+  };
+
+  const getInitialTranslateY = () => {
+    if (timerState === 'REST') return 0;
+    if (timerState === 'RUNNING' || timerState === 'COMPLETE') return 0;
+    return 12;
+  };
+
+  const getInitialScale = () => {
+    if (timerState === 'COMPLETE') return 1.1;
+    if (timerState === 'RUNNING') return 1;
+    return 1;
+  };
+
+  const messageOpacityRef = useRef(new Animated.Value(getInitialOpacity())).current;
+  const messageTranslateYRef = useRef(new Animated.Value(getInitialTranslateY())).current;
+  const messageScaleRef = useRef(new Animated.Value(getInitialScale())).current;
   const messageBounceScaleRef = useRef(new Animated.Value(1)).current;
 
   // Shake animation (abandon: 4px horizontal)
@@ -74,6 +92,11 @@ const MessageContent = forwardRef(function MessageContent(
   useEffect(() => {
     const previousState = prevTimerStateRef.current;
     prevTimerStateRef.current = timerState;
+
+    // Skip animation on first render - initial values are already set correctly
+    if (previousState === null) {
+      return;
+    }
 
     if (timerState === 'RUNNING' && previousState !== 'RUNNING') {
       // ENTERING RUNNING: Smooth arrival with stagger
