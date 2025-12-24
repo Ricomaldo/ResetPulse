@@ -1,5 +1,5 @@
-// src/screens/onboarding/filters/Filter5bSound.jsx
-// Filtre 5b : Choix du son (parcours Personnaliser)
+// src/screens/onboarding/filters/Filter-060-sound.jsx
+// Filtre 060 : Choix du son
 
 import React, { useState, useRef } from 'react';
 import {
@@ -7,16 +7,15 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { rs } from '../onboardingConstants';
+import { rs } from '../../../styles/responsive';
 import haptics from '../../../utils/haptics';
 import useSimpleAudio from '../../../hooks/useSimpleAudio';
 import { TIMER_SOUNDS } from '../../../config/sounds';
 import { fontWeights } from '../../../theme/tokens';
+import OnboardingLayout from '../../../components/onboarding/OnboardingLayout';
 
 export default function Filter080SoundPersonalize({ onContinue }) {
   const { colors, spacing, borderRadius } = useTheme();
@@ -81,110 +80,74 @@ export default function Filter080SoundPersonalize({ onContinue }) {
   const styles = createStyles(colors, spacing, borderRadius);
 
   return (
-    <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
-      {/* Title */}
-      <View style={styles.header}>
-        <Text style={styles.title}>
-          {t('onboarding.v3.filter5b.title')}
-        </Text>
-      </View>
-
+    <OnboardingLayout
+      title={t('onboarding.v3.filter5b.title')}
+      scrollable={true}
+      centerContent={false}
+      footerVariant="primary-skip"
+      primaryButtonProps={{
+        label: t('onboarding.v3.filter5b.continue'),
+        onPress: handleContinue,
+        accessibilityHint: 'Confirm selected sound and continue to next step',
+      }}
+      skipButtonProps={{
+        label: t('onboarding.v3.filter5b.skip'),
+        onPress: handleSkip,
+        accessibilityHint: 'Skip sound selection and use default bell sound',
+      }}
+    >
       {/* Sound List */}
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {TIMER_SOUNDS.map((sound) => {
-          const isSelected = selectedSound === sound.id;
-          const isPlaying = playingId === sound.id;
+      {TIMER_SOUNDS.map((sound) => {
+        const isSelected = selectedSound === sound.id;
+        const isPlaying = playingId === sound.id;
 
-          return (
-            <TouchableOpacity
-              key={sound.id}
-              style={[
-                styles.soundRow,
-                isSelected && styles.soundRowSelected,
-                isPlaying && styles.soundRowPlaying,
-              ]}
-              onPress={() => handleSoundPress(sound.id)}
-              activeOpacity={0.7}
-              accessible={true}
-              accessibilityRole="button"
-              accessibilityLabel={t(`sounds.${sound.id}`)}
-              accessibilityHint={`Select ${t(`sounds.${sound.id}`)} as timer completion sound. Tap to preview.`}
-              accessibilityState={{ selected: isSelected }}
-            >
-              {isSelected && (
-                <View style={styles.checkmark}>
-                  <Text style={styles.checkmarkIcon}>✓</Text>
-                </View>
-              )}
-              <View style={styles.soundInfo}>
-                <Text
-                  style={[
-                    styles.soundName,
-                    isSelected && styles.soundNameActive,
-                  ]}
-                >
-                  {t(`sounds.${sound.id}`)}
-                </Text>
-                <Text style={styles.soundDuration}>{sound.duration}</Text>
+        return (
+          <TouchableOpacity
+            key={sound.id}
+            style={[
+              styles.soundRow,
+              isSelected && styles.soundRowSelected,
+              isPlaying && styles.soundRowPlaying,
+            ]}
+            onPress={() => handleSoundPress(sound.id)}
+            activeOpacity={0.7}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={t(`sounds.${sound.id}`)}
+            accessibilityHint={`Select ${t(`sounds.${sound.id}`)} as timer completion sound. Tap to preview.`}
+            accessibilityState={{ selected: isSelected }}
+          >
+            {isSelected && (
+              <View style={styles.checkmark}>
+                <Text style={styles.checkmarkIcon}>✓</Text>
               </View>
-              {isPlaying && (
-                <View style={styles.playingIndicator}>
-                  <Text style={styles.playingIcon}>🔊</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
-
-      {/* Bottom Buttons */}
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={handleContinue}
-          activeOpacity={0.7}
-          accessible={true}
-          accessibilityRole="button"
-          accessibilityLabel={t('onboarding.v3.filter5b.continue')}
-          accessibilityHint="Confirm selected sound and continue to next step"
-        >
-          <Text style={styles.primaryButtonText}>
-            {t('onboarding.v3.filter5b.continue')}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.skipButton}
-          onPress={handleSkip}
-          activeOpacity={0.7}
-          accessible={true}
-          accessibilityRole="button"
-          accessibilityLabel={t('onboarding.v3.filter5b.skip')}
-          accessibilityHint="Skip sound selection and use default bell sound"
-        >
-          <Text style={styles.skipButtonText}>
-            {t('onboarding.v3.filter5b.skip')}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+            )}
+            <View style={styles.soundInfo}>
+              <Text
+                style={[
+                  styles.soundName,
+                  isSelected && styles.soundNameActive,
+                ]}
+              >
+                {t(`sounds.${sound.id}`)}
+              </Text>
+              <Text style={styles.soundDuration}>{sound.duration}</Text>
+            </View>
+            {isPlaying && (
+              <View style={styles.playingIndicator}>
+                <Text style={styles.playingIcon}>🔊</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        );
+      })}
+    </OnboardingLayout>
   );
 }
 
 const createStyles = (colors, spacing, borderRadius) =>
   StyleSheet.create({
-    bottomContainer: {
-      borderTopColor: colors.border,
-      borderTopWidth: 1,
-      gap: rs(spacing.sm),
-      paddingBottom: rs(spacing.lg),
-      paddingHorizontal: rs(spacing.xl),
-      paddingTop: rs(spacing.md),
-    },
+    // Checkmark for selected sound
     checkmark: {
       alignItems: 'center',
       backgroundColor: colors.brand.primary,
@@ -199,11 +162,8 @@ const createStyles = (colors, spacing, borderRadius) =>
       fontSize: rs(14),
       fontWeight: fontWeights.semibold,
     },
-    header: {
-      paddingBottom: rs(spacing.md),
-      paddingHorizontal: rs(spacing.xl),
-      paddingTop: rs(spacing.lg),
-    },
+
+    // Playing indicator
     playingIcon: {
       fontSize: rs(18),
     },
@@ -211,43 +171,8 @@ const createStyles = (colors, spacing, borderRadius) =>
       marginLeft: rs(spacing.sm),
       paddingHorizontal: rs(spacing.sm),
     },
-    primaryButton: {
-      alignItems: 'center',
-      backgroundColor: colors.brand.primary,
-      borderRadius: borderRadius.xl,
-      justifyContent: 'center',
-      minHeight: rs(56),
-      paddingVertical: rs(spacing.md),
-    },
-    primaryButtonText: {
-      color: colors.background,
-      fontSize: rs(18),
-      fontWeight: fontWeights.semibold,
-    },
-    screen: {
-      backgroundColor: colors.background,
-      flex: 1,
-    },
-    scrollContent: {
-      paddingBottom: rs(spacing.lg),
-      paddingHorizontal: rs(spacing.xl),
-    },
-    scrollView: {
-      flex: 1,
-    },
-    skipButton: {
-      alignItems: 'center',
-      paddingVertical: rs(spacing.sm),
-    },
-    skipButtonText: {
-      color: colors.textSecondary,
-      fontSize: rs(15),
-      fontWeight: fontWeights.medium,
-    },
-    soundDuration: {
-      color: colors.textSecondary,
-      fontSize: rs(12),
-    },
+
+    // Sound info
     soundInfo: {
       flex: 1,
     },
@@ -261,6 +186,12 @@ const createStyles = (colors, spacing, borderRadius) =>
       color: colors.brand.primary,
       fontWeight: fontWeights.semibold,
     },
+    soundDuration: {
+      color: colors.textSecondary,
+      fontSize: rs(12),
+    },
+
+    // Sound row
     soundRow: {
       alignItems: 'center',
       backgroundColor: colors.surface,
@@ -272,18 +203,12 @@ const createStyles = (colors, spacing, borderRadius) =>
       minHeight: rs(60),
       padding: rs(spacing.md),
     },
-    soundRowPlaying: {
-      backgroundColor: colors.brand.primary + '05',
-      borderColor: colors.brand.primary,
-    },
     soundRowSelected: {
       backgroundColor: colors.brand.primary + '10',
       borderColor: colors.brand.primary,
     },
-    title: {
-      color: colors.text,
-      fontSize: rs(28),
-      fontWeight: fontWeights.semibold,
-      textAlign: 'center',
+    soundRowPlaying: {
+      backgroundColor: colors.brand.primary + '05',
+      borderColor: colors.brand.primary,
     },
   });

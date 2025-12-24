@@ -1,19 +1,18 @@
-// src/screens/onboarding/filters/Filter3_5Notifications.jsx
-// Filtre 3.5 : Permission notifications (pré-permission expliquée)
+// src/screens/onboarding/filters/Filter-070-notifications.jsx
+// Filtre 070 : Permission notifications (pré-permission expliquée)
 
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Notifications from 'expo-notifications';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { rs } from '../onboardingConstants';
+import { rs } from '../../../styles/responsive';
 import haptics from '../../../utils/haptics';
 import analytics from '../../../services/analytics';
-import { fontWeights } from '../../../theme/tokens';
+import { fontWeights, spacing, typography } from '../../../theme/tokens';
+import OnboardingLayout from '../../../components/onboarding/OnboardingLayout';
 
 export default function Filter050Notifications({ onContinue }) {
-  const { colors, spacing, borderRadius } = useTheme();
+  const { colors } = useTheme();
   const t = useTranslation();
 
   // Track when filter is displayed
@@ -39,143 +38,76 @@ export default function Filter050Notifications({ onContinue }) {
     onContinue({ notificationPermission: false, shouldRequestLater: false });
   };
 
-  const styles = createStyles(colors, spacing, borderRadius);
+  const styles = createStyles();
 
   return (
-    <SafeAreaView style={styles.screen} edges={['top']}>
-      <View style={styles.centerContent}>
-        {/* Icon */}
-        <View style={styles.iconContainer}>
-          <Text style={styles.icon}>🔔</Text>
-        </View>
-
-        {/* Title */}
-        <Text style={styles.title}>
-          {t('onboarding.v3.filter3_5.title')}
-        </Text>
-
-        {/* Body */}
-        <Text style={styles.body}>
-          {t('onboarding.v3.filter3_5.body')}
-        </Text>
-
-        <Text style={styles.bodySecondary}>
-          {t('onboarding.v3.filter3_5.bodySecondary')}
-        </Text>
-
-        {/* CTA Buttons */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={handleRequestPermission}
-            activeOpacity={0.7}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel={t('onboarding.v3.filter3_5.ctaPrimary')}
-            accessibilityHint="Enable notifications to get alerts when timer completes"
-          >
-            <Text style={styles.primaryButtonText}>
-              {t('onboarding.v3.filter3_5.ctaPrimary')}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={handleSkip}
-            activeOpacity={0.7}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel={t('onboarding.v3.filter3_5.ctaSecondary')}
-            accessibilityHint="Skip notification setup and continue without notifications"
-          >
-            <Text style={styles.secondaryButtonText}>
-              {t('onboarding.v3.filter3_5.ctaSecondary')}
-            </Text>
-          </TouchableOpacity>
-        </View>
+    <OnboardingLayout
+      centerContent={true}
+      footerVariant="primary-secondary"
+      primaryButtonProps={{
+        label: t('onboarding.v3.filter3_5.ctaPrimary'),
+        onPress: handleRequestPermission,
+        accessibilityHint: 'Enable notifications to get alerts when timer completes',
+      }}
+      secondaryButtonProps={{
+        label: t('onboarding.v3.filter3_5.ctaSecondary'),
+        onPress: handleSkip,
+        accessibilityHint: 'Skip notification setup and continue without notifications',
+      }}
+    >
+      {/* Icon */}
+      <View style={[styles.iconContainer, { backgroundColor: colors.brand.primary + '20' }]}>
+        <Text style={styles.icon}>🔔</Text>
       </View>
-    </SafeAreaView>
+
+      {/* Title */}
+      <Text style={[styles.title, { color: colors.text }]}>
+        {t('onboarding.v3.filter3_5.title')}
+      </Text>
+
+      {/* Body */}
+      <Text style={[styles.body, { color: colors.text }]}>
+        {t('onboarding.v3.filter3_5.body')}
+      </Text>
+
+      <Text style={[styles.bodySecondary, { color: colors.textSecondary }]}>
+        {t('onboarding.v3.filter3_5.bodySecondary')}
+      </Text>
+    </OnboardingLayout>
   );
 }
 
-const createStyles = (colors, spacing, borderRadius) =>
+const createStyles = () =>
   StyleSheet.create({
-    body: {
-      color: colors.text,
-      fontSize: rs(16),
-      lineHeight: rs(24),
-      marginBottom: rs(spacing.md),
-      textAlign: 'center',
-    },
-    bodySecondary: {
-      color: colors.textSecondary,
-      fontSize: rs(14),
-      lineHeight: rs(20),
-      marginBottom: rs(spacing.xl),
-      textAlign: 'center',
-    },
-    buttonContainer: {
-      gap: rs(spacing.md),
-      marginTop: rs(spacing.lg),
-      width: '100%',
-    },
-    centerContent: {
-      alignItems: 'center',
-      flex: 1,
-      justifyContent: 'center',
-      paddingHorizontal: rs(spacing.xl),
-    },
-    icon: {
-      fontSize: rs(50),
-    },
+    // Icon container
     iconContainer: {
       alignItems: 'center',
-      backgroundColor: colors.brand.primary + '20',
       borderRadius: rs(50),
       height: rs(100),
       justifyContent: 'center',
       marginBottom: rs(spacing.xl),
       width: rs(100),
     },
-    primaryButton: {
-      alignItems: 'center',
-      backgroundColor: colors.brand.primary,
-      borderRadius: borderRadius.xl,
-      justifyContent: 'center',
-      minHeight: rs(56),
-      paddingHorizontal: rs(spacing.xl),
-      paddingVertical: rs(spacing.md),
+    icon: {
+      fontSize: rs(50),
     },
-    primaryButtonText: {
-      color: colors.background,
-      fontSize: rs(18),
-      fontWeight: fontWeights.semibold,
-    },
-    screen: {
-      backgroundColor: colors.background,
-      flex: 1,
-    },
-    secondaryButton: {
-      alignItems: 'center',
-      backgroundColor: colors.surface,
-      borderColor: colors.border,
-      borderRadius: borderRadius.xl,
-      borderWidth: 2,
-      justifyContent: 'center',
-      minHeight: rs(56),
-      paddingHorizontal: rs(spacing.xl),
-      paddingVertical: rs(spacing.md),
-    },
-    secondaryButtonText: {
-      color: colors.text,
-      fontSize: rs(16),
-      fontWeight: fontWeights.semibold,
-    },
+
+    // Text styles
     title: {
-      color: colors.text,
-      fontSize: rs(28),
+      fontSize: rs(typography.xl),
       fontWeight: fontWeights.semibold,
       marginBottom: rs(spacing.lg),
+      textAlign: 'center',
+    },
+    body: {
+      fontSize: rs(typography.base),
+      lineHeight: rs(24),
+      marginBottom: rs(spacing.md),
+      textAlign: 'center',
+    },
+    bodySecondary: {
+      fontSize: rs(typography.sm),
+      lineHeight: rs(20),
       textAlign: 'center',
     },
   });

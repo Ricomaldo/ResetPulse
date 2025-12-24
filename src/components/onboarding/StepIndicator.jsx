@@ -5,7 +5,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { rs } from '../../screens/onboarding/onboardingConstants';
+import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 
 /**
@@ -32,9 +32,6 @@ const StepIndicator = React.memo(function StepIndicator({ current, total }) {
           />
         ))}
       </View>
-      <Text style={styles.stepText}>
-        {current + 1} / {total}
-      </Text>
     </View>
   );
 });
@@ -74,11 +71,5 @@ const createStyles = (colors, spacing) =>
       flexDirection: 'row',
       gap: rs(spacing.sm),
       justifyContent: 'center',
-      marginBottom: rs(spacing.md),
-    },
-    stepText: {
-      color: colors.textSecondary,
-      fontSize: rs(14),
-      fontWeight: fontWeights.medium,
     },
   });

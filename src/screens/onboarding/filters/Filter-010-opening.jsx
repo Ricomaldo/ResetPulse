@@ -6,7 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import BrandLogo from '../../../components/layout/BrandLogo';
-import { rs } from '../onboardingConstants';
+import { rs } from '../../../styles/responsive';
 import { fontWeights } from '../../../theme/tokens';
 
 const BREATH_CYCLES = 5;
@@ -45,35 +45,40 @@ export default function Filter010Opening({ onContinue }) {
   const styles = createStyles(colors, spacing);
 
   return (
-    <TouchableOpacity
-      style={styles.fullScreen}
-      onPress={() => onContinue()}
-      activeOpacity={1}
-      accessible={true}
-      accessibilityRole="button"
-      accessibilityLabel={t('onboarding.v2.filter0.tapToContinue')}
-      accessibilityHint="Start onboarding flow"
-    >
-      <View style={styles.centerContent}>
-        {/* Animated Brand Logo - same as splash screen */}
-        <Animated.View
-          style={{ transform: [{ scale: scaleAnim }] }}
-          accessible={false}
-        >
-          <BrandLogo size={rs(160)} style={styles.logo} />
-        </Animated.View>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <TouchableOpacity
+        style={styles.fullScreen}
+        onPress={() => onContinue()}
+        activeOpacity={1}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={t('onboarding.v2.filter0.tapToContinue')}
+        accessibilityHint="Start onboarding flow"
+      >
+        <View style={styles.centerContent}>
+          {/* Animated Brand Logo - same as splash screen */}
+          <Animated.View
+            style={{ transform: [{ scale: scaleAnim }] }}
+            accessible={false}
+          >
+            <BrandLogo size={rs(160)} style={styles.logo} />
+          </Animated.View>
 
-        <Text style={styles.breathingText} accessibilityLabel={t('onboarding.v2.filter0.breathe')}>
-          {t('onboarding.v2.filter0.breathe')}
-        </Text>
-        <Text style={styles.tapHint} accessible={false}>{t('onboarding.v2.filter0.tapToContinue')}</Text>
-      </View>
-    </TouchableOpacity>
+          <Text style={styles.breathingText} accessibilityLabel={t('onboarding.v2.filter0.breathe')}>
+            {t('onboarding.v2.filter0.breathe')}
+          </Text>
+          <Text style={styles.tapHint} accessible={false}>{t('onboarding.v2.filter0.tapToContinue')}</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const createStyles = (colors, spacing) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+    },
     breathingText: {
       color: colors.text,
       fontSize: rs(26),
@@ -90,7 +95,6 @@ const createStyles = (colors, spacing) =>
     },
     fullScreen: {
       alignItems: 'center',
-      backgroundColor: colors.background,
       flex: 1,
       justifyContent: 'center',
     },

@@ -7,12 +7,11 @@
 
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { usePurchases } from '../../../contexts/PurchaseContext';
 import { PrimaryButton, SecondaryButton } from '../../../components/buttons/Button';
-import { rs } from '../onboardingConstants';
+import { rs } from '../../../styles/responsive';
 import { getPersonaById } from '../personaConstants';
 import { useAnalytics } from '../../../hooks/useAnalytics';
 import haptics from '../../../utils/haptics';
@@ -113,7 +112,7 @@ export default function Filter080Paywall({
   }, [onContinue, analytics, customActivity]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
         {/* Header */}
         <Text style={[styles.title, { color: colors.text }]}>
@@ -189,7 +188,7 @@ export default function Filter080Paywall({
           accessibilityHint="Skip premium trial and continue with free version"
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

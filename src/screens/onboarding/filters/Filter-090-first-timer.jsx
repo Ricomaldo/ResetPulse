@@ -7,13 +7,13 @@
 
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { PrimaryButton } from '../../../components/buttons/Button';
 import { TimerDial } from '../../../components/dial';
 import useTimer from '../../../hooks/useTimer';
-import { rs } from '../onboardingConstants';
+import OnboardingLayout from '../../../components/onboarding/OnboardingLayout';
+import { rs } from '../../../styles/responsive';
 import { getPersonaById } from '../personaConstants';
 import haptics from '../../../utils/haptics';
 import { spacing, typography, fontWeights, borderRadius } from '../../../theme/tokens';
@@ -70,67 +70,63 @@ export default function Filter090FirstTimer({
   // Summary Phase
   if (phase === 'summary') {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={styles.content}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            {t('onboarding.firstTimer.title')}
-          </Text>
-
-          {/* Summary Card */}
-          <View style={[styles.summaryCard, { backgroundColor: colors.surface }]}>
-            {/* Persona */}
-            {personaData && (
-              <View style={[styles.summaryRow, { borderBottomColor: colors.border }]}>
-                <Text style={styles.summaryIcon}>👤</Text>
-                <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
-                  {t('onboarding.firstTimer.profile')}
-                </Text>
-                <Text style={[styles.summaryValue, { color: colors.text }]}>
-                  {personaData.emoji} {t(personaData.labelKey)}
-                </Text>
-              </View>
-            )}
-
-            {/* Tool */}
-            <View style={[styles.summaryRow, { borderBottomColor: colors.border }]}>
-              <Text style={styles.summaryIcon}>🛠</Text>
-              <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
-                {t('onboarding.firstTimer.tool')}
-              </Text>
-              <Text style={[styles.summaryValue, { color: colors.text }]}>
-                {toolInfo.emoji} {t(toolInfo.labelKey)}
-              </Text>
-            </View>
-
-            {/* Custom Activity */}
-            {customActivity && (
-              <View style={[styles.summaryRow, { borderBottomWidth: 0 }]}>
-                <Text style={styles.summaryIcon}>⏱</Text>
-                <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
-                  {t('onboarding.firstTimer.moment')}
-                </Text>
-                <Text style={[styles.summaryValue, { color: colors.text }]}>
-                  {customActivity.emoji} {customActivity.name || customActivity.label}
-                </Text>
-              </View>
-            )}
-          </View>
-        </View>
-
-        <View style={styles.footer}>
+      <OnboardingLayout
+        title={t('onboarding.firstTimer.title')}
+        centerContent
+        footer={
           <PrimaryButton
             label={t('onboarding.firstTimer.startButton')}
             onPress={handleStartTimer}
             accessibilityHint="Start your first 60-second guided timer session"
           />
+        }
+      >
+        {/* Summary Card */}
+        <View style={[styles.summaryCard, { backgroundColor: colors.surface }]}>
+          {/* Persona */}
+          {personaData && (
+            <View style={[styles.summaryRow, { borderBottomColor: colors.border }]}>
+              <Text style={styles.summaryIcon}>👤</Text>
+              <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
+                {t('onboarding.firstTimer.profile')}
+              </Text>
+              <Text style={[styles.summaryValue, { color: colors.text }]}>
+                {personaData.emoji} {t(personaData.labelKey)}
+              </Text>
+            </View>
+          )}
+
+          {/* Tool */}
+          <View style={[styles.summaryRow, { borderBottomColor: colors.border }]}>
+            <Text style={styles.summaryIcon}>🛠</Text>
+            <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
+              {t('onboarding.firstTimer.tool')}
+            </Text>
+            <Text style={[styles.summaryValue, { color: colors.text }]}>
+              {toolInfo.emoji} {t(toolInfo.labelKey)}
+            </Text>
+          </View>
+
+          {/* Custom Activity */}
+          {customActivity && (
+            <View style={[styles.summaryRow, { borderBottomWidth: 0 }]}>
+              <Text style={styles.summaryIcon}>⏱</Text>
+              <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
+                {t('onboarding.firstTimer.moment')}
+              </Text>
+              <Text style={[styles.summaryValue, { color: colors.text }]}>
+                {customActivity.emoji} {customActivity.name || customActivity.label}
+              </Text>
+            </View>
+          )}
         </View>
-      </SafeAreaView>
+      </OnboardingLayout>
     );
   }
 
   // Timer Phase
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.timerContainer}>
         {/* Timer Dial */}
         <View style={styles.dialWrapper}>
@@ -153,26 +149,11 @@ export default function Filter090FirstTimer({
           </Text>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: rs(spacing.lg),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: rs(typography.xl),
-    fontWeight: fontWeights.semibold,
-    textAlign: 'center',
-    marginBottom: rs(spacing.xl),
-  },
   // Summary card
   summaryCard: {
     width: '100%',
@@ -198,12 +179,10 @@ const styles = StyleSheet.create({
     fontSize: rs(typography.md),
     fontWeight: fontWeights.semibold,
   },
-  // Footer
-  footer: {
-    padding: rs(spacing.lg),
-    paddingBottom: rs(spacing.xl),
+  // Timer phase (custom layout, not using OnboardingLayout)
+  container: {
+    flex: 1,
   },
-  // Timer phase
   timerContainer: {
     flex: 1,
     justifyContent: 'center',
