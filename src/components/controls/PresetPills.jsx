@@ -1,8 +1,9 @@
 /**
  * @fileoverview PresetPills - Presets de durée du timer
- * @description Boutons pour sélectionner une durée prédéfinie et son scale associé
- * Chaque preset change à la fois la durée ET le scale du cadran
+ * @description Boutons pour sélectionner une durée prédéfinie
+ * Les presets changent uniquement la durée (pas l'échelle du cadran)
  * @created 2025-12-19
+ * @updated 2025-12-24 - Disabled auto-scale adaptation
  */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -13,35 +14,33 @@ import IconButton from '../buttons/IconButton';
 
 // Displayed presets in BottomSheet (curated selection)
 const PRESETS = [
-  { minutes: 5, scaleMode: '5min', label: '5' },
-  { minutes: 15, scaleMode: '15min', label: '15' },
-  { minutes: 25, scaleMode: '25min', label: '25' },
-  { minutes: 30, scaleMode: '30min', label: '30' },
-  { minutes: 45, scaleMode: '45min', label: '45' },
-  { minutes: 60, scaleMode: '60min', label: '60' },
+  { minutes: 5, label: '5' },
+  { minutes: 15, label: '15' },
+  { minutes: 25, label: '25' },
+  { minutes: 30, label: '30' },
+  { minutes: 45, label: '45' },
+  { minutes: 60, label: '60' },
 ];
 
 /**
  * PresetPills - Presets de durée du timer
- * Sélectionne une durée prédéfinie et son scale associé
+ * Sélectionne une durée prédéfinie (sans changer l'échelle)
  *
  * @param {function} [onSelectPreset] - Callback optionnel appelé lors de la sélection
  * @param {boolean} [compact=false] - Mode compact
  */
 const PresetPills = React.memo(function PresetPills({ onSelectPreset, compact = false }) {
   const theme = useTheme();
-  const { timer: { scaleMode }, setScaleMode, setCurrentDuration } = useTimerConfig();
+  const { timer: { currentDuration }, setCurrentDuration } = useTimerConfig();
 
   const handlePresetSelect = (preset) => {
-    // Change both duration and scale mode
+    // Change duration only (scale mode stays unchanged)
     setCurrentDuration(preset.minutes * 60); // Convert to seconds
-    setScaleMode(preset.scaleMode);
 
     // Notify parent of the change
     onSelectPreset?.({
       durationMinutes: preset.minutes,
       durationSeconds: preset.minutes * 60,
-      newScaleMode: preset.scaleMode,
     });
   };
 
@@ -54,8 +53,8 @@ const PresetPills = React.memo(function PresetPills({ onSelectPreset, compact = 
   });
 
   const renderPreset = (preset) => {
-    // Button is active when its scale mode matches the current scale mode
-    const isActive = scaleMode === preset.scaleMode;
+    // Button is active when its duration matches the current duration
+    const isActive = currentDuration === preset.minutes * 60;
 
     return (
       <IconButton
@@ -67,7 +66,7 @@ const PresetPills = React.memo(function PresetPills({ onSelectPreset, compact = 
         active={isActive}
         onPress={() => handlePresetSelect(preset)}
         accessibilityLabel={`${preset.label} minutes`}
-        accessibilityHint={`Définit la durée à ${preset.label} minutes et adapte l'échelle du cadran`}
+        accessibilityHint={`Définit la durée à ${preset.label} minutes`}
       />
     );
   };
