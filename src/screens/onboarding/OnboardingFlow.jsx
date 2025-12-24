@@ -1,62 +1,68 @@
 // src/screens/onboarding/OnboardingFlow.jsx
 /**
- * Onboarding Flow v2.1 - Linear 9-step flow
+ * Onboarding Flow v2.1 - Linear 8-step flow
  * No branching - single path for all users
  * ADR-010 implementation
+ * Updated: Filter-025 replaces Filter-040 and Filter-050
  */
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { View, StyleSheet, AppState, BackHandler } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import StepIndicator from '../../components/onboarding/StepIndicator';
 import { useAnalytics } from '../../hooks/useAnalytics';
-import { usePersistedState, usePersistedObject } from '../../hooks/usePersistedState';
 import { ONBOARDING_TRANSITIONS } from '../../styles/animations';
 
 // Import all filters
 import {
   Filter010Opening,
   Filter020Tool,
+  Filter025Intentions,
   Filter030Creation,
-  Filter040TestStart,
-  Filter050TestStop,
   Filter060Sound,
   Filter070Notifications,
   Filter080Paywall,
   Filter090FirstTimer,
 } from './filters';
 
-const TOTAL_STEPS = 9;
+// Filter configuration - simplified switch statement
+const FILTERS = [
+  { Component: Filter010Opening },
+  { Component: Filter020Tool },
+  { Component: Filter025Intentions },
+  { Component: Filter030Creation },
+  { Component: Filter060Sound },
+  { Component: Filter070Notifications },
+  { Component: Filter080Paywall, needsData: ['customActivity', 'interactionProfile'] },
+  { Component: Filter090FirstTimer, needsData: ['customActivity', 'interactionProfile', 'favoriteToolMode'] },
+];
 
-export default function OnboardingFlow({ onComplete }) {
+const TOTAL_STEPS = FILTERS.length;
+
+function OnboardingFlowContent({ onComplete }) {
   const { colors } = useTheme();
   const analytics = useAnalytics();
   const {
     setOnboardingCompleted,
     setCurrentActivity,
-    setCurrentDuration
+    setCurrentDuration,
+    setInteractionProfile,
   } = useTimerConfig();
 
-  // Persisted state - resume onboarding if app killed
-  const [currentStep, setCurrentStep, isLoadingStep] = usePersistedState(
-    '@ResetPulse:onboardingStep',
-    0
-  );
+  // State - always restart from beginning if app interrupted
+  const [currentStep, setCurrentStep] = useState(0);
 
-  // Collected data from filters (persisted)
-  const {
-    values: flowData,
-    setValues: setFlowData,
-    isLoading: isLoadingData,
-  } = usePersistedObject('@ResetPulse:onboardingData', {
+  // Collected data from filters (in-memory only)
+  const [flowData, setFlowData] = useState({
     favoriteToolMode: null,
     customActivity: null,
-    startTiming: null,
-    stopTiming: null,
-    persona: null,
+    intentions: null,
+    challenges: null,
+    otherIntention: null,
+    interactionProfile: null,
     selectedSoundId: null,
     notificationPermission: null,
     purchaseResult: null,
@@ -112,135 +118,104 @@ export default function OnboardingFlow({ onComplete }) {
     return () => backHandler.remove();
   }, [currentStep]);
 
-  // Generic continue handler
+  // Complete onboarding - extracted for clarity
+  const completeOnboarding = useCallback(
+    (finalData) => {
+      // Pre-select custom activity (IKEA effect)
+      if (finalData.customActivity) {
+        setCurrentActivity(finalData.customActivity);
+        setCurrentDuration(finalData.customActivity.defaultDuration);
+        console.log('[OnboardingFlow] Pre-selected custom activity:', finalData.customActivity);
+      }
+
+      // Apply interaction profile from Filter-025
+      if (finalData.interactionProfile) {
+        setInteractionProfile(finalData.interactionProfile);
+        console.log('[OnboardingFlow] Applied interaction profile:', finalData.interactionProfile);
+      }
+
+      setOnboardingCompleted(true);
+      analytics.trackOnboardingCompleted({
+        result: finalData.purchaseResult || 'completed',
+        toolMode: finalData.favoriteToolMode,
+        persona: finalData.persona,
+      });
+      onComplete(finalData);
+    },
+    [setCurrentActivity, setCurrentDuration, setInteractionProfile, setOnboardingCompleted, analytics, onComplete]
+  );
+
+  // Generic continue handler - simplified
   const handleContinue = useCallback(
-    async (stepData = {}) => {
+    (stepData = {}) => {
       // Guard: Filter out React Native events (prevent cyclical structure errors)
-      const isPlainObject = stepData && typeof stepData === 'object' && !stepData.nativeEvent;
-      const sanitizedData = isPlainObject ? stepData : {};
+      const sanitizedData = stepData?.nativeEvent ? {} : stepData;
 
       // Merge new data
-      setFlowData((prev) => ({ ...prev, ...sanitizedData }));
+      const mergedData = { ...flowData, ...sanitizedData };
+      setFlowData(mergedData);
 
       // Track step completion
       analytics.trackOnboardingStepCompleted(currentStep, `filter_${currentStep}`, sanitizedData);
 
-      // Move to next step
+      // Move to next step or complete
       if (currentStep < TOTAL_STEPS - 1) {
         setCurrentStep((prev) => prev + 1);
       } else {
-        // Onboarding complete - pre-select custom activity (IKEA effect)
-        const mergedData = { ...flowData, ...sanitizedData };
-        if (mergedData.customActivity) {
-          setCurrentActivity(mergedData.customActivity);
-          setCurrentDuration(mergedData.customActivity.defaultDuration);
-          console.log('[OnboardingFlow] Pre-selected custom activity:', mergedData.customActivity);
-        }
-
-        // Cleanup persisted state
-        try {
-          await AsyncStorage.multiRemove([
-            '@ResetPulse:onboardingStep',
-            '@ResetPulse:onboardingData',
-          ]);
-        } catch (error) {
-          console.warn('Erreur lors du nettoyage de la persistence onboarding:', error);
-        }
-
-        setOnboardingCompleted(true);
-        analytics.trackOnboardingCompleted({
-          result: sanitizedData.purchaseResult || 'completed',
-          toolMode: mergedData.favoriteToolMode,
-          persona: mergedData.persona,
-        });
-        onComplete(mergedData);
+        completeOnboarding(mergedData);
       }
     },
-    [
-      currentStep,
-      flowData,
-      analytics,
-      setOnboardingCompleted,
-      setCurrentActivity,
-      setCurrentDuration,
-      onComplete,
-      setFlowData,
-      setCurrentStep
-    ]
+    [currentStep, flowData, analytics, completeOnboarding]
   );
 
-  // Render current filter
+  // Render current filter - config-driven
   const renderCurrentFilter = () => {
-    const commonProps = { onContinue: handleContinue };
+    const filter = FILTERS[currentStep];
+    if (!filter) return null;
 
-    switch (currentStep) {
-      case 0:
-        return <Filter010Opening {...commonProps} />;
+    const { Component, needsData } = filter;
 
-      case 1:
-        return <Filter020Tool {...commonProps} />;
+    // Build props dynamically
+    const props = {
+      onContinue: handleContinue,
+      // Add flowData if filter needs it
+      ...(needsData?.reduce((acc, key) => {
+        acc[key] = flowData[key];
+        return acc;
+      }, {})),
+    };
 
-      case 2:
-        return <Filter030Creation {...commonProps} />;
-
-      case 3:
-        return <Filter040TestStart {...commonProps} />;
-
-      case 4:
-        return (
-          <Filter050TestStop
-            {...commonProps}
-            startTiming={flowData.startTiming}
-          />
-        );
-
-      case 5:
-        return <Filter060Sound {...commonProps} />;
-
-      case 6:
-        return <Filter070Notifications {...commonProps} />;
-
-      case 7:
-        return (
-          <Filter080Paywall
-            {...commonProps}
-            customActivity={flowData.customActivity}
-            persona={flowData.persona}
-          />
-        );
-
-      case 8:
-        return (
-          <Filter090FirstTimer
-            {...commonProps}
-            customActivity={flowData.customActivity}
-            persona={flowData.persona}
-            favoriteToolMode={flowData.favoriteToolMode}
-          />
-        );
-
-      default:
-        return null;
-    }
+    return <Component {...props} />;
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={['top', 'bottom']}
+    >
       {/* Step Indicator - Hidden on first and last step */}
       {currentStep > 0 && currentStep < TOTAL_STEPS - 1 && (
-        <StepIndicator current={currentStep + 1} total={TOTAL_STEPS} />
+        <StepIndicator current={currentStep} total={TOTAL_STEPS} />
       )}
 
       {/* Current Filter with animated transitions */}
       <Animated.View
         key={`filter-${currentStep}`}
         entering={FadeIn.duration(ONBOARDING_TRANSITIONS.enterDuration).delay(ONBOARDING_TRANSITIONS.delayBetween)}
-        exiting={FadeOut.duration(ONBOARDING_TRANSITIONS.exitDuration)}
         style={styles.filterContainer}
       >
         {renderCurrentFilter()}
       </Animated.View>
-    </View>
+    </SafeAreaView>
+  );
+}
+
+// Wrapper with SafeAreaProvider (matching TimerScreen pattern)
+export default function OnboardingFlow({ onComplete }) {
+  return (
+    <SafeAreaProvider>
+      <OnboardingFlowContent onComplete={onComplete} />
+    </SafeAreaProvider>
   );
 }
 
