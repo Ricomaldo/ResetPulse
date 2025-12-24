@@ -1,6 +1,6 @@
 // App.js
-import React, { useEffect, useRef, useState } from 'react';
-import { StatusBar, Animated, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StatusBar, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as Notifications from 'expo-notifications';
@@ -26,7 +26,6 @@ const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
 
 function AppContent() {
   const theme = useTheme();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
   // Use optimistic value (false = show onboarding) to avoid blocking render
   // AsyncStorage load happens in background and updates state if needed
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
@@ -43,18 +42,6 @@ function AppContent() {
       }
     };
     loadOnboardingState();
-  }, []);
-
-  // Animation fade in
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    }, 100);
-    return () => clearTimeout(timer);
   }, []);
 
   // Handler for notification taps (post-skip reminders)
@@ -108,7 +95,7 @@ function AppContent() {
   };
 
   return (
-    <Animated.View style={[styles.fadeWrapper, { opacity: fadeAnim }]}>
+    <View style={styles.container}>
       <StatusBar
         barStyle={theme.isDark ? 'light-content' : 'dark-content'}
         backgroundColor={theme.colors.background}
@@ -120,7 +107,7 @@ function AppContent() {
       ) : (
         <TimerScreen />
       )}
-    </Animated.View>
+    </View>
   );
 }
 
@@ -316,9 +303,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  fadeWrapper: {
     flex: 1,
   },
 });
