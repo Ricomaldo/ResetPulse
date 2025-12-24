@@ -148,11 +148,17 @@ export default function App() {
   // ========== DEV: Reset Onboarding ==========
   const handleResetOnboarding = async () => {
     try {
+      // Remove onboarding completion flag
       await AsyncStorage.removeItem(ONBOARDING_COMPLETED_KEY);
-      await AsyncStorage.removeItem('user_timer_config');
-      await AsyncStorage.removeItem('user_sound_config');
-      await AsyncStorage.removeItem('user_interface_config');
+
+      // Remove unified config (timer, palette, layout)
+      await AsyncStorage.removeItem('@ResetPulse:config');
+
+      // Remove onboarding data
+      await AsyncStorage.removeItem('onboarding_v2_config');
+
       setResetTrigger(prev => prev + 1); // Force AppContent remount
+      console.log('[DevFab] Onboarding reset - unified config cleared');
     } catch (error) {
       console.warn('[DevFab] Failed to reset onboarding:', error);
     }
@@ -171,26 +177,28 @@ export default function App() {
   // ========== DEV: Reset Timer Config ==========
   const handleResetTimerConfig = async () => {
     try {
-      // Load current timerOptions from storage
-      const storedOptions = await AsyncStorage.getItem('@ResetPulse:timerOptions');
-      let options = {};
+      // Load current unified config
+      const storedConfig = await AsyncStorage.getItem('@ResetPulse:config');
+      let config = {};
 
-      if (storedOptions) {
+      if (storedConfig) {
         try {
-          options = JSON.parse(storedOptions);
+          config = JSON.parse(storedConfig);
         } catch (e) {
-          console.warn('[DevFab] Failed to parse stored options:', e);
+          console.warn('[DevFab] Failed to parse stored config:', e);
         }
       }
 
-      // Force dev config
+      // Force dev timer settings (preserve other sections: palette, layout, onboarding)
       const devActivity = getActivityById(DEV_DEFAULT_TIMER_CONFIG.activity);
-      options.currentDuration = DEV_DEFAULT_TIMER_CONFIG.duration;
-      options.scaleMode = DEV_DEFAULT_TIMER_CONFIG.scaleMode;
-      options.currentActivity = devActivity;
+      config.timer = {
+        currentActivity: devActivity,
+        currentDuration: DEV_DEFAULT_TIMER_CONFIG.duration,
+        scaleMode: DEV_DEFAULT_TIMER_CONFIG.scaleMode,
+      };
 
-      // Save back to storage
-      await AsyncStorage.setItem('@ResetPulse:timerOptions', JSON.stringify(options));
+      // Save back to unified config
+      await AsyncStorage.setItem('@ResetPulse:config', JSON.stringify(config));
 
       // Force remount to reload context with new values
       setResetTrigger(prev => prev + 1);
@@ -217,14 +225,41 @@ export default function App() {
     try {
       // Remove ALL app-related AsyncStorage keys to restore vanilla state
       await AsyncStorage.multiRemove([
+        // === NEW UNIFIED ARCHITECTURE (Dec 2024) ===
+        // Unified config (timer + palette + layout + onboarding)
+        '@ResetPulse:config',
+
+        // Onboarding
         ONBOARDING_COMPLETED_KEY,
+        'onboarding_v2_config',
+
+        // App state
+        'has_launched_before',
+        '@ResetPulse:hasSeenDrawerHint',
+        '@ResetPulse:paywallSkipDate',
+        '@ResetPulse:reminderScheduled',
+        '@ResetPulse:onboardingCustomActivity',
+
+        // === LEGACY KEYS (for cleanup after migration) ===
+        // Old onboarding (pre-v2.1)
+        '@ResetPulse:onboardingStep',
+        '@ResetPulse:onboardingData',
         'user_timer_config',
         'user_sound_config',
         'user_interface_config',
-        'has_launched_before',
+
+        // Old timer/palette keys (pre-unified)
         '@ResetPulse:timerOptions',
-        '@ResetPulse:hasSeenDrawerHint',
+        '@ResetPulse:timerPalette',
+        '@ResetPulse:selectedColor',
+        '@ResetPulse:favoriteToolMode',
+
+        // Old UI state
         '@ResetPulse:themeMode',
+
+        // === PRESERVE (optional) ===
+        // RevenueCat cache - uncomment to preserve premium status
+        // 'revenuecat_customer_info',
       ]);
       setResetTrigger(prev => prev + 1); // Force AppContent remount
       console.log('[DevFab] App reset to vanilla state - all settings cleared');
