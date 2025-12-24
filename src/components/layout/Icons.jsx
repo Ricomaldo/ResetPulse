@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Circle } from 'react-native-svg';
 import {
   RotateCw as LucideRotateCw,
   RotateCcw as LucideRotateCcw,
@@ -118,6 +118,41 @@ SettingsIcon.propTypes = {
   size: PropTypes.number,
 };
 
+export const CircleGaugeIcon = React.memo(function CircleGaugeIcon({ size = 24, color }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M15.6 2.7a10 10 0 1 0 5.7 5.7"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Circle
+        cx="12"
+        cy="12"
+        r="2"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M13.4 10.6 19 5"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+});
+
+CircleGaugeIcon.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.number,
+};
+
 // Icon wrapper component
 const iconMap = {
   pause: PauseIcon,
@@ -126,6 +161,7 @@ const iconMap = {
   reset: ResetIcon,
   reverse: ReverseIcon,
   settings: SettingsIcon,
+  'circle-gauge': CircleGaugeIcon,
   // Lucide mapped icons
   chevronLeft: LucideChevronLeft,
   chevronRight: LucideChevronRight,
