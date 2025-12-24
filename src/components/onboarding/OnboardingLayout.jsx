@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 import { spacing, typography, fontWeights } from '../../theme/tokens';
-import { PrimaryButton, SecondaryButton } from '../buttons/Button';
+import { PrimaryButton, SecondaryButton } from '../buttons';
 
 /**
  * SkipButton - Internal component for skip button pattern
