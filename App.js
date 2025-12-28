@@ -26,19 +26,21 @@ const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
 
 function AppContent() {
   const theme = useTheme();
-  // Use optimistic value (false = show onboarding) to avoid blocking render
-  // AsyncStorage load happens in background and updates state if needed
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load onboarding state asynchronously without blocking initial render
+  // Load onboarding state asynchronously
   useEffect(() => {
     const loadOnboardingState = async () => {
       try {
         const completed = await AsyncStorage.getItem(ONBOARDING_COMPLETED_KEY);
+        console.log('[AppContent] Onboarding state loaded:', completed);
         setOnboardingCompleted(completed === 'true');
       } catch (error) {
         console.warn('[App] Failed to load onboarding state:', error);
         setOnboardingCompleted(false);
+      } finally {
+        setIsLoading(false);
       }
     };
     loadOnboardingState();
@@ -93,6 +95,18 @@ function AppContent() {
       console.warn('[App] Failed to save onboarding state:', error);
     }
   };
+
+  // Show loading while checking onboarding state
+  if (isLoading) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <StatusBar
+          barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+          backgroundColor={theme.colors.background}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -154,8 +168,23 @@ export default function App() {
   // ========== DEV: Go to App ==========
   const handleGoToApp = async () => {
     try {
+      // Simulate onboarding completion with default data
       await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, 'true');
+
+      // Create default onboarding config (so TimerConfigContext can load it)
+      const defaultOnboardingConfig = {
+        favoriteToolMode: 'commands',
+        customActivity: null, // Will use default activity from ACTIVITIES
+        persona: null,
+        selectedSoundId: 'bell_classic',
+        notificationPermission: false,
+        purchaseResult: 'skipped',
+      };
+
+      await AsyncStorage.setItem('onboarding_v2_config', JSON.stringify(defaultOnboardingConfig));
+
       setResetTrigger(prev => prev + 1); // Force AppContent remount
+      console.log('[DevFab] Skipped to app with default config');
     } catch (error) {
       console.warn('[DevFab] Failed to skip to app:', error);
     }
