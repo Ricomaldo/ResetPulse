@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
   useSharedValue,
   useAnimatedProps,
@@ -95,7 +94,7 @@ export default function Filter050TestStop({ onContinue, startTiming }) {
   // Test Phase
   if (phase === 'test') {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.content}>
           <Text style={[styles.title, { color: colors.text }]}>
             {t('onboarding.testStop.title')}
@@ -143,13 +142,13 @@ export default function Filter050TestStop({ onContinue, startTiming }) {
             </Text>
           )}
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   // Reveal Phase
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
         <Text style={[styles.revealTitle, { color: colors.text }]}>
           {t('onboarding.testStop.revealTitle')}
@@ -174,7 +173,7 @@ export default function Filter050TestStop({ onContinue, startTiming }) {
           accessibilityHint="Continue with your detected interaction profile"
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

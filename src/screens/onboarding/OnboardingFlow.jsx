@@ -25,7 +25,6 @@ import {
   Filter060Sound,
   Filter070Notifications,
   Filter080Paywall,
-  Filter090FirstTimer,
 } from './filters';
 
 // Filter configuration - simplified switch statement
@@ -37,7 +36,6 @@ const FILTERS = [
   { Component: Filter060Sound },
   { Component: Filter070Notifications },
   { Component: Filter080Paywall, needsData: ['customActivity', 'interactionProfile'] },
-  { Component: Filter090FirstTimer, needsData: ['customActivity', 'interactionProfile', 'favoriteToolMode'] },
 ];
 
 const TOTAL_STEPS = FILTERS.length;
@@ -66,7 +64,6 @@ function OnboardingFlowContent({ onComplete }) {
     selectedSoundId: null,
     notificationPermission: null,
     purchaseResult: null,
-    firstTimerCompleted: false,
   });
 
   // Refs for tracking

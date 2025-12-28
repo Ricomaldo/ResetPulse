@@ -1,6 +1,5 @@
 import React, { useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../../../styles/responsive';
@@ -28,7 +27,7 @@ export default function Filter040TestStart({ onContinue }) {
   }, [onContinue]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
         <Text style={[styles.title, { color: colors.text }]}>
           {t('onboarding.testStart.title')}
@@ -56,7 +55,7 @@ export default function Filter040TestStart({ onContinue }) {
           </Text>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
