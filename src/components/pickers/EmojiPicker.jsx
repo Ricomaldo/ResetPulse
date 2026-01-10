@@ -4,7 +4,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -17,28 +16,12 @@ import haptics from '../../utils/haptics';
 // Color constants for emoji picker
 const TRANSPARENT = 'transparent';
 
-// Curated list of emojis suitable for activities
-// Organized by implicit categories for user convenience
+// Curated list of emojis suitable for activities (18 most common)
 const ACTIVITY_EMOJIS = [
-  // Sports & Physical
-  '🏃', '🚴', '🏋️', '🧘', '🏊', '⚽', '🎾', '🏀',
-  // Music & Arts
-  '🎸', '🎹', '🎵', '🎤', '🎨', '✍️', '📸', '🎬',
-  // Learning & Work
-  '📚', '📖', '💻', '📝', '🔬', '🧪', '🎓', '💡',
-  // Food & Home
-  '🍳', '👨‍🍳', '🧹', '🛠️', '🌱', '🧺', '🏠', '☕',
-  // Wellness & Rest
-  '😴', '🧘‍♀️', '🛁', '💆', '🌙', '⭐', '🌸', '🍃',
-  // Social & Fun
-  '🎮', '🎲', '🎯', '🎪', '🎭', '🧩', '👥', '🎉',
-  // Nature & Travel
-  '🚶', '🏔️', '🌳', '🌊', '☀️', '🌈', '🦋', '🐕',
-  // Misc & Abstract
-  '💼', '📱', '⏰', '🔔', '❤️', '✨', '🎁', '🏆',
+  '💻', '📚', '🏃', '🧘', '🎨', '✍️',
+  '☕', '🎮', '🎵', '📝', '💡', '⏰',
+  '🌱', '🛁', '🎯', '📱', '✨', '❤️',
 ];
-
-const NUM_COLUMNS = 6;
 
 const EmojiPicker = React.memo(function EmojiPicker({
   onSelectEmoji,
@@ -50,38 +33,6 @@ const EmojiPicker = React.memo(function EmojiPicker({
   const handleEmojiPress = (emoji) => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onSelectEmoji(emoji);
-  };
-
-  const renderEmoji = ({ item: emoji }) => {
-    const isSelected = selectedEmoji === emoji;
-
-    // Determine background and border colors
-    const backgroundColor = isSelected
-      ? theme.colors.brand.primary + '20'
-      : TRANSPARENT;
-    const borderColor = isSelected
-      ? theme.colors.brand.primary
-      : TRANSPARENT;
-
-    return (
-      <TouchableOpacity
-        style={[
-          styles.emojiButton,
-          {
-            backgroundColor,
-            borderColor,
-          },
-        ]}
-        onPress={() => handleEmojiPress(emoji)}
-        activeOpacity={0.7}
-        accessible={true}
-        accessibilityLabel={`Emoji ${emoji}`}
-        accessibilityRole="button"
-        accessibilityState={{ selected: isSelected }}
-      >
-        <Text style={styles.emoji}>{emoji}</Text>
-      </TouchableOpacity>
-    );
   };
 
   const styles = StyleSheet.create({
@@ -103,23 +54,50 @@ const EmojiPicker = React.memo(function EmojiPicker({
       minWidth: 44,
       width: rs(48, 'min'),
     },
-    listContent: {
+    grid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'flex-start',
       paddingVertical: rs(8, 'min'),
     },
   });
 
   return (
     <View style={[styles.container, style]}>
-      <FlatList
-        data={ACTIVITY_EMOJIS}
-        renderItem={renderEmoji}
-        keyExtractor={(item) => item}
-        numColumns={NUM_COLUMNS}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={true}
-        nestedScrollEnabled={true}
-      />
+      <View style={styles.grid}>
+        {ACTIVITY_EMOJIS.map((emoji) => {
+          const isSelected = selectedEmoji === emoji;
+
+          // Determine background and border colors
+          const backgroundColor = isSelected
+            ? theme.colors.brand.primary + '20'
+            : TRANSPARENT;
+          const borderColor = isSelected
+            ? theme.colors.brand.primary
+            : TRANSPARENT;
+
+          return (
+            <TouchableOpacity
+              key={emoji}
+              style={[
+                styles.emojiButton,
+                {
+                  backgroundColor,
+                  borderColor,
+                },
+              ]}
+              onPress={() => handleEmojiPress(emoji)}
+              activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel={`Emoji ${emoji}`}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isSelected }}
+            >
+              <Text style={styles.emoji}>{emoji}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 });

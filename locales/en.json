@@ -6,7 +6,8 @@
     "confirm": "Confirm",
     "ok": "OK",
     "skip": "Skip",
-    "retry": "Retry"
+    "retry": "Retry",
+    "continue": "Continue"
   },
   "invitation": "Ready?",
   "welcome": {
@@ -30,9 +31,58 @@
       "multitask": "Multitasker",
       "rational": "Rational"
     },
+    "intentions": {
+      "title": "What's it for?",
+      "relax": {
+        "label": "Relax",
+        "defaultName": "Meditation"
+      },
+      "work": {
+        "label": "Work",
+        "defaultName": "Focus"
+      },
+      "create": {
+        "label": "Create",
+        "defaultName": "Create"
+      },
+      "learn": {
+        "label": "Learn",
+        "defaultName": "Study"
+      },
+      "move": {
+        "label": "Move",
+        "defaultName": "Workout"
+      },
+      "other": {
+        "label": "Other",
+        "defaultName": "My moment"
+      },
+      "q1": {
+        "title": "Why a timer for you?",
+        "focus": "To focus",
+        "launch": "To get started",
+        "breathe": "To breathe",
+        "children": "With my kids",
+        "other": "Other...",
+        "otherPlaceholder": "Tell us more..."
+      },
+      "q2": {
+        "title": "What's the hardest part?",
+        "starting": "Getting started",
+        "finishing": "Seeing it through",
+        "staying": "Staying focused",
+        "managing": "Managing my time"
+      }
+    },
     "creation": {
       "title": "Create your first moment",
-      "subtitle": "Choose an emoji, a name, and a duration"
+      "subtitle": "Select your intention",
+      "sectionTitle": "What's it for?",
+      "cta": "Create my moment",
+      "buttonCreate": "Create \"%{name}\" %{emoji}",
+      "durationLabel": "How long?",
+      "namePlaceholder": "Name your moment...",
+      "customNamePlaceholder": "Name your moment..."
     },
     "testStart": {
       "title": "When you're ready, press",
@@ -62,18 +112,13 @@
     },
     "v2": {
       "filter0": {
-        "breathe": "Breathe.\nYour time is yours.",
-        "tapToContinue": "Tap to continue"
+        "breathe": "Your time is yours",
+        "tapToContinue": "When you're ready"
       },
       "filter1": {
-        "title": "What will you use ResetPulse for?",
-        "meditation": "Meditation & Wellbeing",
-        "work": "Work & Study",
-        "creativity": "Creativity & Flow",
-        "time": "Daily time management",
-        "neurodivergent": "My brain works differently",
-        "helper": "Select at least one option",
-        "continue": "Continue"
+        "title": "A timer that adapts to you",
+        "subtitle": "",
+        "cta": "Create my moment"
       },
       "filter2": {
         "title": "Create your first moment",
@@ -408,6 +453,7 @@
       "namePlaceholder": "Ex: Guitar, Cooking...",
       "nameLabel": "Activity name",
       "emojiLabel": "Choose emoji",
+      "moreEmojis": "More...",
       "durationLabel": "Default duration",
       "preview": "Preview",
       "previewPlaceholder": "My activity",

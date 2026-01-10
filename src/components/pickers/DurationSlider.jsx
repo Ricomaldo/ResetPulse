@@ -16,20 +16,17 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
-// Preset durations in seconds
+// Preset durations in seconds (4 common durations)
 const DURATION_PRESETS = [
-  { minutes: 5, seconds: 300 },
-  { minutes: 10, seconds: 600 },
   { minutes: 15, seconds: 900 },
-  { minutes: 20, seconds: 1200 },
   { minutes: 25, seconds: 1500 },
   { minutes: 30, seconds: 1800 },
-  { minutes: 45, seconds: 2700 },
   { minutes: 60, seconds: 3600 },
 ];
 
 const DurationSlider = React.memo(function DurationSlider({
   onValueChange,
+  showControls = true,
   style,
   value,
 }) {
@@ -153,39 +150,41 @@ const DurationSlider = React.memo(function DurationSlider({
 
   return (
     <View style={[styles.container, style]}>
-      {/* Value display with increment/decrement */}
-      <View style={styles.valueContainer}>
-        <TouchableOpacity
-          style={[
-            styles.valueButton,
-            !canDecrement && styles.valueButtonDisabled,
-          ]}
-          onPress={handleDecrement}
-          disabled={!canDecrement}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.valueButtonText}>-</Text>
-        </TouchableOpacity>
+      {/* Value display with increment/decrement (optional) */}
+      {showControls && (
+        <View style={styles.valueContainer}>
+          <TouchableOpacity
+            style={[
+              styles.valueButton,
+              !canDecrement && styles.valueButtonDisabled,
+            ]}
+            onPress={handleDecrement}
+            disabled={!canDecrement}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.valueButtonText}>-</Text>
+          </TouchableOpacity>
 
-        <View style={styles.valueDisplay}>
-          <Text style={styles.valueText}>{currentMinutes}</Text>
-          <Text style={styles.valueUnit}>
-            {t('customActivities.duration.minutes')}
-          </Text>
+          <View style={styles.valueDisplay}>
+            <Text style={styles.valueText}>{currentMinutes}</Text>
+            <Text style={styles.valueUnit}>
+              {t('customActivities.duration.minutes')}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={[
+              styles.valueButton,
+              !canIncrement && styles.valueButtonDisabled,
+            ]}
+            onPress={handleIncrement}
+            disabled={!canIncrement}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.valueButtonText}>+</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={[
-            styles.valueButton,
-            !canIncrement && styles.valueButtonDisabled,
-          ]}
-          onPress={handleIncrement}
-          disabled={!canIncrement}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.valueButtonText}>+</Text>
-        </TouchableOpacity>
-      </View>
+      )}
 
       {/* Preset buttons */}
       <View style={styles.presetsContainer}>
@@ -217,6 +216,7 @@ const DurationSlider = React.memo(function DurationSlider({
 DurationSlider.displayName = 'DurationSlider';
 DurationSlider.propTypes = {
   onValueChange: PropTypes.func.isRequired,
+  showControls: PropTypes.bool,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   value: PropTypes.number.isRequired,
 };

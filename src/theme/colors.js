@@ -9,11 +9,11 @@ const DEBUG_MODE = false;
 
 // --- Brand Palettes ---
 const brandLightProd = {
-  primary: '#C17A71', // Coral (5.1:1 WCAG AA)
-  secondary: '#78716C', // Gris chaud (stone-500)
+  primary: '#E89665', // Coral-orange (logo gradient)
+  secondary: '#8B7D72', // Stone réchauffé
   accent: '#D4A853', // Or classique
-  deep: '#5A5A5A',
-  neutral: '#9CA3AF',
+  deep: '#6B5F55', // Brun-gris foncé (réchauffé)
+  neutral: '#A89B8F', // Taupe clair harmonisé (réchauffé)
 };
 
 const brandLightDebug = {
@@ -27,7 +27,7 @@ const brandLightDebug = {
 const brandLight = DEBUG_MODE ? brandLightDebug : brandLightProd;
 
 const brandDark = {
-  primary: '#C17A71', // Coral (même que light = cohérence brand)
+  primary: '#E89665', // Coral-orange (même que light = cohérence brand)
   secondary: '#A8A29E', // Gris chaud éclairci (stone-400)
   accent: '#D4A853', // Or éclairci
   deep: '#8A8A8A',
@@ -44,7 +44,7 @@ const fixed = {
 // --- Light Theme ---
 // Hierarchy: background (screen) < surface (cards) < surfaceElevated (modals)
 const lightThemeProd = {
-  background: '#ebe8e3', // Cream
+  background: '#EBE3D8', // Cream réchauffé (harmonisé avec logo)
   surface: '#FFFFFF', // Pure white
   surfaceElevated: '#F8F6F3',
 };
@@ -67,9 +67,9 @@ export const lightTheme = {
   surfaceElevated: lt.surfaceElevated,
 
   // Typography
-  text: '#1F2937',
+  text: '#2D2520', // Charcoal brun (réchauffé)
   textSecondary: brandLight.deep,
-  textLight: '#7A7A7A',
+  textLight: '#8B7D72', // Stone réchauffé (harmonisé)
 
   // Borders
   border: brandLight.primary + '40',
