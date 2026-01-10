@@ -1,6 +1,6 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-20'
+updated: '2025-12-24'
 status: active
 ---
 
@@ -25,7 +25,7 @@ status: active
 
 ## Design Tokens
 
-### Color System ✅ A
+### Color System ✅ A+
 
 **File**: `src/theme/colors.js`
 
@@ -37,7 +37,37 @@ status: active
 | Palette colors | 60 | Timer dial (15 palettes × 4) |
 | **Total** | **78** | 100% accounted for |
 
-**Token Compliance**: 95% token-based, 5% hardcoded
+**Token Compliance**: 98% token-based, 2% hardcoded
+
+**Logo-Based Color Harmonization** (Dec 24, 2025):
+- All brand colors now derived from new logo gradient (assets/logo/logo-1024-detoured.png)
+- Warm color palette throughout (coral-orange → taupe → cream)
+- Complete consistency: background, brand, text all harmonized
+
+**Brand Palette** (Light Theme):
+```javascript
+primary: '#E89665'    // Coral-orange (logo gradient center)
+secondary: '#8B7D72'  // Stone réchauffé
+accent: '#D4A853'     // Or classique (logo bottom)
+deep: '#6B5F55'       // Brun-gris foncé (réchauffé)
+neutral: '#A89B8F'    // Taupe clair (réchauffé)
+```
+
+**Typography Colors** (Warm Harmonization):
+```javascript
+text: '#2D2520'       // Charcoal brun (was #1F2937 cold)
+textSecondary: deep   // Brun-gris foncé (was #5A5A5A cold)
+textLight: '#8B7D72'  // Stone réchauffé (was #7A7A7A cold)
+```
+
+**Backgrounds**:
+```javascript
+background: '#EBE3D8'      // Cream réchauffé (was #ebe8e3)
+surface: '#FFFFFF'          // Pure white
+surfaceElevated: '#F8F6F3'  // Off-white warm
+```
+
+**Color Strategy**: All grays converted from cold (blue-tinted) to warm (brown-tinted) for visual coherence with logo gradient.
 
 ---
 
@@ -273,7 +303,35 @@ All spacing converted to `rs()` responsive.
 
 ---
 
-## Recent Changes (Dec 20, 2025)
+## Recent Changes
+
+### Dec 24, 2025 — Logo-Based Color Harmonization
+
+**Context**: New app logo redesigned with punchy coral-orange gradient (assets/logo/logo-1024-detoured.png). Color system updated to derive from logo for brand coherence.
+
+**Changes**:
+1. **Brand Colors** (src/theme/colors.js):
+   - `primary`: #C17A71 → **#E89665** (coral-orange from logo gradient)
+   - `secondary`: #78716C → **#8B7D72** (stone réchauffé)
+   - `accent`: #D4A853 (unchanged - matches logo bottom)
+   - `deep`: #5A5A5A → **#6B5F55** (warm brown-gray)
+   - `neutral`: #9CA3AF → **#A89B8F** (warm taupe)
+
+2. **Typography Colors** (warm harmonization):
+   - `text`: #1F2937 → **#2D2520** (charcoal brun)
+   - `textLight`: #7A7A7A → **#8B7D72** (stone réchauffé)
+
+3. **Background**:
+   - `background`: #ebe8e3 → **#EBE3D8** (cream réchauffé)
+
+4. **Palette Serenity** (src/config/timer-palettes.js):
+   - Updated: ['#E89665', '#D4A853', '#8B7D72', '#5A5A5A']
+
+**Impact**: Complete warm color harmony from background → text → brand. All cold (blue-tinted) grays eliminated.
+
+---
+
+### Dec 20, 2025 — Visual Hierarchy & Responsive Settings
 
 **Commits**:
 1. `c23cb7c` - Solution B: Visual hierarchy by size/padding differentiation
@@ -306,5 +364,5 @@ All spacing converted to `rs()` responsive.
 
 ---
 
-**Last Audit**: 2025-12-20 (Claude-Code Implementation)
-**Grade Trajectory**: 8/10 → 9/10 (from original doc, now updated)
+**Last Audit**: 2025-12-24 (Logo-Based Color Harmonization)
+**Grade Trajectory**: 8/10 → 9/10 → 9.5/10 (from original doc, continuously improved)

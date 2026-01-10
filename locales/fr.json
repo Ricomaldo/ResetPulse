@@ -6,7 +6,8 @@
     "confirm": "Confirmer",
     "ok": "OK",
     "skip": "Passer",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "continue": "Continuer"
   },
   "welcome": {
     "title": "Bienvenue sur ResetPulse",
@@ -33,9 +34,58 @@
       "multitask": "Multi-tâches",
       "rational": "Rationnel"
     },
+    "intentions": {
+      "title": "C'est pour quoi ?",
+      "relax": {
+        "label": "Me poser",
+        "defaultName": "Méditation"
+      },
+      "work": {
+        "label": "Travailler",
+        "defaultName": "Focus"
+      },
+      "create": {
+        "label": "Créer",
+        "defaultName": "Création"
+      },
+      "learn": {
+        "label": "Apprendre",
+        "defaultName": "Étude"
+      },
+      "move": {
+        "label": "Bouger",
+        "defaultName": "Sport"
+      },
+      "other": {
+        "label": "Autre",
+        "defaultName": "Mon moment"
+      },
+      "q1": {
+        "title": "Pourquoi un timer pour toi ?",
+        "focus": "Me concentrer",
+        "launch": "Me lancer",
+        "breathe": "Souffler",
+        "children": "Avec mes enfants",
+        "other": "Autre...",
+        "otherPlaceholder": "Dis-nous en plus..."
+      },
+      "q2": {
+        "title": "C'est quoi le plus dur ?",
+        "starting": "Commencer",
+        "finishing": "Tenir jusqu'au bout",
+        "staying": "Rester focus",
+        "managing": "Gérer mon temps"
+      }
+    },
     "creation": {
       "title": "Crée ton premier moment",
-      "subtitle": "Choisis un emoji, un nom et une durée"
+      "subtitle": "Sélectionne ton intention",
+      "sectionTitle": "C'est pour quoi ?",
+      "cta": "Créer mon moment",
+      "buttonCreate": "Créer \"%{name}\" %{emoji}",
+      "durationLabel": "Combien de temps ?",
+      "namePlaceholder": "Nomme ton moment...",
+      "customNamePlaceholder": "Nomme ton moment..."
     },
     "testStart": {
       "title": "Quand tu es prêt, appuie",
@@ -65,18 +115,13 @@
     },
     "v2": {
       "filter0": {
-        "breathe": "Respire.\nTon temps t'appartient.",
-        "tapToContinue": "Touche pour continuer"
+        "breathe": "Ton temps t'appartient",
+        "tapToContinue": "Quand tu es prêt"
       },
       "filter1": {
-        "title": "Pour quoi utiliser ResetPulse ?",
-        "meditation": "Méditation & Bien-être",
-        "work": "Travail & Étude",
-        "creativity": "Créativité & Flow",
-        "time": "Gestion du temps quotidien",
-        "neurodivergent": "Mon cerveau fonctionne différemment",
-        "helper": "Sélectionne au moins une option",
-        "continue": "Continuer"
+        "title": "Un timer qui s'adapte à toi",
+        "subtitle": "",
+        "cta": "Créer mon moment"
       },
       "filter2": {
         "title": "Crée ton premier moment",
@@ -344,7 +389,28 @@
     "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee",
     "colorNumber": "Couleur {number}",
     "paletteNumber": "Palette {name}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
+    "celebrationEmoji": "Célébration",
+    "closeCreateActivity": "Fermer la création d'activité",
+    "closeEditActivity": "Fermer l'édition d'activité",
+    "closeModalHint": "Ferme cette boîte de dialogue et retourne à l'application",
+    "closePremiumModal": "Fermer l'offre premium",
+    "createActivityHint": "Crée l'activité personnalisée et l'ajoute à votre liste",
+    "deleteActivityHint": "Supprime définitivement cette activité personnalisée",
+    "exploreSettingsHint": "Ouvre les paramètres pour découvrir les fonctionnalités premium",
+    "restorePurchases": "Restaurer les achats précédents",
+    "restorePurchasesHint": "Restaurer l'accès premium si vous avez déjà acheté",
+    "saveActivityHint": "Enregistre les modifications de cette activité",
+    "unlockPremiumHint": "Commencer l'essai gratuit de 7 jours, puis paiement unique",
+    "timer": {
+      "dialAdjustable": "Ajustable. Glissez vers le haut ou le bas pour changer la durée.",
+      "dialTapToToggle": "Appuyez pour démarrer ou mettre en pause le timer",
+      "timerCompleted": "Timer terminé !",
+      "timerRunning": "Timer en cours",
+      "timerStopped": "Timer arrêté",
+      "activityStarted": "{activity} démarré",
+      "activityCompleted": "{activity} terminé"
+    }
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
@@ -374,6 +440,7 @@
       "namePlaceholder": "Ex: Guitare, Cuisine...",
       "nameLabel": "Nom de l'activite",
       "emojiLabel": "Choisir un emoji",
+      "moreEmojis": "Plus...",
       "durationLabel": "Duree par defaut",
       "preview": "Apercu",
       "previewPlaceholder": "Mon activite",

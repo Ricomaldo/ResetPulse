@@ -2,12 +2,12 @@ import i18n from '../i18n';
 
 export const TIMER_PALETTES = {
   serenity: {
-    colors: ['#C17A71', '#D4A853', '#78716C', '#5A5A5A'],
+    colors: ['#E89665', '#D4A853', '#8B7D72', '#5A5A5A'],
     get name() {
       return i18n.t('palettes.serenity');
     },
     isPremium: false,
-    description: 'Palette système ResetPulse (brand colors)',
+    description: 'Palette système ResetPulse (brand colors - logo gradient)',
   },
   softLaser: {
     colors: ['#5DB88A', '#6BC4C4', '#C584B8', '#D4C65E'],

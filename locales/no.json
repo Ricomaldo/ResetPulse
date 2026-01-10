@@ -6,7 +6,8 @@
     "confirm": "Bekreft",
     "ok": "OK",
     "skip": "Hopp over",
-    "retry": "Prøv igjen"
+    "retry": "Prøv igjen",
+    "continue": "Fortsett"
   },
   "welcome": {
     "title": "Velkommen til ResetPulse",

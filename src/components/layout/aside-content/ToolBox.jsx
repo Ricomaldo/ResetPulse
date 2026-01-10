@@ -8,11 +8,8 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTimerConfig } from '../../../contexts/TimerConfigContext';
-import { useTheme } from '../../../theme/ThemeProvider';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
-import { ControlBar } from '../../controls';
-import { rs } from '../../../styles/responsive';
-import ToolboxItem from './ToolboxItem';
+import { ControlBar, PresetPills } from '../../controls';
 
 /**
  * ToolBox - Snap 38% (all 3 tools)
@@ -27,8 +24,7 @@ export default function ToolBox({
   activityCarouselRef,
   paletteCarouselRef,
 }) {
-  const { layout: { favoriteToolMode } } = useTimerConfig();
-  const theme = useTheme();
+  const { favoriteToolMode } = useTimerConfig();
 
   // Tool order based on favorite (favorite first for visual continuity)
   const toolOrder = {
@@ -40,36 +36,21 @@ export default function ToolBox({
 
   const order = toolOrder[favoriteToolMode] || toolOrder.commands;
 
-  // Tool components map with visual hierarchy variants
+  // Tool components map
   const toolComponents = {
     commands: (
-      <ToolboxItem key="commands" variant="controlBar">
-        <ControlBar
-          isRunning={isTimerRunning}
-          isCompleted={isTimerCompleted}
-          onPlay={onPlay}
-          onReset={onReset}
-          onStop={onStop}
-          compact
-        />
-      </ToolboxItem>
+      <ControlBar
+        key="commands"
+        isRunning={isTimerRunning}
+        isCompleted={isTimerCompleted}
+        onPlay={onPlay}
+        onReset={onReset}
+        onStop={onStop}
+        compact
+      />
     ),
-    activities: (
-      <ToolboxItem key="activities" variant="activityCarousel">
-        <ActivityCarousel ref={activityCarouselRef} />
-      </ToolboxItem>
-    ),
-    colors: (
-      <ToolboxItem key="colors" variant="paletteCarousel">
-        <View style={{
-          backgroundColor: theme.colors.surfaceElevated,
-          borderRadius: 999,
-          overflow: 'hidden',
-        }}>
-          <PaletteCarousel ref={paletteCarouselRef} />
-        </View>
-      </ToolboxItem>
-    ),
+    activities: <ActivityCarousel key="activities" ref={activityCarouselRef} />,
+    colors: <PaletteCarousel key="colors" ref={paletteCarouselRef} />,
   };
 
   return (
@@ -80,6 +61,9 @@ export default function ToolBox({
           {index < order.length - 1 && <View style={styles.separator} />}
         </React.Fragment>
       ))}
+      {/* PresetPills toujours en bas */}
+      <View style={styles.separator} />
+      <PresetPills compact />
     </View>
   );
 }
@@ -99,7 +83,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: '100%',
-    paddingTop: rs(0),  // No padding - space controlled by scrollContent
   },
   separator: {
     height: 8,

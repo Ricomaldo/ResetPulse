@@ -179,14 +179,31 @@ export const onboardingEvents = {
 
   /**
    * Tool Selected (Onboarding V2.1)
-   * Trigger: Filter-020-tool - User selects favorite tool mode
-   * Analyse des profils utilisateur
+   * @deprecated Filter-020 is now a preview screen - tool selection removed
+   * Kept for backwards compatibility with analytics data
    *
    * @param {string} tool - Tool selected ('creative' | 'minimalist' | 'multitask' | 'rational')
    */
   trackToolSelected(tool) {
     this.track('tool_selected', {
       tool,
+    });
+  },
+
+  /**
+   * Intention Selected (Onboarding V2.1 Dual-Mode)
+   * Trigger: Filter-030-creation - User selects intention from IntentionPicker
+   * Mesure distribution des intentions (relax, work, create, learn, move, other)
+   *
+   * @param {string} intentionId - Intention ID selected
+   * @param {string} emoji - Auto-populated emoji
+   * @param {number} duration - Auto-populated duration in seconds
+   */
+  trackIntentionSelected(intentionId, emoji, duration) {
+    this.track('intention_selected', {
+      intention_id: intentionId,
+      emoji,
+      duration_seconds: duration,
     });
   },
 
@@ -198,12 +215,14 @@ export const onboardingEvents = {
    * @param {string} emoji - Emoji selected
    * @param {number} nameLength - Name length
    * @param {number} duration - Duration in seconds
+   * @param {string} intentionId - Optional intention ID if using intention-based flow
    */
-  trackCustomActivityCreatedOnboarding(emoji, nameLength, duration) {
+  trackCustomActivityCreatedOnboarding(emoji, nameLength, duration, intentionId = null) {
     this.track('custom_activity_created_onboarding', {
       emoji,
       name_length: nameLength,
       duration_seconds: duration,
+      ...(intentionId && { intention_id: intentionId }),
     });
   },
 
@@ -247,6 +266,33 @@ export const onboardingEvents = {
   trackPersonaDetected(personaId) {
     this.track('persona_detected', {
       persona: personaId,
+    });
+  },
+
+  /**
+   * Intentions Completed (Onboarding V2.1 Filter-025)
+   * Trigger: Filter-025-intentions - User completes 2-question multi-select
+   * Replaces behavioral testing (Filter-040/050)
+   *
+   * @param {Object} data - Intentions and challenges data
+   * @param {Array<string>} data.intentions - Q1 selections (focus, launch, breathe, children, other)
+   * @param {Array<string>} data.challenges - Q2 selections (starting, finishing, staying, managing)
+   * @param {boolean} data.hasOther - Whether "other" was selected in Q1
+   * @param {string|null} data.otherText - Custom text if "other" selected
+   * @param {Object} data.calculatedProfile - Calculated interaction profile
+   * @param {boolean} data.calculatedProfile.startRequiresLongPress - Start requires long press
+   * @param {boolean} data.calculatedProfile.stopRequiresLongPress - Stop requires long press
+   */
+  trackIntentionsCompleted(data) {
+    this.track('intentions_completed', {
+      intentions: data.intentions,
+      intentions_count: data.intentions.length,
+      challenges: data.challenges,
+      challenges_count: data.challenges.length,
+      has_other: data.hasOther,
+      other_text: data.otherText,
+      start_long_press: data.calculatedProfile.startRequiresLongPress,
+      stop_long_press: data.calculatedProfile.stopRequiresLongPress,
     });
   },
 };

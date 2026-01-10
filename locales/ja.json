@@ -6,7 +6,8 @@
     "confirm": "確認",
     "ok": "OK",
     "skip": "スキップ",
-    "retry": "再試行"
+    "retry": "再試行",
+    "continue": "続ける"
   },
   "welcome": {
     "title": "ResetPulseへようこそ",

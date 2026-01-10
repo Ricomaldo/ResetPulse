@@ -6,7 +6,8 @@
     "confirm": "確認",
     "ok": "確定",
     "skip": "跳過",
-    "retry": "重試"
+    "retry": "重試",
+    "continue": "繼續"
   },
   "welcome": {
     "title": "歡迎使用 ResetPulse",

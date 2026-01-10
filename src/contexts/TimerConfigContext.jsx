@@ -73,6 +73,8 @@ export const TimerConfigProvider = ({ children }) => {
         },
         interaction: {
           interactionProfile: 'ritualiste',
+          startRequiresLongPress: false,
+          stopRequiresLongPress: false,
           longPressConfirmDuration: 2500,
           longPressStartDuration: 3000,
           startAnimationDuration: 1200,
@@ -119,6 +121,8 @@ export const TimerConfigProvider = ({ children }) => {
       },
       interaction: {
         interactionProfile: 'ritualiste',
+        startRequiresLongPress: false,
+        stopRequiresLongPress: false,
         longPressConfirmDuration: 2500,
         longPressStartDuration: 3000,
         startAnimationDuration: 1200,
@@ -294,7 +298,7 @@ export const TimerConfigProvider = ({ children }) => {
             const config = JSON.parse(configStr);
             logger.log('[TimerConfigContext] Loading onboarding v2.1 config:', config);
 
-            // Apply favoriteToolMode (Filter-020-tool)
+            // Apply favoriteToolMode (deprecated - Filter-020 is now preview only)
             if (config.favoriteToolMode) {
               setValues(prev => ({
                 ...prev,
@@ -484,12 +488,24 @@ export const TimerConfigProvider = ({ children }) => {
 
     // Interaction (with validation)
     setInteractionProfile: (profile) => {
-      const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce'];
-      if (validProfiles.includes(profile)) {
+      // Accept both string profiles and object with boolean flags
+      if (typeof profile === 'object' && profile !== null) {
         setValues(prev => ({
           ...prev,
-          interaction: { ...prev.interaction, interactionProfile: profile }
+          interaction: {
+            ...prev.interaction,
+            startRequiresLongPress: profile.startRequiresLongPress || false,
+            stopRequiresLongPress: profile.stopRequiresLongPress || false,
+          }
         }));
+      } else {
+        const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce'];
+        if (validProfiles.includes(profile)) {
+          setValues(prev => ({
+            ...prev,
+            interaction: { ...prev.interaction, interactionProfile: profile }
+          }));
+        }
       }
     },
     setLongPressConfirmDuration: (duration) => {

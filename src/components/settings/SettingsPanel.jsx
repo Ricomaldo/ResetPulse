@@ -4,22 +4,7 @@
  * @created 2025-12-19
  */
 import React from 'react';
-import { View, Text, StyleSheet, Switch, Platform, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import {
-  Brain,
-  Zap,
-  Keyboard,
-  Gauge,
-  Clock,
-  Eye,
-  RotateCw,
-  Volume2,
-  Palette,
-  Info,
-  Star,
-  Heart,
-} from 'lucide-react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Platform, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -27,55 +12,27 @@ import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import { SoundPicker } from '../pickers';
-import PresetPills from '../controls/PresetPills';
-import SettingsCard from './SettingsCard';
-import SelectionCard from './SelectionCard';
-import SectionHeader from './SectionHeader';
-import { CardTitle } from './CardTitle';
-import FavoritesActivitySection from './FavoritesActivitySection';
-import FavoritesPaletteSection from './FavoritesPaletteSection';
-import AboutSection from './AboutSection';
 
 /**
  * SettingsPanel - All settings sections (scrollable)
- *
- * @param {Function} onClose - Callback when closing settings (optional)
- * @param {Function} resetOnboarding - Callback to reset onboarding (optional)
- * @param {boolean} isPremiumUser - Whether user is premium (optional, defaults to false)
  */
-export default function SettingsPanel({ onClose = () => {}, resetOnboarding = () => {}, isPremiumUser = false }) {
+export default function SettingsPanel() {
   const theme = useTheme();
   const t = useTranslation();
-  const [showMoreActivitiesModal, setShowMoreActivitiesModal] = React.useState(false);
-  const [showMoreColorsModal, setShowMoreColorsModal] = React.useState(false);
   const {
-    display: { shouldPulse, showActivityEmoji },
+    shouldPulse,
     setShouldPulse,
+    showActivityEmoji,
     setShowActivityEmoji,
-    system: { keepAwakeEnabled },
+    keepAwakeEnabled,
     setKeepAwakeEnabled,
-    timer: { clockwise, selectedSoundId },
+    clockwise,
     setClockwise,
+    selectedSoundId,
     setSelectedSoundId,
-    setScaleMode,
-    interaction: { interactionProfile },
-    setInteractionProfile,
-    favorites: { favoriteActivities, favoritePalettes },
-    setFavoriteActivities,
-    toggleFavoritePalette,
-    layout: { favoriteToolMode },
+    favoriteToolMode,
     setFavoriteToolMode,
   } = useTimerConfig();
-
-  // Helper to toggle favorite activity
-  const toggleFavoriteActivity = (activityId) => {
-    const current = favoriteActivities || [];
-    const isFavorite = current.includes(activityId);
-    const updated = isFavorite
-      ? current.filter((id) => id !== activityId)
-      : [...current, activityId];
-    setFavoriteActivities(updated);
-  };
 
   // Platform-specific touchable component
   const Touchable =
@@ -96,87 +53,59 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         activeOpacity: 0.7,
       };
 
-  // Interaction profiles (personas)
-  const interactionProfiles = [
-    {
-      id: 'impulsif',
-      emoji: '🚀',
-      label: 'Impulsif',
-      description: 'Je démarre vite, j\'ai besoin de freiner',
-    },
-    {
-      id: 'abandonniste',
-      emoji: '🏃',
-      label: 'Abandonniste',
-      description: 'J\'ai du mal à tenir jusqu\'au bout',
-    },
-    {
-      id: 'ritualiste',
-      emoji: '🎯',
-      label: 'Ritualiste',
-      description: 'J\'aime les actions délibérées',
-    },
-    {
-      id: 'veloce',
-      emoji: '⚡',
-      label: 'Véloce',
-      description: 'Je sais ce que je veux',
-    },
-  ];
-
-  // Favorite tools modes (mapped from TimerConfigContext values)
-  const favoriteTools = [
-    {
-      id: 'colors',
-      emoji: '🎨',
-      label: 'Créatif',
-      description: 'Carrousel couleurs',
-    },
-    {
-      id: 'none',
-      emoji: '☯',
-      label: 'Minimaliste',
-      description: 'Rien (handle seul)',
-    },
-    {
-      id: 'activities',
-      emoji: '🔄',
-      label: 'Multi-tâches',
-      description: 'Carrousel activités',
-    },
-    {
-      id: 'combo',
-      emoji: '⏱',
-      label: 'Rationnel',
-      description: 'ControlBar (durée + run)',
-    },
-  ];
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       width: '100%',
     },
-    grid2x2: {
+    favoriteToolGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      gap: rs(12),          // Responsive (was theme.spacing.sm)
-      marginTop: rs(12),    // Responsive (was theme.spacing.sm)
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
     },
-    gridItem2x2: {
-      width: '48%', // ~50% minus gap
+    favoriteToolIcon: {
+      fontSize: rs(24, 'min'),
+      marginBottom: theme.spacing.xs / 2,
+      textAlign: 'center',
+    },
+    favoriteToolItem: {
+      alignItems: 'center',
+      aspectRatio: 1,
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.fixed.transparent,
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 2,
+      justifyContent: 'center',
+      padding: theme.spacing.sm,
+      width: '22%',
+      ...theme.shadow('sm'),
+    },
+    favoriteToolItemActive: {
+      backgroundColor: theme.colors.background,
+      borderColor: theme.colors.brand.primary,
+      ...theme.shadow('md'),
+    },
+    favoriteToolLabel: {
+      color: theme.colors.textLight,
+      fontSize: rs(9, 'min'),
+      fontWeight: fontWeights.medium,
+      textAlign: 'center',
+      width: '100%',
+    },
+    favoriteToolLabelActive: {
+      color: theme.colors.brand.primary,
+      fontWeight: fontWeights.semibold,
+    },
+    optionDescription: {
+      color: theme.colors.textLight,
+      fontSize: rs(11, 'min'),
+      marginTop: theme.spacing.xs / 2,
     },
     optionLabel: {
       color: theme.colors.text,
       flex: 1,
       fontSize: rs(14, 'min'),
-    },
-    optionDescription: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(10, 'min'),           // Reduced from rs(11, 'min') for hierarchy
-      lineHeight: rs(14, 'min'),         // Added for readability
-      marginTop: rs(6),                  // Increased spacing
-      opacity: 0.75,                     // Added opacity for visual recession
     },
     optionRow: {
       alignItems: 'center',
@@ -184,21 +113,36 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       borderBottomWidth: StyleSheet.hairlineWidth,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: rs(12),  // Responsive (was theme.spacing.sm)
+      paddingVertical: theme.spacing.sm,
     },
     scrollContent: {
-      paddingBottom: rs(16),  // Responsive (was theme.spacing.md)
+      paddingBottom: theme.spacing.md,
+    },
+    sectionCard: {
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.brand.primary + '30',
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      marginBottom: theme.spacing.md,
+      padding: theme.spacing.md,
+      ...theme.shadow('sm'),
+    },
+    sectionTitle: {
+      color: theme.colors.text,
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginBottom: theme.spacing.sm,
     },
     segmentButton: {
       alignItems: 'center',
       borderRadius: theme.borderRadius.md - 2,
       flex: 1,
       minWidth: 60,
-      paddingHorizontal: rs(8),  // Responsive (was theme.spacing.xs)
-      paddingVertical: rs(8),    // Responsive (was theme.spacing.xs)
+      paddingHorizontal: theme.spacing.xs,
+      paddingVertical: theme.spacing.xs,
     },
     segmentButtonActive: {
-      backgroundColor: theme.colors.brand.accent, // Selection = accent (orange)
+      backgroundColor: theme.colors.brand.primary,
     },
     segmentText: {
       color: theme.colors.text,
@@ -210,107 +154,75 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       color: theme.colors.fixed.white,
     },
     segmentedControl: {
-      backgroundColor: theme.colors.surfaceElevated,
-      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadius.md,
-      borderWidth: 1,
       flexDirection: 'row',
-      padding: rs(2),  // Responsive
+      padding: 2,
     },
   });
 
+  const favoriteTools = [
+    { id: 'combo', icon: '🎛️', label: 'Combo' },
+    { id: 'colors', icon: '🎨', label: 'Colors' },
+    { id: 'activities', icon: '⚡', label: 'Activities' },
+    { id: 'none', icon: '∅', label: 'None' },
+  ];
+
   return (
     <View style={styles.container}>
-      <BottomSheetScrollView
+      <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Group 1: TOI (You) */}
-        <SectionHeader label="TOI" />
-
-        {/* Section 1: Interaction Profile (Comment tu fonctionnes) */}
-        <SettingsCard title={<CardTitle Icon={Brain} label="Comment tu fonctionnes" theme={theme} />}>
-          <View style={styles.grid2x2}>
-            {interactionProfiles.map((profile) => (
-              <View key={profile.id} style={styles.gridItem2x2}>
-                <SelectionCard
-                  emoji={profile.emoji}
-                  label={profile.label}
-                  description={profile.description}
-                  selected={interactionProfile === profile.id}
-                  onSelect={() => setInteractionProfile(profile.id)}
-                  compact
-                />
-              </View>
-            ))}
-          </View>
-        </SettingsCard>
-
-        {/* Section 2: Favorite Tool (Ton raccourci préféré) */}
-        <SettingsCard title={<CardTitle Icon={Keyboard} label="Ton raccourci préféré" theme={theme} />}>
-          <View style={styles.grid2x2}>
+        {/* 1. Favorite Tool Section */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>⭐ Outil favori</Text>
+          <Text style={styles.optionDescription}>
+            Choisissez l&apos;outil qui s&apos;affiche au premier snap (15%)
+          </Text>
+          <View style={styles.favoriteToolGrid}>
             {favoriteTools.map((tool) => (
-              <View key={tool.id} style={styles.gridItem2x2}>
-                <SelectionCard
-                  emoji={tool.emoji}
-                  label={tool.label}
-                  description={tool.description}
-                  selected={favoriteToolMode === tool.id}
-                  onSelect={() => setFavoriteToolMode(tool.id)}
-                  compact
-                />
-              </View>
+              <Touchable
+                key={tool.id}
+                onPress={() => {
+                  haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+                  setFavoriteToolMode(tool.id);
+                }}
+                {...touchableProps}
+              >
+                <View
+                  style={[
+                    styles.favoriteToolItem,
+                    favoriteToolMode === tool.id && styles.favoriteToolItemActive,
+                  ]}
+                >
+                  <Text style={styles.favoriteToolIcon}>{tool.icon}</Text>
+                  <Text
+                    style={[
+                      styles.favoriteToolLabel,
+                      favoriteToolMode === tool.id && styles.favoriteToolLabelActive,
+                    ]}
+                  >
+                    {tool.label}
+                  </Text>
+                </View>
+              </Touchable>
             ))}
           </View>
-        </SettingsCard>
+        </View>
 
-        {/* Group 2: TES FAVORIS (Your Favorites) - Premium only */}
-        {isPremiumUser && <SectionHeader label="TES FAVORIS" />}
+        {/* 2. Timer Options Section */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>⏱️ Options du timer</Text>
 
-        {/* Section 3: Favorite Activities (Premium only) */}
-        {isPremiumUser && (
-          <FavoritesActivitySection
-            favoriteActivities={favoriteActivities || []}
-            toggleFavoriteActivity={toggleFavoriteActivity}
-            isPremiumUser={isPremiumUser}
-            setShowMoreActivitiesModal={setShowMoreActivitiesModal}
-          />
-        )}
-
-        {/* Section 4: Favorite Palettes (Premium only) */}
-        {isPremiumUser && (
-          <FavoritesPaletteSection
-            favoritePalettes={favoritePalettes || []}
-            toggleFavoritePalette={toggleFavoritePalette}
-            isPremiumUser={isPremiumUser}
-            setShowMoreColorsModal={setShowMoreColorsModal}
-          />
-        )}
-
-        {/* Group 3: TIMER */}
-        <SectionHeader label="TIMER" />
-
-        {/* Dial Scale Presets (top) */}
-        <SettingsCard title={<CardTitle Icon={Gauge} label="Échelle du cadran" theme={theme} />}>
-          <PresetPills
-            compact
-            onSelectPreset={({ newScaleMode }) => {
-              haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-              setScaleMode(newScaleMode);
-            }}
-          />
-        </SettingsCard>
-
-        {/* 1. Timer Options Section */}
-        <SettingsCard title={<CardTitle Icon={Clock} label="Options du timer" theme={theme} />}>
           {/* Emoji activité au centre */}
           <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>Emoji activité au centre</Text>
               <Text style={styles.optionDescription}>
                 {showActivityEmoji
-                  ? "L'emoji s'affiche au centre du cadran"
-                  : "L'emoji est masqué"}
+                  ? 'L&apos;emoji s&apos;affiche au centre du cadran'
+                  : 'L&apos;emoji est masqué'}
               </Text>
             </View>
             <Switch
@@ -342,10 +254,12 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               {...theme.styles.switch(shouldPulse)}
             />
           </View>
-        </SettingsCard>
+        </View>
 
-        {/* 2. Keep Awake Section */}
-        <SettingsCard title={<CardTitle Icon={Eye} label="Keep Awake" theme={theme} />}>
+        {/* 3. Keep Awake Section */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>💡 Keep Awake</Text>
+
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>{t('settings.timer.keepAwake')}</Text>
@@ -368,13 +282,12 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               {...theme.styles.switch(keepAwakeEnabled)}
             />
           </View>
-        </SettingsCard>
+        </View>
 
-        {/* Group 4: AMBIANCE */}
-        <SectionHeader label="AMBIANCE" />
+        {/* 4. Rotation Direction Section */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>🔄 Sens de rotation</Text>
 
-        {/* 3. Rotation Direction Section */}
-        <SettingsCard title={<CardTitle Icon={RotateCw} label="Sens de rotation" theme={theme} />}>
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>{t('settings.timer.rotationDirection')}</Text>
@@ -395,21 +308,23 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               {...theme.styles.switch(clockwise)}
             />
           </View>
-        </SettingsCard>
+        </View>
 
-        {/* 4. Sound Section */}
-        <SettingsCard
-          title={<CardTitle Icon={Volume2} label="Son de notification" theme={theme} />}
-          description={t('settings.timer.soundDescription')}
-        >
+        {/* 5. Sound Section */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>🔊 Son de notification</Text>
+          <Text style={styles.optionDescription}>
+            {t('settings.timer.soundDescription')}
+          </Text>
           <SoundPicker
             selectedSoundId={selectedSoundId}
             onSoundSelect={setSelectedSoundId}
           />
-        </SettingsCard>
+        </View>
 
-        {/* 5. Theme Section */}
-        <SettingsCard title={<CardTitle Icon={Palette} label="Thème" theme={theme} />}>
+        {/* 6. Theme Section */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>🎨 Thème</Text>
 
           <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
@@ -485,17 +400,8 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               </Touchable>
             </View>
           </View>
-        </SettingsCard>
-
-        {/* Group 5: INFO */}
-        <SectionHeader label="INFO" />
-
-        {/* About Section */}
-        <AboutSection
-          resetOnboarding={resetOnboarding}
-          onClose={onClose}
-        />
-      </BottomSheetScrollView>
+        </View>
+      </ScrollView>
     </View>
   );
 }

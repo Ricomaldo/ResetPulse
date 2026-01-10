@@ -24,6 +24,7 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
  * @param {Function} onGoToApp - Callback to skip to app
  * @param {Function} onResetTimerConfig - Callback to reset timer config
  * @param {Function} onResetTooltip - Callback to reset drawer tooltip
+ * @param {Function} onResetToVanilla - Callback to reset ALL app data to vanilla state
  */
 const FAVORITE_TOOL_OPTIONS = [
   { value: 'commands', label: '⚡ Commandes' },
@@ -37,6 +38,7 @@ export default function DevFab({
   onGoToApp,
   onResetTimerConfig,
   onResetTooltip,
+  onResetToVanilla,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
@@ -145,7 +147,7 @@ export default function DevFab({
         </View>
 
         {/* Dev Tools - All resets & shortcuts */}
-        {(onResetOnboarding || onResetTimerConfig || onResetTooltip || onGoToApp) && (
+        {(onResetOnboarding || onResetTimerConfig || onResetTooltip || onGoToApp || onResetToVanilla) && (
           <View style={styles.menuSection}>
             <Text style={styles.menuLabel}>Dev Tools</Text>
 
@@ -194,6 +196,19 @@ export default function DevFab({
                     <Text style={styles.actionText}>→ App</Text>
                   </TouchableOpacity>
                 )}
+              </View>
+            )}
+
+            {/* Row 3: Reset to Vanilla (Full Reset) */}
+            {onResetToVanilla && (
+              <View style={[styles.buttonRow, styles.buttonRowMargin]}>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.resetVanillaButton]}
+                  onPress={() => handleOptionPress(onResetToVanilla)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.actionText}>🔄 Reset to Vanilla</Text>
+                </TouchableOpacity>
               </View>
             )}
           </View>
@@ -321,6 +336,10 @@ const styles = StyleSheet.create({
     backgroundColor: devColors.danger, // Rouge
   },
 
+  resetVanillaButton: {
+    backgroundColor: '#9932CC', // Violet foncé - action destructive majeure
+  },
+
   selectOption: {
     backgroundColor: devColors.devBgSecondary,
     borderRadius: 8,
@@ -402,4 +421,5 @@ DevFab.propTypes = {
   onGoToApp: PropTypes.func,
   onResetTimerConfig: PropTypes.func,
   onResetTooltip: PropTypes.func,
+  onResetToVanilla: PropTypes.func,
 };

@@ -6,7 +6,8 @@
     "confirm": "تأكيد",
     "ok": "حسناً",
     "skip": "تخطي",
-    "retry": "إعادة محاولة"
+    "retry": "إعادة محاولة",
+    "continue": "متابعة"
   },
   "welcome": {
     "title": "مرحباً بك في ResetPulse",

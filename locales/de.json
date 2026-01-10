@@ -6,7 +6,8 @@
     "confirm": "Bestätigen",
     "ok": "OK",
     "skip": "Überspringen",
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "continue": "Weiter"
   },
   "welcome": {
     "title": "Willkommen bei ResetPulse",
@@ -212,14 +213,35 @@
     "startTrial": "Testversion starten",
     "maybeLater": "Vielleicht später",
     "restore": "Käufe wiederherstellen",
-    "activity": "Activité: {name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur {number}",
+    "activity": "Aktivität {name}",
+    "activityLocked": "Premium-Aktivität gesperrt",
+    "customActivityHint": "Lange drücken, um diese benutzerdefinierte Aktivität zu bearbeiten",
+    "moreActivities": "Mehr Aktivitäten",
+    "discoverPremium": "Premium-Aktivitäten entdecken",
+    "colorNumber": "Farbe {number}",
     "paletteNumber": "Palette {name}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+    "discoverMorePalettes": "Tippen, um mehr Paletten zu entdecken",
+    "celebrationEmoji": "Feier",
+    "closeCreateActivity": "Aktivität erstellen schließen",
+    "closeEditActivity": "Aktivität bearbeiten schließen",
+    "closeModalHint": "Schließt diesen Dialog und kehrt zur App zurück",
+    "closePremiumModal": "Premium-Angebot schließen",
+    "createActivityHint": "Erstellt die benutzerdefinierte Aktivität und fügt sie zu deiner Liste hinzu",
+    "deleteActivityHint": "Löscht diese benutzerdefinierte Aktivität dauerhaft",
+    "exploreSettingsHint": "Öffnet die Einstellungen, um Premium-Funktionen zu entdecken",
+    "restorePurchases": "Vorherige Käufe wiederherstellen",
+    "restorePurchasesHint": "Premium-Zugang wiederherstellen, wenn du bereits gekauft hast",
+    "saveActivityHint": "Speichert die Änderungen an dieser Aktivität",
+    "unlockPremiumHint": "7-tägige kostenlose Testversion starten, dann einmalige Zahlung",
+    "timer": {
+      "dialAdjustable": "Einstellbar. Nach oben oder unten wischen, um die Dauer zu ändern.",
+      "dialTapToToggle": "Tippen, um den Timer zu starten oder zu pausieren",
+      "timerCompleted": "Timer abgeschlossen!",
+      "timerRunning": "Timer läuft",
+      "timerStopped": "Timer gestoppt",
+      "activityStarted": "{activity} gestartet",
+      "activityCompleted": "{activity} abgeschlossen"
+    }
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",

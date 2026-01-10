@@ -6,7 +6,8 @@
     "confirm": "Bevestigen",
     "ok": "OK",
     "skip": "Overslaan",
-    "retry": "Opnieuw proberen"
+    "retry": "Opnieuw proberen",
+    "continue": "Doorgaan"
   },
   "welcome": {
     "title": "Welkom bij ResetPulse",

@@ -5,7 +5,7 @@
  * @updated 2025-12-19 - Migrated from PanResponder to Gesture API (RNGH v2)
  */
 import React, { useMemo, useRef, useState, useCallback, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -68,6 +68,9 @@ function TimerDial({
   currentActivity = null,
   showNumbers = true,
   showGraduations = true,
+  showPlayButton = true,
+  showCenterDisk = false,
+  centerImage = null,
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -548,15 +551,58 @@ function TimerDial({
           )}
 
           {/* Center layer: PulseButton (ADR-007) */}
-          <DialCenter
-            activity={showActivityEmoji ? currentActivity : null}
-            isRunning={isRunning}
-            isCompleted={isCompleted}
-            onTap={onDialTap}
-            onLongPressComplete={onDialLongPress}
-            clockwise={clockwise}
-            size={circleSize * 0.25}
-          />
+          {showPlayButton && (
+            <DialCenter
+              activity={showActivityEmoji ? currentActivity : null}
+              isRunning={isRunning}
+              isCompleted={isCompleted}
+              onTap={onDialTap}
+              onLongPressComplete={onDialLongPress}
+              clockwise={clockwise}
+              size={circleSize * 0.25}
+            />
+          )}
+
+          {/* Empty center disk for preview (no button, no emoji) */}
+          {!showPlayButton && showCenterDisk && !centerImage && (
+            <View style={StyleSheet.absoluteFill} pointerEvents="none">
+              <Svg width={svgSize} height={svgSize}>
+                <Circle
+                  cx={centerX}
+                  cy={centerY}
+                  r={circleSize * 0.125}
+                  fill={theme.colors.surface}
+                  opacity={1}
+                />
+              </Svg>
+            </View>
+          )}
+
+          {/* Center image for preview (logo) */}
+          {!showPlayButton && centerImage && (
+            <View style={StyleSheet.absoluteFill} pointerEvents="none">
+              <View
+                style={{
+                  position: 'absolute',
+                  top: centerY - (circleSize * 0.125),
+                  left: centerX - (circleSize * 0.125),
+                  width: circleSize * 0.25,
+                  height: circleSize * 0.25,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Image
+                  source={centerImage}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    resizeMode: 'contain',
+                  }}
+                />
+              </View>
+            </View>
+          )}
         </View>
       </GestureDetector>
     </View>
@@ -581,6 +627,9 @@ TimerDial.propTypes = {
   currentActivity: PropTypes.object,
   showNumbers: PropTypes.bool,
   showGraduations: PropTypes.bool,
+  showPlayButton: PropTypes.bool,
+  showCenterDisk: PropTypes.bool,
+  centerImage: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
 };
 
 // Export memoized version
@@ -603,6 +652,9 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.currentActivity === nextProps.currentActivity &&
     prevProps.showNumbers === nextProps.showNumbers &&
     prevProps.showGraduations === nextProps.showGraduations &&
-    prevProps.showActivityEmoji === nextProps.showActivityEmoji
+    prevProps.showActivityEmoji === nextProps.showActivityEmoji &&
+    prevProps.showPlayButton === nextProps.showPlayButton &&
+    prevProps.showCenterDisk === nextProps.showCenterDisk &&
+    prevProps.centerImage === nextProps.centerImage
   );
 });

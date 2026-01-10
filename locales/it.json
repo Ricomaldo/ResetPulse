@@ -6,7 +6,8 @@
     "confirm": "Conferma",
     "ok": "OK",
     "skip": "Salta",
-    "retry": "Riprova"
+    "retry": "Riprova",
+    "continue": "Continua"
   },
   "welcome": {
     "title": "Benvenuto in ResetPulse",
@@ -212,14 +213,35 @@
     "startTrial": "Inizia prova gratuita",
     "maybeLater": "Forse più tardi",
     "restore": "Ripristina i miei acquisti",
-    "activity": "Activité: {name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur {number}",
-    "paletteNumber": "Palette {name}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+    "activity": "Attività {name}",
+    "activityLocked": "Attività premium bloccata",
+    "customActivityHint": "Tieni premuto per modificare questa attività personalizzata",
+    "moreActivities": "Più attività",
+    "discoverPremium": "Scopri le attività premium",
+    "colorNumber": "Colore {number}",
+    "paletteNumber": "Paletta {name}",
+    "discoverMorePalettes": "Tocca per scoprire più palette",
+    "celebrationEmoji": "Celebrazione",
+    "closeCreateActivity": "Chiudi creazione attività",
+    "closeEditActivity": "Chiudi modifica attività",
+    "closeModalHint": "Chiude questa finestra di dialogo e torna all'app",
+    "closePremiumModal": "Chiudi offerta premium",
+    "createActivityHint": "Crea l'attività personalizzata e la aggiunge alla tua lista",
+    "deleteActivityHint": "Elimina definitivamente questa attività personalizzata",
+    "exploreSettingsHint": "Apre le impostazioni per scoprire le funzionalità premium",
+    "restorePurchases": "Ripristina acquisti precedenti",
+    "restorePurchasesHint": "Ripristina accesso premium se hai già acquistato",
+    "saveActivityHint": "Salva le modifiche a questa attività",
+    "unlockPremiumHint": "Inizia prova gratuita di 7 giorni, poi pagamento unico",
+    "timer": {
+      "dialAdjustable": "Regolabile. Scorri verso l'alto o il basso per cambiare la durata.",
+      "dialTapToToggle": "Tocca per avviare o mettere in pausa il timer",
+      "timerCompleted": "Timer completato!",
+      "timerRunning": "Timer in esecuzione",
+      "timerStopped": "Timer fermato",
+      "activityStarted": "{activity} avviato",
+      "activityCompleted": "{activity} completato"
+    }
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
