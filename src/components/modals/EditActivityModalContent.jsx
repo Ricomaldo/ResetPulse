@@ -2,9 +2,9 @@
  * @fileoverview EditActivityModalContent - Content for editing/deleting custom activities
  * Pure content component (no BottomSheetModal wrapper - handled by ModalStackRenderer)
  * @created 2025-12-21
- * @updated 2025-12-21
+ * @updated 2026-01-13
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -23,7 +23,6 @@ import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import analytics from '../../services/analytics';
 import { fontWeights } from '../../theme/tokens';
-import EmojiPicker from '../pickers/EmojiPicker';
 import DurationSlider from '../pickers/DurationSlider';
 
 // Constants
@@ -49,6 +48,7 @@ export default function EditActivityModalContent({
   const theme = useTheme();
   const t = useTranslation();
   const { updateActivity, deleteActivity: removeActivity } = useCustomActivities();
+  const nativeEmojiInputRef = useRef(null);
 
   // Form state
   const [selectedEmoji, setSelectedEmoji] = useState('');
@@ -67,6 +67,27 @@ export default function EditActivityModalContent({
   const handleClose = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onClose();
+  };
+
+  // Open native emoji keyboard
+  const handleOpenNativeEmojiPicker = () => {
+    nativeEmojiInputRef.current?.focus();
+  };
+
+  // Handle emoji from native keyboard
+  const handleNativeEmojiChange = (text) => {
+    // Extract last emoji from text (handles multi-char emojis)
+    const emojiRegex = /[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu;
+    const emojis = text.match(emojiRegex);
+
+    if (emojis && emojis.length > 0) {
+      // Get last emoji typed
+      const lastEmoji = emojis[emojis.length - 1];
+      setSelectedEmoji(lastEmoji);
+
+      // Close keyboard after selection
+      nativeEmojiInputRef.current?.blur();
+    }
   };
 
   const handleSave = () => {
@@ -224,11 +245,33 @@ export default function EditActivityModalContent({
       padding: theme.spacing.md,
     },
 
-    emojiPickerContainer: {
+    emojiInputButton: {
+      alignItems: 'center',
       backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.lg,
-      maxHeight: rs(200, 'min'),
-      padding: theme.spacing.sm,
+      borderWidth: 1,
+      flexDirection: 'row',
+      minHeight: rs(80, 'min'),
+      padding: theme.spacing.lg,
+    },
+
+    emojiDisplay: {
+      fontSize: rs(48, 'min'),
+      marginRight: theme.spacing.md,
+    },
+
+    emojiInputPlaceholder: {
+      color: theme.colors.textSecondary,
+      flex: 1,
+      fontSize: rs(16, 'min'),
+    },
+
+    hiddenEmojiInput: {
+      height: 0,
+      opacity: 0,
+      position: 'absolute',
+      width: 0,
     },
 
     footer: {
@@ -376,12 +419,29 @@ export default function EditActivityModalContent({
           <Text style={styles.sectionLabel}>
             {t('customActivities.create.emojiLabel')}
           </Text>
-          <View style={styles.emojiPickerContainer}>
-            <EmojiPicker
-              selectedEmoji={selectedEmoji}
-              onSelectEmoji={setSelectedEmoji}
-            />
-          </View>
+          <TouchableOpacity
+            style={styles.emojiInputButton}
+            onPress={handleOpenNativeEmojiPicker}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.emojiDisplay}>
+              {selectedEmoji || '?'}
+            </Text>
+            <Text style={styles.emojiInputPlaceholder}>
+              {selectedEmoji ? t('customActivities.create.emojiLabel') : 'Appuyer pour choisir'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Hidden TextInput for native emoji keyboard */}
+          <TextInput
+            ref={nativeEmojiInputRef}
+            style={styles.hiddenEmojiInput}
+            value=""
+            onChangeText={handleNativeEmojiChange}
+            keyboardType="default"
+            placeholder=""
+            maxLength={10}
+          />
         </View>
 
         {/* Name Input */}

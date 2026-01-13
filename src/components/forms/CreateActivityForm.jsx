@@ -18,7 +18,6 @@ import {
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
-import EmojiPicker from '../pickers/EmojiPicker';
 import DurationSlider from '../pickers/DurationSlider';
 import IntentionPicker from '../onboarding/IntentionPicker';
 import CustomizeStep from './CustomizeStep';
@@ -53,8 +52,7 @@ export default function CreateActivityForm({
   const nativeEmojiInputRef = useRef(null);
 
   // Form state
-  // Default emoji in full mode: first emoji from grid (💻)
-  const [selectedEmoji, setSelectedEmoji] = useState(mode === 'full' ? '💻' : '');
+  const [selectedEmoji, setSelectedEmoji] = useState('');
   const [activityName, setActivityName] = useState('');
   const [duration, setDuration] = useState(DEFAULT_DURATION);
 
@@ -214,11 +212,26 @@ export default function CreateActivityForm({
       padding: theme.spacing.md,
     },
 
-    emojiPickerContainer: {
+    emojiInputButton: {
+      alignItems: 'center',
       backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.lg,
-      maxHeight: rs(200, 'min'),
-      padding: theme.spacing.sm,
+      borderWidth: 1,
+      flexDirection: 'row',
+      minHeight: rs(80, 'min'),
+      padding: theme.spacing.lg,
+    },
+
+    emojiDisplay: {
+      fontSize: rs(48, 'min'),
+      marginRight: theme.spacing.md,
+    },
+
+    emojiInputPlaceholder: {
+      color: theme.colors.textSecondary,
+      flex: 1,
+      fontSize: rs(16, 'min'),
     },
 
     footer: {
@@ -269,54 +282,6 @@ export default function CreateActivityForm({
       borderWidth: 1,
       flexDirection: 'row',
       paddingHorizontal: theme.spacing.md,
-    },
-
-    miniEmojiButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border,
-      borderRadius: theme.borderRadius.md,
-      borderWidth: 1,
-      justifyContent: 'center',
-      minHeight: 60,
-      minWidth: 60,
-      padding: theme.spacing.xs,
-    },
-
-    miniEmojiButtonSelected: {
-      backgroundColor: theme.colors.brand.primary + '20',
-      borderColor: theme.colors.brand.primary,
-      borderWidth: 2,
-    },
-
-    miniEmojiGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: theme.spacing.sm,
-      justifyContent: 'center',
-    },
-
-    miniEmojiText: {
-      fontSize: rs(32, 'min'),
-    },
-
-    moreEmojisButton: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.brand.primary + '15',
-      borderColor: theme.colors.brand.primary,
-      borderRadius: theme.borderRadius.md,
-      borderWidth: 2,
-      justifyContent: 'center',
-      marginTop: theme.spacing.md,
-      minHeight: 48,
-      padding: theme.spacing.md,
-      ...theme.shadow('sm'),
-    },
-
-    moreEmojisButtonText: {
-      color: theme.colors.brand.primary,
-      fontSize: rs(15, 'min'),
-      fontWeight: fontWeights.semibold,
     },
 
     previewCard: {
@@ -443,34 +408,29 @@ export default function CreateActivityForm({
         <Text style={styles.sectionLabel}>
           {t('customActivities.create.emojiLabel')}
         </Text>
-        <View style={styles.emojiPickerContainer}>
-          <EmojiPicker
-            selectedEmoji={selectedEmoji}
-            onSelectEmoji={setSelectedEmoji}
-          />
+        <TouchableOpacity
+          style={styles.emojiInputButton}
+          onPress={handleOpenNativeEmojiPicker}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.emojiDisplay}>
+            {selectedEmoji || '?'}
+          </Text>
+          <Text style={styles.emojiInputPlaceholder}>
+            {selectedEmoji ? t('customActivities.create.emojiLabel') : 'Appuyer pour choisir'}
+          </Text>
+        </TouchableOpacity>
 
-          {/* Native Emoji Picker Button */}
-          <TouchableOpacity
-            style={styles.moreEmojisButton}
-            onPress={handleOpenNativeEmojiPicker}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.moreEmojisButtonText}>
-              🔍 {t('customActivities.create.moreEmojis')}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Hidden TextInput for native emoji keyboard */}
-          <TextInput
-            ref={nativeEmojiInputRef}
-            style={styles.hiddenEmojiInput}
-            value=""
-            onChangeText={handleNativeEmojiChange}
-            keyboardType="default"
-            placeholder=""
-            maxLength={10}
-          />
-        </View>
+        {/* Hidden TextInput for native emoji keyboard */}
+        <TextInput
+          ref={nativeEmojiInputRef}
+          style={styles.hiddenEmojiInput}
+          value=""
+          onChangeText={handleNativeEmojiChange}
+          keyboardType="default"
+          placeholder=""
+          maxLength={10}
+        />
       </View>
 
       {/* Name Input */}

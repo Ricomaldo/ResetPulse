@@ -204,7 +204,7 @@ const PulseButton = React.memo(function PulseButton({
   // Dimensions
   const buttonSize = compact ? rs(48, 'min') : rs(size, 'min');
   const iconSize = compact ? rs(20, 'min') : rs(28, 'min');
-  const emojiSize = compact ? rs(24, 'min') : rs(32, 'min');
+  const emojiSize = compact ? rs(24, 'min') : rs(48, 'min');
   const radius = (buttonSize - STROKE_WIDTH) / 2;
   const circumference = 2 * Math.PI * radius;
   const center = buttonSize / 2;
@@ -275,7 +275,7 @@ const PulseButton = React.memo(function PulseButton({
     const bgColor = interpolateColor(
       stateProgress.value,
       [0, 1],
-      [theme.colors.brand.primary, theme.colors.brand.secondary]
+      [theme.colors.brand.primary + 'D9', theme.colors.brand.secondary + 'D9']
     );
     return {
       backgroundColor: bgColor,
@@ -288,11 +288,11 @@ const PulseButton = React.memo(function PulseButton({
   const getButtonColor = () => {
     switch (state) {
     case 'running':
-      return theme.colors.brand.secondary;
+      return theme.colors.brand.secondary + 'D9';
     case 'complete':
-      return theme.colors.brand.primary;
+      return theme.colors.brand.primary + 'D9';
     default:
-      return theme.colors.brand.primary;
+      return theme.colors.brand.primary + 'D9';
     }
   };
 
@@ -389,7 +389,7 @@ const PulseButton = React.memo(function PulseButton({
       width: buttonSize,
     },
     halo: {
-      backgroundColor: theme.colors.brand.secondary,
+      backgroundColor: theme.colors.brand.secondary + 'D9',
       borderRadius: buttonSize / 2,
       height: buttonSize,
       position: 'absolute',

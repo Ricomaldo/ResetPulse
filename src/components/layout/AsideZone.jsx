@@ -145,7 +145,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
  *
  * @param {string} timerState - 'REST' | 'RUNNING' | 'COMPLETE' (source of truth for animations)
  */
-export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onSnapChange }) {
+export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity }) {
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
   const { timer: { currentActivity } } = useTimerConfig();
@@ -208,7 +208,6 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
         enableDynamicSizing={false} // Force snap points to be respected
         onChange={(index) => {
           setCurrentSnapIndex(index);
-          onSnapChange?.();
         }}
         handleIndicatorStyle={{
           backgroundColor: theme.colors.textSecondary,

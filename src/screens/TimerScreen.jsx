@@ -99,12 +99,23 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
     }
   }, [isTimerRunning, isTimerCompleted]);
 
-  // Clear displayMessage when activity is selected (flashActivity changes)
+  // Update displayMessage when activity changes (flashActivity changes)
   useEffect(() => {
-    if (flashActivity) {
-      setDisplayMessage('');
+    if (flashActivity && timerRef.current) {
+      // Recalculate message immediately with NEW activity (flashActivity)
+      const running = timerRef.current.running || false;
+      const isCompleted = timerRef.current.isCompleted || false;
+
+      // Use flashActivity directly to avoid stale currentActivity
+      if (isCompleted) {
+        setDisplayMessage(getActivityEndMessage(flashActivity, t));
+      } else if (running) {
+        setDisplayMessage(getActivityStartMessage(flashActivity, t));
+      } else {
+        setDisplayMessage(t('invitation'));
+      }
     }
-  }, [flashActivity]);
+  }, [flashActivity, t]);
 
   // Define styles (moved inside component so linter can track usage)
   const styles = StyleSheet.create({
@@ -214,7 +225,6 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
           onReset={handleReset}
           onStop={handleStop}
           onOpenSettings={() => setSettingsModalVisible(true)}
-          onSnapChange={() => setDisplayMessage('')}
         />
       )}
     </SafeAreaView>

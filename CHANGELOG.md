@@ -4,6 +4,67 @@ updated: '2026-01-13'
 status: active
 ---
 
+## [2.1.1] - 2026-01-13
+
+### 🎨 UI/UX Improvements
+
+#### Activity Creation & Editing
+- **Simplified emoji picker**: Replaced emoji grid with native keyboard access
+  - Removed 18-emoji grid from `CreateActivityForm` and `EditActivityModalContent`
+  - Direct access to system emoji keyboard for unlimited emoji selection
+  - Cleaner, more intuitive interface with single tap-to-select button
+  - Better mobile-native experience (iOS/Android)
+
+#### Visual Enhancements
+- **Enlarged activity emoji in timer dial**: Increased from 32px to 48px (+50%)
+  - Significantly improved visibility and readability
+  - Better visual hierarchy for neuroatypical users (TDAH/TSA)
+  - Emoji now serves as primary visual anchor
+- **Refined dial center background**: Reduced opacity to 85% (D9 hex)
+  - Subtle transparency improves emoji contrast
+  - Lighter, more modern aesthetic
+  - Applied to all button states (rest/running/complete) and halos
+
+#### Palette Carousel Behavior
+- **Disabled auto-selection on scroll**: Colors now activate only on tap
+  - Prevents accidental color changes while browsing palettes
+  - More deliberate, controlled user interaction
+  - Infinite carousel loop still functional (premium mode)
+
+#### i18n Improvements (French)
+- Fixed missing accents in activity creation/editing UI
+  - "Creer" → "Créer", "activite" → "activité"
+  - "Duree par defaut" → "Durée par défaut"
+  - "Apercu" → "Aperçu"
+
+### 🐛 Bug Fixes
+
+#### Critical Message Display Fix
+- **Fixed activity message persistence bug**: Messages now display correctly when changing activities
+  - Root cause: BottomSheet snap change was clearing messages
+  - Root cause: Flash activity overlay was hiding messages instead of overlaying
+  - Solution 1: Removed `onSnapChange` message clearing (TimerScreen.jsx:217)
+  - Solution 2: Flash now overlays messages with 20% opacity background (MessageContent.jsx:338)
+  - Messages remain visible and synchronized throughout all interactions
+
+#### Message Synchronization
+- **Improved flashActivity handling**: Messages update immediately with new activity
+  - Fixed stale `currentActivity` reference in message computation
+  - Flash activity now directly used for message calculation
+  - Eliminated timing issues between state updates
+
+### 📝 Files Changed
+- `locales/fr.json`: Fixed accents (8 strings)
+- `src/components/forms/CreateActivityForm.jsx`: Native emoji picker
+- `src/components/modals/EditActivityModalContent.jsx`: Native emoji picker
+- `src/components/buttons/PulseButton.jsx`: Emoji 48px + 85% opacity
+- `src/components/carousels/PaletteCarousel.jsx`: Disabled auto-scroll selection
+- `src/screens/TimerScreen.jsx`: Removed message clearing, fixed flashActivity sync
+- `src/components/layout/AsideZone.jsx`: Removed onSnapChange callback
+- `src/components/messaging/MessageContent.jsx`: Flash overlay instead of replacement
+
+---
+
 ## [2.1.0] - 2026-01-13
 
 ### 🚀 Onboarding V2.1 - Complete Refactor

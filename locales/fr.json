@@ -535,19 +535,19 @@
   },
   "customActivities": {
     "create": {
-      "title": "Creer une activite",
+      "title": "Créer une activité",
       "namePlaceholder": "Ex: Guitare, Cuisine...",
-      "nameLabel": "Nom de l'activite",
+      "nameLabel": "Nom de l'activité",
       "emojiLabel": "Choisir un emoji",
       "moreEmojis": "Plus...",
-      "durationLabel": "Duree par defaut",
-      "preview": "Apercu",
-      "previewPlaceholder": "Mon activite",
-      "buttonCreate": "Creer",
+      "durationLabel": "Durée par défaut",
+      "preview": "Aperçu",
+      "previewPlaceholder": "Mon activité",
+      "buttonCreate": "Créer",
       "buttonCancel": "Annuler",
       "errorTitle": "Information manquante",
-      "errorEmoji": "Veuillez choisir un emoji pour votre activite.",
-      "errorName": "Veuillez entrer un nom pour votre activite."
+      "errorEmoji": "Veuillez choisir un emoji pour votre activité.",
+      "errorName": "Veuillez entrer un nom pour votre activité."
     },
     "edit": {
       "title": "Modifier l'activite",
