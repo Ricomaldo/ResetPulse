@@ -80,7 +80,7 @@
     "creation": {
       "title": "Crée ton premier moment",
       "subtitle": "Sélectionne ton intention",
-      "sectionTitle": "C'est pour quoi ?",
+      "sectionTitle": "Ton premier moment",
       "cta": "Créer mon moment",
       "buttonCreate": "Créer \"%{name}\" %{emoji}",
       "durationLabel": "Combien de temps ?",
