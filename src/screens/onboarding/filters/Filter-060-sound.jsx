@@ -134,7 +134,7 @@ export default function Filter080SoundPersonalize({ onContinue }) {
             </View>
             {isPlaying && (
               <View style={styles.playingIndicator}>
-                <Text style={styles.playingIcon}>🔊</Text>
+                <Text style={styles.playingIcon}>{sound.emoji}</Text>
               </View>
             )}
           </TouchableOpacity>
