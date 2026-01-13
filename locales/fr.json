@@ -167,11 +167,10 @@
     },
     "v3": {
       "filter3_5": {
-        "title": "Reste informé, même en arrière-plan",
-        "body": "ResetPulse peut te notifier quand ton moment est terminé — même si tu utilises une autre app.",
-        "bodySecondary": "Sans notifications, tu devras garder l'app ouverte.",
-        "ctaPrimary": "Activer les notifications",
-        "ctaSecondary": "Continuer sans"
+        "title": "Ne rate pas la fin de tes moments",
+        "body": "Ton timer te préviendra même si tu utilises une autre app ou si ton écran est verrouillé.",
+        "ctaPrimary": "Oui, préviens-moi",
+        "ctaSecondary": "Plus tard"
       },
       "filter4": {
         "title": "Comment veux-tu continuer ?",
