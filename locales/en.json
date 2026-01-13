@@ -110,6 +110,13 @@
       "startButton": "Start my first timer",
       "completionMessage": "Well done! Your space is ready."
     },
+    "launch": {
+      "title": "Let's go!",
+      "subtitle": "Your first moment awaits",
+      "cta": "Start my timer",
+      "ctaHint": "Start the timer with your custom moment",
+      "defaultActivity": "My moment"
+    },
     "v2": {
       "filter0": {
         "breathe": "Your time is yours",
