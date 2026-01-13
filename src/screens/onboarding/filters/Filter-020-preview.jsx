@@ -15,9 +15,6 @@ import { spacing } from '../../../theme/tokens';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const DIAL_SIZE = Math.min(SCREEN_WIDTH * 0.7, 280);
 
-// Logo for center of dial preview
-const LOGO = require('../../../../assets/logo/logo-1024-detoured.png');
-
 export default function Filter020Preview({ onContinue }) {
   const t = useTranslation();
   const { colors } = useTheme();
@@ -30,17 +27,17 @@ export default function Filter020Preview({ onContinue }) {
       footer={
         <PrimaryButton
           label={t('onboarding.v2.filter1.cta')}
-          onPress={onContinue}
+          onPress={() => onContinue()}
           accessibilityHint={t('onboarding.v2.filter1.cta')}
         />
       }
     >
-      {/* Static Timer Preview - 40% filled with logo */}
+      {/* Static Timer Preview - 40% filled with meditation emoji */}
       <View style={styles.dialContainer}>
         <TimerDialPreview
           color={colors.brand.secondary}
           size={DIAL_SIZE}
-          centerImage={LOGO}
+          centerEmoji="🧘"
         />
       </View>
     </OnboardingLayout>
