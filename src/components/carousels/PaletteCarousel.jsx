@@ -113,7 +113,8 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
     }
   }, [effectiveIndex]);
 
-  // Handle scroll end to sync palette state and handle infinite loop (premium only)
+  // Handle scroll end to handle infinite loop (premium only)
+  // Note: Palette change happens only on tap, not on scroll
   const handleScrollEnd = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const containerWidth = rs(280, 'width');
@@ -141,14 +142,7 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
       }
     }
 
-    // Update palette if changed
-    if (newIndex >= 0 && newIndex < DISPLAY_PALETTES.length) {
-      const newPalette = DISPLAY_PALETTES[newIndex];
-      if (newPalette !== currentPalette) {
-        setPalette(newPalette);
-        setColorIndex(0); // Reset to first color of new palette
-      }
-    }
+    // Palette selection removed: colors are now selected only via tap
   };
 
   const styles = StyleSheet.create({

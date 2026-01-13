@@ -314,7 +314,36 @@ const MessageContent = forwardRef(function MessageContent(
 
   return (
     <View style={styles.container}>
-      {/* Flash Activity Layer (temporary, independent) */}
+      {/* Main Message Layer - Always rendered, dimmed when flash is active */}
+      <View style={styles.messageContainer}>
+        {/* Message text with animations */}
+        <Animated.Text
+          style={[
+            styles.message,
+            {
+              opacity: showFlash ? 0.2 : (isRestState ? 0.5 : messageOpacityRef),
+              transform: [
+                { translateY: messageTranslateYRef },
+                { translateX: shakeTranslateXRef },
+                {
+                  scale: Animated.multiply(messageScaleRef, messageBounceScaleRef),
+                },
+              ],
+            },
+          ]}
+        >
+          {displayText}
+        </Animated.Text>
+
+        {/* Animated dots (RUNNING state only) */}
+        {timerState === 'RUNNING' && (
+          <Animated.View style={[styles.dotsContainer, { opacity: showFlash ? 0.2 : 1 }]}>
+            <DotsAnimation isVisible={timerState === 'RUNNING'} />
+          </Animated.View>
+        )}
+      </View>
+
+      {/* Flash Activity Layer (temporary overlay) */}
       {showFlash && (
         <Animated.View
           style={[
@@ -332,37 +361,6 @@ const MessageContent = forwardRef(function MessageContent(
             {flashActivity?.label}
           </Animated.Text>
         </Animated.View>
-      )}
-
-      {/* Main Message Layer */}
-      {!showFlash && (
-        <View style={styles.messageContainer}>
-          {/* Message text with animations */}
-          <Animated.Text
-            style={[
-              styles.message,
-              {
-                opacity: isRestState ? 0.5 : messageOpacityRef,
-                transform: [
-                  { translateY: messageTranslateYRef },
-                  { translateX: shakeTranslateXRef },
-                  {
-                    scale: Animated.multiply(messageScaleRef, messageBounceScaleRef),
-                  },
-                ],
-              },
-            ]}
-          >
-            {displayText}
-          </Animated.Text>
-
-          {/* Animated dots (RUNNING state only) */}
-          {timerState === 'RUNNING' && (
-            <View style={styles.dotsContainer}>
-              <DotsAnimation isVisible={timerState === 'RUNNING'} />
-            </View>
-          )}
-        </View>
       )}
     </View>
   );
