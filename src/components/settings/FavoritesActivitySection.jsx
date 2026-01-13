@@ -44,7 +44,7 @@ function FavoritesActivitySection({
       marginTop: rs(12),  // Responsive (was theme.spacing.sm)
     },
     itemWrapper: {
-      width: '23%', // 4 items per row
+      width: '21%', // 4 items per row (accounting for gap)
     },
     item: {
       alignItems: 'center',

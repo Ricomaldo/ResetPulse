@@ -237,9 +237,13 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     updateArrowVisibility(event.nativeEvent.contentOffset.x);
   }, [updateArrowVisibility]);
 
+  // Page sizing: 4 items (60px) + 3 gaps (13px) + padding (16px) = 295px
+  // Add 5px margin for subtle scroll hint on edges
+  const PAGE_WIDTH = rs(300, 'width');
+
   const styles = StyleSheet.create({
     carouselContainer: {
-      maxWidth: rs(280, 'width'),
+      maxWidth: PAGE_WIDTH,
     },
     onboardingToast: {
       alignSelf: 'center',
@@ -269,9 +273,9 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
       flexDirection: 'row',
       gap: harmonizedSizes.carouselSpacing.itemGap,
       justifyContent: 'center',
-      paddingHorizontal: harmonizedSizes.carouselSpacing.containerPadding.horizontal,
+      paddingHorizontal: rs(10), // Symmetrical padding for content centering
       paddingVertical: harmonizedSizes.carouselSpacing.containerPadding.vertical,
-      width: rs(280, 'width'), // Fixed width per page for paging
+      width: PAGE_WIDTH, // Fixed width per page for paging
     },
     // Plus button: uses same gap as other items (from parent's gap property)
     plusButtonWrapper: {
@@ -304,7 +308,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
             scrollContentWidthRef.current = width;
             updateArrowVisibility(0);
           }}
-          snapToInterval={rs(280, 'width')}
+          snapToInterval={PAGE_WIDTH}
           decelerationRate="fast"
           scrollEnabled={true}
           activeOffsetX={[-5, 5]} // Capture gesture only if horizontal swipe > 5px

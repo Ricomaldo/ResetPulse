@@ -17,7 +17,7 @@ jest.mock('../../src/theme/ThemeProvider', () => ({
   }),
 }));
 
-jest.mock('../../src/screens/onboarding/onboardingConstants', () => ({
+jest.mock('../../src/styles/responsive', () => ({
   rs: (value) => value,
 }));
 

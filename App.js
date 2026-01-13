@@ -20,6 +20,7 @@ import TimerScreen from './src/screens/TimerScreen';
 import { OnboardingFlow } from './src/screens/onboarding';
 import { ErrorBoundary } from './src/components/layout';
 import Analytics from './src/services/analytics';
+import Attribution from './src/services/attribution';
 
 // Storage key pour onboarding V2
 const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
@@ -28,6 +29,7 @@ function AppContent() {
   const theme = useTheme();
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [startTimerImmediately, setStartTimerImmediately] = useState(false);
 
   // Load onboarding state asynchronously
   useEffect(() => {
@@ -71,6 +73,11 @@ function AppContent() {
 
   // Callback quand l'onboarding V2 est terminé
   const handleOnboardingComplete = async (data) => {
+    // Set flag for auto-start timer if requested
+    if (data.startTimerImmediately) {
+      setStartTimerImmediately(true);
+    }
+
     setOnboardingCompleted(true);
 
     // Persister les données onboarding v2.1
@@ -81,10 +88,9 @@ function AppContent() {
       const onboardingConfig = {
         favoriteToolMode: data.favoriteToolMode || 'commands',
         customActivity: data.customActivity || null,
-        persona: data.persona || null,
         selectedSoundId: data.selectedSoundId || 'bell_classic',
         notificationPermission: data.notificationPermission || false,
-        purchaseResult: data.purchaseResult || 'skipped',
+        interactionProfile: data.interactionProfile || null,
       };
 
       // Persist all onboarding data
@@ -119,7 +125,10 @@ function AppContent() {
       {!onboardingCompleted ? (
         <OnboardingFlow onComplete={handleOnboardingComplete} />
       ) : (
-        <TimerScreen />
+        <TimerScreen
+          autoStart={startTimerImmediately}
+          onAutoStartConsumed={() => setStartTimerImmediately(false)}
+        />
       )}
     </View>
   );
@@ -129,12 +138,17 @@ export default function App() {
   // ========== DEV MODE STATE ==========
   const [resetTrigger, setResetTrigger] = useState(0);
 
-  // Initialize Mixpanel Analytics (M7.5)
+  // Initialize Analytics + Attribution (M7.5 + Attribution)
   useEffect(() => {
     const initAnalytics = async () => {
+      // 1. Initialize Mixpanel first
       await Analytics.init();
 
-      // Track app_opened event
+      // 2. Initialize Attribution (fetches Apple Search Ads data on first launch)
+      // This registers source/campaign as super properties for all future events
+      await Attribution.init();
+
+      // 3. Track app_opened event (now includes attribution super props)
       const hasLaunched = await AsyncStorage.getItem('has_launched_before');
       Analytics.trackAppOpened(!hasLaunched);
 

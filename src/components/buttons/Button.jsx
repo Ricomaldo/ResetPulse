@@ -39,6 +39,7 @@ export const PrimaryButton = React.memo(function PrimaryButton({
           paddingHorizontal: spacing.lg,
         },
         disabled && styles.disabled,
+        disabled && { borderWidth: 1, borderColor: colors.border }, // P1-2: visibility fix
         isFocused && createFocusStyle({ colors }),
         style,
       ]}

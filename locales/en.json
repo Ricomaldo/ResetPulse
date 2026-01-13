@@ -9,6 +9,32 @@
     "retry": "Retry",
     "continue": "Continue"
   },
+  "presets": {
+    "adaptHint": "Tap 'Adapt' to fit the dial"
+  },
+  "controls": {
+    "fit": {
+      "label": "Adapt",
+      "accessibilityLabel": "Adapt dial to duration",
+      "accessibilityHint": "Adjusts the dial scale to match the selected duration"
+    },
+    "digitalTimer": {
+      "decreaseDuration": "Decrease duration",
+      "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
+      "showTime": "Show time",
+      "tapToHide": "Tap to hide",
+      "tapToShow": "Tap to show"
+    },
+    "rotation": {
+      "clockwise": "Clockwise",
+      "counterClockwise": "Counter-clockwise"
+    },
+    "presets": {
+      "setDurationHint": "Sets duration to %{minutes} minutes"
+    }
+  },
   "invitation": "Ready?",
   "welcome": {
     "title": "Welcome to ResetPulse",
@@ -71,7 +97,9 @@
         "starting": "Getting started",
         "finishing": "Following through",
         "staying": "Staying focused",
-        "managing": "Managing my time better"
+        "managing": "Managing my time better",
+        "other": "Something else...",
+        "otherPlaceholder": "Like what?"
       }
     },
     "creation": {
@@ -79,7 +107,7 @@
       "subtitle": "Select your intention",
       "sectionTitle": "Your first moment",
       "cta": "Create my moment",
-      "buttonCreate": "Create \"%{name}\" %{emoji}",
+      "buttonCreate": "Create \"%%{name}\" %{emoji}",
       "durationLabel": "How long?",
       "namePlaceholder": "Name your moment...",
       "customNamePlaceholder": "Name your moment..."
@@ -101,6 +129,13 @@
       "price": "$4.99 — Once, forever",
       "ctaTrial": "Try 7 days free",
       "ctaSkip": "Maybe later"
+    },
+    "launch": {
+      "title": "Let's go!",
+      "subtitle": "Your first moment is ready. Tap to begin.",
+      "cta": "Start my timer",
+      "ctaHint": "Start your first timer",
+      "defaultActivity": "My moment"
     },
     "firstTimer": {
       "title": "Your timer is ready",
@@ -286,19 +321,72 @@
       "appDescription": "Customizable visual timer",
       "version": "Version"
     },
+    "persona": {
+      "sectionTitle": "How you work",
+      "sectionSubtitle": "Configure Play/Stop button resistance",
+      "impulsive": {
+        "label": "Impulsive",
+        "description": "Quick start · Hold to stop"
+      },
+      "quitter": {
+        "label": "Quitter",
+        "description": "Hold to start · Quick stop"
+      },
+      "ritualist": {
+        "label": "Ritualist",
+        "description": "Hold to start · Hold to stop"
+      },
+      "swift": {
+        "label": "Swift",
+        "description": "Quick start · Quick stop"
+      }
+    },
     "dev": {
       "title": "🔧 Development",
       "resetOnboarding": "Reset onboarding",
       "resetOnboardingConfirmTitle": "Reset onboarding",
       "resetOnboardingConfirmMessage": "The welcome screen and tooltips will be shown at the next app launch.",
       "resetOnboardingConfirmButton": "Reset"
+    },
+    "tool": {
+      "sectionTitle": "Your favorite shortcut",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "minimalist": {
+        "label": "Minimalist",
+        "description": "Nothing (handle only)"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "rational": {
+        "label": "Rational",
+        "description": "ControlBar (duration + run)"
+      }
+    },
+    "sections": {
+      "dialScale": "Dial scale",
+      "timerOptions": "Timer options",
+      "keepAwake": "Keep Awake",
+      "rotationDirection": "Rotation direction",
+      "notificationSound": "Notification sound",
+      "theme": "Theme"
+    },
+    "options": {
+      "activityEmoji": "Activity emoji at center",
+      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
+      "activityEmojiDescriptionOff": "Emoji is hidden",
+      "pulseAnimation": "Pulse animation"
     }
   },
   "premium": {
     "title": "Unlock everything",
-    "description": "All the colors.\nAll the activities.\nYour maximum comfort.",
+    "description": "All the colors.\nAll the activities.\nCreate your own activities.\nYour maximum comfort.",
     "features": "🎁 7 DAYS FREE",
-    "price": "Then {price} once.\nYours forever.",
+    "price": "Then %{price} once.\nYours forever.",
     "priceOnce": "Once, forever",
     "trial": "",
     "startTrial": "Try 7 days free",
@@ -314,6 +402,11 @@
     "error": "Error",
     "errorOfferings": "Unable to retrieve offers. Try again later.",
     "errorPurchase": "An error occurred during purchase.",
+    "errorNetwork": "No internet connection. Check your network and try again.",
+    "errorStore": "Problem with the store. Try again later.",
+    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
+    "errorRestoreGeneric": "Restore error",
+    "errorGeneric": "An error occurred",
     "paymentPending": "Payment in progress",
     "restoreSuccess": "Restore successful",
     "restoreSuccessMessage": "Your purchases have been restored. All premium features are unlocked.",
@@ -385,40 +478,40 @@
     "startTrial": "Start free trial",
     "maybeLater": "Maybe later",
     "restore": "Restore my purchases",
-    "activity": "Activity {name}",
+    "activity": "Activity %{name}",
     "activityLocked": "Premium activity locked",
     "moreActivities": "More activities",
     "discoverPremium": "Discover premium activities",
     "customActivityHint": "Long press to edit this custom activity",
-    "colorNumber": "Couleur {number}",
-    "paletteNumber": "Palette {name}",
+    "colorNumber": "Couleur %{number}",
+    "paletteNumber": "Palette %{name}",
     "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
     "timer": {
-      "dial": "Timer dial, {minutes} minutes set, {activity}",
+      "dial": "Timer dial, %{minutes} minutes set, %{activity}",
       "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
       "dialTapToToggle": "Tap to start or pause timer",
-      "timeRemaining": "{time} remaining",
+      "timeRemaining": "%{time} remaining",
       "timerRunning": "Timer running",
       "timerPaused": "Timer paused",
       "timerStopped": "Timer stopped",
       "timerCompleted": "Timer completed!",
-      "activityStarted": "{activity} started",
-      "activityCompleted": "{activity} completed",
-      "durationChanged": "Duration set to {minutes} minutes"
+      "activityStarted": "%{activity} started",
+      "activityCompleted": "%{activity} completed",
+      "durationChanged": "Duration set to %{minutes} minutes"
     },
     "rotationClockwise": "Clockwise rotation",
     "rotationCounterClockwise": "Counter-clockwise rotation",
     "premiumModalHint": "Dialog to unlock premium features with 7-day free trial",
     "closePremiumModal": "Close premium offer",
     "closeModalHint": "Closes this dialog and returns to the app",
-    "unlockPremium": "Unlock premium for {price}",
+    "unlockPremium": "Unlock premium for %{price}",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
     "restorePurchases": "Restore previous purchases",
     "restorePurchasesHint": "Restore premium access if you already purchased",
     "discoveryModalHint": "Preview of premium content available with subscription",
     "premiumActivitiesList": "List of premium activities",
     "premiumPalettesList": "List of premium color palettes",
-    "paletteItem": "Color palette: {name}",
+    "paletteItem": "Color palette: %{name}",
     "settingsModalHint": "Configure app interface, timer behavior, and appearance",
     "createActivityModalHint": "Create a custom activity with emoji, name, and duration",
     "closeCreateActivity": "Close create activity",
@@ -441,8 +534,8 @@
     },
     "moreActivities": {
       "title": "Even more moments",
-      "subtitle": "Nap, writing, reading, yoga...",
-      "tagline": "Every moment deserves its color."
+      "subtitle": "16 activities + unlimited custom",
+      "tagline": "Your focus, your rules."
     },
     "activities": "Activités premium",
     "colors": "Palettes premium"
@@ -499,6 +592,10 @@
   "timerMessages": {
     "none": {
       "startMessage": "Ready",
+      "endMessage": "Well done 🎉"
+    },
+    "custom": {
+      "startMessage": "Let's go",
       "endMessage": "Well done 🎉"
     },
     "work": {

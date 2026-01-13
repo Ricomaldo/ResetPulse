@@ -8,17 +8,66 @@
  * - Messages: locales/fr.json, locales/en.json, etc. (timerMessages object)
  *
  * HOW IT WORKS (transparent):
- *   getActivityStartMessage('work', t)
+ *   getActivityStartMessage(activity, t)
+ *   → Extracts activity ID or intentionId for custom activities
  *   → Builds key: 'timerMessages.work.startMessage'
- *   → Calls: t('timerMessages.work.startMessage')
  *   → Returns: "Focus" (from locales)
  *
- * NO MANUAL MAPPING - keys are generated dynamically from activity ID
- * This ensures consistency: if you add activity 'xyz' in activities.js,
- * it automatically looks for timerMessages.xyz.startMessage in locales.
+ * CUSTOM ACTIVITIES:
+ *   Custom activities created during onboarding have an intentionId that maps
+ *   to built-in activity messages:
+ *   - relax → meditation ("Respire")
+ *   - work → work ("Focus")
+ *   - create → creativity ("Crée")
+ *   - learn → study ("Apprends")
+ *   - move → sport ("Bouge")
+ *   - other → custom ("C'est parti")
  */
 
 import { ACTIVITIES } from './activities';
+
+// Map intention IDs to activity IDs for timerMessages
+const INTENTION_TO_MESSAGE_ID = {
+  relax: 'meditation',
+  work: 'work',
+  create: 'creativity',
+  learn: 'study',
+  move: 'sport',
+  other: 'custom',
+};
+
+/**
+ * Get the message ID for an activity (handles custom activities with intentionId)
+ * @param {Object|string} activityOrId - Activity object or activity ID string
+ * @returns {string} The message ID to use for timerMessages lookup
+ */
+const getMessageId = (activityOrId) => {
+  // Handle string ID (backward compatibility)
+  if (typeof activityOrId === 'string') {
+    if (activityOrId.startsWith('custom_')) {
+      return 'custom'; // Fallback for string-only custom IDs
+    }
+    const builtIn = ACTIVITIES.find((a) => a.id === activityOrId);
+    return builtIn ? activityOrId : 'none';
+  }
+
+  // Handle activity object
+  if (!activityOrId) return 'none';
+
+  const { id, intentionId, isCustom } = activityOrId;
+
+  // Custom activity: use intentionId mapping
+  if (isCustom || (id && id.startsWith('custom_'))) {
+    if (intentionId && INTENTION_TO_MESSAGE_ID[intentionId]) {
+      return INTENTION_TO_MESSAGE_ID[intentionId];
+    }
+    return 'custom'; // Fallback
+  }
+
+  // Built-in activity
+  const builtIn = ACTIVITIES.find((a) => a.id === id);
+  return builtIn ? id : 'none';
+};
 
 /**
  * Get the start message for an activity
@@ -26,18 +75,13 @@ import { ACTIVITIES } from './activities';
  *
  * Key pattern: timerMessages.{activityId}.startMessage
  *
- * @param {string} activityId - Activity ID from activities.js
+ * @param {Object|string} activityOrId - Activity object or activity ID string
  * @param {function} t - i18n translation function
  * @returns {string} Translated start message
  */
-export const getActivityStartMessage = (activityId, t) => {
-  // Validate activity exists, fallback to 'none'
-  const activity = ACTIVITIES.find((a) => a.id === activityId);
-  const id = activity ? activityId : 'none';
-
-  // Build the translation key dynamically
-  const key = `timerMessages.${id}.startMessage`;
-  return t(key);
+export const getActivityStartMessage = (activityOrId, t) => {
+  const messageId = getMessageId(activityOrId);
+  return t(`timerMessages.${messageId}.startMessage`);
 };
 
 /**
@@ -46,30 +90,25 @@ export const getActivityStartMessage = (activityId, t) => {
  *
  * Key pattern: timerMessages.{activityId}.endMessage
  *
- * @param {string} activityId - Activity ID from activities.js
+ * @param {Object|string} activityOrId - Activity object or activity ID string
  * @param {function} t - i18n translation function
  * @returns {string} Translated end message
  */
-export const getActivityEndMessage = (activityId, t) => {
-  // Validate activity exists, fallback to 'none'
-  const activity = ACTIVITIES.find((a) => a.id === activityId);
-  const id = activity ? activityId : 'none';
-
-  // Build the translation key dynamically
-  const key = `timerMessages.${id}.endMessage`;
-  return t(key);
+export const getActivityEndMessage = (activityOrId, t) => {
+  const messageId = getMessageId(activityOrId);
+  return t(`timerMessages.${messageId}.endMessage`);
 };
 
 /**
  * Get both start and end messages for an activity
  *
- * @param {string} activityId - Activity ID from activities.js
+ * @param {Object|string} activityOrId - Activity object or activity ID string
  * @param {function} t - i18n translation function
  * @returns {{start: string, end: string}} Both translated messages
  */
-export const getActivityMessages = (activityId, t) => {
+export const getActivityMessages = (activityOrId, t) => {
   return {
-    start: getActivityStartMessage(activityId, t),
-    end: getActivityEndMessage(activityId, t),
+    start: getActivityStartMessage(activityOrId, t),
+    end: getActivityEndMessage(activityOrId, t),
   };
 };

@@ -76,6 +76,7 @@ export default function CustomizeStep({ intention, onBack, onSubmit }) {
       emoji,
       name: name.trim(),
       defaultDuration: duration,
+      intentionId: intention.id, // For message mapping (relax→meditation, create→creativity, etc.)
     });
   };
 

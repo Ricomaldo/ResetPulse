@@ -128,7 +128,7 @@
     "title": "Alles freischalten",
     "description": "Alle Farben.\nAlle Aktivitäten.\nDein maximaler Komfort.",
     "features": "🎁 7 TAGE KOSTENLOS",
-    "price": "Dann {price} einmalig.\nDeins für immer.",
+    "price": "Dann %{price} einmalig.\nDeins für immer.",
     "priceOnce": "Einmalig, für immer",
     "trial": "",
     "startTrial": "7 Tage kostenlos testen",
@@ -213,13 +213,13 @@
     "startTrial": "Testversion starten",
     "maybeLater": "Vielleicht später",
     "restore": "Käufe wiederherstellen",
-    "activity": "Aktivität {name}",
+    "activity": "Aktivität %{name}",
     "activityLocked": "Premium-Aktivität gesperrt",
     "customActivityHint": "Lange drücken, um diese benutzerdefinierte Aktivität zu bearbeiten",
     "moreActivities": "Mehr Aktivitäten",
     "discoverPremium": "Premium-Aktivitäten entdecken",
-    "colorNumber": "Farbe {number}",
-    "paletteNumber": "Palette {name}",
+    "colorNumber": "Farbe %{number}",
+    "paletteNumber": "Palette %{name}",
     "discoverMorePalettes": "Tippen, um mehr Paletten zu entdecken",
     "celebrationEmoji": "Feier",
     "closeCreateActivity": "Aktivität erstellen schließen",
@@ -239,8 +239,8 @@
       "timerCompleted": "Timer abgeschlossen!",
       "timerRunning": "Timer läuft",
       "timerStopped": "Timer gestoppt",
-      "activityStarted": "{activity} gestartet",
-      "activityCompleted": "{activity} abgeschlossen"
+      "activityStarted": "%{activity} gestartet",
+      "activityCompleted": "%{activity} abgeschlossen"
     }
   },
   "discovery": {

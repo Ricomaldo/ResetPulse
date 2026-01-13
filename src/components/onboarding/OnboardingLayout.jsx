@@ -6,7 +6,17 @@
  * @updated 2025-12-24 - Added footer variants support
  */
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -77,6 +87,8 @@ export default function OnboardingLayout({
           contentStyle,
         ],
         showsVerticalScrollIndicator: false,
+        keyboardShouldPersistTaps: 'handled', // Allow taps on buttons while keyboard open
+        keyboardDismissMode: 'on-drag', // Dismiss keyboard on scroll
       }
     : {
         style: [
@@ -138,29 +150,39 @@ export default function OnboardingLayout({
       style={[styles.container, { backgroundColor: colors.background }]}
       edges={['top', 'bottom']}
     >
-      {/* Fixed Header (title + subtitle) - always outside scroll */}
-      {(title || subtitle) && (
-        <View style={styles.header}>
-          {title && (
-            <Text style={[styles.title, { color: colors.text }]}>
-              {title}
-            </Text>
-          )}
-          {subtitle && (
-            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-              {subtitle}
-            </Text>
-          )}
-        </View>
-      )}
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.innerContainer}>
+            {/* Fixed Header (title + subtitle) - always outside scroll */}
+            {(title || subtitle) && (
+              <View style={styles.header}>
+                {title && (
+                  <Text style={[styles.title, { color: colors.text }]}>
+                    {title}
+                  </Text>
+                )}
+                {subtitle && (
+                  <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+                    {subtitle}
+                  </Text>
+                )}
+              </View>
+            )}
 
-      {/* Content Area */}
-      <ContentContainer {...contentContainerProps}>
-        {children}
-      </ContentContainer>
+            {/* Content Area */}
+            <ContentContainer {...contentContainerProps}>
+              {children}
+            </ContentContainer>
 
-      {/* Footer */}
-      {renderFooter()}
+            {/* Footer */}
+            {renderFooter()}
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -197,6 +219,14 @@ OnboardingLayout.propTypes = {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+
+  // Keyboard avoiding wrapper
+  keyboardAvoidingContainer: {
+    flex: 1,
+  },
+  innerContainer: {
     flex: 1,
   },
 

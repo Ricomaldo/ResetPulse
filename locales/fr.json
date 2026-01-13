@@ -9,6 +9,32 @@
     "retry": "Réessayer",
     "continue": "Continuer"
   },
+  "presets": {
+    "adaptHint": "Tape « Adapter » pour ajuster le cadran"
+  },
+  "controls": {
+    "fit": {
+      "label": "Adapter",
+      "accessibilityLabel": "Adapter le cadran à la durée",
+      "accessibilityHint": "Ajuste l'échelle du cadran pour correspondre à la durée sélectionnée"
+    },
+    "digitalTimer": {
+      "decreaseDuration": "Diminuer la durée",
+      "increaseDuration": "Augmenter la durée",
+      "timeLabel": "Temps: %{time}",
+      "durationLabel": "Durée: %{time}",
+      "showTime": "Afficher le temps",
+      "tapToHide": "Appuyez pour masquer",
+      "tapToShow": "Appuyez pour afficher"
+    },
+    "rotation": {
+      "clockwise": "Sens horaire",
+      "counterClockwise": "Sens anti-horaire"
+    },
+    "presets": {
+      "setDurationHint": "Définit la durée à %{minutes} minutes"
+    }
+  },
   "welcome": {
     "title": "Bienvenue sur ResetPulse",
     "subtitle": "Choisissez une activité, ajustez la durée, lancez.",
@@ -74,7 +100,9 @@
         "starting": "Démarrer",
         "finishing": "Aller au bout",
         "staying": "Rester concentré",
-        "managing": "Mieux gérer mon temps"
+        "managing": "Mieux gérer mon temps",
+        "other": "Autre chose...",
+        "otherPlaceholder": "C'est-à-dire ?"
       }
     },
     "creation": {
@@ -82,7 +110,7 @@
       "subtitle": "Sélectionne ton intention",
       "sectionTitle": "Ton premier moment",
       "cta": "Créer mon moment",
-      "buttonCreate": "Créer \"%{name}\" %{emoji}",
+      "buttonCreate": "Créer \"%%{name}\" %{emoji}",
       "durationLabel": "Combien de temps ?",
       "namePlaceholder": "Nomme ton moment...",
       "customNamePlaceholder": "Nomme ton moment..."
@@ -104,6 +132,13 @@
       "price": "4,99€ — Une fois, pour toujours",
       "ctaTrial": "Essai gratuit 7 jours",
       "ctaSkip": "Peut-être plus tard"
+    },
+    "launch": {
+      "title": "C'est parti !",
+      "subtitle": "Ton premier moment est prêt. Appuie pour commencer.",
+      "cta": "Lancer mon timer",
+      "ctaHint": "Lance ton premier timer",
+      "defaultActivity": "Mon moment"
     },
     "firstTimer": {
       "title": "Ton timer est prêt",
@@ -289,19 +324,72 @@
       "appDescription": "Timer visuel personalisable",
       "version": "Version"
     },
+    "persona": {
+      "sectionTitle": "Comment tu fonctionnes",
+      "sectionSubtitle": "Configure la résistance du bouton Play/Stop",
+      "impulsive": {
+        "label": "Impulsif",
+        "description": "Démarrage rapide · Arrêt maintenu"
+      },
+      "quitter": {
+        "label": "Abandonniste",
+        "description": "Démarrage maintenu · Arrêt rapide"
+      },
+      "ritualist": {
+        "label": "Ritualiste",
+        "description": "Démarrage maintenu · Arrêt maintenu"
+      },
+      "swift": {
+        "label": "Véloce",
+        "description": "Démarrage rapide · Arrêt rapide"
+      }
+    },
     "dev": {
       "title": "🔧 Développement",
       "resetOnboarding": "Réinitialiser l'onboarding",
       "resetOnboardingConfirmTitle": "Réinitialiser l'onboarding",
       "resetOnboardingConfirmMessage": "L'écran de bienvenue et les tooltips seront affichés au prochain lancement de l'application.",
       "resetOnboardingConfirmButton": "Réinitialiser"
+    },
+    "tool": {
+      "sectionTitle": "Ton raccourci préféré",
+      "creative": {
+        "label": "Créatif",
+        "description": "Carrousel couleurs"
+      },
+      "minimalist": {
+        "label": "Minimaliste",
+        "description": "Rien (handle seul)"
+      },
+      "multitask": {
+        "label": "Multi-tâches",
+        "description": "Carrousel activités"
+      },
+      "rational": {
+        "label": "Rationnel",
+        "description": "ControlBar (durée + run)"
+      }
+    },
+    "sections": {
+      "dialScale": "Échelle du cadran",
+      "timerOptions": "Options du timer",
+      "keepAwake": "Keep Awake",
+      "rotationDirection": "Sens de rotation",
+      "notificationSound": "Son de notification",
+      "theme": "Thème"
+    },
+    "options": {
+      "activityEmoji": "Emoji activité au centre",
+      "activityEmojiDescriptionOn": "L'emoji s'affiche au centre du cadran",
+      "activityEmojiDescriptionOff": "L'emoji est masqué",
+      "pulseAnimation": "Animation pulse"
     }
   },
   "premium": {
     "title": "Débloque tout",
-    "description": "Toutes les couleurs.\nToutes les activités.\nTon confort maximum.",
+    "description": "Toutes les couleurs.\nToutes les activités.\nCrée tes propres activités.\nTon confort maximum.",
     "features": "🎁 7 JOURS GRATUITS",
-    "price": "Puis {price} une fois.\nÀ toi pour toujours.",
+    "price": "Puis %{price} une fois.\nÀ toi pour toujours.",
     "priceOnce": "Une fois, pour toujours",
     "trial": "",
     "startTrial": "Essayer 7 jours gratuit",
@@ -317,6 +405,11 @@
     "error": "Erreur",
     "errorOfferings": "Impossible de récupérer les offres. Réessayez plus tard.",
     "errorPurchase": "Une erreur est survenue lors de l'achat.",
+    "errorNetwork": "Pas de connexion internet. Vérifiez votre réseau et réessayez.",
+    "errorStore": "Problème avec le store. Réessayez plus tard.",
+    "errorPaymentPending": "Paiement en attente. Vérifiez vos achats dans quelques minutes.",
+    "errorRestoreGeneric": "Erreur de restauration",
+    "errorGeneric": "Une erreur est survenue",
     "paymentPending": "Paiement en cours",
     "restoreSuccess": "Restauration réussie",
     "restoreSuccessMessage": "Vos achats ont été restaurés. Toutes les fonctionnalités premium sont débloquées.",
@@ -388,13 +481,13 @@
     "startTrial": "Commencer l'essai gratuit",
     "maybeLater": "Peut-être plus tard",
     "restore": "Restaurer mes achats",
-    "activity": "Activité {name}",
+    "activity": "Activité %{name}",
     "activityLocked": "Activité premium verrouillée",
     "moreActivities": "Plus d'activités",
     "discoverPremium": "Découvrir les activités premium",
     "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee",
-    "colorNumber": "Couleur {number}",
-    "paletteNumber": "Palette {name}",
+    "colorNumber": "Couleur %{number}",
+    "paletteNumber": "Palette %{name}",
     "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
     "celebrationEmoji": "Célébration",
     "closeCreateActivity": "Fermer la création d'activité",
@@ -414,8 +507,8 @@
       "timerCompleted": "Timer terminé !",
       "timerRunning": "Timer en cours",
       "timerStopped": "Timer arrêté",
-      "activityStarted": "{activity} démarré",
-      "activityCompleted": "{activity} terminé"
+      "activityStarted": "%{activity} démarré",
+      "activityCompleted": "%{activity} terminé"
     }
   },
   "discovery": {
@@ -428,8 +521,8 @@
     },
     "moreActivities": {
       "title": "Encore plus de moments",
-      "subtitle": "Sieste, écriture, lecture, yoga...",
-      "tagline": "Chaque moment mérite sa couleur."
+      "subtitle": "16 activités + créations illimitées",
+      "tagline": "Ton focus, tes règles."
     },
     "activities": "Activités premium",
     "colors": "Palettes premium"
@@ -486,6 +579,10 @@
   "timerMessages": {
     "none": {
       "startMessage": "Prêt",
+      "endMessage": "Bravo 🎉"
+    },
+    "custom": {
+      "startMessage": "C'est parti",
       "endMessage": "Bravo 🎉"
     },
     "work": {

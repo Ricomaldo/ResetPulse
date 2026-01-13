@@ -1,7 +1,66 @@
 ---
 created: '2025-12-14'
-updated: '2025-12-21'
+updated: '2026-01-13'
 status: active
+---
+
+## [2.1.0] - 2026-01-13
+
+### 📊 Apple Search Ads Attribution + Test Fixes
+
+#### Added
+- **Apple Search Ads Attribution Service**
+  - New `src/services/attribution.js` for ROAS tracking
+  - Integrates `@hexigames/react-native-apple-ads-attribution` SDK
+  - Fetches attribution data on first iOS launch via AdServices API
+  - Registers super properties in Mixpanel: `source`, `asa_campaign_id`, `asa_attributed`, etc.
+  - Graceful fallback to "organic" for Android/errors
+
+#### Fixed
+- **Obsolete Test Files Removed**
+  - Deleted `__tests__/unit/onboardingConstants.test.js` (module no longer exists)
+  - Deleted `__tests__/screens/OnboardingFlow.test.js` (outdated V3 flow tests)
+  - Fixed `StepIndicator.test.js` mock path (`styles/responsive` instead of `onboardingConstants`)
+  - Updated `useTimer.test.js` to match current behavior (timer starts with 0 remaining)
+  - All 161 tests now pass
+
+---
+
+### 🔧 Settings Restoration + UX Improvements
+
+#### Fixed
+- **SettingsPanel Content Restored**
+  - Commit `c1813ef` accidentally removed imports and features during cleanup
+  - Restored: BottomSheetScrollView, lucide icons, all settings sub-components
+  - Restored: FavoritesActivitySection, FavoritesPaletteSection, AboutSection
+
+- **Premium Favorites Sections Not Displaying**
+  - `isPremiumUser` prop was not passed from AsideZone → SheetContent → SettingsPanel
+  - Added `usePremiumStatus()` hook in AsideZone and proper prop drilling
+  - Premium users now see "Activités favorites" and "Palettes favorites" sections
+
+- **FavoritesActivitySection Grid Layout (3→4 columns)**
+  - `width: '23%'` caused overflow with `gap: rs(12)`, pushing 4th item to next row
+  - Fixed: `width: '21%'` to properly accommodate 4 items per row
+
+#### Changed
+- **Persona Descriptions Now Functional**
+  - Old: psychological ("Je démarre vite, j'ai besoin de freiner")
+  - New: actionable ("Démarrage rapide · Arrêt maintenu")
+  - Users now understand that persona affects Play/Stop button behavior
+  - Added section subtitle: "Configure la résistance du bouton Play/Stop"
+  - Full i18n support (FR + EN) in `settings.persona.*` keys
+
+- **Pulse Animation Epilepsy Warning**
+  - Added Alert confirmation when enabling pulse animation
+  - Uses existing `pulseWarningTitle/Message/Enable` translations
+  - Disable action remains instant (no confirmation needed)
+
+#### Technical
+- **version-bump.js Script Fixed**
+  - Removed obsolete `SettingsModal.jsx` reference
+  - Made `docs/README.md` update optional (skips if file not found)
+
 ---
 
 ## [Unreleased - Current Sprint]

@@ -29,12 +29,15 @@ export default function Filter030Creation({ onContinue }) {
   };
 
   const handleFormSubmit = (formData) => {
-    // Create activity with onboarding flag (free slot)
+    // Create activity with onboarding flag (free slot) and intentionId for message mapping
     const activity = createActivity(
       formData.emoji,
       formData.name,
       formData.defaultDuration,
-      { createdDuringOnboarding: true }
+      {
+        createdDuringOnboarding: true,
+        intentionId: formData.intentionId, // Maps to timerMessages (relax→meditation, create→creativity, etc.)
+      }
     );
 
     // Track activity creation with intention context

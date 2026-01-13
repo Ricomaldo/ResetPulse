@@ -12,6 +12,7 @@ import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
 import Analytics from '../services/analytics';
 import logger from '../utils/logger';
 import { cancelPostSkipReminders } from '../services/reminderNotifications';
+import i18n from '../i18n';
 
 const PurchaseContext = createContext();
 
@@ -229,7 +230,7 @@ export const PurchaseProvider = ({ children }) => {
         logger.error('[RevenueCat] Network error during purchase:', error);
         return {
           success: false,
-          error: 'Pas de connexion internet. Vérifiez votre réseau et réessayez.',
+          error: i18n.t('premium.errorNetwork'),
           isNetworkError: true
         };
       }
@@ -239,7 +240,7 @@ export const PurchaseProvider = ({ children }) => {
         logger.error('[RevenueCat] Store problem:', error);
         return {
           success: false,
-          error: 'Problème avec le store. Réessayez plus tard.',
+          error: i18n.t('premium.errorStore'),
           isStoreError: true
         };
       }
@@ -249,14 +250,14 @@ export const PurchaseProvider = ({ children }) => {
         logger.error('[RevenueCat] Payment pending:', error);
         return {
           success: false,
-          error: 'Paiement en attente. Vérifiez vos achats dans quelques minutes.',
+          error: i18n.t('premium.errorPaymentPending'),
           isPaymentPending: true
         };
       }
 
       // Generic error
       logger.error('[RevenueCat] Purchase error:', error);
-      return { success: false, error: error.message || 'Une erreur est survenue' };
+      return { success: false, error: error.message || i18n.t('premium.errorGeneric') };
     } finally {
       setIsPurchasing(false);
     }
@@ -281,13 +282,13 @@ export const PurchaseProvider = ({ children }) => {
         logger.error('[RevenueCat] Network error during restore:', error);
         return {
           success: false,
-          error: 'Pas de connexion internet. Vérifiez votre réseau et réessayez.',
+          error: i18n.t('premium.errorNetwork'),
           isNetworkError: true
         };
       }
 
       logger.error('[RevenueCat] Restore error:', error);
-      return { success: false, error: error.message || 'Erreur de restauration' };
+      return { success: false, error: error.message || i18n.t('premium.errorRestoreGeneric') };
     }
   };
 

@@ -8,6 +8,7 @@ import useNotificationTimer from './useNotificationTimer';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from './useTranslation';
 import analytics from '../services/analytics';
+import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
 
 export default function useTimer(initialDuration = 240, onComplete) {
   // Translation hook for accessibility announcements
@@ -59,6 +60,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const appStateRef = useRef(AppState.currentState);
   const wasInBackgroundRef = useRef(false);
   const isInForegroundRef = useRef(AppState.currentState === 'active');
+  const prevHasCompletedRef = useRef(false);
 
   // Timer update function with hybrid foreground/background support
   const updateTimer = useCallback(() => {
@@ -213,6 +215,16 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
   }, [duration, running, remaining]);
 
+  // Reset remaining when transitioning from COMPLETE to REST state
+  // This keeps dial and digital timer in sync after completion
+  useEffect(() => {
+    // Detect transition: hasCompleted was true, now false (COMPLETE → REST)
+    if (prevHasCompletedRef.current && !hasCompleted && remaining === 0 && !running) {
+      setRemaining(duration);
+    }
+    prevHasCompletedRef.current = hasCompleted;
+  }, [hasCompleted, remaining, running, duration]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -284,16 +296,16 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Display message logic (ADR-007: REST/RUNNING/COMPLETE only, no PAUSED)
   const getDisplayMessage = () => {
-    const activityId = currentActivityRef.current?.id || 'none';
+    const activity = currentActivityRef.current;
 
     // COMPLETE: Show completion message if timer finished
     if (remaining === 0 && hasTriggeredCompletion.current && duration > 0) {
-      return t(`timerMessages.${activityId}.endMessage`);
+      return getActivityEndMessage(activity, t);
     }
 
     // RUNNING: Show running message while timer is running
     if (running) {
-      return t(`timerMessages.${activityId}.startMessage`);
+      return getActivityStartMessage(activity, t);
     }
 
     // REST: Show invitation message
@@ -302,17 +314,22 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Controls (ADR-007: startTimer only starts, stopTimer for long-press abandon)
   const startTimer = useCallback(() => {
-    // Can't start if already running or at zero
-    if (running || remaining === 0) {
+    // Can't start if already running
+    if (running) {
       return;
     }
 
-    // Get endMessage for notification
-    const currentActivityId = currentActivityRef.current?.id || 'none';
-    const endMessage = t(`timerMessages.${currentActivityId}.endMessage`);
+    // If remaining is 0 (after completion), reset to duration before starting
+    const effectiveRemaining = remaining === 0 ? duration : remaining;
+    if (remaining === 0) {
+      setRemaining(duration);
+    }
 
-    // Schedule notification for completion
-    scheduleTimerNotification(remaining, currentActivityRef.current, endMessage);
+    // Get endMessage for notification (uses intentionId mapping for custom activities)
+    const endMessage = getActivityEndMessage(currentActivityRef.current, t);
+
+    // Schedule notification for completion (use effectiveRemaining in case we just reset)
+    scheduleTimerNotification(effectiveRemaining, currentActivityRef.current, endMessage);
 
     // Save duration if changed
     if (currentActivityRef.current?.id && duration > 0 &&
@@ -332,12 +349,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
 
     if (__DEV__) {
-      if (__DEV__) {
-        const now = new Date();
-        const minutes = Math.floor(remaining / 60);
-        const secs = remaining % 60;
-        console.warn(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
-      }
+      const now = new Date();
+      const minutes = Math.floor(effectiveRemaining / 60);
+      const secs = effectiveRemaining % 60;
+      console.warn(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
     }
 
     setRunning(true);
