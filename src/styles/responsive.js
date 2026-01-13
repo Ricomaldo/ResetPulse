@@ -135,11 +135,22 @@ export const getSafeAreaPadding = () => {
 
 // Component size calculators
 export const getComponentSizes = () => {
-  const { width, height, isLandscape } = getDeviceInfo();
+  const { width, height, isLandscape, isTablet } = getDeviceInfo();
+
+  // Timer circle size - Adapté aux différentes tailles d'écran
+  let timerCircle;
+  if (isLandscape) {
+    timerCircle = Math.min(width * 0.6, height * 0.9);
+  } else if (isTablet) {
+    // iPad portrait: 80% de la largeur OU 650px max (bon équilibre)
+    timerCircle = Math.min(width * 0.8, 650);
+  } else {
+    // iPhone: 95% de la largeur (comportement original)
+    timerCircle = width * 0.95;
+  }
 
   return {
-    // Timer circle size - ZEN MODE: domine l'écran (taille absolue, pas rs)
-    timerCircle: isLandscape ? Math.min(width * 0.6, height * 0.9) : width * 0.95,
+    timerCircle,
 
     // Activity button size
     activityButton: rs(isLandscape ? 60 : 65, 'min'),
