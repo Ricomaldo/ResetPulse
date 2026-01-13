@@ -6,7 +6,8 @@
  * @updated 2025-12-19
  */
 import React, { useRef, useCallback, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,

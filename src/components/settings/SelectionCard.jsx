@@ -51,13 +51,13 @@ function SelectionCard({ emoji, label, description, selected, onSelect, compact 
   const styles = StyleSheet.create({
     card: {
       alignItems: 'center',
-      backgroundColor: theme.colors.fixed.transparent,
-      borderColor: selected ? theme.colors.brand.accent : theme.colors.brand.secondary,
+      backgroundColor: theme.colors.surface,
+      borderColor: selected ? theme.colors.brand.accent : theme.colors.border,
       borderRadius: theme.borderRadius.lg,
       borderWidth: selected ? 2 : 1,
       justifyContent: 'center',
       padding: compact ? rs(12) : rs(16),  // Responsive (was theme.spacing.sm/md)
-      ...theme.shadow(selected ? 'md' : 'sm'),
+      ...(Platform.OS === 'ios' ? theme.shadow(selected ? 'md' : 'sm') : {}),
     },
     description: {
       color: theme.colors.textSecondary,

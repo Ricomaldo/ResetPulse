@@ -282,7 +282,6 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
         <ScrollView
           ref={scrollViewRef}
           horizontal
-          pagingEnabled
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
           onMomentumScrollEnd={handleScrollEnd}
@@ -290,9 +289,7 @@ const PaletteCarousel = forwardRef(function PaletteCarousel(props, ref) {
           contentContainerStyle={styles.scrollContent}
           snapToInterval={rs(280, 'width')}
           decelerationRate="fast"
-          scrollEnabled={true}
-          activeOffsetX={[-5, 5]} // Capture gesture only if horizontal swipe > 5px
-          failOffsetY={[-5, 5]} // Fail gesture if vertical swipe > 5px (let BottomSheet handle)
+          nestedScrollEnabled={true}
         >
           {DISPLAY_PALETTES.map((paletteName, _paletteIndex) => {
             const paletteInfo = TIMER_PALETTES[paletteName];

@@ -72,11 +72,12 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
   });
 
   // Fade in AllOptions (mandarine) at snap 2 (90%)
+  // Only start fading when 80% of the way to snap 2 (prevents premature preview)
   const allOpacityStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       animatedIndex.value,
-      [0, 1, 2], // Snap 0 (15%), 1 (38%), 2 (90%)
-      [0, 0, 1], // Opacity: invisible → invisible → visible
+      [0, 1, 1.8, 2], // Snap 0, 1, threshold (80% to snap 2), snap 2
+      [0, 0, 0, 1],   // Opacity stays 0 until threshold, then quick fade
       Extrapolation.CLAMP
     );
     return { opacity };
@@ -96,6 +97,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
             { backgroundColor: theme.colors.fixed.transparent, height: LAYER_1_HEIGHT },
             favoriteOpacityStyle,
           ]}
+          pointerEvents={currentSnapIndex === 0 ? 'auto' : 'none'}
         >
           <FavoriteToolBox
             isTimerRunning={isTimerRunning}
@@ -113,6 +115,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
             { backgroundColor: theme.colors.fixed.transparent },
             baseOpacityStyle,
           ]}
+          pointerEvents={currentSnapIndex === 1 ? 'auto' : 'none'}
         >
           <ToolBox
             isTimerRunning={isTimerRunning}
@@ -132,6 +135,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
             { backgroundColor: theme.colors.fixed.transparent },
             allOpacityStyle,
           ]}
+          pointerEvents={currentSnapIndex === 2 ? 'auto' : 'none'}
         >
           <SettingsPanel isPremiumUser={isPremiumUser} />
         </Animated.View>

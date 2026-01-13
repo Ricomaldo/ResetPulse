@@ -298,7 +298,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
         <ScrollView
           ref={scrollViewRef}
           horizontal
-          pagingEnabled
           showsHorizontalScrollIndicator={false}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -310,9 +309,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
           }}
           snapToInterval={PAGE_WIDTH}
           decelerationRate="fast"
-          scrollEnabled={true}
-          activeOffsetX={[-5, 5]} // Capture gesture only if horizontal swipe > 5px
-          failOffsetY={[-5, 5]} // Fail gesture if vertical swipe > 5px (let BottomSheet handle)
+          nestedScrollEnabled={true}
         >
           {activityPages.map((pageActivities, pageIndex) => (
             <View key={`page-${pageIndex}`} style={styles.pageContainer}>
