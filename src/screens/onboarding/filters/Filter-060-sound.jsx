@@ -131,7 +131,6 @@ export default function Filter080SoundPersonalize({ onContinue }) {
               >
                 {t(`sounds.${sound.id}`)}
               </Text>
-              <Text style={styles.soundDuration}>{sound.duration}</Text>
             </View>
             {isPlaying && (
               <View style={styles.playingIndicator}>
@@ -180,15 +179,10 @@ const createStyles = (colors, spacing, borderRadius) =>
       color: colors.text,
       fontSize: rs(15),
       fontWeight: fontWeights.medium,
-      marginBottom: rs(2),
     },
     soundNameActive: {
       color: colors.brand.primary,
       fontWeight: fontWeights.semibold,
-    },
-    soundDuration: {
-      color: colors.textSecondary,
-      fontSize: rs(12),
     },
 
     // Sound row
