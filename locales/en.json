@@ -59,11 +59,11 @@
       },
       "q1": {
         "title": "Your timer would be for...",
-        "focus": "To focus",
-        "launch": "To get started",
-        "breathe": "To breathe",
-        "children": "With my kids",
-        "other": "Other...",
+        "focus": "Focusing better",
+        "launch": "Helping me get started",
+        "breathe": "Taking time for myself",
+        "children": "Framing a moment with my kids",
+        "other": "Something else...",
         "otherPlaceholder": "Tell us more..."
       },
       "q2": {
