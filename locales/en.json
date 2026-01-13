@@ -164,11 +164,10 @@
     },
     "v3": {
       "filter3_5": {
-        "title": "Stay informed, even in the background",
-        "body": "ResetPulse can notify you when your moment is complete — even if you're using another app.",
-        "bodySecondary": "Without notifications, you'll need to keep the app open.",
-        "ctaPrimary": "Enable notifications",
-        "ctaSecondary": "Continue without"
+        "title": "Don't miss when your moments end",
+        "body": "Your timer will alert you even if you use another app or your screen is locked.",
+        "ctaPrimary": "Yes, notify me",
+        "ctaSecondary": "Maybe later"
       },
       "filter4": {
         "title": "How do you want to continue?",

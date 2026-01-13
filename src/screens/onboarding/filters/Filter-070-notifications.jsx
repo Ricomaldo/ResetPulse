@@ -57,7 +57,7 @@ export default function Filter050Notifications({ onContinue }) {
     >
       {/* Icon */}
       <View style={[styles.iconContainer, { backgroundColor: colors.brand.primary + '20' }]}>
-        <Text style={styles.icon}>🔔</Text>
+        <Text style={styles.icon}>⏰</Text>
       </View>
 
       {/* Title */}
@@ -66,12 +66,8 @@ export default function Filter050Notifications({ onContinue }) {
       </Text>
 
       {/* Body */}
-      <Text style={[styles.body, { color: colors.text }]}>
+      <Text style={[styles.body, { color: colors.textSecondary }]}>
         {t('onboarding.v3.filter3_5.body')}
-      </Text>
-
-      <Text style={[styles.bodySecondary, { color: colors.textSecondary }]}>
-        {t('onboarding.v3.filter3_5.bodySecondary')}
       </Text>
     </OnboardingLayout>
   );
@@ -101,13 +97,7 @@ const createStyles = () =>
     },
     body: {
       fontSize: rs(typography.base),
-      lineHeight: rs(24),
-      marginBottom: rs(spacing.md),
-      textAlign: 'center',
-    },
-    bodySecondary: {
-      fontSize: rs(typography.sm),
-      lineHeight: rs(20),
+      lineHeight: rs(26),
       textAlign: 'center',
     },
   });
