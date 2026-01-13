@@ -9,6 +9,7 @@ import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
+import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import Icons from '../layout/Icons';
@@ -54,6 +55,7 @@ const DigitalTimer = React.memo(function DigitalTimer({
   scaleMode: _scaleMode = '60min',
 }) {
   const theme = useTheme();
+  const t = useTranslation();
   const { display: { showTime }, setShowTime } = useTimerConfig();
   const intervalRef = useRef(null);
   const repeatCountRef = useRef(0);
@@ -334,7 +336,7 @@ const DigitalTimer = React.memo(function DigitalTimer({
         onPressOut={() => handlePressOut(handleDecrement)}
         onPress={() => {}} // No-op, actual action handled via press handlers
         disabled={!shouldShowControls || !showTime}
-        accessibilityLabel="Diminuer la durée"
+        accessibilityLabel={t('controls.digitalTimer.decreaseDuration')}
         style={(!shouldShowControls || !showTime) && { opacity: 0 }}
       />
 
@@ -342,8 +344,8 @@ const DigitalTimer = React.memo(function DigitalTimer({
         onPress={handleTimerTap}
         accessible
         accessibilityRole="button"
-        accessibilityLabel={showTime ? (isRemainingMode ? `Temps: ${formattedTime}` : `Durée: ${formattedTime}`) : 'Afficher le temps'}
-        accessibilityHint={showTime ? 'Appuyez pour masquer' : 'Appuyez pour afficher'}
+        accessibilityLabel={showTime ? (isRemainingMode ? t('controls.digitalTimer.timeLabel', { time: formattedTime }) : t('controls.digitalTimer.durationLabel', { time: formattedTime })) : t('controls.digitalTimer.showTime')}
+        accessibilityHint={showTime ? t('controls.digitalTimer.tapToHide') : t('controls.digitalTimer.tapToShow')}
         activeOpacity={0.7}
         style={styles.timerWrapper}
       >
@@ -372,7 +374,7 @@ const DigitalTimer = React.memo(function DigitalTimer({
         onPressOut={() => handlePressOut(handleIncrement)}
         onPress={() => {}} // No-op, actual action handled via press handlers
         disabled={!shouldShowControls || !showTime}
-        accessibilityLabel="Augmenter la durée"
+        accessibilityLabel={t('controls.digitalTimer.increaseDuration')}
         style={(!shouldShowControls || !showTime) && { opacity: 0 }}
       />
     </View>

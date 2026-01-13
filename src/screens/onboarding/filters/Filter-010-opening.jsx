@@ -49,7 +49,7 @@ export default function Filter010Opening({ onContinue }) {
       <TouchableOpacity
         style={styles.fullScreen}
         onPress={() => onContinue()}
-        activeOpacity={1}
+        activeOpacity={0.7}
         accessible={true}
         accessibilityRole="button"
         accessibilityLabel={t('onboarding.v2.filter0.tapToContinue')}

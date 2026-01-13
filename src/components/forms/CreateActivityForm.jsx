@@ -391,11 +391,12 @@ export default function CreateActivityForm({
 
   // Onboarding: Handle step transition and customize submission
   const handleCustomizeSubmit = (customData) => {
-    // Submit final form data to parent
+    // Submit final form data to parent (including intentionId for message mapping)
     onSubmit({
       emoji: customData.emoji,
       name: customData.name,
       defaultDuration: customData.defaultDuration,
+      intentionId: customData.intentionId,
     });
   };
 

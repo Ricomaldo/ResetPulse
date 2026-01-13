@@ -128,7 +128,7 @@
     "title": "Sblocca tutto",
     "description": "Tutti i colori.\nTutte le attività.\nIl tuo massimo comfort.",
     "features": "🎁 7 GIORNI GRATIS",
-    "price": "Poi {price} una volta.\nTuo per sempre.",
+    "price": "Poi %{price} una volta.\nTuo per sempre.",
     "priceOnce": "Una volta, per sempre",
     "trial": "",
     "startTrial": "Prova 7 giorni gratis",
@@ -213,13 +213,13 @@
     "startTrial": "Inizia prova gratuita",
     "maybeLater": "Forse più tardi",
     "restore": "Ripristina i miei acquisti",
-    "activity": "Attività {name}",
+    "activity": "Attività %{name}",
     "activityLocked": "Attività premium bloccata",
     "customActivityHint": "Tieni premuto per modificare questa attività personalizzata",
     "moreActivities": "Più attività",
     "discoverPremium": "Scopri le attività premium",
-    "colorNumber": "Colore {number}",
-    "paletteNumber": "Paletta {name}",
+    "colorNumber": "Colore %{number}",
+    "paletteNumber": "Paletta %{name}",
     "discoverMorePalettes": "Tocca per scoprire più palette",
     "celebrationEmoji": "Celebrazione",
     "closeCreateActivity": "Chiudi creazione attività",
@@ -239,8 +239,8 @@
       "timerCompleted": "Timer completato!",
       "timerRunning": "Timer in esecuzione",
       "timerStopped": "Timer fermato",
-      "activityStarted": "{activity} avviato",
-      "activityCompleted": "{activity} completato"
+      "activityStarted": "%{activity} avviato",
+      "activityCompleted": "%{activity} completato"
     }
   },
   "discovery": {

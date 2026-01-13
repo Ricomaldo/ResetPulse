@@ -6,7 +6,6 @@
  * - package.json
  * - app.json
  * - android/app/build.gradle (versionCode + versionName)
- * - src/components/SettingsModal.jsx
  *
  * Usage:
  *   npm run version:patch  // 1.0.5 -> 1.0.6
@@ -135,27 +134,15 @@ function updateBuildGradle(newVersion, newVersionCode) {
   log(`✓ build.gradle versionName: ${oldVersionName} → ${newVersion}`, colors.green);
 }
 
-function updateSettingsModal(newVersion) {
-  const settingsPath = path.join(__dirname, '../src/components/SettingsModal.jsx');
-  let settingsContent = readFile(settingsPath);
-
-  // Extract current version
-  const versionMatch = settingsContent.match(/Version\s+(\d+\.\d+\.\d+)/);
-  const oldVersion = versionMatch ? versionMatch[1] : '?';
-
-  // Replace version
-  settingsContent = settingsContent.replace(
-    /Version\s+\d+\.\d+\.\d+/,
-    `Version ${newVersion}`
-  );
-
-  writeFile(settingsPath, settingsContent);
-
-  log(`✓ SettingsModal.jsx: ${oldVersion} → ${newVersion}`, colors.green);
-}
-
 function updateDocumentation(newVersion) {
   const readmePath = path.join(__dirname, '../docs/README.md');
+
+  // Only update if file exists
+  if (!fs.existsSync(readmePath)) {
+    log('⊘ docs/README.md: skipped (file not found)', colors.yellow);
+    return;
+  }
+
   let readmeContent = readFile(readmePath);
 
   // Replace "Version actuelle : X.X.X"
@@ -223,8 +210,7 @@ function main() {
     log('  • package.json');
     log('  • app.json');
     log('  • android/app/build.gradle (versionCode + versionName)');
-    log('  • src/components/SettingsModal.jsx');
-    log('  • docs/README.md\n');
+    log('  • docs/README.md (if exists)\n');
 
     // Confirmation prompt (but auto-proceed in CI or non-interactive mode)
     if (process.env.CI || !process.stdin.isTTY) {
@@ -244,7 +230,6 @@ function main() {
     updatePackageJson(newVersion);
     updateAppJson(newVersion);
     updateBuildGradle(newVersion, newVersionCode);
-    updateSettingsModal(newVersion);
     updateDocumentation(newVersion);
 
     log(`\n✨ Success! Version bumped to ${newVersion}`, colors.bright + colors.green);

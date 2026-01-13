@@ -4,7 +4,7 @@
  * Remplace Filter-040 (TestStart) et Filter-050 (TestStop)
  */
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { PrimaryButton } from '../../../components/buttons';
@@ -26,6 +26,7 @@ const Q2_OPTIONS = [
   { id: 'finishing', labelKey: 'onboarding.intentions.q2.finishing', startWeight: 0, stopWeight: 2 },
   { id: 'staying', labelKey: 'onboarding.intentions.q2.staying', startWeight: 1, stopWeight: 1 },
   { id: 'managing', labelKey: 'onboarding.intentions.q2.managing', startWeight: 0, stopWeight: 0 },
+  { id: 'other', labelKey: 'onboarding.intentions.q2.other', startWeight: 0, stopWeight: 0, hasInput: true },
 ];
 
 export default function Filter025Intentions({ onContinue }) {
@@ -35,7 +36,8 @@ export default function Filter025Intentions({ onContinue }) {
 
   const [q1Selected, setQ1Selected] = useState([]);
   const [q2Selected, setQ2Selected] = useState([]);
-  const [otherText, setOtherText] = useState('');
+  const [otherTextQ1, setOtherTextQ1] = useState('');
+  const [otherTextQ2, setOtherTextQ2] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(1);
 
   const toggleQ1 = (id) => {
@@ -88,15 +90,18 @@ export default function Filter025Intentions({ onContinue }) {
       analytics.trackIntentionsCompleted({
         intentions: q1Selected,
         challenges: q2Selected,
-        hasOther: q1Selected.includes('other'),
-        otherText: otherText || null,
+        hasOtherQ1: q1Selected.includes('other'),
+        hasOtherQ2: q2Selected.includes('other'),
+        otherTextQ1: otherTextQ1 || null,
+        otherTextQ2: otherTextQ2 || null,
         calculatedProfile: interactionProfile,
       });
 
       onContinue({
         intentions: q1Selected,
         challenges: q2Selected,
-        otherIntention: otherText,
+        otherIntentionQ1: otherTextQ1,
+        otherIntentionQ2: otherTextQ2,
         interactionProfile,
       });
     }
@@ -125,7 +130,7 @@ export default function Filter025Intentions({ onContinue }) {
       >
         <Text style={[
           styles.optionText,
-          { color: isSelected ? colors.brand.primary : colors.text }
+          { color: isSelected ? colors.brand.deep : colors.text } // WCAG AA contrast fix
         ]}>
           {t(option.labelKey)}
         </Text>
@@ -137,6 +142,7 @@ export default function Filter025Intentions({ onContinue }) {
     <OnboardingLayout
       title={currentQuestion === 1 ? t('onboarding.intentions.q1.title') : t('onboarding.intentions.q2.title')}
       centerContent
+      scrollable // Enable scroll for keyboard avoidance
       footer={
         <PrimaryButton
           label={t('common.continue')}
@@ -160,17 +166,39 @@ export default function Filter025Intentions({ onContinue }) {
               }]}
               placeholder={t('onboarding.intentions.q1.otherPlaceholder')}
               placeholderTextColor={colors.textSecondary}
-              value={otherText}
-              onChangeText={setOtherText}
+              value={otherTextQ1}
+              onChangeText={setOtherTextQ1}
               maxLength={100}
               autoFocus
+              returnKeyType="done"
+              onSubmitEditing={Keyboard.dismiss}
             />
           )}
         </>
       ) : (
-        <View style={styles.optionsContainer}>
-          {Q2_OPTIONS.map(opt => renderOption(opt, q2Selected, toggleQ2))}
-        </View>
+        <>
+          <View style={styles.optionsContainer}>
+            {Q2_OPTIONS.map(opt => renderOption(opt, q2Selected, toggleQ2))}
+          </View>
+
+          {q2Selected.includes('other') && (
+            <TextInput
+              style={[styles.otherInput, {
+                backgroundColor: colors.surface,
+                borderColor: colors.border,
+                color: colors.text,
+              }]}
+              placeholder={t('onboarding.intentions.q2.otherPlaceholder')}
+              placeholderTextColor={colors.textSecondary}
+              value={otherTextQ2}
+              onChangeText={setOtherTextQ2}
+              maxLength={100}
+              autoFocus
+              returnKeyType="done"
+              onSubmitEditing={Keyboard.dismiss}
+            />
+          )}
+        </>
       )}
     </OnboardingLayout>
   );

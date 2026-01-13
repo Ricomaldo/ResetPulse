@@ -1205,6 +1205,11 @@
   dependencies:
     nanoid "^3.3.1"
 
+"@hexigames/react-native-apple-ads-attribution@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/@hexigames/react-native-apple-ads-attribution/-/react-native-apple-ads-attribution-1.0.2.tgz"
+  integrity sha512-I6ITUGe2InpxyggkzkWvy/puwmo5iTp92VjWB+10zXPr0cxAUrIN2pc+c8banOGUkuGW1REakqFc0UXUcRvWlA==
+
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.13.0.tgz"

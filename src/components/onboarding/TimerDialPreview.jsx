@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import TimerDial from '../dial/TimerDial';
 
 export default function TimerDialPreview({
-  progress = 0.4,
+  progress = 0.42,
   duration = 3600,
   color,
   scaleMode = '60min',

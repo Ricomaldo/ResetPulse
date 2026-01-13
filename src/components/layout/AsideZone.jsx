@@ -15,6 +15,7 @@ import BottomSheet, {
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { MessageZone } from '../messaging';
 import { FavoriteToolBox, ToolBox } from './aside-content';
 import { SettingsPanel } from '../settings';
@@ -33,7 +34,7 @@ const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8; // Container at snap 2 (90% snap -
  * SheetContent - Internal component with access to BottomSheet context
  * Handles fade transitions between snap points
  */
-function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, activityCarouselRef, paletteCarouselRef }) {
+function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, activityCarouselRef, paletteCarouselRef, isPremiumUser }) {
   const theme = useTheme();
   const { animatedIndex } = useBottomSheet();
 
@@ -132,7 +133,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
             allOpacityStyle,
           ]}
         >
-          <SettingsPanel />
+          <SettingsPanel isPremiumUser={isPremiumUser} />
         </Animated.View>
       </Animated.View>
     </BottomSheetScrollView>
@@ -148,6 +149,7 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
   const { timer: { currentActivity } } = useTimerConfig();
+  const { isPremium: isPremiumUser } = usePremiumStatus();
 
   // Refs for carousels (for simultaneousHandlers)
   const activityCarouselRef = useRef(null);
@@ -229,6 +231,7 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
           onStop={onStop}
           activityCarouselRef={activityCarouselRef}
           paletteCarouselRef={paletteCarouselRef}
+          isPremiumUser={isPremiumUser}
         />
       </BottomSheet>
     </View>

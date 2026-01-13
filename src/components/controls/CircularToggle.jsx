@@ -7,6 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton } from '../buttons';
 import haptics from '../../utils/haptics';
+import { useTranslation } from '../../hooks/useTranslation';
 
 /**
  * CircularToggle - Circular toggle button for rotation direction
@@ -17,6 +18,8 @@ import haptics from '../../utils/haptics';
  * @param {number} size - Size of the toggle button (32, 40, 60)
  */
 const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle, size = 40 }) {
+  const t = useTranslation();
+
   const handlePress = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
     onToggle(!clockwise);
@@ -33,7 +36,7 @@ const CircularToggle = React.memo(function CircularToggle({ clockwise, onToggle,
       size={buttonSize}
       shape="circular"
       onPress={handlePress}
-      accessibilityLabel={clockwise ? 'Sens horaire' : 'Sens anti-horaire'}
+      accessibilityLabel={clockwise ? t('controls.rotation.clockwise') : t('controls.rotation.counterClockwise')}
     />
   );
 });

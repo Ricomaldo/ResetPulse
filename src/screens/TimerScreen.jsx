@@ -12,7 +12,7 @@ import { DialZone, AsideZone } from '../components/layout';
 import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
 import analytics from '../services/analytics';
 
-function TimerScreenContent() {
+function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
   const theme = useTheme();
   const t = useTranslation();
   const { isLandscape } = useScreenOrientation(); // Detect orientation changes
@@ -30,20 +30,44 @@ function TimerScreenContent() {
   const [isTimerCompleted, setIsTimerCompleted] = useState(false);
   const [timerState, setTimerState] = useState('REST'); // 'REST' | 'RUNNING' | 'COMPLETE'
   const timerRef = useRef(null);
+  const autoStartConsumed = useRef(false);
 
   // Keep screen awake during timer
   useTimerKeepAwake();
 
+  // Auto-start timer after onboarding if requested
+  useEffect(() => {
+    if (!autoStart || autoStartConsumed.current) return;
+
+    // Poll until timerRef is ready (max 2 seconds)
+    let attempts = 0;
+    const maxAttempts = 20;
+    const interval = setInterval(() => {
+      attempts++;
+      if (timerRef.current && !timerRef.current.running) {
+        timerRef.current.startTimer();
+        autoStartConsumed.current = true;
+        clearInterval(interval);
+        if (onAutoStartConsumed) {
+          onAutoStartConsumed();
+        }
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [autoStart, onAutoStartConsumed]);
+
   // Helper to compute display message dynamically (avoids stale message issue)
   // Uses explicit activity message linkage (see src/config/activityMessages.js)
+  // Passes full activity object to support intentionId mapping for custom activities
   const computeDisplayMessage = useCallback((running, isComplete) => {
-    const activityId = currentActivity?.id || 'none';
-
     if (isComplete) {
-      return getActivityEndMessage(activityId, t);
+      return getActivityEndMessage(currentActivity, t);
     }
     if (running) {
-      return getActivityStartMessage(activityId, t);
+      return getActivityStartMessage(currentActivity, t);
     }
     return t('invitation');
   }, [currentActivity, t]);
@@ -197,10 +221,13 @@ function TimerScreenContent() {
   );
 }
 
-export default function TimerScreen() {
+export default function TimerScreen({ autoStart, onAutoStartConsumed }) {
   return (
     <SafeAreaProvider>
-      <TimerScreenContent />
+      <TimerScreenContent
+        autoStart={autoStart}
+        onAutoStartConsumed={onAutoStartConsumed}
+      />
     </SafeAreaProvider>
   );
 }

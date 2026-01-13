@@ -44,7 +44,6 @@ function OnboardingFlowContent({ onComplete }) {
   const { colors } = useTheme();
   const analytics = useAnalytics();
   const {
-    setOnboardingCompleted,
     setCurrentActivity,
     setCurrentDuration,
     setInteractionProfile,
@@ -131,15 +130,11 @@ function OnboardingFlowContent({ onComplete }) {
         console.log('[OnboardingFlow] Applied interaction profile:', finalData.interactionProfile);
       }
 
-      setOnboardingCompleted(true);
-      analytics.trackOnboardingCompleted({
-        result: 'completed',
-        toolMode: finalData.favoriteToolMode,
-        startTimerImmediately: finalData.startTimerImmediately,
-      });
+      analytics.trackOnboardingCompleted('completed');
+      // App.js handles setOnboardingCompleted via onComplete callback
       onComplete(finalData);
     },
-    [setCurrentActivity, setCurrentDuration, setInteractionProfile, setOnboardingCompleted, analytics, onComplete]
+    [setCurrentActivity, setCurrentDuration, setInteractionProfile, analytics, onComplete]
   );
 
   // Generic continue handler - simplified
