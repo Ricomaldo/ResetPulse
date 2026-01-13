@@ -12,8 +12,11 @@ export default function TimerDialPreview({
   color,
   scaleMode = '60min',
   size,
-  centerImage = null,
+  centerEmoji = null,
 }) {
+  // Create a fake activity object to display emoji in center
+  const fakeActivity = centerEmoji ? { emoji: centerEmoji } : null;
+
   return (
     <TimerDial
       progress={progress}
@@ -24,16 +27,16 @@ export default function TimerDialPreview({
       scaleMode={scaleMode}
       showNumbers={true}
       showGraduations={true}
-      showActivityEmoji={false}
-      showPlayButton={false}
-      showCenterDisk={!centerImage}
-      centerImage={centerImage}
+      showActivityEmoji={!!centerEmoji}
+      showPlayButton={!!centerEmoji}
+      showCenterDisk={!centerEmoji}
+      centerImage={null}
       isRunning={false}
+      currentActivity={fakeActivity}
       // No interactivity
       onGraduationTap={null}
       onDialTap={null}
       onDialLongPress={null}
-      currentActivity={null}
     />
   );
 }
@@ -44,5 +47,5 @@ TimerDialPreview.propTypes = {
   color: PropTypes.string,
   scaleMode: PropTypes.string,
   size: PropTypes.number,
-  centerImage: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  centerEmoji: PropTypes.string,
 };
