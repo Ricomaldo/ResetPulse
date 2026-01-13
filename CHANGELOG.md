@@ -6,60 +6,118 @@ status: active
 
 ## [2.1.0] - 2026-01-13
 
-### 📊 Apple Search Ads Attribution + Test Fixes
+### 🚀 Onboarding V2.1 - Complete Refactor
+
+Major overhaul of the onboarding experience with a new linear 7-step flow optimized for conversion and user engagement.
+
+#### New Onboarding Flow (ADR-010)
+- **Filter-010-opening**: Breathing logo animation, tap to continue (ADHD-friendly, no auto-advance)
+- **Filter-020-tool**: Tool selection with 4 options (Commandes, Presets, Dial, Tout)
+- **Filter-025-intentions**: Q1 (intentions) + Q2 (challenges) for user profiling
+- **Filter-030-creation**: Custom activity creation with emoji picker + intention mapping
+- **Filter-060-sound**: Sound selection with preview (simplified, plays sound's own emoji)
+- **Filter-070-notifications**: Improved copy for higher acceptance rate + immediate permission request
+- **Filter-080-launch**: New launch screen replaces paywall (CTA: start timer immediately)
+
+#### Removed Filters
+- **Filter-040-test-start**: Removed (unnecessary friction)
+- **Filter-050-test-stop**: Removed (unnecessary friction)
+- **Filter-090-summary**: Removed (replaced by Filter-080-launch)
+
+#### Sound System Overhaul
+- Renamed sounds for emotional resonance (e.g., `bowl_tibetan` → `apaisement`)
+- Sound preview shows sound's own emoji, not activity emoji
+- Simplified sound selection UI
+
+#### Post-Skip Reminder Notifications (Phase 5)
+- Day 3 reminder: "Ton moment t'attend" with pre-selected activity
+- Day 7 reminder: Opens paywall for conversion
+- Smart scheduling based on skip date
+
+#### Architecture Improvements
+- **Config-driven flow**: FILTERS array with Component + needsData props
+- **Standardized layouts**: OnboardingLayout with sticky titles in scrollable content
+- **Design tokens**: All filters use spacing/typography tokens, no hardcoded values
+- **BrandLogo component**: Real PNG logo for visual continuity (splash → onboarding)
+
+#### i18n Improvements (15 languages)
+- Filter-025: Natural wording for Q1/Q2 titles and choices
+- Filter-030: Generic CTA "Créer mon moment" instead of intermediate name
+- Filter-070: Rewritten copy for higher notification acceptance
+- Fixed `%{variable}` interpolation syntax across all locales
+
+---
+
+### 📊 Analytics & Attribution
 
 #### Added
 - **Apple Search Ads Attribution Service**
   - New `src/services/attribution.js` for ROAS tracking
   - Integrates `@hexigames/react-native-apple-ads-attribution` SDK
   - Fetches attribution data on first iOS launch via AdServices API
-  - Registers super properties in Mixpanel: `source`, `asa_campaign_id`, `asa_attributed`, etc.
+  - Registers super properties: `source`, `asa_campaign_id`, `asa_attributed`, etc.
   - Graceful fallback to "organic" for Android/errors
 
-#### Fixed
-- **Obsolete Test Files Removed**
-  - Deleted `__tests__/unit/onboardingConstants.test.js` (module no longer exists)
-  - Deleted `__tests__/screens/OnboardingFlow.test.js` (outdated V3 flow tests)
-  - Fixed `StepIndicator.test.js` mock path (`styles/responsive` instead of `onboardingConstants`)
-  - Updated `useTimer.test.js` to match current behavior (timer starts with 0 remaining)
-  - All 161 tests now pass
+- **Onboarding Analytics Events**
+  - `onboarding_started`, `onboarding_completed`, `onboarding_abandoned`
+  - `onboarding_step_viewed`, `onboarding_step_completed`
+  - `tool_selected`, `creation_started`, `creation_completed`
 
 ---
 
-### 🔧 Settings Restoration + UX Improvements
+### 🔧 Bug Fixes
+
+#### Critical Fixes
+- **Blank screen on app start**: Removed fade animation causing render issues
+- **OB → App data persistence broken**: Fixed unified config save/load
+- **Cyclical structure error**: Guard against React Native events in stepData
+- **Timer completion bug**: Fixed notification cancellation on stop
+
+#### Onboarding Fixes
+- **Filter-010**: Removed auto-advance (ADHD-friendly)
+- **Filter-020**: Logo replaced with emoji in dial preview
+- **Filter-030**: Use intention label as default name, not hardcoded `defaultName`
+- **Filter-060**: Sticky title in scrollable layout
+- **Filter-070**: Request permission immediately after explanation
+- **DevFab**: Fixed app navigation compatibility with unified config
+
+#### Test Suite
+- Deleted obsolete `onboardingConstants.test.js` (module removed)
+- Deleted obsolete `OnboardingFlow.test.js` (V3 flow tests)
+- Fixed `StepIndicator.test.js` mock path
+- Updated `useTimer.test.js` to match current behavior
+- All 161 tests pass
+
+---
+
+### 🔧 Settings & UX Improvements
 
 #### Fixed
-- **SettingsPanel Content Restored**
-  - Commit `c1813ef` accidentally removed imports and features during cleanup
-  - Restored: BottomSheetScrollView, lucide icons, all settings sub-components
-  - Restored: FavoritesActivitySection, FavoritesPaletteSection, AboutSection
-
-- **Premium Favorites Sections Not Displaying**
-  - `isPremiumUser` prop was not passed from AsideZone → SheetContent → SettingsPanel
-  - Added `usePremiumStatus()` hook in AsideZone and proper prop drilling
-  - Premium users now see "Activités favorites" and "Palettes favorites" sections
-
-- **FavoritesActivitySection Grid Layout (3→4 columns)**
-  - `width: '23%'` caused overflow with `gap: rs(12)`, pushing 4th item to next row
-  - Fixed: `width: '21%'` to properly accommodate 4 items per row
+- **SettingsPanel content restored** after accidental deletion in cleanup commit
+- **Premium favorites sections** now display correctly (prop drilling fixed)
+- **FavoritesActivitySection grid**: 4 columns layout fixed (21% width)
 
 #### Changed
-- **Persona Descriptions Now Functional**
-  - Old: psychological ("Je démarre vite, j'ai besoin de freiner")
-  - New: actionable ("Démarrage rapide · Arrêt maintenu")
-  - Users now understand that persona affects Play/Stop button behavior
-  - Added section subtitle: "Configure la résistance du bouton Play/Stop"
-  - Full i18n support (FR + EN) in `settings.persona.*` keys
+- **Persona descriptions**: Functional instead of psychological
+  - Old: "Je démarre vite, j'ai besoin de freiner"
+  - New: "Démarrage rapide · Arrêt maintenu"
+- **Pulse animation**: Epilepsy warning Alert on enable
+- **PresetPills**: Disabled auto-scale adaptation
+- **FitButton**: Added CircleGaugeIcon for scale adapter
 
-- **Pulse Animation Epilepsy Warning**
-  - Added Alert confirmation when enabling pulse animation
-  - Uses existing `pulseWarningTitle/Message/Enable` translations
-  - Disable action remains instant (no confirmation needed)
+#### i18n Migration
+- SettingsPanel: 13+ strings migrated to `settings.*` keys
+- FitButton: Label + accessibility migrated
+- DigitalTimer, CircularToggle, PresetPills: Accessibility labels migrated
+- PurchaseContext: Error messages migrated
 
-#### Technical
-- **version-bump.js Script Fixed**
-  - Removed obsolete `SettingsModal.jsx` reference
-  - Made `docs/README.md` update optional (skips if file not found)
+---
+
+### 📦 Technical
+
+- **DEV_MODE**: Set to `false` for production
+- **version-bump.js**: Fixed obsolete references
+- **Cleanup**: Removed orphan filter files (040, 050, 090)
 
 ---
 
