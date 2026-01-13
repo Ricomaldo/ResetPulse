@@ -295,9 +295,7 @@ export default function CustomizeStep({ intention, onBack, onSubmit }) {
         activeOpacity={0.8}
       >
         <Text style={styles.ctaButtonText}>
-          {isValid
-            ? `Créer "${name.trim()}" ${emoji}`
-            : t('onboarding.creation.cta')}
+          {t('onboarding.creation.cta')}
         </Text>
       </TouchableOpacity>
     </View>
