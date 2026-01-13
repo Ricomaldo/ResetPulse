@@ -43,7 +43,7 @@ export default function CustomizeStep({ intention, onBack, onSubmit }) {
   // État local
   const [emoji, setEmoji] = useState(intention.emoji);
   const [name, setName] = useState(
-    isOther ? '' : t(intention.defaultNameKey)
+    isOther ? '' : t(intention.i18nKey)
   );
   const [duration, setDuration] = useState(intention.defaultDuration);
 
