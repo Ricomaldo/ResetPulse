@@ -138,23 +138,24 @@ export default function OnboardingLayout({
       style={[styles.container, { backgroundColor: colors.background }]}
       edges={['top', 'bottom']}
     >
+      {/* Fixed Header (title + subtitle) - always outside scroll */}
+      {(title || subtitle) && (
+        <View style={styles.header}>
+          {title && (
+            <Text style={[styles.title, { color: colors.text }]}>
+              {title}
+            </Text>
+          )}
+          {subtitle && (
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+              {subtitle}
+            </Text>
+          )}
+        </View>
+      )}
+
       {/* Content Area */}
       <ContentContainer {...contentContainerProps}>
-        {/* Title */}
-        {title && (
-          <Text style={[styles.title, { color: colors.text }]}>
-            {title}
-          </Text>
-        )}
-
-        {/* Subtitle */}
-        {subtitle && (
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            {subtitle}
-          </Text>
-        )}
-
-        {/* Main Content */}
         {children}
       </ContentContainer>
 
@@ -197,6 +198,12 @@ OnboardingLayout.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  // Fixed header (title + subtitle)
+  header: {
+    paddingHorizontal: rs(spacing.lg),
+    paddingTop: rs(spacing.lg),
   },
 
   // Non-scrollable content
