@@ -6,7 +6,8 @@
 
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { createFocusStyle } from '../../styles/focusStyles';
 import { getButtonBaseStyles, getIconSize } from '../../styles/buttonStyles';
 import { useTheme } from '../../theme/ThemeProvider';

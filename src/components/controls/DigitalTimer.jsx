@@ -5,7 +5,8 @@
  * @updated 2025-12-19
  */
 import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
