@@ -608,14 +608,9 @@ export default function CreateActivityForm({
           accessibilityState={{ disabled: !isFormValid }}
         >
           <Text style={styles.createButtonText}>
-            {mode === 'onboarding' && activityName.trim() && selectedEmoji
-              ? t('onboarding.creation.buttonCreate', {
-                name: activityName.trim(),
-                emoji: selectedEmoji,
-              })
-              : mode === 'onboarding'
-                ? t('onboarding.creation.cta')
-                : t('customActivities.create.buttonCreate')}
+            {mode === 'onboarding'
+              ? t('onboarding.creation.cta')
+              : t('customActivities.create.buttonCreate')}
           </Text>
         </TouchableOpacity>
       </View>
