@@ -35,7 +35,7 @@ export const SOUND_METADATA = {
   'bell_melodic': {
     get name() { return i18n.t('sounds.bell_melodic'); },
     duration: '2s',
-    emoji: '🎵',
+    emoji: '🎶',
     category: 'classic'
   },
   'microwave_vintage': {
@@ -47,31 +47,31 @@ export const SOUND_METADATA = {
   'microwave_ping': {
     get name() { return i18n.t('sounds.microwave_ping'); },
     duration: '1s',
-    emoji: '🔊',
+    emoji: '📍',
     category: 'kitchen'
   },
   'kitchen_timer': {
     get name() { return i18n.t('sounds.kitchen_timer'); },
     duration: '1s',
-    emoji: '⏲️',
+    emoji: '🛎️',
     category: 'kitchen'
   },
   'kitchen_timer_2': {
     get name() { return i18n.t('sounds.kitchen_timer_2'); },
     duration: '2s',
-    emoji: '⏰',
+    emoji: '📢',
     category: 'kitchen'
   },
   'egg_timer': {
     get name() { return i18n.t('sounds.egg_timer'); },
     duration: '1s',
-    emoji: '🥚',
+    emoji: '🎯',
     category: 'kitchen'
   },
   'toaster_bell': {
     get name() { return i18n.t('sounds.toaster_bell'); },
     duration: '1s',
-    emoji: '🍞',
+    emoji: '💫',
     category: 'kitchen'
   },
   'ding_effect': {
@@ -83,7 +83,7 @@ export const SOUND_METADATA = {
   'timer_complete': {
     get name() { return i18n.t('sounds.timer_complete'); },
     duration: '2s',
-    emoji: '✅',
+    emoji: '🏁',
     category: 'modern'
   },
 };
