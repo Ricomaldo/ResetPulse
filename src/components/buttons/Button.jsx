@@ -10,6 +10,7 @@ import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-nat
 import { createFocusStyle } from '../../styles/focusStyles';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
+import { rs } from '../../styles/responsive';
 
 // Couleurs extraites pour respecter la règle no-color-literals
 const TRANSPARENT = 'transparent';
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 48,
+    minHeight: rs(52, 'min'), // Responsive: 52px base (iPhone) → ~65px (iPad)
   },
   disabled: {
     opacity: 0.5,
@@ -261,15 +262,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   text: {
-    fontSize: 16,
+    fontSize: rs(17, 'min'), // Responsive: 17px base → ~21px (iPad)
     fontWeight: fontWeights.semibold,
   },
   textButton: {
     alignItems: 'center',
-    padding: 8,
+    padding: rs(8, 'min'),
   },
   textButtonLabel: {
-    fontSize: 14,
+    fontSize: rs(15, 'min'), // Responsive: 15px base → ~19px (iPad)
     textDecorationLine: 'underline',
   },
 });

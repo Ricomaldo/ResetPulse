@@ -151,10 +151,10 @@ const ControlBar = React.memo(function ControlBar({
   const playButtonRadius = pulseSize / 2;
 
   const styles = StyleSheet.create({
-    // Root container with fixed height
+    // Root container with fixed height (from harmonizedSizes)
     container: {
       width: '100%',
-      height: rs(65, 'min'),
+      height: sizes.containerHeight, // Use harmonized size (rs(80, 'min'))
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',

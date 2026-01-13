@@ -9,11 +9,13 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { PrimaryButton } from '../../../components/buttons';
 import OnboardingLayout from '../../../components/onboarding/OnboardingLayout';
 import TimerDialPreview from '../../../components/onboarding/TimerDialPreview';
-import { rs } from '../../../styles/responsive';
+import { rs, getDeviceInfo } from '../../../styles/responsive';
 import { spacing } from '../../../theme/tokens';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const DIAL_SIZE = Math.min(SCREEN_WIDTH * 0.7, 280);
+const { width: SCREEN_WIDTH, isTablet } = getDeviceInfo();
+// iPad: jusqu'à 400px | iPhone: jusqu'à 280px
+const MAX_DIAL_SIZE = isTablet ? 400 : 280;
+const DIAL_SIZE = Math.min(SCREEN_WIDTH * 0.7, MAX_DIAL_SIZE);
 
 export default function Filter020Preview({ onContinue }) {
   const t = useTranslation();
