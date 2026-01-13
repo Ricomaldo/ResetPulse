@@ -7,4 +7,4 @@ export { default as Filter025Intentions } from './Filter-025-intentions';
 export { default as Filter030Creation } from './Filter-030-creation';
 export { default as Filter060Sound } from './Filter-060-sound';
 export { default as Filter070Notifications } from './Filter-070-notifications';
-export { default as Filter080Paywall } from './Filter-080-paywall';
+export { default as Filter080Launch } from './Filter-080-launch';

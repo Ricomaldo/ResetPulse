@@ -113,6 +113,13 @@
       "startButton": "Lancer mon premier timer",
       "completionMessage": "Bien joué ! Ton espace est prêt."
     },
+    "launch": {
+      "title": "C'est parti !",
+      "subtitle": "Ton premier moment t'attend",
+      "cta": "Lancer mon timer",
+      "ctaHint": "Démarrer le timer avec ton moment personnalisé",
+      "defaultActivity": "Mon moment"
+    },
     "v2": {
       "filter0": {
         "breathe": "Ton temps t'appartient",

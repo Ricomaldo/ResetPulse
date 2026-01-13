@@ -24,7 +24,7 @@ import {
   Filter030Creation,
   Filter060Sound,
   Filter070Notifications,
-  Filter080Paywall,
+  Filter080Launch,
 } from './filters';
 
 // Filter configuration - simplified switch statement
@@ -35,7 +35,7 @@ const FILTERS = [
   { Component: Filter030Creation },
   { Component: Filter060Sound },
   { Component: Filter070Notifications },
-  { Component: Filter080Paywall, needsData: ['customActivity', 'interactionProfile'] },
+  { Component: Filter080Launch, needsData: ['customActivity'] },
 ];
 
 const TOTAL_STEPS = FILTERS.length;
@@ -63,7 +63,7 @@ function OnboardingFlowContent({ onComplete }) {
     interactionProfile: null,
     selectedSoundId: null,
     notificationPermission: null,
-    purchaseResult: null,
+    startTimerImmediately: false,
   });
 
   // Refs for tracking
@@ -133,9 +133,9 @@ function OnboardingFlowContent({ onComplete }) {
 
       setOnboardingCompleted(true);
       analytics.trackOnboardingCompleted({
-        result: finalData.purchaseResult || 'completed',
+        result: 'completed',
         toolMode: finalData.favoriteToolMode,
-        persona: finalData.persona,
+        startTimerImmediately: finalData.startTimerImmediately,
       });
       onComplete(finalData);
     },
