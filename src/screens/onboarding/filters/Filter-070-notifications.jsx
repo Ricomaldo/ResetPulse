@@ -3,6 +3,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../../../styles/responsive';
@@ -21,15 +22,23 @@ export default function Filter050Notifications({ onContinue }) {
   }, []);
 
   const handleRequestPermission = async () => {
-    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+    haptics.selection().catch(() => {});
 
-    // Defer actual permission request until after onboarding
-    // This avoids interrupting the onboarding flow with system dialogs
-    analytics.trackOnboardingNotifGranted();
+    try {
+      // Request permission NOW - user just saw the explanation
+      const { status } = await Notifications.requestPermissionsAsync();
+      const granted = status === 'granted';
 
-    // Save preference without requesting system permission yet
-    // The permission will be requested after onboarding completes
-    onContinue({ notificationPermission: true, shouldRequestLater: true });
+      if (granted) {
+        analytics.trackOnboardingNotifGranted();
+      }
+      // If denied in native modal, we don't track (different from skipping our screen)
+
+      onContinue({ notificationPermission: granted });
+    } catch (error) {
+      console.warn('[Filter070] Permission request failed:', error);
+      onContinue({ notificationPermission: false });
+    }
   };
 
   const handleSkip = () => {
