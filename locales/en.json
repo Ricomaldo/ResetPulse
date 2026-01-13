@@ -356,16 +356,16 @@
     "darkLaser": "Dark Laser"
   },
   "sounds": {
-    "bell_classic": "Classic Bell",
-    "bell_melodic": "Melodic Bell",
-    "microwave_vintage": "Vintage Microwave",
-    "microwave_ping": "Microwave Ping",
-    "kitchen_timer": "Kitchen Timer",
-    "kitchen_timer_2": "Mechanical Timer",
-    "egg_timer": "Egg Timer",
-    "toaster_bell": "Toaster",
-    "ding_effect": "Simple Ding",
-    "timer_complete": "Complete Timer"
+    "bell_classic": "Bell",
+    "bell_melodic": "Chime",
+    "microwave_vintage": "Retro",
+    "microwave_ping": "Ping",
+    "kitchen_timer": "Ding",
+    "kitchen_timer_2": "Signal",
+    "egg_timer": "Tilt",
+    "toaster_bell": "Pop",
+    "ding_effect": "Crystal",
+    "timer_complete": "Done"
   },
   "accessibility": {
     "settings": "Settings",

@@ -359,16 +359,16 @@
     "darkLaser": "Dark Laser"
   },
   "sounds": {
-    "bell_classic": "Cloche classique",
-    "bell_melodic": "Cloche mélodique",
-    "microwave_vintage": "Micro-ondes vintage",
-    "microwave_ping": "Ping micro-ondes",
-    "kitchen_timer": "Minuteur cuisine",
-    "kitchen_timer_2": "Minuteur mécanique",
-    "egg_timer": "Minuteur à œuf",
-    "toaster_bell": "Grille-pain",
-    "ding_effect": "Ding simple",
-    "timer_complete": "Timer complet"
+    "bell_classic": "Cloche",
+    "bell_melodic": "Carillon",
+    "microwave_vintage": "Rétro",
+    "microwave_ping": "Ping",
+    "kitchen_timer": "Ding",
+    "kitchen_timer_2": "Signal",
+    "egg_timer": "Tilt",
+    "toaster_bell": "Pop",
+    "ding_effect": "Cristal",
+    "timer_complete": "Accompli"
   },
   "accessibility": {
     "settings": "Paramètres",
