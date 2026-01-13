@@ -77,7 +77,7 @@
     "creation": {
       "title": "Create your first moment",
       "subtitle": "Select your intention",
-      "sectionTitle": "What's it for?",
+      "sectionTitle": "Your first moment",
       "cta": "Create my moment",
       "buttonCreate": "Create \"%{name}\" %{emoji}",
       "durationLabel": "How long?",
