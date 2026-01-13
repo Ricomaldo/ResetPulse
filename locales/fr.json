@@ -70,11 +70,11 @@
         "otherPlaceholder": "C'est-à-dire ?"
       },
       "q2": {
-        "title": "C'est quoi le plus dur ?",
-        "starting": "Commencer",
-        "finishing": "Tenir jusqu'au bout",
-        "staying": "Rester focus",
-        "managing": "Gérer mon temps"
+        "title": "Un petit coup de main pour...",
+        "starting": "Démarrer",
+        "finishing": "Aller au bout",
+        "staying": "Rester concentré",
+        "managing": "Mieux gérer mon temps"
       }
     },
     "creation": {
