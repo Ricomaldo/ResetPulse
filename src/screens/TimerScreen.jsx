@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import * as StoreReview from 'expo-store-review';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
@@ -19,8 +20,9 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
   const modalStack = useModalStack();
   const {
     incrementCompletedTimers,
-    stats: { hasSeenTwoTimersModal },
+    stats: { hasSeenTwoTimersModal, hasSeenReviewRequest },
     setHasSeenTwoTimersModal,
+    setHasSeenReviewRequest,
     transient: { flashActivity },
     timer: { currentActivity },
   } = useTimerConfig();
@@ -177,11 +179,17 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
   };
 
   // Handle timer completion (ADR-003: trigger after 2 timers)
-  const handleTimerComplete = () => {
+  const handleTimerComplete = async () => {
     const newCount = incrementCompletedTimers();
 
-    if (newCount === 2 && !hasSeenTwoTimersModal) {
-      analytics.trackTwoTimersMilestone();
+    // Robust trigger: show at timer 2-3, with fallback at 5 if missed
+    const shouldShowModal = !hasSeenTwoTimersModal && (
+      (newCount >= 2 && newCount <= 3) || // Primary trigger
+      (newCount === 5) // Fallback if modal was somehow skipped
+    );
+
+    if (shouldShowModal) {
+      analytics.trackTwoTimersMilestone({ fallback: newCount === 5 });
       setHasSeenTwoTimersModal(true);
 
       // Push two timers modal to stack
@@ -194,12 +202,30 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
         },
       });
     }
+
+    // In-app review request at 5 timers (after two timers modal)
+    if (!hasSeenReviewRequest && newCount === 5) {
+      try {
+        const isAvailable = await StoreReview.isAvailableAsync();
+        if (isAvailable) {
+          await StoreReview.requestReview();
+          setHasSeenReviewRequest(true);
+          analytics.track('app_review_requested', { timerCount: newCount });
+        }
+      } catch (error) {
+        // Non-blocking: review request is nice-to-have
+        console.warn('[TimerScreen] StoreReview error:', error.message);
+      }
+    }
   };
+
+  // In landscape, don't apply top/bottom safe area (causes offset)
+  const safeAreaEdges = isLandscape ? ['left', 'right'] : ['top', 'bottom'];
 
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
-      edges={['top', 'bottom']}
+      edges={safeAreaEdges}
     >
       {/* DIAL ZONE - Always visible (portrait & landscape) */}
       <DialZone
@@ -220,10 +246,6 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
           isCompleted={isTimerCompleted}
           flashActivity={flashActivity}
           isTimerRunning={isTimerRunning}
-          isTimerCompleted={isTimerCompleted}
-          onPlay={handlePlayPause}
-          onReset={handleReset}
-          onStop={handleStop}
           onOpenSettings={() => setSettingsModalVisible(true)}
         />
       )}

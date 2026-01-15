@@ -12,20 +12,24 @@
  * Dial modes configuration (ADR-004)
  * No magnetic snap - smooth exploration throughout all scales
  * Graduation marks are visual references only, not snap targets
+ *
+ * @updated 2026-01-15 - Simplified to 5 active scales: 5, 15, 30, 45, 60
+ * (Removed 1min, 10min, 25min for better UX - kept commented for reference)
  */
 export const DIAL_MODES = {
-  '1min': {
-    maxMinutes: 1,
-    label: '1 minute',
-    description: 'Très court',
-    graduationInterval: 1,
-    majorTickInterval: 2,      // Every 10 seconds is major (at 10s, 20s, 30s, 40s, 50s)
-    numberInterval: 2,         // Show numbers only at major ticks (10s, 20s, 30s, 40s, 50s)
-    totalMarksOverride: 12,    // 12 marks = every 5 seconds (cleaner than 60)
-    useSecondsLabels: true,    // Display as "10s", "20s", etc.
-    secondsPerMark: 5,         // Each mark = 5 seconds
-    defaultDuration: 1 * 60,
-  },
+  // DEPRECATED: '1min' - Trop court, peu utile
+  // '1min': {
+  //   maxMinutes: 1,
+  //   label: '1 minute',
+  //   description: 'Très court',
+  //   graduationInterval: 1,
+  //   majorTickInterval: 2,
+  //   numberInterval: 2,
+  //   totalMarksOverride: 12,
+  //   useSecondsLabels: true,
+  //   secondsPerMark: 5,
+  //   defaultDuration: 1 * 60,
+  // },
   '5min': {
     maxMinutes: 5,
     label: '5 minutes',
@@ -35,15 +39,16 @@ export const DIAL_MODES = {
     numberInterval: 1,
     defaultDuration: 5 * 60,
   },
-  '10min': {
-    maxMinutes: 10,
-    label: '10 minutes',
-    description: 'Sessions courtes',
-    graduationInterval: 1,
-    majorTickInterval: 1,      // All 10 marks are major
-    numberInterval: 1,         // All numbers: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-    defaultDuration: 10 * 60,
-  },
+  // DEPRECATED: '10min' - Redondant entre 5min et 15min
+  // '10min': {
+  //   maxMinutes: 10,
+  //   label: '10 minutes',
+  //   description: 'Sessions courtes',
+  //   graduationInterval: 1,
+  //   majorTickInterval: 1,
+  //   numberInterval: 1,
+  //   defaultDuration: 10 * 60,
+  // },
   '15min': {
     maxMinutes: 15,
     label: '15 minutes',
@@ -53,15 +58,16 @@ export const DIAL_MODES = {
     numberInterval: 3,
     defaultDuration: 15 * 60,
   },
-  '25min': {
-    maxMinutes: 25,
-    label: '25 minutes',
-    description: 'Pomodoro standard',
-    graduationInterval: 1,
-    majorTickInterval: 5,
-    numberInterval: 5,
-    defaultDuration: 25 * 60,
-  },
+  // DEPRECATED: '25min' - Preset 25min utilisera scale 30min
+  // '25min': {
+  //   maxMinutes: 25,
+  //   label: '25 minutes',
+  //   description: 'Pomodoro standard',
+  //   graduationInterval: 1,
+  //   majorTickInterval: 5,
+  //   numberInterval: 5,
+  //   defaultDuration: 25 * 60,
+  // },
   '30min': {
     maxMinutes: 30,
     label: '30 minutes',
@@ -92,7 +98,7 @@ export const DIAL_MODES = {
 };
 
 export function getDialMode(mode) {
-  return DIAL_MODES[mode] || DIAL_MODES['25min'];
+  return DIAL_MODES[mode] || DIAL_MODES['30min']; // Default changed from 25min to 30min
 }
 
 export const DIAL_INTERACTION = {
@@ -287,7 +293,7 @@ export const SPRING = {
 
 export const DIAL_LAYOUT = {
   BACKGROUND_OFFSET: 30, // Space between outer radius and background circle
-  CENTER_ZONE_RATIO: 0.35, // 35% of dial = center tap zone
+  CENTER_ZONE_RATIO: 0.45, // 45% of dial = center dead zone (increased to protect PulseButton from drag conflicts)
   OUTER_ZONE_MIN_RATIO: 0.65, // 65%+ = graduations tap zone
   // Handle is now a simple segment (see TimerDial.jsx)
 };

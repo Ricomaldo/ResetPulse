@@ -125,13 +125,11 @@ export default function TimeTimer({
   /**
    * Handle drag/tap on dial to set duration
    * Smooth drag during interaction, subtle snap on release
+   * Allows adjustment even while running (user can "cheat" +/- time)
    * @param {number} minutes - Raw minutes value from dial interaction
    * @param {boolean} isRelease - True if this is the final value (release), false if dragging
    */
   const handleGraduationTap = useCallback((minutes, isRelease = false) => {
-    // Use ref to access latest timer without including it in dependencies
-    if (timerRef.current.running) {return;}
-
     const dialMode = getDialMode(scaleMode);
 
     // Clamp to current scale mode's max (0 to maxMinutes)

@@ -4,7 +4,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Purchases from 'react-native-purchases';
 import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
@@ -109,6 +109,19 @@ export const PurchaseProvider = ({ children }) => {
       await Purchases.configure({ apiKey });
       Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
 
+      // Enable Apple Search Ads attribution collection (iOS only)
+      // This collects AdServices tokens automatically - no extra SDK needed
+      // Data appears in RevenueCat dashboard under Attribution
+      if (Platform.OS === 'ios') {
+        try {
+          await Purchases.enableAdServicesAttributionTokenCollection();
+          logger.log('[RevenueCat] Apple Search Ads attribution enabled');
+        } catch (attrError) {
+          // Non-blocking - attribution is nice-to-have
+          logger.warn('[RevenueCat] Attribution collection failed:', attrError.message);
+        }
+      }
+
       // Step 3: Fetch fresh data in background
       const info = await Purchases.getCustomerInfo();
       const freshPremiumStatus = checkPremiumEntitlement(info);
@@ -193,6 +206,13 @@ export const PurchaseProvider = ({ children }) => {
           // Track purchase completed (M7.5)
           Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
 
+          // Show celebration alert
+          Alert.alert(
+            i18n.t('premium.welcomeTitle'),
+            i18n.t('premium.welcomeMessage'),
+            [{ text: i18n.t('common.ok'), style: 'default' }]
+          );
+
           return { success: true };
         }
       }
@@ -212,6 +232,13 @@ export const PurchaseProvider = ({ children }) => {
 
       // Track purchase completed (M7.5)
       Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
+
+      // Show celebration alert
+      Alert.alert(
+        i18n.t('premium.welcomeTitle'),
+        i18n.t('premium.welcomeMessage'),
+        [{ text: i18n.t('common.ok'), style: 'default' }]
+      );
 
       return { success: true };
     } catch (error) {

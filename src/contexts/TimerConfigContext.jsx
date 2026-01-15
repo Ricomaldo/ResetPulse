@@ -12,7 +12,7 @@
  * - system: keepAwakeEnabled
  * - favorites: favoriteActivities, favoritePalettes
  * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
- * - stats: activityDurations, completedTimersCount, hasSeenTwoTimersModal
+ * - stats: activityDurations, completedTimersCount, hasSeenTwoTimersModal, hasSeenReviewRequest
  * - palette: currentPalette, selectedColorIndex, paletteInfo, paletteColors, timerColors, currentColor
  * - transient: timerRemaining, flashActivity, isLoading
  */
@@ -78,6 +78,8 @@ export const TimerConfigProvider = ({ children }) => {
           longPressConfirmDuration: 2500,
           longPressStartDuration: 3000,
           startAnimationDuration: 1200,
+          customStartLongPress: true,
+          customStopLongPress: true,
         },
         system: {
           keepAwakeEnabled: true,
@@ -95,6 +97,7 @@ export const TimerConfigProvider = ({ children }) => {
           activityDurations: {},
           completedTimersCount: 0,
           hasSeenTwoTimersModal: false,
+          hasSeenReviewRequest: false,
         },
         palette: {
           currentPalette: 'serenity',
@@ -126,6 +129,8 @@ export const TimerConfigProvider = ({ children }) => {
         longPressConfirmDuration: 2500,
         longPressStartDuration: 3000,
         startAnimationDuration: 1200,
+        customStartLongPress: true,
+        customStopLongPress: true,
       },
       system: {
         keepAwakeEnabled: true,
@@ -143,6 +148,7 @@ export const TimerConfigProvider = ({ children }) => {
         activityDurations: {},
         completedTimersCount: 0,
         hasSeenTwoTimersModal: false,
+        hasSeenReviewRequest: false,
       },
       palette: {
         currentPalette: 'serenity',
@@ -205,6 +211,8 @@ export const TimerConfigProvider = ({ children }) => {
               longPressConfirmDuration: parsed.longPressConfirmDuration || migratedValues.interaction.longPressConfirmDuration,
               longPressStartDuration: parsed.longPressStartDuration || migratedValues.interaction.longPressStartDuration,
               startAnimationDuration: parsed.startAnimationDuration || migratedValues.interaction.startAnimationDuration,
+              customStartLongPress: parsed.customStartLongPress !== undefined ? parsed.customStartLongPress : migratedValues.interaction.customStartLongPress,
+              customStopLongPress: parsed.customStopLongPress !== undefined ? parsed.customStopLongPress : migratedValues.interaction.customStopLongPress,
             };
             migratedValues.system = {
               keepAwakeEnabled: parsed.keepAwakeEnabled !== undefined ? parsed.keepAwakeEnabled : migratedValues.system.keepAwakeEnabled,
@@ -222,6 +230,7 @@ export const TimerConfigProvider = ({ children }) => {
               activityDurations: parsed.activityDurations || migratedValues.stats.activityDurations,
               completedTimersCount: parsed.completedTimersCount || migratedValues.stats.completedTimersCount,
               hasSeenTwoTimersModal: parsed.hasSeenTwoTimersModal !== undefined ? parsed.hasSeenTwoTimersModal : migratedValues.stats.hasSeenTwoTimersModal,
+              hasSeenReviewRequest: parsed.hasSeenReviewRequest !== undefined ? parsed.hasSeenReviewRequest : migratedValues.stats.hasSeenReviewRequest,
             };
             needsMigration = true;
           } catch (e) {
@@ -395,6 +404,8 @@ export const TimerConfigProvider = ({ children }) => {
       longPressConfirmDuration: values.interaction.longPressConfirmDuration,
       longPressStartDuration: values.interaction.longPressStartDuration,
       startAnimationDuration: values.interaction.startAnimationDuration,
+      customStartLongPress: values.interaction.customStartLongPress,
+      customStopLongPress: values.interaction.customStopLongPress,
     },
     system: {
       keepAwakeEnabled: values.system.keepAwakeEnabled,
@@ -412,6 +423,7 @@ export const TimerConfigProvider = ({ children }) => {
       activityDurations: values.stats.activityDurations,
       completedTimersCount: values.stats.completedTimersCount,
       hasSeenTwoTimersModal: values.stats.hasSeenTwoTimersModal,
+      hasSeenReviewRequest: values.stats.hasSeenReviewRequest,
     },
     palette: {
       currentPalette: values.palette.currentPalette,
@@ -499,7 +511,7 @@ export const TimerConfigProvider = ({ children }) => {
           }
         }));
       } else {
-        const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce'];
+        const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce', 'custom'];
         if (validProfiles.includes(profile)) {
           setValues(prev => ({
             ...prev,
@@ -527,6 +539,17 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         interaction: { ...prev.interaction, startAnimationDuration: clamped }
+      }));
+    },
+    setCustomInteraction: (startRequiresLongPress, stopRequiresLongPress) => {
+      setValues(prev => ({
+        ...prev,
+        interaction: {
+          ...prev.interaction,
+          interactionProfile: 'custom',
+          customStartLongPress: startRequiresLongPress,
+          customStopLongPress: stopRequiresLongPress,
+        }
       }));
     },
 
@@ -628,6 +651,12 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         stats: { ...prev.stats, hasSeenTwoTimersModal: seen }
+      }));
+    },
+    setHasSeenReviewRequest: (seen) => {
+      setValues(prev => ({
+        ...prev,
+        stats: { ...prev.stats, hasSeenReviewRequest: seen }
       }));
     },
 

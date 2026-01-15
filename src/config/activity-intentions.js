@@ -14,14 +14,14 @@ export const ACTIVITY_INTENTIONS = [
     emoji: '🧘',
     i18nKey: 'onboarding.intentions.relax.label',
     defaultNameKey: 'onboarding.intentions.relax.defaultName',
-    defaultDuration: 1200, // 20 min
+    defaultDuration: 900, // 15 min (aligned with 5 scales)
   },
   {
     id: 'work',
     emoji: '💻',
     i18nKey: 'onboarding.intentions.work.label',
     defaultNameKey: 'onboarding.intentions.work.defaultName',
-    defaultDuration: 1500, // 25 min (Pomodoro)
+    defaultDuration: 1800, // 30 min (aligned with 5 scales, closest to Pomodoro)
   },
   {
     id: 'create',

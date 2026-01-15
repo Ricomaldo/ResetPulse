@@ -10,7 +10,8 @@
     "continue": "Continuer"
   },
   "presets": {
-    "adaptHint": "Tape « Adapter » pour ajuster le cadran"
+    "adaptHint": "Tape « Adapter » pour ajuster le cadran",
+    "longPressHint": "Appui long pour adapter le cadran"
   },
   "controls": {
     "fit": {
@@ -243,19 +244,19 @@
   },
   "personas": {
     "veloce": {
-      "label": "Véloce",
+      "label": "Flow",
       "description": "Tu sais ce que tu veux. Ton timer répondra instantanément."
     },
     "abandonniste": {
-      "label": "Abandonniste",
+      "label": "Ancrage",
       "description": "Tu as du mal à tenir jusqu'au bout. Ton timer te protégera des arrêts impulsifs."
     },
     "impulsif": {
-      "label": "Impulsif",
+      "label": "Intention",
       "description": "Tu démarres vite, tu as besoin de freiner. Ton timer demandera confirmation pour démarrer."
     },
     "ritualiste": {
-      "label": "Ritualiste",
+      "label": "Présence",
       "description": "Les actions délibérées te correspondent. Ton timer s'adaptera à ton rythme."
     }
   },
@@ -325,23 +326,30 @@
       "version": "Version"
     },
     "persona": {
-      "sectionTitle": "Comment tu fonctionnes",
+      "sectionTitle": "Profil d'interaction",
       "sectionSubtitle": "Configure la résistance du bouton Play/Stop",
-      "impulsive": {
-        "label": "Impulsif",
+      "flow": {
+        "label": "Flow",
+        "description": "Démarrage rapide · Arrêt rapide"
+      },
+      "anchored": {
+        "label": "Ancrage",
         "description": "Démarrage rapide · Arrêt maintenu"
       },
-      "quitter": {
-        "label": "Abandonniste",
+      "intentional": {
+        "label": "Intention",
         "description": "Démarrage maintenu · Arrêt rapide"
       },
-      "ritualist": {
-        "label": "Ritualiste",
+      "mindful": {
+        "label": "Présence",
         "description": "Démarrage maintenu · Arrêt maintenu"
       },
-      "swift": {
-        "label": "Véloce",
-        "description": "Démarrage rapide · Arrêt rapide"
+      "custom": {
+        "label": "Personnalisé",
+        "startLabel": "Démarrage",
+        "stopLabel": "Arrêt",
+        "tap": "Tap",
+        "hold": "Maintenu"
       }
     },
     "dev": {
@@ -368,10 +376,14 @@
       "rational": {
         "label": "Rationnel",
         "description": "ControlBar (durée + run)"
+      },
+      "timeSetup": {
+        "label": "Réglage Temps",
+        "description": "Minuteur + presets"
       }
     },
     "sections": {
-      "dialScale": "Échelle du cadran",
+      "configuration": "CONFIGURATION",
       "timerOptions": "Options du timer",
       "keepAwake": "Keep Awake",
       "rotationDirection": "Sens de rotation",

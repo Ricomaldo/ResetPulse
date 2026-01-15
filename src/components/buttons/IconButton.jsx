@@ -2,11 +2,12 @@
  * @fileoverview IconButton Component for ResetPulse
  * Flexible icon button with optional label support for toolbar and inline actions
  * @created 2025-12-19
+ * @updated 2026-01-15 - Added pulse animation for 'selection-pulse' variant
  */
 
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View, Animated } from 'react-native';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import { createFocusStyle } from '../../styles/focusStyles';
 import { getButtonBaseStyles, getIconSize } from '../../styles/buttonStyles';
@@ -68,6 +69,35 @@ const IconButton = React.memo(function IconButton({
   const { colors, borderRadius, spacing } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
 
+  // Pulse animation for 'selection-pulse' variant
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (variant === 'selection-pulse') {
+      // Loop pulse animation
+      const animation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 0.8,
+            duration: 200,
+            useNativeDriver: false, // borderWidth needs layout animation
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: false,
+          }),
+        ])
+      );
+      animation.start();
+
+      return () => animation.stop();
+    } else {
+      // Reset to default
+      pulseAnim.setValue(1);
+    }
+  }, [variant, pulseAnim]);
+
   // Get base button styles from utility
   const { styles: baseStyles, variantConfig } = getButtonBaseStyles(
     { colors, borderRadius, spacing },
@@ -109,12 +139,18 @@ const IconButton = React.memo(function IconButton({
       minHeight: baseStyles.height,
     };
 
+  // Pulse style for 'selection-pulse' variant
+  const pulseStyle = variant === 'selection-pulse' ? {
+    opacity: pulseAnim,
+  } : {};
+
   return (
     <TouchableOpacity
       style={[
         baseStyles,
         containerPaddingStyle,
         isFocused && createFocusStyle({ colors }),
+        pulseStyle,
         style,
       ]}
       onPress={onPress}

@@ -124,6 +124,23 @@ export const getButtonBaseStyles = (theme, options = {}) => {
       textColor: colors.text,
       overlayColor: 'rgba(0, 0, 0, 0.10)',
     },
+    // Selection pulse: interim "tap again" affordance (double tap window)
+    'selection-pulse': {
+      backgroundColor: colors.background,
+      borderColor: colors.brand.accent,
+      borderWidth: 2,
+      textColor: colors.text,
+      overlayColor: colors.brand.accent + '20',
+      pulse: true, // Flag for animated pulse
+    },
+    // Selection with border: scale active indicator
+    'selection-border': {
+      backgroundColor: colors.background,
+      borderColor: colors.brand.primary,
+      borderWidth: 2,
+      textColor: colors.text,
+      overlayColor: colors.text + '10',
+    },
   };
 
   const sizeConfig = sizeMap[size] || sizeMap.medium;

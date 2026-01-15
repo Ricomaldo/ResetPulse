@@ -21,7 +21,7 @@ export const PERSONAS = {
   },
   abandonniste: {
     id: 'abandonniste',
-    emoji: '🏃',
+    emoji: '⚓',
     labelKey: 'personas.abandonniste.label',
     descriptionKey: 'personas.abandonniste.description',
     startRequiresLongPress: false,
@@ -29,7 +29,7 @@ export const PERSONAS = {
   },
   impulsif: {
     id: 'impulsif',
-    emoji: '🚀',
+    emoji: '🎯',
     labelKey: 'personas.impulsif.label',
     descriptionKey: 'personas.impulsif.description',
     startRequiresLongPress: true,
@@ -37,7 +37,7 @@ export const PERSONAS = {
   },
   ritualiste: {
     id: 'ritualiste',
-    emoji: '🎯',
+    emoji: '🧘',
     labelKey: 'personas.ritualiste.label',
     descriptionKey: 'personas.ritualiste.description',
     startRequiresLongPress: true,

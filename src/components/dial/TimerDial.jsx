@@ -154,6 +154,8 @@ function TimerDial({
   const lastTouchMinutesRef = useRef(null);
   // Track timestamp for velocity calculation
   const lastMoveTimeRef = useRef(null);
+  // Track if drag is valid (started outside dead zone)
+  const isDragValid = useSharedValue(false);
 
   // Get graduation marks and numbers from centralized logic
   const graduationMarks = useMemo(() => {
@@ -188,16 +190,20 @@ function TimerDial({
   // All gesture logic runs on JS thread because dial methods require JS
 
   // Handler for pan gesture start
-  const handlePanStart = useCallback((touchX, touchY) => {
+  const handlePanStart = useCallback((touchX, touchY, shouldActivate) => {
     const distanceFromCenter = Math.sqrt(
       Math.pow(touchX - centerX, 2) + Math.pow(touchY - centerY, 2)
     );
 
     // Ignore touches in center zone (let PulseButton handle them)
+    // Dead zone: 45% of dial radius to protect PulseButton from drag conflicts
     if (distanceFromCenter <= centerZoneRadius) {
+      shouldActivate.value = false;
+      setIsDragging(false); // Ensure dragging flag is reset
       return false;
     }
 
+    shouldActivate.value = true;
     setIsDragging(true);
 
     // Calculate where the user touched
@@ -297,21 +303,32 @@ function TimerDial({
       .minDistance(10) // Minimum distance to start pan (differentiates from tap)
       .onStart((event) => {
         'worklet';
-        runOnJS(handlePanStart)(event.x, event.y);
+        isDragValid.value = false; // Reset flag
+        runOnJS(handlePanStart)(event.x, event.y, isDragValid);
       })
       .onUpdate((event) => {
         'worklet';
-        runOnJS(handlePanUpdate)(event.x, event.y);
+        // Only process drag if it started outside dead zone (45% radius)
+        if (isDragValid.value) {
+          runOnJS(handlePanUpdate)(event.x, event.y);
+        }
       })
       .onEnd(() => {
         'worklet';
-        runOnJS(handlePanEnd)();
+        if (isDragValid.value) {
+          runOnJS(handlePanEnd)();
+        }
+        isDragValid.value = false; // Reset for next gesture
       })
       .onFinalize(() => {
         'worklet';
-        runOnJS(handlePanEnd)();
+        // Always reset flag, even if gesture was cancelled
+        if (isDragValid.value) {
+          runOnJS(handlePanEnd)();
+        }
+        isDragValid.value = false;
       }),
-  [handlePanStart, handlePanUpdate, handlePanEnd]
+  [handlePanStart, handlePanUpdate, handlePanEnd, isDragValid]
   );
 
   // === GESTURE: Tap (on graduations to set duration) ===
@@ -412,21 +429,17 @@ function TimerDial({
             now: durationMinutes,
             text: `${durationMinutes} minutes`,
           }}
-          accessibilityActions={
-            !isRunning
-              ? [
-                { name: 'increment', label: 'Increase duration' },
-                { name: 'decrement', label: 'Decrease duration' },
-                { name: 'activate', label: 'Start timer' },
-              ]
-              : [{ name: 'activate', label: 'Pause timer' }]
-          }
+          accessibilityActions={[
+            { name: 'increment', label: 'Increase duration' },
+            { name: 'decrement', label: 'Decrease duration' },
+            { name: 'activate', label: isRunning ? 'Pause timer' : 'Start timer' },
+          ]}
           onAccessibilityAction={(event) => {
             const { actionName } = event.nativeEvent;
-            if (actionName === 'increment' && onGraduationTap && !isRunning) {
+            if (actionName === 'increment' && onGraduationTap) {
               const newDuration = Math.min(duration + 60, getDialMode(scaleMode).maxMinutes * 60);
               onGraduationTap(newDuration / 60, true);
-            } else if (actionName === 'decrement' && onGraduationTap && !isRunning) {
+            } else if (actionName === 'decrement' && onGraduationTap) {
               const newDuration = Math.max(0, duration - 60);
               onGraduationTap(newDuration / 60, true);
             } else if (actionName === 'activate' && onDialTap) {
@@ -494,7 +507,8 @@ function TimerDial({
 
           {/* Drag handle: small radial segment on the arc edge */}
           {/* Same color as arc but darker for contrast */}
-          {!isRunning && displayProgress > 0 && (
+          {/* Visible even when running to allow time adjustment */}
+          {displayProgress > 0 && (
             <Animated.View
               style={[
                 staticStyles.absoluteOverlay,

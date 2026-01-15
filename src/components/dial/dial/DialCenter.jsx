@@ -32,8 +32,11 @@ const DialCenter = React.memo(function DialCenter({
   size = 72,
 }) {
   // Get pulse setting and interaction profile from context
-  const { display: { shouldPulse }, interaction: { interactionProfile } } = useTimerConfig();
-  const profileConfig = getProfileConfig(interactionProfile);
+  const { display: { shouldPulse }, interaction: { interactionProfile, customStartLongPress, customStopLongPress } } = useTimerConfig();
+  const profileConfig = getProfileConfig(interactionProfile, {
+    startRequiresLongPress: customStartLongPress,
+    stopRequiresLongPress: customStopLongPress,
+  });
 
   // Déterminer l'état du bouton
   const getState = () => {

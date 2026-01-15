@@ -3,9 +3,9 @@
  * Migration: PanResponder custom → @gorhom/bottom-sheet
  * Stack: @gorhom/bottom-sheet + react-native-reanimated (ADR-006)
  * @created 2025-12-19
- * @updated 2025-12-19
+ * @updated 2026-01-15 - Added onAnimate to block direct snap jumps (0→2, 2→0)
  */
-import React, { useRef, useMemo, useState, useEffect } from 'react';
+import React, { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import BottomSheet, {
   BottomSheetScrollView,
@@ -25,8 +25,8 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 // Calculate responsive heights based on snap points
 // Note: Container heights are slightly smaller than snap points to account for handle + padding
-const LAYER_1_HEIGHT = SCREEN_HEIGHT * 0.08; // Turquoise layer (fixed small height)
-const CONTAINER_SNAP_1 = SCREEN_HEIGHT * 0.1; // Container at snap 0 (15% snap - 5% handle/padding)
+const LAYER_1_HEIGHT = SCREEN_HEIGHT * 0.1; // Turquoise layer (fixed small height)
+const CONTAINER_SNAP_1 = SCREEN_HEIGHT * 0.13; // Container at snap 0 (18% snap - 5% handle/padding)
 const CONTAINER_SNAP_2 = SCREEN_HEIGHT * 0.32; // Container at snap 1 (38% snap - 6% handle/padding)
 const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8; // Container at snap 2 (90% snap - 10% handle/padding)
 
@@ -34,7 +34,7 @@ const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8; // Container at snap 2 (90% snap -
  * SheetContent - Internal component with access to BottomSheet context
  * Handles fade transitions between snap points
  */
-function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, activityCarouselRef, paletteCarouselRef, isPremiumUser }) {
+function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, paletteCarouselRef, isPremiumUser }) {
   const theme = useTheme();
   const { animatedIndex } = useBottomSheet();
 
@@ -42,18 +42,18 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
   const containerHeightStyle = useAnimatedStyle(() => {
     const height = interpolate(
       animatedIndex.value,
-      [0, 1, 2], // Snap 0 (15%), 1 (38%), 2 (90%)
+      [0, 1, 2], // Snap 0 (18%), 1 (38%), 2 (90%)
       [CONTAINER_SNAP_1, CONTAINER_SNAP_2, CONTAINER_SNAP_3], // Responsive heights
       Extrapolation.CLAMP
     );
     return { height };
   });
 
-  // Fade out FavoriteTool (turquoise) when moving from snap 0 (15%) to snap 1 (38%)
+  // Fade out FavoriteTool (turquoise) when moving from snap 0 (18%) to snap 1 (38%)
   const favoriteOpacityStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       animatedIndex.value,
-      [0, 1, 2], // Snap 0 (15%), 1 (38%), 2 (90%)
+      [0, 1, 2], // Snap 0 (18%), 1 (38%), 2 (90%)
       [1, 0, 0], // Opacity: visible → invisible → invisible
       Extrapolation.CLAMP
     );
@@ -64,7 +64,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
   const baseOpacityStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       animatedIndex.value,
-      [0, 1, 2], // Snap 0 (15%), 1 (38%), 2 (90%)
+      [0, 1, 2], // Snap 0 (18%), 1 (38%), 2 (90%)
       [0, 1, 0], // Opacity: invisible → visible → invisible
       Extrapolation.CLAMP
     );
@@ -86,11 +86,11 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
   return (
     <BottomSheetScrollView
       contentContainerStyle={styles.scrollContent}
-      scrollEnabled={currentSnapIndex >= 1} // Scroll disabled at snap 0 (15%), enabled at snap 1+ (38%, 90%)
+      scrollEnabled={currentSnapIndex >= 1} // Scroll disabled at snap 0 (18%), enabled at snap 1+ (38%, 90%)
     >
       {/* All layers superposed (FavoriteTool + BaseCommands + AllOptions) */}
       <Animated.View style={[styles.layerContainer, containerHeightStyle]}>
-        {/* Snap 15%: FavoriteToolBox */}
+        {/* Snap 18%: FavoriteToolBox */}
         <Animated.View
           style={[
             styles.layerAbsolute,
@@ -101,10 +101,6 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
         >
           <FavoriteToolBox
             isTimerRunning={isTimerRunning}
-            isTimerCompleted={isTimerCompleted}
-            onPlay={onPlay}
-            onReset={onReset}
-            onStop={onStop}
           />
         </Animated.View>
 
@@ -119,10 +115,6 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
         >
           <ToolBox
             isTimerRunning={isTimerRunning}
-            isTimerCompleted={isTimerCompleted}
-            onPlay={onPlay}
-            onReset={onReset}
-            onStop={onStop}
             activityCarouselRef={activityCarouselRef}
             paletteCarouselRef={paletteCarouselRef}
           />
@@ -148,8 +140,13 @@ function SheetContent({ currentSnapIndex, isTimerRunning, isTimerCompleted, onPl
  * AsideZone - BottomSheet 3-snap (0=favorite, 1=toolbox, 2=all) + MessageZone overlay
  *
  * @param {string} timerState - 'REST' | 'RUNNING' | 'COMPLETE' (source of truth for animations)
+ * @param {boolean} isTimerRunning - Timer running state
+ * @param {Function} onOpenSettings - Callback to open settings (unused, kept for API compatibility)
+ * @param {string} displayMessage - Message to display in MessageZone
+ * @param {boolean} isCompleted - Timer completion state (MessageZone)
+ * @param {Object} flashActivity - Activity flash animation data
  */
-export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted, onPlay, onReset, onStop, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity }) {
+export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity }) {
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
   const { timer: { currentActivity } } = useTimerConfig();
@@ -159,11 +156,14 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
   const activityCarouselRef = useRef(null);
   const paletteCarouselRef = useRef(null);
 
-  // 3 snap points: 15% (favorite) / 38% (toolbox) / 90% (all)
-  const snapPoints = useMemo(() => ['15%', '38%', '90%'], []);
+  // Track previous snap index (for preventing 0 → 2 jumps)
+  const previousSnapIndexRef = useRef(0);
+
+  // 3 snap points: 18% (favorite) / 38% (toolbox) / 90% (all)
+  const snapPoints = useMemo(() => ['18%', '38%', '90%'], []);
 
   // Track current snap index (0=favorite, 1=toolbox, 2=all)
-  const [currentSnapIndex, setCurrentSnapIndex] = useState(0); // Default: 15% (favorite)
+  const [currentSnapIndex, setCurrentSnapIndex] = useState(0); // Default: 18% (favorite)
 
   // Dynamic background based on snap index (no animation to avoid frozen object error)
   // Snap 0-1: surface | Snap 2 (expanded): surfaceElevated
@@ -173,8 +173,8 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
 
   // Custom spring animation (smooth, less bouncy)
   const animationConfigs = useBottomSheetSpringConfigs({
-    damping: 90,
-    stiffness: 450,
+    damping: 100,        // Increased from 90 - more resistance at snap points
+    stiffness: 400,      // Decreased from 450 - slower, more controlled transitions
     overshootClamping: true,
     restDisplacementThreshold: 0.01,
     restSpeedThreshold: 0.01,
@@ -183,9 +183,26 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
   // Auto-collapse to snap 0 (favorite) when timer is running
   useEffect(() => {
     if (isTimerRunning && bottomSheetRef.current) {
-      bottomSheetRef.current.snapToIndex(0); // Collapse to 15% (favorite tool visible)
+      bottomSheetRef.current.snapToIndex(0); // Collapse to 18% (favorite tool visible)
+      previousSnapIndexRef.current = 0; // Reset previous snap index
     }
   }, [isTimerRunning]);
+
+  // onAnimate: intercept BEFORE animation starts (not during)
+  // Block direct jumps 0→2 and 2→0 by redirecting to snap 1
+  const handleAnimate = useCallback((fromIndex, toIndex) => {
+    // Block 0 → 2 jump (swipe up from 18% attempting to reach 90%)
+    if (fromIndex === 0 && toIndex === 2) {
+      bottomSheetRef.current?.snapToIndex(1); // Force stop at 38%
+      return;
+    }
+
+    // Block 2 → 0 jump (swipe down from 90% attempting to reach 18%)
+    if (fromIndex === 2 && toIndex === 0) {
+      bottomSheetRef.current?.snapToIndex(1); // Force stop at 38%
+      return;
+    }
+  }, []);
 
   return (
     <View style={styles.asideContainer}>
@@ -207,11 +224,14 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={snapPoints}
-        index={0} // Start at 15% (favorite)
+        index={0} // Start at 18% (favorite)
         enablePanDownToClose={false} // Drawer permanent (no close state)
         enableDynamicSizing={false} // Force snap points to be respected
+        onAnimate={handleAnimate} // Intercept BEFORE animation starts to block direct jumps
         onChange={(index) => {
+          // Update state
           setCurrentSnapIndex(index);
+          previousSnapIndexRef.current = index;
         }}
         handleIndicatorStyle={{
           backgroundColor: theme.colors.textSecondary,
@@ -228,10 +248,6 @@ export default function AsideZone({ timerState, isTimerRunning, isTimerCompleted
         <SheetContent
           currentSnapIndex={currentSnapIndex}
           isTimerRunning={isTimerRunning}
-          isTimerCompleted={isTimerCompleted}
-          onPlay={onPlay}
-          onReset={onReset}
-          onStop={onStop}
           activityCarouselRef={activityCarouselRef}
           paletteCarouselRef={paletteCarouselRef}
           isPremiumUser={isPremiumUser}

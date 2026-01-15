@@ -1,7 +1,7 @@
 /**
  * @fileoverview Snap interval settings for dial interaction
  * @created 2025-12-17
- * @updated 2025-12-17
+ * @updated 2026-01-15 - Simplified to 5 active scales
  *
  * Snap intervals are applied ONLY on release (not during drag) for subtle precision assistance.
  * These values determine how the timer duration "snaps" to the nearest interval when the user
@@ -16,13 +16,16 @@
 /**
  * Snap intervals (in seconds) for each scale mode (ADR-004)
  * Applied when user releases drag gesture or taps on graduations
+ *
+ * Active scales: 5, 15, 30, 45, 60 minutes
+ * (Removed 1min, 10min, 25min - kept commented for reference)
  */
 export const SNAP_INTERVALS = {
-  '1min': 1,   // 1 second
+  // '1min': 1,   // DEPRECATED
   '5min': 5,   // 5 seconds
-  '10min': 10, // 10 seconds
+  // '10min': 10, // DEPRECATED
   '15min': 15, // 15 seconds
-  '25min': 25, // 25 seconds
+  // '25min': 25, // DEPRECATED
   '30min': 30, // 30 seconds
   '45min': 45, // 45 seconds
   '60min': 60, // 60 seconds
