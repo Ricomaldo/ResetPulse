@@ -240,8 +240,8 @@ describe('TimerScreen', () => {
     expect(asideZone.props.timerState).toBeDefined();
     expect(asideZone.props.displayMessage).toBeDefined();
     expect(asideZone.props.isTimerRunning).toBeDefined();
-    expect(asideZone.props.onPlay).toBeDefined();
-    expect(asideZone.props.onReset).toBeDefined();
-    expect(asideZone.props.onStop).toBeDefined();
+    expect(asideZone.props.isCompleted).toBeDefined();
+    expect(asideZone.props.flashActivity).toBeDefined();
+    expect(asideZone.props.onOpenSettings).toBeDefined();
   });
 });
