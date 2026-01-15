@@ -190,20 +190,8 @@ function TimerDial({
   // All gesture logic runs on JS thread because dial methods require JS
 
   // Handler for pan gesture start
-  const handlePanStart = useCallback((touchX, touchY, shouldActivate) => {
-    const distanceFromCenter = Math.sqrt(
-      Math.pow(touchX - centerX, 2) + Math.pow(touchY - centerY, 2)
-    );
-
-    // Ignore touches in center zone (let PulseButton handle them)
-    // Dead zone: 45% of dial radius to protect PulseButton from drag conflicts
-    if (distanceFromCenter <= centerZoneRadius) {
-      shouldActivate.value = false;
-      setIsDragging(false); // Ensure dragging flag is reset
-      return false;
-    }
-
-    shouldActivate.value = true;
+  const handlePanStart = useCallback((touchX, touchY) => {
+    // Dead zone check is now done in the worklet (panGesture.onStart)
     setIsDragging(true);
 
     // Calculate where the user touched
@@ -217,7 +205,7 @@ function TimerDial({
     lastMoveTimeRef.current = Date.now();
 
     return true;
-  }, [dial, duration, centerX, centerY, centerZoneRadius]);
+  }, [dial, duration, centerX, centerY]);
 
   // Handler for pan gesture update (must be in JS thread for dial methods)
   const handlePanUpdate = useCallback((touchX, touchY) => {
@@ -303,12 +291,22 @@ function TimerDial({
       .minDistance(10) // Minimum distance to start pan (differentiates from tap)
       .onStart((event) => {
         'worklet';
-        isDragValid.value = false; // Reset flag
-        runOnJS(handlePanStart)(event.x, event.y, isDragValid);
+        // Calculate distance from center in worklet (can modify SharedValue here)
+        const dx = event.x - centerX;
+        const dy = event.y - centerY;
+        const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+
+        // Check if touch is outside dead zone (38% of radius)
+        if (distanceFromCenter > centerZoneRadius) {
+          isDragValid.value = true;
+          runOnJS(handlePanStart)(event.x, event.y);
+        } else {
+          isDragValid.value = false;
+        }
       })
       .onUpdate((event) => {
         'worklet';
-        // Only process drag if it started outside dead zone (45% radius)
+        // Only process drag if it started outside dead zone
         if (isDragValid.value) {
           runOnJS(handlePanUpdate)(event.x, event.y);
         }
@@ -328,7 +326,7 @@ function TimerDial({
         }
         isDragValid.value = false;
       }),
-  [handlePanStart, handlePanUpdate, handlePanEnd, isDragValid]
+  [handlePanStart, handlePanUpdate, handlePanEnd, centerX, centerY, centerZoneRadius]
   );
 
   // === GESTURE: Tap (on graduations to set duration) ===

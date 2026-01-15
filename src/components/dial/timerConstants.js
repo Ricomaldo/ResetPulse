@@ -293,7 +293,7 @@ export const SPRING = {
 
 export const DIAL_LAYOUT = {
   BACKGROUND_OFFSET: 30, // Space between outer radius and background circle
-  CENTER_ZONE_RATIO: 0.45, // 45% of dial = center dead zone (increased to protect PulseButton from drag conflicts)
+  CENTER_ZONE_RATIO: 0.38, // 38% of dial = center dead zone (just below arc inner radius 40%)
   OUTER_ZONE_MIN_RATIO: 0.65, // 65%+ = graduations tap zone
   // Handle is now a simple segment (see TimerDial.jsx)
 };
