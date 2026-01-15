@@ -4,6 +4,25 @@ updated: '2026-01-15'
 status: active
 ---
 
+## [2.1.2] - 2026-01-15
+
+### 🐛 Critical Bug Fix
+
+#### Dial Drag Gesture Restored
+- **Fixed broken dial drag**: Drag gesture was completely broken after implementing dead zone for PulseButton conflict
+  - **Root cause**: Attempted to modify `isDragValid` SharedValue from JS thread (via `runOnJS` callback)
+  - **Solution**: Moved dead zone distance calculation into `panGesture.onStart` worklet where SharedValue modification is allowed
+  - SharedValues can only be modified in worklet context (UI thread), not from JS callbacks
+  - Dial drag now works correctly while still protecting PulseButton (38% center dead zone)
+  - All gesture interactions restored: drag arc, tap graduations, tap center button
+
+### 📦 Version Updates
+- **Android versionCode**: 23 (previously 22 in production)
+- **versionName**: 2.1.2
+- Synchronized across package.json, app.json, and build.gradle
+
+---
+
 ## [2.1.1] - 2026-01-15
 
 ### 🎯 Scale & Duration Control Improvements
