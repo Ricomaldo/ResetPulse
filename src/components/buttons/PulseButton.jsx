@@ -420,21 +420,6 @@ const PulseButton = React.memo(function PulseButton({
   // MODE SOPHISTICATED: Long press pour stop/start (DialCenter)
   // ==========================================================
 
-  // Tap gesture for REST (when startRequiresLongPress=false) and COMPLETE states
-  const tapGesture = Gesture.Tap()
-    .onBegin(() => {
-      'worklet';
-      isPressed.value = true;
-    })
-    .onEnd(() => {
-      'worklet';
-      runOnJS(handleTap)();
-    })
-    .onFinalize(() => {
-      'worklet';
-      isPressed.value = false;
-    });
-
   // Long press gesture for START (when startRequiresLongPress=true)
   const longPressStartGesture = Gesture.LongPress()
     .minDuration(longPressStartDuration)
@@ -527,38 +512,34 @@ const PulseButton = React.memo(function PulseButton({
       );
     }
 
-    // Quick start mode: simple tap
+    // Quick start mode: simple tap (use TouchableOpacity for Android BottomSheet compatibility)
     return (
-      <GestureDetector gesture={tapGesture}>
-        <Animated.View
-          style={[styles.container, animatedButtonStyle]}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel={getAccessibilityLabel()}
-        >
-          <Animated.View style={[styles.buttonAnimated, animatedColorStyle]}>
-            {renderContent()}
-          </Animated.View>
-        </Animated.View>
-      </GestureDetector>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleTap}
+        activeOpacity={0.7}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={getAccessibilityLabel()}
+      >
+        {renderContent()}
+      </TouchableOpacity>
     );
   }
 
-  // --- COMPLETE: Tap with transition animation ---
+  // --- COMPLETE: Tap with transition animation (use TouchableOpacity for Android BottomSheet compatibility) ---
   if (state === 'complete') {
     return (
-      <GestureDetector gesture={tapGesture}>
-        <Animated.View
-          style={[styles.container, animatedButtonStyle]}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel={getAccessibilityLabel()}
-        >
-          <Animated.View style={[styles.buttonAnimated, animatedColorStyle]}>
-            {renderContent()}
-          </Animated.View>
-        </Animated.View>
-      </GestureDetector>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleTap}
+        activeOpacity={0.7}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={getAccessibilityLabel()}
+      >
+        {renderContent()}
+      </TouchableOpacity>
     );
   }
 

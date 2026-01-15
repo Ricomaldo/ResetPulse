@@ -10,7 +10,6 @@ import {
   Brain,
   Zap,
   Keyboard,
-  Gauge,
   Clock,
   Eye,
   RotateCw,
@@ -27,7 +26,6 @@ import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import { SoundPicker } from '../pickers';
-import PresetPills from '../controls/PresetPills';
 import SettingsCard from './SettingsCard';
 import SelectionCard from './SelectionCard';
 import SectionHeader from './SectionHeader';
@@ -57,9 +55,9 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
     timer: { clockwise, selectedSoundId },
     setClockwise,
     setSelectedSoundId,
-    setScaleMode,
-    interaction: { interactionProfile },
+    interaction: { interactionProfile, customStartLongPress, customStopLongPress },
     setInteractionProfile,
+    setCustomInteraction,
     favorites: { favoriteActivities, favoritePalettes },
     setFavoriteActivities,
     toggleFavoritePalette,
@@ -99,28 +97,34 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
   // Interaction profiles (personas)
   const interactionProfiles = [
     {
-      id: 'impulsif',
-      emoji: '🚀',
-      label: t('settings.persona.impulsive.label'),
-      description: t('settings.persona.impulsive.description'),
+      id: 'veloce',
+      emoji: '⚡',
+      label: t('settings.persona.flow.label'),
+      description: t('settings.persona.flow.description'),
     },
     {
       id: 'abandonniste',
-      emoji: '🏃',
-      label: t('settings.persona.quitter.label'),
-      description: t('settings.persona.quitter.description'),
+      emoji: '⚓',
+      label: t('settings.persona.anchored.label'),
+      description: t('settings.persona.anchored.description'),
+    },
+    {
+      id: 'impulsif',
+      emoji: '🎯',
+      label: t('settings.persona.intentional.label'),
+      description: t('settings.persona.intentional.description'),
     },
     {
       id: 'ritualiste',
-      emoji: '🎯',
-      label: t('settings.persona.ritualist.label'),
-      description: t('settings.persona.ritualist.description'),
+      emoji: '🧘',
+      label: t('settings.persona.mindful.label'),
+      description: t('settings.persona.mindful.description'),
     },
     {
-      id: 'veloce',
-      emoji: '⚡',
-      label: t('settings.persona.swift.label'),
-      description: t('settings.persona.swift.description'),
+      id: 'custom',
+      emoji: '⚙️',
+      label: t('settings.persona.custom.label'),
+      description: '', // Toggles will be shown instead
     },
   ];
 
@@ -147,8 +151,8 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
     {
       id: 'combo',
       emoji: '⏱',
-      label: t('settings.tool.rational.label'),
-      description: t('settings.tool.rational.description'),
+      label: t('settings.tool.timeSetup.label'),
+      description: t('settings.tool.timeSetup.description'),
     },
   ];
 
@@ -217,6 +221,44 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       flexDirection: 'row',
       padding: rs(2),  // Responsive
     },
+    customToggles: {
+      marginTop: rs(8),
+      gap: rs(8),
+    },
+    toggleRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    toggleLabel: {
+      color: theme.colors.text,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.medium,
+    },
+    toggleControl: {
+      flexDirection: 'row',
+      gap: rs(4),
+    },
+    toggleButton: {
+      paddingHorizontal: rs(12),
+      paddingVertical: rs(6),
+      borderRadius: theme.borderRadius.md,
+      backgroundColor: theme.colors.surfaceElevated,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+    },
+    toggleButtonActive: {
+      backgroundColor: theme.colors.brand.accent,
+      borderColor: theme.colors.brand.accent,
+    },
+    toggleButtonText: {
+      color: theme.colors.text,
+      fontSize: rs(11, 'min'),
+      fontWeight: fontWeights.medium,
+    },
+    toggleButtonTextActive: {
+      color: theme.colors.fixed.white,
+    },
   });
 
   return (
@@ -225,16 +267,17 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Group 1: TOI (You) */}
-        <SectionHeader label="TOI" />
+        {/* Group 1: CONFIGURATION */}
+        <SectionHeader label={t('settings.sections.configuration')} />
 
         {/* Section 1: Interaction Profile (Comment tu fonctionnes) */}
         <SettingsCard
           title={<CardTitle Icon={Brain} label={t('settings.persona.sectionTitle')} theme={theme} />}
           description={t('settings.persona.sectionSubtitle')}
         >
+          {/* 2x2 Grid for preset profiles (first 4) */}
           <View style={styles.grid2x2}>
-            {interactionProfiles.map((profile) => (
+            {interactionProfiles.slice(0, 4).map((profile) => (
               <View key={profile.id} style={styles.gridItem2x2}>
                 <SelectionCard
                   emoji={profile.emoji}
@@ -247,64 +290,120 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               </View>
             ))}
           </View>
-        </SettingsCard>
 
-        {/* Section 2: Favorite Tool (Ton raccourci préféré) */}
-        <SettingsCard title={<CardTitle Icon={Keyboard} label={t('settings.tool.sectionTitle')} theme={theme} />}>
-          <View style={styles.grid2x2}>
-            {favoriteTools.map((tool) => (
-              <View key={tool.id} style={styles.gridItem2x2}>
-                <SelectionCard
-                  emoji={tool.emoji}
-                  label={tool.label}
-                  description={tool.description}
-                  selected={favoriteToolMode === tool.id}
-                  onSelect={() => setFavoriteToolMode(tool.id)}
-                  compact
-                />
-              </View>
-            ))}
+          {/* Full-width Custom profile card */}
+          <View style={{ marginTop: rs(12) }}>
+            <SelectionCard
+              emoji="⚙️"
+              label={t('settings.persona.custom.label')}
+              description=""
+              selected={interactionProfile === 'custom'}
+              onSelect={() => setInteractionProfile('custom')}
+              compact={false}
+            />
           </View>
+
+          {/* Custom toggles (shown when custom profile is selected) */}
+          {interactionProfile === 'custom' && (
+            <View style={styles.customToggles}>
+              {/* Start toggle */}
+              <View style={styles.toggleRow}>
+                <Text style={styles.toggleLabel}>{t('settings.persona.custom.startLabel')}</Text>
+                <View style={styles.toggleControl}>
+                  <Touchable
+                    style={[
+                      styles.toggleButton,
+                      !customStartLongPress && styles.toggleButtonActive,
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setCustomInteraction(false, customStopLongPress);
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text
+                      style={[
+                        styles.toggleButtonText,
+                        !customStartLongPress && styles.toggleButtonTextActive,
+                      ]}
+                    >
+                      {t('settings.persona.custom.tap')}
+                    </Text>
+                  </Touchable>
+                  <Touchable
+                    style={[
+                      styles.toggleButton,
+                      customStartLongPress && styles.toggleButtonActive,
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setCustomInteraction(true, customStopLongPress);
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text
+                      style={[
+                        styles.toggleButtonText,
+                        customStartLongPress && styles.toggleButtonTextActive,
+                      ]}
+                    >
+                      {t('settings.persona.custom.hold')}
+                    </Text>
+                  </Touchable>
+                </View>
+              </View>
+
+              {/* Stop toggle */}
+              <View style={styles.toggleRow}>
+                <Text style={styles.toggleLabel}>{t('settings.persona.custom.stopLabel')}</Text>
+                <View style={styles.toggleControl}>
+                  <Touchable
+                    style={[
+                      styles.toggleButton,
+                      !customStopLongPress && styles.toggleButtonActive,
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setCustomInteraction(customStartLongPress, false);
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text
+                      style={[
+                        styles.toggleButtonText,
+                        !customStopLongPress && styles.toggleButtonTextActive,
+                      ]}
+                    >
+                      {t('settings.persona.custom.tap')}
+                    </Text>
+                  </Touchable>
+                  <Touchable
+                    style={[
+                      styles.toggleButton,
+                      customStopLongPress && styles.toggleButtonActive,
+                    ]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      setCustomInteraction(customStartLongPress, true);
+                    }}
+                    {...touchableProps}
+                  >
+                    <Text
+                      style={[
+                        styles.toggleButtonText,
+                        customStopLongPress && styles.toggleButtonTextActive,
+                      ]}
+                    >
+                      {t('settings.persona.custom.hold')}
+                    </Text>
+                  </Touchable>
+                </View>
+              </View>
+            </View>
+          )}
         </SettingsCard>
 
-        {/* Group 2: TES FAVORIS (Your Favorites) - Premium only */}
-        {isPremiumUser && <SectionHeader label="TES FAVORIS" />}
-
-        {/* Section 3: Favorite Activities (Premium only) */}
-        {isPremiumUser && (
-          <FavoritesActivitySection
-            favoriteActivities={favoriteActivities || []}
-            toggleFavoriteActivity={toggleFavoriteActivity}
-            isPremiumUser={isPremiumUser}
-            setShowMoreActivitiesModal={setShowMoreActivitiesModal}
-          />
-        )}
-
-        {/* Section 4: Favorite Palettes (Premium only) */}
-        {isPremiumUser && (
-          <FavoritesPaletteSection
-            favoritePalettes={favoritePalettes || []}
-            toggleFavoritePalette={toggleFavoritePalette}
-            isPremiumUser={isPremiumUser}
-            setShowMoreColorsModal={setShowMoreColorsModal}
-          />
-        )}
-
-        {/* Group 3: TIMER */}
-        <SectionHeader label="TIMER" />
-
-        {/* Dial Scale Presets (top) */}
-        <SettingsCard title={<CardTitle Icon={Gauge} label={t('settings.sections.dialScale')} theme={theme} />}>
-          <PresetPills
-            compact
-            onSelectPreset={({ newScaleMode }) => {
-              haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-              setScaleMode(newScaleMode);
-            }}
-          />
-        </SettingsCard>
-
-        {/* 1. Timer Options Section */}
+        {/* Section 2: Timer Options */}
         <SettingsCard title={<CardTitle Icon={Clock} label={t('settings.sections.timerOptions')} theme={theme} />}>
           {/* Emoji activité au centre */}
           <View style={styles.optionRow}>
@@ -358,7 +457,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
           </View>
         </SettingsCard>
 
-        {/* 2. Keep Awake Section */}
+        {/* Section 3: Keep Awake */}
         <SettingsCard title={<CardTitle Icon={Eye} label="Keep Awake" theme={theme} />}>
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
@@ -384,7 +483,48 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
           </View>
         </SettingsCard>
 
-        {/* Group 4: AMBIANCE */}
+        {/* Section 4: Favorite Tool (Ton raccourci préféré) */}
+        <SettingsCard title={<CardTitle Icon={Keyboard} label={t('settings.tool.sectionTitle')} theme={theme} />}>
+          <View style={styles.grid2x2}>
+            {favoriteTools.map((tool) => (
+              <View key={tool.id} style={styles.gridItem2x2}>
+                <SelectionCard
+                  emoji={tool.emoji}
+                  label={tool.label}
+                  description={tool.description}
+                  selected={favoriteToolMode === tool.id}
+                  onSelect={() => setFavoriteToolMode(tool.id)}
+                  compact
+                />
+              </View>
+            ))}
+          </View>
+        </SettingsCard>
+
+        {/* Group 2: TES FAVORIS (Your Favorites) - Premium only */}
+        {isPremiumUser && <SectionHeader label="TES FAVORIS" />}
+
+        {/* Section 3: Favorite Activities (Premium only) */}
+        {isPremiumUser && (
+          <FavoritesActivitySection
+            favoriteActivities={favoriteActivities || []}
+            toggleFavoriteActivity={toggleFavoriteActivity}
+            isPremiumUser={isPremiumUser}
+            setShowMoreActivitiesModal={setShowMoreActivitiesModal}
+          />
+        )}
+
+        {/* Section 4: Favorite Palettes (Premium only) */}
+        {isPremiumUser && (
+          <FavoritesPaletteSection
+            favoritePalettes={favoritePalettes || []}
+            toggleFavoritePalette={toggleFavoritePalette}
+            isPremiumUser={isPremiumUser}
+            setShowMoreColorsModal={setShowMoreColorsModal}
+          />
+        )}
+
+        {/* Group 3: AMBIANCE */}
         <SectionHeader label="AMBIANCE" />
 
         {/* 3. Rotation Direction Section */}

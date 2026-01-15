@@ -19,8 +19,8 @@ import ModalStackRenderer from './src/components/modals/ModalStackRenderer';
 import TimerScreen from './src/screens/TimerScreen';
 import { OnboardingFlow } from './src/screens/onboarding';
 import { ErrorBoundary } from './src/components/layout';
+import SplashScreen from './src/components/SplashScreen';
 import Analytics from './src/services/analytics';
-import Attribution from './src/services/attribution';
 
 // Storage key pour onboarding V2
 const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
@@ -102,16 +102,9 @@ function AppContent() {
     }
   };
 
-  // Show loading while checking onboarding state
+  // Show branded splash screen while loading state
   if (isLoading) {
-    return (
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <StatusBar
-          barStyle={theme.isDark ? 'light-content' : 'dark-content'}
-          backgroundColor={theme.colors.background}
-        />
-      </View>
-    );
+    return <SplashScreen />;
   }
 
   return (
@@ -138,17 +131,12 @@ export default function App() {
   // ========== DEV MODE STATE ==========
   const [resetTrigger, setResetTrigger] = useState(0);
 
-  // Initialize Analytics + Attribution (M7.5 + Attribution)
+  // Initialize Analytics (M7.5)
+  // Note: Apple Search Ads attribution is now handled by RevenueCat in PurchaseContext
   useEffect(() => {
     const initAnalytics = async () => {
-      // 1. Initialize Mixpanel first
       await Analytics.init();
 
-      // 2. Initialize Attribution (fetches Apple Search Ads data on first launch)
-      // This registers source/campaign as super properties for all future events
-      await Attribution.init();
-
-      // 3. Track app_opened event (now includes attribution super props)
       const hasLaunched = await AsyncStorage.getItem('has_launched_before');
       Analytics.trackAppOpened(!hasLaunched);
 

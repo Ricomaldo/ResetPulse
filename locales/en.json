@@ -10,7 +10,8 @@
     "continue": "Continue"
   },
   "presets": {
-    "adaptHint": "Tap 'Adapt' to fit the dial"
+    "adaptHint": "Tap 'Adapt' to fit the dial",
+    "longPressHint": "Long press to adapt the dial"
   },
   "controls": {
     "fit": {
@@ -240,19 +241,19 @@
   },
   "personas": {
     "veloce": {
-      "label": "Quick",
+      "label": "Flow",
       "description": "You know what you want. Your timer will respond instantly."
     },
     "abandonniste": {
-      "label": "Struggler",
+      "label": "Anchored",
       "description": "You have trouble seeing things through. Your timer will protect you from impulsive stops."
     },
     "impulsif": {
-      "label": "Impulsive",
+      "label": "Intentional",
       "description": "You start fast, you need to slow down. Your timer will ask for confirmation to start."
     },
     "ritualiste": {
-      "label": "Ritualistic",
+      "label": "Mindful",
       "description": "Deliberate actions suit you. Your timer will adapt to your rhythm."
     }
   },
@@ -322,23 +323,30 @@
       "version": "Version"
     },
     "persona": {
-      "sectionTitle": "How you work",
+      "sectionTitle": "Interaction Profile",
       "sectionSubtitle": "Configure Play/Stop button resistance",
-      "impulsive": {
-        "label": "Impulsive",
+      "flow": {
+        "label": "Flow",
+        "description": "Quick start · Quick stop"
+      },
+      "anchored": {
+        "label": "Anchored",
         "description": "Quick start · Hold to stop"
       },
-      "quitter": {
-        "label": "Quitter",
+      "intentional": {
+        "label": "Intentional",
         "description": "Hold to start · Quick stop"
       },
-      "ritualist": {
-        "label": "Ritualist",
+      "mindful": {
+        "label": "Mindful",
         "description": "Hold to start · Hold to stop"
       },
-      "swift": {
-        "label": "Swift",
-        "description": "Quick start · Quick stop"
+      "custom": {
+        "label": "Custom",
+        "startLabel": "Start",
+        "stopLabel": "Stop",
+        "tap": "Tap",
+        "hold": "Hold"
       }
     },
     "dev": {
@@ -365,10 +373,14 @@
       "rational": {
         "label": "Rational",
         "description": "ControlBar (duration + run)"
+      },
+      "timeSetup": {
+        "label": "Time Setup",
+        "description": "Timer + presets"
       }
     },
     "sections": {
-      "dialScale": "Dial scale",
+      "configuration": "CONFIGURATION",
       "timerOptions": "Timer options",
       "keepAwake": "Keep Awake",
       "rotationDirection": "Rotation direction",

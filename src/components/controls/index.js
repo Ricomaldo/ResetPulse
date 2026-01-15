@@ -5,6 +5,5 @@
 export { default as CircularToggle } from './CircularToggle';
 export { default as DigitalTimer } from './DigitalTimer';
 export { default as DurationPresets } from './DurationPresets';
-export { default as FitButton } from './FitButton';
 export { default as ControlBar } from './ControlBar';
 export { default as PresetPills } from './PresetPills';

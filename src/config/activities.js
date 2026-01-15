@@ -42,7 +42,7 @@ export const ACTIVITIES = [
     get label() {
       return i18n.t('activities.work');
     },
-    defaultDuration: 1500, // 25 minutes (Pomodoro)
+    defaultDuration: 1800, // 30 minutes (aligned with 5 scales, closest to Pomodoro)
     isPremium: false,
     suggestedColor: 'deep',
     description: 'Sessions de travail concentré',
@@ -66,7 +66,7 @@ export const ACTIVITIES = [
     get label() {
       return i18n.t('activities.meditation');
     },
-    defaultDuration: 1200, // 20 minutes
+    defaultDuration: 900, // 15 minutes (aligned with 5 scales)
     isPremium: false, // FREE - ancrage bien-être
     suggestedColor: 'calm',
     description: 'Sessions de méditation guidée',
@@ -128,7 +128,7 @@ export const ACTIVITIES = [
     get label() {
       return i18n.t('activities.sport');
     },
-    defaultDuration: 600, // 10 minutes
+    defaultDuration: 900, // 15 minutes (aligned with 5 scales)
     isPremium: true,
     suggestedColor: 'energy',
     description: 'Étirements et exercices courts',
@@ -140,7 +140,7 @@ export const ACTIVITIES = [
     get label() {
       return i18n.t('activities.walking');
     },
-    defaultDuration: 1200, // 20 minutes
+    defaultDuration: 900, // 15 minutes (aligned with 5 scales)
     isPremium: true,
     suggestedColor: 'deep',
     description: 'Mouvement conscient',
@@ -166,7 +166,7 @@ export const ACTIVITIES = [
     get label() {
       return i18n.t('activities.gaming');
     },
-    defaultDuration: 1200, // 20 minutes
+    defaultDuration: 900, // 15 minutes (aligned with 5 scales)
     isPremium: true,
     suggestedColor: 'energy',
     description: "Temps d'écran contrôlé",
@@ -214,7 +214,7 @@ export const ACTIVITIES = [
     get label() {
       return i18n.t('activities.nap');
     },
-    defaultDuration: 1200, // 20 minutes - cycle sieste optimal
+    defaultDuration: 900, // 15 minutes (aligned with 5 scales) - cycle sieste optimal
     isPremium: true,
     suggestedColor: 'calm',
     description: 'Power nap récupérateur',
@@ -226,7 +226,7 @@ export const ACTIVITIES = [
     get label() {
       return i18n.t('activities.writing');
     },
-    defaultDuration: 1200, // 20 minutes - morning pages
+    defaultDuration: 900, // 15 minutes (aligned with 5 scales) - morning pages
     isPremium: true,
     suggestedColor: 'focus',
     description: 'Journaling, écriture libre',

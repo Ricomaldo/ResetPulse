@@ -6,34 +6,43 @@
 /**
  * Get button behavior config for a given interaction profile (ADR-008)
  *
- * @param {string} profileId - 'impulsif' | 'abandonniste' | 'ritualiste' | 'veloce'
+ * @param {string} profileId - 'impulsif' | 'abandonniste' | 'ritualiste' | 'veloce' | 'custom'
+ * @param {{startRequiresLongPress?: boolean, stopRequiresLongPress?: boolean}} customConfig - Custom profile config (only used when profileId === 'custom')
  * @returns {{startRequiresLongPress: boolean, stopRequiresLongPress: boolean}}
  */
-export const getProfileConfig = (profileId) => {
+export const getProfileConfig = (profileId, customConfig = {}) => {
+  // Handle custom profile
+  if (profileId === 'custom') {
+    return {
+      startRequiresLongPress: customConfig.startRequiresLongPress ?? true,
+      stopRequiresLongPress: customConfig.stopRequiresLongPress ?? true,
+    };
+  }
+
   switch (profileId) {
     case 'impulsif':
-      // 🚀 Start: Long, Stop: Tap
+      // 🎯 Intention: Start: Long, Stop: Tap
       return {
         startRequiresLongPress: true,
         stopRequiresLongPress: false,
       };
 
     case 'abandonniste':
-      // 🏃 Start: Tap, Stop: Long
+      // ⚓ Ancrage: Start: Tap, Stop: Long
       return {
         startRequiresLongPress: false,
         stopRequiresLongPress: true,
       };
 
     case 'ritualiste':
-      // 🎯 Start: Long, Stop: Long
+      // 🧘 Présence: Start: Long, Stop: Long
       return {
         startRequiresLongPress: true,
         stopRequiresLongPress: true,
       };
 
     case 'veloce':
-      // ⚡ Start: Tap, Stop: Tap
+      // ⚡ Flow: Start: Tap, Stop: Tap
       return {
         startRequiresLongPress: false,
         stopRequiresLongPress: false,

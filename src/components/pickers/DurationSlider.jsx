@@ -16,11 +16,12 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
-// Preset durations in seconds (4 common durations)
+// Preset durations in seconds (aligned with 5 active scales)
 const DURATION_PRESETS = [
+  { minutes: 5, seconds: 300 },
   { minutes: 15, seconds: 900 },
-  { minutes: 25, seconds: 1500 },
   { minutes: 30, seconds: 1800 },
+  { minutes: 45, seconds: 2700 },
   { minutes: 60, seconds: 3600 },
 ];
 

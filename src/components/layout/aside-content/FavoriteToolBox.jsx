@@ -1,5 +1,5 @@
 /**
- * @fileoverview FavoriteToolBox - Snap 15% content
+ * @fileoverview FavoriteToolBox - Snap 18% content
  * @description Renders only the favorite tool selected by user
  * @created 2025-12-19
  * @updated 2025-12-19
@@ -14,9 +14,9 @@ import { rs } from '../../../styles/responsive';
 import ToolboxItem from './ToolboxItem';
 
 /**
- * FavoriteToolBox - Snap 15% (favorite tool only)
+ * FavoriteToolBox - Snap 18% (favorite tool only)
  */
-export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPlay, onReset, onStop }) {
+export default function FavoriteToolBox({ isTimerRunning }) {
   const { layout: { favoriteToolMode } } = useTimerConfig();
 
   // Map favorite modes to components with visual hierarchy variants
@@ -25,10 +25,6 @@ export default function FavoriteToolBox({ isTimerRunning, isTimerCompleted, onPl
       <ToolboxItem variant="controlBar">
         <ControlBar
           isRunning={isTimerRunning}
-          isCompleted={isTimerCompleted}
-          onPlay={onPlay}
-          onReset={onReset}
-          onStop={onStop}
           compact
         />
       </ToolboxItem>
@@ -63,9 +59,5 @@ const styles = StyleSheet.create({
 });
 
 FavoriteToolBox.propTypes = {
-  isTimerCompleted: PropTypes.bool,
   isTimerRunning: PropTypes.bool.isRequired,
-  onPlay: PropTypes.func.isRequired,
-  onReset: PropTypes.func.isRequired,
-  onStop: PropTypes.func,
 };

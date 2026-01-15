@@ -9,18 +9,15 @@ import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useTimerConfig } from '../../../contexts/TimerConfigContext';
 import { ActivityCarousel, PaletteCarousel } from '../../carousels';
-import { ControlBar, PresetPills } from '../../controls';
+import { ControlBar } from '../../controls';
 
 /**
  * ToolBox - Snap 38% (all 3 tools)
  * Dynamic order: favorite tool first for visual continuity
+ * NOTE: PresetPills now integrated in ControlBar (not displayed separately)
  */
 export default function ToolBox({
   isTimerRunning,
-  isTimerCompleted,
-  onPlay,
-  onReset,
-  onStop,
   activityCarouselRef,
   paletteCarouselRef,
 }) {
@@ -42,10 +39,6 @@ export default function ToolBox({
       <ControlBar
         key="commands"
         isRunning={isTimerRunning}
-        isCompleted={isTimerCompleted}
-        onPlay={onPlay}
-        onReset={onReset}
-        onStop={onStop}
         compact
       />
     ),
@@ -61,20 +54,13 @@ export default function ToolBox({
           {index < order.length - 1 && <View style={styles.separator} />}
         </React.Fragment>
       ))}
-      {/* PresetPills toujours en bas */}
-      <View style={styles.separator} />
-      <PresetPills compact />
     </View>
   );
 }
 
 ToolBox.propTypes = {
   activityCarouselRef: PropTypes.object,
-  isTimerCompleted: PropTypes.bool,
   isTimerRunning: PropTypes.bool.isRequired,
-  onPlay: PropTypes.func.isRequired,
-  onReset: PropTypes.func.isRequired,
-  onStop: PropTypes.func,
   paletteCarouselRef: PropTypes.object,
 };
 

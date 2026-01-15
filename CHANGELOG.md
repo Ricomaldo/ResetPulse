@@ -1,10 +1,93 @@
 ---
 created: '2025-12-14'
-updated: '2026-01-13'
+updated: '2026-01-15'
 status: active
 ---
 
-## [2.1.1] - 2026-01-13
+## [2.1.1] - 2026-01-15
+
+### 🎯 Scale & Duration Control Improvements
+
+#### Double Tap Preset System
+- **Replaced long press with double tap**: More discoverable and intuitive interaction
+  - **1st tap**: Set duration (auto-reset to 60min scale if duration > current scale)
+  - **2nd tap (within 400ms)**: Force scale to optimal for that duration
+  - **Visual feedback**: Orange pulsing border during double-tap window (400ms)
+  - **Escape hatch**: Double tap on already-active preset resets scale to 60min
+  - New button variants: `selection-pulse` (animated border) and `selection-border` (scale indicator)
+  - Removed hint system (pulse animation provides affordance)
+
+#### Universal 60min Scale Reset
+- **Auto-scale behavior change**: Duration > current scale now resets to 60min (not optimal scale)
+  - Rationale: 60min = universal mental model (clock face), more predictable
+  - User can still force optimal scale with double tap
+  - Applied to PresetPills, ActivityCarousel, and custom activity creation
+
+#### Auto-Scale for Activities
+- **ActivityCarousel**: Auto-reset to 60min when selecting activity with duration > current scale
+- **Custom activities**: Auto-reset to 60min when creating activity with duration > current scale
+- Consistent behavior across all duration selection methods
+
+#### Visual State System (4 states)
+- **Neutral** (`selection`): Neither duration nor scale active
+- **Duration active** (`accent`): Orange background when duration matches preset
+- **Double-tap window** (`selection-pulse`): Orange animated border (400ms)
+- **Scale active** (`selection-border`): Blue border when scale matches preset (but duration doesn't)
+
+### 🐛 Bug Fixes
+
+#### BottomSheet Snap Blocking
+- **Fixed direct snap jumps**: Prevented 0→2 and 2→0 jumps using `onAnimate` callback
+  - Previous `onChange`-based approach caused visual glitch (sheet animating to snap2 then retracting)
+  - Now intercepts BEFORE animation starts, forcing stop at snap1 (38%)
+  - Smoother, more controlled drawer behavior
+
+#### Gesture Conflicts
+- **Fixed dial drag/PulseButton conflict**: Increased center dead zone from 35% to 45%
+  - Dial drag now ignores touches in center zone (protects PulseButton)
+  - Added `isDragValid` SharedValue for gesture validation
+  - PulseButton interaction no longer triggers dial drag
+
+#### Snap Point Sizing
+- **Improved affordance**: Snap point 0 increased from 15% to 18%
+- **PresetPills size**: Always medium for better tap targets (removed compact mode)
+- **Container heights**: Adjusted for better visual hierarchy
+
+#### Haptics API
+- **Fixed PresetPills haptics**: Corrected method names (`selection()` not `selectionHaptic()`)
+  - Used correct HapticManager instance methods throughout
+
+### 📝 Architecture & Code Quality
+
+#### New Helper: scaleHelpers.js
+- Centralized scale utilities: `getOptimalScale()`, `scaleToMode()`, `modeToScale()`
+- DRY principle: Removed duplicate scale logic from PresetPills and ControlBar
+- Simplified to 5 active scales: [5, 15, 30, 45, 60] minutes
+
+#### Button Variants Extension
+- Added `selection-pulse` variant with opacity pulse animation (0.8 ↔ 1, 400ms loop)
+- Added `selection-border` variant for scale indicator (blue border)
+- Pulse auto-starts/stops based on variant change
+
+#### Code Cleanup
+- Removed unused hint/toast system from PresetPills (replaced by pulse animation)
+- Removed long press handlers (replaced by double tap)
+- Cleaned up imports (Text, Animated, fontWeights, rs no longer needed)
+
+### 📋 Files Changed
+- `src/styles/buttonStyles.js`: New variants (selection-pulse, selection-border)
+- `src/components/buttons/IconButton.jsx`: Pulse animation implementation
+- `src/components/controls/PresetPills.jsx`: Double tap logic, removed hint system
+- `src/components/carousels/ActivityCarousel.jsx`: Auto-scale to 60min
+- `src/components/layout/AsideZone.jsx`: onAnimate snap blocking
+- `src/components/dial/TimerDial.jsx`: Increased dead zone to 45%
+- `src/components/dial/timerConstants.js`: CENTER_ZONE_RATIO 0.35 → 0.45
+- `src/utils/scaleHelpers.js`: **NEW** - Centralized scale helpers
+- `_internal/docs/decisions/ADR-011-auto-scale-duration-selection.md`: **NEW** - Auto-scale architecture decision
+
+---
+
+## [2.1.0] - 2026-01-13 (Previous Release)
 
 ### 🎨 UI/UX Improvements
 

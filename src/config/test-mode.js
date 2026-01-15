@@ -6,7 +6,7 @@
 
 // Active le mode développement général
 // true = mode dev, false = production
-export const DEV_MODE = false;
+export const DEV_MODE = true;
 
 // Affiche le FAB wrench pour contrôle dev (premium, onboarding reset, etc.)
 // true = FAB visible, false = FAB caché
@@ -16,7 +16,7 @@ export const SHOW_DEV_FAB = false;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
-export const DEFAULT_PREMIUM = false;
+export const DEFAULT_PREMIUM = true;
 
 // Config timer par défaut en mode dev
 // Utilisé pour forcer un état initial connu (20min méditation)
