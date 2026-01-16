@@ -9,6 +9,8 @@
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
       "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
       "showTime": "Show time",
       "tapToHide": "Tap to hide",
       "tapToShow": "Tap to show"
@@ -142,10 +144,12 @@
     "favorites": {
       "palettes": {
         "title": "Favorite palettes",
+        "description": "Select up to 4 favorite palettes (%{count}/4)",
         "morePalettes": "More palettes"
       },
       "activities": {
         "title": "Favorite activities",
+        "description": "Select up to 4 favorite activities (%{count}/4)",
         "more": "More"
       }
     },
@@ -160,6 +164,7 @@
     "title": "Unlock everything",
     "description": "All the colors.\nAll the activities.\nCreate your own activities.\nYour maximum comfort.",
     "features": "7 DAYS FREE",
+    "price": "Then %{price} once.\nYours forever.",
     "startTrial": "Try 7 days free",
     "restore": "Restore my purchases",
     "welcomeTitle": "Welcome Premium! 🎉",
@@ -236,26 +241,33 @@
   "accessibility": {
     "keepAwake": "Keep screen awake",
     "rotationDirection": "Rotation direction",
+    "activity": "Activity %{name}",
     "activityLocked": "Premium activity locked",
     "moreActivities": "More activities",
     "discoverPremium": "Discover premium activities",
     "customActivityHint": "Long press to edit this custom activity",
+    "colorNumber": "Color %{number}",
     "discoverMorePalettes": "Tap to discover more palettes",
     "timer": {
+      "dial": "Timer dial, %{minutes} minutes set, %{activity}",
       "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
       "dialTapToToggle": "Tap to start or pause timer",
       "timerRunning": "Timer running",
       "timerStopped": "Timer stopped",
       "timerCompleted": "Timer completed!",
+      "activityStarted": "%{activity} started",
+      "activityCompleted": "%{activity} completed",
       "startTimer": "Start timer",
       "stopTimer": "Stop timer",
       "resetTimer": "Reset timer"
     },
     "closePremiumModal": "Close premium offer",
     "closeModalHint": "Closes this dialog and returns to the app",
+    "unlockPremium": "Unlock premium for %{price}",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
     "restorePurchases": "Restore previous purchases",
     "restorePurchasesHint": "Restore premium access if you already purchased",
+    "paletteItem": "Color palette: %{name}",
     "closeCreateActivity": "Close create activity",
     "createActivityHint": "Creates the custom activity and adds it to your list",
     "closeEditActivity": "Close edit activity",
@@ -304,7 +316,8 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible."
+      "deleteConfirmMessage": "This action is irreversible.",
+      "usageStats": "Used %{count} times"
     },
     "duration": {
       "minutes": "min"
@@ -391,6 +404,7 @@
     "reminder": {
       "day3": {
         "title": "A moment for yourself?",
+        "bodyPersonalized": "Your {{name}} awaits {{emoji}} — {{duration}} min for you?",
         "bodyGeneric": "Your timer awaits — take a moment for yourself"
       },
       "day7": {

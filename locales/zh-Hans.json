@@ -129,10 +129,12 @@
     "favorites": {
       "palettes": {
         "title": "Favorite palettes",
+        "description": "Select up to 4 favorite palettes (%{count}/4)",
         "morePalettes": "More palettes"
       },
       "activities": {
         "title": "Favorite activities",
+        "description": "Select up to 4 favorite activities (%{count}/4)",
         "more": "More"
       }
     },
@@ -147,6 +149,7 @@
     "title": "解锁全部",
     "description": "所有颜色。\n所有活动。\n你的最大舒适。",
     "features": "7天免费",
+    "price": "之后 %{price} 一次性。\n永远属于你。",
     "startTrial": "免费试用7天",
     "restore": "恢复我的购买",
     "welcomeTitle": "欢迎使用高级版! 🎉",
@@ -223,10 +226,12 @@
   "accessibility": {
     "keepAwake": "保持屏幕常亮",
     "rotationDirection": "旋转方向",
+    "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur %{number}",
     "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
     "celebrationEmoji": "Celebration",
     "closeCreateActivity": "Close create activity",
@@ -246,10 +251,15 @@
       "timerCompleted": "Timer completed!",
       "timerRunning": "Timer running",
       "timerStopped": "Timer stopped",
+      "activityStarted": "%{activity} started",
+      "activityCompleted": "%{activity} completed",
       "startTimer": "Start timer",
       "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer"
-    }
+      "resetTimer": "Reset timer",
+      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+    },
+    "unlockPremium": "Unlock premium for %{price}",
+    "paletteItem": "Color palette: %{name}"
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
@@ -292,7 +302,8 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible."
+      "deleteConfirmMessage": "This action is irreversible.",
+      "usageStats": "Used %{count} times"
     },
     "duration": {
       "minutes": "min"
@@ -302,6 +313,7 @@
     "reminder": {
       "day3": {
         "title": "为自己留出一刻?",
+        "bodyPersonalized": "你的{{name}}在等你 {{emoji}} — {{duration}}分钟怎么样?",
         "bodyGeneric": "你的计时器在等待 — 为自己留出一刻"
       },
       "day7": {
@@ -314,6 +326,8 @@
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
       "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
       "showTime": "Show time",
       "tapToHide": "Tap to hide",
       "tapToShow": "Tap to show"

@@ -129,10 +129,12 @@
     "favorites": {
       "palettes": {
         "title": "Favorite palettes",
+        "description": "Select up to 4 favorite palettes (%{count}/4)",
         "morePalettes": "More palettes"
       },
       "activities": {
         "title": "Favorite activities",
+        "description": "Select up to 4 favorite activities (%{count}/4)",
         "more": "More"
       }
     },
@@ -147,6 +149,7 @@
     "title": "모두 잠금 해제",
     "description": "모든 색상.\n모든 활동.\n최고의 편안함.",
     "features": "7일 무료",
+    "price": "이후 %{price} 한 번만.\n영원히 당신의 것.",
     "startTrial": "7일 무료 체험",
     "restore": "구매 복원",
     "welcomeTitle": "프리미엄을 환영합니다! 🎉",
@@ -223,10 +226,12 @@
   "accessibility": {
     "keepAwake": "화면 켜짐 유지",
     "rotationDirection": "회전 방향",
+    "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur %{number}",
     "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
     "celebrationEmoji": "Celebration",
     "closeCreateActivity": "Close create activity",
@@ -246,10 +251,15 @@
       "timerCompleted": "Timer completed!",
       "timerRunning": "Timer running",
       "timerStopped": "Timer stopped",
+      "activityStarted": "%{activity} started",
+      "activityCompleted": "%{activity} completed",
       "startTimer": "Start timer",
       "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer"
-    }
+      "resetTimer": "Reset timer",
+      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+    },
+    "unlockPremium": "Unlock premium for %{price}",
+    "paletteItem": "Color palette: %{name}"
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
@@ -292,7 +302,8 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible."
+      "deleteConfirmMessage": "This action is irreversible.",
+      "usageStats": "Used %{count} times"
     },
     "duration": {
       "minutes": "min"
@@ -302,6 +313,7 @@
     "reminder": {
       "day3": {
         "title": "자신을 위한 시간?",
+        "bodyPersonalized": "당신의 {{name}}이 기다리고 있어요 {{emoji}} — {{duration}}분 어때요?",
         "bodyGeneric": "당신의 타이머가 기다리고 있습니다 — 자신을 위한 시간을 가져보세요"
       },
       "day7": {
@@ -314,6 +326,8 @@
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
       "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
       "showTime": "Show time",
       "tapToHide": "Tap to hide",
       "tapToShow": "Tap to show"

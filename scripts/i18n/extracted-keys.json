@@ -1,16 +1,18 @@
 {
   "metadata": {
-    "extractedAt": "2026-01-16T16:34:26.340Z",
+    "extractedAt": "2026-01-16T18:27:24.198Z",
     "sourceDirectory": "src/",
-    "filesScanned": 228
+    "filesScanned": 242
   },
   "staticKeys": [
+    "accessibility.activity",
     "accessibility.activityLocked",
     "accessibility.celebrationEmoji",
     "accessibility.closeCreateActivity",
     "accessibility.closeEditActivity",
     "accessibility.closeModalHint",
     "accessibility.closePremiumModal",
+    "accessibility.colorNumber",
     "accessibility.createActivityHint",
     "accessibility.customActivityHint",
     "accessibility.deleteActivityHint",
@@ -19,10 +21,14 @@
     "accessibility.exploreSettingsHint",
     "accessibility.keepAwake",
     "accessibility.moreActivities",
+    "accessibility.paletteItem",
     "accessibility.restorePurchases",
     "accessibility.restorePurchasesHint",
     "accessibility.rotationDirection",
     "accessibility.saveActivityHint",
+    "accessibility.timer.activityCompleted",
+    "accessibility.timer.activityStarted",
+    "accessibility.timer.dial",
     "accessibility.timer.dialAdjustable",
     "accessibility.timer.dialTapToToggle",
     "accessibility.timer.resetTimer",
@@ -31,6 +37,7 @@
     "accessibility.timer.timerCompleted",
     "accessibility.timer.timerRunning",
     "accessibility.timer.timerStopped",
+    "accessibility.unlockPremium",
     "accessibility.unlockPremiumHint",
     "activities.break",
     "activities.cleaning",
@@ -54,10 +61,12 @@
     "common.ok",
     "common.retry",
     "controls.digitalTimer.decreaseDuration",
+    "controls.digitalTimer.durationLabel",
     "controls.digitalTimer.increaseDuration",
     "controls.digitalTimer.showTime",
     "controls.digitalTimer.tapToHide",
     "controls.digitalTimer.tapToShow",
+    "controls.digitalTimer.timeLabel",
     "controls.rotation.clockwise",
     "controls.rotation.counterClockwise",
     "customActivities.addButton",
@@ -80,6 +89,7 @@
     "customActivities.edit.deleteConfirmMessage",
     "customActivities.edit.deleteConfirmTitle",
     "customActivities.edit.title",
+    "customActivities.edit.usageStats",
     "customActivities.toast.created",
     "customActivities.toast.deleted",
     "customActivities.toast.updated",
@@ -93,6 +103,7 @@
     "discovery.moreColors.title",
     "invitation",
     "notifications.reminder.day3.bodyGeneric",
+    "notifications.reminder.day3.bodyPersonalized",
     "notifications.reminder.day3.title",
     "notifications.reminder.day7.body",
     "notifications.reminder.day7.title",
@@ -155,6 +166,7 @@
     "premium.noConnection",
     "premium.noConnectionMessage",
     "premium.paymentPending",
+    "premium.price",
     "premium.restore",
     "premium.restoreError",
     "premium.restoreNone",
@@ -178,8 +190,10 @@
     "settings.appearance.themeDescriptionDark",
     "settings.appearance.themeDescriptionLight",
     "settings.appearance.themeLight",
+    "settings.favorites.activities.description",
     "settings.favorites.activities.more",
     "settings.favorites.activities.title",
+    "settings.favorites.palettes.description",
     "settings.favorites.palettes.morePalettes",
     "settings.favorites.palettes.title",
     "settings.interface.pulseAnimationDescriptionOff",
@@ -285,12 +299,14 @@
     ]
   },
   "allKeys": [
+    "accessibility.activity",
     "accessibility.activityLocked",
     "accessibility.celebrationEmoji",
     "accessibility.closeCreateActivity",
     "accessibility.closeEditActivity",
     "accessibility.closeModalHint",
     "accessibility.closePremiumModal",
+    "accessibility.colorNumber",
     "accessibility.createActivityHint",
     "accessibility.customActivityHint",
     "accessibility.deleteActivityHint",
@@ -299,10 +315,14 @@
     "accessibility.exploreSettingsHint",
     "accessibility.keepAwake",
     "accessibility.moreActivities",
+    "accessibility.paletteItem",
     "accessibility.restorePurchases",
     "accessibility.restorePurchasesHint",
     "accessibility.rotationDirection",
     "accessibility.saveActivityHint",
+    "accessibility.timer.activityCompleted",
+    "accessibility.timer.activityStarted",
+    "accessibility.timer.dial",
     "accessibility.timer.dialAdjustable",
     "accessibility.timer.dialTapToToggle",
     "accessibility.timer.resetTimer",
@@ -311,6 +331,7 @@
     "accessibility.timer.timerCompleted",
     "accessibility.timer.timerRunning",
     "accessibility.timer.timerStopped",
+    "accessibility.unlockPremium",
     "accessibility.unlockPremiumHint",
     "activities.break",
     "activities.cleaning",
@@ -334,10 +355,12 @@
     "common.ok",
     "common.retry",
     "controls.digitalTimer.decreaseDuration",
+    "controls.digitalTimer.durationLabel",
     "controls.digitalTimer.increaseDuration",
     "controls.digitalTimer.showTime",
     "controls.digitalTimer.tapToHide",
     "controls.digitalTimer.tapToShow",
+    "controls.digitalTimer.timeLabel",
     "controls.rotation.clockwise",
     "controls.rotation.counterClockwise",
     "customActivities.addButton",
@@ -360,6 +383,7 @@
     "customActivities.edit.deleteConfirmMessage",
     "customActivities.edit.deleteConfirmTitle",
     "customActivities.edit.title",
+    "customActivities.edit.usageStats",
     "customActivities.toast.created",
     "customActivities.toast.deleted",
     "customActivities.toast.updated",
@@ -373,6 +397,7 @@
     "discovery.moreColors.title",
     "invitation",
     "notifications.reminder.day3.bodyGeneric",
+    "notifications.reminder.day3.bodyPersonalized",
     "notifications.reminder.day3.title",
     "notifications.reminder.day7.body",
     "notifications.reminder.day7.title",
@@ -435,6 +460,7 @@
     "premium.noConnection",
     "premium.noConnectionMessage",
     "premium.paymentPending",
+    "premium.price",
     "premium.restore",
     "premium.restoreError",
     "premium.restoreNone",
@@ -458,8 +484,10 @@
     "settings.appearance.themeDescriptionDark",
     "settings.appearance.themeDescriptionLight",
     "settings.appearance.themeLight",
+    "settings.favorites.activities.description",
     "settings.favorites.activities.more",
     "settings.favorites.activities.title",
+    "settings.favorites.palettes.description",
     "settings.favorites.palettes.morePalettes",
     "settings.favorites.palettes.title",
     "settings.interface.pulseAnimationDescriptionOff",
@@ -559,9 +587,9 @@
     "welcome.title"
   ],
   "statistics": {
-    "staticCount": 228,
+    "staticCount": 242,
     "dynamicCount": 44,
-    "totalCount": 272,
+    "totalCount": 286,
     "dynamicPatternUsages": 5
   },
   "patterns": [
@@ -588,6 +616,9 @@
   ],
   "fileUsage": {
     "notifications.reminder.day3.title": [
+      "src/services/reminderNotifications.js"
+    ],
+    "notifications.reminder.day3.bodyPersonalized": [
       "src/services/reminderNotifications.js"
     ],
     "notifications.reminder.day3.bodyGeneric": [
@@ -755,7 +786,13 @@
       "src/config/activities.js",
       "src/components/dial/TimerDial.jsx"
     ],
+    "accessibility.timer.activityCompleted": [
+      "src/hooks/useTimer.js"
+    ],
     "accessibility.timer.timerCompleted": [
+      "src/hooks/useTimer.js"
+    ],
+    "accessibility.timer.activityStarted": [
       "src/hooks/useTimer.js"
     ],
     "accessibility.timer.timerRunning": [
@@ -1067,10 +1104,16 @@
     "settings.favorites.palettes.title": [
       "src/components/settings/FavoritesPaletteSection.jsx"
     ],
+    "settings.favorites.palettes.description": [
+      "src/components/settings/FavoritesPaletteSection.jsx"
+    ],
     "settings.favorites.palettes.morePalettes": [
       "src/components/settings/FavoritesPaletteSection.jsx"
     ],
     "settings.favorites.activities.title": [
+      "src/components/settings/FavoritesActivitySection.jsx"
+    ],
+    "settings.favorites.activities.description": [
       "src/components/settings/FavoritesActivitySection.jsx"
     ],
     "settings.favorites.activities.more": [
@@ -1169,6 +1212,12 @@
     "premium.features": [
       "src/components/modals/PremiumModalContent.jsx"
     ],
+    "premium.price": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "accessibility.unlockPremium": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
     "accessibility.unlockPremiumHint": [
       "src/components/modals/PremiumModalContent.jsx",
       "src/components/modals/DiscoveryModalContent.jsx"
@@ -1243,6 +1292,9 @@
       "src/components/modals/EditActivityModalContent.jsx",
       "src/components/forms/CreateActivityForm.jsx"
     ],
+    "customActivities.edit.usageStats": [
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
     "customActivities.edit.buttonSave": [
       "src/components/modals/EditActivityModalContent.jsx",
       "src/components/modals/EditActivityModalContent.jsx"
@@ -1284,6 +1336,9 @@
     "accessibility.createActivityHint": [
       "src/components/forms/CreateActivityForm.jsx"
     ],
+    "accessibility.timer.dial": [
+      "src/components/dial/TimerDial.jsx"
+    ],
     "accessibility.timer.dialTapToToggle": [
       "src/components/dial/TimerDial.jsx",
       "src/components/dial/TimerDial.jsx"
@@ -1307,6 +1362,12 @@
       "src/components/dial/TimerDial.jsx",
       "src/components/buttons/PulseButton.jsx"
     ],
+    "controls.digitalTimer.timeLabel": [
+      "src/components/controls/DigitalTimer.jsx"
+    ],
+    "controls.digitalTimer.durationLabel": [
+      "src/components/controls/DigitalTimer.jsx"
+    ],
     "controls.digitalTimer.showTime": [
       "src/components/controls/DigitalTimer.jsx"
     ],
@@ -1316,6 +1377,9 @@
     "controls.digitalTimer.tapToShow": [
       "src/components/controls/DigitalTimer.jsx"
     ],
+    "accessibility.paletteItem": [
+      "src/components/carousels/PaletteCarousel.jsx"
+    ],
     "discovery.moreColors.title": [
       "src/components/carousels/PaletteCarousel.jsx",
       "src/components/carousels/PaletteCarousel.jsx"
@@ -1324,6 +1388,9 @@
       "src/components/carousels/PaletteCarousel.jsx"
     ],
     "discovery.moreColors.tagline": [
+      "src/components/carousels/PaletteCarousel.jsx"
+    ],
+    "accessibility.colorNumber": [
       "src/components/carousels/PaletteCarousel.jsx"
     ],
     "accessibility.discoverMorePalettes": [
@@ -1361,6 +1428,10 @@
     ],
     "accessibility.discoverPremium": [
       "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "accessibility.activity": [
+      "src/components/carousels/activity-items/ActivityItem.jsx",
+      "src/components/carousels/activity-items/ActivityItem.jsx"
     ],
     "accessibility.activityLocked": [
       "src/components/carousels/activity-items/ActivityItem.jsx"

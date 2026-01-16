@@ -129,10 +129,12 @@
     "favorites": {
       "palettes": {
         "title": "Favorite palettes",
+        "description": "Select up to 4 favorite palettes (%{count}/4)",
         "morePalettes": "More palettes"
       },
       "activities": {
         "title": "Favorite activities",
+        "description": "Select up to 4 favorite activities (%{count}/4)",
         "more": "More"
       }
     },
@@ -147,6 +149,7 @@
     "title": "Desbloqueia tudo",
     "description": "Todas as cores.\nTodas as atividades.\nO teu conforto máximo.",
     "features": "7 DIAS GRÁTIS",
+    "price": "Depois %{price} uma vez.\nTeu para sempre.",
     "startTrial": "Experimentar 7 dias grátis",
     "restore": "Restaurar as minhas compras",
     "welcomeTitle": "Bem-vindo Premium! 🎉",
@@ -223,10 +226,12 @@
   "accessibility": {
     "keepAwake": "Manter ecrã ativo",
     "rotationDirection": "Direção de rotação",
+    "activity": "Atividade %{name}",
     "activityLocked": "Atividade premium bloqueada",
     "customActivityHint": "Mantém pressionado para editar esta atividade personalizada",
     "moreActivities": "Mais atividades",
     "discoverPremium": "Descobrir atividades premium",
+    "colorNumber": "Cor %{number}",
     "discoverMorePalettes": "Toca para descobrir mais paletas",
     "celebrationEmoji": "Celebração",
     "closeCreateActivity": "Fechar criação de atividade",
@@ -246,10 +251,15 @@
       "timerCompleted": "Temporizador concluído!",
       "timerRunning": "Temporizador em execução",
       "timerStopped": "Temporizador parado",
+      "activityStarted": "%{activity} iniciado",
+      "activityCompleted": "%{activity} concluído",
       "startTimer": "Start timer",
       "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer"
-    }
+      "resetTimer": "Reset timer",
+      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+    },
+    "unlockPremium": "Unlock premium for %{price}",
+    "paletteItem": "Color palette: %{name}"
   },
   "discovery": {
     "defaultCta": "Desbloquear tudo - 7 dias grátis",
@@ -292,7 +302,8 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible."
+      "deleteConfirmMessage": "This action is irreversible.",
+      "usageStats": "Used %{count} times"
     },
     "duration": {
       "minutes": "min"
@@ -302,6 +313,7 @@
     "reminder": {
       "day3": {
         "title": "Um momento para ti?",
+        "bodyPersonalized": "A tua {{name}} espera por ti {{emoji}} — {{duration}} min para ti?",
         "bodyGeneric": "O teu temporizador espera por ti — tira um momento para ti"
       },
       "day7": {
@@ -314,6 +326,8 @@
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
       "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
       "showTime": "Show time",
       "tapToHide": "Tap to hide",
       "tapToShow": "Tap to show"
