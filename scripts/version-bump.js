@@ -6,6 +6,8 @@
  * - package.json
  * - app.json
  * - android/app/build.gradle (versionCode + versionName)
+ * - src/components/settings/AboutSection.jsx (displayed version)
+ * - docs/README.md (if exists)
  *
  * Usage:
  *   npm run version:patch  // 1.0.5 -> 1.0.6
@@ -156,6 +158,32 @@ function updateDocumentation(newVersion) {
   log(`✓ docs/README.md: Version actuelle → ${newVersion}`, colors.green);
 }
 
+function updateAboutSection(newVersion) {
+  const aboutPath = path.join(__dirname, '../src/components/settings/AboutSection.jsx');
+
+  // Only update if file exists
+  if (!fs.existsSync(aboutPath)) {
+    log('⊘ AboutSection.jsx: skipped (file not found)', colors.yellow);
+    return;
+  }
+
+  let aboutContent = readFile(aboutPath);
+
+  // Extract current version
+  const versionMatch = aboutContent.match(/{t\('settings\.about\.version'\)}\s+(\d+\.\d+\.\d+)/);
+  const oldVersion = versionMatch ? versionMatch[1] : '?';
+
+  // Replace version in AboutSection (line 67)
+  aboutContent = aboutContent.replace(
+    /{t\('settings\.about\.version'\)}\s+\d+\.\d+\.\d+/,
+    `{t('settings.about.version')} ${newVersion}`
+  );
+
+  writeFile(aboutPath, aboutContent);
+
+  log(`✓ AboutSection.jsx: ${oldVersion} → ${newVersion}`, colors.green);
+}
+
 function main() {
   const args = process.argv.slice(2);
 
@@ -210,6 +238,7 @@ function main() {
     log('  • package.json');
     log('  • app.json');
     log('  • android/app/build.gradle (versionCode + versionName)');
+    log('  • src/components/settings/AboutSection.jsx');
     log('  • docs/README.md (if exists)\n');
 
     // Confirmation prompt (but auto-proceed in CI or non-interactive mode)
@@ -230,6 +259,7 @@ function main() {
     updatePackageJson(newVersion);
     updateAppJson(newVersion);
     updateBuildGradle(newVersion, newVersionCode);
+    updateAboutSection(newVersion);
     updateDocumentation(newVersion);
 
     log(`\n✨ Success! Version bumped to ${newVersion}`, colors.bright + colors.green);
