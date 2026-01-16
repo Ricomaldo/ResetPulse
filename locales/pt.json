@@ -90,7 +90,7 @@
       "rotationCounterClockwise": "Sentido anti-horário",
       "keepAwake": "Manter ecrã ativo",
       "keepAwakeDescriptionOn": "O ecrã permanece ativo durante o temporizador",
-      "keepAwakeDescriptionOff": "O ecrã pode bloquear durante o temporizador"
+      "keepAwakeDescriptionOff": "O ecrã pode bloquear durante o temporizador",
       "longPressStart": "Enable long tap to start",
       "longPressStartDescriptionOn": "Hold to start the timer",
       "longPressStartDescriptionOff": "Simple tap to start",

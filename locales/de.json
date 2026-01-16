@@ -90,7 +90,7 @@
       "rotationCounterClockwise": "Gegen den Uhrzeigersinn",
       "keepAwake": "Bildschirm wach halten",
       "keepAwakeDescriptionOn": "Bildschirm bleibt während Timer wach",
-      "keepAwakeDescriptionOff": "Bildschirm kann sich während Timer sperren"
+      "keepAwakeDescriptionOff": "Bildschirm kann sich während Timer sperren",
       "longPressStart": "Enable long tap to start",
       "longPressStartDescriptionOn": "Hold to start the timer",
       "longPressStartDescriptionOff": "Simple tap to start",
