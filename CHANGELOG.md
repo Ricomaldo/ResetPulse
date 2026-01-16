@@ -4,7 +4,7 @@ updated: '2026-01-16'
 status: active
 ---
 
-## [2.1.3] - 2026-01-16
+## [2.1.4] - 2026-01-16
 
 ### ✨ Visual & Animation Enhancements
 
@@ -87,6 +87,20 @@ status: active
     - App.js → AppContent → TimerScreen → AsideZone → SheetContent → SettingsPanel → AboutSection
   - Button now correctly resets onboarding state and returns user to onboarding flow
   - **Files**: `App.js`, `src/screens/TimerScreen.jsx`, `src/components/layout/AsideZone.jsx`
+
+#### Onboarding Duration Button Width
+- **Fixed layout overflow**: Only 4 duration buttons fit on one line instead of 5 in screen 030 (activity creation)
+  - **Root cause**: Duration buttons had `minWidth: 70px`, too wide for 5 buttons
+  - **Solution**: Reduced `minWidth` to 62px
+  - Calculation: Screen width 375px - padding 32px - gaps 32px = 311px available / 5 buttons = 62.2px each
+  - All 5 duration presets (5, 15, 30, 45, 60 min) now fit on one line
+  - **Files**: `src/components/forms/CustomizeStep.jsx`
+
+### 📦 Version Updates
+- **Version**: 2.1.4
+- **Android versionCode**: 25 (bumped from 24)
+- **versionName**: 2.1.4
+- Synchronized across package.json, app.json, build.gradle, and AboutSection
 
 ---
 
