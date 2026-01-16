@@ -80,6 +80,14 @@ status: active
   - **Files**: `src/hooks/useNotificationTimer.js`, `src/hooks/useTimer.js`
   - **Documentation**: See `_internal/docs/reports/notification-race-condition-fix.md` for comprehensive test matrix
 
+#### Restart the Guide Button
+- **Fixed non-functional button**: "Restart the guide" button in About section was not working
+  - **Root cause**: `handleResetOnboarding` function was never propagated from App.js to SettingsPanel
+  - **Solution**: Propagated `onResetOnboarding` prop through entire component chain:
+    - App.js → AppContent → TimerScreen → AsideZone → SheetContent → SettingsPanel → AboutSection
+  - Button now correctly resets onboarding state and returns user to onboarding flow
+  - **Files**: `App.js`, `src/screens/TimerScreen.jsx`, `src/components/layout/AsideZone.jsx`
+
 ---
 
 ## [2.1.2] - 2026-01-15
