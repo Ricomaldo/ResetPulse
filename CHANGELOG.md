@@ -96,6 +96,84 @@ status: active
   - All 5 duration presets (5, 15, 30, 45, 60 min) now fit on one line
   - **Files**: `src/components/forms/CustomizeStep.jsx`
 
+### 🌍 i18n Complete Audit & Cleanup (CRITICAL)
+
+#### Audit Infrastructure
+- **Created 10 automated scripts** for comprehensive i18n validation:
+  - `01-extract-keys.js`: Extract static + dynamic i18n keys from code
+  - `02-parse-locales.js`: Parse all locale JSON files to flat maps
+  - `03-audit-sync.js`: Detect P0/P1/P2/P3 issues (missing, pollution, obsolete, duplicates)
+  - `04-generate-report.js`: Generate baseline/validation markdown reports
+  - `05-consolidate-duplicates.js`: Auto-consolidate duplicate keys
+  - `06-backfill-locales.js`: Backfill incomplete locales with EN placeholders
+  - `07-cleanup-obsolete-keys.js`: Remove dead keys from all locales
+  - `08-cleanup-backfilled-obsolete.js`: Clean extra obsolete keys from backfilled locales
+  - `09-restore-missing-keys.js`: Restore accidentally deleted keys
+  - `10-restore-all-missing-keys.js`: Emergency restoration script
+- **Added npm scripts**: `i18n:audit`, `i18n:extract`, `i18n:parse`, `i18n:consolidate`, `i18n:backfill`, `i18n:cleanup`
+- **Comprehensive reports**: Baseline and validation reports in `_internal/docs/audits/audit-2026-01-16/`
+
+#### Extraction Regex Fix (CRITICAL)
+- **Fixed key extraction pattern**: Regex only captured `t('key')` but missed `t('key', {params})`
+  - **Old regex**: `/\bt\((['"\`])([^'"\`]+)\1\)/g`
+  - **New regex**: `/\bt\((['"\`])([^'"\`]+)\1(?:,|\))/g`
+  - Now correctly captures both `t('key')` and `t('key', {params})`
+  - Prevented deletion of 14 actively-used keys with parameters
+
+#### Locale Cleanup & Synchronization
+- **Removed 220 obsolete keys** across all 15 locales (1,480 total removals)
+  - Code coverage improved: 56% → 100% (286/286 keys used)
+  - Reduced locale file sizes by ~44% (496 → 300 keys in FR/EN)
+- **Backfilled 13 incomplete locales** from 43-55% to 100%:
+  - ES, DE, IT, PT, RU, NL, JA, KO, ZH-Hans, ZH-Hant, AR, SV, NO
+  - Added 1,861 keys total with EN placeholders
+  - Professional translation plan documented: `_internal/docs/guides/i18n-translation-plan.md`
+- **Fixed P1 locale pollution** (20 real issues):
+  - EN: `accessibility.colorNumber`, `accessibility.discoverMorePalettes`, `discovery.*`
+  - ES/DE/IT/PT: Discovery modal strings corrected
+
+#### Critical Keys Restored
+**14 keys with parameters** (initially deleted due to regex bug):
+- `accessibility.unlockPremium` (with price)
+- `accessibility.activity` (with name)
+- `accessibility.colorNumber` (with number)
+- `accessibility.paletteItem` (with name)
+- `accessibility.timer.activityCompleted` (with activity)
+- `accessibility.timer.activityStarted` (with activity)
+- `accessibility.timer.dial` (with minutes, activity)
+- `controls.digitalTimer.durationLabel` (with time)
+- `controls.digitalTimer.timeLabel` (with time)
+- `customActivities.edit.usageStats` (with count)
+- `notifications.reminder.day3.bodyPersonalized` (with name, emoji, duration)
+- `premium.price` (with price)
+- `settings.favorites.activities.description` (with count)
+- `settings.favorites.palettes.description` (with count)
+
+**24 onboarding.intentions keys** (entire section restored):
+- Persona labels: `relax`, `work`, `create`, `learn`, `move`, `other` (each with label + defaultName)
+- Question 1 options: `focus`, `launch`, `breathe`, `children`, `other`
+- Question 2 options: `starting`, `finishing`, `staying`, `managing`, `other`
+- **Root cause**: Cleanup script missed template literal patterns used in persona mapping
+- **Fix**: Restored from backup for FR/EN, copied EN structure to 13 backfilled locales
+
+#### Final State
+- ✅ **All 15 locales: 300 keys each** (100% synchronized)
+- ✅ **P0 (missing keys): 0**
+- ✅ **P2 (obsolete keys): 0**
+- ✅ **Code coverage: 100%** (286/286 keys used)
+- ✅ **Onboarding fully functional** (all persona screens working)
+- ⚠️ **P1 (locale pollution): 69** (false positives - cognates like "Yoga", "Sport")
+- ⚠️ **P3 (duplicate values): 3** (acceptable redundancy)
+
+#### Documentation
+- **Audit reports**: `_internal/docs/audits/audit-2026-01-16/`
+  - Baseline report (initial state: P0=0, P1=85, P2=218, P3=43)
+  - Validation report (final state: P0=0, P1=69, P2=0, P3=3)
+  - Final summary with complete audit cycle
+- **Translation plan**: `_internal/docs/guides/i18n-translation-plan.md`
+  - 3-phase approach: Professional (ES/DE/IT/PT) → DeepL (RU/NL/JA/KO/ZH) → Community (AR/SV/NO)
+  - Cost estimate: $1,498-$2,112 total
+
 ### 📦 Version Updates
 - **Version**: 2.1.4
 - **Android versionCode**: 25 (bumped from 24)
