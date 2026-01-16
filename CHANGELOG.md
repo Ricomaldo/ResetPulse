@@ -65,6 +65,21 @@ status: active
 - **Fixed isRunning prop chain**: Properly flows from TimerScreen → AsideZone → SheetContent → FavoriteToolBox/ToolBox → ActivityCarousel/ControlBar
 - **PropTypes consistency**: Added/updated PropTypes for all modified components
 
+#### Notification Race Condition (CRITICAL)
+- **Fixed orphaned notifications**: Resolved race condition causing "notifications from nowhere"
+  - **Root cause**: `cancelTimerNotification()` could run before `scheduleTimerNotification()` finished setting the notification ID, leaving orphaned notifications
+  - **Solution**: Promise-based synchronization ensures cancel WAITS for in-progress schedule to complete
+    - Added `schedulingPromiseRef` to track in-flight schedule operations
+    - Both schedule and cancel now enforce mutual exclusion via promise synchronization
+    - Cancel always waits for schedule to complete before proceeding, ensuring notification ID is set
+  - **Fixes scenarios**:
+    - Rapid start → stop → start cycles
+    - Component unmount during scheduling
+    - Multiple rapid timer starts
+    - Double-tap start button
+  - **Files**: `src/hooks/useNotificationTimer.js`, `src/hooks/useTimer.js`
+  - **Documentation**: See `_internal/docs/reports/notification-race-condition-fix.md` for comprehensive test matrix
+
 ---
 
 ## [2.1.2] - 2026-01-15
