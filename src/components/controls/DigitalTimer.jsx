@@ -272,8 +272,8 @@ const DigitalTimer = React.memo(function DigitalTimer({
   };
 
   // Sizes
-  const fontSize = compact ? rs(20) : rs(26);
-  const gap = compact ? rs(4) : rs(6); // Rapproché pour resserrer -/+
+  const fontSize = compact ? rs(24) : rs(36); // Augmenté pour meilleure lisibilité
+  const gap = compact ? rs(6) : rs(8); // Légèrement augmenté pour respirer
   const pillHeight = isCollapsed ? rs(40) : rs(44);
 
   const styles = StyleSheet.create({
@@ -302,12 +302,12 @@ const DigitalTimer = React.memo(function DigitalTimer({
       fontSize: fontSize,
       fontVariant: ['tabular-nums'],
       fontWeight: '600',
-      minWidth: compact ? rs(70) : rs(90),
+      minWidth: compact ? rs(80) : rs(115), // Augmenté pour texte plus grand
       opacity: 1,
       textAlign: 'center',
     },
     timerWrapper: {
-      minWidth: compact ? rs(70) : rs(90),
+      minWidth: compact ? rs(80) : rs(115), // Synchronisé avec timeText
       alignItems: 'center',
       justifyContent: 'center',
     },

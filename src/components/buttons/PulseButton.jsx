@@ -8,8 +8,13 @@
  *
  * États possibles: 'rest' | 'running' | 'complete'
  *
+ * Animations:
+ * - REST: breathing pulse (optional, controlled by shouldPulse)
+ * - RUNNING: halos + rotating second hand (1 rotation/minute)
+ * - COMPLETE: bounce effect
+ *
  * @created 2025-12-19
- * @updated 2026-01-16 - Simplified logic based on state + 2 booleans
+ * @updated 2026-01-16 - Added second hand animation for running state
  */
 import React, { useRef, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
@@ -31,6 +36,7 @@ import Svg, { Circle } from 'react-native-svg';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
+import { useTranslation } from '../../hooks/useTranslation';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
@@ -50,6 +56,12 @@ const STATE_TRANSITION_DURATION = 250;
 const HALO_DURATION = 1200;
 const HALO_SCALE_MAX = 1.8;
 const HALO_DELAY = 600;
+
+// Second hand animation (RUNNING state)
+const SECOND_HAND_DURATION = 60000; // 1 minute for full rotation
+const SECOND_HAND_SIZE = 6; // Size of the main dot
+const SECOND_HAND_TRAIL_COUNT = 4; // Number of trailing dots (comma effect)
+const SECOND_HAND_TRAIL_SPACING = 8; // Degrees between trail dots
 
 // Animated Circle component
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -76,6 +88,7 @@ const PulseButton = React.memo(function PulseButton({
   shouldPulse = false,
 }) {
   const theme = useTheme();
+  const t = useTranslation();
   const timerConfig = useTimerConfig();
   const longPressConfirmDuration = timerConfig?.longPressConfirmDuration ?? DEFAULT_LONG_PRESS_DURATION;
   const longPressStartDuration = timerConfig?.longPressStartDuration ?? DEFAULT_LONG_PRESS_DURATION;
@@ -160,6 +173,51 @@ const PulseButton = React.memo(function PulseButton({
     opacity: halo2Opacity.value,
     transform: [{ scale: halo2Scale.value }],
   }));
+
+  // === SECOND HAND ANIMATION (RUNNING state) ===
+  const secondHandRotation = useSharedValue(0);
+
+  useEffect(() => {
+    if (state === 'running') {
+      // Start from current position, rotate continuously
+      secondHandRotation.value = withRepeat(
+        withTiming(360, {
+          duration: SECOND_HAND_DURATION,
+          easing: Easing.linear
+        }),
+        -1, // Infinite repeat
+        false // Don't reverse
+      );
+    } else {
+      cancelAnimation(secondHandRotation);
+      secondHandRotation.value = 0;
+    }
+  }, [state, secondHandRotation]);
+
+  // Generate trail styles with decreasing opacity (comma/fade effect)
+  // Container rotation only, scale applied to dot itself
+  const trail0Style = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${secondHandRotation.value}deg` }],
+  }));
+
+  const trail1Style = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${secondHandRotation.value - SECOND_HAND_TRAIL_SPACING}deg` }],
+  }));
+
+  const trail2Style = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${secondHandRotation.value - (SECOND_HAND_TRAIL_SPACING * 2)}deg` }],
+  }));
+
+  const trail3Style = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${secondHandRotation.value - (SECOND_HAND_TRAIL_SPACING * 3)}deg` }],
+  }));
+
+  const trailStyles = [
+    { containerStyle: trail0Style, opacity: 1.0, scale: 1.0 },
+    { containerStyle: trail1Style, opacity: 0.7, scale: 0.8 },
+    { containerStyle: trail2Style, opacity: 0.45, scale: 0.6 },
+    { containerStyle: trail3Style, opacity: 0.2, scale: 0.4 },
+  ];
 
   // === STATE TRANSITION ANIMATION ===
   const stateProgress = useSharedValue(state === 'running' ? 1 : 0);
@@ -284,11 +342,11 @@ const PulseButton = React.memo(function PulseButton({
   const getAccessibilityLabel = () => {
     switch (state) {
       case 'running':
-        return 'Stop timer';
+        return t('accessibility.timer.stopTimer');
       case 'complete':
-        return 'Reset timer';
+        return t('accessibility.timer.resetTimer');
       default:
-        return 'Start timer';
+        return t('accessibility.timer.startTimer');
     }
   };
 
@@ -348,6 +406,28 @@ const PulseButton = React.memo(function PulseButton({
         { scaleY: clockwise ? -1 : 1 }, // Same direction (wind up)
       ],
     },
+    secondHandContainer: {
+      position: 'absolute',
+      width: buttonSize,
+      height: buttonSize,
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+    },
+    secondHandDot: {
+      width: SECOND_HAND_SIZE,
+      height: SECOND_HAND_SIZE,
+      borderRadius: SECOND_HAND_SIZE / 2,
+      backgroundColor: theme.colors.brand.accent, // Accent color (gold)
+      marginTop: STROKE_WIDTH + 2, // Position just outside the button edge
+      ...theme.shadow('sm'),
+    },
+    secondHandTrailContainer: {
+      position: 'absolute',
+      width: buttonSize,
+      height: buttonSize,
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+    },
   });
 
   // === GESTURE HANDLERS ===
@@ -403,16 +483,37 @@ const PulseButton = React.memo(function PulseButton({
 
   // === RENDER HELPERS ===
   const renderSimpleButton = () => (
-    <TouchableOpacity
-      style={styles.button}
-      onPress={handleTap}
-      activeOpacity={0.7}
-      accessible
-      accessibilityRole="button"
-      accessibilityLabel={getAccessibilityLabel()}
-    >
-      {renderContent()}
-    </TouchableOpacity>
+    <View style={styles.container}>
+      {/* Halos (only for running state with pulse enabled) */}
+      {shouldPulse && state === 'running' && (
+        <View style={styles.haloContainer}>
+          <Animated.View style={[styles.halo, halo1Style]} />
+          <Animated.View style={[styles.halo, halo2Style]} />
+        </View>
+      )}
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleTap}
+        activeOpacity={0.7}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={getAccessibilityLabel()}
+      >
+        {renderContent()}
+      </TouchableOpacity>
+
+      {/* Second hand indicator with trail (only for running state) */}
+      {state === 'running' && (
+        <View style={styles.secondHandContainer} pointerEvents="none">
+          {trailStyles.map((trail, index) => (
+            <Animated.View key={index} style={[styles.secondHandTrailContainer, trail.containerStyle]}>
+              <View style={[styles.secondHandDot, { opacity: trail.opacity, transform: [{ scale: trail.scale }] }]} />
+            </Animated.View>
+          ))}
+        </View>
+      )}
+    </View>
   );
 
   const renderLongPressButton = (gesture, circleProps, isStopMode = false) => (
@@ -430,6 +531,17 @@ const PulseButton = React.memo(function PulseButton({
           {renderContent()}
         </Animated.View>
 
+        {/* Second hand indicator with trail (only for running state) */}
+        {state === 'running' && (
+          <View style={styles.secondHandContainer} pointerEvents="none">
+            {trailStyles.map((trail, index) => (
+              <Animated.View key={index} style={[styles.secondHandTrailContainer, trail.containerStyle]}>
+                <View style={[styles.secondHandDot, { opacity: trail.opacity, transform: [{ scale: trail.scale }] }]} />
+              </Animated.View>
+            ))}
+          </View>
+        )}
+
         {/* Progress circle overlay */}
         <View style={isStopMode ? styles.progressOverlay : styles.progressOverlayStart}>
           <Svg width={buttonSize} height={buttonSize}>
@@ -437,7 +549,7 @@ const PulseButton = React.memo(function PulseButton({
               cx={center}
               cy={center}
               r={radius}
-              stroke={theme.colors.fixed.white + '30'}
+              stroke={theme.colors.brand.accent + '30'}
               strokeWidth={STROKE_WIDTH}
               fill="transparent"
             />
@@ -445,7 +557,7 @@ const PulseButton = React.memo(function PulseButton({
               cx={center}
               cy={center}
               r={radius}
-              stroke={theme.colors.fixed.white}
+              stroke={theme.colors.brand.accent}
               strokeWidth={STROKE_WIDTH}
               fill="transparent"
               strokeDasharray={circumference}

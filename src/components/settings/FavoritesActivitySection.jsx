@@ -9,6 +9,7 @@ import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import PropTypes from 'prop-types';
 import { Star } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
@@ -31,6 +32,7 @@ function FavoritesActivitySection({
   setShowMoreActivitiesModal,
 }) {
   const theme = useTheme();
+  const t = useTranslation();
   const allActivities = getAllActivities();
 
   const availableActivities = isPremiumUser
@@ -115,8 +117,8 @@ function FavoritesActivitySection({
 
   return (
     <SettingsCard
-      title={<CardTitle Icon={Star} label="Activités favorites" theme={theme} />}
-      description={`Sélectionnez jusqu'à 4 activités favorites (${favoriteActivities.length}/4)`}
+      title={<CardTitle Icon={Star} label={t('settings.favorites.activities.title')} theme={theme} />}
+      description={t('settings.favorites.activities.description', { count: favoriteActivities.length })}
     >
       <View style={styles.grid}>
         {availableActivities.map((activity) => {
@@ -164,7 +166,7 @@ function FavoritesActivitySection({
               activeOpacity={0.7}
             >
               <Text style={styles.discoverIcon}>+</Text>
-              <Text style={styles.discoverText}>Plus</Text>
+              <Text style={styles.discoverText}>{t('settings.favorites.activities.more')}</Text>
             </TouchableOpacity>
           </View>
         )}

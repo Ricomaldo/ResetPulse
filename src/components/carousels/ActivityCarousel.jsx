@@ -1,7 +1,7 @@
 /**
  * @fileoverview Activity carousel for selecting timer activities
  * @created 2025-12-14
- * @updated 2026-01-16 - Always reset to 60min scale on activity selection
+ * @updated 2026-01-16 - Removed scale auto-adjustment (scale is manual only)
  */
 import PropTypes from 'prop-types';
 import React, { useRef, useEffect, useState, useMemo, useCallback, forwardRef } from 'react';
@@ -26,14 +26,13 @@ import analytics from '../../services/analytics';
 import { ActivityItem, PlusButton } from './activity-items/index';
 import { fontWeights } from '../../theme/tokens';
 
-const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = false }, ref) {
+const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = false, isRunning = false }, ref) {
   const theme = useTheme();
   const t = useTranslation();
   const {
     timer: { currentActivity },
     setCurrentActivity,
     setCurrentDuration,
-    setScaleMode,
     handleActivitySelect,
     favorites: { favoriteActivities = [] },
     stats: { activityDurations = {} },
@@ -74,14 +73,14 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   [isPremiumUser, builtInActivities, customActivities]
   );
 
-  // Organize activities into pages: max 4 activities per page, favorites first
+  // Organize activities into pages: max 5 activities per page, favorites first
   const activityPages = useMemo(() => {
-    const MAX_ITEMS_PER_PAGE = 4;
+    const MAX_ITEMS_PER_PAGE = 5;
 
     // Sort activities: favorites first (already sorted in builtInActivities)
     const sortedActivities = [...activities];
 
-    // Split into pages of max 4 items
+    // Split into pages of max 5 items
     const pages = [];
     for (let i = 0; i < sortedActivities.length; i += MAX_ITEMS_PER_PAGE) {
       pages.push(sortedActivities.slice(i, i + MAX_ITEMS_PER_PAGE));
@@ -89,12 +88,6 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
 
     return pages.length > 0 ? pages : [[]]; // Return at least one empty page
   }, [activities]);
-
-  useEffect(() => {
-    if (drawerVisible && scrollViewRef.current) {
-      setTimeout(() => scrollViewRef.current?.scrollTo({ x: 0, animated: false }), 50);
-    }
-  }, [drawerVisible]);
 
   const getScaleAnim = (activityId) => {
     if (!scaleAnims[activityId]) {scaleAnims[activityId] = new Animated.Value(1);}
@@ -120,6 +113,12 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   }, [toastAnim]);
 
   const handleActivityPress = useCallback((activity) => {
+    // Block activity change when timer is running
+    if (isRunning) {
+      haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
+      return;
+    }
+
     if (activity.isPremium && !isPremiumUser) {
       haptics.warning().catch(() => { /* Optional operation - failure is non-critical */ });
       modalStack.push('premium', {
@@ -137,14 +136,11 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     const savedDuration = activityDurations[activity.id];
     const durationToApply = savedDuration || activity.defaultDuration;
 
-    // Always reset to 60min scale when selecting an activity
-    setScaleMode('60min');
+    // Set duration and update current activity
     setCurrentDuration(durationToApply);
-
-    // Update current activity
     setCurrentActivity(activity);
     animateSelection(activity.id);
-  }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration, setScaleMode, handleActivitySelect, modalStack, t]);
+  }, [isRunning, isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration, handleActivitySelect, modalStack, t]);
 
   const handleMorePress = useCallback(() => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
@@ -215,12 +211,10 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   }, [modalStack, handleActivityUpdated, handleActivityDeleted]);
 
   const handleActivityCreated = useCallback((newActivity) => {
-    // Always reset to 60min scale when creating a new activity
-    setScaleMode('60min');
     setCurrentActivity(newActivity);
     setCurrentDuration(newActivity.defaultDuration);
     showToast(t('customActivities.toast.created'));
-  }, [setCurrentActivity, setCurrentDuration, setScaleMode, showToast, t]);
+  }, [setCurrentActivity, setCurrentDuration, showToast, t]);
 
   const handleActivityUpdated = useCallback((updatedActivity) => {
     if (currentActivity?.id === updatedActivity.id) {setCurrentActivity(updatedActivity);}
@@ -245,9 +239,9 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     updateArrowVisibility(event.nativeEvent.contentOffset.x);
   }, [updateArrowVisibility]);
 
-  // Page sizing: 4 items (60px) + 3 gaps (13px) + padding (16px) = 295px
-  // Add 5px margin for subtle scroll hint on edges
-  const PAGE_WIDTH = rs(300, 'width');
+  // Page sizing: 5 items (60px) + 4 gaps (13px) + padding (20px) = 372px
+  // Shows all 5 buttons (4 activities + "+") without scroll in free mode
+  const PAGE_WIDTH = rs(375, 'width');
 
   const styles = StyleSheet.create({
     carouselContainer: {
@@ -291,6 +285,8 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     },
     scrollContent: {
       alignItems: 'center',
+      flexGrow: 1,
+      justifyContent: 'center',
       paddingHorizontal: 0,
     },
     scrollView: {
@@ -300,7 +296,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   });
 
   return (
-    <View style={styles.outerContainer}>
+    <View style={[styles.outerContainer, isRunning && { opacity: 0.5 }]}>
       {/* Carousel container */}
       <View style={styles.carouselContainer}>
         <ScrollView
@@ -391,6 +387,7 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
 
 ActivityCarousel.propTypes = {
   drawerVisible: PropTypes.bool,
+  isRunning: PropTypes.bool,
 };
 
 export default ActivityCarousel;

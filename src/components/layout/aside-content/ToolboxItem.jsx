@@ -46,14 +46,14 @@ const ToolboxItem = React.memo(function ToolboxItem({ children, variant = 'defau
       sizes = harmonizedSizes.toolboxItem;
   }
 
-  // Only controlBar keeps background, carousels are transparent
-  const hasBackground = variant === 'controlBar';
+  // All variants are now transparent (no background)
+  const hasBackground = false;
 
   const styles = StyleSheet.create({
     container: {
       width: '100%',  // Critical: full width for layout calculations in children (esp. ControlBar with absolute positioning)
-      backgroundColor: hasBackground ? theme.colors.surfaceElevated : theme.colors.fixed.transparent,
-      borderRadius: hasBackground ? theme.borderRadius.lg : 0,
+      backgroundColor: theme.colors.fixed.transparent,
+      borderRadius: 0,
       paddingHorizontal: sizes.padding.horizontal,
       paddingVertical: sizes.padding.vertical,
       minHeight: sizes.minHeight,

@@ -26,7 +26,6 @@ import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import { SoundPicker } from '../pickers';
 import SettingsCard from './SettingsCard';
-import SelectionCard from './SelectionCard';
 import SectionHeader from './SectionHeader';
 import { CardTitle } from './CardTitle';
 import FavoritesActivitySection from './FavoritesActivitySection';
@@ -51,9 +50,10 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
     setShowActivityEmoji,
     system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
-    timer: { clockwise, selectedSoundId },
+    timer: { clockwise, selectedSoundId, scaleMode },
     setClockwise,
     setSelectedSoundId,
+    setScaleMode,
     interaction: { customStartLongPress, customStopLongPress },
     setCustomInteraction,
     favorites: { favoriteActivities, favoritePalettes },
@@ -73,47 +73,38 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
     setFavoriteActivities(updated);
   };
 
-  // Favorite tools modes (mapped from TimerConfigContext values)
+  // Favorite tools modes - 3 options mutuellement exclusives
   const favoriteTools = [
     {
-      id: 'colors',
-      emoji: '🎨',
-      label: t('settings.tool.creative.label'),
-      description: t('settings.tool.creative.description'),
-    },
-    {
-      id: 'none',
-      emoji: '☯',
-      label: t('settings.tool.minimalist.label'),
-      description: t('settings.tool.minimalist.description'),
-    },
-    {
       id: 'activities',
-      emoji: '🔄',
       label: t('settings.tool.multitask.label'),
       description: t('settings.tool.multitask.description'),
     },
     {
-      id: 'combo',
-      emoji: '⏱',
-      label: t('settings.tool.timeSetup.label'),
-      description: t('settings.tool.timeSetup.description'),
+      id: 'colors',
+      label: t('settings.tool.creative.label'),
+      description: t('settings.tool.creative.description'),
+    },
+    {
+      id: 'commands',
+      label: t('settings.tool.precision.label'),
+      description: t('settings.tool.precision.description'),
     },
   ];
+
+  // Handler pour toggles mutuellement exclusifs
+  const handleToolToggle = (toolId) => {
+    haptics.switchToggle().catch(() => {});
+    // Si on active un tool, on le set. Si on désactive, impossible (un doit toujours être actif)
+    if (favoriteToolMode !== toolId) {
+      setFavoriteToolMode(toolId);
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       width: '100%',
-    },
-    grid2x2: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: rs(12),          // Responsive (was theme.spacing.sm)
-      marginTop: rs(12),    // Responsive (was theme.spacing.sm)
-    },
-    gridItem2x2: {
-      width: '48%', // ~50% minus gap
     },
     optionLabel: {
       color: theme.colors.text,
@@ -180,6 +171,44 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
 
         {/* Section 2: Timer Options */}
         <SettingsCard title={<CardTitle Icon={Clock} label={t('settings.sections.timerOptions')} theme={theme} />}>
+          {/* Dial Scale (Range) */}
+          <View style={styles.optionRow}>
+            <View style={{ flex: 1, marginBottom: rs(12) }}>
+              <Text style={styles.optionLabel}>{t('settings.timer.dialScale')}</Text>
+              <Text style={styles.optionDescription}>
+                {t('settings.timer.dialScaleDescription')}
+              </Text>
+            </View>
+          </View>
+          <View style={[styles.segmentedControl, { marginBottom: rs(12) }]}>
+            {['5min', '15min', '30min', '45min', '60min'].map((scale) => (
+              <TouchableOpacity
+                key={scale}
+                style={[
+                  styles.segmentButton,
+                  scaleMode === scale && styles.segmentButtonActive,
+                ]}
+                onPress={() => {
+                  haptics.selection().catch(() => {});
+                  setScaleMode(scale);
+                }}
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel={`${scale} scale`}
+                accessibilityState={{ selected: scaleMode === scale }}
+              >
+                <Text
+                  style={[
+                    styles.segmentText,
+                    scaleMode === scale && styles.segmentTextActive,
+                  ]}
+                >
+                  {scale.replace('min', '')}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
           {/* Emoji activité au centre */}
           <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
@@ -219,7 +248,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                     t('settings.interface.pulseWarningTitle'),
                     t('settings.interface.pulseWarningMessage'),
                     [
-                      { text: t('cancel'), style: 'cancel' },
+                      { text: t('common.cancel'), style: 'cancel' },
                       { text: t('settings.interface.pulseWarningEnable'), onPress: () => setShouldPulse(true) }
                     ]
                   );
@@ -273,10 +302,10 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         </SettingsCard>
 
         {/* Section 3: Keep Awake */}
-        <SettingsCard title={<CardTitle Icon={Eye} label="Keep Awake" theme={theme} />}>
+        <SettingsCard title={<CardTitle Icon={Eye} label={t('settings.sections.keepAwake')} theme={theme} />}>
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.optionLabel}>{t('settings.timer.keepAwake')}</Text>
+              <Text style={styles.optionLabel}>{t('accessibility.keepAwake')}</Text>
               <Text style={styles.optionDescription}>
                 {keepAwakeEnabled
                   ? t('settings.timer.keepAwakeDescriptionOn')
@@ -298,26 +327,33 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
           </View>
         </SettingsCard>
 
-        {/* Section 4: Favorite Tool (Ton raccourci préféré) */}
+        {/* Section 4: Minimal Display Mode */}
         <SettingsCard title={<CardTitle Icon={Keyboard} label={t('settings.tool.sectionTitle')} theme={theme} />}>
-          <View style={styles.grid2x2}>
-            {favoriteTools.map((tool) => (
-              <View key={tool.id} style={styles.gridItem2x2}>
-                <SelectionCard
-                  emoji={tool.emoji}
-                  label={tool.label}
-                  description={tool.description}
-                  selected={favoriteToolMode === tool.id}
-                  onSelect={() => setFavoriteToolMode(tool.id)}
-                  compact
-                />
+          {favoriteTools.map((tool, index) => (
+            <View
+              key={tool.id}
+              style={[
+                styles.optionRow,
+                index === favoriteTools.length - 1 && { borderBottomWidth: 0 }
+              ]}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.optionLabel}>{tool.label}</Text>
+                <Text style={styles.optionDescription}>
+                  {tool.description}
+                </Text>
               </View>
-            ))}
-          </View>
+              <Switch
+                value={favoriteToolMode === tool.id}
+                onValueChange={() => handleToolToggle(tool.id)}
+                {...theme.styles.switch(favoriteToolMode === tool.id)}
+              />
+            </View>
+          ))}
         </SettingsCard>
 
         {/* Group 2: TES FAVORIS (Your Favorites) - Premium only */}
-        {isPremiumUser && <SectionHeader label="TES FAVORIS" />}
+        {isPremiumUser && <SectionHeader label={t('settings.sections.favorites')} />}
 
         {/* Section 3: Favorite Activities (Premium only) */}
         {isPremiumUser && (
@@ -340,15 +376,15 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         )}
 
         {/* Group 3: AMBIANCE */}
-        <SectionHeader label="AMBIANCE" />
+        <SectionHeader label={t('settings.sections.ambiance')} />
 
         {/* 3. Rotation Direction Section */}
-        <SettingsCard title={<CardTitle Icon={RotateCw} label={t('settings.sections.rotationDirection')} theme={theme} />}>
+        <SettingsCard title={<CardTitle Icon={RotateCw} label={t('accessibility.rotationDirection')} theme={theme} />}>
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.optionLabel}>{t('settings.timer.rotationDirection')}</Text>
+              <Text style={styles.optionLabel}>{t('accessibility.rotationDirection')}</Text>
               <Text style={styles.optionDescription}>
-                {clockwise ? t('settings.timer.rotationClockwise') : t('settings.timer.rotationCounterClockwise')}
+                {clockwise ? t('controls.rotation.clockwise') : t('controls.rotation.counterClockwise')}
               </Text>
             </View>
             <Switch
@@ -382,7 +418,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
 
           <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.optionLabel}>{t('settings.appearance.theme')}</Text>
+              <Text style={styles.optionLabel}>{t('settings.sections.theme')}</Text>
               <Text style={styles.optionDescription}>
                 {theme.mode === 'auto'
                   ? t('settings.appearance.themeDescriptionAuto')
@@ -457,7 +493,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         </SettingsCard>
 
         {/* Group 5: INFO */}
-        <SectionHeader label="INFO" />
+        <SectionHeader label={t('settings.sections.info')} />
 
         {/* About Section */}
         <AboutSection

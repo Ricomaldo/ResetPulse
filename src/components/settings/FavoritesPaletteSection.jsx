@@ -9,6 +9,7 @@ import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import PropTypes from 'prop-types';
 import { Heart } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTranslation } from '../../hooks/useTranslation';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
@@ -32,6 +33,7 @@ function FavoritesPaletteSection({
   setShowMoreColorsModal,
 }) {
   const theme = useTheme();
+  const t = useTranslation();
   const allPaletteNames = Object.keys(TIMER_PALETTES);
 
   const availablePalettes = isPremiumUser
@@ -104,8 +106,8 @@ function FavoritesPaletteSection({
 
   return (
     <SettingsCard
-      title={<CardTitle Icon={Heart} label="Palettes favorites" theme={theme} />}
-      description={`Sélectionnez jusqu'à 4 palettes favorites (${favoritePalettes.length}/4)`}
+      title={<CardTitle Icon={Heart} label={t('settings.favorites.palettes.title')} theme={theme} />}
+      description={t('settings.favorites.palettes.description', { count: favoritePalettes.length })}
     >
       <View style={styles.grid}>
         {availablePalettes.map((paletteName) => {
@@ -154,7 +156,7 @@ function FavoritesPaletteSection({
               activeOpacity={0.7}
             >
               <Text style={styles.discoverIcon}>+</Text>
-              <Text style={styles.discoverText}>Plus de palettes</Text>
+              <Text style={styles.discoverText}>{t('settings.favorites.palettes.morePalettes')}</Text>
             </TouchableOpacity>
           </View>
         )}

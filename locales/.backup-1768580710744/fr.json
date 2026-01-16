@@ -1,0 +1,420 @@
+{
+  "common": {
+    "cancel": "Annuler",
+    "ok": "OK",
+    "retry": "Réessayer",
+    "continue": "Continuer"
+  },
+  "controls": {
+    "digitalTimer": {
+      "decreaseDuration": "Diminuer la durée",
+      "increaseDuration": "Augmenter la durée",
+      "showTime": "Afficher le temps",
+      "tapToHide": "Appuyez pour masquer",
+      "tapToShow": "Appuyez pour afficher"
+    },
+    "rotation": {
+      "clockwise": "Sens horaire",
+      "counterClockwise": "Sens anti-horaire"
+    }
+  },
+  "welcome": {
+    "title": "Bienvenue sur ResetPulse"
+  },
+  "invitation": "...",
+  "onboarding": {
+    "restartGuide": "Relancer le guide",
+    "restartGuideDescription": "Afficher à nouveau l'écran de bienvenue et les conseils",
+    "intentions": {
+      "other": {
+        "defaultName": "Mon moment"
+      },
+      "q1": {
+        "title": "Ton timer, ce serait pour...",
+        "otherPlaceholder": "C'est-à-dire ?"
+      },
+      "q2": {
+        "title": "Un petit coup de main pour...",
+        "otherPlaceholder": "C'est-à-dire ?"
+      }
+    },
+    "creation": {
+      "sectionTitle": "Ton premier moment",
+      "cta": "Créer mon moment",
+      "durationLabel": "Combien de temps ?",
+      "namePlaceholder": "Nomme ton moment..."
+    },
+    "paywall": {
+      "title": "Tu as créé ton premier moment",
+      "profile": "Profil :",
+      "question": "Envie d'en créer d'autres ?",
+      "valueProposition": "15 palettes · 16 activités · Créations illimitées",
+      "price": "4,99€ — Une fois, pour toujours",
+      "ctaTrial": "Essai gratuit 7 jours",
+      "ctaSkip": "Peut-être plus tard"
+    },
+    "launch": {
+      "title": "C'est parti !",
+      "subtitle": "Ton premier moment est prêt. Appuie pour commencer.",
+      "cta": "Lancer mon timer",
+      "ctaHint": "Lance ton premier timer",
+      "defaultActivity": "Mon moment"
+    },
+    "v2": {
+      "filter0": {
+        "breathe": "Ton temps t'appartient",
+        "tapToContinue": "Quand tu es prêt"
+      },
+      "filter1": {
+        "title": "Un timer qui s'adapte à toi",
+        "subtitle": "",
+        "cta": "Créer mon moment"
+      }
+    },
+    "v3": {
+      "filter3_5": {
+        "title": "Ne rate pas la fin de tes moments",
+        "body": "Ton timer te préviendra même si tu utilises une autre app ou si ton écran est verrouillé.",
+        "ctaPrimary": "Oui, préviens-moi",
+        "ctaSecondary": "Plus tard"
+      },
+      "filter5b": {
+        "title": "Ta sonnerie",
+        "continue": "Continuer",
+        "skip": "Passer →"
+      }
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "interface": {
+      "pulseAnimationDescriptionOn": "Animation activée pendant le timer",
+      "pulseAnimationDescriptionOff": "Animation désactivée",
+      "pulseWarningTitle": "Animation de pulsation",
+      "pulseWarningMessage": "Cette option active une animation visuelle répétitive.\n\nÉvitez d'activer cette fonctionnalité si vous êtes sensible aux effets visuels ou si vous avez des antécédents de photosensibilité.",
+      "pulseWarningEnable": "Activer"
+    },
+    "timer": {
+      "soundDescription": "Choisissez le son qui sera joué à la fin du timer",
+      "rotationDirection": "Sens de rotation",
+      "rotationClockwise": "Sens horaire",
+      "rotationCounterClockwise": "Sens anti-horaire",
+      "keepAwake": "Maintenir l'écran allumé",
+      "keepAwakeDescriptionOn": "L'écran reste allumé pendant le timer",
+      "keepAwakeDescriptionOff": "L'écran peut se verrouiller pendant le timer",
+      "dialScale": "Échelle du cadran",
+      "dialScaleDescription": "Durée maximale affichée sur le cadran",
+      "longPressStart": "Activer le long tap au start",
+      "longPressStartDescriptionOn": "Maintenir pour démarrer le timer",
+      "longPressStartDescriptionOff": "Simple tap pour démarrer",
+      "longPressStop": "Activer le long tap à l'arrêt",
+      "longPressStopDescriptionOn": "Maintenir pour arrêter le timer",
+      "longPressStopDescriptionOff": "Simple tap pour arrêter"
+    },
+    "appearance": {
+      "theme": "Thème",
+      "themeLight": "☀️ Clair",
+      "themeDark": "🌙 Sombre",
+      "themeAuto": "📱 Auto",
+      "themeDescriptionAuto": "Automatique (système)",
+      "themeDescriptionDark": "Sombre",
+      "themeDescriptionLight": "Clair"
+    },
+    "about": {
+      "title": "À propos",
+      "appName": "ResetPulse",
+      "appDescription": "Timer visuel personalisable",
+      "version": "Version"
+    },
+    "tool": {
+      "sectionTitle": "Mode d'affichage minimal",
+      "creative": {
+        "label": "Créatif",
+        "description": "Carrousel couleurs"
+      },
+      "multitask": {
+        "label": "Multi-tâches",
+        "description": "Carrousel activités"
+      },
+      "precision": {
+        "label": "Précision",
+        "description": "Timer digital avec +/-"
+      }
+    },
+    "sections": {
+      "configuration": "CONFIGURATION",
+      "timerOptions": "Options du timer",
+      "keepAwake": "Keep Awake",
+      "rotationDirection": "Sens de rotation",
+      "notificationSound": "Son de notification",
+      "theme": "Thème",
+      "favorites": "TES FAVORIS",
+      "ambiance": "AMBIANCE",
+      "info": "INFO"
+    },
+    "favorites": {
+      "palettes": {
+        "title": "Palettes favorites",
+        "morePalettes": "Plus de palettes"
+      },
+      "activities": {
+        "title": "Activités favorites",
+        "more": "Plus"
+      }
+    },
+    "options": {
+      "activityEmoji": "Emoji activité au centre",
+      "activityEmojiDescriptionOn": "L'emoji s'affiche au centre du cadran",
+      "activityEmojiDescriptionOff": "L'emoji est masqué",
+      "pulseAnimation": "Animation pulse"
+    }
+  },
+  "premium": {
+    "title": "Débloque tout",
+    "description": "Toutes les couleurs.\nToutes les activités.\nCrée tes propres activités.\nTon confort maximum.",
+    "features": "7 JOURS GRATUITS",
+    "startTrial": "Essayer 7 jours gratuit",
+    "maybeLater": "Peut-être plus tard",
+    "restore": "Restaurer mes achats",
+    "welcomeTitle": "Bienvenue Premium ! 🎉",
+    "welcomeMessage": "Toutes les palettes et activités sont maintenant débloquées.",
+    "welcomeButton": "Super !",
+    "noConnection": "Pas de connexion",
+    "noConnectionMessage": "Impossible de charger les offres. Vérifiez votre connexion internet.",
+    "error": "Erreur",
+    "errorOfferings": "Impossible de récupérer les offres. Réessayez plus tard.",
+    "errorPurchase": "Une erreur est survenue lors de l'achat.",
+    "errorNetwork": "Pas de connexion internet. Vérifiez votre réseau et réessayez.",
+    "errorStore": "Problème avec le store. Réessayez plus tard.",
+    "errorPaymentPending": "Paiement en attente. Vérifiez vos achats dans quelques minutes.",
+    "errorRestoreGeneric": "Erreur de restauration",
+    "errorGeneric": "Une erreur est survenue",
+    "paymentPending": "Paiement en cours",
+    "restoreSuccess": "Restauration réussie",
+    "restoreSuccessMessage": "Vos achats ont été restaurés. Toutes les fonctionnalités premium sont débloquées.",
+    "restoreNone": "Aucun achat trouvé",
+    "restoreNoneMessage": "Aucun achat précédent n'a été trouvé pour ce compte.",
+    "restoreError": "Impossible de restaurer vos achats.",
+    "unexpectedError": "Une erreur inattendue est survenue.",
+    "contactSupport": "Contacter le support",
+    "tooManyAttempts": "Veuillez contacter le support si le problème persiste."
+  },
+  "activities": {
+    "none": "Basique",
+    "work": "Travail",
+    "break": "Pause",
+    "reading": "Lecture",
+    "study": "Étude",
+    "meditation": "Méditation",
+    "yoga": "Yoga",
+    "sport": "Sport",
+    "walking": "Marche",
+    "creativity": "Créativité",
+    "cooking": "Cuisine",
+    "gaming": "Jeux",
+    "homework": "Devoirs",
+    "music": "Musique",
+    "cleaning": "Ménage",
+    "nap": "Sieste",
+    "writing": "Écriture"
+  },
+  "palettes": {
+    "serenity": "Sérénité",
+    "earth": "Terre",
+    "softLaser": "Soft Laser",
+    "classic": "Classique",
+    "tropical": "Tropical",
+    "zen": "Zen",
+    "forest": "Forêt",
+    "ocean": "Océan",
+    "dawn": "Aurore",
+    "dusk": "Crépuscule",
+    "soft": "Douce",
+    "autumn": "Automne",
+    "lavender": "Lavande",
+    "teal": "Canard",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "Cloche",
+    "bell_melodic": "Carillon",
+    "microwave_vintage": "Rétro",
+    "microwave_ping": "Ping",
+    "kitchen_timer": "Ding",
+    "kitchen_timer_2": "Signal",
+    "egg_timer": "Tilt",
+    "toaster_bell": "Pop",
+    "ding_effect": "Cristal",
+    "timer_complete": "Accompli"
+  },
+  "accessibility": {
+    "keepAwake": "Maintenir l'écran allumé",
+    "rotationDirection": "Sens de rotation",
+    "activityLocked": "Activité premium verrouillée",
+    "moreActivities": "Plus d'activités",
+    "discoverPremium": "Découvrir les activités premium",
+    "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
+    "celebrationEmoji": "Célébration",
+    "closeCreateActivity": "Fermer la création d'activité",
+    "closeEditActivity": "Fermer l'édition d'activité",
+    "closeModalHint": "Ferme cette boîte de dialogue et retourne à l'application",
+    "closePremiumModal": "Fermer l'offre premium",
+    "createActivityHint": "Crée l'activité personnalisée et l'ajoute à votre liste",
+    "deleteActivityHint": "Supprime définitivement cette activité personnalisée",
+    "exploreSettingsHint": "Ouvre les paramètres pour découvrir les fonctionnalités premium",
+    "restorePurchases": "Restaurer les achats précédents",
+    "restorePurchasesHint": "Restaurer l'accès premium si vous avez déjà acheté",
+    "saveActivityHint": "Enregistre les modifications de cette activité",
+    "unlockPremiumHint": "Commencer l'essai gratuit de 7 jours, puis paiement unique",
+    "timer": {
+      "dialAdjustable": "Ajustable. Glissez vers le haut ou le bas pour changer la durée.",
+      "dialTapToToggle": "Appuyez pour démarrer ou mettre en pause le timer",
+      "timerCompleted": "Timer terminé !",
+      "timerRunning": "Timer en cours",
+      "timerStopped": "Timer arrêté",
+      "startTimer": "Démarrer le timer",
+      "stopTimer": "Arrêter le timer",
+      "resetTimer": "Réinitialiser le timer"
+    }
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "moreColors": {
+      "title": "Encore plus de couleurs",
+      "subtitle": "Océan, forêt, lavande, canard...",
+      "tagline": "Chaque humeur, son ambiance."
+    },
+    "moreActivities": {
+      "title": "Encore plus de moments",
+      "subtitle": "16 activités + créations illimitées",
+      "tagline": "Ton focus, tes règles."
+    },
+    "activities": "Activités premium"
+  },
+  "twoTimers": {
+    "title": "Tu as créé 2 moments !",
+    "message": "Envie d'explorer plus de couleurs et d'activités ?",
+    "explore": "Explorer le premium",
+    "dismiss": "Peut-être plus tard"
+  },
+  "customActivities": {
+    "create": {
+      "title": "Créer une activité",
+      "namePlaceholder": "Ex: Guitare, Cuisine...",
+      "nameLabel": "Nom de l'activité",
+      "emojiLabel": "Choisir un emoji",
+      "emojiPlaceholder": "Appuyer pour choisir",
+      "durationLabel": "Durée par défaut",
+      "preview": "Aperçu",
+      "previewPlaceholder": "Mon activité",
+      "buttonCreate": "Créer",
+      "buttonCancel": "Annuler",
+      "errorTitle": "Information manquante",
+      "errorEmoji": "Veuillez choisir un emoji pour votre activité.",
+      "errorName": "Veuillez entrer un nom pour votre activité."
+    },
+    "edit": {
+      "title": "Modifier l'activite",
+      "buttonSave": "Enregistrer",
+      "buttonDelete": "Supprimer",
+      "deleteConfirmTitle": "Supprimer ?",
+      "deleteConfirmMessage": "Cette action est irreversible.",
+      "deleteConfirmButton": "Supprimer",
+      "deleteCancelButton": "Annuler"
+    },
+    "duration": {
+      "minutes": "min"
+    },
+    "addButton": "Creer une activite",
+    "addButtonHint": "Creer une activite personnalisee",
+    "toast": {
+      "created": "Activite creee !",
+      "updated": "Activite modifiee",
+      "deleted": "Activite supprimee"
+    }
+  },
+  "timerMessages": {
+    "none": {
+      "startMessage": "Prêt",
+      "endMessage": "Bravo 🎉"
+    },
+    "work": {
+      "startMessage": "Focus",
+      "endMessage": "Accompli ✨"
+    },
+    "break": {
+      "startMessage": "Repos",
+      "endMessage": "Rechargé 🔋"
+    },
+    "meditation": {
+      "startMessage": "Respire",
+      "endMessage": "Centré 🪷"
+    },
+    "creativity": {
+      "startMessage": "Crée",
+      "endMessage": "Inspiré ✨"
+    },
+    "reading": {
+      "startMessage": "Plonge",
+      "endMessage": "Enrichi 📖"
+    },
+    "study": {
+      "startMessage": "Apprends",
+      "endMessage": "Progressé 📈"
+    },
+    "yoga": {
+      "startMessage": "Respire",
+      "endMessage": "Apaisé 🪷"
+    },
+    "sport": {
+      "startMessage": "Bouge",
+      "endMessage": "Énergisé ⚡"
+    },
+    "walking": {
+      "startMessage": "Marche",
+      "endMessage": "Revitalisé 🌿"
+    },
+    "cooking": {
+      "startMessage": "Prépare",
+      "endMessage": "Gourmand 🍽️"
+    },
+    "gaming": {
+      "startMessage": "Joue",
+      "endMessage": "Détendu 🎮"
+    },
+    "homework": {
+      "startMessage": "Concentre",
+      "endMessage": "Réussi ✅"
+    },
+    "music": {
+      "startMessage": "Joue",
+      "endMessage": "Harmonisé 🎵"
+    },
+    "cleaning": {
+      "startMessage": "Range",
+      "endMessage": "Serein ✨"
+    },
+    "nap": {
+      "startMessage": "Repose",
+      "endMessage": "Régénéré 💤"
+    },
+    "writing": {
+      "startMessage": "Écris",
+      "endMessage": "Libéré ✍️"
+    }
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Un moment pour toi ?",
+        "bodyGeneric": "Ton timer t'attend — prends un moment pour toi"
+      },
+      "day7": {
+        "title": "Dernière chance",
+        "body": "Essai gratuit 7 jours — profites-en avant qu'il expire"
+      }
+    }
+  }
+}

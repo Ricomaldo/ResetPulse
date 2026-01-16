@@ -18,20 +18,15 @@
       "question": "もっと作りたい?",
       "valueProposition": "15パレット・16アクティビティ・無制限の作成",
       "price": "4,99€ — 一度だけ、永遠に",
-      "ctaTrial": "7日間無料で試す",
-      "ctaSkip": "後で"
+      "ctaTrial": "7日間無料で試す"
     },
     "intentions": {
-      "other": {
-        "defaultName": "My moment"
-      },
       "q1": {
         "title": "Your timer would be for...",
         "otherPlaceholder": "Like what?"
       },
       "q2": {
-        "title": "A little help with...",
-        "otherPlaceholder": "Like what?"
+        "title": "A little help with..."
       }
     },
     "creation": {
@@ -54,8 +49,7 @@
       },
       "filter1": {
         "title": "A timer that adapts to you",
-        "subtitle": "",
-        "cta": "Create my moment"
+        "subtitle": ""
       }
     },
     "v3": {
@@ -67,7 +61,6 @@
       },
       "filter5b": {
         "title": "Your ringtone",
-        "continue": "Continue",
         "skip": "Skip →"
       }
     }
@@ -83,10 +76,6 @@
     },
     "timer": {
       "soundDescription": "タイマー終了時に再生するサウンドを選択",
-      "rotationDirection": "回転方向",
-      "rotationClockwise": "時計回り",
-      "rotationCounterClockwise": "反時計回り",
-      "keepAwake": "画面をスリープさせない",
       "keepAwakeDescriptionOn": "タイマー動作中は画面をスリープさせない",
       "keepAwakeDescriptionOff": "タイマー動作中も画面をスリープ可能",
       "longPressStart": "Enable long tap to start",
@@ -99,7 +88,6 @@
       "dialScaleDescription": "Maximum duration displayed on the dial"
     },
     "appearance": {
-      "theme": "テーマ",
       "themeLight": "☀️ ライト",
       "themeDark": "🌙 ダーク",
       "themeAuto": "📱 自動",
@@ -132,7 +120,6 @@
       "configuration": "CONFIGURATION",
       "timerOptions": "Timer options",
       "keepAwake": "Keep Awake",
-      "rotationDirection": "Rotation direction",
       "notificationSound": "Notification sound",
       "theme": "Theme",
       "favorites": "YOUR FAVORITES",
@@ -161,7 +148,6 @@
     "description": "すべてのカラー。\nすべてのアクティビティ。\n最高の快適さ。",
     "features": "7日間無料",
     "startTrial": "7日間無料で試す",
-    "maybeLater": "後で",
     "restore": "購入を復元",
     "welcomeTitle": "プレミアムへようこそ 🎉",
     "welcomeMessage": "すべてのパレットとアクティビティがアンロックされました。",
@@ -216,7 +202,6 @@
     "dawn": "オーロラ",
     "dusk": "夕暮れ",
     "soft": "やさしい",
-    "pastel_girly": "パステル",
     "autumn": "秋",
     "lavender": "ラベンダー",
     "teal": "青緑",
@@ -268,7 +253,6 @@
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
-    "defaultDismiss": "Peut-être plus tard",
     "activities": "Activités premium",
     "moreColors": {
       "title": "Even more colors",
@@ -299,7 +283,6 @@
       "preview": "Preview",
       "previewPlaceholder": "My activity",
       "buttonCreate": "Create",
-      "buttonCancel": "Cancel",
       "errorTitle": "Missing information",
       "errorEmoji": "Please choose an emoji for your activity.",
       "errorName": "Please enter a name for your activity."
@@ -309,18 +292,11 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "deleteConfirmButton": "Delete",
-      "deleteCancelButton": "Cancel"
+      "deleteConfirmMessage": "This action is irreversible."
     },
     "duration": {
       "minutes": "min"
     }
-  },
-  "moreColors": {
-    "title": "さらに多くの色",
-    "subtitle": "(subtitle)",
-    "tagline": "(tagline)"
   },
   "notifications": {
     "reminder": {

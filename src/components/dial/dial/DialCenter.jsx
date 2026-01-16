@@ -21,6 +21,7 @@ import { getProfileConfig } from '../../../utils/interactionProfileConfig';
  * @param {function} onLongPressComplete - Callback long press (RUNNING → stop)
  * @param {boolean} clockwise - Sens du timer (pour animation)
  * @param {number} size - Taille du bouton
+ * @param {number} progress - Progress du timer (0-1, utilisé pour position initiale du long press)
  */
 const DialCenter = React.memo(function DialCenter({
   activity,
@@ -30,6 +31,7 @@ const DialCenter = React.memo(function DialCenter({
   onLongPressComplete,
   clockwise = false,
   size = 72,
+  progress = 1,
 }) {
   // Get pulse setting and interaction profile from context
   const { display: { shouldPulse }, interaction: { interactionProfile, customStartLongPress, customStopLongPress } } = useTimerConfig();

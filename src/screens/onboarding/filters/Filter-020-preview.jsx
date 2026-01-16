@@ -28,9 +28,9 @@ export default function Filter020Preview({ onContinue }) {
       centerContent
       footer={
         <PrimaryButton
-          label={t('onboarding.v2.filter1.cta')}
+          label={t('onboarding.creation.cta')}
           onPress={() => onContinue()}
-          accessibilityHint={t('onboarding.v2.filter1.cta')}
+          accessibilityHint={t('onboarding.creation.cta')}
         />
       }
     >

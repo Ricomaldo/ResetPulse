@@ -1,0 +1,300 @@
+{
+  "common": {
+    "settings": "Ajustes",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "ok": "OK",
+    "skip": "Omitir",
+    "retry": "Reintentar",
+    "continue": "Continuar"
+  },
+  "welcome": {
+    "title": "Bienvenido a ResetPulse",
+    "subtitle": "Elige una actividad, ajusta la duración, inicia.",
+    "discover": "Descubrir"
+  },
+  "invitation": "¿Listo?",
+  "onboarding": {
+    "activities": "Selecciona tu actividad",
+    "dial": "Ajusta la duración del temporizador",
+    "palette": "Cambia los colores a tu gusto",
+    "controls": "Inicia, pausa o reinicia",
+    "controlsSubtext": "El temporizador continúa en segundo plano",
+    "completion": "¡Disfruta ResetPulse!",
+    "restartGuide": "Reiniciar la guía",
+    "restartGuideDescription": "Mostrar la pantalla de bienvenida y consejos de nuevo",
+    "tool": {
+      "title": "¿Qué te describe mejor?",
+      "creative": "Creativo",
+      "minimalist": "Minimalista",
+      "multitask": "Multitarea",
+      "rational": "Racional"
+    },
+    "creation": {
+      "title": "Crea tu primer momento",
+      "subtitle": "Elige un emoji, un nombre y una duración"
+    },
+    "testStart": {
+      "title": "Cuando estés listo, pulsa",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Ahora, suelta cuando quieras",
+      "hint": "",
+      "revealTitle": "Eres"
+    },
+    "paywall": {
+      "title": "Has creado tu primer momento",
+      "profile": "Perfil:",
+      "question": "¿Quieres crear más?",
+      "valueProposition": "15 paletas · 16 actividades · Creaciones ilimitadas",
+      "price": "4,99€ — Una vez, para siempre",
+      "ctaTrial": "Prueba 7 días gratis",
+      "ctaSkip": "Quizás más tarde"
+    },
+    "firstTimer": {
+      "title": "Tu temporizador está listo",
+      "profile": "Perfil",
+      "tool": "Herramienta",
+      "moment": "Momento",
+      "startButton": "Iniciar mi primer temporizador",
+      "completionMessage": "¡Bien hecho! Tu espacio está listo."
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "interface": {
+      "title": "🪄 Interfaz",
+      "minimalInterface": "Interfaz mínima",
+      "minimalInterfaceDescriptionOn": "Ocultar actividades y colores cuando el temporizador está activo",
+      "minimalInterfaceDescriptionOff": "Interfaz completa durante el temporizador",
+      "digitalTimer": "Temporizador digital",
+      "digitalTimerDescriptionOn": "Mostrar tiempo restante en MM:SS",
+      "digitalTimerDescriptionOff": "Temporizador digital desactivado",
+      "pulseAnimation": "Animación de pulso",
+      "pulseAnimationDescriptionOn": "Animación activada durante el temporizador",
+      "pulseAnimationDescriptionOff": "Animación desactivada",
+      "pulseWarningTitle": "Animación de pulso",
+      "pulseWarningMessage": "Esta opción activa una animación visual repetitiva.\n\nEvita activar esta función si eres sensible a efectos visuales o tienes historial de fotosensibilidad.",
+      "pulseWarningEnable": "Activar"
+    },
+    "timer": {
+      "title": "⚙️ Temporizador",
+      "soundDescription": "Elige el sonido que se reproducirá al finalizar el temporizador",
+      "dialMode": "Modo de dial",
+      "dialMode60": "Escala de 60 minutos",
+      "dialMode25": "Pomodoro de 25 minutos",
+      "rotationDirection": "Dirección de rotación",
+      "rotationClockwise": "Sentido horario",
+      "rotationCounterClockwise": "Sentido antihorario",
+      "keepAwake": "Mantener pantalla activa",
+      "keepAwakeDescriptionOn": "La pantalla permanece activa durante el temporizador",
+      "keepAwakeDescriptionOff": "La pantalla puede bloquearse durante el temporizador",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "title": "🎨 Apariencia",
+      "theme": "Tema",
+      "themeLight": "☀️ Claro",
+      "themeDark": "🌙 Oscuro",
+      "themeAuto": "📱 Auto",
+      "themeDescriptionAuto": "Automático (sistema)",
+      "themeDescriptionDark": "Oscuro",
+      "themeDescriptionLight": "Claro",
+      "showPalettes": "Mostrar paletas",
+      "showPalettesDescriptionOn": "Paletas visibles en la interfaz",
+      "showPalettesDescriptionOff": "Paletas ocultas",
+      "palettesDescription": "Versión gratuita: Earth y Laser disponibles",
+      "showActivities": "Mostrar actividades",
+      "showActivitiesDescriptionOn": "Actividades visibles en la interfaz",
+      "showActivitiesDescriptionOff": "Actividades ocultas",
+      "activitiesDescription": "Selecciona tus favoritas para verlas primero"
+    },
+    "about": {
+      "title": "Acerca de",
+      "appName": "ResetPulse",
+      "appDescription": "Temporizador visual personalizable",
+      "version": "Versión"
+    },
+    "dev": {
+      "title": "🔧 Desarrollo",
+      "resetOnboarding": "Reiniciar onboarding",
+      "resetOnboardingConfirmTitle": "Reiniciar onboarding",
+      "resetOnboardingConfirmMessage": "La pantalla de bienvenida y los consejos se mostrarán en el próximo inicio de la aplicación.",
+      "resetOnboardingConfirmButton": "Reiniciar"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "Desbloquéalo todo",
+    "description": "Todos los colores.\nTodas las actividades.\nTu máximo confort.",
+    "features": "7 DÍAS GRATIS",
+    "price": "Luego %{price} una vez.\nTuyo para siempre.",
+    "priceOnce": "Una vez, para siempre",
+    "trial": "",
+    "startTrial": "Probar 7 días gratis",
+    "maybeLater": "Quizás más tarde",
+    "restore": "Restaurar mis compras",
+    "unlock": "Desbloquear ✨",
+    "onboardingToast": "¡Termina la guía para descubrir las paletas premium!",
+    "welcomeTitle": "¡Bienvenido Premium! 🎉",
+    "welcomeMessage": "Todas las paletas y actividades están ahora desbloqueadas.",
+    "welcomeButton": "¡Genial!",
+    "noConnection": "Sin conexión",
+    "noConnectionMessage": "No se pueden cargar las ofertas. Verifica tu conexión a internet.",
+    "error": "Error",
+    "errorOfferings": "No se pueden obtener las ofertas. Inténtalo más tarde.",
+    "errorPurchase": "Ocurrió un error durante la compra.",
+    "paymentPending": "Pago en proceso",
+    "restoreSuccess": "Restauración exitosa",
+    "restoreSuccessMessage": "Tus compras han sido restauradas. Todas las funciones premium están desbloqueadas.",
+    "restoreNone": "No se encontró ninguna compra",
+    "restoreNoneMessage": "No se encontró ninguna compra previa para esta cuenta.",
+    "restoreError": "No se pudieron restaurar tus compras.",
+    "unexpectedError": "Ocurrió un error inesperado.",
+    "contactSupport": "Contactar soporte",
+    "tooManyAttempts": "Por favor, contacta al soporte si el problema persiste."
+  },
+  "activities": {
+    "none": "Básico",
+    "work": "Trabajo",
+    "break": "Descanso",
+    "breathing": "Respiración",
+    "reading": "Lectura",
+    "study": "Estudio",
+    "meditation": "Meditación",
+    "yoga": "Yoga",
+    "sport": "Deporte",
+    "walking": "Caminar",
+    "creativity": "Creatividad",
+    "cooking": "Cocinar",
+    "gaming": "Videojuegos",
+    "homework": "Tareas",
+    "music": "Música",
+    "cleaning": "Limpieza"
+  },
+  "palettes": {
+    "earth": "Tierra",
+    "softLaser": "Soft Laser",
+    "classic": "Clásico",
+    "tropical": "Tropical",
+    "zen": "Zen",
+    "forest": "Bosque",
+    "ocean": "Océano",
+    "dawn": "Aurora",
+    "dusk": "Crepúsculo",
+    "soft": "Suave",
+    "pastel_girly": "Pasteles",
+    "autumn": "Otoño",
+    "lavender": "Lavanda",
+    "teal": "Turquesa",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "Campana Clásica",
+    "bell_melodic": "Campana Melódica",
+    "microwave_vintage": "Microondas Vintage",
+    "microwave_ping": "Ping de Microondas",
+    "kitchen_timer": "Temporizador de Cocina",
+    "kitchen_timer_2": "Temporizador Mecánico",
+    "egg_timer": "Temporizador de Huevos",
+    "toaster_bell": "Tostadora",
+    "ding_effect": "Ding Simple",
+    "timer_complete": "Temporizador Completo"
+  },
+  "accessibility": {
+    "settings": "Ajustes",
+    "openSettings": "Abrir ajustes de la aplicación",
+    "closeSettings": "Cerrar ajustes",
+    "minimalInterface": "Interfaz mínima",
+    "keepAwake": "Mantener pantalla activa",
+    "showPalettes": "Mostrar paletas",
+    "showActivities": "Mostrar actividades",
+    "rotationDirection": "Dirección de rotación",
+    "startTrial": "Iniciar prueba gratuita",
+    "maybeLater": "Quizás más tarde",
+    "restore": "Restaurar mis compras",
+    "activity": "Actividad %{name}",
+    "activityLocked": "Actividad premium bloqueada",
+    "customActivityHint": "Mantén presionado para editar esta actividad personalizada",
+    "moreActivities": "Más actividades",
+    "discoverPremium": "Descubrir actividades premium",
+    "colorNumber": "Color %{number}",
+    "paletteNumber": "Paleta %{name}",
+    "discoverMorePalettes": "Toca para descubrir más paletas",
+    "celebrationEmoji": "Celebración",
+    "closeCreateActivity": "Cerrar creación de actividad",
+    "closeEditActivity": "Cerrar edición de actividad",
+    "closeModalHint": "Cierra este diálogo y vuelve a la aplicación",
+    "closePremiumModal": "Cerrar oferta premium",
+    "createActivityHint": "Crea la actividad personalizada y la añade a tu lista",
+    "deleteActivityHint": "Elimina permanentemente esta actividad personalizada",
+    "exploreSettingsHint": "Abre los ajustes para descubrir las funciones premium",
+    "restorePurchases": "Restaurar compras anteriores",
+    "restorePurchasesHint": "Restaurar acceso premium si ya compraste",
+    "saveActivityHint": "Guarda los cambios de esta actividad",
+    "unlockPremiumHint": "Comenzar prueba gratuita de 7 días, luego pago único",
+    "timer": {
+      "dialAdjustable": "Ajustable. Desliza hacia arriba o abajo para cambiar la duración.",
+      "dialTapToToggle": "Toca para iniciar o pausar el temporizador",
+      "timerCompleted": "¡Temporizador completado!",
+      "timerRunning": "Temporizador en curso",
+      "timerStopped": "Temporizador detenido",
+      "activityStarted": "%{activity} iniciado",
+      "activityCompleted": "%{activity} completado"
+    }
+  },
+  "discovery": {
+    "defaultCta": "Desbloquear todo - 7 días gratis",
+    "defaultDismiss": "Quizás más tarde",
+    "activities": "Actividades premium",
+    "colors": "Paletas premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "Aún más colores",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "¿Un momento para ti?",
+        "bodyPersonalized": "Tu {{name}} te espera {{emoji}} — ¿{{duration}} min para ti?",
+        "bodyGeneric": "Tu temporizador te espera — tómate un momento para ti"
+      },
+      "day7": {
+        "title": "Última oportunidad",
+        "body": "Prueba gratuita de 7 días — aprovéchala antes de que expire"
+      }
+    }
+  }
+}

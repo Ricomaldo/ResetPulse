@@ -428,9 +428,9 @@ function TimerDial({
             text: `${durationMinutes} minutes`,
           }}
           accessibilityActions={[
-            { name: 'increment', label: 'Increase duration' },
-            { name: 'decrement', label: 'Decrease duration' },
-            { name: 'activate', label: isRunning ? 'Pause timer' : 'Start timer' },
+            { name: 'increment', label: t('controls.digitalTimer.increaseDuration') },
+            { name: 'decrement', label: t('controls.digitalTimer.decreaseDuration') },
+            { name: 'activate', label: isRunning ? t('accessibility.timer.stopTimer') : t('accessibility.timer.startTimer') },
           ]}
           onAccessibilityAction={(event) => {
             const { actionName } = event.nativeEvent;

@@ -20,7 +20,7 @@ const SettingsThemeSection = React.memo(function SettingsThemeSection({
 }) {
   return (
     <View style={styles.sectionCard}>
-      <Text style={styles.sectionTitle}>🎨 Thème</Text>
+      <Text style={styles.sectionTitle}>{t('settings.appearance.title')}</Text>
 
       <View style={styles.optionRow}>
         <View style={{ flex: 1 }}>

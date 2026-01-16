@@ -1,0 +1,191 @@
+{
+  "common": {
+    "cancel": "Annuleren",
+    "ok": "OK",
+    "retry": "Opnieuw proberen",
+    "continue": "Doorgaan"
+  },
+  "welcome": {
+    "title": "Welkom bij ResetPulse"
+  },
+  "invitation": "Klaar?",
+  "onboarding": {
+    "restartGuide": "Handleiding opnieuw starten",
+    "restartGuideDescription": "Welkomstscherm en tips opnieuw tonen",
+    "paywall": {
+      "title": "Je hebt je eerste moment gemaakt",
+      "profile": "Profiel:",
+      "question": "Zin om meer te maken?",
+      "valueProposition": "15 paletten · 16 activiteiten · Onbeperkt creatief",
+      "price": "4,99€ — Eenmaal, voor altijd",
+      "ctaTrial": "7 dagen gratis proberen",
+      "ctaSkip": "Misschien later"
+    }
+  },
+  "settings": {
+    "title": "Instellingen",
+    "interface": {
+      "pulseAnimationDescriptionOn": "Animatie ingeschakeld tijdens timer",
+      "pulseAnimationDescriptionOff": "Animatie uitgeschakeld",
+      "pulseWarningTitle": "Pulsanimatie",
+      "pulseWarningMessage": "Deze optie schakelt een repetitieve visuele animatie in.\n\nVermijd het inschakelen van deze functie als je gevoelig bent voor visuele effecten of een geschiedenis hebt van fotogevoeligheid.",
+      "pulseWarningEnable": "Inschakelen"
+    },
+    "timer": {
+      "soundDescription": "Kies het geluid dat aan het einde van de timer wordt afgespeeld",
+      "rotationDirection": "Draairichting",
+      "rotationClockwise": "Met de klok mee",
+      "rotationCounterClockwise": "Tegen de klok in",
+      "keepAwake": "Scherm wakker houden",
+      "keepAwakeDescriptionOn": "Scherm blijft wakker tijdens timer",
+      "keepAwakeDescriptionOff": "Scherm kan vergrendelen tijdens timer",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "theme": "Thema",
+      "themeLight": "☀️ Licht",
+      "themeDark": "🌙 Donker",
+      "themeAuto": "📱 Auto",
+      "themeDescriptionAuto": "Automatisch (systeem)",
+      "themeDescriptionDark": "Donker",
+      "themeDescriptionLight": "Licht"
+    },
+    "about": {
+      "title": "Over",
+      "appName": "ResetPulse",
+      "appDescription": "Aanpasbare visuele timer",
+      "version": "Versie"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "Ontgrendel alles",
+    "description": "Alle kleuren.\nAlle activiteiten.\nJouw maximale comfort.",
+    "features": "7 DAGEN GRATIS",
+    "startTrial": "7 dagen gratis proberen",
+    "maybeLater": "Misschien later",
+    "restore": "Mijn aankopen herstellen",
+    "welcomeTitle": "Welkom Premium! 🎉",
+    "welcomeMessage": "Alle paletten en activiteiten zijn nu ontgrendeld.",
+    "welcomeButton": "Geweldig!",
+    "noConnection": "Geen verbinding",
+    "noConnectionMessage": "Kan aanbiedingen niet laden. Controleer je internetverbinding.",
+    "error": "Fout",
+    "errorOfferings": "Kan aanbiedingen niet ophalen. Probeer het later opnieuw.",
+    "errorPurchase": "Er is een fout opgetreden tijdens de aankoop.",
+    "paymentPending": "Betaling in behandeling",
+    "restoreSuccess": "Herstel succesvol",
+    "restoreSuccessMessage": "Je aankopen zijn hersteld. Alle premium functies zijn ontgrendeld.",
+    "restoreNone": "Geen aankoop gevonden",
+    "restoreNoneMessage": "Er is geen eerdere aankoop gevonden voor dit account.",
+    "restoreError": "Kan je aankopen niet herstellen.",
+    "unexpectedError": "Er is een onverwachte fout opgetreden.",
+    "contactSupport": "Neem contact op met ondersteuning",
+    "tooManyAttempts": "Neem contact op met de ondersteuning als het probleem aanhoudt."
+  },
+  "activities": {
+    "none": "Basis",
+    "work": "Werk",
+    "break": "Pauze",
+    "reading": "Lezen",
+    "study": "Studeren",
+    "meditation": "Meditatie",
+    "yoga": "Yoga",
+    "sport": "Sport",
+    "walking": "Wandelen",
+    "creativity": "Creativiteit",
+    "cooking": "Koken",
+    "gaming": "Gamen",
+    "homework": "Huiswerk",
+    "music": "Muziek",
+    "cleaning": "Schoonmaken"
+  },
+  "palettes": {
+    "earth": "Aarde",
+    "softLaser": "Soft Laser",
+    "classic": "Klassiek",
+    "tropical": "Tropisch",
+    "zen": "Zen",
+    "forest": "Bos",
+    "ocean": "Oceaan",
+    "dawn": "Aurora",
+    "dusk": "Schemering",
+    "soft": "Zacht",
+    "pastel_girly": "Pastels",
+    "autumn": "Herfst",
+    "lavender": "Lavendel",
+    "teal": "Blauwgroen",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "Klassieke bel",
+    "bell_melodic": "Melodieuze bel",
+    "microwave_vintage": "Vintage magnetron",
+    "microwave_ping": "Magnetron ping",
+    "kitchen_timer": "Kookwekker",
+    "kitchen_timer_2": "Mechanische timer",
+    "egg_timer": "Eierklok",
+    "toaster_bell": "Broodrooster",
+    "ding_effect": "Simpele ding",
+    "timer_complete": "Timer voltooid"
+  },
+  "accessibility": {
+    "keepAwake": "Scherm wakker houden",
+    "rotationDirection": "Draairichting",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "Nog meer kleuren",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Een moment voor jezelf?",
+        "bodyGeneric": "Je timer wacht op je — neem een moment voor jezelf"
+      },
+      "day7": {
+        "title": "Laatste kans",
+        "body": "7 dagen gratis proefperiode — grijp het voordat het verloopt"
+      }
+    }
+  }
+}

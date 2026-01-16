@@ -68,6 +68,7 @@ const MessageContent = forwardRef(function MessageContent(
   const messageTranslateYRef = useRef(new Animated.Value(getInitialTranslateY())).current;
   const messageScaleRef = useRef(new Animated.Value(getInitialScale())).current;
   const messageBounceScaleRef = useRef(new Animated.Value(1)).current;
+  const breathingOpacityRef = useRef(new Animated.Value(1)).current; // Subtle breathing fade
 
   // Shake animation (abandon: 4px horizontal)
   const shakeTranslateXRef = useRef(new Animated.Value(0)).current;
@@ -189,6 +190,39 @@ const MessageContent = forwardRef(function MessageContent(
       }
     }
   }, [timerState, messageOpacityRef, messageTranslateYRef, messageScaleRef, messageBounceScaleRef]);
+
+  // ============================================
+  // BREATHING FADE: Subtle continuous animation (RUNNING state only)
+  // ============================================
+
+  useEffect(() => {
+    if (timerState === 'RUNNING') {
+      // Start breathing fade (0.65 → 1 → 0.65, 3s cycle) - Option A (35% variation)
+      const breathingAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(breathingOpacityRef, {
+            toValue: 0.65,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(breathingOpacityRef, {
+            toValue: 1,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      breathingAnimation.start();
+
+      return () => {
+        breathingAnimation.stop();
+        breathingOpacityRef.setValue(1); // Reset to full opacity
+      };
+    } else {
+      // Not running: keep full opacity
+      breathingOpacityRef.setValue(1);
+    }
+  }, [timerState, breathingOpacityRef]);
 
   // ============================================
   // FLASH ACTIVITY: Temporary layer (independent of timerState)
@@ -321,7 +355,11 @@ const MessageContent = forwardRef(function MessageContent(
           style={[
             styles.message,
             {
-              opacity: showFlash ? 0.2 : (isRestState ? 0.5 : messageOpacityRef),
+              opacity: showFlash
+                ? 0.2
+                : (isRestState
+                    ? 0.5
+                    : Animated.multiply(messageOpacityRef, breathingOpacityRef)), // Apply breathing fade
               transform: [
                 { translateY: messageTranslateYRef },
                 { translateX: shakeTranslateXRef },
@@ -337,7 +375,7 @@ const MessageContent = forwardRef(function MessageContent(
 
         {/* Animated dots (RUNNING state only) */}
         {timerState === 'RUNNING' && (
-          <Animated.View style={[styles.dotsContainer, { opacity: showFlash ? 0.2 : 1 }]}>
+          <Animated.View style={[styles.dotsContainer, { opacity: showFlash ? 0.2 : breathingOpacityRef }]}>
             <DotsAnimation isVisible={timerState === 'RUNNING'} />
           </Animated.View>
         )}

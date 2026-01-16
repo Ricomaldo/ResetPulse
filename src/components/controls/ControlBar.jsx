@@ -1,8 +1,8 @@
 /**
- * @fileoverview ControlBar - Barre de contrôle unifiée (ADR-004 v2)
- * @description Layout responsive avec/sans presets
+ * @fileoverview ControlBar - Barre de contrôle simplifiée
+ * @description Affiche uniquement le DigitalTimer (durée avec +/-)
  * @created 2025-12-19
- * @updated 2025-12-19
+ * @updated 2026-01-16 - Removed presets (scale is now manual only)
  */
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
@@ -11,17 +11,14 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { rs } from '../../styles/responsive';
 import DigitalTimer from './DigitalTimer';
-import PresetPills from './PresetPills';
 
 /**
- * ControlBar - Barre de contrôle "Time Setup" (ADR-004 v3)
+ * ControlBar - Affiche la durée du timer avec contrôles +/-
  *
  * Layout: [−] 25:00 [+]
- *         [5] [15] [25] [30] [45] [60]
  *
- * NOTE: PulseButton removed - dial center button handles play/pause/reset
- * NOTE: CircularToggle removed - available in Settings Panel
- * NOTE: PresetPills integrated (moved from ToolBox)
+ * NOTE: Scale (dial range) is manual only - no auto-adjustment
+ * NOTE: Presets removed - duration set via +/- buttons or dial drag
  *
  * @param {boolean} isRunning - Timer en cours
  * @param {boolean} compact - Mode compact (tailles réduites)
@@ -57,28 +54,15 @@ const ControlBar = React.memo(function ControlBar({
   const currentScaleMinutes = parseInt(scaleMode) || 25;
   const maxDuration = currentScaleMinutes * 60;
 
-  // Handle scale upgrade when incrementing at max
-  const handleScaleUpgrade = () => {
-    const scaleUpgrades = { 5: 15, 15: 30, 30: 45, 45: 60, 60: 60 }; // 5 scales
-    const nextScale = scaleUpgrades[currentScaleMinutes];
-    if (nextScale && nextScale !== currentScaleMinutes) {
-      setScaleMode(`${nextScale}min`);
-      return true;
-    }
-    return false;
-  };
-
   const styles = StyleSheet.create({
-    // Vertical layout: DigitalTimer + PresetPills
     container: {
       width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: compact ? rs(8) : rs(12),
+      marginTop: rs(16), // Push digital timer down slightly
     },
   });
 
-  // Vertical layout: DigitalTimer + PresetPills
   return (
     <View style={styles.container}>
       {/* DigitalTimer [−] 25:00 [+] */}
@@ -89,13 +73,9 @@ const ControlBar = React.memo(function ControlBar({
         showControls={true}
         scaleMode={scaleMode}
         onDurationChange={setCurrentDuration}
-        onScaleUpgrade={handleScaleUpgrade}
         isRunning={isRunning}
         compact={compact}
       />
-
-      {/* PresetPills [5] [15] [25] [30] [45] [60] */}
-      <PresetPills compact={compact} />
     </View>
   );
 });

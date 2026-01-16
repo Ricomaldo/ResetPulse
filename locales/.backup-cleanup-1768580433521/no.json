@@ -1,0 +1,258 @@
+{
+  "common": {
+    "settings": "Innstillinger",
+    "close": "Lukk",
+    "cancel": "Avbryt",
+    "confirm": "Bekreft",
+    "ok": "OK",
+    "skip": "Hopp over",
+    "retry": "Prøv igjen",
+    "continue": "Fortsett"
+  },
+  "welcome": {
+    "title": "Velkommen til ResetPulse",
+    "subtitle": "Velg en aktivitet, juster varigheten, start.",
+    "discover": "Oppdag"
+  },
+  "invitation": "Klar?",
+  "onboarding": {
+    "activities": "Velg din aktivitet",
+    "dial": "Juster timerens varighet",
+    "palette": "Endre farger som du vil",
+    "controls": "Start, pause eller tilbakestill",
+    "controlsSubtext": "Timeren fortsetter i bakgrunnen",
+    "completion": "Nyt ResetPulse!",
+    "restartGuide": "Start guiden på nytt",
+    "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen",
+    "tool": {
+      "title": "Hva passer deg best?",
+      "creative": "Kreativ",
+      "minimalist": "Minimalist",
+      "multitask": "Multitasker",
+      "rational": "Rasjonell"
+    },
+    "creation": {
+      "title": "Opprett ditt første moment",
+      "subtitle": "Velg en emoji, et navn og en varighet"
+    },
+    "testStart": {
+      "title": "Når du er klar, trykk",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Nå, slipp når du vil",
+      "hint": "",
+      "revealTitle": "Du er"
+    },
+    "paywall": {
+      "title": "Du opprettet ditt første moment",
+      "profile": "Profil:",
+      "question": "Vil du opprett flere?",
+      "valueProposition": "15 paletter · 16 aktiviteter · Ubegrenset kreativitet",
+      "price": "4,99€ — En gang, for alltid",
+      "ctaTrial": "Prøv 7 dager gratis",
+      "ctaSkip": "Kanskje senere"
+    },
+    "firstTimer": {
+      "title": "Timeren din er klar",
+      "profile": "Profil",
+      "tool": "Verktøy",
+      "moment": "Moment",
+      "startButton": "Start min første timer",
+      "completionMessage": "Bra jobbet! Rommet ditt er klart."
+    }
+  },
+  "settings": {
+    "title": "Innstillinger",
+    "interface": {
+      "title": "🪄 Grensesnitt",
+      "minimalInterface": "Minimalt grensesnitt",
+      "minimalInterfaceDescriptionOn": "Skjul aktiviteter og farger når timeren kjører",
+      "minimalInterfaceDescriptionOff": "Fullstendig grensesnitt selv under timer",
+      "digitalTimer": "Digital timer",
+      "digitalTimerDescriptionOn": "Vis gjenværende tid i MM:SS",
+      "digitalTimerDescriptionOff": "Digital timer deaktivert",
+      "pulseAnimation": "Pulsanimering",
+      "pulseAnimationDescriptionOn": "Animering aktivert under timer",
+      "pulseAnimationDescriptionOff": "Animering deaktivert",
+      "pulseWarningTitle": "Pulsanimering",
+      "pulseWarningMessage": "Dette alternativet aktiverer en gjentakende visuell animering.\n\nUnngå å aktivere denne funksjonen hvis du er følsom for visuelle effekter eller har en historie med fotofølsomhet.",
+      "pulseWarningEnable": "Aktiver"
+    },
+    "timer": {
+      "title": "⚙️ Timer",
+      "soundDescription": "Velg lyden som skal spilles når timeren er ferdig",
+      "dialMode": "Skivemodus",
+      "dialMode60": "60 minutters skala",
+      "dialMode25": "25 minutters Pomodoro",
+      "rotationDirection": "Rotasjonsretning",
+      "rotationClockwise": "Med klokken",
+      "rotationCounterClockwise": "Mot klokken",
+      "keepAwake": "Hold skjermen våken",
+      "keepAwakeDescriptionOn": "Skjermen forblir våken under timeren",
+      "keepAwakeDescriptionOff": "Skjermen kan låses under timeren"
+    },
+    "appearance": {
+      "title": "🎨 Utseende",
+      "theme": "Tema",
+      "themeLight": "☀️ Lys",
+      "themeDark": "🌙 Mørk",
+      "themeAuto": "📱 Auto",
+      "themeDescriptionAuto": "Automatisk (system)",
+      "themeDescriptionDark": "Mørk",
+      "themeDescriptionLight": "Lys",
+      "showPalettes": "Vis paletter",
+      "showPalettesDescriptionOn": "Paletter synlige i grensesnittet",
+      "showPalettesDescriptionOff": "Paletter skjult",
+      "palettesDescription": "Gratis versjon: Earth og Laser tilgjengelige",
+      "showActivities": "Vis aktiviteter",
+      "showActivitiesDescriptionOn": "Aktiviteter synlige i grensesnittet",
+      "showActivitiesDescriptionOff": "Aktiviteter skjult",
+      "activitiesDescription": "Velg favorittene dine for å se dem først"
+    },
+    "about": {
+      "title": "Om",
+      "appName": "ResetPulse",
+      "appDescription": "Tilpassbar visuell timer",
+      "version": "Versjon"
+    },
+    "dev": {
+      "title": "🔧 Utvikling",
+      "resetOnboarding": "Tilbakestill onboarding",
+      "resetOnboardingConfirmTitle": "Tilbakestill onboarding",
+      "resetOnboardingConfirmMessage": "Velkomstskjermen og tipsene vil vises ved neste oppstart av appen.",
+      "resetOnboardingConfirmButton": "Tilbakestill"
+    }
+  },
+  "premium": {
+    "title": "Lås opp alt",
+    "description": "Alle farger.\nAlle aktiviteter.\nDin maksimale komfort.",
+    "features": "7 DAGER GRATIS",
+    "price": "Deretter %{price} én gang.\nDin for alltid.",
+    "priceOnce": "Én gang, for alltid",
+    "trial": "",
+    "startTrial": "Prøv 7 dager gratis",
+    "maybeLater": "Kanskje senere",
+    "restore": "Gjenopprett kjøpene mine",
+    "unlock": "Lås opp ✨",
+    "onboardingToast": "Fullfør guiden for å oppdage premiumpaletter!",
+    "welcomeTitle": "Velkommen Premium! 🎉",
+    "welcomeMessage": "Alle paletter og aktiviteter er nå låst opp.",
+    "welcomeButton": "Fantastisk!",
+    "noConnection": "Ingen tilkobling",
+    "noConnectionMessage": "Kan ikke laste tilbud. Sjekk internettilkoblingen din.",
+    "error": "Feil",
+    "errorOfferings": "Kan ikke hente tilbud. Prøv igjen senere.",
+    "errorPurchase": "En feil oppstod under kjøpet.",
+    "paymentPending": "Betaling pågår",
+    "restoreSuccess": "Gjenopprettelse vellykket",
+    "restoreSuccessMessage": "Kjøpene dine er gjenopprettet. Alle premiumfunksjoner er låst opp.",
+    "restoreNone": "Ingen kjøp funnet",
+    "restoreNoneMessage": "Ingen tidligere kjøp ble funnet for denne kontoen.",
+    "restoreError": "Kunne ikke gjenopprette kjøpene dine.",
+    "unexpectedError": "En uventet feil oppstod.",
+    "contactSupport": "Kontakt support",
+    "tooManyAttempts": "Vennligst kontakt support hvis problemet vedvarer."
+  },
+  "activities": {
+    "none": "Grunnleggende",
+    "work": "Arbeid",
+    "break": "Pause",
+    "breathing": "Pust",
+    "reading": "Lesing",
+    "study": "Studie",
+    "meditation": "Meditasjon",
+    "yoga": "Yoga",
+    "sport": "Sport",
+    "walking": "Gåtur",
+    "creativity": "Kreativitet",
+    "cooking": "Matlaging",
+    "gaming": "Spill",
+    "homework": "Lekser",
+    "music": "Musikk",
+    "cleaning": "Rengjøring"
+  },
+  "palettes": {
+    "earth": "Jord",
+    "softLaser": "Soft Laser",
+    "classic": "Klassisk",
+    "tropical": "Tropisk",
+    "zen": "Zen",
+    "forest": "Skog",
+    "ocean": "Hav",
+    "dawn": "Aurora",
+    "dusk": "Skumring",
+    "soft": "Mild",
+    "pastel_girly": "Pasteller",
+    "autumn": "Høst",
+    "lavender": "Lavendel",
+    "teal": "Blågrønn",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "Klassisk bjelle",
+    "bell_melodic": "Melodisk bjelle",
+    "microwave_vintage": "Vintage mikrobølgeovn",
+    "microwave_ping": "Mikrobølgeovn ping",
+    "kitchen_timer": "Kjøkkentimer",
+    "kitchen_timer_2": "Mekanisk timer",
+    "egg_timer": "Eggtimer",
+    "toaster_bell": "Brødrister",
+    "ding_effect": "Enkel ding",
+    "timer_complete": "Timer fullført"
+  },
+  "accessibility": {
+    "settings": "Innstillinger",
+    "openSettings": "Åpne appinnstillinger",
+    "closeSettings": "Lukk innstillinger",
+    "minimalInterface": "Minimalt grensesnitt",
+    "keepAwake": "Hold skjermen våken",
+    "showPalettes": "Vis paletter",
+    "showActivities": "Vis aktiviteter",
+    "rotationDirection": "Rotasjonsretning",
+    "startTrial": "Start gratis prøveperiode",
+    "maybeLater": "Kanskje senere",
+    "restore": "Gjenopprett kjøpene mine",
+    "activity": "Activité: %{name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur %{number}",
+    "paletteNumber": "Palette %{name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "Enda flere farger",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Et øyeblikk for deg selv?",
+        "bodyPersonalized": "Din {{name}} venter på deg {{emoji}} — {{duration}} min for deg?",
+        "bodyGeneric": "Din timer venter — ta et øyeblikk for deg selv"
+      },
+      "day7": {
+        "title": "Siste sjanse",
+        "body": "7 dagers gratis prøveperiode — ta den før den utløper"
+      }
+    }
+  }
+}

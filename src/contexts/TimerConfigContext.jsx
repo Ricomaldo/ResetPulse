@@ -92,7 +92,7 @@ export const TimerConfigProvider = ({ children }) => {
         layout: {
           commandBarConfig: [],
           carouselBarConfig: [],
-          favoriteToolMode: 'commands',
+          favoriteToolMode: 'activities',
         },
         stats: {
           activityDurations: {},
@@ -143,7 +143,7 @@ export const TimerConfigProvider = ({ children }) => {
       layout: {
         commandBarConfig: [],
         carouselBarConfig: [],
-        favoriteToolMode: 'commands',
+        favoriteToolMode: 'activities',
       },
       stats: {
         activityDurations: {},

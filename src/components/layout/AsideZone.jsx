@@ -27,7 +27,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 // Note: Container heights are slightly smaller than snap points to account for handle + padding
 const LAYER_1_HEIGHT = SCREEN_HEIGHT * 0.1; // Turquoise layer (fixed small height)
 const CONTAINER_SNAP_1 = SCREEN_HEIGHT * 0.13; // Container at snap 0 (18% snap - 5% handle/padding)
-const CONTAINER_SNAP_2 = SCREEN_HEIGHT * 0.32; // Container at snap 1 (38% snap - 6% handle/padding)
+const CONTAINER_SNAP_2 = SCREEN_HEIGHT * 0.27; // Container at snap 1 (32% snap - 5% handle/padding)
 const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8; // Container at snap 2 (90% snap - 10% handle/padding)
 
 /**
@@ -42,29 +42,29 @@ function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, p
   const containerHeightStyle = useAnimatedStyle(() => {
     const height = interpolate(
       animatedIndex.value,
-      [0, 1, 2], // Snap 0 (18%), 1 (38%), 2 (90%)
+      [0, 1, 2], // Snap 0 (18%), 1 (32%), 2 (90%)
       [CONTAINER_SNAP_1, CONTAINER_SNAP_2, CONTAINER_SNAP_3], // Responsive heights
       Extrapolation.CLAMP
     );
     return { height };
   });
 
-  // Fade out FavoriteTool (turquoise) when moving from snap 0 (18%) to snap 1 (38%)
+  // Fade out FavoriteTool (turquoise) when moving from snap 0 (18%) to snap 1 (32%)
   const favoriteOpacityStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       animatedIndex.value,
-      [0, 1, 2], // Snap 0 (18%), 1 (38%), 2 (90%)
+      [0, 1, 2], // Snap 0 (18%), 1 (32%), 2 (90%)
       [1, 0, 0], // Opacity: visible → invisible → invisible
       Extrapolation.CLAMP
     );
     return { opacity };
   });
 
-  // Fade in BaseCommands (pourpre) at snap 1 (38%), fade out at snap 2 (90%)
+  // Fade in BaseCommands (pourpre) at snap 1 (32%), fade out at snap 2 (90%)
   const baseOpacityStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       animatedIndex.value,
-      [0, 1, 2], // Snap 0 (18%), 1 (38%), 2 (90%)
+      [0, 1, 2], // Snap 0 (18%), 1 (32%), 2 (90%)
       [0, 1, 0], // Opacity: invisible → visible → invisible
       Extrapolation.CLAMP
     );
@@ -86,7 +86,10 @@ function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, p
   return (
     <BottomSheetScrollView
       contentContainerStyle={styles.scrollContent}
-      scrollEnabled={currentSnapIndex >= 1} // Scroll disabled at snap 0 (18%), enabled at snap 1+ (38%, 90%)
+      scrollEnabled={true}
+      bounces={currentSnapIndex === 2} // Only bounce at snap 2 (90%) where content scrolls
+      overScrollMode="never"
+      showsVerticalScrollIndicator={currentSnapIndex === 2}
     >
       {/* All layers superposed (FavoriteTool + BaseCommands + AllOptions) */}
       <Animated.View style={[styles.layerContainer, containerHeightStyle]}>
@@ -104,7 +107,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, p
           />
         </Animated.View>
 
-        {/* Snap 38%: ToolBox (all 3 tools) */}
+        {/* Snap 32%: ToolBox (all 3 tools) */}
         <Animated.View
           style={[
             styles.layerAbsolute,
@@ -156,8 +159,8 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
   const activityCarouselRef = useRef(null);
   const paletteCarouselRef = useRef(null);
 
-  // 3 snap points: 18% (favorite) / 38% (toolbox) / 90% (all)
-  const snapPoints = useMemo(() => ['18%', '38%', '90%'], []);
+  // 3 snap points: 18% (favorite) / 32% (toolbox) / 90% (all)
+  const snapPoints = useMemo(() => ['18%', '32%', '90%'], []);
 
   // Track current snap index (0=favorite, 1=toolbox, 2=all)
   const [currentSnapIndex, setCurrentSnapIndex] = useState(0); // Default: 18% (favorite)
@@ -207,6 +210,8 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
         index={0} // Start at 18% (favorite)
         enablePanDownToClose={false} // Drawer permanent (no close state)
         enableDynamicSizing={false} // Force snap points to be respected
+        activeOffsetY={[-10, 10]} // Require 10px vertical movement before capturing gesture
+        failOffsetX={[-10, 10]} // Allow horizontal scroll in carousels
         onChange={(index) => {
           setCurrentSnapIndex(index);
         }}
@@ -246,7 +251,7 @@ const styles = StyleSheet.create({
   },
   labelOverlay: {
     alignItems: 'center',
-    bottom: SCREEN_HEIGHT * 0.28, // 28% from bottom (balanced between 25% too low, 32% too high)
+    bottom: SCREEN_HEIGHT * 0.35, // 35% from bottom (in the 32-38% zone, above snap 1)
     justifyContent: 'center',
     pointerEvents: 'none', // Don't capture touches (label is display-only)
     position: 'absolute',

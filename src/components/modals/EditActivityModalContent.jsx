@@ -139,11 +139,11 @@ export default function EditActivityModalContent({
       t('customActivities.edit.deleteConfirmMessage'),
       [
         {
-          text: t('customActivities.edit.deleteCancelButton'),
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: t('customActivities.edit.deleteConfirmButton'),
+          text: t('customActivities.edit.buttonDelete'),
           style: 'destructive',
           onPress: () => {
             // Track analytics before deletion
@@ -428,7 +428,7 @@ export default function EditActivityModalContent({
               {selectedEmoji || '?'}
             </Text>
             <Text style={styles.emojiInputPlaceholder}>
-              {selectedEmoji ? t('customActivities.create.emojiLabel') : 'Appuyer pour choisir'}
+              {selectedEmoji ? t('customActivities.create.emojiLabel') : t('customActivities.create.emojiPlaceholder')}
             </Text>
           </TouchableOpacity>
 
@@ -511,12 +511,12 @@ export default function EditActivityModalContent({
             style={styles.cancelButton}
             onPress={handleClose}
             activeOpacity={0.7}
-            accessibilityLabel={t('customActivities.create.buttonCancel')}
+            accessibilityLabel={t('common.cancel')}
             accessibilityRole="button"
             accessibilityHint={t('accessibility.closeModalHint')}
           >
             <Text style={styles.cancelButtonText}>
-              {t('customActivities.create.buttonCancel')}
+              {t('common.cancel')}
             </Text>
           </TouchableOpacity>
 

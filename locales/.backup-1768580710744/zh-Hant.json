@@ -1,0 +1,191 @@
+{
+  "common": {
+    "cancel": "取消",
+    "ok": "確定",
+    "retry": "重試",
+    "continue": "繼續"
+  },
+  "welcome": {
+    "title": "歡迎使用 ResetPulse"
+  },
+  "invitation": "準備好了嗎?",
+  "onboarding": {
+    "restartGuide": "重新開始引導",
+    "restartGuideDescription": "再次顯示歡迎畫面和提示",
+    "paywall": {
+      "title": "你建立了第一個時刻",
+      "profile": "個人資料:",
+      "question": "想要建立更多?",
+      "valueProposition": "15 調色盤 · 16 活動 · 無限建立",
+      "price": "4,99€ — 一次性，永久擁有",
+      "ctaTrial": "免費試用 7 天",
+      "ctaSkip": "稍後"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "interface": {
+      "pulseAnimationDescriptionOn": "計時器運作時啟用動畫",
+      "pulseAnimationDescriptionOff": "動畫已停用",
+      "pulseWarningTitle": "脈衝動畫",
+      "pulseWarningMessage": "此選項會啟用重複的視覺動畫。\n\n如果您對視覺效果敏感或有光敏史，請避免啟用此功能。",
+      "pulseWarningEnable": "啟用"
+    },
+    "timer": {
+      "soundDescription": "選擇計時器結束時播放的聲音",
+      "rotationDirection": "旋轉方向",
+      "rotationClockwise": "順時針",
+      "rotationCounterClockwise": "逆時針",
+      "keepAwake": "保持螢幕常亮",
+      "keepAwakeDescriptionOn": "計時器運作時螢幕保持常亮",
+      "keepAwakeDescriptionOff": "計時器運作時螢幕可以鎖定",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "theme": "主題",
+      "themeLight": "☀️ 淺色",
+      "themeDark": "🌙 深色",
+      "themeAuto": "📱 自動",
+      "themeDescriptionAuto": "自動(系統)",
+      "themeDescriptionDark": "深色",
+      "themeDescriptionLight": "淺色"
+    },
+    "about": {
+      "title": "關於",
+      "appName": "ResetPulse",
+      "appDescription": "可自訂的視覺計時器",
+      "version": "版本"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "解鎖全部",
+    "description": "所有顏色。\n所有活動。\n你的最大舒適。",
+    "features": "7天免費",
+    "startTrial": "免費試用7天",
+    "maybeLater": "稍後再說",
+    "restore": "恢復我的購買",
+    "welcomeTitle": "歡迎使用進階版! 🎉",
+    "welcomeMessage": "所有調色盤和活動現已解鎖。",
+    "welcomeButton": "太棒了!",
+    "noConnection": "無網路連線",
+    "noConnectionMessage": "無法載入優惠資訊。請檢查您的網路連線。",
+    "error": "錯誤",
+    "errorOfferings": "無法取得優惠資訊。請稍後再試。",
+    "errorPurchase": "購買過程中發生錯誤。",
+    "paymentPending": "付款處理中",
+    "restoreSuccess": "恢復成功",
+    "restoreSuccessMessage": "您的購買已恢復。所有進階功能已解鎖。",
+    "restoreNone": "未找到購買記錄",
+    "restoreNoneMessage": "未找到此帳號的購買記錄。",
+    "restoreError": "無法恢復您的購買。",
+    "unexpectedError": "發生意外錯誤。",
+    "contactSupport": "聯絡支援",
+    "tooManyAttempts": "如果問題仍未解決，請聯絡支援。"
+  },
+  "activities": {
+    "none": "基礎",
+    "work": "工作",
+    "break": "休息",
+    "reading": "閱讀",
+    "study": "學習",
+    "meditation": "冥想",
+    "yoga": "瑜珈",
+    "sport": "運動",
+    "walking": "散步",
+    "creativity": "創作",
+    "cooking": "烹飪",
+    "gaming": "遊戲",
+    "homework": "作業",
+    "music": "音樂",
+    "cleaning": "清潔"
+  },
+  "palettes": {
+    "earth": "大地",
+    "softLaser": "Soft Laser",
+    "classic": "經典",
+    "tropical": "熱帶",
+    "zen": "禪",
+    "forest": "森林",
+    "ocean": "海洋",
+    "dawn": "極光",
+    "dusk": "黃昏",
+    "soft": "溫柔",
+    "pastel_girly": "粉彩",
+    "autumn": "秋天",
+    "lavender": "薰衣草",
+    "teal": "青綠",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "經典鈴聲",
+    "bell_melodic": "旋律鈴聲",
+    "microwave_vintage": "復古微波爐",
+    "microwave_ping": "微波爐提示音",
+    "kitchen_timer": "廚房計時器",
+    "kitchen_timer_2": "機械計時器",
+    "egg_timer": "煮蛋計時器",
+    "toaster_bell": "烤麵包機",
+    "ding_effect": "簡單叮聲",
+    "timer_complete": "計時器完成"
+  },
+  "accessibility": {
+    "keepAwake": "保持螢幕常亮",
+    "rotationDirection": "旋轉方向",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "更多顏色",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "為自己留出一刻?",
+        "bodyGeneric": "你的計時器在等待 — 為自己留出一刻"
+      },
+      "day7": {
+        "title": "最後機會",
+        "body": "7天免費試用 — 趕在過期前獲取"
+      }
+    }
+  }
+}

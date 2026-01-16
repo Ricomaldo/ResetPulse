@@ -56,7 +56,7 @@ export default function DiscoveryModalContent({
 
   // Use i18n defaults if not provided
   const ctaTextFinal = ctaText || t('discovery.defaultCta');
-  const dismissTextFinal = dismissText || t('discovery.defaultDismiss');
+  const dismissTextFinal = dismissText || t('twoTimers.dismiss');
 
   const handleUnlock = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });

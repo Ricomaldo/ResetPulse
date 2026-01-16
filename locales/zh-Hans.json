@@ -18,20 +18,15 @@
       "question": "想要创建更多?",
       "valueProposition": "15 调色板 · 16 活动 · 无限创建",
       "price": "4,99€ — 一次性，永久拥有",
-      "ctaTrial": "免费试用 7 天",
-      "ctaSkip": "稍后"
+      "ctaTrial": "免费试用 7 天"
     },
     "intentions": {
-      "other": {
-        "defaultName": "My moment"
-      },
       "q1": {
         "title": "Your timer would be for...",
         "otherPlaceholder": "Like what?"
       },
       "q2": {
-        "title": "A little help with...",
-        "otherPlaceholder": "Like what?"
+        "title": "A little help with..."
       }
     },
     "creation": {
@@ -54,8 +49,7 @@
       },
       "filter1": {
         "title": "A timer that adapts to you",
-        "subtitle": "",
-        "cta": "Create my moment"
+        "subtitle": ""
       }
     },
     "v3": {
@@ -67,7 +61,6 @@
       },
       "filter5b": {
         "title": "Your ringtone",
-        "continue": "Continue",
         "skip": "Skip →"
       }
     }
@@ -83,10 +76,6 @@
     },
     "timer": {
       "soundDescription": "选择计时器结束时播放的声音",
-      "rotationDirection": "旋转方向",
-      "rotationClockwise": "顺时针",
-      "rotationCounterClockwise": "逆时针",
-      "keepAwake": "保持屏幕常亮",
       "keepAwakeDescriptionOn": "计时器运行时屏幕保持常亮",
       "keepAwakeDescriptionOff": "计时器运行时屏幕可以锁定",
       "longPressStart": "Enable long tap to start",
@@ -99,7 +88,6 @@
       "dialScaleDescription": "Maximum duration displayed on the dial"
     },
     "appearance": {
-      "theme": "主题",
       "themeLight": "☀️ 浅色",
       "themeDark": "🌙 深色",
       "themeAuto": "📱 自动",
@@ -132,7 +120,6 @@
       "configuration": "CONFIGURATION",
       "timerOptions": "Timer options",
       "keepAwake": "Keep Awake",
-      "rotationDirection": "Rotation direction",
       "notificationSound": "Notification sound",
       "theme": "Theme",
       "favorites": "YOUR FAVORITES",
@@ -161,7 +148,6 @@
     "description": "所有颜色。\n所有活动。\n你的最大舒适。",
     "features": "7天免费",
     "startTrial": "免费试用7天",
-    "maybeLater": "稍后再说",
     "restore": "恢复我的购买",
     "welcomeTitle": "欢迎使用高级版! 🎉",
     "welcomeMessage": "所有调色板和活动现已解锁。",
@@ -216,7 +202,6 @@
     "dawn": "极光",
     "dusk": "黄昏",
     "soft": "温柔",
-    "pastel_girly": "粉彩",
     "autumn": "秋天",
     "lavender": "薰衣草",
     "teal": "青绿",
@@ -268,7 +253,6 @@
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
-    "defaultDismiss": "Peut-être plus tard",
     "activities": "Activités premium",
     "moreColors": {
       "title": "Even more colors",
@@ -299,7 +283,6 @@
       "preview": "Preview",
       "previewPlaceholder": "My activity",
       "buttonCreate": "Create",
-      "buttonCancel": "Cancel",
       "errorTitle": "Missing information",
       "errorEmoji": "Please choose an emoji for your activity.",
       "errorName": "Please enter a name for your activity."
@@ -309,18 +292,11 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "deleteConfirmButton": "Delete",
-      "deleteCancelButton": "Cancel"
+      "deleteConfirmMessage": "This action is irreversible."
     },
     "duration": {
       "minutes": "min"
     }
-  },
-  "moreColors": {
-    "title": "更多颜色",
-    "subtitle": "(subtitle)",
-    "tagline": "(tagline)"
   },
   "notifications": {
     "reminder": {

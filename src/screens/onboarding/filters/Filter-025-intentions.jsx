@@ -188,7 +188,7 @@ export default function Filter025Intentions({ onContinue }) {
                 borderColor: colors.border,
                 color: colors.text,
               }]}
-              placeholder={t('onboarding.intentions.q2.otherPlaceholder')}
+              placeholder={t('onboarding.intentions.q1.otherPlaceholder')}
               placeholderTextColor={colors.textSecondary}
               value={otherTextQ2}
               onChangeText={setOtherTextQ2}
