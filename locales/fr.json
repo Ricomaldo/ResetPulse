@@ -9,6 +9,8 @@
     "digitalTimer": {
       "decreaseDuration": "Diminuer la durée",
       "increaseDuration": "Augmenter la durée",
+      "timeLabel": "Temps: %{time}",
+      "durationLabel": "Durée: %{time}",
       "showTime": "Afficher le temps",
       "tapToHide": "Appuyez pour masquer",
       "tapToShow": "Appuyez pour afficher"
@@ -142,10 +144,12 @@
     "favorites": {
       "palettes": {
         "title": "Palettes favorites",
+        "description": "Sélectionnez jusqu'à 4 palettes favorites (%{count}/4)",
         "morePalettes": "Plus de palettes"
       },
       "activities": {
         "title": "Activités favorites",
+        "description": "Sélectionnez jusqu'à 4 activités favorites (%{count}/4)",
         "more": "Plus"
       }
     },
@@ -160,6 +164,7 @@
     "title": "Débloque tout",
     "description": "Toutes les couleurs.\nToutes les activités.\nCrée tes propres activités.\nTon confort maximum.",
     "features": "7 JOURS GRATUITS",
+    "price": "Puis %{price} une fois.\nÀ toi pour toujours.",
     "startTrial": "Essayer 7 jours gratuit",
     "restore": "Restaurer mes achats",
     "welcomeTitle": "Bienvenue Premium ! 🎉",
@@ -236,10 +241,12 @@
   "accessibility": {
     "keepAwake": "Maintenir l'écran allumé",
     "rotationDirection": "Sens de rotation",
+    "activity": "Activité %{name}",
     "activityLocked": "Activité premium verrouillée",
     "moreActivities": "Plus d'activités",
     "discoverPremium": "Découvrir les activités premium",
     "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee",
+    "colorNumber": "Couleur %{number}",
     "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
     "celebrationEmoji": "Célébration",
     "closeCreateActivity": "Fermer la création d'activité",
@@ -259,10 +266,15 @@
       "timerCompleted": "Timer terminé !",
       "timerRunning": "Timer en cours",
       "timerStopped": "Timer arrêté",
+      "activityStarted": "%{activity} démarré",
+      "activityCompleted": "%{activity} terminé",
       "startTimer": "Démarrer le timer",
       "stopTimer": "Arrêter le timer",
-      "resetTimer": "Réinitialiser le timer"
-    }
+      "resetTimer": "Réinitialiser le timer",
+      "dial": "Cadran du timer, %{minutes} minutes définies, %{activity}"
+    },
+    "unlockPremium": "Débloquer le premium pour %{price}",
+    "paletteItem": "Palette de couleurs : %{name}"
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
@@ -304,7 +316,8 @@
       "buttonSave": "Enregistrer",
       "buttonDelete": "Supprimer",
       "deleteConfirmTitle": "Supprimer ?",
-      "deleteConfirmMessage": "Cette action est irreversible."
+      "deleteConfirmMessage": "Cette action est irreversible.",
+      "usageStats": "Utilisee %{count} fois"
     },
     "duration": {
       "minutes": "min"
@@ -391,6 +404,7 @@
     "reminder": {
       "day3": {
         "title": "Un moment pour toi ?",
+        "bodyPersonalized": "Ta {{name}} t'attend {{emoji}} — {{duration}} min pour toi ?",
         "bodyGeneric": "Ton timer t'attend — prends un moment pour toi"
       },
       "day7": {

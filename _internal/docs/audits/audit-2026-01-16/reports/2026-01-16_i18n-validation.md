@@ -10,8 +10,8 @@ domain: i18n
 
 ## Executive Summary
 
-- **Total keys in FR**: 262
-- **Total keys used in code**: 272
+- **Total keys in FR**: 276
+- **Total keys used in code**: 286
 - **Missing keys (P0)**: 0
 - **Obsolete keys (P2)**: 0
 - **Duplicate values (P3)**: 3
@@ -124,7 +124,7 @@ domain: i18n
 
 ## Statistics
 
-- **Code coverage**: 100% (262/262 keys used)
+- **Code coverage**: 100% (276/276 keys used)
 - **Dead keys**: 0 (0%)
 - **Locale completion**: FR/EN 100%, Others vary (see locales summary)
 

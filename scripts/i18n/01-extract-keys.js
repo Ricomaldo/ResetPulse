@@ -15,7 +15,8 @@ const SRC_DIR = path.join(ROOT_DIR, 'src');
 const OUTPUT_FILE = path.join(__dirname, 'extracted-keys.json');
 
 // Regex patterns for extracting t() calls
-const STATIC_KEY_REGEX = /\bt\((['"`])([^'"`]+)\1\)/g;
+// Updated to match t('key') and t('key', {params})
+const STATIC_KEY_REGEX = /\bt\((['"`])([^'"`]+)\1(?:,|\))/g;
 const DYNAMIC_KEY_REGEX = /\bt\(`([^`]*\$\{[^}]+\}[^`]*)`\)/g;
 
 /**

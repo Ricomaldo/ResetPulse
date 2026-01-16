@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "auditedAt": "2026-01-16T16:34:26.428Z",
+    "auditedAt": "2026-01-16T18:27:24.294Z",
     "auditType": "baseline",
     "referenceLocale": "fr"
   },
@@ -798,9 +798,9 @@
     }
   },
   "statistics": {
-    "totalKeysInCode": 272,
-    "totalKeysInFR": 262,
-    "usedKeys": 262,
+    "totalKeysInCode": 286,
+    "totalKeysInFR": 276,
+    "usedKeys": 276,
     "deadKeys": 0,
     "codeCoverage": "100%",
     "missingKeys": 0,

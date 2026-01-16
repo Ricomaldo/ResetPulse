@@ -9,26 +9,10 @@ console.log('============================================================\n');
 
 // Keys to remove (exist in backfilled locales but not in FR/EN)
 const obsoleteKeys = [
-  'customActivities.create.buttonCancel',
-  'customActivities.edit.deleteCancelButton',
-  'customActivities.edit.deleteConfirmButton',
-  'discovery.defaultDismiss',
   'moreColors.subtitle',
   'moreColors.tagline',
   'moreColors.title',
-  'onboarding.intentions.other.defaultName',
-  'onboarding.intentions.q2.otherPlaceholder',
-  'onboarding.paywall.ctaSkip',
-  'onboarding.v2.filter1.cta',
-  'onboarding.v3.filter5b.continue',
-  'palettes.pastel_girly',
-  'premium.maybeLater',
-  'settings.appearance.theme',
-  'settings.sections.rotationDirection',
-  'settings.timer.keepAwake',
-  'settings.timer.rotationClockwise',
-  'settings.timer.rotationCounterClockwise',
-  'settings.timer.rotationDirection'
+  'palettes.pastel_girly'
 ];
 
 // Locales to clean (backfilled ones)
