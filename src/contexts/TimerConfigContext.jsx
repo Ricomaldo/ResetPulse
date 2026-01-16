@@ -25,6 +25,7 @@ import { usePersistedObject } from '../hooks/usePersistedState';
 import { getDefaultActivity, getActivityById } from '../config/activities';
 import { DEV_MODE, DEV_DEFAULT_TIMER_CONFIG } from '../config/test-mode';
 import { TIMER_PALETTES, getTimerColors } from '../config/timer-palettes';
+import { DEFAULT_SOUND_ID } from '../config/sounds';
 
 const TimerConfigContext = createContext(null);
 
@@ -61,7 +62,7 @@ export const TimerConfigProvider = ({ children }) => {
         timer: {
           currentActivity: devActivity,
           currentDuration: DEV_DEFAULT_TIMER_CONFIG.duration,
-          selectedSoundId: 'bell_classic',
+          selectedSoundId: DEFAULT_SOUND_ID,
           clockwise: false,
           scaleMode: DEV_DEFAULT_TIMER_CONFIG.scaleMode,
         },
@@ -112,7 +113,7 @@ export const TimerConfigProvider = ({ children }) => {
       timer: {
         currentActivity: getDefaultActivity(),
         currentDuration: 1500, // 25 minutes
-        selectedSoundId: 'bell_classic',
+        selectedSoundId: DEFAULT_SOUND_ID,
         clockwise: false,
         scaleMode: '25min',
       },

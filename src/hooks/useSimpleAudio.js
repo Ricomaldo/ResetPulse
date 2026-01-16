@@ -4,7 +4,7 @@
 
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { useAudioPlayer, setAudioModeAsync } from 'expo-audio';
-import { getSoundById } from '../config/sounds';
+import { getSoundById, DEFAULT_SOUND_ID } from '../config/sounds';
 
 // Configuration audio globale (une seule fois)
 let isGloballyConfigured = false;
@@ -35,7 +35,7 @@ const configureAudioOnce = async () => {
  * @param {string} defaultSoundId - ID du son par défaut
  * @returns {Object} - playSound function et état de chargement
  */
-export default function useSimpleAudio(defaultSoundId = 'bell_classic') {
+export default function useSimpleAudio(defaultSoundId = DEFAULT_SOUND_ID) {
   const [currentSoundFile, setCurrentSoundFile] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const player = useAudioPlayer(currentSoundFile);

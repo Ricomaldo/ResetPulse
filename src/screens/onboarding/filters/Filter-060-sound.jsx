@@ -13,7 +13,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../../../styles/responsive';
 import haptics from '../../../utils/haptics';
 import useSimpleAudio from '../../../hooks/useSimpleAudio';
-import { TIMER_SOUNDS } from '../../../config/sounds';
+import { TIMER_SOUNDS, DEFAULT_SOUND_ID } from '../../../config/sounds';
 import { fontWeights } from '../../../theme/tokens';
 import OnboardingLayout from '../../../components/onboarding/OnboardingLayout';
 
@@ -22,7 +22,7 @@ export default function Filter080SoundPersonalize({ onContinue }) {
   const t = useTranslation();
   const { playSound, stopSound } = useSimpleAudio('preview');
 
-  const [selectedSound, setSelectedSound] = useState('bell_classic');
+  const [selectedSound, setSelectedSound] = useState(DEFAULT_SOUND_ID);
   const [playingId, setPlayingId] = useState(null);
   const timeoutRef = useRef(null);
 
@@ -74,7 +74,7 @@ export default function Filter080SoundPersonalize({ onContinue }) {
     }
 
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-    onContinue({ selectedSound: 'bell_classic' }); // Default
+    onContinue({ selectedSound: DEFAULT_SOUND_ID }); // Default
   };
 
   const styles = createStyles(colors, spacing, borderRadius);
