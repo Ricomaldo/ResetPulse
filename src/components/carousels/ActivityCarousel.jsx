@@ -1,7 +1,7 @@
 /**
  * @fileoverview Activity carousel for selecting timer activities
  * @created 2025-12-14
- * @updated 2026-01-15 - Added auto-scale when activity duration > current scale
+ * @updated 2026-01-16 - Always reset to 60min scale on activity selection
  */
 import PropTypes from 'prop-types';
 import React, { useRef, useEffect, useState, useMemo, useCallback, forwardRef } from 'react';
@@ -25,13 +25,12 @@ import { useModalStack } from '../../contexts/ModalStackContext';
 import analytics from '../../services/analytics';
 import { ActivityItem, PlusButton } from './activity-items/index';
 import { fontWeights } from '../../theme/tokens';
-import { modeToScale } from '../../utils/scaleHelpers';
 
 const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = false }, ref) {
   const theme = useTheme();
   const t = useTranslation();
   const {
-    timer: { currentActivity, scaleMode },
+    timer: { currentActivity },
     setCurrentActivity,
     setCurrentDuration,
     setScaleMode,
@@ -137,26 +136,15 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
     // Determine duration to apply (saved or default)
     const savedDuration = activityDurations[activity.id];
     const durationToApply = savedDuration || activity.defaultDuration;
-    const durationMinutes = durationToApply / 60;
 
-    // Auto-scale logic: reset to 60min if duration > current scale
-    const currentScaleMinutes = modeToScale(scaleMode);
-
-    // Edge case: If duration > current scale, reset to 60min (universal reference)
-    if (durationMinutes > currentScaleMinutes) {
-      setScaleMode('60min'); // Always reset to 60min (not optimal)
-      setCurrentDuration(durationToApply);
-      // Feedback: scale adapted automatically
-      haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-    } else {
-      // Normal: set duration, scale unchanged
-      setCurrentDuration(durationToApply);
-    }
+    // Always reset to 60min scale when selecting an activity
+    setScaleMode('60min');
+    setCurrentDuration(durationToApply);
 
     // Update current activity
     setCurrentActivity(activity);
     animateSelection(activity.id);
-  }, [isPremiumUser, activityDurations, scaleMode, setCurrentActivity, setCurrentDuration, setScaleMode, handleActivitySelect, modalStack, t]);
+  }, [isPremiumUser, activityDurations, setCurrentActivity, setCurrentDuration, setScaleMode, handleActivitySelect, modalStack, t]);
 
   const handleMorePress = useCallback(() => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
@@ -227,18 +215,12 @@ const ActivityCarousel = forwardRef(function ActivityCarousel({ drawerVisible = 
   }, [modalStack, handleActivityUpdated, handleActivityDeleted]);
 
   const handleActivityCreated = useCallback((newActivity) => {
-    const durationMinutes = newActivity.defaultDuration / 60;
-    const currentScaleMinutes = modeToScale(scaleMode);
-
-    // Auto-reset to 60min if new activity duration > current scale
-    if (durationMinutes > currentScaleMinutes) {
-      setScaleMode('60min'); // Always reset to 60min (not optimal)
-    }
-
+    // Always reset to 60min scale when creating a new activity
+    setScaleMode('60min');
     setCurrentActivity(newActivity);
     setCurrentDuration(newActivity.defaultDuration);
     showToast(t('customActivities.toast.created'));
-  }, [scaleMode, setCurrentActivity, setCurrentDuration, setScaleMode, showToast, t]);
+  }, [setCurrentActivity, setCurrentDuration, setScaleMode, showToast, t]);
 
   const handleActivityUpdated = useCallback((updatedActivity) => {
     if (currentActivity?.id === updatedActivity.id) {setCurrentActivity(updatedActivity);}

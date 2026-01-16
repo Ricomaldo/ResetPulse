@@ -20,10 +20,11 @@ import haptics from '../../utils/haptics';
 
 const MAX_NAME_LENGTH = 20;
 const DURATION_PRESETS = [
-  { minutes: 10, seconds: 600 },
-  { minutes: 20, seconds: 1200 },
+  { minutes: 5, seconds: 300 },
+  { minutes: 15, seconds: 900 },
   { minutes: 30, seconds: 1800 },
   { minutes: 45, seconds: 2700 },
+  { minutes: 60, seconds: 3600 },
 ];
 
 /**

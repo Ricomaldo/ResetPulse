@@ -1,7 +1,8 @@
 /**
- * @fileoverview DurationPresets - 4 boutons presets durée (ADR-004 révisé)
- * @description Presets de durée [5][15][30][60] minutes
+ * @fileoverview DurationPresets - 5 boutons presets durée (ADR-004 révisé)
+ * @description Presets de durée [5][15][30][45][60] minutes
  * @created 2025-12-19
+ * @updated 2026-01-16 - Added 45min preset for consistency
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -10,10 +11,10 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
-const PRESETS = [5, 15, 30, 60]; // minutes
+const PRESETS = [5, 15, 30, 45, 60]; // minutes
 
 /**
- * DurationPresets - 4 presets de durée
+ * DurationPresets - 5 presets de durée
  *
  * @param {number} currentDuration - Durée actuelle en secondes
  * @param {function} onSelectDuration - Callback avec (durationSeconds)
