@@ -235,8 +235,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
       }
+      // CRITICAL: Cancel any scheduled notification to prevent orphaned notifications
+      cancelTimerNotification();
     };
-  }, []);
+  }, [cancelTimerNotification]);
 
   // Track app state to detect background/foreground transitions
   useEffect(() => {
@@ -325,6 +327,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
       setRemaining(duration);
     }
 
+    // CRITICAL: Cancel any existing notification before scheduling a new one
+    // This prevents orphaned notifications if user rapidly starts/stops/starts
+    cancelTimerNotification();
+
     // Get endMessage for notification (uses intentionId mapping for custom activities)
     const endMessage = getActivityEndMessage(currentActivityRef.current, t);
 
@@ -366,7 +372,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
       ? t('accessibility.timer.activityStarted', { activity: activityLabel })
       : t('accessibility.timer.timerRunning');
     AccessibilityInfo.announceForAccessibility(startMessage);
-  }, [remaining, duration, running, scheduleTimerNotification,
+  }, [remaining, duration, running, scheduleTimerNotification, cancelTimerNotification,
     activityDurations, saveActivityDuration, t]);
 
   // stopTimer: Called by long-press "rewind" gesture (ADR-007)

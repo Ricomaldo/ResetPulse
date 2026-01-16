@@ -55,6 +55,8 @@ setupAndroidChannel();
 export default function useNotificationTimer() {
   const notificationIdRef = useRef(null);
   const appStateRef = useRef(AppState.currentState);
+  const schedulingInProgressRef = useRef(false); // Prevent race conditions
+  const schedulingPromiseRef = useRef(null); // Track in-flight schedule operation
 
   // Demander permission au mount
   useEffect(() => {
@@ -92,52 +94,73 @@ export default function useNotificationTimer() {
       return null;
     }
 
-    try {
-      // Annuler notification existante
-      if (notificationIdRef.current) {
-        await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
-      }
-
-      // Format 2: emoji + endMessage (sans durée)
-      const activityEmoji = activity?.emoji || '⏰';
-      const title = `${activityEmoji} ${endMessage || 'Terminé'}`;
-
-      // Programmer nouvelle notification
-      const id = await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body: '', // Corps vide - tout est dans le titre
-          sound: '634089__aj_heels__timercomplete01.wav', // Son bell_classic
-          // Pour Android 8+ le son du channel est utilisé
-        },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, // Enum correct SDK 54
-          seconds: Math.max(1, seconds), // Au minimum 1 seconde
-          channelId: 'timer', // Android : utilise le channel créé
-        },
-      });
-
-      notificationIdRef.current = id;
-
+    // Prevent race conditions: wait for any in-progress scheduling to complete
+    if (schedulingInProgressRef.current && schedulingPromiseRef.current) {
       if (__DEV__) {
-        const now = new Date();
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        const endTime = new Date(now.getTime() + seconds * 1000);
-        const timeString = endTime.toLocaleTimeString('fr-FR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-        console.warn(`📱 [${now.toLocaleTimeString('fr-FR')}] Notif programmée dans ${minutes}min ${secs}s → "${title}" à ${timeString}`);
+        console.warn('⚠️ Scheduling already in progress, waiting for it to complete first');
       }
-
-      return id;
-    } catch (error) {
-      console.warn('⚠️ Error scheduling notification:', error.message);
-      // Fail silently - don't crash the app
-      return null;
+      // Wait for previous scheduling to complete before proceeding
+      await schedulingPromiseRef.current;
     }
+
+    schedulingInProgressRef.current = true;
+
+    // Create and store the scheduling promise
+    const schedulePromise = (async () => {
+      try {
+        // Annuler notification existante (defensive, should already be null)
+        if (notificationIdRef.current) {
+          await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
+          notificationIdRef.current = null;
+        }
+
+        // Format 2: emoji + endMessage (sans durée)
+        const activityEmoji = activity?.emoji || '⏰';
+        const title = `${activityEmoji} ${endMessage || 'Terminé'}`;
+
+        // Programmer nouvelle notification
+        const id = await Notifications.scheduleNotificationAsync({
+          content: {
+            title,
+            body: '', // Corps vide - tout est dans le titre
+            sound: '634089__aj_heels__timercomplete01.wav', // Son bell_classic
+            // Pour Android 8+ le son du channel est utilisé
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, // Enum correct SDK 54
+            seconds: Math.max(1, seconds), // Au minimum 1 seconde
+            channelId: 'timer', // Android : utilise le channel créé
+          },
+        });
+
+        notificationIdRef.current = id;
+
+        if (__DEV__) {
+          const now = new Date();
+          const minutes = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          const endTime = new Date(now.getTime() + seconds * 1000);
+          const timeString = endTime.toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          });
+          console.warn(`📱 [${now.toLocaleTimeString('fr-FR')}] Notif programmée dans ${minutes}min ${secs}s → "${title}" à ${timeString}`);
+        }
+
+        return id;
+      } catch (error) {
+        console.warn('⚠️ Error scheduling notification:', error.message);
+        // Fail silently - don't crash the app
+        return null;
+      } finally {
+        schedulingInProgressRef.current = false;
+        schedulingPromiseRef.current = null;
+      }
+    })();
+
+    schedulingPromiseRef.current = schedulePromise;
+    return schedulePromise;
   };
 
   // Annuler la notification
@@ -145,6 +168,15 @@ export default function useNotificationTimer() {
     // Skip si notifications non disponibles
     if (!notificationsAvailable) {
       return;
+    }
+
+    // CRITICAL: Wait for any in-progress scheduling to complete first
+    // This prevents race conditions where cancel runs before schedule finishes
+    if (schedulingInProgressRef.current && schedulingPromiseRef.current) {
+      if (__DEV__) {
+        console.warn('⚠️ Waiting for in-progress schedule to complete before canceling');
+      }
+      await schedulingPromiseRef.current;
     }
 
     try {
