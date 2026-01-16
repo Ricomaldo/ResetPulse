@@ -25,7 +25,7 @@ import Analytics from './src/services/analytics';
 // Storage key pour onboarding V2
 const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
 
-function AppContent() {
+function AppContent({ onResetOnboarding }) {
   const theme = useTheme();
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -121,6 +121,7 @@ function AppContent() {
         <TimerScreen
           autoStart={startTimerImmediately}
           onAutoStartConsumed={() => setStartTimerImmediately(false)}
+          onResetOnboarding={onResetOnboarding}
         />
       )}
     </View>
@@ -292,7 +293,7 @@ export default function App() {
       <ThemeProvider>
         <PurchaseProvider>
           <ModalStackProvider>
-            <AppContent key={resetTrigger} />
+            <AppContent key={resetTrigger} onResetOnboarding={handleResetOnboarding} />
             <ModalStackRenderer />
           </ModalStackProvider>
         </PurchaseProvider>

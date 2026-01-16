@@ -34,7 +34,7 @@ const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8; // Container at snap 2 (90% snap -
  * SheetContent - Internal component with access to BottomSheet context
  * Handles fade transitions between snap points
  */
-function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, paletteCarouselRef, isPremiumUser }) {
+function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, paletteCarouselRef, isPremiumUser, onResetOnboarding }) {
   const theme = useTheme();
   const { animatedIndex } = useBottomSheet();
 
@@ -132,7 +132,15 @@ function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, p
           ]}
           pointerEvents={currentSnapIndex === 2 ? 'auto' : 'none'}
         >
-          <SettingsPanel isPremiumUser={isPremiumUser} />
+          <SettingsPanel
+            isPremiumUser={isPremiumUser}
+            resetOnboarding={onResetOnboarding}
+            onClose={() => {
+              // Close settings (snap back to snap 0)
+              // Note: We don't have a ref to BottomSheet here, so this is a no-op
+              // The close is handled by the user swiping down
+            }}
+          />
         </Animated.View>
       </Animated.View>
     </BottomSheetScrollView>
@@ -148,8 +156,9 @@ function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, p
  * @param {string} displayMessage - Message to display in MessageZone
  * @param {boolean} isCompleted - Timer completion state (MessageZone)
  * @param {Object} flashActivity - Activity flash animation data
+ * @param {Function} onResetOnboarding - Callback to reset onboarding
  */
-export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity }) {
+export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onResetOnboarding }) {
   const theme = useTheme();
   const bottomSheetRef = useRef(null);
   const { timer: { currentActivity } } = useTimerConfig();
@@ -233,6 +242,7 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
           activityCarouselRef={activityCarouselRef}
           paletteCarouselRef={paletteCarouselRef}
           isPremiumUser={isPremiumUser}
+          onResetOnboarding={onResetOnboarding}
         />
       </BottomSheet>
     </View>

@@ -13,7 +13,7 @@ import { DialZone, AsideZone } from '../components/layout';
 import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
 import analytics from '../services/analytics';
 
-function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
+function TimerScreenContent({ autoStart = false, onAutoStartConsumed, onResetOnboarding }) {
   const theme = useTheme();
   const t = useTranslation();
   const { isLandscape } = useScreenOrientation(); // Detect orientation changes
@@ -247,18 +247,20 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed }) {
           flashActivity={flashActivity}
           isTimerRunning={isTimerRunning}
           onOpenSettings={() => setSettingsModalVisible(true)}
+          onResetOnboarding={onResetOnboarding}
         />
       )}
     </SafeAreaView>
   );
 }
 
-export default function TimerScreen({ autoStart, onAutoStartConsumed }) {
+export default function TimerScreen({ autoStart, onAutoStartConsumed, onResetOnboarding }) {
   return (
     <SafeAreaProvider>
       <TimerScreenContent
         autoStart={autoStart}
         onAutoStartConsumed={onAutoStartConsumed}
+        onResetOnboarding={onResetOnboarding}
       />
     </SafeAreaProvider>
   );

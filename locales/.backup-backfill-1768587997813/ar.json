@@ -1,0 +1,187 @@
+{
+  "common": {
+    "cancel": "إلغاء",
+    "ok": "حسناً",
+    "retry": "إعادة محاولة",
+    "continue": "متابعة"
+  },
+  "welcome": {
+    "title": "مرحباً بك في ResetPulse"
+  },
+  "invitation": "هل أنت مستعد?",
+  "onboarding": {
+    "restartGuide": "إعادة تشغيل الدليل",
+    "restartGuideDescription": "عرض شاشة الترحيب والنصائح مرة أخرى",
+    "paywall": {
+      "title": "لقد أنشأت لحظتك الأولى",
+      "profile": "الملف الشخصي:",
+      "question": "هل تريد إنشاء المزيد?",
+      "valueProposition": "15 لوح · 16 نشاط · إنشاءات غير محدودة",
+      "price": "4,99€ — مرة واحدة، إلى الأبد",
+      "ctaTrial": "جرب 7 أيام مجاناً"
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "interface": {
+      "pulseAnimationDescriptionOn": "الحركة مفعلة أثناء المؤقت",
+      "pulseAnimationDescriptionOff": "الحركة معطلة",
+      "pulseWarningTitle": "حركة النبض",
+      "pulseWarningMessage": "يفعّل هذا الخيار حركة بصرية متكررة.\n\nتجنب تفعيل هذه الميزة إذا كنت حساساً للتأثيرات البصرية أو لديك تاريخ مع الحساسية الضوئية.",
+      "pulseWarningEnable": "تفعيل"
+    },
+    "timer": {
+      "soundDescription": "اختر الصوت الذي سيتم تشغيله عند انتهاء المؤقت",
+      "keepAwakeDescriptionOn": "تبقى الشاشة مضاءة أثناء المؤقت",
+      "keepAwakeDescriptionOff": "يمكن قفل الشاشة أثناء المؤقت",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "themeLight": "☀️ فاتح",
+      "themeDark": "🌙 داكن",
+      "themeAuto": "📱 تلقائي",
+      "themeDescriptionAuto": "تلقائي (النظام)",
+      "themeDescriptionDark": "داكن",
+      "themeDescriptionLight": "فاتح"
+    },
+    "about": {
+      "title": "حول",
+      "appName": "ResetPulse",
+      "appDescription": "مؤقت بصري قابل للتخصيص",
+      "version": "الإصدار"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "افتح كل شيء",
+    "description": "كل الألوان.\nكل الأنشطة.\nراحتك القصوى.",
+    "features": "7 أيام مجاناً",
+    "price": "ثم %{price} مرة واحدة.\nملكك للأبد.",
+    "startTrial": "جرب 7 أيام مجاناً",
+    "restore": "استعادة مشترياتي",
+    "welcomeTitle": "مرحباً بك في النسخة المميزة! 🎉",
+    "welcomeMessage": "جميع اللوحات والأنشطة مفتوحة الآن.",
+    "welcomeButton": "رائع!",
+    "noConnection": "لا يوجد اتصال",
+    "noConnectionMessage": "تعذر تحميل العروض. تحقق من اتصالك بالإنترنت.",
+    "error": "خطأ",
+    "errorOfferings": "تعذر الحصول على العروض. حاول مرة أخرى لاحقاً.",
+    "errorPurchase": "حدث خطأ أثناء الشراء.",
+    "paymentPending": "الدفع قيد المعالجة",
+    "restoreSuccess": "نجحت الاستعادة",
+    "restoreSuccessMessage": "تمت استعادة مشترياتك. جميع الميزات المميزة مفتوحة.",
+    "restoreNone": "لم يتم العثور على مشتريات",
+    "restoreNoneMessage": "لم يتم العثور على مشتريات سابقة لهذا الحساب.",
+    "restoreError": "تعذرت استعادة مشترياتك.",
+    "unexpectedError": "حدث خطأ غير متوقع.",
+    "contactSupport": "الاتصال بالدعم",
+    "tooManyAttempts": "يرجى الاتصال بالدعم إذا استمرت المشكلة."
+  },
+  "activities": {
+    "none": "أساسي",
+    "work": "عمل",
+    "break": "استراحة",
+    "reading": "قراءة",
+    "study": "دراسة",
+    "meditation": "تأمل",
+    "yoga": "يوغا",
+    "sport": "رياضة",
+    "walking": "مشي",
+    "creativity": "إبداع",
+    "cooking": "طبخ",
+    "gaming": "ألعاب",
+    "homework": "واجب منزلي",
+    "music": "موسيقى",
+    "cleaning": "تنظيف"
+  },
+  "palettes": {
+    "earth": "الأرض",
+    "softLaser": "Soft Laser",
+    "classic": "كلاسيكي",
+    "tropical": "استوائي",
+    "zen": "زن",
+    "forest": "غابة",
+    "ocean": "محيط",
+    "dawn": "الشفق",
+    "dusk": "الغسق",
+    "soft": "لطيف",
+    "pastel_girly": "باستيل",
+    "autumn": "الخريف",
+    "lavender": "الخزامى",
+    "teal": "أزرق مخضر",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "جرس كلاسيكي",
+    "bell_melodic": "جرس لحني",
+    "microwave_vintage": "ميكروويف عتيق",
+    "microwave_ping": "تنبيه ميكروويف",
+    "kitchen_timer": "مؤقت مطبخ",
+    "kitchen_timer_2": "مؤقت ميكانيكي",
+    "egg_timer": "مؤقت البيض",
+    "toaster_bell": "محمصة خبز",
+    "ding_effect": "رنين بسيط",
+    "timer_complete": "اكتمال المؤقت"
+  },
+  "accessibility": {
+    "keepAwake": "إبقاء الشاشة مضاءة",
+    "rotationDirection": "اتجاه الدوران",
+    "activity": "Activité: %{name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur %{number}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "activities": "Activités premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "المزيد من الألوان",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "لحظة لنفسك؟",
+        "bodyPersonalized": "{{name}} الخاص بك ينتظرك {{emoji}} — {{duration}} دقيقة لك؟",
+        "bodyGeneric": "مؤقتك ينتظرك — خذ لحظة لنفسك"
+      },
+      "day7": {
+        "title": "فرصتك الأخيرة",
+        "body": "تجربة مجانية لمدة 7 أيام — احصل عليها قبل انتهاء صلاحيتها"
+      }
+    }
+  }
+}

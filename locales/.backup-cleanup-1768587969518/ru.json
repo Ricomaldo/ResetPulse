@@ -1,0 +1,279 @@
+{
+  "common": {
+    "settings": "Настройки",
+    "close": "Закрыть",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "ok": "ОК",
+    "skip": "Пропустить",
+    "retry": "Повторить",
+    "continue": "Продолжить"
+  },
+  "welcome": {
+    "title": "Добро пожаловать в ResetPulse",
+    "subtitle": "Выберите активность, настройте длительность, начните.",
+    "discover": "Начать"
+  },
+  "invitation": "Готов?",
+  "onboarding": {
+    "activities": "Выберите активность",
+    "dial": "Настройте длительность таймера",
+    "palette": "Меняйте цвета как хотите",
+    "controls": "Запуск, пауза или сброс",
+    "controlsSubtext": "Таймер продолжает работать в фоне",
+    "completion": "Наслаждайтесь ResetPulse!",
+    "restartGuide": "Перезапустить руководство",
+    "restartGuideDescription": "Показать приветственный экран и подсказки снова",
+    "tool": {
+      "title": "Что тебе лучше всего подходит?",
+      "creative": "Творческий",
+      "minimalist": "Минималист",
+      "multitask": "Мультизадачник",
+      "rational": "Рациональный"
+    },
+    "creation": {
+      "title": "Создай свой первый момент",
+      "subtitle": "Выбери эмодзи, имя и длительность"
+    },
+    "testStart": {
+      "title": "Когда готов, нажми",
+      "hint": ""
+    },
+    "testStop": {
+      "title": "Теперь отпусти, когда захочешь",
+      "hint": "",
+      "revealTitle": "Ты"
+    },
+    "paywall": {
+      "title": "Ты создал свой первый момент",
+      "profile": "Профиль:",
+      "question": "Хочешь создать ещё?",
+      "valueProposition": "15 палитр · 16 активностей · Неограниченное творчество",
+      "price": "4,99€ — Один раз, навсегда",
+      "ctaTrial": "7 дней бесплатно",
+      "ctaSkip": "Может быть позже"
+    },
+    "firstTimer": {
+      "title": "Твой таймер готов",
+      "profile": "Профиль",
+      "tool": "Инструмент",
+      "moment": "Момент",
+      "startButton": "Запустить мой первый таймер",
+      "completionMessage": "Отлично! Твоё пространство готово."
+    }
+  },
+  "settings": {
+    "title": "Настройки",
+    "interface": {
+      "title": "🪄 Интерфейс",
+      "minimalInterface": "Минимальный интерфейс",
+      "minimalInterfaceDescriptionOn": "Скрывать активности и цвета во время работы таймера",
+      "minimalInterfaceDescriptionOff": "Полный интерфейс во время таймера",
+      "digitalTimer": "Цифровой таймер",
+      "digitalTimerDescriptionOn": "Показывать оставшееся время в формате ММ:СС",
+      "digitalTimerDescriptionOff": "Цифровой таймер отключен",
+      "pulseAnimation": "Пульсация",
+      "pulseAnimationDescriptionOn": "Анимация включена во время таймера",
+      "pulseAnimationDescriptionOff": "Анимация отключена",
+      "pulseWarningTitle": "Пульсация",
+      "pulseWarningMessage": "Эта опция включает повторяющуюся визуальную анимацию.\n\nИзбегайте включения этой функции, если вы чувствительны к визуальным эффектам или имеете историю светочувствительности.",
+      "pulseWarningEnable": "Включить"
+    },
+    "timer": {
+      "title": "⚙️ Таймер",
+      "soundDescription": "Выберите звук, который будет воспроизведен по окончании таймера",
+      "dialMode": "Режим циферблата",
+      "dialMode60": "Шкала 60 минут",
+      "dialMode25": "Помодоро 25 минут",
+      "rotationDirection": "Направление вращения",
+      "rotationClockwise": "По часовой стрелке",
+      "rotationCounterClockwise": "Против часовой стрелки",
+      "keepAwake": "Не блокировать экран",
+      "keepAwakeDescriptionOn": "Экран остается активным во время таймера",
+      "keepAwakeDescriptionOff": "Экран может заблокироваться во время таймера",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "title": "🎨 Оформление",
+      "theme": "Тема",
+      "themeLight": "☀️ Светлая",
+      "themeDark": "🌙 Темная",
+      "themeAuto": "📱 Авто",
+      "themeDescriptionAuto": "Автоматически (система)",
+      "themeDescriptionDark": "Темная",
+      "themeDescriptionLight": "Светлая",
+      "showPalettes": "Показывать палитры",
+      "showPalettesDescriptionOn": "Палитры видны в интерфейсе",
+      "showPalettesDescriptionOff": "Палитры скрыты",
+      "palettesDescription": "Бесплатная версия: доступны Earth и Laser",
+      "showActivities": "Показывать активности",
+      "showActivitiesDescriptionOn": "Активности видны в интерфейсе",
+      "showActivitiesDescriptionOff": "Активности скрыты",
+      "activitiesDescription": "Выберите избранные, чтобы видеть их первыми"
+    },
+    "about": {
+      "title": "О приложении",
+      "appName": "ResetPulse",
+      "appDescription": "Настраиваемый визуальный таймер",
+      "version": "Версия"
+    },
+    "dev": {
+      "title": "🔧 Разработка",
+      "resetOnboarding": "Сбросить онбординг",
+      "resetOnboardingConfirmTitle": "Сбросить онбординг",
+      "resetOnboardingConfirmMessage": "Приветственный экран и подсказки будут показаны при следующем запуске приложения.",
+      "resetOnboardingConfirmButton": "Сбросить"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "Разблокируй всё",
+    "description": "Все цвета.\nВсе активности.\nТвой максимальный комфорт.",
+    "features": "7 ДНЕЙ БЕСПЛАТНО",
+    "price": "Затем %{price} один раз.\nТвоё навсегда.",
+    "priceOnce": "Один раз, навсегда",
+    "trial": "",
+    "startTrial": "Попробовать 7 дней бесплатно",
+    "maybeLater": "Может быть позже",
+    "restore": "Восстановить покупки",
+    "unlock": "Разблокировать ✨",
+    "onboardingToast": "Завершите руководство, чтобы открыть премиум палитры!",
+    "welcomeTitle": "Добро пожаловать в Premium! 🎉",
+    "welcomeMessage": "Все палитры и активности теперь разблокированы.",
+    "welcomeButton": "Отлично!",
+    "noConnection": "Нет соединения",
+    "noConnectionMessage": "Не удалось загрузить предложения. Проверьте подключение к интернету.",
+    "error": "Ошибка",
+    "errorOfferings": "Не удалось получить предложения. Попробуйте позже.",
+    "errorPurchase": "Произошла ошибка во время покупки.",
+    "paymentPending": "Платеж обрабатывается",
+    "restoreSuccess": "Восстановление успешно",
+    "restoreSuccessMessage": "Ваши покупки восстановлены. Все premium функции разблокированы.",
+    "restoreNone": "Покупки не найдены",
+    "restoreNoneMessage": "Для этой учетной записи не найдено предыдущих покупок.",
+    "restoreError": "Не удалось восстановить покупки.",
+    "unexpectedError": "Произошла непредвиденная ошибка.",
+    "contactSupport": "Свяжитесь с поддержкой",
+    "tooManyAttempts": "Пожалуйста, свяжитесь с поддержкой, если проблема не устранена."
+  },
+  "activities": {
+    "none": "Базовая",
+    "work": "Работа",
+    "break": "Перерыв",
+    "breathing": "Дыхание",
+    "reading": "Чтение",
+    "study": "Учеба",
+    "meditation": "Медитация",
+    "yoga": "Йога",
+    "sport": "Спорт",
+    "walking": "Прогулка",
+    "creativity": "Творчество",
+    "cooking": "Готовка",
+    "gaming": "Игры",
+    "homework": "Домашняя работа",
+    "music": "Музыка",
+    "cleaning": "Уборка"
+  },
+  "palettes": {
+    "earth": "Земля",
+    "softLaser": "Soft Laser",
+    "classic": "Классика",
+    "tropical": "Тропики",
+    "zen": "Дзен",
+    "forest": "Лес",
+    "ocean": "Океан",
+    "dawn": "Аврора",
+    "dusk": "Сумерки",
+    "soft": "Нежность",
+    "pastel_girly": "Пастель",
+    "autumn": "Осень",
+    "lavender": "Лаванда",
+    "teal": "Бирюзовый",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "Классический звонок",
+    "bell_melodic": "Мелодичный звонок",
+    "microwave_vintage": "Винтажная микроволновка",
+    "microwave_ping": "Пинг микроволновки",
+    "kitchen_timer": "Кухонный таймер",
+    "kitchen_timer_2": "Механический таймер",
+    "egg_timer": "Таймер для яиц",
+    "toaster_bell": "Тостер",
+    "ding_effect": "Простой динь",
+    "timer_complete": "Таймер завершен"
+  },
+  "accessibility": {
+    "settings": "Настройки",
+    "openSettings": "Открыть настройки приложения",
+    "closeSettings": "Закрыть настройки",
+    "minimalInterface": "Минимальный интерфейс",
+    "keepAwake": "Не блокировать экран",
+    "showPalettes": "Показывать палитры",
+    "showActivities": "Показывать активности",
+    "rotationDirection": "Направление вращения",
+    "startTrial": "Начать бесплатную пробную версию",
+    "maybeLater": "Может быть позже",
+    "restore": "Восстановить покупки",
+    "activity": "Activité: %{name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur %{number}",
+    "paletteNumber": "Palette %{name}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultDismiss": "Peut-être plus tard",
+    "activities": "Activités premium",
+    "colors": "Palettes premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "Ещё больше цветов",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Момент для себя?",
+        "bodyPersonalized": "Твой {{name}} тебя ждет {{emoji}} — {{duration}} мин для тебя?",
+        "bodyGeneric": "Твой таймер тебя ждет — возьми момент для себя"
+      },
+      "day7": {
+        "title": "Последний шанс",
+        "body": "7 дней бесплатно — используй это предложение пока не истекло"
+      }
+    }
+  }
+}

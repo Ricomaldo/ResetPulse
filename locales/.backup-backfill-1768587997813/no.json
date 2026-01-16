@@ -1,0 +1,166 @@
+{
+  "common": {
+    "cancel": "Avbryt",
+    "ok": "OK",
+    "retry": "Prøv igjen",
+    "continue": "Fortsett"
+  },
+  "welcome": {
+    "title": "Velkommen til ResetPulse"
+  },
+  "invitation": "Klar?",
+  "onboarding": {
+    "restartGuide": "Start guiden på nytt",
+    "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen",
+    "paywall": {
+      "title": "Du opprettet ditt første moment",
+      "profile": "Profil:",
+      "question": "Vil du opprett flere?",
+      "valueProposition": "15 paletter · 16 aktiviteter · Ubegrenset kreativitet",
+      "price": "4,99€ — En gang, for alltid",
+      "ctaTrial": "Prøv 7 dager gratis"
+    }
+  },
+  "settings": {
+    "title": "Innstillinger",
+    "interface": {
+      "pulseAnimationDescriptionOn": "Animering aktivert under timer",
+      "pulseAnimationDescriptionOff": "Animering deaktivert",
+      "pulseWarningTitle": "Pulsanimering",
+      "pulseWarningMessage": "Dette alternativet aktiverer en gjentakende visuell animering.\n\nUnngå å aktivere denne funksjonen hvis du er følsom for visuelle effekter eller har en historie med fotofølsomhet.",
+      "pulseWarningEnable": "Aktiver"
+    },
+    "timer": {
+      "soundDescription": "Velg lyden som skal spilles når timeren er ferdig",
+      "keepAwakeDescriptionOn": "Skjermen forblir våken under timeren",
+      "keepAwakeDescriptionOff": "Skjermen kan låses under timeren"
+    },
+    "appearance": {
+      "themeLight": "☀️ Lys",
+      "themeDark": "🌙 Mørk",
+      "themeAuto": "📱 Auto",
+      "themeDescriptionAuto": "Automatisk (system)",
+      "themeDescriptionDark": "Mørk",
+      "themeDescriptionLight": "Lys"
+    },
+    "about": {
+      "title": "Om",
+      "appName": "ResetPulse",
+      "appDescription": "Tilpassbar visuell timer",
+      "version": "Versjon"
+    }
+  },
+  "premium": {
+    "title": "Lås opp alt",
+    "description": "Alle farger.\nAlle aktiviteter.\nDin maksimale komfort.",
+    "features": "7 DAGER GRATIS",
+    "price": "Deretter %{price} én gang.\nDin for alltid.",
+    "startTrial": "Prøv 7 dager gratis",
+    "restore": "Gjenopprett kjøpene mine",
+    "welcomeTitle": "Velkommen Premium! 🎉",
+    "welcomeMessage": "Alle paletter og aktiviteter er nå låst opp.",
+    "welcomeButton": "Fantastisk!",
+    "noConnection": "Ingen tilkobling",
+    "noConnectionMessage": "Kan ikke laste tilbud. Sjekk internettilkoblingen din.",
+    "error": "Feil",
+    "errorOfferings": "Kan ikke hente tilbud. Prøv igjen senere.",
+    "errorPurchase": "En feil oppstod under kjøpet.",
+    "paymentPending": "Betaling pågår",
+    "restoreSuccess": "Gjenopprettelse vellykket",
+    "restoreSuccessMessage": "Kjøpene dine er gjenopprettet. Alle premiumfunksjoner er låst opp.",
+    "restoreNone": "Ingen kjøp funnet",
+    "restoreNoneMessage": "Ingen tidligere kjøp ble funnet for denne kontoen.",
+    "restoreError": "Kunne ikke gjenopprette kjøpene dine.",
+    "unexpectedError": "En uventet feil oppstod.",
+    "contactSupport": "Kontakt support",
+    "tooManyAttempts": "Vennligst kontakt support hvis problemet vedvarer."
+  },
+  "activities": {
+    "none": "Grunnleggende",
+    "work": "Arbeid",
+    "break": "Pause",
+    "reading": "Lesing",
+    "study": "Studie",
+    "meditation": "Meditasjon",
+    "yoga": "Yoga",
+    "sport": "Sport",
+    "walking": "Gåtur",
+    "creativity": "Kreativitet",
+    "cooking": "Matlaging",
+    "gaming": "Spill",
+    "homework": "Lekser",
+    "music": "Musikk",
+    "cleaning": "Rengjøring"
+  },
+  "palettes": {
+    "earth": "Jord",
+    "softLaser": "Soft Laser",
+    "classic": "Klassisk",
+    "tropical": "Tropisk",
+    "zen": "Zen",
+    "forest": "Skog",
+    "ocean": "Hav",
+    "dawn": "Aurora",
+    "dusk": "Skumring",
+    "soft": "Mild",
+    "pastel_girly": "Pasteller",
+    "autumn": "Høst",
+    "lavender": "Lavendel",
+    "teal": "Blågrønn",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "Klassisk bjelle",
+    "bell_melodic": "Melodisk bjelle",
+    "microwave_vintage": "Vintage mikrobølgeovn",
+    "microwave_ping": "Mikrobølgeovn ping",
+    "kitchen_timer": "Kjøkkentimer",
+    "kitchen_timer_2": "Mekanisk timer",
+    "egg_timer": "Eggtimer",
+    "toaster_bell": "Brødrister",
+    "ding_effect": "Enkel ding",
+    "timer_complete": "Timer fullført"
+  },
+  "accessibility": {
+    "keepAwake": "Hold skjermen våken",
+    "rotationDirection": "Rotasjonsretning",
+    "activity": "Activité: %{name}",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "colorNumber": "Couleur %{number}",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "activities": "Activités premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "Enda flere farger",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "Et øyeblikk for deg selv?",
+        "bodyPersonalized": "Din {{name}} venter på deg {{emoji}} — {{duration}} min for deg?",
+        "bodyGeneric": "Din timer venter — ta et øyeblikk for deg selv"
+      },
+      "day7": {
+        "title": "Siste sjanse",
+        "body": "7 dagers gratis prøveperiode — ta den før den utløper"
+      }
+    }
+  }
+}
