@@ -18,20 +18,15 @@
       "question": "Zin om meer te maken?",
       "valueProposition": "15 paletten · 16 activiteiten · Onbeperkt creatief",
       "price": "4,99€ — Eenmaal, voor altijd",
-      "ctaTrial": "7 dagen gratis proberen",
-      "ctaSkip": "Misschien later"
+      "ctaTrial": "7 dagen gratis proberen"
     },
     "intentions": {
-      "other": {
-        "defaultName": "My moment"
-      },
       "q1": {
         "title": "Your timer would be for...",
         "otherPlaceholder": "Like what?"
       },
       "q2": {
-        "title": "A little help with...",
-        "otherPlaceholder": "Like what?"
+        "title": "A little help with..."
       }
     },
     "creation": {
@@ -54,8 +49,7 @@
       },
       "filter1": {
         "title": "A timer that adapts to you",
-        "subtitle": "",
-        "cta": "Create my moment"
+        "subtitle": ""
       }
     },
     "v3": {
@@ -67,7 +61,6 @@
       },
       "filter5b": {
         "title": "Your ringtone",
-        "continue": "Continue",
         "skip": "Skip →"
       }
     }
@@ -83,10 +76,6 @@
     },
     "timer": {
       "soundDescription": "Kies het geluid dat aan het einde van de timer wordt afgespeeld",
-      "rotationDirection": "Draairichting",
-      "rotationClockwise": "Met de klok mee",
-      "rotationCounterClockwise": "Tegen de klok in",
-      "keepAwake": "Scherm wakker houden",
       "keepAwakeDescriptionOn": "Scherm blijft wakker tijdens timer",
       "keepAwakeDescriptionOff": "Scherm kan vergrendelen tijdens timer",
       "longPressStart": "Enable long tap to start",
@@ -99,7 +88,6 @@
       "dialScaleDescription": "Maximum duration displayed on the dial"
     },
     "appearance": {
-      "theme": "Thema",
       "themeLight": "☀️ Licht",
       "themeDark": "🌙 Donker",
       "themeAuto": "📱 Auto",
@@ -132,7 +120,6 @@
       "configuration": "CONFIGURATION",
       "timerOptions": "Timer options",
       "keepAwake": "Keep Awake",
-      "rotationDirection": "Rotation direction",
       "notificationSound": "Notification sound",
       "theme": "Theme",
       "favorites": "YOUR FAVORITES",
@@ -161,7 +148,6 @@
     "description": "Alle kleuren.\nAlle activiteiten.\nJouw maximale comfort.",
     "features": "7 DAGEN GRATIS",
     "startTrial": "7 dagen gratis proberen",
-    "maybeLater": "Misschien later",
     "restore": "Mijn aankopen herstellen",
     "welcomeTitle": "Welkom Premium! 🎉",
     "welcomeMessage": "Alle paletten en activiteiten zijn nu ontgrendeld.",
@@ -216,7 +202,6 @@
     "dawn": "Aurora",
     "dusk": "Schemering",
     "soft": "Zacht",
-    "pastel_girly": "Pastels",
     "autumn": "Herfst",
     "lavender": "Lavendel",
     "teal": "Blauwgroen",
@@ -268,7 +253,6 @@
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
-    "defaultDismiss": "Peut-être plus tard",
     "activities": "Activités premium",
     "moreColors": {
       "title": "Even more colors",
@@ -299,7 +283,6 @@
       "preview": "Preview",
       "previewPlaceholder": "My activity",
       "buttonCreate": "Create",
-      "buttonCancel": "Cancel",
       "errorTitle": "Missing information",
       "errorEmoji": "Please choose an emoji for your activity.",
       "errorName": "Please enter a name for your activity."
@@ -309,18 +292,11 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "deleteConfirmButton": "Delete",
-      "deleteCancelButton": "Cancel"
+      "deleteConfirmMessage": "This action is irreversible."
     },
     "duration": {
       "minutes": "min"
     }
-  },
-  "moreColors": {
-    "title": "Nog meer kleuren",
-    "subtitle": "(subtitle)",
-    "tagline": "(tagline)"
   },
   "notifications": {
     "reminder": {

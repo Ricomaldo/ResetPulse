@@ -86,7 +86,7 @@ export default function Filter080SoundPersonalize({ onContinue }) {
       centerContent={false}
       footerVariant="primary-skip"
       primaryButtonProps={{
-        label: t('onboarding.v3.filter5b.continue'),
+        label: t('common.continue'),
         onPress: handleContinue,
         accessibilityHint: 'Confirm selected sound and continue to next step',
       }}

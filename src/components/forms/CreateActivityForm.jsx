@@ -101,7 +101,7 @@ export default function CreateActivityForm({
       // Submit with auto-populated or custom data
       onSubmit({
         emoji: selectedEmoji,
-        name: activityName.trim() || t('onboarding.intentions.other.defaultName'),
+        name: activityName.trim() || t('onboarding.launch.defaultActivity'),
         defaultDuration: duration,
       });
       return;
@@ -417,7 +417,7 @@ export default function CreateActivityForm({
             {selectedEmoji || '?'}
           </Text>
           <Text style={styles.emojiInputPlaceholder}>
-            {selectedEmoji ? t('customActivities.create.emojiLabel') : 'Appuyer pour choisir'}
+            {selectedEmoji ? t('customActivities.create.emojiLabel') : t('customActivities.create.emojiPlaceholder')}
           </Text>
         </TouchableOpacity>
 
@@ -545,12 +545,12 @@ export default function CreateActivityForm({
             style={styles.cancelButton}
             onPress={onCancel}
             activeOpacity={0.7}
-            accessibilityLabel={t('customActivities.create.buttonCancel')}
+            accessibilityLabel={t('common.cancel')}
             accessibilityRole="button"
             accessibilityHint={t('accessibility.closeModalHint')}
           >
             <Text style={styles.cancelButtonText}>
-              {t('customActivities.create.buttonCancel')}
+              {t('common.cancel')}
             </Text>
           </TouchableOpacity>
         )}

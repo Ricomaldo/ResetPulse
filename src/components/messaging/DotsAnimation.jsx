@@ -10,58 +10,88 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { rs } from '../../styles/responsive';
 
 /**
- * DotsAnimation - Wave of 3 dots with staggered opacity animation
+ * DotsAnimation - Sequential dots animation
  *
- * Animation: Each dot cycles opacity 0.3 → 1 → 0.3 in 800ms, staggered by 150ms
- * Result: Breathing wave effect that suggests time passing
+ * Animation: Dots appear sequentially with 1s interval
+ * Sequence: 0 → 1 → 1+2 → 1+2+3 → reset (4s total cycle)
+ * Result: Progressive appearance effect that shows time passing
  *
  * @param {boolean} isVisible - Controls if dots should be animated (true = RUNNING, false = hidden)
  */
 function DotsAnimation({ isVisible = false }) {
   const theme = useTheme();
 
-  // Create 3 animated values for staggered wave
-  const dot1OpacityRef = useRef(new Animated.Value(0.3)).current;
-  const dot2OpacityRef = useRef(new Animated.Value(0.3)).current;
-  const dot3OpacityRef = useRef(new Animated.Value(0.3)).current;
+  // Create 3 animated values for sequential appearance
+  const dot1OpacityRef = useRef(new Animated.Value(0)).current;
+  const dot2OpacityRef = useRef(new Animated.Value(0)).current;
+  const dot3OpacityRef = useRef(new Animated.Value(0)).current;
 
   // Start animation loop when isVisible changes
   React.useEffect(() => {
     if (!isVisible) return;
 
-    // Helper to create loop animation for one dot
-    const createDotAnimation = (opacityRef, delay) => {
-      return Animated.loop(
-        Animated.sequence([
-          Animated.delay(delay), // Stagger delay
-          Animated.timing(opacityRef, {
-            toValue: 1,
-            duration: 400,
+    // Sequential animation: 0 → 1 → 1+2 → 1+2+3 → reset
+    const animation = Animated.loop(
+      Animated.sequence([
+        // State 0: all hidden (0s)
+        Animated.delay(0),
+
+        // State 1: dot 1 appears (1s)
+        Animated.timing(dot1OpacityRef, {
+          toValue: 1,
+          duration: 200, // Quick fade in
+          useNativeDriver: true,
+        }),
+        Animated.delay(800), // Hold for rest of 1s
+
+        // State 2: dot 2 appears (2s)
+        Animated.timing(dot2OpacityRef, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.delay(800),
+
+        // State 3: dot 3 appears (3s)
+        Animated.timing(dot3OpacityRef, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.delay(800), // Hold state 3 for 1s total
+
+        // Hold state 1+2+3 visible for an extra beat
+        Animated.delay(500),
+
+        // Fade out all dots (quick)
+        Animated.parallel([
+          Animated.timing(dot1OpacityRef, {
+            toValue: 0,
+            duration: 200,
             useNativeDriver: true,
           }),
-          Animated.timing(opacityRef, {
-            toValue: 0.3,
-            duration: 400,
+          Animated.timing(dot2OpacityRef, {
+            toValue: 0,
+            duration: 200,
             useNativeDriver: true,
           }),
-        ])
-      );
-    };
+          Animated.timing(dot3OpacityRef, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]),
 
-    // Start all 3 animations with staggered delays
-    const anim1 = createDotAnimation(dot1OpacityRef, 0); // 0ms delay
-    const anim2 = createDotAnimation(dot2OpacityRef, 150); // 150ms delay
-    const anim3 = createDotAnimation(dot3OpacityRef, 300); // 300ms delay
+        // Stay at "aucun" state for 1 second
+        Animated.delay(1000),
+      ])
+    );
 
-    anim1.start();
-    anim2.start();
-    anim3.start();
+    animation.start();
 
     // Cleanup
     return () => {
-      anim1.stop();
-      anim2.stop();
-      anim3.stop();
+      animation.stop();
     };
   }, [isVisible, dot1OpacityRef, dot2OpacityRef, dot3OpacityRef]);
 
@@ -78,7 +108,7 @@ function DotsAnimation({ isVisible = false }) {
       width: dotSize,
       height: dotSize,
       borderRadius: dotSize / 2,
-      backgroundColor: theme.colors.text,
+      backgroundColor: theme.colors.brand.neutral,
       marginHorizontal: spacing / 2,
     },
   });

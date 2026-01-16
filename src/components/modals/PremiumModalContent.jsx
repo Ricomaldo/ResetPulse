@@ -503,7 +503,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
           accessibilityHint={t('accessibility.closeModalHint')}
         >
           <Text style={styles.secondaryButtonText}>
-            {t('premium.maybeLater')}
+            {t('twoTimers.dismiss')}
           </Text>
         </TouchableOpacity>
 

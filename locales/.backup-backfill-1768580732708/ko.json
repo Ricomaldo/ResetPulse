@@ -1,0 +1,183 @@
+{
+  "common": {
+    "cancel": "취소",
+    "ok": "확인",
+    "retry": "다시 시도",
+    "continue": "계속"
+  },
+  "welcome": {
+    "title": "ResetPulse에 오신 것을 환영합니다"
+  },
+  "invitation": "준비됐어?",
+  "onboarding": {
+    "restartGuide": "가이드 다시 시작",
+    "restartGuideDescription": "환영 화면과 팁 다시 표시",
+    "paywall": {
+      "title": "첫 번째 모멘트를 만들었어요",
+      "profile": "프로필:",
+      "question": "더 만들고 싶어요?",
+      "valueProposition": "15 팔레트 · 16 활동 · 무제한 생성",
+      "price": "4,99€ — 한 번, 영원히",
+      "ctaTrial": "7일 무료 체험"
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "interface": {
+      "pulseAnimationDescriptionOn": "타이머 실행 중 애니메이션 활성화",
+      "pulseAnimationDescriptionOff": "애니메이션 비활성화",
+      "pulseWarningTitle": "펄스 애니메이션",
+      "pulseWarningMessage": "이 옵션은 반복적인 시각 효과를 활성화합니다.\n\n시각 효과에 민감하거나 광과민성 병력이 있는 경우 이 기능을 활성화하지 마세요.",
+      "pulseWarningEnable": "활성화"
+    },
+    "timer": {
+      "soundDescription": "타이머 종료 시 재생할 소리 선택",
+      "keepAwakeDescriptionOn": "타이머 실행 중 화면 켜짐 유지",
+      "keepAwakeDescriptionOff": "타이머 실행 중 화면 잠금 가능",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "themeLight": "☀️ 라이트",
+      "themeDark": "🌙 다크",
+      "themeAuto": "📱 자동",
+      "themeDescriptionAuto": "자동(시스템 설정)",
+      "themeDescriptionDark": "다크",
+      "themeDescriptionLight": "라이트"
+    },
+    "about": {
+      "title": "정보",
+      "appName": "ResetPulse",
+      "appDescription": "사용자 정의 가능한 비주얼 타이머",
+      "version": "버전"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "모두 잠금 해제",
+    "description": "모든 색상.\n모든 활동.\n최고의 편안함.",
+    "features": "7일 무료",
+    "startTrial": "7일 무료 체험",
+    "restore": "구매 복원",
+    "welcomeTitle": "프리미엄을 환영합니다! 🎉",
+    "welcomeMessage": "모든 팔레트와 활동이 잠금 해제되었습니다.",
+    "welcomeButton": "좋아요!",
+    "noConnection": "연결 없음",
+    "noConnectionMessage": "제안을 불러올 수 없습니다. 인터넷 연결을 확인하세요.",
+    "error": "오류",
+    "errorOfferings": "제안을 가져올 수 없습니다. 나중에 다시 시도하세요.",
+    "errorPurchase": "구매 중 오류가 발생했습니다.",
+    "paymentPending": "결제 진행 중",
+    "restoreSuccess": "복원 성공",
+    "restoreSuccessMessage": "구매가 복원되었습니다. 모든 프리미엄 기능이 잠금 해제되었습니다.",
+    "restoreNone": "구매를 찾을 수 없음",
+    "restoreNoneMessage": "이 계정의 이전 구매를 찾을 수 없습니다.",
+    "restoreError": "구매를 복원할 수 없습니다.",
+    "unexpectedError": "예기치 않은 오류가 발생했습니다.",
+    "contactSupport": "지원팀에 문의",
+    "tooManyAttempts": "문제가 계속되면 지원팀에 문의하세요."
+  },
+  "activities": {
+    "none": "기본",
+    "work": "작업",
+    "break": "휴식",
+    "reading": "독서",
+    "study": "공부",
+    "meditation": "명상",
+    "yoga": "요가",
+    "sport": "운동",
+    "walking": "걷기",
+    "creativity": "창작",
+    "cooking": "요리",
+    "gaming": "게임",
+    "homework": "숙제",
+    "music": "음악",
+    "cleaning": "청소"
+  },
+  "palettes": {
+    "earth": "대지",
+    "softLaser": "Soft Laser",
+    "classic": "클래식",
+    "tropical": "트로피컬",
+    "zen": "선",
+    "forest": "숲",
+    "ocean": "바다",
+    "dawn": "오로라",
+    "dusk": "황혼",
+    "soft": "부드러운",
+    "pastel_girly": "파스텔",
+    "autumn": "가을",
+    "lavender": "라벤더",
+    "teal": "청록",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "클래식 벨",
+    "bell_melodic": "멜로딕 벨",
+    "microwave_vintage": "빈티지 전자레인지",
+    "microwave_ping": "전자레인지 핑",
+    "kitchen_timer": "주방 타이머",
+    "kitchen_timer_2": "기계식 타이머",
+    "egg_timer": "에그 타이머",
+    "toaster_bell": "토스터",
+    "ding_effect": "심플 딩",
+    "timer_complete": "타이머 완료"
+  },
+  "accessibility": {
+    "keepAwake": "화면 켜짐 유지",
+    "rotationDirection": "회전 방향",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "activities": "Activités premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "더 많은 색상",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "자신을 위한 시간?",
+        "bodyGeneric": "당신의 타이머가 기다리고 있습니다 — 자신을 위한 시간을 가져보세요"
+      },
+      "day7": {
+        "title": "마지막 기회",
+        "body": "7일 무료 체험 — 만료되기 전에 지금 받으세요"
+      }
+    }
+  }
+}

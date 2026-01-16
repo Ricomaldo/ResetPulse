@@ -181,7 +181,7 @@ export default function Filter080Paywall({
           accessibilityHint="Start 7-day free trial to unlock all premium features"
         />
         <SecondaryButton
-          label={t('onboarding.paywall.ctaSkip')}
+          label={t('twoTimers.dismiss')}
           onPress={handleSkip}
           disabled={isAnyOperationInProgress}
           style={styles.skipButton}

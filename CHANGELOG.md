@@ -1,7 +1,70 @@
 ---
 created: '2025-12-14'
-updated: '2026-01-15'
+updated: '2026-01-16'
 status: active
+---
+
+## [2.1.3] - 2026-01-16
+
+### ✨ Visual & Animation Enhancements
+
+#### PulseButton Second Hand Animation
+- **Added rotating indicator**: Shows time passing with smooth animation during RUNNING state
+  - Second hand (trotteuse) completes one rotation per minute (60s cycle)
+  - Comet trail effect: 4 dots with decreasing size (100% → 80% → 60% → 40%) and opacity
+  - Uses accent color (gold #D4A853) for visual coherence
+  - Positioned on outer edge of button with `pointerEvents="none"` (doesn't block tap/long press)
+
+#### PulseButton Long Press Visual
+- **Changed progress circle color**: White → accent (gold) for consistency with second hand
+- Background circle and animated progress both use `theme.colors.brand.accent`
+
+#### Message Animation System
+- **Breathing fade effect**: Message and dots pulse together during RUNNING state
+  - Opacity range: 1.0 → 0.65 → 1.0 (35% variation, 3s cycle)
+  - More visible than previous 15% variation
+  - Synchronized with sequential dots animation
+- **Sequential dots animation**: Redesigned for clearer progression
+  - Pattern: 0 → 1 → 1+2 → 1+2+3 → pause → reset
+  - 1 second between each state
+  - 500ms hold at full state (1+2+3)
+  - 1 second pause at empty state
+  - Total cycle: ~5.7 seconds
+- **Color refinement**:
+  - Message text: `theme.colors.text` (charcoal #2D2520)
+  - Dots: `theme.colors.brand.neutral` (taupe #A89B8F)
+
+### 🎯 UX Improvements
+
+#### Activity Change Protection
+- **Block activity selection while timer running**: Prevents accidental changes during session
+  - ActivityCarousel receives `isRunning` prop from parent components
+  - Guard in `handleActivityPress` blocks tap when `isRunning === true`
+  - Haptic warning feedback (`haptics.warning()`) on blocked attempt
+  - Visual feedback: carousel dims to 50% opacity when disabled
+  - Applies to both FavoriteToolBox (snap 18%) and ToolBox (snap 32%)
+
+#### BottomSheet Gesture Handling
+- **Improved scroll/swipe recognition**: Better distinction between vertical drawer swipe and horizontal carousel scroll
+  - `activeOffsetY={[-10, 10]}`: Requires 10px vertical movement before capturing gesture
+  - `failOffsetX={[-10, 10]}`: Releases gesture if 10px horizontal movement (for carousels)
+  - `bounces` enabled only at snap 2 (90%) where Settings content scrolls
+  - `overScrollMode="never"` on Android for cleaner UX
+  - Fixes occasional scroll blocking at snap 2
+
+#### ControlBar Layout
+- **Removed background**: ToolboxItem no longer applies `surfaceElevated` background to `controlBar` variant
+  - Digital timer now transparent, blends with drawer background
+  - Cleaner visual hierarchy
+- **Improved vertical spacing**: Added `marginTop: rs(16)` to push digital timer down slightly
+  - Better visual balance in drawer
+
+### 🐛 Bug Fixes
+
+#### Component Prop Propagation
+- **Fixed isRunning prop chain**: Properly flows from TimerScreen → AsideZone → SheetContent → FavoriteToolBox/ToolBox → ActivityCarousel/ControlBar
+- **PropTypes consistency**: Added/updated PropTypes for all modified components
+
 ---
 
 ## [2.1.2] - 2026-01-15

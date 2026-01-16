@@ -1,0 +1,183 @@
+{
+  "common": {
+    "cancel": "取消",
+    "ok": "确定",
+    "retry": "重试",
+    "continue": "继续"
+  },
+  "welcome": {
+    "title": "欢迎使用 ResetPulse"
+  },
+  "invitation": "准备好了吗?",
+  "onboarding": {
+    "restartGuide": "重新开始引导",
+    "restartGuideDescription": "再次显示欢迎屏幕和提示",
+    "paywall": {
+      "title": "你创建了第一个时刻",
+      "profile": "个人资料:",
+      "question": "想要创建更多?",
+      "valueProposition": "15 调色板 · 16 活动 · 无限创建",
+      "price": "4,99€ — 一次性，永久拥有",
+      "ctaTrial": "免费试用 7 天"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "interface": {
+      "pulseAnimationDescriptionOn": "计时器运行时启用动画",
+      "pulseAnimationDescriptionOff": "动画已禁用",
+      "pulseWarningTitle": "脉冲动画",
+      "pulseWarningMessage": "此选项会启用重复的视觉动画。\n\n如果您对视觉效果敏感或有光敏史,请避免启用此功能。",
+      "pulseWarningEnable": "启用"
+    },
+    "timer": {
+      "soundDescription": "选择计时器结束时播放的声音",
+      "keepAwakeDescriptionOn": "计时器运行时屏幕保持常亮",
+      "keepAwakeDescriptionOff": "计时器运行时屏幕可以锁定",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "themeLight": "☀️ 浅色",
+      "themeDark": "🌙 深色",
+      "themeAuto": "📱 自动",
+      "themeDescriptionAuto": "自动(系统)",
+      "themeDescriptionDark": "深色",
+      "themeDescriptionLight": "浅色"
+    },
+    "about": {
+      "title": "关于",
+      "appName": "ResetPulse",
+      "appDescription": "可定制的视觉计时器",
+      "version": "版本"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "解锁全部",
+    "description": "所有颜色。\n所有活动。\n你的最大舒适。",
+    "features": "7天免费",
+    "startTrial": "免费试用7天",
+    "restore": "恢复我的购买",
+    "welcomeTitle": "欢迎使用高级版! 🎉",
+    "welcomeMessage": "所有调色板和活动现已解锁。",
+    "welcomeButton": "太棒了!",
+    "noConnection": "无网络连接",
+    "noConnectionMessage": "无法加载优惠信息。请检查您的网络连接。",
+    "error": "错误",
+    "errorOfferings": "无法获取优惠信息。请稍后再试。",
+    "errorPurchase": "购买过程中发生错误。",
+    "paymentPending": "付款处理中",
+    "restoreSuccess": "恢复成功",
+    "restoreSuccessMessage": "您的购买已恢复。所有高级功能已解锁。",
+    "restoreNone": "未找到购买记录",
+    "restoreNoneMessage": "未找到此账户的购买记录。",
+    "restoreError": "无法恢复您的购买。",
+    "unexpectedError": "发生意外错误。",
+    "contactSupport": "联系支持",
+    "tooManyAttempts": "如果问题仍未解决，请联系支持。"
+  },
+  "activities": {
+    "none": "基础",
+    "work": "工作",
+    "break": "休息",
+    "reading": "阅读",
+    "study": "学习",
+    "meditation": "冥想",
+    "yoga": "瑜伽",
+    "sport": "运动",
+    "walking": "散步",
+    "creativity": "创作",
+    "cooking": "烹饪",
+    "gaming": "游戏",
+    "homework": "作业",
+    "music": "音乐",
+    "cleaning": "清洁"
+  },
+  "palettes": {
+    "earth": "大地",
+    "softLaser": "Soft Laser",
+    "classic": "经典",
+    "tropical": "热带",
+    "zen": "禅",
+    "forest": "森林",
+    "ocean": "海洋",
+    "dawn": "极光",
+    "dusk": "黄昏",
+    "soft": "温柔",
+    "pastel_girly": "粉彩",
+    "autumn": "秋天",
+    "lavender": "薰衣草",
+    "teal": "青绿",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "经典铃声",
+    "bell_melodic": "旋律铃声",
+    "microwave_vintage": "复古微波炉",
+    "microwave_ping": "微波炉提示音",
+    "kitchen_timer": "厨房计时器",
+    "kitchen_timer_2": "机械计时器",
+    "egg_timer": "煮蛋计时器",
+    "toaster_bell": "烤面包机",
+    "ding_effect": "简单叮声",
+    "timer_complete": "计时器完成"
+  },
+  "accessibility": {
+    "keepAwake": "保持屏幕常亮",
+    "rotationDirection": "旋转方向",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "activities": "Activités premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "更多颜色",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "为自己留出一刻?",
+        "bodyGeneric": "你的计时器在等待 — 为自己留出一刻"
+      },
+      "day7": {
+        "title": "最后机会",
+        "body": "7天免费试用 — 赶在过期前获取"
+      }
+    }
+  }
+}

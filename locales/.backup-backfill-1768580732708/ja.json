@@ -1,0 +1,183 @@
+{
+  "common": {
+    "cancel": "キャンセル",
+    "ok": "OK",
+    "retry": "再試行",
+    "continue": "続ける"
+  },
+  "welcome": {
+    "title": "ResetPulseへようこそ"
+  },
+  "invitation": "準備はいい?",
+  "onboarding": {
+    "restartGuide": "ガイドを再表示",
+    "restartGuideDescription": "ウェルカム画面とヒントを再度表示",
+    "paywall": {
+      "title": "最初のモーメントを作成しました",
+      "profile": "プロフィール:",
+      "question": "もっと作りたい?",
+      "valueProposition": "15パレット・16アクティビティ・無制限の作成",
+      "price": "4,99€ — 一度だけ、永遠に",
+      "ctaTrial": "7日間無料で試す"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "interface": {
+      "pulseAnimationDescriptionOn": "タイマー動作中のアニメーションオン",
+      "pulseAnimationDescriptionOff": "アニメーションオフ",
+      "pulseWarningTitle": "パルスアニメーション",
+      "pulseWarningMessage": "この機能は繰り返しの視覚効果を有効にします。\n\n視覚効果に敏感な方や光過敏症の既往がある方は、この機能を有効にしないでください。",
+      "pulseWarningEnable": "有効にする"
+    },
+    "timer": {
+      "soundDescription": "タイマー終了時に再生するサウンドを選択",
+      "keepAwakeDescriptionOn": "タイマー動作中は画面をスリープさせない",
+      "keepAwakeDescriptionOff": "タイマー動作中も画面をスリープ可能",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
+    },
+    "appearance": {
+      "themeLight": "☀️ ライト",
+      "themeDark": "🌙 ダーク",
+      "themeAuto": "📱 自動",
+      "themeDescriptionAuto": "自動(システム設定)",
+      "themeDescriptionDark": "ダーク",
+      "themeDescriptionLight": "ライト"
+    },
+    "about": {
+      "title": "このアプリについて",
+      "appName": "ResetPulse",
+      "appDescription": "カスタマイズ可能なビジュアルタイマー",
+      "version": "バージョン"
+    },
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    }
+  },
+  "premium": {
+    "title": "すべてを解放",
+    "description": "すべてのカラー。\nすべてのアクティビティ。\n最高の快適さ。",
+    "features": "7日間無料",
+    "startTrial": "7日間無料で試す",
+    "restore": "購入を復元",
+    "welcomeTitle": "プレミアムへようこそ 🎉",
+    "welcomeMessage": "すべてのパレットとアクティビティがアンロックされました。",
+    "welcomeButton": "素晴らしい",
+    "noConnection": "接続なし",
+    "noConnectionMessage": "オファーを読み込めません。インターネット接続を確認してください。",
+    "error": "エラー",
+    "errorOfferings": "オファーを取得できません。後でもう一度お試しください。",
+    "errorPurchase": "購入中にエラーが発生しました。",
+    "paymentPending": "決済処理中",
+    "restoreSuccess": "復元成功",
+    "restoreSuccessMessage": "購入が復元されました。すべてのプレミアム機能がアンロックされました。",
+    "restoreNone": "購入が見つかりません",
+    "restoreNoneMessage": "このアカウントの購入履歴が見つかりませんでした。",
+    "restoreError": "購入を復元できませんでした。",
+    "unexpectedError": "予期しないエラーが発生しました。",
+    "contactSupport": "サポートに連絡",
+    "tooManyAttempts": "問題が解決しない場合はサポートにお問い合わせください。"
+  },
+  "activities": {
+    "none": "基本",
+    "work": "仕事",
+    "break": "休憩",
+    "reading": "読書",
+    "study": "勉強",
+    "meditation": "瞑想",
+    "yoga": "ヨガ",
+    "sport": "運動",
+    "walking": "ウォーキング",
+    "creativity": "創作",
+    "cooking": "料理",
+    "gaming": "ゲーム",
+    "homework": "宿題",
+    "music": "音楽",
+    "cleaning": "掃除"
+  },
+  "palettes": {
+    "earth": "大地",
+    "softLaser": "Soft Laser",
+    "classic": "クラシック",
+    "tropical": "トロピカル",
+    "zen": "禅",
+    "forest": "森",
+    "ocean": "海",
+    "dawn": "オーロラ",
+    "dusk": "夕暮れ",
+    "soft": "やさしい",
+    "pastel_girly": "パステル",
+    "autumn": "秋",
+    "lavender": "ラベンダー",
+    "teal": "青緑",
+    "darkLaser": "Dark Laser"
+  },
+  "sounds": {
+    "bell_classic": "クラシックベル",
+    "bell_melodic": "メロディックベル",
+    "microwave_vintage": "ビンテージ電子レンジ",
+    "microwave_ping": "電子レンジピン",
+    "kitchen_timer": "キッチンタイマー",
+    "kitchen_timer_2": "メカニカルタイマー",
+    "egg_timer": "エッグタイマー",
+    "toaster_bell": "トースター",
+    "ding_effect": "シンプルディン",
+    "timer_complete": "タイマー完了"
+  },
+  "accessibility": {
+    "keepAwake": "画面をスリープさせない",
+    "rotationDirection": "回転方向",
+    "activityLocked": "Activité premium - Déverouiller pour accéder",
+    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
+    "moreActivities": "Découvrir plus d'activités",
+    "discoverPremium": "Appuyez pour découvrir les activités premium",
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+  },
+  "discovery": {
+    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "activities": "Activités premium"
+  },
+  "customActivities": {
+    "toast": {
+      "created": "Moment créé avec succès",
+      "updated": "Moment mis à jour",
+      "deleted": "Moment supprimé"
+    },
+    "addButton": "Ajouter un moment",
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+  },
+  "moreColors": {
+    "title": "さらに多くの色",
+    "subtitle": "(subtitle)",
+    "tagline": "(tagline)"
+  },
+  "notifications": {
+    "reminder": {
+      "day3": {
+        "title": "自分のための時間?",
+        "bodyGeneric": "あなたのタイマーが待っています — 自分のための時間を取ってください"
+      },
+      "day7": {
+        "title": "最後のチャンス",
+        "body": "7日間の無料トライアル — 期限切れになる前に今しましょう"
+      }
+    }
+  }
+}

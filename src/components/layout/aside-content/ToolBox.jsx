@@ -42,7 +42,7 @@ export default function ToolBox({
         compact
       />
     ),
-    activities: <ActivityCarousel key="activities" ref={activityCarouselRef} />,
+    activities: <ActivityCarousel key="activities" ref={activityCarouselRef} isRunning={isTimerRunning} />,
     colors: <PaletteCarousel key="colors" ref={paletteCarouselRef} />,
   };
 

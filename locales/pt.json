@@ -18,20 +18,15 @@
       "question": "Queres criar mais?",
       "valueProposition": "15 paletas · 16 atividades · Criações ilimitadas",
       "price": "4,99€ — Uma vez, para sempre",
-      "ctaTrial": "Testa 7 dias grátis",
-      "ctaSkip": "Talvez mais tarde"
+      "ctaTrial": "Testa 7 dias grátis"
     },
     "intentions": {
-      "other": {
-        "defaultName": "My moment"
-      },
       "q1": {
         "title": "Your timer would be for...",
         "otherPlaceholder": "Like what?"
       },
       "q2": {
-        "title": "A little help with...",
-        "otherPlaceholder": "Like what?"
+        "title": "A little help with..."
       }
     },
     "creation": {
@@ -54,8 +49,7 @@
       },
       "filter1": {
         "title": "A timer that adapts to you",
-        "subtitle": "",
-        "cta": "Create my moment"
+        "subtitle": ""
       }
     },
     "v3": {
@@ -67,7 +61,6 @@
       },
       "filter5b": {
         "title": "Your ringtone",
-        "continue": "Continue",
         "skip": "Skip →"
       }
     }
@@ -83,10 +76,6 @@
     },
     "timer": {
       "soundDescription": "Escolhe o som que será reproduzido no final do temporizador",
-      "rotationDirection": "Direção de rotação",
-      "rotationClockwise": "Sentido horário",
-      "rotationCounterClockwise": "Sentido anti-horário",
-      "keepAwake": "Manter ecrã ativo",
       "keepAwakeDescriptionOn": "O ecrã permanece ativo durante o temporizador",
       "keepAwakeDescriptionOff": "O ecrã pode bloquear durante o temporizador",
       "longPressStart": "Enable long tap to start",
@@ -99,7 +88,6 @@
       "dialScaleDescription": "Maximum duration displayed on the dial"
     },
     "appearance": {
-      "theme": "Tema",
       "themeLight": "☀️ Claro",
       "themeDark": "🌙 Escuro",
       "themeAuto": "📱 Auto",
@@ -132,7 +120,6 @@
       "configuration": "CONFIGURATION",
       "timerOptions": "Timer options",
       "keepAwake": "Keep Awake",
-      "rotationDirection": "Rotation direction",
       "notificationSound": "Notification sound",
       "theme": "Theme",
       "favorites": "YOUR FAVORITES",
@@ -161,7 +148,6 @@
     "description": "Todas as cores.\nTodas as atividades.\nO teu conforto máximo.",
     "features": "7 DIAS GRÁTIS",
     "startTrial": "Experimentar 7 dias grátis",
-    "maybeLater": "Talvez mais tarde",
     "restore": "Restaurar as minhas compras",
     "welcomeTitle": "Bem-vindo Premium! 🎉",
     "welcomeMessage": "Todas as paletas e atividades estão agora desbloqueadas.",
@@ -216,7 +202,6 @@
     "dawn": "Aurora",
     "dusk": "Crepúsculo",
     "soft": "Suave",
-    "pastel_girly": "Pastéis",
     "autumn": "Outono",
     "lavender": "Lavanda",
     "teal": "Turquesa",
@@ -268,7 +253,6 @@
   },
   "discovery": {
     "defaultCta": "Desbloquear tudo - 7 dias grátis",
-    "defaultDismiss": "Talvez mais tarde",
     "activities": "Atividades premium",
     "moreColors": {
       "title": "Even more colors",
@@ -299,7 +283,6 @@
       "preview": "Preview",
       "previewPlaceholder": "My activity",
       "buttonCreate": "Create",
-      "buttonCancel": "Cancel",
       "errorTitle": "Missing information",
       "errorEmoji": "Please choose an emoji for your activity.",
       "errorName": "Please enter a name for your activity."
@@ -309,18 +292,11 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "deleteConfirmButton": "Delete",
-      "deleteCancelButton": "Cancel"
+      "deleteConfirmMessage": "This action is irreversible."
     },
     "duration": {
       "minutes": "min"
     }
-  },
-  "moreColors": {
-    "title": "Ainda mais cores",
-    "subtitle": "(subtitle)",
-    "tagline": "(tagline)"
   },
   "notifications": {
     "reminder": {

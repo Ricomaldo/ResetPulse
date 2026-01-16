@@ -18,20 +18,15 @@
       "question": "더 만들고 싶어요?",
       "valueProposition": "15 팔레트 · 16 활동 · 무제한 생성",
       "price": "4,99€ — 한 번, 영원히",
-      "ctaTrial": "7일 무료 체험",
-      "ctaSkip": "나중에"
+      "ctaTrial": "7일 무료 체험"
     },
     "intentions": {
-      "other": {
-        "defaultName": "My moment"
-      },
       "q1": {
         "title": "Your timer would be for...",
         "otherPlaceholder": "Like what?"
       },
       "q2": {
-        "title": "A little help with...",
-        "otherPlaceholder": "Like what?"
+        "title": "A little help with..."
       }
     },
     "creation": {
@@ -54,8 +49,7 @@
       },
       "filter1": {
         "title": "A timer that adapts to you",
-        "subtitle": "",
-        "cta": "Create my moment"
+        "subtitle": ""
       }
     },
     "v3": {
@@ -67,7 +61,6 @@
       },
       "filter5b": {
         "title": "Your ringtone",
-        "continue": "Continue",
         "skip": "Skip →"
       }
     }
@@ -83,10 +76,6 @@
     },
     "timer": {
       "soundDescription": "타이머 종료 시 재생할 소리 선택",
-      "rotationDirection": "회전 방향",
-      "rotationClockwise": "시계방향",
-      "rotationCounterClockwise": "반시계방향",
-      "keepAwake": "화면 켜짐 유지",
       "keepAwakeDescriptionOn": "타이머 실행 중 화면 켜짐 유지",
       "keepAwakeDescriptionOff": "타이머 실행 중 화면 잠금 가능",
       "longPressStart": "Enable long tap to start",
@@ -99,7 +88,6 @@
       "dialScaleDescription": "Maximum duration displayed on the dial"
     },
     "appearance": {
-      "theme": "테마",
       "themeLight": "☀️ 라이트",
       "themeDark": "🌙 다크",
       "themeAuto": "📱 자동",
@@ -132,7 +120,6 @@
       "configuration": "CONFIGURATION",
       "timerOptions": "Timer options",
       "keepAwake": "Keep Awake",
-      "rotationDirection": "Rotation direction",
       "notificationSound": "Notification sound",
       "theme": "Theme",
       "favorites": "YOUR FAVORITES",
@@ -161,7 +148,6 @@
     "description": "모든 색상.\n모든 활동.\n최고의 편안함.",
     "features": "7일 무료",
     "startTrial": "7일 무료 체험",
-    "maybeLater": "나중에",
     "restore": "구매 복원",
     "welcomeTitle": "프리미엄을 환영합니다! 🎉",
     "welcomeMessage": "모든 팔레트와 활동이 잠금 해제되었습니다.",
@@ -216,7 +202,6 @@
     "dawn": "오로라",
     "dusk": "황혼",
     "soft": "부드러운",
-    "pastel_girly": "파스텔",
     "autumn": "가을",
     "lavender": "라벤더",
     "teal": "청록",
@@ -268,7 +253,6 @@
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
-    "defaultDismiss": "Peut-être plus tard",
     "activities": "Activités premium",
     "moreColors": {
       "title": "Even more colors",
@@ -299,7 +283,6 @@
       "preview": "Preview",
       "previewPlaceholder": "My activity",
       "buttonCreate": "Create",
-      "buttonCancel": "Cancel",
       "errorTitle": "Missing information",
       "errorEmoji": "Please choose an emoji for your activity.",
       "errorName": "Please enter a name for your activity."
@@ -309,18 +292,11 @@
       "buttonSave": "Save",
       "buttonDelete": "Delete",
       "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "deleteConfirmButton": "Delete",
-      "deleteCancelButton": "Cancel"
+      "deleteConfirmMessage": "This action is irreversible."
     },
     "duration": {
       "minutes": "min"
     }
-  },
-  "moreColors": {
-    "title": "더 많은 색상",
-    "subtitle": "(subtitle)",
-    "tagline": "(tagline)"
   },
   "notifications": {
     "reminder": {
