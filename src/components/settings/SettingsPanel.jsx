@@ -7,7 +7,6 @@ import React from 'react';
 import { View, Text, StyleSheet, Switch, Platform, Alert } from 'react-native';
 import { BottomSheetScrollView, TouchableOpacity } from '@gorhom/bottom-sheet';
 import {
-  Brain,
   Zap,
   Keyboard,
   Clock,
@@ -55,8 +54,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
     timer: { clockwise, selectedSoundId },
     setClockwise,
     setSelectedSoundId,
-    interaction: { interactionProfile, customStartLongPress, customStopLongPress },
-    setInteractionProfile,
+    interaction: { customStartLongPress, customStopLongPress },
     setCustomInteraction,
     favorites: { favoriteActivities, favoritePalettes },
     setFavoriteActivities,
@@ -74,40 +72,6 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       : [...current, activityId];
     setFavoriteActivities(updated);
   };
-
-  // Interaction profiles (personas)
-  const interactionProfiles = [
-    {
-      id: 'veloce',
-      emoji: '⚡',
-      label: t('settings.persona.flow.label'),
-      description: t('settings.persona.flow.description'),
-    },
-    {
-      id: 'abandonniste',
-      emoji: '⚓',
-      label: t('settings.persona.anchored.label'),
-      description: t('settings.persona.anchored.description'),
-    },
-    {
-      id: 'impulsif',
-      emoji: '🎯',
-      label: t('settings.persona.intentional.label'),
-      description: t('settings.persona.intentional.description'),
-    },
-    {
-      id: 'ritualiste',
-      emoji: '🧘',
-      label: t('settings.persona.mindful.label'),
-      description: t('settings.persona.mindful.description'),
-    },
-    {
-      id: 'custom',
-      emoji: '⚙️',
-      label: t('settings.persona.custom.label'),
-      description: '', // Toggles will be shown instead
-    },
-  ];
 
   // Favorite tools modes (mapped from TimerConfigContext values)
   const favoriteTools = [
@@ -202,44 +166,6 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       flexDirection: 'row',
       padding: rs(2),  // Responsive
     },
-    customToggles: {
-      marginTop: rs(8),
-      gap: rs(8),
-    },
-    toggleRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    toggleLabel: {
-      color: theme.colors.text,
-      fontSize: rs(12, 'min'),
-      fontWeight: fontWeights.medium,
-    },
-    toggleControl: {
-      flexDirection: 'row',
-      gap: rs(4),
-    },
-    toggleButton: {
-      paddingHorizontal: rs(12),
-      paddingVertical: rs(6),
-      borderRadius: theme.borderRadius.md,
-      backgroundColor: theme.colors.surfaceElevated,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-    },
-    toggleButtonActive: {
-      backgroundColor: theme.colors.brand.accent,
-      borderColor: theme.colors.brand.accent,
-    },
-    toggleButtonText: {
-      color: theme.colors.text,
-      fontSize: rs(11, 'min'),
-      fontWeight: fontWeights.medium,
-    },
-    toggleButtonTextActive: {
-      color: theme.colors.fixed.white,
-    },
   });
 
   return (
@@ -251,138 +177,6 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         {/* Group 1: CONFIGURATION */}
         <SectionHeader label={t('settings.sections.configuration')} />
 
-        {/* Section 1: Interaction Profile (Comment tu fonctionnes) */}
-        <SettingsCard
-          title={<CardTitle Icon={Brain} label={t('settings.persona.sectionTitle')} theme={theme} />}
-          description={t('settings.persona.sectionSubtitle')}
-        >
-          {/* 2x2 Grid for preset profiles (first 4) */}
-          <View style={styles.grid2x2}>
-            {interactionProfiles.slice(0, 4).map((profile) => (
-              <View key={profile.id} style={styles.gridItem2x2}>
-                <SelectionCard
-                  emoji={profile.emoji}
-                  label={profile.label}
-                  description={profile.description}
-                  selected={interactionProfile === profile.id}
-                  onSelect={() => setInteractionProfile(profile.id)}
-                  compact
-                />
-              </View>
-            ))}
-          </View>
-
-          {/* Full-width Custom profile card */}
-          <View style={{ marginTop: rs(12) }}>
-            <SelectionCard
-              emoji="⚙️"
-              label={t('settings.persona.custom.label')}
-              description=""
-              selected={interactionProfile === 'custom'}
-              onSelect={() => setInteractionProfile('custom')}
-              compact={false}
-            />
-          </View>
-
-          {/* Custom toggles (shown when custom profile is selected) */}
-          {interactionProfile === 'custom' && (
-            <View style={styles.customToggles}>
-              {/* Start toggle */}
-              <View style={styles.toggleRow}>
-                <Text style={styles.toggleLabel}>{t('settings.persona.custom.startLabel')}</Text>
-                <View style={styles.toggleControl}>
-                  <TouchableOpacity
-                    style={[
-                      styles.toggleButton,
-                      !customStartLongPress && styles.toggleButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setCustomInteraction(false, customStopLongPress);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Text
-                      style={[
-                        styles.toggleButtonText,
-                        !customStartLongPress && styles.toggleButtonTextActive,
-                      ]}
-                    >
-                      {t('settings.persona.custom.tap')}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.toggleButton,
-                      customStartLongPress && styles.toggleButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setCustomInteraction(true, customStopLongPress);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Text
-                      style={[
-                        styles.toggleButtonText,
-                        customStartLongPress && styles.toggleButtonTextActive,
-                      ]}
-                    >
-                      {t('settings.persona.custom.hold')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              {/* Stop toggle */}
-              <View style={styles.toggleRow}>
-                <Text style={styles.toggleLabel}>{t('settings.persona.custom.stopLabel')}</Text>
-                <View style={styles.toggleControl}>
-                  <TouchableOpacity
-                    style={[
-                      styles.toggleButton,
-                      !customStopLongPress && styles.toggleButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setCustomInteraction(customStartLongPress, false);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Text
-                      style={[
-                        styles.toggleButtonText,
-                        !customStopLongPress && styles.toggleButtonTextActive,
-                      ]}
-                    >
-                      {t('settings.persona.custom.tap')}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.toggleButton,
-                      customStopLongPress && styles.toggleButtonActive,
-                    ]}
-                    onPress={() => {
-                      haptics.selection().catch(() => {});
-                      setCustomInteraction(customStartLongPress, true);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Text
-                      style={[
-                        styles.toggleButtonText,
-                        customStopLongPress && styles.toggleButtonTextActive,
-                      ]}
-                    >
-                      {t('settings.persona.custom.hold')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          )}
-        </SettingsCard>
 
         {/* Section 2: Timer Options */}
         <SettingsCard title={<CardTitle Icon={Clock} label={t('settings.sections.timerOptions')} theme={theme} />}>
@@ -407,7 +201,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
           </View>
 
           {/* Animation Pulse */}
-          <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
+          <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>{t('settings.options.pulseAnimation')}</Text>
               <Text style={styles.optionDescription}>
@@ -434,6 +228,46 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                 }
               }}
               {...theme.styles.switch(shouldPulse)}
+            />
+          </View>
+
+          {/* Long Press Start */}
+          <View style={styles.optionRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.optionLabel}>{t('settings.timer.longPressStart')}</Text>
+              <Text style={styles.optionDescription}>
+                {customStartLongPress
+                  ? t('settings.timer.longPressStartDescriptionOn')
+                  : t('settings.timer.longPressStartDescriptionOff')}
+              </Text>
+            </View>
+            <Switch
+              value={customStartLongPress}
+              onValueChange={(value) => {
+                haptics.switchToggle().catch(() => {});
+                setCustomInteraction(value, customStopLongPress);
+              }}
+              {...theme.styles.switch(customStartLongPress)}
+            />
+          </View>
+
+          {/* Long Press Stop */}
+          <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.optionLabel}>{t('settings.timer.longPressStop')}</Text>
+              <Text style={styles.optionDescription}>
+                {customStopLongPress
+                  ? t('settings.timer.longPressStopDescriptionOn')
+                  : t('settings.timer.longPressStopDescriptionOff')}
+              </Text>
+            </View>
+            <Switch
+              value={customStopLongPress}
+              onValueChange={(value) => {
+                haptics.switchToggle().catch(() => {});
+                setCustomInteraction(customStartLongPress, value);
+              }}
+              {...theme.styles.switch(customStopLongPress)}
             />
           </View>
         </SettingsCard>

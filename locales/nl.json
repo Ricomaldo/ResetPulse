@@ -91,6 +91,12 @@
       "keepAwake": "Scherm wakker houden",
       "keepAwakeDescriptionOn": "Scherm blijft wakker tijdens timer",
       "keepAwakeDescriptionOff": "Scherm kan vergrendelen tijdens timer"
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
     },
     "appearance": {
       "title": "🎨 Uiterlijk",

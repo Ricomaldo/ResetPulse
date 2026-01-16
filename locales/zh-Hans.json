@@ -91,6 +91,12 @@
       "keepAwake": "保持屏幕常亮",
       "keepAwakeDescriptionOn": "计时器运行时屏幕保持常亮",
       "keepAwakeDescriptionOff": "计时器运行时屏幕可以锁定"
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
     },
     "appearance": {
       "title": "🎨 外观",

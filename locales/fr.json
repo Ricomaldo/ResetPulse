@@ -299,7 +299,13 @@
       "rotationCounterClockwise": "Sens anti-horaire",
       "keepAwake": "Maintenir l'écran allumé",
       "keepAwakeDescriptionOn": "L'écran reste allumé pendant le timer",
-      "keepAwakeDescriptionOff": "L'écran peut se verrouiller pendant le timer"
+      "keepAwakeDescriptionOff": "L'écran peut se verrouiller pendant le timer",
+      "longPressStart": "Activer le long tap au start",
+      "longPressStartDescriptionOn": "Maintenir pour démarrer le timer",
+      "longPressStartDescriptionOff": "Simple tap pour démarrer",
+      "longPressStop": "Activer le long tap à l'arrêt",
+      "longPressStopDescriptionOn": "Maintenir pour arrêter le timer",
+      "longPressStopDescriptionOff": "Simple tap pour arrêter"
     },
     "appearance": {
       "title": "🎨 Apparence",
