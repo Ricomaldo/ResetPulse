@@ -35,9 +35,9 @@ function SelectionCard({ emoji, label, description, selected, onSelect, compact 
     card: {
       alignItems: 'center',
       backgroundColor: theme.colors.surface,
-      borderColor: selected ? theme.colors.brand.accent : theme.colors.border,
+      borderColor: selected ? theme.colors.brand.accent : theme.colors.surface, // Invisible border when not selected
       borderRadius: theme.borderRadius.lg,
-      borderWidth: selected ? 2 : 1,
+      borderWidth: 2, // Always 2 to prevent layout shift
       justifyContent: 'center',
       padding: compact ? rs(12) : rs(16),  // Responsive (was theme.spacing.sm/md)
       ...(Platform.OS === 'ios' ? theme.shadow(selected ? 'md' : 'sm') : {}),
