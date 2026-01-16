@@ -133,7 +133,7 @@ export default function CustomizeStep({ intention, onBack, onSubmit }) {
       borderWidth: 2,
       justifyContent: 'center',
       minHeight: 60,
-      minWidth: 70,
+      minWidth: 62, // Reduced from 70 to fit 5 buttons on one line
       paddingHorizontal: theme.spacing.sm,
       paddingVertical: theme.spacing.sm,
     },

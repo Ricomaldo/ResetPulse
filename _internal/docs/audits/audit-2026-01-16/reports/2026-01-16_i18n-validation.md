@@ -10,13 +10,13 @@ domain: i18n
 
 ## Executive Summary
 
-- **Total keys in FR**: 276
+- **Total keys in FR**: 300
 - **Total keys used in code**: 286
 - **Missing keys (P0)**: 0
-- **Obsolete keys (P2)**: 0
-- **Duplicate values (P3)**: 3
-- **Locale pollution (P1)**: 69
-- **Production readiness**: ⚠️ **WARNING** (69 P1 locale pollution issues should be fixed)
+- **Obsolete keys (P2)**: 24
+- **Duplicate values (P3)**: 11
+- **Locale pollution (P1)**: 74
+- **Production readiness**: ⚠️ **WARNING** (74 P1 locale pollution issues should be fixed)
 
 ## Findings by Severity
 
@@ -24,12 +24,13 @@ domain: i18n
 
 ✅ No missing keys detected.
 
-### P1 High — Locale Pollution (69 found)
+### P1 High — Locale Pollution (74 found)
 
 **Impact**: Wrong language displayed to users (French text in English/Spanish locales).
 
 | Key | Locale | FR Value | Current Value |
 |-----|--------|----------|---------------|
+| `onboarding.intentions.work.defaultName` | en | Focus | Focus |
 | `settings.about.appName` | en | ResetPulse | ResetPulse |
 | `settings.about.version` | en | Version | Version |
 | `settings.sections.configuration` | en | CONFIGURATION | CONFIGURATION |
@@ -49,6 +50,7 @@ domain: i18n
 | `sounds.toaster_bell` | en | Pop | Pop |
 | `customActivities.duration.minutes` | en | min | min |
 | `timerMessages.work.startMessage` | en | Focus | Focus |
+| `onboarding.intentions.work.defaultName` | es | Focus | Focus |
 | `settings.about.appName` | es | ResetPulse | ResetPulse |
 | `settings.sections.configuration` | es | CONFIGURATION | CONFIGURATION |
 | `settings.sections.keepAwake` | es | Keep Awake | Keep Awake |
@@ -61,6 +63,7 @@ domain: i18n
 | `palettes.darkLaser` | es | Dark Laser | Dark Laser |
 | `customActivities.duration.minutes` | es | min | min |
 | `timerMessages.work.startMessage` | es | Focus | Focus |
+| `onboarding.intentions.work.defaultName` | de | Focus | Focus |
 | `settings.about.appName` | de | ResetPulse | ResetPulse |
 | `settings.about.version` | de | Version | Version |
 | `settings.sections.configuration` | de | CONFIGURATION | CONFIGURATION |
@@ -75,6 +78,7 @@ domain: i18n
 | `palettes.darkLaser` | de | Dark Laser | Dark Laser |
 | `customActivities.duration.minutes` | de | min | min |
 | `timerMessages.work.startMessage` | de | Focus | Focus |
+| `onboarding.intentions.work.defaultName` | it | Focus | Focus |
 | `settings.about.appName` | it | ResetPulse | ResetPulse |
 | `settings.sections.configuration` | it | CONFIGURATION | CONFIGURATION |
 | `settings.sections.keepAwake` | it | Keep Awake | Keep Awake |
@@ -87,6 +91,7 @@ domain: i18n
 | `palettes.darkLaser` | it | Dark Laser | Dark Laser |
 | `customActivities.duration.minutes` | it | min | min |
 | `timerMessages.work.startMessage` | it | Focus | Focus |
+| `onboarding.intentions.work.defaultName` | pt | Focus | Focus |
 | `settings.about.appName` | pt | ResetPulse | ResetPulse |
 | `settings.sections.configuration` | pt | CONFIGURATION | CONFIGURATION |
 | `settings.sections.keepAwake` | pt | Keep Awake | Keep Awake |
@@ -100,16 +105,48 @@ domain: i18n
 | `customActivities.duration.minutes` | pt | min | min |
 | `timerMessages.work.startMessage` | pt | Focus | Focus |
 
-### P2 Medium — Obsolete Keys (0 found)
+### P2 Medium — Obsolete Keys (24 found)
 
-✅ No obsolete keys detected.
+**Impact**: Dead code, bloat (~2KB). Safe to remove.
 
-### P3 Low — Duplicate Values (3 found)
+| Key | Value | Impact |
+|-----|-------|--------|
+| `onboarding.intentions.title` | C'est pour quoi ? | Dead code, bloat (~2KB) |
+| `onboarding.intentions.relax.label` | Me poser | Dead code, bloat (~2KB) |
+| `onboarding.intentions.relax.defaultName` | Méditation | Dead code, bloat (~2KB) |
+| `onboarding.intentions.work.label` | Travailler | Dead code, bloat (~2KB) |
+| `onboarding.intentions.work.defaultName` | Focus | Dead code, bloat (~2KB) |
+| `onboarding.intentions.create.label` | Créer | Dead code, bloat (~2KB) |
+| `onboarding.intentions.create.defaultName` | Création | Dead code, bloat (~2KB) |
+| `onboarding.intentions.learn.label` | Apprendre | Dead code, bloat (~2KB) |
+| `onboarding.intentions.learn.defaultName` | Étude | Dead code, bloat (~2KB) |
+| `onboarding.intentions.move.label` | Bouger | Dead code, bloat (~2KB) |
+| `onboarding.intentions.move.defaultName` | Sport | Dead code, bloat (~2KB) |
+| `onboarding.intentions.other.label` | Autre | Dead code, bloat (~2KB) |
+| `onboarding.intentions.other.defaultName` | Mon moment | Dead code, bloat (~2KB) |
+| `onboarding.intentions.q1.focus` | Mieux me concentrer | Dead code, bloat (~2KB) |
+| `onboarding.intentions.q1.launch` | M'aider à démarrer | Dead code, bloat (~2KB) |
+| `onboarding.intentions.q1.breathe` | Prendre du temps pour moi | Dead code, bloat (~2KB) |
+| `onboarding.intentions.q1.children` | Cadrer un moment avec mes enfants | Dead code, bloat (~2KB) |
+| `onboarding.intentions.q1.other` | Autre chose... | Dead code, bloat (~2KB) |
+| `onboarding.intentions.q2.starting` | Démarrer | Dead code, bloat (~2KB) |
+| `onboarding.intentions.q2.finishing` | Aller au bout | Dead code, bloat (~2KB) |
+| ... | _4 more keys_ | ... |
+
+### P3 Low — Duplicate Values (11 found)
 
 **Impact**: Redundancy, confusion. Consider consolidating to canonical keys.
 
 | Value | Keys | Recommendation |
 |-------|------|----------------|
+| Méditation | `activities.meditation`, `onboarding.intentions.relax.defaultName` | Consolidate to activities.meditation |
+| Focus | `onboarding.intentions.work.defaultName`, `timerMessages.work.startMessage` | Consolidate to timerMessages.work.startMessage |
+| Créer | `customActivities.create.buttonCreate`, `onboarding.intentions.create.label` | Consolidate to onboarding.intentions.create.label |
+| Étude | `activities.study`, `onboarding.intentions.learn.defaultName` | Consolidate to activities.study |
+| Sport | `activities.sport`, `onboarding.intentions.move.defaultName` | Consolidate to activities.sport |
+| Mon moment | `onboarding.intentions.other.defaultName`, `onboarding.launch.defaultActivity` | Consolidate to onboarding.launch.defaultActivity |
+| Autre chose... | `onboarding.intentions.q1.other`, `onboarding.intentions.q2.other` | Consolidate to onboarding.intentions.q1.other |
+| C'est-à-dire ? | `onboarding.intentions.q1.otherPlaceholder`, `onboarding.intentions.q2.otherPlaceholder` | Consolidate to onboarding.intentions.q1.otherPlaceholder |
 | Marche | `activities.walking`, `timerMessages.walking.startMessage` | Consolidate to activities.walking |
 | Respire | `timerMessages.meditation.startMessage`, `timerMessages.yoga.startMessage` | Consolidate to timerMessages.yoga.startMessage |
 | Joue | `timerMessages.gaming.startMessage`, `timerMessages.music.startMessage` | Consolidate to timerMessages.music.startMessage |
@@ -124,12 +161,13 @@ domain: i18n
 
 ## Statistics
 
-- **Code coverage**: 100% (276/276 keys used)
-- **Dead keys**: 0 (0%)
+- **Code coverage**: 92% (276/300 keys used)
+- **Dead keys**: 24 (8%)
 - **Locale completion**: FR/EN 100%, Others vary (see locales summary)
 
 ## Recommendations
 
-2. **Fix 69 P1 locale pollution issues** (HIGH priority)
-4. **Consider consolidating 3 P3 duplicate groups** (future optimization)
+2. **Fix 74 P1 locale pollution issues** (HIGH priority)
+3. **Remove 24 P2 obsolete keys** (optional, cleanup)
+4. **Consider consolidating 11 P3 duplicate groups** (future optimization)
 
