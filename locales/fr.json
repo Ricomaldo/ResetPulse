@@ -28,12 +28,48 @@
     "restartGuide": "Relancer le guide",
     "restartGuideDescription": "Afficher à nouveau l'écran de bienvenue et les conseils",
     "intentions": {
+      "title": "C'est pour quoi ?",
+      "relax": {
+        "label": "Me poser",
+        "defaultName": "Méditation"
+      },
+      "work": {
+        "label": "Travailler",
+        "defaultName": "Focus"
+      },
+      "create": {
+        "label": "Créer",
+        "defaultName": "Création"
+      },
+      "learn": {
+        "label": "Apprendre",
+        "defaultName": "Étude"
+      },
+      "move": {
+        "label": "Bouger",
+        "defaultName": "Sport"
+      },
+      "other": {
+        "label": "Autre",
+        "defaultName": "Mon moment"
+      },
       "q1": {
         "title": "Ton timer, ce serait pour...",
+        "focus": "Mieux me concentrer",
+        "launch": "M'aider à démarrer",
+        "breathe": "Prendre du temps pour moi",
+        "children": "Cadrer un moment avec mes enfants",
+        "other": "Autre chose...",
         "otherPlaceholder": "C'est-à-dire ?"
       },
       "q2": {
-        "title": "Un petit coup de main pour..."
+        "title": "Un petit coup de main pour...",
+        "starting": "Démarrer",
+        "finishing": "Aller au bout",
+        "staying": "Rester concentré",
+        "managing": "Mieux gérer mon temps",
+        "other": "Autre chose...",
+        "otherPlaceholder": "C'est-à-dire ?"
       }
     },
     "creation": {

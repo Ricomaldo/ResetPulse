@@ -1,12 +1,22 @@
 {
   "metadata": {
-    "auditedAt": "2026-01-16T18:27:24.294Z",
+    "auditedAt": "2026-01-16T18:31:08.076Z",
     "auditType": "baseline",
     "referenceLocale": "fr"
   },
   "findings": {
     "missingKeys": [],
     "localePollution": [
+      {
+        "key": "onboarding.intentions.work.defaultName",
+        "locale": "en",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
       {
         "key": "settings.about.appName",
         "locale": "en",
@@ -198,6 +208,16 @@
         "recommendation": "Translate en value"
       },
       {
+        "key": "onboarding.intentions.work.defaultName",
+        "locale": "es",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
         "key": "settings.about.appName",
         "locale": "es",
         "frValue": "ResetPulse",
@@ -316,6 +336,16 @@
         "issue": "Locale pollution",
         "impact": "Wrong language displayed",
         "recommendation": "Translate es value"
+      },
+      {
+        "key": "onboarding.intentions.work.defaultName",
+        "locale": "de",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
       },
       {
         "key": "settings.about.appName",
@@ -458,6 +488,16 @@
         "recommendation": "Translate de value"
       },
       {
+        "key": "onboarding.intentions.work.defaultName",
+        "locale": "it",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
         "key": "settings.about.appName",
         "locale": "it",
         "frValue": "ResetPulse",
@@ -576,6 +616,16 @@
         "issue": "Locale pollution",
         "impact": "Wrong language displayed",
         "recommendation": "Translate it value"
+      },
+      {
+        "key": "onboarding.intentions.work.defaultName",
+        "locale": "pt",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
       },
       {
         "key": "settings.about.appName",
@@ -698,8 +748,281 @@
         "recommendation": "Translate pt value"
       }
     ],
-    "obsoleteKeys": [],
+    "obsoleteKeys": [
+      {
+        "key": "onboarding.intentions.title",
+        "value": "C'est pour quoi ?",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.relax.label",
+        "value": "Me poser",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.relax.defaultName",
+        "value": "Méditation",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.work.label",
+        "value": "Travailler",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.work.defaultName",
+        "value": "Focus",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.create.label",
+        "value": "Créer",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.create.defaultName",
+        "value": "Création",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.learn.label",
+        "value": "Apprendre",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.learn.defaultName",
+        "value": "Étude",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.move.label",
+        "value": "Bouger",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.move.defaultName",
+        "value": "Sport",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.other.label",
+        "value": "Autre",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.other.defaultName",
+        "value": "Mon moment",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q1.focus",
+        "value": "Mieux me concentrer",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q1.launch",
+        "value": "M'aider à démarrer",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q1.breathe",
+        "value": "Prendre du temps pour moi",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q1.children",
+        "value": "Cadrer un moment avec mes enfants",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q1.other",
+        "value": "Autre chose...",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q2.starting",
+        "value": "Démarrer",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q2.finishing",
+        "value": "Aller au bout",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q2.staying",
+        "value": "Rester concentré",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q2.managing",
+        "value": "Mieux gérer mon temps",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q2.other",
+        "value": "Autre chose...",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      },
+      {
+        "key": "onboarding.intentions.q2.otherPlaceholder",
+        "value": "C'est-à-dire ?",
+        "severity": "P2",
+        "issue": "Obsolete key",
+        "impact": "Dead code, bloat (~2KB)"
+      }
+    ],
     "duplicateValues": [
+      {
+        "value": "Méditation",
+        "keys": [
+          "activities.meditation",
+          "onboarding.intentions.relax.defaultName"
+        ],
+        "canonicalKey": "activities.meditation",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to activities.meditation"
+      },
+      {
+        "value": "Focus",
+        "keys": [
+          "onboarding.intentions.work.defaultName",
+          "timerMessages.work.startMessage"
+        ],
+        "canonicalKey": "timerMessages.work.startMessage",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to timerMessages.work.startMessage"
+      },
+      {
+        "value": "Créer",
+        "keys": [
+          "customActivities.create.buttonCreate",
+          "onboarding.intentions.create.label"
+        ],
+        "canonicalKey": "onboarding.intentions.create.label",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to onboarding.intentions.create.label"
+      },
+      {
+        "value": "Étude",
+        "keys": [
+          "activities.study",
+          "onboarding.intentions.learn.defaultName"
+        ],
+        "canonicalKey": "activities.study",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to activities.study"
+      },
+      {
+        "value": "Sport",
+        "keys": [
+          "activities.sport",
+          "onboarding.intentions.move.defaultName"
+        ],
+        "canonicalKey": "activities.sport",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to activities.sport"
+      },
+      {
+        "value": "Mon moment",
+        "keys": [
+          "onboarding.intentions.other.defaultName",
+          "onboarding.launch.defaultActivity"
+        ],
+        "canonicalKey": "onboarding.launch.defaultActivity",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to onboarding.launch.defaultActivity"
+      },
+      {
+        "value": "Autre chose...",
+        "keys": [
+          "onboarding.intentions.q1.other",
+          "onboarding.intentions.q2.other"
+        ],
+        "canonicalKey": "onboarding.intentions.q1.other",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to onboarding.intentions.q1.other"
+      },
+      {
+        "value": "C'est-à-dire ?",
+        "keys": [
+          "onboarding.intentions.q1.otherPlaceholder",
+          "onboarding.intentions.q2.otherPlaceholder"
+        ],
+        "canonicalKey": "onboarding.intentions.q1.otherPlaceholder",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to onboarding.intentions.q1.otherPlaceholder"
+      },
       {
         "value": "Marche",
         "keys": [
@@ -799,17 +1122,17 @@
   },
   "statistics": {
     "totalKeysInCode": 286,
-    "totalKeysInFR": 276,
+    "totalKeysInFR": 300,
     "usedKeys": 276,
-    "deadKeys": 0,
-    "codeCoverage": "100%",
+    "deadKeys": 24,
+    "codeCoverage": "92%",
     "missingKeys": 0,
-    "pollutionIssues": 69,
-    "duplicateGroups": 3
+    "pollutionIssues": 74,
+    "duplicateGroups": 11
   },
   "readiness": {
     "status": "WARNING",
     "emoji": "⚠️",
-    "message": "69 P1 locale pollution issues should be fixed"
+    "message": "74 P1 locale pollution issues should be fixed"
   }
 }

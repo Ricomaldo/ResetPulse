@@ -21,12 +21,48 @@
       "ctaTrial": "Prøv 7 dager gratis"
     },
     "intentions": {
+      "title": "What's it for?",
+      "relax": {
+        "label": "Relax",
+        "defaultName": "Meditation"
+      },
+      "work": {
+        "label": "Work",
+        "defaultName": "Focus"
+      },
+      "create": {
+        "label": "Create",
+        "defaultName": "Create"
+      },
+      "learn": {
+        "label": "Learn",
+        "defaultName": "Study"
+      },
+      "move": {
+        "label": "Move",
+        "defaultName": "Workout"
+      },
+      "other": {
+        "label": "Other",
+        "defaultName": "My moment"
+      },
       "q1": {
         "title": "Your timer would be for...",
+        "focus": "Focusing better",
+        "launch": "Helping me get started",
+        "breathe": "Taking time for myself",
+        "children": "Framing a moment with my kids",
+        "other": "Something else...",
         "otherPlaceholder": "Like what?"
       },
       "q2": {
-        "title": "A little help with..."
+        "title": "A little help with...",
+        "starting": "Getting started",
+        "finishing": "Following through",
+        "staying": "Staying focused",
+        "managing": "Managing my time better",
+        "other": "Something else...",
+        "otherPlaceholder": "Like what?"
       }
     },
     "creation": {
