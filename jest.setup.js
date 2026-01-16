@@ -130,6 +130,16 @@ jest.mock('react-native-reanimated', () => {
     if (!mock.createAnimatedComponent) {
       mock.createAnimatedComponent = (component) => component;
     }
+    // Add addWhitelistedUIProps for @gorhom/bottom-sheet compatibility
+    if (!mock.addWhitelistedUIProps) {
+      mock.addWhitelistedUIProps = jest.fn();
+    }
+    if (!mock.default) {
+      mock.default = {};
+    }
+    if (!mock.default.addWhitelistedUIProps) {
+      mock.default.addWhitelistedUIProps = jest.fn();
+    }
     // Add FadeIn and FadeOut for onboarding transitions
     if (!mock.FadeIn) {
       mock.FadeIn = {
@@ -159,6 +169,7 @@ jest.mock('react-native-reanimated', () => {
         Image: View,
         ScrollView: View,
         FlatList: View,
+        addWhitelistedUIProps: jest.fn(),
       },
       View: View,
       Text: View,
@@ -174,6 +185,7 @@ jest.mock('react-native-reanimated', () => {
       withRepeat: (value) => value,
       withSequence: (...values) => values[values.length - 1],
       interpolate: (value, config) => config.outputRange?.[0] || 0,
+      addWhitelistedUIProps: jest.fn(),
       FadeIn: createFadeAnimation(),
       FadeOut: {
         duration: () => ({}),

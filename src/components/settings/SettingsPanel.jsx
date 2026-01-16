@@ -4,8 +4,8 @@
  * @created 2025-12-19
  */
 import React from 'react';
-import { View, Text, StyleSheet, Switch, Platform, TouchableOpacity, TouchableNativeFeedback, Alert } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { View, Text, StyleSheet, Switch, Platform, Alert } from 'react-native';
+import { BottomSheetScrollView, TouchableOpacity } from '@gorhom/bottom-sheet';
 import {
   Brain,
   Zap,
@@ -74,25 +74,6 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
       : [...current, activityId];
     setFavoriteActivities(updated);
   };
-
-  // Platform-specific touchable component
-  const Touchable =
-    Platform.OS === 'android' &&
-    TouchableNativeFeedback?.canUseNativeForeground?.()
-      ? TouchableNativeFeedback
-      : TouchableOpacity;
-
-  const touchableProps =
-    Platform.OS === 'android' && TouchableNativeFeedback?.Ripple
-      ? {
-        background: TouchableNativeFeedback.Ripple(
-          theme.colors.brand.primary + '20',
-          false
-        ),
-      }
-      : {
-        activeOpacity: 0.7,
-      };
 
   // Interaction profiles (personas)
   const interactionProfiles = [
@@ -310,7 +291,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               <View style={styles.toggleRow}>
                 <Text style={styles.toggleLabel}>{t('settings.persona.custom.startLabel')}</Text>
                 <View style={styles.toggleControl}>
-                  <Touchable
+                  <TouchableOpacity
                     style={[
                       styles.toggleButton,
                       !customStartLongPress && styles.toggleButtonActive,
@@ -319,7 +300,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                       haptics.selection().catch(() => {});
                       setCustomInteraction(false, customStopLongPress);
                     }}
-                    {...touchableProps}
+                    activeOpacity={0.7}
                   >
                     <Text
                       style={[
@@ -329,8 +310,8 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                     >
                       {t('settings.persona.custom.tap')}
                     </Text>
-                  </Touchable>
-                  <Touchable
+                  </TouchableOpacity>
+                  <TouchableOpacity
                     style={[
                       styles.toggleButton,
                       customStartLongPress && styles.toggleButtonActive,
@@ -339,7 +320,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                       haptics.selection().catch(() => {});
                       setCustomInteraction(true, customStopLongPress);
                     }}
-                    {...touchableProps}
+                    activeOpacity={0.7}
                   >
                     <Text
                       style={[
@@ -349,7 +330,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                     >
                       {t('settings.persona.custom.hold')}
                     </Text>
-                  </Touchable>
+                  </TouchableOpacity>
                 </View>
               </View>
 
@@ -357,7 +338,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               <View style={styles.toggleRow}>
                 <Text style={styles.toggleLabel}>{t('settings.persona.custom.stopLabel')}</Text>
                 <View style={styles.toggleControl}>
-                  <Touchable
+                  <TouchableOpacity
                     style={[
                       styles.toggleButton,
                       !customStopLongPress && styles.toggleButtonActive,
@@ -366,7 +347,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                       haptics.selection().catch(() => {});
                       setCustomInteraction(customStartLongPress, false);
                     }}
-                    {...touchableProps}
+                    activeOpacity={0.7}
                   >
                     <Text
                       style={[
@@ -376,8 +357,8 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                     >
                       {t('settings.persona.custom.tap')}
                     </Text>
-                  </Touchable>
-                  <Touchable
+                  </TouchableOpacity>
+                  <TouchableOpacity
                     style={[
                       styles.toggleButton,
                       customStopLongPress && styles.toggleButtonActive,
@@ -386,7 +367,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                       haptics.selection().catch(() => {});
                       setCustomInteraction(customStartLongPress, true);
                     }}
-                    {...touchableProps}
+                    activeOpacity={0.7}
                   >
                     <Text
                       style={[
@@ -396,7 +377,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                     >
                       {t('settings.persona.custom.hold')}
                     </Text>
-                  </Touchable>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -577,7 +558,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               </Text>
             </View>
             <View style={styles.segmentedControl}>
-              <Touchable
+              <TouchableOpacity
                 style={[
                   styles.segmentButton,
                   theme.mode === 'light' && styles.segmentButtonActive,
@@ -586,7 +567,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                   haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
                   theme.setTheme('light');
                 }}
-                {...touchableProps}
+                activeOpacity={0.7}
               >
                 <Text
                   style={[
@@ -596,8 +577,8 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                 >
                   {t('settings.appearance.themeLight')}
                 </Text>
-              </Touchable>
-              <Touchable
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
                   styles.segmentButton,
                   theme.mode === 'dark' && styles.segmentButtonActive,
@@ -606,7 +587,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                   haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
                   theme.setTheme('dark');
                 }}
-                {...touchableProps}
+                activeOpacity={0.7}
               >
                 <Text
                   style={[
@@ -616,8 +597,8 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                 >
                   {t('settings.appearance.themeDark')}
                 </Text>
-              </Touchable>
-              <Touchable
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
                   styles.segmentButton,
                   theme.mode === 'auto' && styles.segmentButtonActive,
@@ -626,7 +607,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                   haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
                   theme.setTheme('auto');
                 }}
-                {...touchableProps}
+                activeOpacity={0.7}
               >
                 <Text
                   style={[
@@ -636,7 +617,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
                 >
                   {t('settings.appearance.themeAuto')}
                 </Text>
-              </Touchable>
+              </TouchableOpacity>
             </View>
           </View>
         </SettingsCard>

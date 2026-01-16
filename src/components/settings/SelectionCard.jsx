@@ -5,7 +5,8 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, TouchableNativeFeedback } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontWeights } from '../../theme/tokens';
@@ -24,24 +25,6 @@ import haptics from '../../utils/haptics';
  */
 function SelectionCard({ emoji, label, description, selected, onSelect, compact = false }) {
   const theme = useTheme();
-
-  // Platform-specific touchable
-  const Touchable =
-    Platform.OS === 'android' && TouchableNativeFeedback?.canUseNativeForeground?.()
-      ? TouchableNativeFeedback
-      : TouchableOpacity;
-
-  const touchableProps =
-    Platform.OS === 'android' && TouchableNativeFeedback?.Ripple
-      ? {
-        background: TouchableNativeFeedback.Ripple(
-          theme.colors.brand.primary + '20',
-          false
-        ),
-      }
-      : {
-        activeOpacity: 0.7,
-      };
 
   const handlePress = () => {
     haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
@@ -82,13 +65,13 @@ function SelectionCard({ emoji, label, description, selected, onSelect, compact 
   });
 
   return (
-    <Touchable onPress={handlePress} {...touchableProps}>
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
       <View style={styles.card}>
         <Text style={styles.emoji}>{emoji}</Text>
         <Text style={styles.label}>{label}</Text>
         {description && <Text style={styles.description}>{description}</Text>}
       </View>
-    </Touchable>
+    </TouchableOpacity>
   );
 }
 
