@@ -1,49 +1,17 @@
 {
   "common": {
-    "settings": "设置",
-    "close": "关闭",
     "cancel": "取消",
-    "confirm": "确认",
     "ok": "确定",
-    "skip": "跳过",
     "retry": "重试",
     "continue": "继续"
   },
   "welcome": {
-    "title": "欢迎使用 ResetPulse",
-    "subtitle": "选择活动,调整时长,开始。",
-    "discover": "开始探索"
+    "title": "欢迎使用 ResetPulse"
   },
   "invitation": "准备好了吗?",
   "onboarding": {
-    "activities": "选择你的活动",
-    "dial": "调整计时器时长",
-    "palette": "随意更改颜色",
-    "controls": "开始、暂停或重置",
-    "controlsSubtext": "计时器在后台继续运行",
-    "completion": "享受 ResetPulse!",
     "restartGuide": "重新开始引导",
     "restartGuideDescription": "再次显示欢迎屏幕和提示",
-    "tool": {
-      "title": "哪个最适合你?",
-      "creative": "创意型",
-      "minimalist": "极简型",
-      "multitask": "多任务型",
-      "rational": "理性型"
-    },
-    "creation": {
-      "title": "创建你的第一个时刻",
-      "subtitle": "选择一个表情符号、名称和时长"
-    },
-    "testStart": {
-      "title": "准备好后点击",
-      "hint": ""
-    },
-    "testStop": {
-      "title": "现在，随时松开",
-      "hint": "",
-      "revealTitle": "你是"
-    },
     "paywall": {
       "title": "你创建了第一个时刻",
       "profile": "个人资料:",
@@ -53,26 +21,60 @@
       "ctaTrial": "免费试用 7 天",
       "ctaSkip": "稍后"
     },
-    "firstTimer": {
-      "title": "你的计时器已准备好",
-      "profile": "个人资料",
-      "tool": "工具",
-      "moment": "时刻",
-      "startButton": "启动第一个计时器",
-      "completionMessage": "干得好! 你的空间已准备就绪。"
+    "intentions": {
+      "other": {
+        "defaultName": "My moment"
+      },
+      "q1": {
+        "title": "Your timer would be for...",
+        "otherPlaceholder": "Like what?"
+      },
+      "q2": {
+        "title": "A little help with...",
+        "otherPlaceholder": "Like what?"
+      }
+    },
+    "creation": {
+      "sectionTitle": "Your first moment",
+      "cta": "Create my moment",
+      "durationLabel": "How long?",
+      "namePlaceholder": "Name your moment..."
+    },
+    "launch": {
+      "title": "Let's go!",
+      "subtitle": "Your first moment is ready. Tap to begin.",
+      "cta": "Start my timer",
+      "ctaHint": "Start your first timer",
+      "defaultActivity": "My moment"
+    },
+    "v2": {
+      "filter0": {
+        "breathe": "Your time is yours",
+        "tapToContinue": "When you're ready"
+      },
+      "filter1": {
+        "title": "A timer that adapts to you",
+        "subtitle": "",
+        "cta": "Create my moment"
+      }
+    },
+    "v3": {
+      "filter3_5": {
+        "title": "Don't miss when your moments end",
+        "body": "Your timer will alert you even if you use another app or your screen is locked.",
+        "ctaPrimary": "Yes, notify me",
+        "ctaSecondary": "Maybe later"
+      },
+      "filter5b": {
+        "title": "Your ringtone",
+        "continue": "Continue",
+        "skip": "Skip →"
+      }
     }
   },
   "settings": {
     "title": "设置",
     "interface": {
-      "title": "🪄 界面",
-      "minimalInterface": "极简界面",
-      "minimalInterfaceDescriptionOn": "计时器运行时隐藏活动和颜色",
-      "minimalInterfaceDescriptionOff": "计时器运行时显示完整界面",
-      "digitalTimer": "数字计时器",
-      "digitalTimerDescriptionOn": "以 MM:SS 格式显示剩余时间",
-      "digitalTimerDescriptionOff": "数字计时器已禁用",
-      "pulseAnimation": "脉冲动画",
       "pulseAnimationDescriptionOn": "计时器运行时启用动画",
       "pulseAnimationDescriptionOff": "动画已禁用",
       "pulseWarningTitle": "脉冲动画",
@@ -80,11 +82,7 @@
       "pulseWarningEnable": "启用"
     },
     "timer": {
-      "title": "⚙️ 计时器",
       "soundDescription": "选择计时器结束时播放的声音",
-      "dialMode": "刻度盘模式",
-      "dialMode60": "60分钟刻度",
-      "dialMode25": "25分钟番茄钟",
       "rotationDirection": "旋转方向",
       "rotationClockwise": "顺时针",
       "rotationCounterClockwise": "逆时针",
@@ -96,25 +94,18 @@
       "longPressStartDescriptionOff": "Simple tap to start",
       "longPressStop": "Enable long tap to stop",
       "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop"
+      "longPressStopDescriptionOff": "Simple tap to stop",
+      "dialScale": "Dial range",
+      "dialScaleDescription": "Maximum duration displayed on the dial"
     },
     "appearance": {
-      "title": "🎨 外观",
       "theme": "主题",
       "themeLight": "☀️ 浅色",
       "themeDark": "🌙 深色",
       "themeAuto": "📱 自动",
       "themeDescriptionAuto": "自动(系统)",
       "themeDescriptionDark": "深色",
-      "themeDescriptionLight": "浅色",
-      "showPalettes": "显示调色板",
-      "showPalettesDescriptionOn": "界面中显示调色板",
-      "showPalettesDescriptionOff": "调色板已隐藏",
-      "palettesDescription": "免费版本:可用 Earth 和 Laser",
-      "showActivities": "显示活动",
-      "showActivitiesDescriptionOn": "界面中显示活动",
-      "showActivitiesDescriptionOff": "活动已隐藏",
-      "activitiesDescription": "选择您喜欢的活动以优先显示"
+      "themeDescriptionLight": "浅色"
     },
     "about": {
       "title": "关于",
@@ -122,26 +113,56 @@
       "appDescription": "可定制的视觉计时器",
       "version": "版本"
     },
-    "dev": {
-      "title": "🔧 开发",
-      "resetOnboarding": "重置引导",
-      "resetOnboardingConfirmTitle": "重置引导",
-      "resetOnboardingConfirmMessage": "下次启动应用时将显示欢迎屏幕和提示。",
-      "resetOnboardingConfirmButton": "重置"
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    },
+    "sections": {
+      "configuration": "CONFIGURATION",
+      "timerOptions": "Timer options",
+      "keepAwake": "Keep Awake",
+      "rotationDirection": "Rotation direction",
+      "notificationSound": "Notification sound",
+      "theme": "Theme",
+      "favorites": "YOUR FAVORITES",
+      "ambiance": "AMBIANCE",
+      "info": "INFO"
+    },
+    "favorites": {
+      "palettes": {
+        "title": "Favorite palettes",
+        "morePalettes": "More palettes"
+      },
+      "activities": {
+        "title": "Favorite activities",
+        "more": "More"
+      }
+    },
+    "options": {
+      "activityEmoji": "Activity emoji at center",
+      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
+      "activityEmojiDescriptionOff": "Emoji is hidden",
+      "pulseAnimation": "Pulse animation"
     }
   },
   "premium": {
     "title": "解锁全部",
     "description": "所有颜色。\n所有活动。\n你的最大舒适。",
-    "features": "🎁 7天免费",
-    "price": "之后 %{price} 一次性。\n永远属于你。",
-    "priceOnce": "一次性买断",
-    "trial": "",
+    "features": "7天免费",
     "startTrial": "免费试用7天",
     "maybeLater": "稍后再说",
     "restore": "恢复我的购买",
-    "unlock": "解锁 ✨",
-    "onboardingToast": "完成引导以发现高级调色板!",
     "welcomeTitle": "欢迎使用高级版! 🎉",
     "welcomeMessage": "所有调色板和活动现已解锁。",
     "welcomeButton": "太棒了!",
@@ -158,13 +179,17 @@
     "restoreError": "无法恢复您的购买。",
     "unexpectedError": "发生意外错误。",
     "contactSupport": "联系支持",
-    "tooManyAttempts": "如果问题仍未解决，请联系支持。"
+    "tooManyAttempts": "如果问题仍未解决，请联系支持。",
+    "errorNetwork": "No internet connection. Check your network and try again.",
+    "errorStore": "Problem with the store. Try again later.",
+    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
+    "errorRestoreGeneric": "Restore error",
+    "errorGeneric": "An error occurred"
   },
   "activities": {
     "none": "基础",
     "work": "工作",
     "break": "休息",
-    "breathing": "呼吸",
     "reading": "阅读",
     "study": "学习",
     "meditation": "冥想",
@@ -176,7 +201,9 @@
     "gaming": "游戏",
     "homework": "作业",
     "music": "音乐",
-    "cleaning": "清洁"
+    "cleaning": "清洁",
+    "nap": "Nap",
+    "writing": "Writing"
   },
   "palettes": {
     "earth": "大地",
@@ -193,7 +220,8 @@
     "autumn": "秋天",
     "lavender": "薰衣草",
     "teal": "青绿",
-    "darkLaser": "Dark Laser"
+    "darkLaser": "Dark Laser",
+    "serenity": "Serenity"
   },
   "sounds": {
     "bell_classic": "经典铃声",
@@ -208,31 +236,50 @@
     "timer_complete": "计时器完成"
   },
   "accessibility": {
-    "settings": "设置",
-    "openSettings": "打开应用设置",
-    "closeSettings": "关闭设置",
-    "minimalInterface": "极简界面",
     "keepAwake": "保持屏幕常亮",
-    "showPalettes": "显示调色板",
-    "showActivities": "显示活动",
     "rotationDirection": "旋转方向",
-    "startTrial": "开始免费试用",
-    "maybeLater": "稍后再说",
-    "restore": "恢复我的购买",
-    "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "paletteNumber": "Palette %{name}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
+    "celebrationEmoji": "Celebration",
+    "closeCreateActivity": "Close create activity",
+    "closeEditActivity": "Close edit activity",
+    "closeModalHint": "Closes this dialog and returns to the app",
+    "closePremiumModal": "Close premium offer",
+    "createActivityHint": "Creates the custom activity and adds it to your list",
+    "deleteActivityHint": "Permanently deletes this custom activity",
+    "exploreSettingsHint": "Opens settings to discover premium features",
+    "restorePurchases": "Restore previous purchases",
+    "restorePurchasesHint": "Restore premium access if you already purchased",
+    "saveActivityHint": "Saves changes to this activity",
+    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "timer": {
+      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
+      "dialTapToToggle": "Tap to start or pause timer",
+      "timerCompleted": "Timer completed!",
+      "timerRunning": "Timer running",
+      "timerStopped": "Timer stopped",
+      "startTimer": "Start timer",
+      "stopTimer": "Stop timer",
+      "resetTimer": "Reset timer"
+    }
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
     "defaultDismiss": "Peut-être plus tard",
     "activities": "Activités premium",
-    "colors": "Palettes premium"
+    "moreColors": {
+      "title": "Even more colors",
+      "subtitle": "Ocean, forest, lavender, duck...",
+      "tagline": "Every mood, its atmosphere."
+    },
+    "moreActivities": {
+      "title": "Even more moments",
+      "subtitle": "16 activities + unlimited custom",
+      "tagline": "Your focus, your rules."
+    }
   },
   "customActivities": {
     "toast": {
@@ -241,7 +288,34 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
+    "create": {
+      "title": "Create activity",
+      "namePlaceholder": "Ex: Guitar, Cooking...",
+      "nameLabel": "Activity name",
+      "emojiLabel": "Choose emoji",
+      "emojiPlaceholder": "Tap to choose",
+      "durationLabel": "Default duration",
+      "preview": "Preview",
+      "previewPlaceholder": "My activity",
+      "buttonCreate": "Create",
+      "buttonCancel": "Cancel",
+      "errorTitle": "Missing information",
+      "errorEmoji": "Please choose an emoji for your activity.",
+      "errorName": "Please enter a name for your activity."
+    },
+    "edit": {
+      "title": "Edit activity",
+      "buttonSave": "Save",
+      "buttonDelete": "Delete",
+      "deleteConfirmTitle": "Delete?",
+      "deleteConfirmMessage": "This action is irreversible.",
+      "deleteConfirmButton": "Delete",
+      "deleteCancelButton": "Cancel"
+    },
+    "duration": {
+      "minutes": "min"
+    }
   },
   "moreColors": {
     "title": "更多颜色",
@@ -252,13 +326,101 @@
     "reminder": {
       "day3": {
         "title": "为自己留出一刻?",
-        "bodyPersonalized": "你的{{name}}在等你 {{emoji}} — {{duration}}分钟怎么样?",
         "bodyGeneric": "你的计时器在等待 — 为自己留出一刻"
       },
       "day7": {
         "title": "最后机会",
         "body": "7天免费试用 — 赶在过期前获取"
       }
+    }
+  },
+  "controls": {
+    "digitalTimer": {
+      "decreaseDuration": "Decrease duration",
+      "increaseDuration": "Increase duration",
+      "showTime": "Show time",
+      "tapToHide": "Tap to hide",
+      "tapToShow": "Tap to show"
+    },
+    "rotation": {
+      "clockwise": "Clockwise",
+      "counterClockwise": "Counter-clockwise"
+    }
+  },
+  "twoTimers": {
+    "title": "You've created 2 moments!",
+    "message": "Want to explore more colors and activities?",
+    "explore": "Explore premium",
+    "dismiss": "Maybe later"
+  },
+  "timerMessages": {
+    "none": {
+      "startMessage": "Ready",
+      "endMessage": "Well done 🎉"
+    },
+    "work": {
+      "startMessage": "Focus",
+      "endMessage": "Accomplished ✨"
+    },
+    "break": {
+      "startMessage": "Rest",
+      "endMessage": "Recharged 🔋"
+    },
+    "meditation": {
+      "startMessage": "Breathe",
+      "endMessage": "Centered 🪷"
+    },
+    "creativity": {
+      "startMessage": "Create",
+      "endMessage": "Inspired ✨"
+    },
+    "reading": {
+      "startMessage": "Dive in",
+      "endMessage": "Enriched 📖"
+    },
+    "study": {
+      "startMessage": "Learn",
+      "endMessage": "Advanced 📈"
+    },
+    "yoga": {
+      "startMessage": "Breathe",
+      "endMessage": "Peaceful 🪷"
+    },
+    "sport": {
+      "startMessage": "Move",
+      "endMessage": "Energized ⚡"
+    },
+    "walking": {
+      "startMessage": "Walk",
+      "endMessage": "Revitalized 🌿"
+    },
+    "cooking": {
+      "startMessage": "Prepare",
+      "endMessage": "Satisfied 🍽️"
+    },
+    "gaming": {
+      "startMessage": "Play",
+      "endMessage": "Relaxed 🎮"
+    },
+    "homework": {
+      "startMessage": "Focus",
+      "endMessage": "Completed ✅"
+    },
+    "music": {
+      "startMessage": "Play",
+      "endMessage": "Harmonized 🎵"
+    },
+    "cleaning": {
+      "startMessage": "Organize",
+      "endMessage": "Serene ✨"
+    },
+    "nap": {
+      "startMessage": "Rest",
+      "endMessage": "Refreshed 💤"
+    },
+    "writing": {
+      "startMessage": "Write",
+      "endMessage": "Liberated ✍️"
     }
   }
 }

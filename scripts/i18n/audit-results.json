@@ -1,0 +1,815 @@
+{
+  "metadata": {
+    "auditedAt": "2026-01-16T16:34:26.428Z",
+    "auditType": "baseline",
+    "referenceLocale": "fr"
+  },
+  "findings": {
+    "missingKeys": [],
+    "localePollution": [
+      {
+        "key": "settings.about.appName",
+        "locale": "en",
+        "frValue": "ResetPulse",
+        "localeValue": "ResetPulse",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "settings.about.version",
+        "locale": "en",
+        "frValue": "Version",
+        "localeValue": "Version",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "settings.sections.configuration",
+        "locale": "en",
+        "frValue": "CONFIGURATION",
+        "localeValue": "CONFIGURATION",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "settings.sections.keepAwake",
+        "locale": "en",
+        "frValue": "Keep Awake",
+        "localeValue": "Keep Awake",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "settings.sections.ambiance",
+        "locale": "en",
+        "frValue": "AMBIANCE",
+        "localeValue": "AMBIANCE",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "settings.sections.info",
+        "locale": "en",
+        "frValue": "INFO",
+        "localeValue": "INFO",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "activities.yoga",
+        "locale": "en",
+        "frValue": "Yoga",
+        "localeValue": "Yoga",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "activities.sport",
+        "locale": "en",
+        "frValue": "Sport",
+        "localeValue": "Sport",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "palettes.softLaser",
+        "locale": "en",
+        "frValue": "Soft Laser",
+        "localeValue": "Soft Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "palettes.tropical",
+        "locale": "en",
+        "frValue": "Tropical",
+        "localeValue": "Tropical",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "palettes.zen",
+        "locale": "en",
+        "frValue": "Zen",
+        "localeValue": "Zen",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "palettes.darkLaser",
+        "locale": "en",
+        "frValue": "Dark Laser",
+        "localeValue": "Dark Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "sounds.microwave_ping",
+        "locale": "en",
+        "frValue": "Ping",
+        "localeValue": "Ping",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "sounds.kitchen_timer",
+        "locale": "en",
+        "frValue": "Ding",
+        "localeValue": "Ding",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "sounds.kitchen_timer_2",
+        "locale": "en",
+        "frValue": "Signal",
+        "localeValue": "Signal",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "sounds.egg_timer",
+        "locale": "en",
+        "frValue": "Tilt",
+        "localeValue": "Tilt",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "sounds.toaster_bell",
+        "locale": "en",
+        "frValue": "Pop",
+        "localeValue": "Pop",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "customActivities.duration.minutes",
+        "locale": "en",
+        "frValue": "min",
+        "localeValue": "min",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "timerMessages.work.startMessage",
+        "locale": "en",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate en value"
+      },
+      {
+        "key": "settings.about.appName",
+        "locale": "es",
+        "frValue": "ResetPulse",
+        "localeValue": "ResetPulse",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "settings.sections.configuration",
+        "locale": "es",
+        "frValue": "CONFIGURATION",
+        "localeValue": "CONFIGURATION",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "settings.sections.keepAwake",
+        "locale": "es",
+        "frValue": "Keep Awake",
+        "localeValue": "Keep Awake",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "settings.sections.ambiance",
+        "locale": "es",
+        "frValue": "AMBIANCE",
+        "localeValue": "AMBIANCE",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "settings.sections.info",
+        "locale": "es",
+        "frValue": "INFO",
+        "localeValue": "INFO",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "activities.yoga",
+        "locale": "es",
+        "frValue": "Yoga",
+        "localeValue": "Yoga",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "palettes.softLaser",
+        "locale": "es",
+        "frValue": "Soft Laser",
+        "localeValue": "Soft Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "palettes.tropical",
+        "locale": "es",
+        "frValue": "Tropical",
+        "localeValue": "Tropical",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "palettes.zen",
+        "locale": "es",
+        "frValue": "Zen",
+        "localeValue": "Zen",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "palettes.darkLaser",
+        "locale": "es",
+        "frValue": "Dark Laser",
+        "localeValue": "Dark Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "customActivities.duration.minutes",
+        "locale": "es",
+        "frValue": "min",
+        "localeValue": "min",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "timerMessages.work.startMessage",
+        "locale": "es",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate es value"
+      },
+      {
+        "key": "settings.about.appName",
+        "locale": "de",
+        "frValue": "ResetPulse",
+        "localeValue": "ResetPulse",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "settings.about.version",
+        "locale": "de",
+        "frValue": "Version",
+        "localeValue": "Version",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "settings.sections.configuration",
+        "locale": "de",
+        "frValue": "CONFIGURATION",
+        "localeValue": "CONFIGURATION",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "settings.sections.keepAwake",
+        "locale": "de",
+        "frValue": "Keep Awake",
+        "localeValue": "Keep Awake",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "settings.sections.ambiance",
+        "locale": "de",
+        "frValue": "AMBIANCE",
+        "localeValue": "AMBIANCE",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "settings.sections.info",
+        "locale": "de",
+        "frValue": "INFO",
+        "localeValue": "INFO",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "activities.break",
+        "locale": "de",
+        "frValue": "Pause",
+        "localeValue": "Pause",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "activities.yoga",
+        "locale": "de",
+        "frValue": "Yoga",
+        "localeValue": "Yoga",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "activities.sport",
+        "locale": "de",
+        "frValue": "Sport",
+        "localeValue": "Sport",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "palettes.softLaser",
+        "locale": "de",
+        "frValue": "Soft Laser",
+        "localeValue": "Soft Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "palettes.zen",
+        "locale": "de",
+        "frValue": "Zen",
+        "localeValue": "Zen",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "palettes.darkLaser",
+        "locale": "de",
+        "frValue": "Dark Laser",
+        "localeValue": "Dark Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "customActivities.duration.minutes",
+        "locale": "de",
+        "frValue": "min",
+        "localeValue": "min",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "timerMessages.work.startMessage",
+        "locale": "de",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate de value"
+      },
+      {
+        "key": "settings.about.appName",
+        "locale": "it",
+        "frValue": "ResetPulse",
+        "localeValue": "ResetPulse",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "settings.sections.configuration",
+        "locale": "it",
+        "frValue": "CONFIGURATION",
+        "localeValue": "CONFIGURATION",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "settings.sections.keepAwake",
+        "locale": "it",
+        "frValue": "Keep Awake",
+        "localeValue": "Keep Awake",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "settings.sections.ambiance",
+        "locale": "it",
+        "frValue": "AMBIANCE",
+        "localeValue": "AMBIANCE",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "settings.sections.info",
+        "locale": "it",
+        "frValue": "INFO",
+        "localeValue": "INFO",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "activities.yoga",
+        "locale": "it",
+        "frValue": "Yoga",
+        "localeValue": "Yoga",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "activities.sport",
+        "locale": "it",
+        "frValue": "Sport",
+        "localeValue": "Sport",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "palettes.softLaser",
+        "locale": "it",
+        "frValue": "Soft Laser",
+        "localeValue": "Soft Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "palettes.zen",
+        "locale": "it",
+        "frValue": "Zen",
+        "localeValue": "Zen",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "palettes.darkLaser",
+        "locale": "it",
+        "frValue": "Dark Laser",
+        "localeValue": "Dark Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "customActivities.duration.minutes",
+        "locale": "it",
+        "frValue": "min",
+        "localeValue": "min",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "timerMessages.work.startMessage",
+        "locale": "it",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate it value"
+      },
+      {
+        "key": "settings.about.appName",
+        "locale": "pt",
+        "frValue": "ResetPulse",
+        "localeValue": "ResetPulse",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "settings.sections.configuration",
+        "locale": "pt",
+        "frValue": "CONFIGURATION",
+        "localeValue": "CONFIGURATION",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "settings.sections.keepAwake",
+        "locale": "pt",
+        "frValue": "Keep Awake",
+        "localeValue": "Keep Awake",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "settings.sections.ambiance",
+        "locale": "pt",
+        "frValue": "AMBIANCE",
+        "localeValue": "AMBIANCE",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "settings.sections.info",
+        "locale": "pt",
+        "frValue": "INFO",
+        "localeValue": "INFO",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "activities.yoga",
+        "locale": "pt",
+        "frValue": "Yoga",
+        "localeValue": "Yoga",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "palettes.softLaser",
+        "locale": "pt",
+        "frValue": "Soft Laser",
+        "localeValue": "Soft Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "palettes.tropical",
+        "locale": "pt",
+        "frValue": "Tropical",
+        "localeValue": "Tropical",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "palettes.zen",
+        "locale": "pt",
+        "frValue": "Zen",
+        "localeValue": "Zen",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "palettes.darkLaser",
+        "locale": "pt",
+        "frValue": "Dark Laser",
+        "localeValue": "Dark Laser",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "customActivities.duration.minutes",
+        "locale": "pt",
+        "frValue": "min",
+        "localeValue": "min",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      },
+      {
+        "key": "timerMessages.work.startMessage",
+        "locale": "pt",
+        "frValue": "Focus",
+        "localeValue": "Focus",
+        "severity": "P1",
+        "issue": "Locale pollution",
+        "impact": "Wrong language displayed",
+        "recommendation": "Translate pt value"
+      }
+    ],
+    "obsoleteKeys": [],
+    "duplicateValues": [
+      {
+        "value": "Marche",
+        "keys": [
+          "activities.walking",
+          "timerMessages.walking.startMessage"
+        ],
+        "canonicalKey": "activities.walking",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to activities.walking"
+      },
+      {
+        "value": "Respire",
+        "keys": [
+          "timerMessages.meditation.startMessage",
+          "timerMessages.yoga.startMessage"
+        ],
+        "canonicalKey": "timerMessages.yoga.startMessage",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to timerMessages.yoga.startMessage"
+      },
+      {
+        "value": "Joue",
+        "keys": [
+          "timerMessages.gaming.startMessage",
+          "timerMessages.music.startMessage"
+        ],
+        "canonicalKey": "timerMessages.music.startMessage",
+        "duplicateCount": 2,
+        "severity": "P3",
+        "issue": "Duplicate value",
+        "impact": "Redundancy, confusion",
+        "recommendation": "Consolidate to timerMessages.music.startMessage"
+      }
+    ]
+  },
+  "dynamicValidation": {
+    "timerMessages": {
+      "valid": [
+        "timerMessages.none.startMessage",
+        "timerMessages.none.endMessage",
+        "timerMessages.work.startMessage",
+        "timerMessages.work.endMessage",
+        "timerMessages.break.startMessage",
+        "timerMessages.break.endMessage",
+        "timerMessages.meditation.startMessage",
+        "timerMessages.meditation.endMessage",
+        "timerMessages.creativity.startMessage",
+        "timerMessages.creativity.endMessage",
+        "timerMessages.reading.startMessage",
+        "timerMessages.reading.endMessage",
+        "timerMessages.study.startMessage",
+        "timerMessages.study.endMessage",
+        "timerMessages.yoga.startMessage",
+        "timerMessages.yoga.endMessage",
+        "timerMessages.sport.startMessage",
+        "timerMessages.sport.endMessage",
+        "timerMessages.walking.startMessage",
+        "timerMessages.walking.endMessage",
+        "timerMessages.cooking.startMessage",
+        "timerMessages.cooking.endMessage",
+        "timerMessages.gaming.startMessage",
+        "timerMessages.gaming.endMessage",
+        "timerMessages.homework.startMessage",
+        "timerMessages.homework.endMessage",
+        "timerMessages.music.startMessage",
+        "timerMessages.music.endMessage",
+        "timerMessages.cleaning.startMessage",
+        "timerMessages.cleaning.endMessage",
+        "timerMessages.nap.startMessage",
+        "timerMessages.nap.endMessage",
+        "timerMessages.writing.startMessage",
+        "timerMessages.writing.endMessage"
+      ],
+      "invalid": []
+    },
+    "sounds": {
+      "valid": [
+        "sounds.timer_complete",
+        "sounds.bell_classic",
+        "sounds.bell_melodic",
+        "sounds.microwave_vintage",
+        "sounds.microwave_ping",
+        "sounds.kitchen_timer",
+        "sounds.kitchen_timer_2",
+        "sounds.egg_timer",
+        "sounds.toaster_bell",
+        "sounds.ding_effect"
+      ],
+      "invalid": []
+    }
+  },
+  "statistics": {
+    "totalKeysInCode": 272,
+    "totalKeysInFR": 262,
+    "usedKeys": 262,
+    "deadKeys": 0,
+    "codeCoverage": "100%",
+    "missingKeys": 0,
+    "pollutionIssues": 69,
+    "duplicateGroups": 3
+  },
+  "readiness": {
+    "status": "WARNING",
+    "emoji": "⚠️",
+    "message": "69 P1 locale pollution issues should be fixed"
+  }
+}

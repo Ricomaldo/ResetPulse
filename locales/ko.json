@@ -1,49 +1,17 @@
 {
   "common": {
-    "settings": "설정",
-    "close": "닫기",
     "cancel": "취소",
-    "confirm": "확인",
     "ok": "확인",
-    "skip": "건너뛰기",
     "retry": "다시 시도",
     "continue": "계속"
   },
   "welcome": {
-    "title": "ResetPulse에 오신 것을 환영합니다",
-    "subtitle": "활동을 선택하고, 시간을 조정하고, 시작하세요.",
-    "discover": "시작하기"
+    "title": "ResetPulse에 오신 것을 환영합니다"
   },
   "invitation": "준비됐어?",
   "onboarding": {
-    "activities": "활동 선택",
-    "dial": "타이머 시간 조정",
-    "palette": "원하는 색상으로 변경",
-    "controls": "시작, 일시정지 또는 재설정",
-    "controlsSubtext": "타이머는 백그라운드에서 계속 실행됩니다",
-    "completion": "ResetPulse를 즐기세요!",
     "restartGuide": "가이드 다시 시작",
     "restartGuideDescription": "환영 화면과 팁 다시 표시",
-    "tool": {
-      "title": "당신에게 가장 잘 맞는 건?",
-      "creative": "창의적",
-      "minimalist": "미니멀",
-      "multitask": "멀티태스커",
-      "rational": "이성적"
-    },
-    "creation": {
-      "title": "첫 번째 모멘트 만들기",
-      "subtitle": "이모지, 이름, 시간을 선택하세요"
-    },
-    "testStart": {
-      "title": "준비되면 탭하세요",
-      "hint": ""
-    },
-    "testStop": {
-      "title": "이제 언제든지 손을 떼세요",
-      "hint": "",
-      "revealTitle": "당신은"
-    },
     "paywall": {
       "title": "첫 번째 모멘트를 만들었어요",
       "profile": "프로필:",
@@ -53,26 +21,60 @@
       "ctaTrial": "7일 무료 체험",
       "ctaSkip": "나중에"
     },
-    "firstTimer": {
-      "title": "타이머가 준비됐어요",
-      "profile": "프로필",
-      "tool": "도구",
-      "moment": "모멘트",
-      "startButton": "첫 타이머 시작",
-      "completionMessage": "잘했어요! 당신의 공간이 준비됐습니다."
+    "intentions": {
+      "other": {
+        "defaultName": "My moment"
+      },
+      "q1": {
+        "title": "Your timer would be for...",
+        "otherPlaceholder": "Like what?"
+      },
+      "q2": {
+        "title": "A little help with...",
+        "otherPlaceholder": "Like what?"
+      }
+    },
+    "creation": {
+      "sectionTitle": "Your first moment",
+      "cta": "Create my moment",
+      "durationLabel": "How long?",
+      "namePlaceholder": "Name your moment..."
+    },
+    "launch": {
+      "title": "Let's go!",
+      "subtitle": "Your first moment is ready. Tap to begin.",
+      "cta": "Start my timer",
+      "ctaHint": "Start your first timer",
+      "defaultActivity": "My moment"
+    },
+    "v2": {
+      "filter0": {
+        "breathe": "Your time is yours",
+        "tapToContinue": "When you're ready"
+      },
+      "filter1": {
+        "title": "A timer that adapts to you",
+        "subtitle": "",
+        "cta": "Create my moment"
+      }
+    },
+    "v3": {
+      "filter3_5": {
+        "title": "Don't miss when your moments end",
+        "body": "Your timer will alert you even if you use another app or your screen is locked.",
+        "ctaPrimary": "Yes, notify me",
+        "ctaSecondary": "Maybe later"
+      },
+      "filter5b": {
+        "title": "Your ringtone",
+        "continue": "Continue",
+        "skip": "Skip →"
+      }
     }
   },
   "settings": {
     "title": "설정",
     "interface": {
-      "title": "🪄 인터페이스",
-      "minimalInterface": "최소 인터페이스",
-      "minimalInterfaceDescriptionOn": "타이머 실행 중 활동과 색상 숨기기",
-      "minimalInterfaceDescriptionOff": "타이머 실행 중에도 전체 인터페이스",
-      "digitalTimer": "디지털 타이머",
-      "digitalTimerDescriptionOn": "남은 시간을 MM:SS로 표시",
-      "digitalTimerDescriptionOff": "디지털 타이머 비활성화",
-      "pulseAnimation": "펄스 애니메이션",
       "pulseAnimationDescriptionOn": "타이머 실행 중 애니메이션 활성화",
       "pulseAnimationDescriptionOff": "애니메이션 비활성화",
       "pulseWarningTitle": "펄스 애니메이션",
@@ -80,11 +82,7 @@
       "pulseWarningEnable": "활성화"
     },
     "timer": {
-      "title": "⚙️ 타이머",
       "soundDescription": "타이머 종료 시 재생할 소리 선택",
-      "dialMode": "다이얼 모드",
-      "dialMode60": "60분 스케일",
-      "dialMode25": "25분 포모도로",
       "rotationDirection": "회전 방향",
       "rotationClockwise": "시계방향",
       "rotationCounterClockwise": "반시계방향",
@@ -96,25 +94,18 @@
       "longPressStartDescriptionOff": "Simple tap to start",
       "longPressStop": "Enable long tap to stop",
       "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop"
+      "longPressStopDescriptionOff": "Simple tap to stop",
+      "dialScale": "Dial range",
+      "dialScaleDescription": "Maximum duration displayed on the dial"
     },
     "appearance": {
-      "title": "🎨 외관",
       "theme": "테마",
       "themeLight": "☀️ 라이트",
       "themeDark": "🌙 다크",
       "themeAuto": "📱 자동",
       "themeDescriptionAuto": "자동(시스템 설정)",
       "themeDescriptionDark": "다크",
-      "themeDescriptionLight": "라이트",
-      "showPalettes": "팔레트 표시",
-      "showPalettesDescriptionOn": "인터페이스에 팔레트 표시",
-      "showPalettesDescriptionOff": "팔레트 숨김",
-      "palettesDescription": "무료 버전: Earth와 Laser 사용 가능",
-      "showActivities": "활동 표시",
-      "showActivitiesDescriptionOn": "인터페이스에 활동 표시",
-      "showActivitiesDescriptionOff": "활동 숨김",
-      "activitiesDescription": "즐겨찾는 활동을 선택하면 먼저 표시됩니다"
+      "themeDescriptionLight": "라이트"
     },
     "about": {
       "title": "정보",
@@ -122,26 +113,56 @@
       "appDescription": "사용자 정의 가능한 비주얼 타이머",
       "version": "버전"
     },
-    "dev": {
-      "title": "🔧 개발",
-      "resetOnboarding": "온보딩 재설정",
-      "resetOnboardingConfirmTitle": "온보딩 재설정",
-      "resetOnboardingConfirmMessage": "다음 앱 실행 시 환영 화면과 툴팁이 표시됩니다.",
-      "resetOnboardingConfirmButton": "재설정"
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    },
+    "sections": {
+      "configuration": "CONFIGURATION",
+      "timerOptions": "Timer options",
+      "keepAwake": "Keep Awake",
+      "rotationDirection": "Rotation direction",
+      "notificationSound": "Notification sound",
+      "theme": "Theme",
+      "favorites": "YOUR FAVORITES",
+      "ambiance": "AMBIANCE",
+      "info": "INFO"
+    },
+    "favorites": {
+      "palettes": {
+        "title": "Favorite palettes",
+        "morePalettes": "More palettes"
+      },
+      "activities": {
+        "title": "Favorite activities",
+        "more": "More"
+      }
+    },
+    "options": {
+      "activityEmoji": "Activity emoji at center",
+      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
+      "activityEmojiDescriptionOff": "Emoji is hidden",
+      "pulseAnimation": "Pulse animation"
     }
   },
   "premium": {
     "title": "모두 잠금 해제",
     "description": "모든 색상.\n모든 활동.\n최고의 편안함.",
-    "features": "🎁 7일 무료",
-    "price": "이후 %{price} 한 번만.\n영원히 당신의 것.",
-    "priceOnce": "영구 구매",
-    "trial": "",
+    "features": "7일 무료",
     "startTrial": "7일 무료 체험",
     "maybeLater": "나중에",
     "restore": "구매 복원",
-    "unlock": "잠금 해제 ✨",
-    "onboardingToast": "가이드를 완료하여 프리미엄 팔레트를 확인하세요!",
     "welcomeTitle": "프리미엄을 환영합니다! 🎉",
     "welcomeMessage": "모든 팔레트와 활동이 잠금 해제되었습니다.",
     "welcomeButton": "좋아요!",
@@ -158,13 +179,17 @@
     "restoreError": "구매를 복원할 수 없습니다.",
     "unexpectedError": "예기치 않은 오류가 발생했습니다.",
     "contactSupport": "지원팀에 문의",
-    "tooManyAttempts": "문제가 계속되면 지원팀에 문의하세요."
+    "tooManyAttempts": "문제가 계속되면 지원팀에 문의하세요.",
+    "errorNetwork": "No internet connection. Check your network and try again.",
+    "errorStore": "Problem with the store. Try again later.",
+    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
+    "errorRestoreGeneric": "Restore error",
+    "errorGeneric": "An error occurred"
   },
   "activities": {
     "none": "기본",
     "work": "작업",
     "break": "휴식",
-    "breathing": "호흡",
     "reading": "독서",
     "study": "공부",
     "meditation": "명상",
@@ -176,7 +201,9 @@
     "gaming": "게임",
     "homework": "숙제",
     "music": "음악",
-    "cleaning": "청소"
+    "cleaning": "청소",
+    "nap": "Nap",
+    "writing": "Writing"
   },
   "palettes": {
     "earth": "대지",
@@ -193,7 +220,8 @@
     "autumn": "가을",
     "lavender": "라벤더",
     "teal": "청록",
-    "darkLaser": "Dark Laser"
+    "darkLaser": "Dark Laser",
+    "serenity": "Serenity"
   },
   "sounds": {
     "bell_classic": "클래식 벨",
@@ -208,31 +236,50 @@
     "timer_complete": "타이머 완료"
   },
   "accessibility": {
-    "settings": "설정",
-    "openSettings": "앱 설정 열기",
-    "closeSettings": "설정 닫기",
-    "minimalInterface": "최소 인터페이스",
     "keepAwake": "화면 켜짐 유지",
-    "showPalettes": "팔레트 표시",
-    "showActivities": "활동 표시",
     "rotationDirection": "회전 방향",
-    "startTrial": "무료 체험 시작",
-    "maybeLater": "나중에",
-    "restore": "구매 복원",
-    "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "paletteNumber": "Palette %{name}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
+    "celebrationEmoji": "Celebration",
+    "closeCreateActivity": "Close create activity",
+    "closeEditActivity": "Close edit activity",
+    "closeModalHint": "Closes this dialog and returns to the app",
+    "closePremiumModal": "Close premium offer",
+    "createActivityHint": "Creates the custom activity and adds it to your list",
+    "deleteActivityHint": "Permanently deletes this custom activity",
+    "exploreSettingsHint": "Opens settings to discover premium features",
+    "restorePurchases": "Restore previous purchases",
+    "restorePurchasesHint": "Restore premium access if you already purchased",
+    "saveActivityHint": "Saves changes to this activity",
+    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "timer": {
+      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
+      "dialTapToToggle": "Tap to start or pause timer",
+      "timerCompleted": "Timer completed!",
+      "timerRunning": "Timer running",
+      "timerStopped": "Timer stopped",
+      "startTimer": "Start timer",
+      "stopTimer": "Stop timer",
+      "resetTimer": "Reset timer"
+    }
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
     "defaultDismiss": "Peut-être plus tard",
     "activities": "Activités premium",
-    "colors": "Palettes premium"
+    "moreColors": {
+      "title": "Even more colors",
+      "subtitle": "Ocean, forest, lavender, duck...",
+      "tagline": "Every mood, its atmosphere."
+    },
+    "moreActivities": {
+      "title": "Even more moments",
+      "subtitle": "16 activities + unlimited custom",
+      "tagline": "Your focus, your rules."
+    }
   },
   "customActivities": {
     "toast": {
@@ -241,7 +288,34 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
+    "create": {
+      "title": "Create activity",
+      "namePlaceholder": "Ex: Guitar, Cooking...",
+      "nameLabel": "Activity name",
+      "emojiLabel": "Choose emoji",
+      "emojiPlaceholder": "Tap to choose",
+      "durationLabel": "Default duration",
+      "preview": "Preview",
+      "previewPlaceholder": "My activity",
+      "buttonCreate": "Create",
+      "buttonCancel": "Cancel",
+      "errorTitle": "Missing information",
+      "errorEmoji": "Please choose an emoji for your activity.",
+      "errorName": "Please enter a name for your activity."
+    },
+    "edit": {
+      "title": "Edit activity",
+      "buttonSave": "Save",
+      "buttonDelete": "Delete",
+      "deleteConfirmTitle": "Delete?",
+      "deleteConfirmMessage": "This action is irreversible.",
+      "deleteConfirmButton": "Delete",
+      "deleteCancelButton": "Cancel"
+    },
+    "duration": {
+      "minutes": "min"
+    }
   },
   "moreColors": {
     "title": "더 많은 색상",
@@ -252,13 +326,101 @@
     "reminder": {
       "day3": {
         "title": "자신을 위한 시간?",
-        "bodyPersonalized": "당신의 {{name}}이 기다리고 있어요 {{emoji}} — {{duration}}분 어때요?",
         "bodyGeneric": "당신의 타이머가 기다리고 있습니다 — 자신을 위한 시간을 가져보세요"
       },
       "day7": {
         "title": "마지막 기회",
         "body": "7일 무료 체험 — 만료되기 전에 지금 받으세요"
       }
+    }
+  },
+  "controls": {
+    "digitalTimer": {
+      "decreaseDuration": "Decrease duration",
+      "increaseDuration": "Increase duration",
+      "showTime": "Show time",
+      "tapToHide": "Tap to hide",
+      "tapToShow": "Tap to show"
+    },
+    "rotation": {
+      "clockwise": "Clockwise",
+      "counterClockwise": "Counter-clockwise"
+    }
+  },
+  "twoTimers": {
+    "title": "You've created 2 moments!",
+    "message": "Want to explore more colors and activities?",
+    "explore": "Explore premium",
+    "dismiss": "Maybe later"
+  },
+  "timerMessages": {
+    "none": {
+      "startMessage": "Ready",
+      "endMessage": "Well done 🎉"
+    },
+    "work": {
+      "startMessage": "Focus",
+      "endMessage": "Accomplished ✨"
+    },
+    "break": {
+      "startMessage": "Rest",
+      "endMessage": "Recharged 🔋"
+    },
+    "meditation": {
+      "startMessage": "Breathe",
+      "endMessage": "Centered 🪷"
+    },
+    "creativity": {
+      "startMessage": "Create",
+      "endMessage": "Inspired ✨"
+    },
+    "reading": {
+      "startMessage": "Dive in",
+      "endMessage": "Enriched 📖"
+    },
+    "study": {
+      "startMessage": "Learn",
+      "endMessage": "Advanced 📈"
+    },
+    "yoga": {
+      "startMessage": "Breathe",
+      "endMessage": "Peaceful 🪷"
+    },
+    "sport": {
+      "startMessage": "Move",
+      "endMessage": "Energized ⚡"
+    },
+    "walking": {
+      "startMessage": "Walk",
+      "endMessage": "Revitalized 🌿"
+    },
+    "cooking": {
+      "startMessage": "Prepare",
+      "endMessage": "Satisfied 🍽️"
+    },
+    "gaming": {
+      "startMessage": "Play",
+      "endMessage": "Relaxed 🎮"
+    },
+    "homework": {
+      "startMessage": "Focus",
+      "endMessage": "Completed ✅"
+    },
+    "music": {
+      "startMessage": "Play",
+      "endMessage": "Harmonized 🎵"
+    },
+    "cleaning": {
+      "startMessage": "Organize",
+      "endMessage": "Serene ✨"
+    },
+    "nap": {
+      "startMessage": "Rest",
+      "endMessage": "Refreshed 💤"
+    },
+    "writing": {
+      "startMessage": "Write",
+      "endMessage": "Liberated ✍️"
     }
   }
 }
