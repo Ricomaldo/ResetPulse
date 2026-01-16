@@ -30,7 +30,8 @@
           ]
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-keep-awake"
     ],
     "notification": {
       "icon": "./assets/icon.png",

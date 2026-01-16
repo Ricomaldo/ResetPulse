@@ -91,6 +91,12 @@
       "keepAwake": "Mantener pantalla activa",
       "keepAwakeDescriptionOn": "La pantalla permanece activa durante el temporizador",
       "keepAwakeDescriptionOff": "La pantalla puede bloquearse durante el temporizador"
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
     },
     "appearance": {
       "title": "🎨 Apariencia",
