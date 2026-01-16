@@ -56,7 +56,7 @@ function AboutSection({ resetOnboarding, onClose }) {
   return (
     <>
       {/* About Section */}
-      <SettingsCard title={<CardTitle Icon={Info} label="À propos" theme={theme} />}>
+      <SettingsCard title={<CardTitle Icon={Info} label={t('settings.about.title')} theme={theme} />}>
         {/* App info */}
         <View style={styles.optionRow}>
           <Text style={styles.label}>{t('settings.about.appName')}</Text>
@@ -64,7 +64,7 @@ function AboutSection({ resetOnboarding, onClose }) {
             {t('settings.about.appDescription')}
           </Text>
           <Text style={[styles.description, { marginTop: rs(8) }]}>
-            {t('settings.about.version')} 1.1.7
+            {t('settings.about.version')} 2.1.3
           </Text>
         </View>
 
