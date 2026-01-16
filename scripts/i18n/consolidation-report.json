@@ -1,0 +1,274 @@
+{
+  "consolidatedAt": "2026-01-16T16:25:10.955Z",
+  "totalDuplicateGroups": 15,
+  "consolidated": [
+    {
+      "canonicalKey": "common.cancel",
+      "removedKeys": [
+        "customActivities.create.buttonCancel",
+        "customActivities.edit.deleteCancelButton"
+      ],
+      "value": "Annuler",
+      "originalKeys": [
+        "common.cancel",
+        "customActivities.create.buttonCancel",
+        "customActivities.edit.deleteCancelButton"
+      ]
+    },
+    {
+      "canonicalKey": "common.continue",
+      "removedKeys": [
+        "onboarding.v3.filter5b.continue"
+      ],
+      "value": "Continuer",
+      "originalKeys": [
+        "common.continue",
+        "onboarding.v3.filter5b.continue"
+      ]
+    },
+    {
+      "canonicalKey": "controls.rotation.clockwise",
+      "removedKeys": [
+        "settings.timer.rotationClockwise"
+      ],
+      "value": "Sens horaire",
+      "originalKeys": [
+        "controls.rotation.clockwise",
+        "settings.timer.rotationClockwise"
+      ]
+    },
+    {
+      "canonicalKey": "controls.rotation.counterClockwise",
+      "removedKeys": [
+        "settings.timer.rotationCounterClockwise"
+      ],
+      "value": "Sens anti-horaire",
+      "originalKeys": [
+        "controls.rotation.counterClockwise",
+        "settings.timer.rotationCounterClockwise"
+      ]
+    },
+    {
+      "canonicalKey": "onboarding.launch.defaultActivity",
+      "removedKeys": [
+        "onboarding.intentions.other.defaultName"
+      ],
+      "value": "Mon moment",
+      "originalKeys": [
+        "onboarding.launch.defaultActivity",
+        "onboarding.intentions.other.defaultName"
+      ]
+    },
+    {
+      "canonicalKey": "onboarding.intentions.q1.otherPlaceholder",
+      "removedKeys": [
+        "onboarding.intentions.q2.otherPlaceholder"
+      ],
+      "value": "C'est-à-dire ?",
+      "originalKeys": [
+        "onboarding.intentions.q1.otherPlaceholder",
+        "onboarding.intentions.q2.otherPlaceholder"
+      ]
+    },
+    {
+      "canonicalKey": "onboarding.creation.cta",
+      "removedKeys": [
+        "onboarding.v2.filter1.cta"
+      ],
+      "value": "Créer mon moment",
+      "originalKeys": [
+        "onboarding.creation.cta",
+        "onboarding.v2.filter1.cta"
+      ]
+    },
+    {
+      "canonicalKey": "twoTimers.dismiss",
+      "removedKeys": [
+        "premium.maybeLater",
+        "discovery.defaultDismiss",
+        "onboarding.paywall.ctaSkip"
+      ],
+      "value": "Peut-être plus tard",
+      "originalKeys": [
+        "twoTimers.dismiss",
+        "premium.maybeLater",
+        "discovery.defaultDismiss",
+        "onboarding.paywall.ctaSkip"
+      ]
+    },
+    {
+      "canonicalKey": "accessibility.rotationDirection",
+      "removedKeys": [
+        "settings.timer.rotationDirection",
+        "settings.sections.rotationDirection"
+      ],
+      "value": "Sens de rotation",
+      "originalKeys": [
+        "accessibility.rotationDirection",
+        "settings.timer.rotationDirection",
+        "settings.sections.rotationDirection"
+      ]
+    },
+    {
+      "canonicalKey": "accessibility.keepAwake",
+      "removedKeys": [
+        "settings.timer.keepAwake"
+      ],
+      "value": "Maintenir l'écran allumé",
+      "originalKeys": [
+        "accessibility.keepAwake",
+        "settings.timer.keepAwake"
+      ]
+    },
+    {
+      "canonicalKey": "settings.sections.theme",
+      "removedKeys": [
+        "settings.appearance.theme"
+      ],
+      "value": "Thème",
+      "originalKeys": [
+        "settings.sections.theme",
+        "settings.appearance.theme"
+      ]
+    },
+    {
+      "canonicalKey": "activities.walking",
+      "removedKeys": [
+        "timerMessages.walking.startMessage"
+      ],
+      "value": "Marche",
+      "originalKeys": [
+        "activities.walking",
+        "timerMessages.walking.startMessage"
+      ]
+    },
+    {
+      "canonicalKey": "customActivities.edit.buttonDelete",
+      "removedKeys": [
+        "customActivities.edit.deleteConfirmButton"
+      ],
+      "value": "Supprimer",
+      "originalKeys": [
+        "customActivities.edit.buttonDelete",
+        "customActivities.edit.deleteConfirmButton"
+      ]
+    },
+    {
+      "canonicalKey": "timerMessages.yoga.startMessage",
+      "removedKeys": [
+        "timerMessages.meditation.startMessage"
+      ],
+      "value": "Respire",
+      "originalKeys": [
+        "timerMessages.yoga.startMessage",
+        "timerMessages.meditation.startMessage"
+      ]
+    },
+    {
+      "canonicalKey": "timerMessages.music.startMessage",
+      "removedKeys": [
+        "timerMessages.gaming.startMessage"
+      ],
+      "value": "Joue",
+      "originalKeys": [
+        "timerMessages.music.startMessage",
+        "timerMessages.gaming.startMessage"
+      ]
+    }
+  ],
+  "sourceFiles": {
+    "totalFilesModified": 15,
+    "changes": [
+      {
+        "file": "src/components/modals/EditActivityModalContent.jsx",
+        "oldKey": "customActivities.create.buttonCancel",
+        "newKey": "common.cancel"
+      },
+      {
+        "file": "src/components/modals/EditActivityModalContent.jsx",
+        "oldKey": "customActivities.edit.deleteCancelButton",
+        "newKey": "common.cancel"
+      },
+      {
+        "file": "src/components/forms/CreateActivityForm.jsx",
+        "oldKey": "customActivities.create.buttonCancel",
+        "newKey": "common.cancel"
+      },
+      {
+        "file": "src/screens/onboarding/filters/Filter-060-sound.jsx",
+        "oldKey": "onboarding.v3.filter5b.continue",
+        "newKey": "common.continue"
+      },
+      {
+        "file": "src/components/settings/SettingsPanel.jsx",
+        "oldKey": "settings.timer.rotationClockwise",
+        "newKey": "controls.rotation.clockwise"
+      },
+      {
+        "file": "src/components/settings/SettingsPanel.jsx",
+        "oldKey": "settings.timer.rotationCounterClockwise",
+        "newKey": "controls.rotation.counterClockwise"
+      },
+      {
+        "file": "src/components/forms/CreateActivityForm.jsx",
+        "oldKey": "onboarding.intentions.other.defaultName",
+        "newKey": "onboarding.launch.defaultActivity"
+      },
+      {
+        "file": "src/screens/onboarding/filters/Filter-025-intentions.jsx",
+        "oldKey": "onboarding.intentions.q2.otherPlaceholder",
+        "newKey": "onboarding.intentions.q1.otherPlaceholder"
+      },
+      {
+        "file": "src/screens/onboarding/filters/Filter-020-preview.jsx",
+        "oldKey": "onboarding.v2.filter1.cta",
+        "newKey": "onboarding.creation.cta"
+      },
+      {
+        "file": "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+        "oldKey": "onboarding.paywall.ctaSkip",
+        "newKey": "twoTimers.dismiss"
+      },
+      {
+        "file": "src/components/modals/PremiumModalContent.jsx",
+        "oldKey": "premium.maybeLater",
+        "newKey": "twoTimers.dismiss"
+      },
+      {
+        "file": "src/components/modals/DiscoveryModalContent.jsx",
+        "oldKey": "discovery.defaultDismiss",
+        "newKey": "twoTimers.dismiss"
+      },
+      {
+        "file": "src/components/settings/SettingsPanel.jsx",
+        "oldKey": "settings.timer.rotationDirection",
+        "newKey": "accessibility.rotationDirection"
+      },
+      {
+        "file": "src/components/settings/SettingsPanel.jsx",
+        "oldKey": "settings.sections.rotationDirection",
+        "newKey": "accessibility.rotationDirection"
+      },
+      {
+        "file": "src/components/settings/SettingsPanel.jsx",
+        "oldKey": "settings.timer.keepAwake",
+        "newKey": "accessibility.keepAwake"
+      },
+      {
+        "file": "src/components/settings/SettingsPanel.jsx",
+        "oldKey": "settings.appearance.theme",
+        "newKey": "settings.sections.theme"
+      },
+      {
+        "file": "src/components/modals/EditActivityModalContent.jsx",
+        "oldKey": "customActivities.edit.deleteConfirmButton",
+        "newKey": "customActivities.edit.buttonDelete"
+      }
+    ]
+  },
+  "localeFiles": {
+    "totalFilesUpdated": 15,
+    "totalKeysRemoved": 142
+  },
+  "backupDirectory": "locales/.backup-1768580710744"
+}

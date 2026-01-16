@@ -1,0 +1,1375 @@
+{
+  "metadata": {
+    "extractedAt": "2026-01-16T16:34:26.340Z",
+    "sourceDirectory": "src/",
+    "filesScanned": 228
+  },
+  "staticKeys": [
+    "accessibility.activityLocked",
+    "accessibility.celebrationEmoji",
+    "accessibility.closeCreateActivity",
+    "accessibility.closeEditActivity",
+    "accessibility.closeModalHint",
+    "accessibility.closePremiumModal",
+    "accessibility.createActivityHint",
+    "accessibility.customActivityHint",
+    "accessibility.deleteActivityHint",
+    "accessibility.discoverMorePalettes",
+    "accessibility.discoverPremium",
+    "accessibility.exploreSettingsHint",
+    "accessibility.keepAwake",
+    "accessibility.moreActivities",
+    "accessibility.restorePurchases",
+    "accessibility.restorePurchasesHint",
+    "accessibility.rotationDirection",
+    "accessibility.saveActivityHint",
+    "accessibility.timer.dialAdjustable",
+    "accessibility.timer.dialTapToToggle",
+    "accessibility.timer.resetTimer",
+    "accessibility.timer.startTimer",
+    "accessibility.timer.stopTimer",
+    "accessibility.timer.timerCompleted",
+    "accessibility.timer.timerRunning",
+    "accessibility.timer.timerStopped",
+    "accessibility.unlockPremiumHint",
+    "activities.break",
+    "activities.cleaning",
+    "activities.cooking",
+    "activities.creativity",
+    "activities.gaming",
+    "activities.homework",
+    "activities.meditation",
+    "activities.music",
+    "activities.nap",
+    "activities.none",
+    "activities.reading",
+    "activities.sport",
+    "activities.study",
+    "activities.walking",
+    "activities.work",
+    "activities.writing",
+    "activities.yoga",
+    "common.cancel",
+    "common.continue",
+    "common.ok",
+    "common.retry",
+    "controls.digitalTimer.decreaseDuration",
+    "controls.digitalTimer.increaseDuration",
+    "controls.digitalTimer.showTime",
+    "controls.digitalTimer.tapToHide",
+    "controls.digitalTimer.tapToShow",
+    "controls.rotation.clockwise",
+    "controls.rotation.counterClockwise",
+    "customActivities.addButton",
+    "customActivities.addButtonHint",
+    "customActivities.create.buttonCreate",
+    "customActivities.create.durationLabel",
+    "customActivities.create.emojiLabel",
+    "customActivities.create.emojiPlaceholder",
+    "customActivities.create.errorEmoji",
+    "customActivities.create.errorName",
+    "customActivities.create.errorTitle",
+    "customActivities.create.nameLabel",
+    "customActivities.create.namePlaceholder",
+    "customActivities.create.preview",
+    "customActivities.create.previewPlaceholder",
+    "customActivities.create.title",
+    "customActivities.duration.minutes",
+    "customActivities.edit.buttonDelete",
+    "customActivities.edit.buttonSave",
+    "customActivities.edit.deleteConfirmMessage",
+    "customActivities.edit.deleteConfirmTitle",
+    "customActivities.edit.title",
+    "customActivities.toast.created",
+    "customActivities.toast.deleted",
+    "customActivities.toast.updated",
+    "discovery.activities",
+    "discovery.defaultCta",
+    "discovery.moreActivities.subtitle",
+    "discovery.moreActivities.tagline",
+    "discovery.moreActivities.title",
+    "discovery.moreColors.subtitle",
+    "discovery.moreColors.tagline",
+    "discovery.moreColors.title",
+    "invitation",
+    "notifications.reminder.day3.bodyGeneric",
+    "notifications.reminder.day3.title",
+    "notifications.reminder.day7.body",
+    "notifications.reminder.day7.title",
+    "onboarding.creation.cta",
+    "onboarding.creation.durationLabel",
+    "onboarding.creation.namePlaceholder",
+    "onboarding.creation.sectionTitle",
+    "onboarding.intentions.q1.otherPlaceholder",
+    "onboarding.intentions.q1.title",
+    "onboarding.intentions.q2.title",
+    "onboarding.launch.cta",
+    "onboarding.launch.ctaHint",
+    "onboarding.launch.defaultActivity",
+    "onboarding.launch.subtitle",
+    "onboarding.launch.title",
+    "onboarding.paywall.ctaTrial",
+    "onboarding.paywall.price",
+    "onboarding.paywall.profile",
+    "onboarding.paywall.question",
+    "onboarding.paywall.title",
+    "onboarding.paywall.valueProposition",
+    "onboarding.restartGuide",
+    "onboarding.restartGuideDescription",
+    "onboarding.v2.filter0.breathe",
+    "onboarding.v2.filter0.tapToContinue",
+    "onboarding.v2.filter1.subtitle",
+    "onboarding.v2.filter1.title",
+    "onboarding.v3.filter3_5.body",
+    "onboarding.v3.filter3_5.ctaPrimary",
+    "onboarding.v3.filter3_5.ctaSecondary",
+    "onboarding.v3.filter3_5.title",
+    "onboarding.v3.filter5b.skip",
+    "onboarding.v3.filter5b.title",
+    "palettes.autumn",
+    "palettes.classic",
+    "palettes.darkLaser",
+    "palettes.dawn",
+    "palettes.dusk",
+    "palettes.earth",
+    "palettes.forest",
+    "palettes.lavender",
+    "palettes.ocean",
+    "palettes.serenity",
+    "palettes.soft",
+    "palettes.softLaser",
+    "palettes.teal",
+    "palettes.tropical",
+    "palettes.zen",
+    "premium.contactSupport",
+    "premium.description",
+    "premium.error",
+    "premium.errorGeneric",
+    "premium.errorNetwork",
+    "premium.errorOfferings",
+    "premium.errorPaymentPending",
+    "premium.errorPurchase",
+    "premium.errorRestoreGeneric",
+    "premium.errorStore",
+    "premium.features",
+    "premium.noConnection",
+    "premium.noConnectionMessage",
+    "premium.paymentPending",
+    "premium.restore",
+    "premium.restoreError",
+    "premium.restoreNone",
+    "premium.restoreNoneMessage",
+    "premium.restoreSuccess",
+    "premium.restoreSuccessMessage",
+    "premium.startTrial",
+    "premium.title",
+    "premium.tooManyAttempts",
+    "premium.unexpectedError",
+    "premium.welcomeButton",
+    "premium.welcomeMessage",
+    "premium.welcomeTitle",
+    "settings.about.appDescription",
+    "settings.about.appName",
+    "settings.about.title",
+    "settings.about.version",
+    "settings.appearance.themeAuto",
+    "settings.appearance.themeDark",
+    "settings.appearance.themeDescriptionAuto",
+    "settings.appearance.themeDescriptionDark",
+    "settings.appearance.themeDescriptionLight",
+    "settings.appearance.themeLight",
+    "settings.favorites.activities.more",
+    "settings.favorites.activities.title",
+    "settings.favorites.palettes.morePalettes",
+    "settings.favorites.palettes.title",
+    "settings.interface.pulseAnimationDescriptionOff",
+    "settings.interface.pulseAnimationDescriptionOn",
+    "settings.interface.pulseWarningEnable",
+    "settings.interface.pulseWarningMessage",
+    "settings.interface.pulseWarningTitle",
+    "settings.options.activityEmoji",
+    "settings.options.activityEmojiDescriptionOff",
+    "settings.options.activityEmojiDescriptionOn",
+    "settings.options.pulseAnimation",
+    "settings.sections.ambiance",
+    "settings.sections.configuration",
+    "settings.sections.favorites",
+    "settings.sections.info",
+    "settings.sections.keepAwake",
+    "settings.sections.notificationSound",
+    "settings.sections.theme",
+    "settings.sections.timerOptions",
+    "settings.timer.dialScale",
+    "settings.timer.dialScaleDescription",
+    "settings.timer.keepAwakeDescriptionOff",
+    "settings.timer.keepAwakeDescriptionOn",
+    "settings.timer.longPressStart",
+    "settings.timer.longPressStartDescriptionOff",
+    "settings.timer.longPressStartDescriptionOn",
+    "settings.timer.longPressStop",
+    "settings.timer.longPressStopDescriptionOff",
+    "settings.timer.longPressStopDescriptionOn",
+    "settings.timer.soundDescription",
+    "settings.title",
+    "settings.tool.creative.description",
+    "settings.tool.creative.label",
+    "settings.tool.multitask.description",
+    "settings.tool.multitask.label",
+    "settings.tool.precision.description",
+    "settings.tool.precision.label",
+    "settings.tool.sectionTitle",
+    "sounds.bell_classic",
+    "sounds.bell_melodic",
+    "sounds.ding_effect",
+    "sounds.egg_timer",
+    "sounds.kitchen_timer",
+    "sounds.kitchen_timer_2",
+    "sounds.microwave_ping",
+    "sounds.microwave_vintage",
+    "sounds.timer_complete",
+    "sounds.toaster_bell",
+    "twoTimers.dismiss",
+    "twoTimers.explore",
+    "twoTimers.message",
+    "twoTimers.title",
+    "welcome.title"
+  ],
+  "dynamicKeys": {
+    "timerMessages": [
+      "timerMessages.none.startMessage",
+      "timerMessages.none.endMessage",
+      "timerMessages.work.startMessage",
+      "timerMessages.work.endMessage",
+      "timerMessages.break.startMessage",
+      "timerMessages.break.endMessage",
+      "timerMessages.meditation.startMessage",
+      "timerMessages.meditation.endMessage",
+      "timerMessages.creativity.startMessage",
+      "timerMessages.creativity.endMessage",
+      "timerMessages.reading.startMessage",
+      "timerMessages.reading.endMessage",
+      "timerMessages.study.startMessage",
+      "timerMessages.study.endMessage",
+      "timerMessages.yoga.startMessage",
+      "timerMessages.yoga.endMessage",
+      "timerMessages.sport.startMessage",
+      "timerMessages.sport.endMessage",
+      "timerMessages.walking.startMessage",
+      "timerMessages.walking.endMessage",
+      "timerMessages.cooking.startMessage",
+      "timerMessages.cooking.endMessage",
+      "timerMessages.gaming.startMessage",
+      "timerMessages.gaming.endMessage",
+      "timerMessages.homework.startMessage",
+      "timerMessages.homework.endMessage",
+      "timerMessages.music.startMessage",
+      "timerMessages.music.endMessage",
+      "timerMessages.cleaning.startMessage",
+      "timerMessages.cleaning.endMessage",
+      "timerMessages.nap.startMessage",
+      "timerMessages.nap.endMessage",
+      "timerMessages.writing.startMessage",
+      "timerMessages.writing.endMessage"
+    ],
+    "sounds": [
+      "sounds.timer_complete",
+      "sounds.bell_classic",
+      "sounds.bell_melodic",
+      "sounds.microwave_vintage",
+      "sounds.microwave_ping",
+      "sounds.kitchen_timer",
+      "sounds.kitchen_timer_2",
+      "sounds.egg_timer",
+      "sounds.toaster_bell",
+      "sounds.ding_effect"
+    ]
+  },
+  "allKeys": [
+    "accessibility.activityLocked",
+    "accessibility.celebrationEmoji",
+    "accessibility.closeCreateActivity",
+    "accessibility.closeEditActivity",
+    "accessibility.closeModalHint",
+    "accessibility.closePremiumModal",
+    "accessibility.createActivityHint",
+    "accessibility.customActivityHint",
+    "accessibility.deleteActivityHint",
+    "accessibility.discoverMorePalettes",
+    "accessibility.discoverPremium",
+    "accessibility.exploreSettingsHint",
+    "accessibility.keepAwake",
+    "accessibility.moreActivities",
+    "accessibility.restorePurchases",
+    "accessibility.restorePurchasesHint",
+    "accessibility.rotationDirection",
+    "accessibility.saveActivityHint",
+    "accessibility.timer.dialAdjustable",
+    "accessibility.timer.dialTapToToggle",
+    "accessibility.timer.resetTimer",
+    "accessibility.timer.startTimer",
+    "accessibility.timer.stopTimer",
+    "accessibility.timer.timerCompleted",
+    "accessibility.timer.timerRunning",
+    "accessibility.timer.timerStopped",
+    "accessibility.unlockPremiumHint",
+    "activities.break",
+    "activities.cleaning",
+    "activities.cooking",
+    "activities.creativity",
+    "activities.gaming",
+    "activities.homework",
+    "activities.meditation",
+    "activities.music",
+    "activities.nap",
+    "activities.none",
+    "activities.reading",
+    "activities.sport",
+    "activities.study",
+    "activities.walking",
+    "activities.work",
+    "activities.writing",
+    "activities.yoga",
+    "common.cancel",
+    "common.continue",
+    "common.ok",
+    "common.retry",
+    "controls.digitalTimer.decreaseDuration",
+    "controls.digitalTimer.increaseDuration",
+    "controls.digitalTimer.showTime",
+    "controls.digitalTimer.tapToHide",
+    "controls.digitalTimer.tapToShow",
+    "controls.rotation.clockwise",
+    "controls.rotation.counterClockwise",
+    "customActivities.addButton",
+    "customActivities.addButtonHint",
+    "customActivities.create.buttonCreate",
+    "customActivities.create.durationLabel",
+    "customActivities.create.emojiLabel",
+    "customActivities.create.emojiPlaceholder",
+    "customActivities.create.errorEmoji",
+    "customActivities.create.errorName",
+    "customActivities.create.errorTitle",
+    "customActivities.create.nameLabel",
+    "customActivities.create.namePlaceholder",
+    "customActivities.create.preview",
+    "customActivities.create.previewPlaceholder",
+    "customActivities.create.title",
+    "customActivities.duration.minutes",
+    "customActivities.edit.buttonDelete",
+    "customActivities.edit.buttonSave",
+    "customActivities.edit.deleteConfirmMessage",
+    "customActivities.edit.deleteConfirmTitle",
+    "customActivities.edit.title",
+    "customActivities.toast.created",
+    "customActivities.toast.deleted",
+    "customActivities.toast.updated",
+    "discovery.activities",
+    "discovery.defaultCta",
+    "discovery.moreActivities.subtitle",
+    "discovery.moreActivities.tagline",
+    "discovery.moreActivities.title",
+    "discovery.moreColors.subtitle",
+    "discovery.moreColors.tagline",
+    "discovery.moreColors.title",
+    "invitation",
+    "notifications.reminder.day3.bodyGeneric",
+    "notifications.reminder.day3.title",
+    "notifications.reminder.day7.body",
+    "notifications.reminder.day7.title",
+    "onboarding.creation.cta",
+    "onboarding.creation.durationLabel",
+    "onboarding.creation.namePlaceholder",
+    "onboarding.creation.sectionTitle",
+    "onboarding.intentions.q1.otherPlaceholder",
+    "onboarding.intentions.q1.title",
+    "onboarding.intentions.q2.title",
+    "onboarding.launch.cta",
+    "onboarding.launch.ctaHint",
+    "onboarding.launch.defaultActivity",
+    "onboarding.launch.subtitle",
+    "onboarding.launch.title",
+    "onboarding.paywall.ctaTrial",
+    "onboarding.paywall.price",
+    "onboarding.paywall.profile",
+    "onboarding.paywall.question",
+    "onboarding.paywall.title",
+    "onboarding.paywall.valueProposition",
+    "onboarding.restartGuide",
+    "onboarding.restartGuideDescription",
+    "onboarding.v2.filter0.breathe",
+    "onboarding.v2.filter0.tapToContinue",
+    "onboarding.v2.filter1.subtitle",
+    "onboarding.v2.filter1.title",
+    "onboarding.v3.filter3_5.body",
+    "onboarding.v3.filter3_5.ctaPrimary",
+    "onboarding.v3.filter3_5.ctaSecondary",
+    "onboarding.v3.filter3_5.title",
+    "onboarding.v3.filter5b.skip",
+    "onboarding.v3.filter5b.title",
+    "palettes.autumn",
+    "palettes.classic",
+    "palettes.darkLaser",
+    "palettes.dawn",
+    "palettes.dusk",
+    "palettes.earth",
+    "palettes.forest",
+    "palettes.lavender",
+    "palettes.ocean",
+    "palettes.serenity",
+    "palettes.soft",
+    "palettes.softLaser",
+    "palettes.teal",
+    "palettes.tropical",
+    "palettes.zen",
+    "premium.contactSupport",
+    "premium.description",
+    "premium.error",
+    "premium.errorGeneric",
+    "premium.errorNetwork",
+    "premium.errorOfferings",
+    "premium.errorPaymentPending",
+    "premium.errorPurchase",
+    "premium.errorRestoreGeneric",
+    "premium.errorStore",
+    "premium.features",
+    "premium.noConnection",
+    "premium.noConnectionMessage",
+    "premium.paymentPending",
+    "premium.restore",
+    "premium.restoreError",
+    "premium.restoreNone",
+    "premium.restoreNoneMessage",
+    "premium.restoreSuccess",
+    "premium.restoreSuccessMessage",
+    "premium.startTrial",
+    "premium.title",
+    "premium.tooManyAttempts",
+    "premium.unexpectedError",
+    "premium.welcomeButton",
+    "premium.welcomeMessage",
+    "premium.welcomeTitle",
+    "settings.about.appDescription",
+    "settings.about.appName",
+    "settings.about.title",
+    "settings.about.version",
+    "settings.appearance.themeAuto",
+    "settings.appearance.themeDark",
+    "settings.appearance.themeDescriptionAuto",
+    "settings.appearance.themeDescriptionDark",
+    "settings.appearance.themeDescriptionLight",
+    "settings.appearance.themeLight",
+    "settings.favorites.activities.more",
+    "settings.favorites.activities.title",
+    "settings.favorites.palettes.morePalettes",
+    "settings.favorites.palettes.title",
+    "settings.interface.pulseAnimationDescriptionOff",
+    "settings.interface.pulseAnimationDescriptionOn",
+    "settings.interface.pulseWarningEnable",
+    "settings.interface.pulseWarningMessage",
+    "settings.interface.pulseWarningTitle",
+    "settings.options.activityEmoji",
+    "settings.options.activityEmojiDescriptionOff",
+    "settings.options.activityEmojiDescriptionOn",
+    "settings.options.pulseAnimation",
+    "settings.sections.ambiance",
+    "settings.sections.configuration",
+    "settings.sections.favorites",
+    "settings.sections.info",
+    "settings.sections.keepAwake",
+    "settings.sections.notificationSound",
+    "settings.sections.theme",
+    "settings.sections.timerOptions",
+    "settings.timer.dialScale",
+    "settings.timer.dialScaleDescription",
+    "settings.timer.keepAwakeDescriptionOff",
+    "settings.timer.keepAwakeDescriptionOn",
+    "settings.timer.longPressStart",
+    "settings.timer.longPressStartDescriptionOff",
+    "settings.timer.longPressStartDescriptionOn",
+    "settings.timer.longPressStop",
+    "settings.timer.longPressStopDescriptionOff",
+    "settings.timer.longPressStopDescriptionOn",
+    "settings.timer.soundDescription",
+    "settings.title",
+    "settings.tool.creative.description",
+    "settings.tool.creative.label",
+    "settings.tool.multitask.description",
+    "settings.tool.multitask.label",
+    "settings.tool.precision.description",
+    "settings.tool.precision.label",
+    "settings.tool.sectionTitle",
+    "sounds.bell_classic",
+    "sounds.bell_classic",
+    "sounds.bell_melodic",
+    "sounds.bell_melodic",
+    "sounds.ding_effect",
+    "sounds.ding_effect",
+    "sounds.egg_timer",
+    "sounds.egg_timer",
+    "sounds.kitchen_timer",
+    "sounds.kitchen_timer",
+    "sounds.kitchen_timer_2",
+    "sounds.kitchen_timer_2",
+    "sounds.microwave_ping",
+    "sounds.microwave_ping",
+    "sounds.microwave_vintage",
+    "sounds.microwave_vintage",
+    "sounds.timer_complete",
+    "sounds.timer_complete",
+    "sounds.toaster_bell",
+    "sounds.toaster_bell",
+    "timerMessages.break.endMessage",
+    "timerMessages.break.startMessage",
+    "timerMessages.cleaning.endMessage",
+    "timerMessages.cleaning.startMessage",
+    "timerMessages.cooking.endMessage",
+    "timerMessages.cooking.startMessage",
+    "timerMessages.creativity.endMessage",
+    "timerMessages.creativity.startMessage",
+    "timerMessages.gaming.endMessage",
+    "timerMessages.gaming.startMessage",
+    "timerMessages.homework.endMessage",
+    "timerMessages.homework.startMessage",
+    "timerMessages.meditation.endMessage",
+    "timerMessages.meditation.startMessage",
+    "timerMessages.music.endMessage",
+    "timerMessages.music.startMessage",
+    "timerMessages.nap.endMessage",
+    "timerMessages.nap.startMessage",
+    "timerMessages.none.endMessage",
+    "timerMessages.none.startMessage",
+    "timerMessages.reading.endMessage",
+    "timerMessages.reading.startMessage",
+    "timerMessages.sport.endMessage",
+    "timerMessages.sport.startMessage",
+    "timerMessages.study.endMessage",
+    "timerMessages.study.startMessage",
+    "timerMessages.walking.endMessage",
+    "timerMessages.walking.startMessage",
+    "timerMessages.work.endMessage",
+    "timerMessages.work.startMessage",
+    "timerMessages.writing.endMessage",
+    "timerMessages.writing.startMessage",
+    "timerMessages.yoga.endMessage",
+    "timerMessages.yoga.startMessage",
+    "twoTimers.dismiss",
+    "twoTimers.explore",
+    "twoTimers.message",
+    "twoTimers.title",
+    "welcome.title"
+  ],
+  "statistics": {
+    "staticCount": 228,
+    "dynamicCount": 44,
+    "totalCount": 272,
+    "dynamicPatternUsages": 5
+  },
+  "patterns": [
+    {
+      "pattern": "sounds.${sound.id}",
+      "file": "src/screens/onboarding/filters/Filter-060-sound.jsx"
+    },
+    {
+      "pattern": "sounds.${sound.id}",
+      "file": "src/screens/onboarding/filters/Filter-060-sound.jsx"
+    },
+    {
+      "pattern": "sounds.${sound.id}",
+      "file": "src/screens/onboarding/filters/Filter-060-sound.jsx"
+    },
+    {
+      "pattern": "timerMessages.${messageId}.startMessage",
+      "file": "src/config/activityMessages.js"
+    },
+    {
+      "pattern": "timerMessages.${messageId}.endMessage",
+      "file": "src/config/activityMessages.js"
+    }
+  ],
+  "fileUsage": {
+    "notifications.reminder.day3.title": [
+      "src/services/reminderNotifications.js"
+    ],
+    "notifications.reminder.day3.bodyGeneric": [
+      "src/services/reminderNotifications.js"
+    ],
+    "notifications.reminder.day7.title": [
+      "src/services/reminderNotifications.js"
+    ],
+    "notifications.reminder.day7.body": [
+      "src/services/reminderNotifications.js"
+    ],
+    "invitation": [
+      "src/screens/TimerScreen.jsx",
+      "src/screens/TimerScreen.jsx",
+      "src/hooks/useTimer.js"
+    ],
+    "premium.error": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.errorOfferings": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "common.ok": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/contexts/PurchaseContext.jsx",
+      "src/contexts/PurchaseContext.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.noConnection": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.noConnectionMessage": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.errorPurchase": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "onboarding.paywall.title": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx"
+    ],
+    "onboarding.paywall.profile": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx"
+    ],
+    "onboarding.paywall.question": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx"
+    ],
+    "onboarding.paywall.valueProposition": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx"
+    ],
+    "onboarding.paywall.price": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx"
+    ],
+    "onboarding.paywall.ctaTrial": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx"
+    ],
+    "twoTimers.dismiss": [
+      "src/screens/onboarding/filters/Filter-080-paywall.jsx",
+      "src/components/modals/TwoTimersModalContent.jsx",
+      "src/components/modals/TwoTimersModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/DiscoveryModalContent.jsx"
+    ],
+    "onboarding.launch.defaultActivity": [
+      "src/screens/onboarding/filters/Filter-080-launch.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "onboarding.launch.cta": [
+      "src/screens/onboarding/filters/Filter-080-launch.jsx"
+    ],
+    "onboarding.launch.ctaHint": [
+      "src/screens/onboarding/filters/Filter-080-launch.jsx"
+    ],
+    "onboarding.launch.title": [
+      "src/screens/onboarding/filters/Filter-080-launch.jsx"
+    ],
+    "onboarding.launch.subtitle": [
+      "src/screens/onboarding/filters/Filter-080-launch.jsx"
+    ],
+    "onboarding.v3.filter3_5.ctaPrimary": [
+      "src/screens/onboarding/filters/Filter-070-notifications.jsx"
+    ],
+    "onboarding.v3.filter3_5.ctaSecondary": [
+      "src/screens/onboarding/filters/Filter-070-notifications.jsx"
+    ],
+    "onboarding.v3.filter3_5.title": [
+      "src/screens/onboarding/filters/Filter-070-notifications.jsx"
+    ],
+    "onboarding.v3.filter3_5.body": [
+      "src/screens/onboarding/filters/Filter-070-notifications.jsx"
+    ],
+    "onboarding.v3.filter5b.title": [
+      "src/screens/onboarding/filters/Filter-060-sound.jsx"
+    ],
+    "common.continue": [
+      "src/screens/onboarding/filters/Filter-060-sound.jsx",
+      "src/screens/onboarding/filters/Filter-025-intentions.jsx"
+    ],
+    "onboarding.v3.filter5b.skip": [
+      "src/screens/onboarding/filters/Filter-060-sound.jsx"
+    ],
+    "onboarding.intentions.q1.title": [
+      "src/screens/onboarding/filters/Filter-025-intentions.jsx"
+    ],
+    "onboarding.intentions.q2.title": [
+      "src/screens/onboarding/filters/Filter-025-intentions.jsx"
+    ],
+    "onboarding.intentions.q1.otherPlaceholder": [
+      "src/screens/onboarding/filters/Filter-025-intentions.jsx",
+      "src/screens/onboarding/filters/Filter-025-intentions.jsx"
+    ],
+    "onboarding.v2.filter1.title": [
+      "src/screens/onboarding/filters/Filter-020-preview.jsx"
+    ],
+    "onboarding.v2.filter1.subtitle": [
+      "src/screens/onboarding/filters/Filter-020-preview.jsx"
+    ],
+    "onboarding.creation.cta": [
+      "src/screens/onboarding/filters/Filter-020-preview.jsx",
+      "src/screens/onboarding/filters/Filter-020-preview.jsx",
+      "src/components/forms/CustomizeStep.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "onboarding.v2.filter0.tapToContinue": [
+      "src/screens/onboarding/filters/Filter-010-opening.jsx",
+      "src/screens/onboarding/filters/Filter-010-opening.jsx"
+    ],
+    "onboarding.v2.filter0.breathe": [
+      "src/screens/onboarding/filters/Filter-010-opening.jsx",
+      "src/screens/onboarding/filters/Filter-010-opening.jsx"
+    ],
+    "settings.title": [
+      "src/hooks/useTranslation.js"
+    ],
+    "welcome.title": [
+      "src/hooks/useTranslation.js"
+    ],
+    "activities.none": [
+      "src/hooks/useTimer.js",
+      "src/hooks/useTimer.js",
+      "src/config/activities.js",
+      "src/components/dial/TimerDial.jsx"
+    ],
+    "accessibility.timer.timerCompleted": [
+      "src/hooks/useTimer.js"
+    ],
+    "accessibility.timer.timerRunning": [
+      "src/hooks/useTimer.js"
+    ],
+    "accessibility.timer.timerStopped": [
+      "src/hooks/useTimer.js"
+    ],
+    "premium.welcomeTitle": [
+      "src/contexts/PurchaseContext.jsx",
+      "src/contexts/PurchaseContext.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.welcomeMessage": [
+      "src/contexts/PurchaseContext.jsx",
+      "src/contexts/PurchaseContext.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.errorNetwork": [
+      "src/contexts/PurchaseContext.jsx",
+      "src/contexts/PurchaseContext.jsx"
+    ],
+    "premium.errorStore": [
+      "src/contexts/PurchaseContext.jsx"
+    ],
+    "premium.errorPaymentPending": [
+      "src/contexts/PurchaseContext.jsx"
+    ],
+    "premium.errorGeneric": [
+      "src/contexts/PurchaseContext.jsx"
+    ],
+    "premium.errorRestoreGeneric": [
+      "src/contexts/PurchaseContext.jsx"
+    ],
+    "palettes.serenity": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.softLaser": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.earth": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.zen": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.classic": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.tropical": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.dusk": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.darkLaser": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.autumn": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.dawn": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.soft": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.lavender": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.teal": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.forest": [
+      "src/config/timer-palettes.js"
+    ],
+    "palettes.ocean": [
+      "src/config/timer-palettes.js"
+    ],
+    "sounds.timer_complete": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.bell_classic": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.bell_melodic": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.microwave_vintage": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.microwave_ping": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.kitchen_timer": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.kitchen_timer_2": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.egg_timer": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.toaster_bell": [
+      "src/config/sounds-mapping.js"
+    ],
+    "sounds.ding_effect": [
+      "src/config/sounds-mapping.js"
+    ],
+    "activities.work": [
+      "src/config/activities.js"
+    ],
+    "activities.break": [
+      "src/config/activities.js"
+    ],
+    "activities.meditation": [
+      "src/config/activities.js"
+    ],
+    "activities.creativity": [
+      "src/config/activities.js"
+    ],
+    "activities.reading": [
+      "src/config/activities.js"
+    ],
+    "activities.study": [
+      "src/config/activities.js"
+    ],
+    "activities.yoga": [
+      "src/config/activities.js"
+    ],
+    "activities.sport": [
+      "src/config/activities.js"
+    ],
+    "activities.walking": [
+      "src/config/activities.js"
+    ],
+    "activities.cooking": [
+      "src/config/activities.js"
+    ],
+    "activities.gaming": [
+      "src/config/activities.js"
+    ],
+    "activities.homework": [
+      "src/config/activities.js"
+    ],
+    "activities.music": [
+      "src/config/activities.js"
+    ],
+    "activities.cleaning": [
+      "src/config/activities.js"
+    ],
+    "activities.nap": [
+      "src/config/activities.js"
+    ],
+    "activities.writing": [
+      "src/config/activities.js"
+    ],
+    "settings.tool.multitask.label": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.tool.multitask.description": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.tool.creative.label": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.tool.creative.description": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.tool.precision.label": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.tool.precision.description": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.sections.configuration": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.sections.timerOptions": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.dialScale": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.dialScaleDescription": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.options.activityEmoji": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.options.activityEmojiDescriptionOn": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.options.activityEmojiDescriptionOff": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.options.pulseAnimation": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.interface.pulseAnimationDescriptionOn": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.interface.pulseAnimationDescriptionOff": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.interface.pulseWarningTitle": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.interface.pulseWarningMessage": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "common.cancel": [
+      "src/components/settings/SettingsPanel.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "settings.interface.pulseWarningEnable": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.longPressStart": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.longPressStartDescriptionOn": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.longPressStartDescriptionOff": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.longPressStop": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.longPressStopDescriptionOn": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.longPressStopDescriptionOff": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.sections.keepAwake": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "accessibility.keepAwake": [
+      "src/components/settings/SettingsPanel.jsx",
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.keepAwakeDescriptionOn": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.keepAwakeDescriptionOff": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.tool.sectionTitle": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.sections.favorites": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.sections.ambiance": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "accessibility.rotationDirection": [
+      "src/components/settings/SettingsPanel.jsx",
+      "src/components/settings/SettingsPanel.jsx",
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "controls.rotation.clockwise": [
+      "src/components/settings/SettingsPanel.jsx",
+      "src/components/controls/CircularToggle.jsx"
+    ],
+    "controls.rotation.counterClockwise": [
+      "src/components/settings/SettingsPanel.jsx",
+      "src/components/controls/CircularToggle.jsx"
+    ],
+    "settings.sections.notificationSound": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.timer.soundDescription": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.sections.theme": [
+      "src/components/settings/SettingsPanel.jsx",
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.appearance.themeDescriptionAuto": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.appearance.themeDescriptionDark": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.appearance.themeDescriptionLight": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.appearance.themeLight": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.appearance.themeDark": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.appearance.themeAuto": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.sections.info": [
+      "src/components/settings/SettingsPanel.jsx"
+    ],
+    "settings.favorites.palettes.title": [
+      "src/components/settings/FavoritesPaletteSection.jsx"
+    ],
+    "settings.favorites.palettes.morePalettes": [
+      "src/components/settings/FavoritesPaletteSection.jsx"
+    ],
+    "settings.favorites.activities.title": [
+      "src/components/settings/FavoritesActivitySection.jsx"
+    ],
+    "settings.favorites.activities.more": [
+      "src/components/settings/FavoritesActivitySection.jsx"
+    ],
+    "settings.about.title": [
+      "src/components/settings/AboutSection.jsx"
+    ],
+    "settings.about.appName": [
+      "src/components/settings/AboutSection.jsx"
+    ],
+    "settings.about.appDescription": [
+      "src/components/settings/AboutSection.jsx"
+    ],
+    "settings.about.version": [
+      "src/components/settings/AboutSection.jsx"
+    ],
+    "onboarding.restartGuide": [
+      "src/components/settings/AboutSection.jsx"
+    ],
+    "onboarding.restartGuideDescription": [
+      "src/components/settings/AboutSection.jsx"
+    ],
+    "customActivities.duration.minutes": [
+      "src/components/pickers/DurationSlider.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "accessibility.celebrationEmoji": [
+      "src/components/modals/TwoTimersModalContent.jsx"
+    ],
+    "twoTimers.title": [
+      "src/components/modals/TwoTimersModalContent.jsx"
+    ],
+    "twoTimers.message": [
+      "src/components/modals/TwoTimersModalContent.jsx"
+    ],
+    "twoTimers.explore": [
+      "src/components/modals/TwoTimersModalContent.jsx",
+      "src/components/modals/TwoTimersModalContent.jsx"
+    ],
+    "accessibility.exploreSettingsHint": [
+      "src/components/modals/TwoTimersModalContent.jsx"
+    ],
+    "accessibility.closeModalHint": [
+      "src/components/modals/TwoTimersModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/DiscoveryModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "premium.welcomeButton": [
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "common.retry": [
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.contactSupport": [
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.tooManyAttempts": [
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.paymentPending": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.restoreSuccess": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.restoreSuccessMessage": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.restoreNone": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.restoreNoneMessage": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.restoreError": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.unexpectedError": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.title": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.description": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.features": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "accessibility.unlockPremiumHint": [
+      "src/components/modals/PremiumModalContent.jsx",
+      "src/components/modals/DiscoveryModalContent.jsx"
+    ],
+    "premium.startTrial": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "accessibility.closePremiumModal": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "accessibility.restorePurchases": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "accessibility.restorePurchasesHint": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "premium.restore": [
+      "src/components/modals/PremiumModalContent.jsx"
+    ],
+    "customActivities.create.errorTitle": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx",
+      "src/components/forms/CreateActivityForm.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.errorEmoji": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.errorName": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.edit.deleteConfirmTitle": [
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "customActivities.edit.deleteConfirmMessage": [
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "customActivities.edit.buttonDelete": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "customActivities.edit.title": [
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "accessibility.closeEditActivity": [
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "customActivities.create.emojiLabel": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.emojiPlaceholder": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.nameLabel": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.namePlaceholder": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.durationLabel": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.edit.buttonSave": [
+      "src/components/modals/EditActivityModalContent.jsx",
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "accessibility.saveActivityHint": [
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "accessibility.deleteActivityHint": [
+      "src/components/modals/EditActivityModalContent.jsx"
+    ],
+    "discovery.defaultCta": [
+      "src/components/modals/DiscoveryModalContent.jsx"
+    ],
+    "onboarding.creation.namePlaceholder": [
+      "src/components/forms/CustomizeStep.jsx"
+    ],
+    "onboarding.creation.durationLabel": [
+      "src/components/forms/CustomizeStep.jsx"
+    ],
+    "onboarding.creation.sectionTitle": [
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.preview": [
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.previewPlaceholder": [
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.title": [
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "accessibility.closeCreateActivity": [
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "customActivities.create.buttonCreate": [
+      "src/components/forms/CreateActivityForm.jsx",
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "accessibility.createActivityHint": [
+      "src/components/forms/CreateActivityForm.jsx"
+    ],
+    "accessibility.timer.dialTapToToggle": [
+      "src/components/dial/TimerDial.jsx",
+      "src/components/dial/TimerDial.jsx"
+    ],
+    "accessibility.timer.dialAdjustable": [
+      "src/components/dial/TimerDial.jsx"
+    ],
+    "controls.digitalTimer.increaseDuration": [
+      "src/components/dial/TimerDial.jsx",
+      "src/components/controls/DigitalTimer.jsx"
+    ],
+    "controls.digitalTimer.decreaseDuration": [
+      "src/components/dial/TimerDial.jsx",
+      "src/components/controls/DigitalTimer.jsx"
+    ],
+    "accessibility.timer.stopTimer": [
+      "src/components/dial/TimerDial.jsx",
+      "src/components/buttons/PulseButton.jsx"
+    ],
+    "accessibility.timer.startTimer": [
+      "src/components/dial/TimerDial.jsx",
+      "src/components/buttons/PulseButton.jsx"
+    ],
+    "controls.digitalTimer.showTime": [
+      "src/components/controls/DigitalTimer.jsx"
+    ],
+    "controls.digitalTimer.tapToHide": [
+      "src/components/controls/DigitalTimer.jsx"
+    ],
+    "controls.digitalTimer.tapToShow": [
+      "src/components/controls/DigitalTimer.jsx"
+    ],
+    "discovery.moreColors.title": [
+      "src/components/carousels/PaletteCarousel.jsx",
+      "src/components/carousels/PaletteCarousel.jsx"
+    ],
+    "discovery.moreColors.subtitle": [
+      "src/components/carousels/PaletteCarousel.jsx"
+    ],
+    "discovery.moreColors.tagline": [
+      "src/components/carousels/PaletteCarousel.jsx"
+    ],
+    "accessibility.discoverMorePalettes": [
+      "src/components/carousels/PaletteCarousel.jsx"
+    ],
+    "discovery.activities": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "discovery.moreActivities.title": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "discovery.moreActivities.subtitle": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "discovery.moreActivities.tagline": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "customActivities.toast.created": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "customActivities.toast.updated": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "customActivities.toast.deleted": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "customActivities.addButton": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "accessibility.moreActivities": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "customActivities.addButtonHint": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "accessibility.discoverPremium": [
+      "src/components/carousels/ActivityCarousel.jsx"
+    ],
+    "accessibility.activityLocked": [
+      "src/components/carousels/activity-items/ActivityItem.jsx"
+    ],
+    "accessibility.customActivityHint": [
+      "src/components/carousels/activity-items/ActivityItem.jsx"
+    ],
+    "accessibility.timer.resetTimer": [
+      "src/components/buttons/PulseButton.jsx"
+    ]
+  }
+}

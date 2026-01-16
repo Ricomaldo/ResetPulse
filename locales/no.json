@@ -1,49 +1,17 @@
 {
   "common": {
-    "settings": "Innstillinger",
-    "close": "Lukk",
     "cancel": "Avbryt",
-    "confirm": "Bekreft",
     "ok": "OK",
-    "skip": "Hopp over",
     "retry": "Prøv igjen",
     "continue": "Fortsett"
   },
   "welcome": {
-    "title": "Velkommen til ResetPulse",
-    "subtitle": "Velg en aktivitet, juster varigheten, start.",
-    "discover": "Oppdag"
+    "title": "Velkommen til ResetPulse"
   },
   "invitation": "Klar?",
   "onboarding": {
-    "activities": "Velg din aktivitet",
-    "dial": "Juster timerens varighet",
-    "palette": "Endre farger som du vil",
-    "controls": "Start, pause eller tilbakestill",
-    "controlsSubtext": "Timeren fortsetter i bakgrunnen",
-    "completion": "Nyt ResetPulse!",
     "restartGuide": "Start guiden på nytt",
     "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen",
-    "tool": {
-      "title": "Hva passer deg best?",
-      "creative": "Kreativ",
-      "minimalist": "Minimalist",
-      "multitask": "Multitasker",
-      "rational": "Rasjonell"
-    },
-    "creation": {
-      "title": "Opprett ditt første moment",
-      "subtitle": "Velg en emoji, et navn og en varighet"
-    },
-    "testStart": {
-      "title": "Når du er klar, trykk",
-      "hint": ""
-    },
-    "testStop": {
-      "title": "Nå, slipp når du vil",
-      "hint": "",
-      "revealTitle": "Du er"
-    },
     "paywall": {
       "title": "Du opprettet ditt første moment",
       "profile": "Profil:",
@@ -53,26 +21,60 @@
       "ctaTrial": "Prøv 7 dager gratis",
       "ctaSkip": "Kanskje senere"
     },
-    "firstTimer": {
-      "title": "Timeren din er klar",
-      "profile": "Profil",
-      "tool": "Verktøy",
-      "moment": "Moment",
-      "startButton": "Start min første timer",
-      "completionMessage": "Bra jobbet! Rommet ditt er klart."
+    "intentions": {
+      "other": {
+        "defaultName": "My moment"
+      },
+      "q1": {
+        "title": "Your timer would be for...",
+        "otherPlaceholder": "Like what?"
+      },
+      "q2": {
+        "title": "A little help with...",
+        "otherPlaceholder": "Like what?"
+      }
+    },
+    "creation": {
+      "sectionTitle": "Your first moment",
+      "cta": "Create my moment",
+      "durationLabel": "How long?",
+      "namePlaceholder": "Name your moment..."
+    },
+    "launch": {
+      "title": "Let's go!",
+      "subtitle": "Your first moment is ready. Tap to begin.",
+      "cta": "Start my timer",
+      "ctaHint": "Start your first timer",
+      "defaultActivity": "My moment"
+    },
+    "v2": {
+      "filter0": {
+        "breathe": "Your time is yours",
+        "tapToContinue": "When you're ready"
+      },
+      "filter1": {
+        "title": "A timer that adapts to you",
+        "subtitle": "",
+        "cta": "Create my moment"
+      }
+    },
+    "v3": {
+      "filter3_5": {
+        "title": "Don't miss when your moments end",
+        "body": "Your timer will alert you even if you use another app or your screen is locked.",
+        "ctaPrimary": "Yes, notify me",
+        "ctaSecondary": "Maybe later"
+      },
+      "filter5b": {
+        "title": "Your ringtone",
+        "continue": "Continue",
+        "skip": "Skip →"
+      }
     }
   },
   "settings": {
     "title": "Innstillinger",
     "interface": {
-      "title": "🪄 Grensesnitt",
-      "minimalInterface": "Minimalt grensesnitt",
-      "minimalInterfaceDescriptionOn": "Skjul aktiviteter og farger når timeren kjører",
-      "minimalInterfaceDescriptionOff": "Fullstendig grensesnitt selv under timer",
-      "digitalTimer": "Digital timer",
-      "digitalTimerDescriptionOn": "Vis gjenværende tid i MM:SS",
-      "digitalTimerDescriptionOff": "Digital timer deaktivert",
-      "pulseAnimation": "Pulsanimering",
       "pulseAnimationDescriptionOn": "Animering aktivert under timer",
       "pulseAnimationDescriptionOff": "Animering deaktivert",
       "pulseWarningTitle": "Pulsanimering",
@@ -80,35 +82,30 @@
       "pulseWarningEnable": "Aktiver"
     },
     "timer": {
-      "title": "⚙️ Timer",
       "soundDescription": "Velg lyden som skal spilles når timeren er ferdig",
-      "dialMode": "Skivemodus",
-      "dialMode60": "60 minutters skala",
-      "dialMode25": "25 minutters Pomodoro",
       "rotationDirection": "Rotasjonsretning",
       "rotationClockwise": "Med klokken",
       "rotationCounterClockwise": "Mot klokken",
       "keepAwake": "Hold skjermen våken",
       "keepAwakeDescriptionOn": "Skjermen forblir våken under timeren",
-      "keepAwakeDescriptionOff": "Skjermen kan låses under timeren"
+      "keepAwakeDescriptionOff": "Skjermen kan låses under timeren",
+      "dialScale": "Dial range",
+      "dialScaleDescription": "Maximum duration displayed on the dial",
+      "longPressStart": "Enable long tap to start",
+      "longPressStartDescriptionOn": "Hold to start the timer",
+      "longPressStartDescriptionOff": "Simple tap to start",
+      "longPressStop": "Enable long tap to stop",
+      "longPressStopDescriptionOn": "Hold to stop the timer",
+      "longPressStopDescriptionOff": "Simple tap to stop"
     },
     "appearance": {
-      "title": "🎨 Utseende",
       "theme": "Tema",
       "themeLight": "☀️ Lys",
       "themeDark": "🌙 Mørk",
       "themeAuto": "📱 Auto",
       "themeDescriptionAuto": "Automatisk (system)",
       "themeDescriptionDark": "Mørk",
-      "themeDescriptionLight": "Lys",
-      "showPalettes": "Vis paletter",
-      "showPalettesDescriptionOn": "Paletter synlige i grensesnittet",
-      "showPalettesDescriptionOff": "Paletter skjult",
-      "palettesDescription": "Gratis versjon: Earth og Laser tilgjengelige",
-      "showActivities": "Vis aktiviteter",
-      "showActivitiesDescriptionOn": "Aktiviteter synlige i grensesnittet",
-      "showActivitiesDescriptionOff": "Aktiviteter skjult",
-      "activitiesDescription": "Velg favorittene dine for å se dem først"
+      "themeDescriptionLight": "Lys"
     },
     "about": {
       "title": "Om",
@@ -116,26 +113,56 @@
       "appDescription": "Tilpassbar visuell timer",
       "version": "Versjon"
     },
-    "dev": {
-      "title": "🔧 Utvikling",
-      "resetOnboarding": "Tilbakestill onboarding",
-      "resetOnboardingConfirmTitle": "Tilbakestill onboarding",
-      "resetOnboardingConfirmMessage": "Velkomstskjermen og tipsene vil vises ved neste oppstart av appen.",
-      "resetOnboardingConfirmButton": "Tilbakestill"
+    "tool": {
+      "sectionTitle": "Minimal display mode",
+      "creative": {
+        "label": "Creative",
+        "description": "Colors carousel"
+      },
+      "multitask": {
+        "label": "Multitask",
+        "description": "Activities carousel"
+      },
+      "precision": {
+        "label": "Precision",
+        "description": "Digital timer with +/- controls"
+      }
+    },
+    "sections": {
+      "configuration": "CONFIGURATION",
+      "timerOptions": "Timer options",
+      "keepAwake": "Keep Awake",
+      "rotationDirection": "Rotation direction",
+      "notificationSound": "Notification sound",
+      "theme": "Theme",
+      "favorites": "YOUR FAVORITES",
+      "ambiance": "AMBIANCE",
+      "info": "INFO"
+    },
+    "favorites": {
+      "palettes": {
+        "title": "Favorite palettes",
+        "morePalettes": "More palettes"
+      },
+      "activities": {
+        "title": "Favorite activities",
+        "more": "More"
+      }
+    },
+    "options": {
+      "activityEmoji": "Activity emoji at center",
+      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
+      "activityEmojiDescriptionOff": "Emoji is hidden",
+      "pulseAnimation": "Pulse animation"
     }
   },
   "premium": {
     "title": "Lås opp alt",
     "description": "Alle farger.\nAlle aktiviteter.\nDin maksimale komfort.",
-    "features": "🎁 7 DAGER GRATIS",
-    "price": "Deretter %{price} én gang.\nDin for alltid.",
-    "priceOnce": "Én gang, for alltid",
-    "trial": "",
+    "features": "7 DAGER GRATIS",
     "startTrial": "Prøv 7 dager gratis",
     "maybeLater": "Kanskje senere",
     "restore": "Gjenopprett kjøpene mine",
-    "unlock": "Lås opp ✨",
-    "onboardingToast": "Fullfør guiden for å oppdage premiumpaletter!",
     "welcomeTitle": "Velkommen Premium! 🎉",
     "welcomeMessage": "Alle paletter og aktiviteter er nå låst opp.",
     "welcomeButton": "Fantastisk!",
@@ -152,13 +179,17 @@
     "restoreError": "Kunne ikke gjenopprette kjøpene dine.",
     "unexpectedError": "En uventet feil oppstod.",
     "contactSupport": "Kontakt support",
-    "tooManyAttempts": "Vennligst kontakt support hvis problemet vedvarer."
+    "tooManyAttempts": "Vennligst kontakt support hvis problemet vedvarer.",
+    "errorNetwork": "No internet connection. Check your network and try again.",
+    "errorStore": "Problem with the store. Try again later.",
+    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
+    "errorRestoreGeneric": "Restore error",
+    "errorGeneric": "An error occurred"
   },
   "activities": {
     "none": "Grunnleggende",
     "work": "Arbeid",
     "break": "Pause",
-    "breathing": "Pust",
     "reading": "Lesing",
     "study": "Studie",
     "meditation": "Meditasjon",
@@ -170,7 +201,9 @@
     "gaming": "Spill",
     "homework": "Lekser",
     "music": "Musikk",
-    "cleaning": "Rengjøring"
+    "cleaning": "Rengjøring",
+    "nap": "Nap",
+    "writing": "Writing"
   },
   "palettes": {
     "earth": "Jord",
@@ -187,7 +220,8 @@
     "autumn": "Høst",
     "lavender": "Lavendel",
     "teal": "Blågrønn",
-    "darkLaser": "Dark Laser"
+    "darkLaser": "Dark Laser",
+    "serenity": "Serenity"
   },
   "sounds": {
     "bell_classic": "Klassisk bjelle",
@@ -202,31 +236,50 @@
     "timer_complete": "Timer fullført"
   },
   "accessibility": {
-    "settings": "Innstillinger",
-    "openSettings": "Åpne appinnstillinger",
-    "closeSettings": "Lukk innstillinger",
-    "minimalInterface": "Minimalt grensesnitt",
     "keepAwake": "Hold skjermen våken",
-    "showPalettes": "Vis paletter",
-    "showActivities": "Vis aktiviteter",
     "rotationDirection": "Rotasjonsretning",
-    "startTrial": "Start gratis prøveperiode",
-    "maybeLater": "Kanskje senere",
-    "restore": "Gjenopprett kjøpene mine",
-    "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "paletteNumber": "Palette %{name}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes"
+    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
+    "celebrationEmoji": "Celebration",
+    "closeCreateActivity": "Close create activity",
+    "closeEditActivity": "Close edit activity",
+    "closeModalHint": "Closes this dialog and returns to the app",
+    "closePremiumModal": "Close premium offer",
+    "createActivityHint": "Creates the custom activity and adds it to your list",
+    "deleteActivityHint": "Permanently deletes this custom activity",
+    "exploreSettingsHint": "Opens settings to discover premium features",
+    "restorePurchases": "Restore previous purchases",
+    "restorePurchasesHint": "Restore premium access if you already purchased",
+    "saveActivityHint": "Saves changes to this activity",
+    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "timer": {
+      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
+      "dialTapToToggle": "Tap to start or pause timer",
+      "timerCompleted": "Timer completed!",
+      "timerRunning": "Timer running",
+      "timerStopped": "Timer stopped",
+      "startTimer": "Start timer",
+      "stopTimer": "Stop timer",
+      "resetTimer": "Reset timer"
+    }
   },
   "discovery": {
     "defaultCta": "Débloquer tout - 7 jours gratuits",
     "defaultDismiss": "Peut-être plus tard",
     "activities": "Activités premium",
-    "colors": "Palettes premium"
+    "moreColors": {
+      "title": "Even more colors",
+      "subtitle": "Ocean, forest, lavender, duck...",
+      "tagline": "Every mood, its atmosphere."
+    },
+    "moreActivities": {
+      "title": "Even more moments",
+      "subtitle": "16 activities + unlimited custom",
+      "tagline": "Your focus, your rules."
+    }
   },
   "customActivities": {
     "toast": {
@@ -235,7 +288,34 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé"
+    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
+    "create": {
+      "title": "Create activity",
+      "namePlaceholder": "Ex: Guitar, Cooking...",
+      "nameLabel": "Activity name",
+      "emojiLabel": "Choose emoji",
+      "emojiPlaceholder": "Tap to choose",
+      "durationLabel": "Default duration",
+      "preview": "Preview",
+      "previewPlaceholder": "My activity",
+      "buttonCreate": "Create",
+      "buttonCancel": "Cancel",
+      "errorTitle": "Missing information",
+      "errorEmoji": "Please choose an emoji for your activity.",
+      "errorName": "Please enter a name for your activity."
+    },
+    "edit": {
+      "title": "Edit activity",
+      "buttonSave": "Save",
+      "buttonDelete": "Delete",
+      "deleteConfirmTitle": "Delete?",
+      "deleteConfirmMessage": "This action is irreversible.",
+      "deleteConfirmButton": "Delete",
+      "deleteCancelButton": "Cancel"
+    },
+    "duration": {
+      "minutes": "min"
+    }
   },
   "moreColors": {
     "title": "Enda flere farger",
@@ -246,13 +326,101 @@
     "reminder": {
       "day3": {
         "title": "Et øyeblikk for deg selv?",
-        "bodyPersonalized": "Din {{name}} venter på deg {{emoji}} — {{duration}} min for deg?",
         "bodyGeneric": "Din timer venter — ta et øyeblikk for deg selv"
       },
       "day7": {
         "title": "Siste sjanse",
         "body": "7 dagers gratis prøveperiode — ta den før den utløper"
       }
+    }
+  },
+  "controls": {
+    "digitalTimer": {
+      "decreaseDuration": "Decrease duration",
+      "increaseDuration": "Increase duration",
+      "showTime": "Show time",
+      "tapToHide": "Tap to hide",
+      "tapToShow": "Tap to show"
+    },
+    "rotation": {
+      "clockwise": "Clockwise",
+      "counterClockwise": "Counter-clockwise"
+    }
+  },
+  "twoTimers": {
+    "title": "You've created 2 moments!",
+    "message": "Want to explore more colors and activities?",
+    "explore": "Explore premium",
+    "dismiss": "Maybe later"
+  },
+  "timerMessages": {
+    "none": {
+      "startMessage": "Ready",
+      "endMessage": "Well done 🎉"
+    },
+    "work": {
+      "startMessage": "Focus",
+      "endMessage": "Accomplished ✨"
+    },
+    "break": {
+      "startMessage": "Rest",
+      "endMessage": "Recharged 🔋"
+    },
+    "meditation": {
+      "startMessage": "Breathe",
+      "endMessage": "Centered 🪷"
+    },
+    "creativity": {
+      "startMessage": "Create",
+      "endMessage": "Inspired ✨"
+    },
+    "reading": {
+      "startMessage": "Dive in",
+      "endMessage": "Enriched 📖"
+    },
+    "study": {
+      "startMessage": "Learn",
+      "endMessage": "Advanced 📈"
+    },
+    "yoga": {
+      "startMessage": "Breathe",
+      "endMessage": "Peaceful 🪷"
+    },
+    "sport": {
+      "startMessage": "Move",
+      "endMessage": "Energized ⚡"
+    },
+    "walking": {
+      "startMessage": "Walk",
+      "endMessage": "Revitalized 🌿"
+    },
+    "cooking": {
+      "startMessage": "Prepare",
+      "endMessage": "Satisfied 🍽️"
+    },
+    "gaming": {
+      "startMessage": "Play",
+      "endMessage": "Relaxed 🎮"
+    },
+    "homework": {
+      "startMessage": "Focus",
+      "endMessage": "Completed ✅"
+    },
+    "music": {
+      "startMessage": "Play",
+      "endMessage": "Harmonized 🎵"
+    },
+    "cleaning": {
+      "startMessage": "Organize",
+      "endMessage": "Serene ✨"
+    },
+    "nap": {
+      "startMessage": "Rest",
+      "endMessage": "Refreshed 💤"
+    },
+    "writing": {
+      "startMessage": "Write",
+      "endMessage": "Liberated ✍️"
     }
   }
 }
