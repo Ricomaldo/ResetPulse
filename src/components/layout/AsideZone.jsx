@@ -3,9 +3,9 @@
  * Migration: PanResponder custom → @gorhom/bottom-sheet
  * Stack: @gorhom/bottom-sheet + react-native-reanimated (ADR-006)
  * @created 2025-12-19
- * @updated 2026-01-15 - Added onAnimate to block direct snap jumps (0→2, 2→0)
+ * @updated 2026-01-15 - Removed onAnimate blocking for smoother UX (natural snap behavior)
  */
-import React, { useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import BottomSheet, {
   BottomSheetScrollView,
@@ -156,9 +156,6 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
   const activityCarouselRef = useRef(null);
   const paletteCarouselRef = useRef(null);
 
-  // Track previous snap index (for preventing 0 → 2 jumps)
-  const previousSnapIndexRef = useRef(0);
-
   // 3 snap points: 18% (favorite) / 38% (toolbox) / 90% (all)
   const snapPoints = useMemo(() => ['18%', '38%', '90%'], []);
 
@@ -171,10 +168,10 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
     backgroundColor: currentSnapIndex === 2 ? theme.colors.surfaceElevated : theme.colors.surface,
   };
 
-  // Custom spring animation (smooth, less bouncy)
+  // Custom spring animation (smooth, natural feel)
   const animationConfigs = useBottomSheetSpringConfigs({
-    damping: 100,        // Increased from 90 - more resistance at snap points
-    stiffness: 400,      // Decreased from 450 - slower, more controlled transitions
+    damping: 80,         // Less resistance for smoother feel
+    stiffness: 450,      // Moderate speed
     overshootClamping: true,
     restDisplacementThreshold: 0.01,
     restSpeedThreshold: 0.01,
@@ -184,25 +181,8 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
   useEffect(() => {
     if (isTimerRunning && bottomSheetRef.current) {
       bottomSheetRef.current.snapToIndex(0); // Collapse to 18% (favorite tool visible)
-      previousSnapIndexRef.current = 0; // Reset previous snap index
     }
   }, [isTimerRunning]);
-
-  // onAnimate: intercept BEFORE animation starts (not during)
-  // Block direct jumps 0→2 and 2→0 by redirecting to snap 1
-  const handleAnimate = useCallback((fromIndex, toIndex) => {
-    // Block 0 → 2 jump (swipe up from 18% attempting to reach 90%)
-    if (fromIndex === 0 && toIndex === 2) {
-      bottomSheetRef.current?.snapToIndex(1); // Force stop at 38%
-      return;
-    }
-
-    // Block 2 → 0 jump (swipe down from 90% attempting to reach 18%)
-    if (fromIndex === 2 && toIndex === 0) {
-      bottomSheetRef.current?.snapToIndex(1); // Force stop at 38%
-      return;
-    }
-  }, []);
 
   return (
     <View style={styles.asideContainer}>
@@ -227,11 +207,8 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
         index={0} // Start at 18% (favorite)
         enablePanDownToClose={false} // Drawer permanent (no close state)
         enableDynamicSizing={false} // Force snap points to be respected
-        onAnimate={handleAnimate} // Intercept BEFORE animation starts to block direct jumps
         onChange={(index) => {
-          // Update state
           setCurrentSnapIndex(index);
-          previousSnapIndexRef.current = index;
         }}
         handleIndicatorStyle={{
           backgroundColor: theme.colors.textSecondary,
