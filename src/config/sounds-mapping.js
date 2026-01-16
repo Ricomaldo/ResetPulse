@@ -6,6 +6,9 @@ import i18n from '../i18n';
 // Clé = identifiant interne stable
 // Valeur = require() du fichier audio
 export const SOUND_FILES = {
+  // Son recommandé (par défaut)
+  'timer_complete': require('../../assets/sounds/634089__aj_heels__timercomplete01.wav'),
+
   // Sons de cloche
   'bell_classic': require('../../assets/sounds/bell_short.wav'),
   'bell_melodic': require('../../assets/sounds/815533__mihacappy__bell01.wav'),
@@ -20,12 +23,17 @@ export const SOUND_FILES = {
 
   // Sons génériques
   'ding_effect': require('../../assets/sounds/615949__julesv4__ding-effect.wav'),
-  'timer_complete': require('../../assets/sounds/634089__aj_heels__timercomplete01.wav'),
 };
 
 // Métadonnées des sons (nom affiché, durée, emoji)
 // Les noms utilisent des getters pour supporter i18n dynamique
 export const SOUND_METADATA = {
+  'timer_complete': {
+    get name() { return i18n.t('sounds.timer_complete'); },
+    duration: '2s',
+    emoji: '🏁',
+    category: 'modern'
+  },
   'bell_classic': {
     get name() { return i18n.t('sounds.bell_classic'); },
     duration: '2s',
@@ -80,16 +88,10 @@ export const SOUND_METADATA = {
     emoji: '✨',
     category: 'modern'
   },
-  'timer_complete': {
-    get name() { return i18n.t('sounds.timer_complete'); },
-    duration: '2s',
-    emoji: '🏁',
-    category: 'modern'
-  },
 };
 
 // Son par défaut
-export const DEFAULT_SOUND_ID = 'bell_classic';
+export const DEFAULT_SOUND_ID = 'timer_complete';
 
 // Helper pour obtenir la liste des sons formatée
 export const getTimerSounds = () => {
