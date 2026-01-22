@@ -1,7 +1,47 @@
 ---
 created: '2025-12-14'
-updated: '2026-01-16'
+updated: '2026-01-22'
 status: active
+---
+
+## [2.1.5] - 2026-01-22
+
+### 🐛 Critical Bugfixes
+
+#### Timer Core Logic (useTimer.js)
+- **Fixed timer not ticking**: Timer now counts down properly on both iOS and Android
+  - Root cause: Stale closure in `updateTimer` callback - state values (`startTime`, `duration`, `running`) were captured at creation time
+  - Effect sequence bug: RAF/setTimeout called old version of `updateTimer` with `startTime=null` in closure
+  - Solution: Migrated to refs pattern (`runningRef`, `startTimeRef`, `durationRef`, `remainingRef`) to avoid closure staleness
+  - `updateTimer` now has empty dependency array `[]` and uses `.current` values (always fresh)
+
+- **Fixed incorrect elapsed time tracking**: Stop/reset now report accurate elapsed seconds
+  - `stopTimer` and `resetTimer` were using stale state values from closure
+  - Migrated to refs: `durationRef.current - remainingRef.current`
+  - Analytics now correctly track `elapsed_seconds` when timer is abandoned
+
+- **Fixed premature notification cancellation**: Scheduled notifications no longer cancelled immediately after start
+  - Cleanup effect had `cancelTimerNotification` in dependencies → re-triggered on every function recreation
+  - Changed to empty deps `[]` with captured function reference (cleanup only on unmount)
+
+### 📚 Technical Notes
+
+**React Closure Pattern**: When a `useCallback` captures frequently-changing values (states/props) but is used in effects with stable dependencies (RAF, intervals), use refs to prevent stale closures:
+
+```javascript
+// ❌ Before: Callback recreated on every state change
+const callback = useCallback(() => {
+  // Uses state directly (stale in RAF closure)
+}, [state, otherState]);
+
+// ✅ After: Callback stable, always uses fresh values
+const stateRef = useRef(state);
+stateRef.current = state; // Sync every render
+const callback = useCallback(() => {
+  // Uses stateRef.current (always fresh)
+}, []); // Never recreated
+```
+
 ---
 
 ## [2.1.4] - 2026-01-16

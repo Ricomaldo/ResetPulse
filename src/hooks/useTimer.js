@@ -61,18 +61,28 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const wasInBackgroundRef = useRef(false);
   const isInForegroundRef = useRef(AppState.currentState === 'active');
   const prevHasCompletedRef = useRef(false);
+  const runningRef = useRef(running);
+  const startTimeRef = useRef(startTime);
+  const durationRef = useRef(duration);
+  const remainingRef = useRef(remaining);
+
+  // Sync refs with state (no effect needed - direct sync)
+  runningRef.current = running;
+  startTimeRef.current = startTime;
+  durationRef.current = duration;
+  remainingRef.current = remaining;
 
   // Timer update function with hybrid foreground/background support
   const updateTimer = useCallback(() => {
-    if (!isMountedRef.current || !running || !startTime) {return;}
+    if (!isMountedRef.current || !runningRef.current || !startTimeRef.current) {return;}
 
     const now = Date.now();
-    const elapsed = Math.floor((now - startTime) / 1000);
-    const newRemaining = Math.max(0, duration - elapsed);
+    const elapsed = Math.floor((now - startTimeRef.current) / 1000);
+    const newRemaining = Math.max(0, durationRef.current - elapsed);
 
     setRemaining(newRemaining);
 
-    if (newRemaining > 0 && running) {
+    if (newRemaining > 0 && runningRef.current) {
       // Hybrid approach: Use RAF for smooth foreground, setTimeout for battery-efficient background
       if (isInForegroundRef.current) {
         // Foreground: Use requestAnimationFrame for smooth 60Hz updates
@@ -92,7 +102,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         setHasCompleted(true);
 
         // Track timer completion
-        analytics.trackTimerCompleted(duration, currentActivityRef.current, 100);
+        analytics.trackTimerCompleted(durationRef.current, currentActivityRef.current, 100);
 
         // Vérifier si l'app était en background (notification a déjà sonné)
         const skipSound = wasInBackgroundRef.current;
@@ -157,12 +167,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
       // Log timer completion avec timecode
       if (__DEV__) {
         const now = new Date();
-        const minutes = Math.floor(duration / 60);
-        const secs = duration % 60;
+        const minutes = Math.floor(durationRef.current / 60);
+        const secs = durationRef.current % 60;
         console.warn(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé!`);
       }
     }
-  }, [startTime, duration, running]);
+  }, []); // No dependencies - uses refs only
 
   // Effect 1: Initialize startTime when starting
   useEffect(() => {
@@ -227,6 +237,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
 
   // Cleanup on unmount
   useEffect(() => {
+    const cancelNotif = cancelTimerNotification; // Capture stable ref
     return () => {
       isMountedRef.current = false;
       if (rafRef.current) {
@@ -236,9 +247,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
         clearTimeout(intervalRef.current);
       }
       // CRITICAL: Cancel any scheduled notification to prevent orphaned notifications
-      cancelTimerNotification();
+      cancelNotif();
     };
-  }, [cancelTimerNotification]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - cleanup only on unmount
 
   // Track app state to detect background/foreground transitions
   useEffect(() => {
@@ -317,14 +329,14 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Controls (ADR-007: startTimer only starts, stopTimer for long-press abandon)
   const startTimer = useCallback(() => {
     // Can't start if already running
-    if (running) {
+    if (runningRef.current) {
       return;
     }
 
     // If remaining is 0 (after completion), reset to duration before starting
-    const effectiveRemaining = remaining === 0 ? duration : remaining;
-    if (remaining === 0) {
-      setRemaining(duration);
+    const effectiveRemaining = remainingRef.current === 0 ? durationRef.current : remainingRef.current;
+    if (remainingRef.current === 0) {
+      setRemaining(durationRef.current);
     }
 
     // CRITICAL: Cancel any existing notification before scheduling a new one
@@ -338,13 +350,13 @@ export default function useTimer(initialDuration = 240, onComplete) {
     scheduleTimerNotification(effectiveRemaining, currentActivityRef.current, endMessage);
 
     // Save duration if changed
-    if (currentActivityRef.current?.id && duration > 0 &&
-        activityDurations[currentActivityRef.current.id] !== duration) {
-      saveActivityDuration(currentActivityRef.current.id, duration);
+    if (currentActivityRef.current?.id && durationRef.current > 0 &&
+        activityDurations[currentActivityRef.current.id] !== durationRef.current) {
+      saveActivityDuration(currentActivityRef.current.id, durationRef.current);
     }
 
     // Track timer start
-    analytics.trackTimerStarted(duration, currentActivityRef.current, currentColorRef.current, currentPaletteRef.current);
+    analytics.trackTimerStarted(durationRef.current, currentActivityRef.current, currentColorRef.current, currentPaletteRef.current);
 
     // Track custom activity usage
     if (currentActivityRef.current?.isCustom) {
@@ -372,22 +384,22 @@ export default function useTimer(initialDuration = 240, onComplete) {
       ? t('accessibility.timer.activityStarted', { activity: activityLabel })
       : t('accessibility.timer.timerRunning');
     AccessibilityInfo.announceForAccessibility(startMessage);
-  }, [remaining, duration, running, scheduleTimerNotification, cancelTimerNotification,
+  }, [scheduleTimerNotification, cancelTimerNotification,
     activityDurations, saveActivityDuration, t]);
 
   // stopTimer: Called by long-press "rewind" gesture (ADR-007)
   const stopTimer = useCallback(() => {
     // Can only stop if running
-    if (!running) {
+    if (!runningRef.current) {
       return;
     }
 
-    // Track timer abandoned
-    const elapsed = duration - remaining;
-    analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivityRef.current);
+    // Track timer abandoned (use refs for current values)
+    const elapsed = durationRef.current - remainingRef.current;
+    analytics.trackTimerAbandoned(durationRef.current, elapsed, 'reset', currentActivityRef.current);
 
     // Reset to initial state
-    setRemaining(duration);
+    setRemaining(durationRef.current);
     setRunning(false);
     setStartTime(null);
     setHasCompleted(false);
@@ -404,17 +416,17 @@ export default function useTimer(initialDuration = 240, onComplete) {
     if (__DEV__) {
       console.warn(`⏹️ [Stop] Timer abandonné après ${elapsed}s`);
     }
-  }, [running, duration, remaining, cancelTimerNotification, t]);
+  }, [cancelTimerNotification, t]);
 
   // resetTimer: Reset to initial state (used for COMPLETE → REST transition)
   const resetTimer = useCallback(() => {
     // Track timer reset only if was running
-    if (running) {
-      const elapsed = duration - remaining;
-      analytics.trackTimerAbandoned(duration, elapsed, 'reset', currentActivityRef.current);
+    if (runningRef.current) {
+      const elapsed = durationRef.current - remainingRef.current;
+      analytics.trackTimerAbandoned(durationRef.current, elapsed, 'reset', currentActivityRef.current);
     }
 
-    setRemaining(duration);
+    setRemaining(durationRef.current);
     setRunning(false);
     setStartTime(null);
     setHasCompleted(false);
@@ -425,7 +437,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     if (__DEV__) {
       console.warn('🔄 [Reset] Timer réinitialisé');
     }
-  }, [cancelTimerNotification, running, duration, remaining]);
+  }, [cancelTimerNotification]);
 
   const setPresetDuration = useCallback((minutes) => {
     const newDuration = minutes * 60;
