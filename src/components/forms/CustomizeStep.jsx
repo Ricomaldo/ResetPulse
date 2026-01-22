@@ -17,15 +17,10 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { spacing, typography, fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
+import { DURATION_PRESETS, MAX_DURATION } from '../../config/durations';
+import DurationControls from '../controls/DurationControls';
 
 const MAX_NAME_LENGTH = 20;
-const DURATION_PRESETS = [
-  { minutes: 5, seconds: 300 },
-  { minutes: 15, seconds: 900 },
-  { minutes: 30, seconds: 1800 },
-  { minutes: 45, seconds: 2700 },
-  { minutes: 60, seconds: 3600 },
-];
 
 /**
  * CustomizeStep - Personnalisation emoji + nom + durée
@@ -53,6 +48,10 @@ export default function CustomizeStep({ intention, onBack, onSubmit }) {
   const handleDurationSelect = (durationSeconds) => {
     haptics.selection().catch(() => {});
     setDuration(durationSeconds);
+  };
+
+  const handleDurationChange = (newDuration) => {
+    setDuration(newDuration);
   };
 
   const handleEmojiPickerOpen = () => {
@@ -209,6 +208,12 @@ export default function CustomizeStep({ intention, onBack, onSubmit }) {
       marginTop: theme.spacing.xl,
       textAlign: 'center',
     },
+
+    digitalTimerContainer: {
+      alignItems: 'center',
+      marginTop: theme.spacing.md,
+      marginBottom: theme.spacing.sm,
+    },
   });
 
   return (
@@ -263,6 +268,18 @@ export default function CustomizeStep({ intention, onBack, onSubmit }) {
       <Text style={styles.sectionLabel}>
         {t('onboarding.creation.durationLabel')}
       </Text>
+
+      {/* Duration controls with increment/decrement */}
+      <View style={styles.digitalTimerContainer}>
+        <DurationControls
+          duration={duration}
+          maxDuration={MAX_DURATION}
+          onDurationChange={handleDurationChange}
+          compact={false}
+        />
+      </View>
+
+      {/* Preset buttons */}
       <View style={styles.durationRow}>
         {DURATION_PRESETS.map((preset) => {
           const isSelected = duration === preset.seconds;

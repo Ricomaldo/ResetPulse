@@ -23,10 +23,10 @@ import IntentionPicker from '../onboarding/IntentionPicker';
 import CustomizeStep from './CustomizeStep';
 import { rs } from '../../styles/responsive';
 import { fontWeights, typography } from '../../theme/tokens';
+import { DEFAULT_DURATION } from '../../config/durations';
 
 // Constants
 const MAX_NAME_LENGTH = 20;
-const DEFAULT_DURATION = 1800; // 30 minutes
 
 /**
  * CreateActivityForm - Dual-mode form component
