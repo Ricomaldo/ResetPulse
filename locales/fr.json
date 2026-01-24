@@ -313,7 +313,7 @@
     "paletteItem": "Palette de couleurs : %{name}"
   },
   "discovery": {
-    "defaultCta": "Débloquer tout - 7 jours gratuits",
+    "defaultCta": "Essayer 7 jours gratuits",
     "moreColors": {
       "title": "Encore plus de couleurs",
       "subtitle": "Océan, forêt, lavande, canard...",
@@ -329,7 +329,7 @@
   "twoTimers": {
     "title": "Tu as créé 2 moments !",
     "message": "Envie d'explorer plus de couleurs et d'activités ?",
-    "explore": "Explorer le premium",
+    "explore": "Découvrir",
     "dismiss": "Peut-être plus tard"
   },
   "customActivities": {

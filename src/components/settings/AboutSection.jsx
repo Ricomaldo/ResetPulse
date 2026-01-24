@@ -65,7 +65,7 @@ function AboutSection({ resetOnboarding, onClose }) {
             {t('settings.about.appDescription')}
           </Text>
           <Text style={[styles.description, { marginTop: rs(8) }]}>
-            {t('settings.about.version')} 2.1.5
+            {t('settings.about.version')} 2.1.6
           </Text>
         </View>
 

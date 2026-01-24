@@ -1,9 +1,9 @@
 /**
- * @fileoverview AsideZone V2 - BottomSheet 3-snap (ADR-005 v2)
+ * @fileoverview AsideZone V2 - BottomSheet 3-snap (ADR-013)
  * Migration: PanResponder custom → @gorhom/bottom-sheet
  * Stack: @gorhom/bottom-sheet + react-native-reanimated (ADR-006)
  * @created 2025-12-19
- * @updated 2026-01-15 - Removed onAnimate blocking for smoother UX (natural snap behavior)
+ * @updated 2026-01-23 - Fixed scroll conflict at snap 2 (ADR-013: Option C - activeOffsetY + enableContentPanningGesture)
  */
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
@@ -219,8 +219,9 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
         index={0} // Start at 18% (favorite)
         enablePanDownToClose={false} // Drawer permanent (no close state)
         enableDynamicSizing={false} // Force snap points to be respected
-        activeOffsetY={[-10, 10]} // Require 10px vertical movement before capturing gesture
+        activeOffsetY={[-20, 20]} // ADR-013: Increased threshold (10→20px) to fix scroll conflict at snap 2
         failOffsetX={[-10, 10]} // Allow horizontal scroll in carousels
+        enableContentPanningGesture={currentSnapIndex !== 2} // ADR-013: Disable content pan at snap 2 (scroll vs drag conflict fix)
         onChange={(index) => {
           setCurrentSnapIndex(index);
         }}
