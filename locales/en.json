@@ -313,7 +313,7 @@
     "exploreSettingsHint": "Opens settings to discover premium features"
   },
   "discovery": {
-    "defaultCta": "Unlock everything - 7 days free",
+    "defaultCta": "Try 7 days free",
     "moreColors": {
       "title": "Even more colors",
       "subtitle": "Ocean, forest, lavender, duck...",
@@ -329,7 +329,7 @@
   "twoTimers": {
     "title": "You've created 2 moments!",
     "message": "Want to explore more colors and activities?",
-    "explore": "Explore premium",
+    "explore": "Discover",
     "dismiss": "Maybe later"
   },
   "customActivities": {

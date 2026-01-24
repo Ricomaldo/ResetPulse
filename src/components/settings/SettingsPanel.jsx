@@ -54,8 +54,8 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
     setClockwise,
     setSelectedSoundId,
     setScaleMode,
-    interaction: { customStartLongPress, customStopLongPress },
-    setCustomInteraction,
+    // interaction: { customStartLongPress, customStopLongPress }, // ❌ SUSPENDED ADR-012
+    // setCustomInteraction, // ❌ SUSPENDED ADR-012
     favorites: { favoriteActivities, favoritePalettes },
     setFavoriteActivities,
     toggleFavoritePalette,
@@ -260,7 +260,11 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
             />
           </View>
 
-          {/* Long Press Start */}
+          {/* ❌ SUSPENDED in v2.1.6 - ADR-012
+              Feature Long Tap instable, désactivée temporairement
+              Voir _internal/docs/decisions/ADR-012-long-tap-suspension.md */}
+
+          {/* Long Press Start - COMMENTED OUT
           <View style={styles.optionRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>{t('settings.timer.longPressStart')}</Text>
@@ -279,8 +283,9 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               {...theme.styles.switch(customStartLongPress)}
             />
           </View>
+          */}
 
-          {/* Long Press Stop */}
+          {/* Long Press Stop - COMMENTED OUT
           <View style={[styles.optionRow, { borderBottomWidth: 0 }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.optionLabel}>{t('settings.timer.longPressStop')}</Text>
@@ -299,6 +304,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
               {...theme.styles.switch(customStopLongPress)}
             />
           </View>
+          */}
         </SettingsCard>
 
         {/* Section 3: Keep Awake */}

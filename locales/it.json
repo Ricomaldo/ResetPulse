@@ -298,7 +298,7 @@
     "paletteItem": "Color palette: %{name}"
   },
   "discovery": {
-    "defaultCta": "Sblocca tutto - 7 giorni gratis",
+    "defaultCta": "Prova 7 giorni gratis",
     "activities": "Attività premium",
     "moreColors": {
       "title": "Even more colors",
@@ -376,7 +376,7 @@
   "twoTimers": {
     "title": "You've created 2 moments!",
     "message": "Want to explore more colors and activities?",
-    "explore": "Explore premium",
+    "explore": "Scopri",
     "dismiss": "Maybe later"
   },
   "timerMessages": {

@@ -1,7 +1,54 @@
 ---
 created: '2025-12-14'
-updated: '2026-01-22'
+updated: '2026-01-23'
 status: active
+---
+
+## [2.1.6] - 2026-01-23
+
+### 🎨 UX Improvements
+
+#### Premium Modal CTAs (Softer Wording)
+- **TwoTimers Modal**: CTA changed from "Explorer le premium" → "Découvrir" (and equivalents in 15 languages)
+  - **Rationale**: Previous wording felt too sales-y, causing user friction
+  - **Impact**: More inviting, less pushy CTA for post-2-timers celebration modal
+- **Discovery Modals** (+ Activities / + Colors): CTA changed from "Débloquer tout - 7 jours gratuits" → "Essayer 7 jours gratuits"
+  - **Rationale**: Focus on trial benefit, remove "unlock" pressure language
+  - **Impact**: Clearer value proposition, less aggressive tone
+- **15 languages updated**: en, fr, es, de, it, pt, nl, ja, ko, zh-Hans, zh-Hant, ar, ru, sv, no
+
+### 🐛 Bug Fixes
+
+#### Bottom Sheet Scroll Conflict (Snap 2 at 90%)
+- **Fixed scroll conflict** at snap 2 (Settings Panel): Increased vertical threshold + disabled content panning
+  - **Implementation**: `activeOffsetY={[-20, 20]}` + `enableContentPanningGesture={currentSnapIndex !== 2}`
+  - **Impact**: Scroll within SettingsPanel now reliable, no confusion with sheet drag-to-close
+  - **User action**: Scroll content freely, drag **handle** to close sheet
+  - **Documentation**: See `_internal/docs/decisions/ADR-013-bottom-sheet-3-snaps.md`
+
+### ⚠️ Feature Suspension
+
+#### Long Tap Feature (Temporarily Disabled)
+- **Suspended long tap interaction settings**: Long Press Start and Long Press Stop settings removed from SettingsPanel
+  - **Root cause**: Feature instability after multiple fix attempts in v2.1.5
+  - **Decision**: Temporary suspension to prioritize app stability over experimental features
+  - **Impact**: PulseButton reverts to simple tap only (start/stop)
+  - **Code**: Settings UI commented out (not deleted) for future reactivation
+  - **Documentation**: See `_internal/docs/decisions/ADR-012-long-tap-suspension.md`
+  - **Future**: Will be reactivated when properly debugged and tested
+
+### 📚 Technical Notes
+
+**Suspension Strategy**: Code preservation for future reactivation
+- Settings UI commented out in SettingsPanel (lines 263-301)
+- Context properties and i18n keys preserved (not deleted)
+- Simple tap behavior remains default and stable
+
+**Bottom Sheet Gestures**: Option C (combined approach)
+- Vertical threshold increased from 10px to 20px
+- Content panning disabled at snap 2 (settings)
+- Handle-only drag for closing sheet at full expansion
+
 ---
 
 ## [2.1.5] - 2026-01-22
