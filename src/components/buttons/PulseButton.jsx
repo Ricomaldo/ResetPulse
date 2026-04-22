@@ -30,6 +30,7 @@ import Animated, {
   cancelAnimation,
   interpolateColor,
   runOnJS,
+  runOnUI,
   Easing,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
@@ -97,21 +98,24 @@ const PulseButton = React.memo(function PulseButton({
   const pulseScale = useSharedValue(1);
 
   useEffect(() => {
-    if (shouldPulse && state === 'rest') {
-      const breatheEasing = Easing.bezier(0.37, 0, 0.63, 1);
-      pulseScale.value = withRepeat(
-        withSequence(
-          withTiming(PULSE_SCALE_MAX, { duration: PULSE_DURATION, easing: breatheEasing }),
-          withTiming(1, { duration: PULSE_DURATION, easing: breatheEasing })
-        ),
-        -1,
-        false
-      );
-    } else {
-      cancelAnimation(pulseScale);
-      pulseScale.value = withTiming(1, { duration: 200, easing: Easing.out(Easing.quad) });
-    }
-  }, [shouldPulse, state, pulseScale]);
+    runOnUI(() => {
+      'worklet';
+      if (shouldPulse && state === 'rest') {
+        const breatheEasing = Easing.bezier(0.37, 0, 0.63, 1);
+        pulseScale.value = withRepeat(
+          withSequence(
+            withTiming(PULSE_SCALE_MAX, { duration: PULSE_DURATION, easing: breatheEasing }),
+            withTiming(1, { duration: PULSE_DURATION, easing: breatheEasing })
+          ),
+          -1,
+          false
+        );
+      } else {
+        cancelAnimation(pulseScale);
+        pulseScale.value = withTiming(1, { duration: 200, easing: Easing.out(Easing.quad) });
+      }
+    })();
+  }, [shouldPulse, state]);
 
   // === HALO ANIMATION (RUNNING state) ===
   const halo1Scale = useSharedValue(1);
@@ -121,27 +125,14 @@ const PulseButton = React.memo(function PulseButton({
 
   useEffect(() => {
     if (shouldPulse && state === 'running') {
-      halo1Scale.value = withRepeat(
-        withTiming(HALO_SCALE_MAX, { duration: HALO_DURATION, easing: Easing.out(Easing.quad) }),
-        -1,
-        false
-      );
-      halo1Opacity.value = withRepeat(
-        withSequence(
-          withTiming(0.6, { duration: 100, easing: Easing.out(Easing.quad) }),
-          withTiming(0, { duration: HALO_DURATION - 100, easing: Easing.in(Easing.quad) })
-        ),
-        -1,
-        false
-      );
-
-      const startHalo2 = () => {
-        halo2Scale.value = withRepeat(
+      runOnUI(() => {
+        'worklet';
+        halo1Scale.value = withRepeat(
           withTiming(HALO_SCALE_MAX, { duration: HALO_DURATION, easing: Easing.out(Easing.quad) }),
           -1,
           false
         );
-        halo2Opacity.value = withRepeat(
+        halo1Opacity.value = withRepeat(
           withSequence(
             withTiming(0.6, { duration: 100, easing: Easing.out(Easing.quad) }),
             withTiming(0, { duration: HALO_DURATION - 100, easing: Easing.in(Easing.quad) })
@@ -149,20 +140,42 @@ const PulseButton = React.memo(function PulseButton({
           -1,
           false
         );
+      })();
+
+      const startHalo2 = () => {
+        runOnUI(() => {
+          'worklet';
+          halo2Scale.value = withRepeat(
+            withTiming(HALO_SCALE_MAX, { duration: HALO_DURATION, easing: Easing.out(Easing.quad) }),
+            -1,
+            false
+          );
+          halo2Opacity.value = withRepeat(
+            withSequence(
+              withTiming(0.6, { duration: 100, easing: Easing.out(Easing.quad) }),
+              withTiming(0, { duration: HALO_DURATION - 100, easing: Easing.in(Easing.quad) })
+            ),
+            -1,
+            false
+          );
+        })();
       };
       const halo2Timer = setTimeout(startHalo2, HALO_DELAY);
       return () => clearTimeout(halo2Timer);
     } else {
-      cancelAnimation(halo1Scale);
-      cancelAnimation(halo1Opacity);
-      cancelAnimation(halo2Scale);
-      cancelAnimation(halo2Opacity);
-      halo1Scale.value = 1;
-      halo1Opacity.value = 0;
-      halo2Scale.value = 1;
-      halo2Opacity.value = 0;
+      runOnUI(() => {
+        'worklet';
+        cancelAnimation(halo1Scale);
+        cancelAnimation(halo1Opacity);
+        cancelAnimation(halo2Scale);
+        cancelAnimation(halo2Opacity);
+        halo1Scale.value = 1;
+        halo1Opacity.value = 0;
+        halo2Scale.value = 1;
+        halo2Opacity.value = 0;
+      })();
     }
-  }, [shouldPulse, state, halo1Scale, halo1Opacity, halo2Scale, halo2Opacity]);
+  }, [shouldPulse, state]);
 
   const halo1Style = useAnimatedStyle(() => ({
     opacity: halo1Opacity.value,
@@ -178,21 +191,23 @@ const PulseButton = React.memo(function PulseButton({
   const secondHandRotation = useSharedValue(0);
 
   useEffect(() => {
-    if (state === 'running') {
-      // Start from current position, rotate continuously
-      secondHandRotation.value = withRepeat(
-        withTiming(360, {
-          duration: SECOND_HAND_DURATION,
-          easing: Easing.linear
-        }),
-        -1, // Infinite repeat
-        false // Don't reverse
-      );
-    } else {
-      cancelAnimation(secondHandRotation);
-      secondHandRotation.value = 0;
-    }
-  }, [state, secondHandRotation]);
+    runOnUI(() => {
+      'worklet';
+      if (state === 'running') {
+        secondHandRotation.value = withRepeat(
+          withTiming(360, {
+            duration: SECOND_HAND_DURATION,
+            easing: Easing.linear
+          }),
+          -1,
+          false
+        );
+      } else {
+        cancelAnimation(secondHandRotation);
+        secondHandRotation.value = 0;
+      }
+    })();
+  }, [state]);
 
   // Generate trail styles with decreasing opacity (comma/fade effect)
   // Container rotation only, scale applied to dot itself
@@ -228,20 +243,23 @@ const PulseButton = React.memo(function PulseButton({
     const prevState = prevStateRef.current;
     prevStateRef.current = state;
 
-    stateProgress.value = withTiming(
-      state === 'running' ? 1 : 0,
-      { duration: STATE_TRANSITION_DURATION, easing: Easing.inOut(Easing.quad) }
-    );
-
     const shouldBounce = state === 'complete' || (prevState === 'running' && state === 'rest');
-    if (shouldBounce) {
-      scaleTransition.value = withSequence(
-        withTiming(0.92, { duration: 80, easing: Easing.out(Easing.quad) }),
-        withTiming(1.05, { duration: 120, easing: Easing.out(Easing.quad) }),
-        withTiming(1, { duration: 150, easing: Easing.inOut(Easing.quad) })
+    runOnUI(() => {
+      'worklet';
+      stateProgress.value = withTiming(
+        state === 'running' ? 1 : 0,
+        { duration: STATE_TRANSITION_DURATION, easing: Easing.inOut(Easing.quad) }
       );
-    }
-  }, [state, stateProgress, scaleTransition]);
+
+      if (shouldBounce) {
+        scaleTransition.value = withSequence(
+          withTiming(0.92, { duration: 80, easing: Easing.out(Easing.quad) }),
+          withTiming(1.05, { duration: 120, easing: Easing.out(Easing.quad) }),
+          withTiming(1, { duration: 150, easing: Easing.inOut(Easing.quad) })
+        );
+      }
+    })();
+  }, [state]);
 
   // === DIMENSIONS ===
   const buttonSize = compact ? rs(48, 'min') : rs(size, 'min');

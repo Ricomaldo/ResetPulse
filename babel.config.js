@@ -9,7 +9,7 @@ module.exports = function(api) {
         safe: false,
         allowUndefined: true,
       }],
-      'react-native-reanimated/plugin', // MUST be last plugin
+      'react-native-reanimated/plugin',
     ]
   };
 };

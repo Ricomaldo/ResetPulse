@@ -9,6 +9,7 @@ import { View, StyleSheet, Image } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
+  runOnUI,
   useSharedValue,
   useAnimatedStyle,
   useAnimatedReaction,
@@ -82,19 +83,20 @@ function TimerDial({
 
   useEffect(() => {
     // Animate handle on mount: fade-in → pulse → settle
-    hintOpacity.value = withSequence(
-      // Fade in
-      withTiming(1, { duration: 400, easing: Easing.out(Easing.ease) }),
-      // Pulse (2x)
-      withDelay(100, withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) })),
-      withTiming(1, { duration: 300, easing: Easing.inOut(Easing.ease) }),
-      withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) }),
-      withTiming(0.7, { duration: 300, easing: Easing.out(Easing.ease) })
-    );
+    runOnUI(() => {
+      'worklet';
+      hintOpacity.value = withSequence(
+        withTiming(1, { duration: 400, easing: Easing.out(Easing.ease) }),
+        withDelay(100, withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) })),
+        withTiming(1, { duration: 300, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.7, { duration: 300, easing: Easing.out(Easing.ease) })
+      );
+    })();
     // Mark animation as done after total duration (~1.7s)
     const timer = setTimeout(() => setHintAnimationDone(true), 1700);
     return () => clearTimeout(timer);
-  }, [hintOpacity]);
+  }, []);
 
   const handleHintStyle = useAnimatedStyle(() => ({
     opacity: hintOpacity.value,
@@ -113,15 +115,18 @@ function TimerDial({
   // Animate progress when graduation is tapped (not running, not dragging)
   useEffect(() => {
     if (!isRunning && !isDragging) {
-      // Graduation tap or external change - animate smoothly
-      // Using ease-in-out for natural, unhurried motion
-      animatedProgress.value = withTiming(targetProgress, {
-        duration: 300,
-        easing: Easing.inOut(Easing.quad),
-      });
+      runOnUI(() => {
+        'worklet';
+        animatedProgress.value = withTiming(targetProgress, {
+          duration: 300,
+          easing: Easing.inOut(Easing.quad),
+        });
+      })();
     } else {
-      // Running timer or dragging - instant update
-      animatedProgress.value = targetProgress;
+      runOnUI(() => {
+        'worklet';
+        animatedProgress.value = targetProgress;
+      })();
     }
   }, [targetProgress, isRunning, isDragging]);
 
