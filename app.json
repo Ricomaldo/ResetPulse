@@ -34,7 +34,9 @@
           ]
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-asset",
+      "expo-audio"
     ],
     "notification": {
       "icon": "./assets/icon.png",
