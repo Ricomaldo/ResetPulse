@@ -3,20 +3,17 @@
  * Orchestrates dial sub-components for visual timer display
  * @created 2025-12-14
  * @updated 2025-12-19 - Migrated from PanResponder to Gesture API (RNGH v2)
+ *
+ * Animation layers to re-add (Reanimated 4 + New Arch):
+ *   [ ] hint pulse on mount (hintOpacity withSequence)
+ *   [ ] smooth graduation tap transition (animatedProgress withTiming)
  */
-import React, { useMemo, useRef, useState, useCallback, useEffect } from 'react';
+import React, { useMemo, useRef, useState, useCallback } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
+import {
   runOnJS,
-  runOnUI,
   useSharedValue,
-  useAnimatedStyle,
-  useAnimatedReaction,
-  withTiming,
-  withSequence,
-  withDelay,
-  Easing,
 } from 'react-native-reanimated';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -77,67 +74,10 @@ function TimerDial({
   const t = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
 
-  // === HINT ANIMATION (fade-in/pulse on mount) ===
-  const hintOpacity = useSharedValue(0);
-  const [hintAnimationDone, setHintAnimationDone] = useState(false);
-
-  useEffect(() => {
-    // Animate handle on mount: fade-in → pulse → settle
-    runOnUI(() => {
-      'worklet';
-      hintOpacity.value = withSequence(
-        withTiming(1, { duration: 400, easing: Easing.out(Easing.ease) }),
-        withDelay(100, withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) })),
-        withTiming(1, { duration: 300, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0.4, { duration: 300, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0.7, { duration: 300, easing: Easing.out(Easing.ease) })
-      );
-    })();
-    // Mark animation as done after total duration (~1.7s)
-    const timer = setTimeout(() => setHintAnimationDone(true), 1700);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleHintStyle = useAnimatedStyle(() => ({
-    opacity: hintOpacity.value,
-  }));
-
-  // === SMOOTH GRADUATION TAP ANIMATION ===
-  // Pre-calc scaled progress (needed early for animation)
+  // === PROGRESS (direct, no animation — smooth transition layer to re-add) ===
   const maxMinutesForScale = getDialMode(scaleMode).maxMinutes;
   const currentMinutesForScale = duration / 60;
-  const targetProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
-
-  // Shared value for animating progress on graduation taps
-  const animatedProgress = useSharedValue(targetProgress);
-  const [displayProgress, setDisplayProgress] = useState(targetProgress);
-
-  // Animate progress when graduation is tapped (not running, not dragging)
-  useEffect(() => {
-    if (!isRunning && !isDragging) {
-      runOnUI(() => {
-        'worklet';
-        animatedProgress.value = withTiming(targetProgress, {
-          duration: 300,
-          easing: Easing.inOut(Easing.quad),
-        });
-      })();
-    } else {
-      runOnUI(() => {
-        'worklet';
-        animatedProgress.value = targetProgress;
-      })();
-    }
-  }, [targetProgress, isRunning, isDragging]);
-
-  // Sync animated value to JS state for rendering
-  useAnimatedReaction(
-    () => animatedProgress.value,
-    (value) => {
-      runOnJS(setDisplayProgress)(value);
-    },
-    [animatedProgress]
-  );
+  const displayProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);
@@ -512,20 +452,13 @@ function TimerDial({
           {/* Same color as arc but darker for contrast */}
           {/* Visible even when running to allow time adjustment */}
           {displayProgress > 0 && (
-            <Animated.View
-              style={[
-                staticStyles.absoluteOverlay,
-                !hintAnimationDone && handleHintStyle,
-              ]}
-              pointerEvents="none"
-            >
+            <View style={staticStyles.absoluteOverlay} pointerEvents="none">
               <Svg
                 width={svgSize}
                 height={svgSize}
                 accessible={false}
                 importantForAccessibility="no"
               >
-                {/* Small radial segment within arc thickness - deep color */}
                 <Line
                   x1={handleX1}
                   y1={handleY1}
@@ -537,7 +470,7 @@ function TimerDial({
                   opacity={isDragging ? 1 : 0.85}
                 />
               </Svg>
-            </Animated.View>
+            </View>
           )}
 
           {/* Physical fixation dots - hide when PulseButton is displayed */}
