@@ -1,6 +1,6 @@
 ---
 created: '2025-12-07'
-updated: '2025-12-17'
+updated: '2026-04-30'
 status: active
 type: project-framework
 ---
@@ -12,9 +12,10 @@ type: project-framework
 This document defines the **project architecture, tech stack, and conventions**. It changes rarely.
 
 For **current missions, workflows, or next steps**, see:
-- **Current mission** → `_internal/cockpit/workflow/active/current.md` (symlink to planning/)
-- **All missions** → `_internal/cockpit/planning/` or `_internal/cockpit/workflow/`
-- **Audit archive** → `_internal/docs/audits/`
+- **Orientation session** → `_cockpit/README.md` ← lire en premier
+- **Mission active** → `_cockpit/missions/active/`
+- **Vision & cap** → `_cockpit/vision/index.md`
+- **Règles de pilotage** → `_cockpit/flow-rules.md`
 
 ---
 
@@ -24,7 +25,7 @@ ResetPulse est une application Time Timer visuel pour utilisateurs neuroatypique
 
 ## Stack technique
 
-- **Framework**: React Native 0.81.4 + Expo SDK 54 (New Architecture activée)
+- **Framework**: React Native 0.83.6 + Expo SDK 55 (New Architecture activée)
 - **React**: 19.1.0
 - **État**: Context API (TimerPaletteContext, TimerOptionsContext, PurchaseContext)
 - **i18n**: i18n-js (15 langues supportées)
@@ -106,16 +107,15 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 ## État actuel du projet
 
 ### En production
-- v1.2.3 sur Apple App Store et Google Play
+- v2.1.6 sur Apple App Store et Google Play
 - Analytics Mixpanel actifs
 
-### En cours (proto)
-- `OnboardingV2Prototype.jsx` - Nouveau funnel d'onboarding
-- À valider puis séquencer en screens séparés
-- Mise à jour des implémentations Mixpanel et RevenueCat à prévoir
+### En cours
+- Mission P1 : simplifier app pour prestataire Fiverr (PulseButton, onboarding, console)
+- Séquence complète : `_cockpit/vision/fiverr-engagement.md`
 
-### Timeline
-- Position actuelle: environ M8
+### Tests
+- 161/161 passent
 
 ## Fichiers clés à connaître
 
@@ -210,44 +210,44 @@ Tous les ratios de contraste respectent **WCAG AA** :
 
 ## 📚 Documentation Framework
 
-La documentation du projet est organisée dans `_internal/docs/` :
+La documentation du projet est organisée dans `_docs/` :
 
 | Catégorie | Emplacement | Contenu |
 |-----------|-------------|---------|
-| **Guides** | `_internal/docs/guides/` | How-to (builds, deployment, testing) |
-| **Decisions** | `_internal/docs/decisions/` | ADRs (Architecture Decision Records) |
-| **Reports** | `_internal/docs/reports/` | Living architecture docs (updated regularly) |
-| **Audits** | `_internal/docs/audits/` | Audit cycles (immutable archives, timestamped) |
-| **Legacy** | `_internal/docs/legacy/` | Previous documentation (reference) |
+| **Guides** | `_docs/guides/` | How-to (builds, deployment, testing) |
+| **Decisions** | `_docs/decisions/` | ADRs projet |
+| **Testing** | `_docs/testing/` | Checklists, procédures QA |
+| **Templates** | `_docs/templates/` | Modèles réutilisables |
+| **Reports/Audits** | `_library/resetpulse/` (Hyperion) | Archives audits (bougées lors du revival avril 2026) |
 
-→ See [`_internal/docs/README.md`](_internal/docs/README.md) for complete structure.
+→ See [`_docs/INDEX.md`](_docs/INDEX.md) for complete structure.
 
 ---
 
 ## 🚀 Cockpit & Missions
 
-Project execution (missions, workflows, audits) is orchestrated in `_internal/cockpit/` :
+Project execution (missions, vision, findings) is orchestrated in `_cockpit/` :
 
-- **Current mission** → `_internal/cockpit/workflow/active/current.md` (symlink to planning/)
-- **All missions** → `_internal/cockpit/planning/` or `_internal/cockpit/workflow/`
-- **Cockpit framework** → See [`_internal/cockpit/CLAUDE.md`](_internal/cockpit/CLAUDE.md)
+- **Orientation session** → [`_cockpit/README.md`](_cockpit/README.md) ← lire en premier
+- **Mission active** → `_cockpit/missions/active/`
+- **Vision & séquence** → `_cockpit/vision/index.md`
+- **Règles de pilotage** → `_cockpit/flow-rules.md`
 
 ---
 
 ## 🔧 System References
 
-Ce projet suit l'Architecture V2. Sources de vérité :
+Ce projet suit le système aegis. Sources de vérité :
 
 | Document | Emplacement |
 |----------|-------------|
-| Index Références | `~/dev/_ref/LINKS.md` |
-| ADR-01 Architecture | `~/dev/_ref/standards/ADR-01-architecture-v2.md` |
-| ADR-02 Conventions | `~/dev/_ref/standards/ADR-02-conventions-nommage.md` |
-| ADR-03 Linking | `~/dev/_ref/standards/ADR-03-strategie-linking.md` |
-| Framework Cockpit | `~/dev/_ref/frameworks/cockpit.md` |
-| Framework Documentation | `~/dev/_ref/frameworks/documentation.md` |
+| Nommage & frontmatter | `~/_aegis/decisions/records/adr-001-naming-and-format.md` |
+| Versioning | `~/_aegis/decisions/records/adr-014-versioning.md` |
+| Git strategy | `~/_aegis/decisions/records/adr-041-git-strategy.md` |
+| Cockpit structure | `~/_aegis/decisions/records/adr-081-cockpit.md` |
+| Règles projet | `_cockpit/flow-rules.md` |
 
-### Conventions Appliquées (ADR-02)
+### Conventions Appliquées (ADR-001)
 
 | Contexte | Convention | Exemple |
 |----------|------------|---------|
@@ -270,32 +270,26 @@ status: draft | active | archived
 
 ---
 
-## 🗺️ Framework Navigation
+## 🗺️ Navigation session
 
 **You're here**: Working on ResetPulse (React Native timer app).
 
-### Quick Reads (New Session)
-- **System overview** (5min): `~/dev/_ref/guides/framework-momentum.md`
-- **Agent onboarding** (20min): `~/dev/_ref/guides/agent-onboarding.md` ← **Read this first if new to project**
-- **Audit methodology** (reference): `~/dev/_ref/guides/audit-cycles.md`
+### Nouvelle session — lire dans cet ordre
+1. `_cockpit/README.md` — état actuel, mission active, ce qui est stale
+2. `_cockpit/missions/active/` — périmètre en cours
+3. `_cockpit/changelog.md` — ce qui s'est passé avant
 
-### Active Work
-- **What's the current mission?** → `cat _internal/cockpit/workflow/active/current.md`
-- **Mission template**: `_internal/cockpit/planning/mission-*.md`
-- **Project state** → `_internal/cockpit/CLAUDE.md`
+### Travail actif
+- **Mission active** → `_cockpit/missions/active/`
+- **Vision séquence** → `_cockpit/vision/fiverr-engagement.md`
+- **Findings & devlogs** → `_cockpit/findings/` / `_cockpit/devlogs/`
 
-### System Standards (Project-Level)
-- **Architecture decisions**: `_internal/docs/decisions/`
-- **Architecture reports** (current state): `_internal/docs/reports/`
-- **Audit archives** (historical): `_internal/docs/audits/audit-YYYY-MM-DD/`
+### Standards projet
+- **ADRs projet** → `_docs/decisions/`
+- **Guides techniques** → `_docs/guides/`
+- **Règles cockpit** → `_cockpit/flow-rules.md`
 
-### System Standards (System-Level)
-- **ADR-01** (Architecture): `~/dev/_ref/standards/ADR-01-architecture-v2.md`
-- **ADR-02** (Conventions): `~/dev/_ref/standards/ADR-02-conventions-nommage.md`
-- **Cockpit Framework**: `~/dev/_ref/frameworks/cockpit.md`
-- **Documentation Framework**: `~/dev/_ref/frameworks/documentation.md`
-
-### Tooling
-- **Validate frontmatter**: `~/dev/_infra/scripts/validate-frontmatter.sh`
-- **Check all active missions**: `~/dev/_infra/scripts/check-missions.sh`
-- **Scaffold new project**: `~/dev/_infra/scripts/new-project.sh`
+### Standards système (aegis)
+- **Nommage** → `~/_aegis/decisions/records/adr-001-naming-and-format.md`
+- **Versioning** → `~/_aegis/decisions/records/adr-014-versioning.md`
+- **Cockpit** → `~/_aegis/decisions/records/adr-081-cockpit.md`
