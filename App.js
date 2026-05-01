@@ -21,6 +21,7 @@ import { OnboardingFlow } from './src/screens/onboarding';
 import { ErrorBoundary } from './src/components/layout';
 import SplashScreen from './src/components/SplashScreen';
 import Analytics from './src/services/analytics';
+import logger from './src/utils/logger';
 
 // Storage key pour onboarding V2
 const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
@@ -36,13 +37,14 @@ function AppContent({ onResetOnboarding }) {
     const loadOnboardingState = async () => {
       try {
         const completed = await AsyncStorage.getItem(ONBOARDING_COMPLETED_KEY);
-        console.log('[AppContent] Onboarding state loaded:', completed);
+        logger.boot.step('config', 'onboarding', completed === 'true' ? 'completed' : 'pending');
         setOnboardingCompleted(completed === 'true');
       } catch (error) {
         console.warn('[App] Failed to load onboarding state:', error);
         setOnboardingCompleted(false);
       } finally {
         setIsLoading(false);
+        logger.boot.visible();
       }
     };
     loadOnboardingState();
@@ -136,6 +138,7 @@ export default function App() {
   // Note: Apple Search Ads attribution is now handled by RevenueCat in PurchaseContext
   useEffect(() => {
     const initAnalytics = async () => {
+      logger.boot.start();
       await Analytics.init();
 
       const hasLaunched = await AsyncStorage.getItem('has_launched_before');

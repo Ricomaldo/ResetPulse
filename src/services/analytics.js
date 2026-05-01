@@ -18,6 +18,7 @@ import { Mixpanel } from 'mixpanel-react-native';
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import { MIXPANEL_TOKEN } from '@env';
+import logger from '../utils/logger';
 import {
   onboardingEvents,
   timerEvents,
@@ -26,10 +27,6 @@ import {
   customActivitiesEvents,
 } from './analytics/index';
 
-// Mixpanel token loaded from .env (fallback for development)
-if (!MIXPANEL_TOKEN) {
-  console.warn('[Analytics] MIXPANEL_TOKEN not configured in .env');
-}
 
 class AnalyticsService {
   constructor() {
@@ -66,9 +63,9 @@ class AnalyticsService {
    * À appeler dans App.js au startup
    */
   async init() {
-    if (__DEV__) {
-      console.warn('🔄 [Analytics] Initializing Mixpanel SDK...');
-      console.warn(`   Token: ${MIXPANEL_TOKEN.substring(0, 8)}...`);
+    if (!MIXPANEL_TOKEN) {
+      logger.boot.step('analytics', 'disabled (no token)');
+      return;
     }
 
     try {
@@ -94,14 +91,7 @@ class AnalyticsService {
         app_version: appVersion,
       });
 
-      if (__DEV__) {
-        console.warn('✅ [Analytics] Mixpanel initialized successfully');
-        console.warn(`   Platform: ${Platform.OS}`);
-        console.warn(`   App Version: ${appVersion}`);
-        console.warn(`   Token: ${MIXPANEL_TOKEN.substring(0, 12)}...`);
-        console.warn('   Server URL: https://api-eu.mixpanel.com');
-        console.warn('   Ready to track events');
-      }
+      logger.boot.step('analytics', `ready (${Platform.OS} v${appVersion})`);
     } catch (error) {
       // Graceful fallback for Expo Go (native module unavailable)
       if (error.message?.includes('initialize') && __DEV__) {
@@ -122,9 +112,6 @@ class AnalyticsService {
    */
   track(eventName, properties = {}) {
     if (!this.isInitialized || !this.mixpanel) {
-      if (__DEV__) {
-        console.warn('⚠️ [Analytics] Not initialized, event ignored:', eventName);
-      }
       return;
     }
 

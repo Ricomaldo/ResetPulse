@@ -46,6 +46,7 @@ const OLD_KEYS = {
 export const TimerConfigProvider = ({ children }) => {
   const hasLoadedOnboardingConfig = useRef(false);
   const hasMigratedOldKeys = useRef(false);
+  const hasLoggedBoot = useRef(false);
 
   // Transient state (not persisted)
   const [timerRemaining, setTimerRemaining] = useState(0);
@@ -704,6 +705,11 @@ export const TimerConfigProvider = ({ children }) => {
   // Block children render until loaded
   if (isLoading) {
     return null;
+  }
+
+  if (!hasLoggedBoot.current) {
+    hasLoggedBoot.current = true;
+    logger.boot.step('config', `timer config loaded (activity=${values.timer?.currentActivity?.id}, palette=${values.palette?.currentPalette})`);
   }
 
   return <TimerConfigContext.Provider value={value}>{children}</TimerConfigContext.Provider>;

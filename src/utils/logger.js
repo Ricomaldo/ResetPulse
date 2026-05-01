@@ -3,23 +3,64 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ERROR_STORAGE_KEY = '@resetpulse_errors';
 const MAX_STORED_ERRORS = 10;
 
+// ANSI color codes for Metro console
+const C = {
+  reset:  '\x1b[0m',
+  dim:    '\x1b[2m',
+  bold:   '\x1b[1m',
+  gray:   '\x1b[90m',
+  cyan:   '\x1b[36m',
+  yellow: '\x1b[33m',
+  green:  '\x1b[32m',
+  blue:   '\x1b[34m',
+};
+
 class Logger {
   constructor() {
     this.isDev = __DEV__;
+    this._t0 = null;
+
+    // Boot sequence tracker — timeline relative au démarrage app
+    // Usage: logger.boot.start() → logger.boot.step('phase', 'label') → logger.boot.visible/complete()
+    this.boot = {
+      start: () => {
+        this._t0 = Date.now();
+      },
+      step: (phase, label, data) => {
+        if (!this.isDev) return;
+        const elapsed = this._t0 !== null ? `+${String(Date.now() - this._t0).padStart(4)}ms` : '  +?ms';
+        const prefix  = `${C.dim}[Boot]${C.reset} ${C.gray}${elapsed}${C.reset}`;
+        const tag     = `${C.cyan}[${phase}]${C.reset}`;
+        const msg     = data !== undefined
+          ? `${label}  ${C.yellow}${data}${C.reset}`
+          : label;
+        console.log(`${prefix}  ${tag}  ${msg}`);
+      },
+      visible: () => {
+        if (!this.isDev) return;
+        const ms = this._t0 !== null ? Date.now() - this._t0 : '?';
+        console.log(`${C.dim}[Boot]${C.reset}  ${C.blue}${C.bold}◎ UI visible${C.reset}  ${C.gray}${ms}ms${C.reset}`);
+      },
+      complete: () => {
+        if (!this.isDev) return;
+        const ms = this._t0 !== null ? Date.now() - this._t0 : '?';
+        console.log(`${C.dim}[Boot]${C.reset}  ${C.green}${C.bold}✓ boot complete${C.reset}  ${C.gray}${ms}ms${C.reset}`);
+      },
+    };
   }
 
   // Log simple en dev
   log(message, data) {
     if (this.isDev) {
       // eslint-disable-next-line no-console
-      console.log(`[ResetPulse] ${message}`, data || '');
+      data !== undefined ? console.log(`[ResetPulse] ${message}`, data) : console.log(`[ResetPulse] ${message}`);
     }
   }
 
   // Warning en dev seulement
   warn(message, data) {
     if (this.isDev) {
-      console.warn(`[ResetPulse] ${message}`, data || '');
+      data !== undefined ? console.warn(`[ResetPulse] ${message}`, data) : console.warn(`[ResetPulse] ${message}`);
     }
   }
 
