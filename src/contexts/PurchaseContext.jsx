@@ -44,7 +44,7 @@ const loadCachedStatus = async () => {
       return null;
     }
 
-    logger.log('[RevenueCat Cache] Using cached premium status:', isPremium);
+    logger.boot.step('purchases', `cache HIT → premium=${isPremium}`);
     return isPremium;
   } catch (error) {
     logger.error('[RevenueCat Cache] Error loading cache:', error);
@@ -59,7 +59,6 @@ const saveCachedStatus = async (isPremium) => {
       timestamp: Date.now()
     };
     await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
-    logger.log('[RevenueCat Cache] Saved premium status to cache:', isPremium);
   } catch (error) {
     logger.error('[RevenueCat Cache] Error saving cache:', error);
   }
@@ -98,7 +97,7 @@ export const PurchaseProvider = ({ children }) => {
         // Set cached status immediately (non-blocking)
         setIsPremium(cachedStatus);
         setIsLoading(false);
-        logger.log('[RevenueCat] Using cached status, refreshing in background');
+        logger.boot.step('purchases', 'cache HIT → background refresh started');
       }
 
       // Step 2: Configure SDK
@@ -106,8 +105,8 @@ export const PurchaseProvider = ({ children }) => {
         ? REVENUECAT_CONFIG.ios.apiKey
         : REVENUECAT_CONFIG.android.apiKey;
 
-      await Purchases.configure({ apiKey });
       Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
+      await Purchases.configure({ apiKey });
 
       // Enable Apple Search Ads attribution collection (iOS only)
       // This collects AdServices tokens automatically - no extra SDK needed
@@ -115,7 +114,7 @@ export const PurchaseProvider = ({ children }) => {
       if (Platform.OS === 'ios') {
         try {
           await Purchases.enableAdServicesAttributionTokenCollection();
-          logger.log('[RevenueCat] Apple Search Ads attribution enabled');
+          logger.boot.step('purchases', 'ads attribution OK');
         } catch (attrError) {
           // Non-blocking - attribution is nice-to-have
           logger.warn('[RevenueCat] Attribution collection failed:', attrError.message);
@@ -125,12 +124,12 @@ export const PurchaseProvider = ({ children }) => {
       // Step 3: Fetch fresh data in background
       const info = await Purchases.getCustomerInfo();
       const freshPremiumStatus = checkPremiumEntitlement(info);
+      logger.boot.step('purchases', `network → premium=${freshPremiumStatus}`);
 
-      // Update UI with fresh data
+      // Update UI with fresh data (also saves to cache)
       updateCustomerInfo(info);
 
-      // Step 4: Save fresh status to cache
-      await saveCachedStatus(freshPremiumStatus);
+      logger.boot.complete();
 
       // Listener pour les mises à jour en temps réel
       Purchases.addCustomerInfoUpdateListener(updateCustomerInfo);
