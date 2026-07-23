@@ -25,6 +25,13 @@ Liste des composants avec textes hardcodés en français à traduire avant relea
 - [ ] FREE_ACTIVITIES labels (Travail, Pause, Méditation, Créativité)
 - [ ] Filter 0-5 textes
 
+## Sheet SCR-10 (recentrage Lot 1 — batch i18n au Lot 3)
+
+### AsideZone.jsx
+- [ ] MODE_LABELS : "Mixte", "Focus", "Complet"
+- [ ] RITUALS_LABEL : "Mes rituels"
+- [ ] PALETTES_LABEL : "Palettes"
+
 ## Carrousels
 
 ### ActivityCarousel.jsx
@@ -35,4 +42,4 @@ Liste des composants avec textes hardcodés en français à traduire avant relea
 - [ ] accessibilityLabel bouton "+"
 
 ---
-*Mis à jour: 5 Dec 2024*
+*Mis à jour: 23 juillet 2026*

@@ -1,11 +1,12 @@
 /**
- * @fileoverview AsideZone V3 - Custom drawer Reanimated 4
- * Migration: @gorhom/bottom-sheet → Gesture.Pan + Reanimated 4 (2026-05-01)
- * Reason: @gorhom/bottom-sheet v5.x incompatible with Reanimated 4.x (Expo SDK 55)
- * See devlog: _cockpit/devlogs/2026-05-01_aside-custom-drawer-reanimated4.md
+ * @fileoverview AsideZone - Sheet léger custom Reanimated 4 (SCR-10, ADR-014)
+ * V3 (2026-05-01) : migration @gorhom/bottom-sheet → Gesture.Pan + Reanimated 4.
+ * Recentrage (2026-07-23) : 3 snaps / 7 sections → 2 états (fermé / ouvert
+ * au swipe up) et 4 blocs — segmenté Mode (structure seule au Lot 1),
+ * 3 toggles, Mes rituels, Palettes.
  */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ScrollView, Switch } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -17,206 +18,224 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
-import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useTranslation } from '../../hooks/useTranslation';
+import { rs } from '../../styles/responsive';
+import { fontWeights } from '../../theme/tokens';
+import haptics from '../../utils/haptics';
 import { MessageZone } from '../messaging';
-import { FavoriteToolBox, ToolBox } from './aside-content';
-import { SettingsPanel } from '../settings';
+import { ActivityCarousel, PaletteCarousel } from '../carousels';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-// Container heights per snap (content area, slightly smaller than snap to account for handle)
-const LAYER_1_HEIGHT = SCREEN_HEIGHT * 0.1;
-const CONTAINER_SNAP_1 = SCREEN_HEIGHT * 0.13;
-const CONTAINER_SNAP_2 = SCREEN_HEIGHT * 0.27;
-const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8;
+// 2 snaps : fermé (handle visible) / ouvert (sheet 80%)
+const SNAP_Y_CLOSED = SCREEN_HEIGHT * 0.92;
+const SNAP_Y_OPEN = SCREEN_HEIGHT * 0.2;
 
-// Drawer translateY values per snap point
-// Higher Y = more collapsed (less of drawer visible)
-const SNAP_Y_0 = SCREEN_HEIGHT * 0.82; // snap 0: 18% visible
-const SNAP_Y_1 = SCREEN_HEIGHT * 0.68; // snap 1: 32% visible
-const SNAP_Y_2 = SCREEN_HEIGHT * 0.10; // snap 2: 90% visible
-const SNAP_YS = [SNAP_Y_0, SNAP_Y_1, SNAP_Y_2];
-
-// Opacity threshold: allOpacity starts at 80% of the way from snap 1 → snap 2
-const SNAP_Y_ALL_THRESHOLD = SNAP_Y_1 + 0.8 * (SNAP_Y_2 - SNAP_Y_1);
-
-const SPRING_CONFIG = {
-  damping: 80,
-  stiffness: 450,
-  overshootClamping: true,
-  restDisplacementThreshold: 0.01,
-  restSpeedThreshold: 0.01,
-};
-
-// Worklet: find nearest snap index, with velocity bias (1 step in swipe direction)
-// Index 0 = most collapsed (snap 18%), Index 2 = most expanded (snap 90%)
-// velocityY > 0 → swiping down → collapse → lower snap index
-// velocityY < 0 → swiping up → expand → higher snap index
-function findNearestSnap(y, velocityY) {
-  'worklet';
-  let nearest = 0;
-  let minDist = Infinity;
-  for (let i = 0; i < SNAP_YS.length; i++) {
-    const dist = Math.abs(SNAP_YS[i] - y);
-    if (dist < minDist) {
-      minDist = dist;
-      nearest = i;
-    }
-  }
-  if (velocityY > 500) return Math.max(0, nearest - 1);
-  if (velocityY < -500) return Math.min(2, nearest + 1);
-  return nearest;
-}
-
-function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, paletteCarouselRef, isPremiumUser, animatedTranslateY }) {
-  const theme = useTheme();
-
-  const containerHeightStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_2, SNAP_Y_1, SNAP_Y_0],
-      [CONTAINER_SNAP_3, CONTAINER_SNAP_2, CONTAINER_SNAP_1],
-      Extrapolation.CLAMP
-    );
-    return { height };
-  });
-
-  const favoriteOpacityStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_1, SNAP_Y_0],
-      [0, 1],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  const baseOpacityStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_2, SNAP_Y_1, SNAP_Y_0],
-      [0, 1, 0],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  const allOpacityStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_2, SNAP_Y_ALL_THRESHOLD, SNAP_Y_1, SNAP_Y_0],
-      [1, 0, 0, 0],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContent}
-      scrollEnabled={currentSnapIndex === 2}
-      bounces={currentSnapIndex === 2}
-      overScrollMode="never"
-      showsVerticalScrollIndicator={currentSnapIndex === 2}
-      nestedScrollEnabled={true}
-    >
-      <Animated.View style={[styles.layerContainer, containerHeightStyle]}>
-        {/* Snap 18%: FavoriteToolBox */}
-        <Animated.View
-          style={[
-            styles.layerAbsolute,
-            { backgroundColor: theme.colors.fixed.transparent, height: LAYER_1_HEIGHT },
-            favoriteOpacityStyle,
-          ]}
-          pointerEvents={currentSnapIndex === 0 ? 'auto' : 'none'}
-        >
-          <FavoriteToolBox isTimerRunning={isTimerRunning} />
-        </Animated.View>
-
-        {/* Snap 32%: ToolBox */}
-        <Animated.View
-          style={[
-            styles.layerAbsolute,
-            { backgroundColor: theme.colors.fixed.transparent },
-            baseOpacityStyle,
-          ]}
-          pointerEvents={currentSnapIndex === 1 ? 'auto' : 'none'}
-        >
-          <ToolBox
-            isTimerRunning={isTimerRunning}
-            activityCarouselRef={activityCarouselRef}
-            paletteCarouselRef={paletteCarouselRef}
-          />
-        </Animated.View>
-
-        {/* Snap 90%: SettingsPanel */}
-        <Animated.View
-          style={[
-            styles.layerAbsolute,
-            { backgroundColor: theme.colors.fixed.transparent },
-            allOpacityStyle,
-          ]}
-          pointerEvents={currentSnapIndex === 2 ? 'auto' : 'none'}
-        >
-          <SettingsPanel
-            isPremiumUser={isPremiumUser}
-            onClose={() => {}}
-          />
-        </Animated.View>
-      </Animated.View>
-    </ScrollView>
-  );
-}
+// Libellés SCR-10 hardcodés FR — batch i18n 15 langues au Lot 3 (src/i18n/TODO.md)
+const MODE_LABELS = ['Mixte', 'Focus', 'Complet'];
+const RITUALS_LABEL = 'Mes rituels';
+const PALETTES_LABEL = 'Palettes';
 
 export default function AsideZone({ timerState, isTimerRunning, displayMessage, isCompleted, flashActivity }) {
   const theme = useTheme();
-  const { timer: { currentActivity } } = useTimerConfig();
-  const { isPremium: isPremiumUser } = usePremiumStatus();
+  const t = useTranslation();
+  const {
+    timer: { currentActivity, clockwise },
+    setClockwise,
+    display: { showActivityEmoji },
+    setShowActivityEmoji,
+    system: { keepAwakeEnabled },
+    setKeepAwakeEnabled,
+  } = useTimerConfig();
 
   const activityCarouselRef = useRef(null);
   const paletteCarouselRef = useRef(null);
 
-  const [currentSnapIndex, setCurrentSnapIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const animatedTranslateY = useSharedValue(SNAP_Y_0);
-  const startY = useSharedValue(SNAP_Y_0);
+  const translateY = useSharedValue(SNAP_Y_CLOSED);
+  const startY = useSharedValue(SNAP_Y_CLOSED);
 
-  const snapToIndex = (index) => {
-    animatedTranslateY.value = withSpring(SNAP_YS[index], SPRING_CONFIG);
-    setCurrentSnapIndex(index);
+  const snapTo = (open) => {
+    translateY.value = withSpring(open ? SNAP_Y_OPEN : SNAP_Y_CLOSED, {
+      damping: 80,
+      stiffness: 450,
+      overshootClamping: true,
+      restDisplacementThreshold: 0.01,
+      restSpeedThreshold: 0.01,
+    });
+    setIsOpen(open);
   };
 
-  // Auto-collapse to snap 0 when timer starts
+  // Auto-collapse when timer starts
   useEffect(() => {
-    if (isTimerRunning && currentSnapIndex !== 0) {
-      snapToIndex(0);
+    if (isTimerRunning && isOpen) {
+      snapTo(false);
     }
-  }, [isTimerRunning]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isTimerRunning]); // volontairement limité : réagit au seul démarrage du timer
 
   const panGesture = useMemo(() => Gesture.Pan()
     .activeOffsetY([-20, 20])
     .failOffsetX([-15, 15])
     .onBegin(() => {
-      startY.value = animatedTranslateY.value;
+      startY.value = translateY.value;
     })
     .onUpdate((e) => {
       const newY = startY.value + e.translationY;
-      animatedTranslateY.value = Math.max(SNAP_Y_2, Math.min(SNAP_Y_0, newY));
+      translateY.value = Math.max(SNAP_Y_OPEN, Math.min(SNAP_Y_CLOSED, newY));
     })
     .onEnd((e) => {
-      const snapIndex = findNearestSnap(animatedTranslateY.value, e.velocityY);
-      animatedTranslateY.value = withSpring(SNAP_YS[snapIndex], SPRING_CONFIG);
-      runOnJS(setCurrentSnapIndex)(snapIndex);
+      const midpoint = (SNAP_Y_OPEN + SNAP_Y_CLOSED) / 2;
+      let open = translateY.value < midpoint;
+      if (e.velocityY > 500) { open = false; }
+      if (e.velocityY < -500) { open = true; }
+      translateY.value = withSpring(open ? SNAP_Y_OPEN : SNAP_Y_CLOSED, {
+        damping: 80,
+        stiffness: 450,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+      });
+      runOnJS(setIsOpen)(open);
     }),
-  [animatedTranslateY, startY]);
+  [translateY, startY]);
 
   const drawerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: animatedTranslateY.value }],
+    transform: [{ translateY: translateY.value }],
   }));
 
-  const dynamicBackgroundStyle = {
-    backgroundColor: currentSnapIndex === 2 ? theme.colors.surfaceElevated : theme.colors.surface,
-  };
+  const contentAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateY.value,
+      [SNAP_Y_OPEN, SNAP_Y_CLOSED],
+      [1, 0],
+      Extrapolation.CLAMP
+    ),
+  }));
+
+  const styles = StyleSheet.create({
+    asideContainer: {
+      bottom: 0,
+      left: 0,
+      pointerEvents: 'box-none',
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      zIndex: 50,
+    },
+    content: {
+      flex: 1,
+    },
+    drawer: {
+      backgroundColor: theme.colors.surface,
+      borderTopLeftRadius: 16,
+      borderTopRightRadius: 16,
+      height: SCREEN_HEIGHT,
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      top: 0,
+    },
+    handleContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 10,
+    },
+    handleIndicator: {
+      borderRadius: 3,
+      height: 5,
+      width: 50,
+    },
+    labelOverlay: {
+      alignItems: 'center',
+      bottom: SCREEN_HEIGHT * 0.35,
+      justifyContent: 'center',
+      pointerEvents: 'none',
+      position: 'absolute',
+      width: '100%',
+      zIndex: 0,
+    },
+    optionLabel: {
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(14, 'min'),
+    },
+    optionRow: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: rs(12),
+    },
+    optionRowLast: {
+      borderBottomWidth: 0,
+    },
+    scrollContent: {
+      paddingBottom: rs(24),
+      paddingHorizontal: rs(16),
+    },
+    sectionLabel: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.semibold,
+      letterSpacing: 0.5,
+      marginBottom: rs(8),
+      marginTop: rs(16),
+      textTransform: 'uppercase',
+    },
+    segmentButton: {
+      alignItems: 'center',
+      borderRadius: theme.borderRadius.md - 2,
+      flex: 1,
+      paddingVertical: rs(8),
+    },
+    segmentButtonActive: {
+      backgroundColor: theme.colors.brand.accent,
+    },
+    segmentText: {
+      color: theme.colors.text,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.medium,
+      textAlign: 'center',
+    },
+    segmentTextActive: {
+      color: theme.colors.fixed.white,
+    },
+    segmentedControl: {
+      backgroundColor: theme.colors.surfaceElevated,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 1,
+      flexDirection: 'row',
+      marginTop: rs(4),
+      padding: rs(2),
+    },
+    togglesCard: {
+      marginTop: rs(16),
+    },
+  });
+
+  const toggles = [
+    {
+      key: 'keepAwake',
+      label: t('accessibility.keepAwake'),
+      value: keepAwakeEnabled,
+      onChange: setKeepAwakeEnabled,
+    },
+    {
+      key: 'clockwise',
+      label: t('accessibility.rotationDirection'),
+      value: clockwise,
+      onChange: setClockwise,
+    },
+    {
+      key: 'activityEmoji',
+      label: t('settings.options.activityEmoji'),
+      value: showActivityEmoji,
+      onChange: setShowActivityEmoji,
+    },
+  ];
 
   return (
     <View style={styles.asideContainer}>
@@ -234,79 +253,70 @@ export default function AsideZone({ timerState, isTimerRunning, displayMessage, 
       )}
 
       <GestureDetector gesture={panGesture}>
-        <Animated.View style={[styles.drawer, dynamicBackgroundStyle, drawerAnimatedStyle, theme.shadow('xl')]}>
+        <Animated.View style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
           {/* Handle */}
           <View style={styles.handleContainer}>
             <View style={[styles.handleIndicator, { backgroundColor: theme.colors.textSecondary }]} />
           </View>
 
-          {/* Content */}
-          <SheetContent
-            currentSnapIndex={currentSnapIndex}
-            isTimerRunning={isTimerRunning}
-            activityCarouselRef={activityCarouselRef}
-            paletteCarouselRef={paletteCarouselRef}
-            isPremiumUser={isPremiumUser}
-            animatedTranslateY={animatedTranslateY}
-          />
+          {/* SCR-10 : 4 blocs */}
+          <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
+            <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              scrollEnabled={isOpen}
+              showsVerticalScrollIndicator={false}
+              nestedScrollEnabled={true}
+            >
+              {/* Bloc 1 : segmenté Mode — structure seule au Lot 1 (non fonctionnel) */}
+              <View style={styles.segmentedControl}>
+                {MODE_LABELS.map((label, index) => (
+                  <View
+                    key={label}
+                    style={[styles.segmentButton, index === 0 && styles.segmentButtonActive]}
+                  >
+                    <Text style={[styles.segmentText, index === 0 && styles.segmentTextActive]}>
+                      {label}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Bloc 2 : 3 toggles */}
+              <View style={styles.togglesCard}>
+                {toggles.map((toggle, index) => (
+                  <View
+                    key={toggle.key}
+                    style={[styles.optionRow, index === toggles.length - 1 && styles.optionRowLast]}
+                  >
+                    <Text style={styles.optionLabel}>{toggle.label}</Text>
+                    <Switch
+                      accessible={true}
+                      accessibilityLabel={toggle.label}
+                      accessibilityRole="switch"
+                      accessibilityState={{ checked: toggle.value }}
+                      value={toggle.value}
+                      onValueChange={(value) => {
+                        haptics.switchToggle().catch(() => {});
+                        toggle.onChange(value);
+                      }}
+                      {...theme.styles.switch(toggle.value)}
+                    />
+                  </View>
+                ))}
+              </View>
+
+              {/* Bloc 3 : Mes rituels */}
+              <Text style={styles.sectionLabel}>{RITUALS_LABEL}</Text>
+              <ActivityCarousel ref={activityCarouselRef} isRunning={isTimerRunning} />
+
+              {/* Bloc 4 : Palettes */}
+              <Text style={styles.sectionLabel}>{PALETTES_LABEL}</Text>
+              <PaletteCarousel ref={paletteCarouselRef} />
+            </ScrollView>
+          </Animated.View>
         </Animated.View>
       </GestureDetector>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  asideContainer: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 50,
-    pointerEvents: 'box-none',
-  },
-  labelOverlay: {
-    alignItems: 'center',
-    bottom: SCREEN_HEIGHT * 0.35,
-    justifyContent: 'center',
-    pointerEvents: 'none',
-    position: 'absolute',
-    width: '100%',
-    zIndex: 0,
-  },
-  drawer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: SCREEN_HEIGHT,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-  handleContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-  },
-  handleIndicator: {
-    width: 50,
-    height: 5,
-    borderRadius: 3,
-  },
-  layerAbsolute: {
-    borderRadius: 12,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  layerContainer: {
-    position: 'relative',
-  },
-  scrollContent: {
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-    paddingTop: 0,
-  },
-});
