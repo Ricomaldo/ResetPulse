@@ -1,9 +1,10 @@
 ---
 created: '2025-10-08'
-updated: '2025-12-22'
-status: active
+status: amended
 milestone: M8
 confidence: high
+superseded_by: 'adr-014-recentrage-signature.md (déclencheur « 2 timers » devient invitation Ambiances)'
+updated: '2026-07-23'
 ---
 
 # ADR 001 - Stratégie Monétisation ResetPulse v1.1.0

@@ -1,3 +1,9 @@
+---
+status: superseded
+superseded_by: 'adr-014-recentrage-signature.md'
+updated: '2026-07-23'
+---
+
 # ADR-005 : Architecture DialZone / AsideZone
 
 ## Statut : VALIDÉ

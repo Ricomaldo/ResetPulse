@@ -1,10 +1,12 @@
 ---
 created: '2025-12-22'
-status: accepted
+status: superseded
 type: architecture-decision-record
 context: 'ResetPulse Onboarding v2.1 - Vision finale avant implémentation'
 stakeholders: 'Eric (product), Chrysalis (architecture), Claude Code (implementation)'
 supersedes: 'OB v2 proto (non déployé)'
+superseded_by: 'adr-014-recentrage-signature.md'
+updated: '2026-07-23'
 ---
 
 # ADR-010 — Onboarding v2.1 Vision Finale

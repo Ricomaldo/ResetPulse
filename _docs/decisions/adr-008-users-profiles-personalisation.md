@@ -1,3 +1,9 @@
+---
+status: superseded
+superseded_by: 'adr-014-recentrage-signature.md, adr-015-modele-rituel-activite.md'
+updated: '2026-07-23'
+---
+
 *Ajuste les seuils, nettoie le texte*
 
 ---

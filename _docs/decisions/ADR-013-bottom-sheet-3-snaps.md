@@ -1,8 +1,9 @@
 ---
 created: '2026-01-23'
-updated: '2026-01-23'
-status: active
+status: superseded
 tags: [adr, ux, bottom-sheet, gestures, aside-zone, gorhom]
+superseded_by: 'adr-014-recentrage-signature.md'
+updated: '2026-07-23'
 ---
 
 # ADR-013: Bottom Sheet 3-Snaps Architecture

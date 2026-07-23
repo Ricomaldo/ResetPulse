@@ -1,3 +1,9 @@
+---
+status: partially-superseded
+superseded_by: 'adr-014-recentrage-signature.md (gorhom sort, RNGH reste)'
+updated: '2026-07-23'
+---
+
 # ADR-006 : Stack Gestes & Animations
 
 ## Statut : ACCEPTÉ (implémentation partielle justifiée)
