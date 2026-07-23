@@ -36,7 +36,6 @@ export default function TimerDialPreview({
       // No interactivity
       onGraduationTap={null}
       onDialTap={null}
-      onDialLongPress={null}
     />
   );
 }

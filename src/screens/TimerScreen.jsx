@@ -113,43 +113,11 @@ function TimerScreenContent() {
       // COMPLETE → RESET
       timerRef.current.resetTimer();
     } else if (running) {
-      // RUNNING → STOP (toggle behavior: tap = stop when stopRequiresLongPress = true)
+      // RUNNING → STOP (tap franc, ADR-014)
       timerRef.current.stopTimer();
     } else {
       // REST → START
       timerRef.current.startTimer();
-    }
-  };
-
-  // Handle play from controls (REST→START, RUNNING→toggle stop, COMPLETE→RESET)
-  const handlePlayPause = () => {
-    if (!timerRef.current) {
-      return;
-    }
-
-    const { running, isCompleted } = timerRef.current;
-
-    if (isCompleted) {
-      timerRef.current.resetTimer();
-    } else if (running) {
-      // RUNNING → STOP (toggle behavior)
-      timerRef.current.stopTimer();
-    } else {
-      timerRef.current.startTimer();
-    }
-  };
-
-  // Handle reset from controls (COMPLETE → REST)
-  const handleReset = () => {
-    if (timerRef.current) {
-      timerRef.current.resetTimer();
-    }
-  };
-
-  // Handle stop from long press (ADR-007: RUNNING → REST via rewind animation)
-  const handleStop = () => {
-    if (timerRef.current) {
-      timerRef.current.stopTimer();
     }
   };
 

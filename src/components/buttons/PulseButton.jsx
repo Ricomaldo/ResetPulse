@@ -1,44 +1,35 @@
 /**
  * @fileoverview PulseButton - Bouton principal ResetPulse
+ * Tap franc sur les 3 états (ADR-014 recentrage — la pression sensible sort).
  *
  * Base simplifiée — couches d'animation à réajouter :
  *   [ ] breathing pulse (REST, shouldPulse)
  *   [ ] halos × 2 (RUNNING, shouldPulse)
  *   [ ] second hand + trail dots (RUNNING)
  *   [ ] interpolateColor + bounce (state transition)
- *   [ ] long-press progress circle (Reanimated useAnimatedProps + SVG)
  */
-import React, { useRef, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { TouchableOpacity, GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
-
-const DEFAULT_LONG_PRESS_DURATION = 2500;
 
 const PulseButton = React.memo(function PulseButton({
   state = 'rest',
   emoji = null,
   activity = null,
   onTap,
-  onLongPressComplete,
   size = 72,
   compact = false,
-  stopRequiresLongPress = true,
-  startRequiresLongPress = false,
   shouldPulse = false, // reserved — animation layer not yet wired
-  clockwise = false,   // reserved — progress circle layer not yet wired
+  clockwise = false,   // reserved — animation layer not yet wired
 }) {
   const theme = useTheme();
   const t = useTranslation();
-  const timerConfig = useTimerConfig();
-  const longPressConfirmDuration = timerConfig?.longPressConfirmDuration ?? DEFAULT_LONG_PRESS_DURATION;
-  const longPressStartDuration   = timerConfig?.longPressStartDuration   ?? DEFAULT_LONG_PRESS_DURATION;
 
   // === DIMENSIONS ===
   const buttonSize = compact ? rs(48, 'min') : rs(size, 'min');
@@ -50,17 +41,10 @@ const PulseButton = React.memo(function PulseButton({
     ? theme.colors.brand.secondary + 'D9'
     : theme.colors.brand.primary + 'D9';
 
-  // === CALLBACKS ===
-  const completedRef = useRef(false);
-
   const handleTap = useCallback(() => {
     haptics.selection().catch(() => {});
     onTap?.();
   }, [onTap]);
-
-  const resetCompletion = useCallback(() => {
-    completedRef.current = false;
-  }, []);
 
   // === STYLES ===
   const styles = StyleSheet.create({
@@ -106,13 +90,7 @@ const PulseButton = React.memo(function PulseButton({
   };
 
   // === RENDER ===
-  const buttonView = (
-    <View style={[styles.button, { backgroundColor: bgColor }]}>
-      {renderContent()}
-    </View>
-  );
-
-  const renderSimpleButton = () => (
+  return (
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.button, { backgroundColor: bgColor }]}
@@ -126,72 +104,19 @@ const PulseButton = React.memo(function PulseButton({
       </TouchableOpacity>
     </View>
   );
-
-  const longPressStopGesture = React.useMemo(() =>
-    Gesture.LongPress()
-      .minDuration(longPressConfirmDuration)
-      .runOnJS(true)
-      .onBegin(resetCompletion)
-      .onStart(() => {
-        if (completedRef.current) { return; }
-        completedRef.current = true;
-        haptics.notification('warning').catch(() => {});
-        onLongPressComplete?.();
-      }),
-  [longPressConfirmDuration, resetCompletion, onLongPressComplete]);
-
-  const longPressStartGesture = React.useMemo(() =>
-    Gesture.LongPress()
-      .minDuration(longPressStartDuration)
-      .runOnJS(true)
-      .onBegin(resetCompletion)
-      .onStart(() => {
-        if (completedRef.current) { return; }
-        completedRef.current = true;
-        haptics.notification('success').catch(() => {});
-        onTap?.();
-      }),
-  [longPressStartDuration, resetCompletion, onTap]);
-
-  const renderLongPressStop = () => (
-    <GestureDetector gesture={longPressStopGesture}>
-      <View style={styles.container}>
-        {buttonView}
-      </View>
-    </GestureDetector>
-  );
-
-  const renderLongPressStart = () => (
-    <GestureDetector gesture={longPressStartGesture}>
-      <View style={styles.container}>
-        {buttonView}
-      </View>
-    </GestureDetector>
-  );
-
-  if (state === 'rest') {
-    return startRequiresLongPress ? renderLongPressStart() : renderSimpleButton();
-  }
-  if (state === 'running') {
-    return stopRequiresLongPress ? renderLongPressStop() : renderSimpleButton();
-  }
-  return renderSimpleButton();
 });
 
 PulseButton.displayName = 'PulseButton';
 
 PulseButton.propTypes = {
-  activity:               PropTypes.shape({ emoji: PropTypes.string }),
-  clockwise:              PropTypes.bool,
-  compact:                PropTypes.bool,
-  emoji:                  PropTypes.string,
-  onLongPressComplete:    PropTypes.func,
-  onTap:                  PropTypes.func,
-  shouldPulse:            PropTypes.bool,
-  size:                   PropTypes.number,
-  startRequiresLongPress: PropTypes.bool,
-  state:                  PropTypes.oneOf(['rest', 'running', 'complete']),
-  stopRequiresLongPress:  PropTypes.bool,
+  activity:    PropTypes.shape({ emoji: PropTypes.string }),
+  clockwise:   PropTypes.bool,
+  compact:     PropTypes.bool,
+  emoji:       PropTypes.string,
+  onTap:       PropTypes.func,
+  shouldPulse: PropTypes.bool,
+  size:        PropTypes.number,
+  state:       PropTypes.oneOf(['rest', 'running', 'complete']),
 };
 
 export default PulseButton;

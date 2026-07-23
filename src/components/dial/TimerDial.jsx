@@ -61,7 +61,6 @@ function TimerDial({
   showActivityEmoji = true,
   onGraduationTap = null,
   onDialTap = null,
-  onDialLongPress = null,
   isCompleted = false,
   currentActivity = null,
   showNumbers = true,
@@ -507,7 +506,6 @@ function TimerDial({
               isRunning={isRunning}
               isCompleted={isCompleted}
               onTap={onDialTap}
-              onLongPressComplete={onDialLongPress}
               clockwise={clockwise}
               size={circleSize * 0.25}
             />
@@ -572,7 +570,6 @@ TimerDial.propTypes = {
   showActivityEmoji: PropTypes.bool,
   onGraduationTap: PropTypes.func,
   onDialTap: PropTypes.func,
-  onDialLongPress: PropTypes.func,
   isCompleted: PropTypes.bool,
   currentActivity: PropTypes.object,
   showNumbers: PropTypes.bool,
@@ -597,7 +594,6 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.isRunning === nextProps.isRunning &&
     prevProps.onDialTap === nextProps.onDialTap &&
     prevProps.onGraduationTap === nextProps.onGraduationTap &&
-    prevProps.onDialLongPress === nextProps.onDialLongPress &&
     prevProps.isCompleted === nextProps.isCompleted &&
     prevProps.currentActivity === nextProps.currentActivity &&
     prevProps.showNumbers === nextProps.showNumbers &&

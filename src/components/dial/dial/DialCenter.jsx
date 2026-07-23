@@ -9,7 +9,6 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PulseButton } from '../../buttons';
 import { useTimerConfig } from '../../../contexts/TimerConfigContext';
-import { getProfileConfig } from '../../../utils/interactionProfileConfig';
 
 /**
  * DialCenter - Affiche PulseButton au centre du dial
@@ -17,28 +16,19 @@ import { getProfileConfig } from '../../../utils/interactionProfileConfig';
  * @param {Object} activity - Objet activité (contient emoji et propriétés)
  * @param {boolean} isRunning - Timer en cours
  * @param {boolean} isCompleted - Timer terminé
- * @param {function} onTap - Callback tap (REST → start, COMPLETE → reset)
- * @param {function} onLongPressComplete - Callback long press (RUNNING → stop)
+ * @param {function} onTap - Callback tap (REST → start, RUNNING → stop, COMPLETE → reset)
  * @param {boolean} clockwise - Sens du timer (pour animation)
  * @param {number} size - Taille du bouton
- * @param {number} progress - Progress du timer (0-1, utilisé pour position initiale du long press)
  */
 const DialCenter = React.memo(function DialCenter({
   activity,
   isRunning,
   isCompleted = false,
   onTap,
-  onLongPressComplete,
   clockwise = false,
   size = 72,
-  progress = 1,
 }) {
-  // Get pulse setting and interaction profile from context
-  const { display: { shouldPulse }, interaction: { interactionProfile, customStartLongPress, customStopLongPress } } = useTimerConfig();
-  const profileConfig = getProfileConfig(interactionProfile, {
-    startRequiresLongPress: customStartLongPress,
-    stopRequiresLongPress: customStopLongPress,
-  });
+  const { display: { shouldPulse } } = useTimerConfig();
 
   // Déterminer l'état du bouton
   const getState = () => {
@@ -53,11 +43,8 @@ const DialCenter = React.memo(function DialCenter({
         state={getState()}
         activity={activity}
         onTap={onTap}
-        onLongPressComplete={onLongPressComplete}
         clockwise={clockwise}
         size={size}
-        stopRequiresLongPress={profileConfig.stopRequiresLongPress}
-        startRequiresLongPress={profileConfig.startRequiresLongPress}
         shouldPulse={shouldPulse}
       />
     </View>
@@ -72,7 +59,6 @@ DialCenter.propTypes = {
   clockwise: PropTypes.bool,
   isCompleted: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,
-  onLongPressComplete: PropTypes.func,
   onTap: PropTypes.func,
   size: PropTypes.number,
 };

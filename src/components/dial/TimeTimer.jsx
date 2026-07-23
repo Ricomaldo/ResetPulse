@@ -46,11 +46,6 @@ export default function TimeTimer({
   // Sync timer ref on every render
   timerRef.current = timer;
 
-  // Stable stopTimer reference that doesn't change on every render
-  const handleStopTimer = useCallback(() => {
-    timerRef.current.stopTimer();
-  }, []);
-
   // Refs for onboarding
   const dialWrapperRef = useRef(null);
 
@@ -174,7 +169,6 @@ export default function TimeTimer({
           showActivityEmoji={showActivityEmoji}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}
-          onDialLongPress={handleStopTimer}
           isCompleted={timer.isCompleted}
           currentActivity={currentActivity}
           showNumbers={true}
