@@ -296,6 +296,7 @@
     "restorePurchasesHint": "Restaurer l'accès premium si vous avez déjà acheté",
     "saveActivityHint": "Enregistre les modifications de cette activité",
     "unlockPremiumHint": "Commencer l'essai gratuit de 7 jours, puis paiement unique",
+    "distraction": "Distraction",
     "timer": {
       "dialAdjustable": "Ajustable. Glissez vers le haut ou le bas pour changer la durée.",
       "dialTapToToggle": "Appuyez pour démarrer ou mettre en pause le timer",

@@ -145,8 +145,9 @@ export const getComponentSizes = () => {
     // iPad portrait: 80% de la largeur OU 650px max (bon équilibre)
     timerCircle = Math.min(width * 0.8, 650);
   } else {
-    // iPhone: 95% de la largeur (comportement original)
-    timerCircle = width * 0.95;
+    // iPhone portrait: 80% de la largeur (ADR-014 recentrage — le disque
+    // est le produit, mais ne doit pas écraser le chrome sous lui)
+    timerCircle = width * 0.8;
   }
 
   return {

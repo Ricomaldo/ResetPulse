@@ -1,196 +1,201 @@
-// src/screens/TimerScreen.jsx
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { StyleSheet } from 'react-native';
+/**
+ * @fileoverview TimerScreen — écran principal, Mode Mixte (SCR-1, ADR-014)
+ * Reconstruction Lot 2 (2026-07-23) : écran neuf, construit depuis
+ * `_docs/specs/recentrage.md`. Récolte des primitives prouvées (TimeTimer,
+ * ActivityItem, activities.js, timer-palettes.js) — pas de layout hérité.
+ * Cycle 1 : état repos uniquement. Pas de logique de séance (Cycle 2).
+ */
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import * as StoreReview from 'expo-store-review';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
-import { useTimerKeepAwake } from '../hooks/useTimerKeepAwake';
-import { useScreenOrientation } from '../hooks/useScreenOrientation';
 import { useTranslation } from '../hooks/useTranslation';
-import { useModalStack } from '../contexts/ModalStackContext';
-import { DialZone, AsideZone } from '../components/layout';
-import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
-import analytics from '../services/analytics';
-import logger from '../utils/logger';
+import { rs } from '../styles/responsive';
+import TimeTimer from '../components/dial/TimeTimer';
+import Icons from '../components/layout/Icons';
+import { getFreeActivities } from '../config/activities';
+import { getPaletteColors } from '../config/timer-palettes';
+import haptics from '../utils/haptics';
+
+const FREE_ACTIVITIES = getFreeActivities();
+const SERENITY_COLORS = getPaletteColors('serenity');
+const ACTIVITY_SIZE = rs(40, 'min');
+const COLOR_DOT_SIZE = rs(26, 'min');
+
+function CompactRow() {
+  const theme = useTheme();
+  const t = useTranslation();
+  const {
+    timer: { currentActivity },
+    palette: { currentColor },
+    setCurrentActivity,
+    setColorIndex,
+  } = useTimerConfig();
+
+  const styles = StyleSheet.create({
+    activityButton: {
+      alignItems: 'center',
+      borderRadius: theme.borderRadius.round,
+      height: ACTIVITY_SIZE,
+      justifyContent: 'center',
+      width: ACTIVITY_SIZE,
+    },
+    activityButtonActive: {
+      backgroundColor: theme.colors.brand.accent,
+    },
+    activityEmoji: {
+      fontSize: rs(20, 'min'),
+    },
+    colorDot: {
+      borderRadius: theme.borderRadius.round,
+      borderWidth: 2,
+      height: COLOR_DOT_SIZE,
+      padding: 3,
+      width: COLOR_DOT_SIZE,
+    },
+    colorDotActive: {
+      transform: [{ scale: 1.15 }],
+    },
+    colorDotInner: {
+      borderRadius: theme.borderRadius.round,
+      flex: 1,
+    },
+    row: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.round,
+      flexDirection: 'row',
+      gap: theme.spacing.xs,
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: theme.spacing.xs,
+      ...theme.shadow('sm'),
+    },
+    separator: {
+      backgroundColor: theme.colors.border,
+      height: rs(24, 'min'),
+      marginHorizontal: theme.spacing.xxs,
+      width: StyleSheet.hairlineWidth * 2,
+    },
+  });
+
+  return (
+    <View style={styles.row}>
+      {FREE_ACTIVITIES.map((activity) => {
+        const isActive = currentActivity?.id === activity.id;
+        return (
+          <TouchableOpacity
+            key={activity.id}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={t('accessibility.activity', {
+              name: activity.label,
+            })}
+            accessibilityState={{ selected: isActive }}
+            style={[styles.activityButton, isActive && styles.activityButtonActive]}
+            onPress={() => {
+              haptics.selection().catch(() => {});
+              setCurrentActivity(activity);
+            }}
+            activeOpacity={0.7}
+          >
+            {activity.id === 'none' ? (
+              <Icons
+                name="timer"
+                size={rs(18, 'min')}
+                color={isActive ? theme.colors.fixed.white : theme.colors.textSecondary}
+              />
+            ) : (
+              <Text style={styles.activityEmoji}>{activity.emoji}</Text>
+            )}
+          </TouchableOpacity>
+        );
+      })}
+
+      <View style={styles.separator} />
+
+      {SERENITY_COLORS.map((color, index) => (
+        <TouchableOpacity
+          key={color}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel={t('accessibility.colorNumber', { number: index + 1 })}
+          accessibilityState={{ selected: currentColor === color }}
+          style={[
+            styles.colorDot,
+            { borderColor: color },
+            currentColor === color && styles.colorDotActive,
+          ]}
+          onPress={() => {
+            haptics.selection().catch(() => {});
+            setColorIndex(index);
+          }}
+          activeOpacity={0.7}
+        >
+          <View style={[styles.colorDotInner, { backgroundColor: color }]} />
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
+function DistractionButton() {
+  const theme = useTheme();
+  const t = useTranslation();
+
+  const styles = StyleSheet.create({
+    button: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.round,
+      height: rs(48, 'min'),
+      justifyContent: 'center',
+      marginTop: theme.spacing.lg,
+      width: rs(48, 'min'),
+      ...theme.shadow('sm'),
+    },
+    emoji: {
+      fontSize: rs(22, 'min'),
+    },
+  });
+
+  return (
+    <TouchableOpacity
+      style={styles.button}
+      accessible
+      accessibilityRole="button"
+      accessibilityLabel={t('accessibility.distraction')}
+      activeOpacity={0.7}
+      onPress={() => {}}
+    >
+      <Text style={styles.emoji}>🎲</Text>
+    </TouchableOpacity>
+  );
+}
 
 function TimerScreenContent() {
   const theme = useTheme();
-  const t = useTranslation();
-  const { isLandscape } = useScreenOrientation(); // Detect orientation changes
-  const modalStack = useModalStack();
-  const {
-    incrementCompletedTimers,
-    stats: { hasSeenTwoTimersModal, hasSeenReviewRequest },
-    setHasSeenTwoTimersModal,
-    setHasSeenReviewRequest,
-    transient: { flashActivity },
-    timer: { currentActivity },
-  } = useTimerConfig();
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [displayMessage, setDisplayMessage] = useState('');
-  const [isTimerCompleted, setIsTimerCompleted] = useState(false);
-  const [timerState, setTimerState] = useState('REST'); // 'REST' | 'RUNNING' | 'COMPLETE'
-  const timerRef = useRef(null);
 
-  // Keep screen awake during timer
-  useTimerKeepAwake();
-
-  // Helper to compute display message dynamically (avoids stale message issue)
-  // Uses explicit activity message linkage (see src/config/activityMessages.js)
-  // Passes full activity object to support intentionId mapping for custom activities
-  const computeDisplayMessage = useCallback((running, isComplete) => {
-    if (isComplete) {
-      return getActivityEndMessage(currentActivity, t);
-    }
-    if (running) {
-      return getActivityStartMessage(currentActivity, t);
-    }
-    return t('invitation');
-  }, [currentActivity, t]);
-
-  // Sync timer state to local states for re-renders (ADR-007: no PAUSED state)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (timerRef.current) {
-        const running = timerRef.current.running || false;
-        const isCompleted = timerRef.current.isCompleted || false;
-
-        setIsTimerRunning(running);
-        setIsTimerCompleted(isCompleted);
-        // Compute message freshly each interval to avoid stale translation
-        setDisplayMessage(computeDisplayMessage(running, isCompleted));
-      }
-    }, 50);
-    return () => clearInterval(interval);
-  }, [computeDisplayMessage]);
-
-  // Update timerState based on isTimerRunning and isTimerCompleted (source of truth for animations)
-  useEffect(() => {
-    if (isTimerCompleted) {
-      setTimerState('COMPLETE');
-    } else if (isTimerRunning) {
-      setTimerState('RUNNING');
-    } else {
-      setTimerState('REST');
-    }
-  }, [isTimerRunning, isTimerCompleted]);
-
-  // Update displayMessage when activity changes (flashActivity changes)
-  useEffect(() => {
-    if (flashActivity && timerRef.current) {
-      // Recalculate message immediately with NEW activity (flashActivity)
-      const running = timerRef.current.running || false;
-      const isCompleted = timerRef.current.isCompleted || false;
-
-      // Use flashActivity directly to avoid stale currentActivity
-      if (isCompleted) {
-        setDisplayMessage(getActivityEndMessage(flashActivity, t));
-      } else if (running) {
-        setDisplayMessage(getActivityStartMessage(flashActivity, t));
-      } else {
-        setDisplayMessage(t('invitation'));
-      }
-    }
-  }, [flashActivity, t]);
-
-  // Define styles (moved inside component so linter can track usage)
   const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
+    content: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
   });
-
-  // Handle dial tap (REST→START, RUNNING→toggle stop, COMPLETE→RESET)
-  const handleDialTap = () => {
-    if (!timerRef.current) {
-      return;
-    }
-
-    const { running, isCompleted } = timerRef.current;
-
-    if (isCompleted) {
-      // COMPLETE → RESET
-      timerRef.current.resetTimer();
-    } else if (running) {
-      // RUNNING → STOP (tap franc, ADR-014)
-      timerRef.current.stopTimer();
-    } else {
-      // REST → START
-      timerRef.current.startTimer();
-    }
-  };
-
-  // Handle timer completion (ADR-003: trigger after 2 timers)
-  const handleTimerComplete = async () => {
-    const newCount = incrementCompletedTimers();
-
-    // Robust trigger: show at timer 2-3, with fallback at 5 if missed
-    const shouldShowModal = !hasSeenTwoTimersModal && (
-      (newCount >= 2 && newCount <= 3) || // Primary trigger
-      (newCount === 5) // Fallback if modal was somehow skipped
-    );
-
-    if (shouldShowModal) {
-      analytics.trackTwoTimersMilestone({ fallback: newCount === 5 });
-      setHasSeenTwoTimersModal(true);
-
-      // Push two timers modal to stack
-      modalStack.push('twoTimers', {
-        snapPoints: ['50%'],
-        onExplore: () => {
-          modalStack.push('premium', {
-            highlightedFeature: 'toutes les couleurs et activités',
-          });
-        },
-      });
-    }
-
-    // In-app review request at 5 timers (after two timers modal)
-    if (!hasSeenReviewRequest && newCount === 5) {
-      try {
-        const isAvailable = await StoreReview.isAvailableAsync();
-        if (isAvailable) {
-          await StoreReview.requestReview();
-          setHasSeenReviewRequest(true);
-          analytics.track('app_review_requested', { timerCount: newCount });
-        }
-      } catch (error) {
-        // Non-blocking: review request is nice-to-have
-        logger.warn('StoreReview error', error.message);
-      }
-    }
-  };
-
-  // In landscape, don't apply top/bottom safe area (causes offset)
-  const safeAreaEdges = isLandscape ? ['left', 'right'] : ['top', 'bottom'];
 
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
-      edges={safeAreaEdges}
     >
-      {/* DIAL ZONE - Always visible (portrait & landscape) */}
-      <DialZone
-        onRunningChange={setIsTimerRunning}
-        onTimerRef={(ref) => {
-          timerRef.current = ref;
-        }}
-        onDialTap={handleDialTap}
-        onTimerComplete={handleTimerComplete}
-        isLandscape={isLandscape}
-      />
-
-      {/* ASIDE ZONE - Portrait only (hidden in landscape for zen mode) */}
-      {!isLandscape && (
-        <AsideZone
-          timerState={timerState}
-          displayMessage={displayMessage}
-          isCompleted={isTimerCompleted}
-          flashActivity={flashActivity}
-          isTimerRunning={isTimerRunning}
-        />
-      )}
+      <View style={styles.content}>
+        <TimeTimer />
+        <CompactRow />
+        <DistractionButton />
+      </View>
     </SafeAreaView>
   );
 }

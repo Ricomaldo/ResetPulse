@@ -13,5 +13,4 @@ export {
   ReverseIcon,
   SettingsIcon,
 } from './Icons';
-export { default as DialZone } from './DialZone';
 export { default as AsideZone } from './AsideZone';

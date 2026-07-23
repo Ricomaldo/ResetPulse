@@ -301,6 +301,7 @@
     "closeModalHint": "Closes this dialog and returns to the app",
     "unlockPremium": "Unlock premium for %{price}",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "distraction": "Distraction",
     "restorePurchases": "Restore previous purchases",
     "restorePurchasesHint": "Restore premium access if you already purchased",
     "paletteItem": "Color palette: %{name}",
