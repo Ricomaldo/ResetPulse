@@ -75,17 +75,17 @@ const PulseButton = React.memo(function PulseButton({
     }
     const iconColor = theme.colors.fixed.white;
     switch (state) {
-      case 'running':  return <StopIcon  size={iconSize} color={iconColor} />;
-      case 'complete': return <ResetIcon size={iconSize} color={iconColor} />;
-      default:         return <PlayIcon  size={iconSize} color={iconColor} />;
+    case 'running':  return <StopIcon  size={iconSize} color={iconColor} />;
+    case 'complete': return <ResetIcon size={iconSize} color={iconColor} />;
+    default:         return <PlayIcon  size={iconSize} color={iconColor} />;
     }
   };
 
   const getAccessibilityLabel = () => {
     switch (state) {
-      case 'running':  return t('accessibility.timer.stopTimer');
-      case 'complete': return t('accessibility.timer.resetTimer');
-      default:         return t('accessibility.timer.startTimer');
+    case 'running':  return t('accessibility.timer.stopTimer');
+    case 'complete': return t('accessibility.timer.resetTimer');
+    default:         return t('accessibility.timer.startTimer');
     }
   };
 

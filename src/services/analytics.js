@@ -2,8 +2,8 @@
 /**
  * Analytics adapter — no-op (Lot 1 recentrage, ADR-014).
  * Mixpanel est sorti. PostHog se branche ici au Lot 2.
- * L'API est conservée : tout appel track*/identify est absorbé sans effet,
- * les consommateurs (useAnalytics, contexts, modals) restent inchangés.
+ * L'API est conservée : tout appel (track, identify, événements) est absorbé
+ * sans effet, les consommateurs (useAnalytics, contexts, modals) restent inchangés.
  */
 import logger from '../utils/logger';
 

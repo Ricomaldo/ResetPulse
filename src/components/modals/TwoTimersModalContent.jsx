@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
@@ -106,7 +105,7 @@ export default function TwoTimersModalContent({ onClose, onExplore }) {
   });
 
   return (
-    <BottomSheetView style={styles.container}>
+    <View style={styles.container}>
       <Text
         style={styles.emoji}
         accessible={true}
@@ -149,6 +148,6 @@ export default function TwoTimersModalContent({ onClose, onExplore }) {
           </Text>
         </TouchableOpacity>
       </View>
-    </BottomSheetView>
+    </View>
   );
 }

@@ -95,7 +95,6 @@ export default function ModalStackRenderer() {
       visible={isVisible}
       onClose={handleClose}
       snapPoints={props.snapPoints || ['90%']} // Customizable per modal
-      enableDynamicSizing={props.enableDynamicSizing || false}
     >
       <ContentComponent
         modalId={id}
