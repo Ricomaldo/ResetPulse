@@ -8,6 +8,7 @@
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../i18n';
+import logger from '../utils/logger';
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -37,14 +38,14 @@ export const schedulePostSkipReminders = async (customActivity) => {
     // Vérifier permission notifications
     const { status } = await Notifications.getPermissionsAsync();
     if (status !== 'granted') {
-      console.log('Notifications not permitted, skipping reminders');
+      logger.log('Notifications not permitted, skipping reminders');
       return;
     }
 
     // Vérifier si déjà programmé (ne pas re-programmer)
     const alreadyScheduled = await AsyncStorage.getItem(STORAGE_KEYS.REMINDER_SCHEDULED);
     if (alreadyScheduled === 'true') {
-      console.log('Reminders already scheduled, skipping');
+      logger.log('Reminders already scheduled, skipping');
       return;
     }
 
@@ -66,9 +67,9 @@ export const schedulePostSkipReminders = async (customActivity) => {
     // Marquer comme programmé
     await AsyncStorage.setItem(STORAGE_KEYS.REMINDER_SCHEDULED, 'true');
 
-    console.log('Post-skip reminders scheduled successfully');
+    logger.log('Post-skip reminders scheduled');
   } catch (error) {
-    console.error('Failed to schedule reminders:', error);
+    logger.error('Failed to schedule reminders', error.message);
     // Fail silently - don't crash the app
   }
 };
@@ -143,9 +144,9 @@ export const cancelPostSkipReminders = async () => {
     await Notifications.cancelScheduledNotificationAsync(NOTIFICATION_IDS.DAY_7);
     await AsyncStorage.removeItem(STORAGE_KEYS.REMINDER_SCHEDULED);
     await AsyncStorage.removeItem(STORAGE_KEYS.PAYWALL_SKIP_DATE);
-    console.log('Post-skip reminders cancelled successfully');
+    logger.log('Post-skip reminders cancelled');
   } catch (error) {
-    console.error('Failed to cancel reminders:', error);
+    logger.error('Failed to cancel reminders', error.message);
     // Fail silently
   }
 };

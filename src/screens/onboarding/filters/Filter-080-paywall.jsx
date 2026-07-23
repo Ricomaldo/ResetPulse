@@ -15,6 +15,7 @@ import { rs } from '../../../styles/responsive';
 import { getPersonaById } from '../personaConstants';
 import { useAnalytics } from '../../../hooks/useAnalytics';
 import haptics from '../../../utils/haptics';
+import logger from '../../../utils/logger';
 import { schedulePostSkipReminders } from '../../../services/reminderNotifications';
 import { spacing, typography, fontWeights, borderRadius } from '../../../theme/tokens';
 
@@ -91,7 +92,7 @@ export default function Filter080Paywall({
         setLocalPurchasing(false);
       }
     } catch (error) {
-      console.error('[Filter080Paywall] Trial start failed:', error);
+      logger.error('Trial start failed', error.message);
       Alert.alert(
         t('premium.error'),
         t('premium.errorPurchase'),

@@ -4,8 +4,7 @@
  * @created 2025-12-19
  */
 import React from 'react';
-import { View, Text, StyleSheet, Switch, Platform, Alert } from 'react-native';
-import { BottomSheetScrollView, TouchableOpacity } from '@gorhom/bottom-sheet';
+import { View, Text, StyleSheet, Switch, Platform, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import {
   Zap,
   Keyboard,
@@ -161,7 +160,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
 
   return (
     <View style={styles.container}>
-      <BottomSheetScrollView
+      <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
@@ -506,7 +505,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
           resetOnboarding={resetOnboarding}
           onClose={onClose}
         />
-      </BottomSheetScrollView>
+      </ScrollView>
     </View>
   );
 }

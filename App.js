@@ -40,7 +40,7 @@ function AppContent({ onResetOnboarding }) {
         logger.boot.step('config', 'onboarding', completed === 'true' ? 'completed' : 'pending');
         setOnboardingCompleted(completed === 'true');
       } catch (error) {
-        console.warn('[App] Failed to load onboarding state:', error);
+        logger.warn('Failed to load onboarding state', error.message);
         setOnboardingCompleted(false);
       } finally {
         setIsLoading(false);
@@ -98,9 +98,9 @@ function AppContent({ onResetOnboarding }) {
       // Persist all onboarding data
       await AsyncStorage.setItem('onboarding_v2_config', JSON.stringify(onboardingConfig));
 
-      console.log('[App] Onboarding v2.1 config saved:', onboardingConfig);
+      logger.log('Onboarding v2.1 config saved');
     } catch (error) {
-      console.warn('[App] Failed to save onboarding state:', error);
+      logger.warn('Failed to save onboarding state', error.message);
     }
   };
 
@@ -165,9 +165,9 @@ export default function App() {
       await AsyncStorage.removeItem('onboarding_v2_config');
 
       setResetTrigger(prev => prev + 1); // Force AppContent remount
-      console.log('[DevFab] Onboarding reset - unified config cleared');
+      logger.log('DevFab: onboarding reset');
     } catch (error) {
-      console.warn('[DevFab] Failed to reset onboarding:', error);
+      logger.warn('DevFab: failed to reset onboarding', error.message);
     }
   };
 
@@ -190,9 +190,9 @@ export default function App() {
       await AsyncStorage.setItem('onboarding_v2_config', JSON.stringify(defaultOnboardingConfig));
 
       setResetTrigger(prev => prev + 1); // Force AppContent remount
-      console.log('[DevFab] Skipped to app with default config');
+      logger.log('DevFab: skipped to app with default config');
     } catch (error) {
-      console.warn('[DevFab] Failed to skip to app:', error);
+      logger.warn('DevFab: failed to skip to app', error.message);
     }
   };
 
@@ -207,7 +207,7 @@ export default function App() {
         try {
           config = JSON.parse(storedConfig);
         } catch (e) {
-          console.warn('[DevFab] Failed to parse stored config:', e);
+          logger.warn('DevFab: failed to parse stored config', e.message);
         }
       }
 
@@ -225,9 +225,9 @@ export default function App() {
       // Force remount to reload context with new values
       setResetTrigger(prev => prev + 1);
 
-      console.log('[DevFab] Timer config reset to dev defaults (20min meditation)');
+      logger.log('DevFab: timer config reset to dev defaults');
     } catch (error) {
-      console.warn('[DevFab] Failed to reset timer config:', error);
+      logger.warn('DevFab: failed to reset timer config', error.message);
     }
   };
 
@@ -236,9 +236,9 @@ export default function App() {
     try {
       await AsyncStorage.removeItem('@ResetPulse:hasSeenDrawerHint');
       setResetTrigger(prev => prev + 1); // Force remount to show tooltip
-      console.log('[DevFab] Drawer tooltip reset - will show on next app view');
+      logger.log('DevFab: drawer tooltip reset');
     } catch (error) {
-      console.warn('[DevFab] Failed to reset tooltip:', error);
+      logger.warn('DevFab: failed to reset tooltip', error.message);
     }
   };
 
@@ -284,9 +284,9 @@ export default function App() {
         // 'revenuecat_customer_info',
       ]);
       setResetTrigger(prev => prev + 1); // Force AppContent remount
-      console.log('[DevFab] App reset to vanilla state - all settings cleared');
+      logger.log('DevFab: app reset to vanilla state');
     } catch (error) {
-      console.warn('[DevFab] Failed to reset to vanilla:', error);
+      logger.warn('DevFab: failed to reset to vanilla', error.message);
     }
   };
 

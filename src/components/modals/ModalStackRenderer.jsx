@@ -12,6 +12,7 @@ import DiscoveryModalContent from './DiscoveryModalContent';
 import CreateActivityModalContent from './CreateActivityModalContent';
 import EditActivityModalContent from './EditActivityModalContent';
 import TwoTimersModalContent from './TwoTimersModalContent';
+import logger from '../../utils/logger';
 
 /**
  * Modal type mapping (string → Content component)
@@ -63,7 +64,7 @@ export default function ModalStackRenderer() {
   const ContentComponent = MODAL_TYPES[Component];
 
   if (!ContentComponent) {
-    console.error(`[ModalStackRenderer] Unknown modal type: ${Component}`);
+    logger.warn(`Unknown modal type: ${Component}`);
     return null;
   }
 
@@ -73,23 +74,13 @@ export default function ModalStackRenderer() {
   // onClose handler with animation delay
   // Wraps props.onClose if it exists (for analytics callbacks)
   const handleClose = () => {
-    console.log('[ModalStackRenderer] handleClose called for modal:', id);
-
-    // Call user-provided onClose callback first (e.g., analytics)
     if (props.onClose) {
-      console.log('[ModalStackRenderer] Calling user onClose callback');
       props.onClose();
     }
 
-    // Mark modal as closing (triggers visible=false → close animation)
-    setClosingModalIds(prev => {
-      console.log('[ModalStackRenderer] Adding to closingModalIds:', id);
-      return [...prev, id];
-    });
+    setClosingModalIds(prev => [...prev, id]);
 
-    // Wait for BottomSheet close animation (300ms) before removing from stack
     setTimeout(() => {
-      console.log('[ModalStackRenderer] Timeout fired, removing from stack:', id);
       popById(id);
       setClosingModalIds(prev => prev.filter(modalId => modalId !== id));
     }, 300);

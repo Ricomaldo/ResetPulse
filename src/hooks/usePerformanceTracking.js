@@ -6,6 +6,7 @@ import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import Analytics from '../services/analytics';
 import { DEV_MODE } from '../config/test-mode';
+import logger from '../utils/logger';
 
 // Module-level timestamp to capture app start time
 const APP_START_TIME = Date.now();
@@ -51,11 +52,7 @@ export const usePerformanceTracking = () => {
 
     // Dev mode: Log to console
     if (DEV_MODE) {
-      // eslint-disable-next-line no-console
-      console.log('📊 [Performance] TTI tracked:', {
-        ...metrics,
-        tti_seconds: (ttiMs / 1000).toFixed(2),
-      });
+      logger.log('📊 TTI tracked', { ...metrics, tti_seconds: (ttiMs / 1000).toFixed(2) });
     }
   };
 

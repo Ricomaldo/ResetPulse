@@ -9,6 +9,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../../../styles/responsive';
 import haptics from '../../../utils/haptics';
 import analytics from '../../../services/analytics';
+import logger from '../../../utils/logger';
 import { fontWeights, spacing, typography } from '../../../theme/tokens';
 import OnboardingLayout from '../../../components/onboarding/OnboardingLayout';
 
@@ -36,7 +37,7 @@ export default function Filter050Notifications({ onContinue }) {
 
       onContinue({ notificationPermission: granted });
     } catch (error) {
-      console.warn('[Filter070] Permission request failed:', error);
+      logger.warn('Notification permission request failed', error.message);
       onContinue({ notificationPermission: false });
     }
   };

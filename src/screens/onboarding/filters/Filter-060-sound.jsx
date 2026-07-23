@@ -13,6 +13,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { rs } from '../../../styles/responsive';
 import haptics from '../../../utils/haptics';
 import useSimpleAudio from '../../../hooks/useSimpleAudio';
+import logger from '../../../utils/logger';
 import { TIMER_SOUNDS, DEFAULT_SOUND_ID } from '../../../config/sounds';
 import { fontWeights } from '../../../theme/tokens';
 import OnboardingLayout from '../../../components/onboarding/OnboardingLayout';
@@ -50,7 +51,7 @@ export default function Filter080SoundPersonalize({ onContinue }) {
         setPlayingId(null);
       }, 2000);
     } catch (error) {
-      console.warn('[Filter5b] Failed to play sound:', error);
+      logger.warn('Failed to play sound preview', error.message);
       setPlayingId(null);
     }
   };

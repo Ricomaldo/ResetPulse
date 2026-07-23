@@ -10,6 +10,7 @@
  */
 
 import Constants from 'expo-constants';
+import logger from '../utils/logger';
 
 // Load RevenueCat keys from app.json extras
 const { revenueCat } = Constants.expoConfig?.extra || {};
@@ -25,7 +26,7 @@ export const REVENUECAT_CONFIG = {
 
 // Validation
 if (!revenueCat?.iosKey || !revenueCat?.androidKey) {
-  console.warn('[RevenueCat] API keys not configured in app.json extra');
+  logger.warn('RevenueCat API keys not configured in app.json extra');
 }
 
 // Produit unique: one-time purchase

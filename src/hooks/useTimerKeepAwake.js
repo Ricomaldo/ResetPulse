@@ -13,8 +13,9 @@
 
 import { useEffect } from 'react';
 import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
-import useTimer from './useTimer'; // Default export, pas named export
+import useTimer from './useTimer';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
+import logger from '../utils/logger';
 
 export const useTimerKeepAwake = () => {
   const { isRunning } = useTimer();
@@ -25,9 +26,7 @@ export const useTimerKeepAwake = () => {
     if (isRunning && keepAwakeEnabled) {
       activateKeepAwake('timer');
 
-      if (__DEV__) {
-        console.warn('[KeepAwake] ✅ Activated - Screen will stay on');
-      }
+      logger.log('KeepAwake activated');
     } else {
       deactivateKeepAwake('timer');
       // Deactivation silencieuse (pas de log, comportement normal)

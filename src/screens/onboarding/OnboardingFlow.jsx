@@ -15,6 +15,7 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import StepIndicator from '../../components/onboarding/StepIndicator';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { ONBOARDING_TRANSITIONS } from '../../styles/animations';
+import logger from '../../utils/logger';
 
 // Import all filters
 import {
@@ -121,13 +122,13 @@ function OnboardingFlowContent({ onComplete }) {
       if (finalData.customActivity) {
         setCurrentActivity(finalData.customActivity);
         setCurrentDuration(finalData.customActivity.defaultDuration);
-        console.log('[OnboardingFlow] Pre-selected custom activity:', finalData.customActivity);
+        logger.log('Pre-selected custom activity', finalData.customActivity.id);
       }
 
       // Apply interaction profile from Filter-025
       if (finalData.interactionProfile) {
         setInteractionProfile(finalData.interactionProfile);
-        console.log('[OnboardingFlow] Applied interaction profile:', finalData.interactionProfile);
+        logger.log('Applied interaction profile', finalData.interactionProfile);
       }
 
       analytics.trackOnboardingCompleted('completed');

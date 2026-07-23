@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
 import { AppState, Platform } from 'react-native';
+import logger from '../utils/logger';
 
 // Configuration pour les notifications (SDK 54+)
 // Protection contre les modules natifs manquants (iOS Simulator notamment)
@@ -18,9 +19,7 @@ try {
   notificationsAvailable = true;
 } catch (error) {
   // Silent fail sur iOS Simulator - les notifications ne sont pas disponibles
-  if (__DEV__) {
-    console.warn('ℹ️ Notifications not available (iOS Simulator or missing module)');
-  }
+  logger.log('ℹ️ Notifications not available (iOS Simulator or missing module)');
 }
 
 // Créer le channel Android pour les notifications du timer
@@ -41,11 +40,9 @@ const setupAndroidChannel = async () => {
       showBadge: true,
     });
 
-    if (__DEV__) {
-      console.warn('✅ Android notification channel "timer" created');
-    }
+    logger.log('✅ Android notification channel "timer" created');
   } catch (error) {
-    console.warn('⚠️ Failed to create Android notification channel:', error.message);
+    logger.warn('Failed to create Android notification channel', error.message);
   }
 };
 
@@ -65,10 +62,10 @@ export default function useNotificationTimer() {
         const { status } = await Notifications.requestPermissionsAsync();
 
         if (status !== 'granted') {
-          console.warn('Notification permissions not granted');
+          logger.warn('Notification permissions not granted');
         }
       } catch (error) {
-        console.warn('⚠️ Failed to request notification permissions:', error.message);
+        logger.warn('Failed to request notification permissions', error.message);
       }
     };
 
@@ -96,9 +93,7 @@ export default function useNotificationTimer() {
 
     // Prevent race conditions: wait for any in-progress scheduling to complete
     if (schedulingInProgressRef.current && schedulingPromiseRef.current) {
-      if (__DEV__) {
-        console.warn('⚠️ Scheduling already in progress, waiting for it to complete first');
-      }
+      logger.log('Scheduling already in progress, waiting…');
       // Wait for previous scheduling to complete before proceeding
       await schedulingPromiseRef.current;
     }
@@ -140,18 +135,13 @@ export default function useNotificationTimer() {
           const minutes = Math.floor(seconds / 60);
           const secs = seconds % 60;
           const endTime = new Date(now.getTime() + seconds * 1000);
-          const timeString = endTime.toLocaleTimeString('fr-FR', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          });
-          console.warn(`📱 [${now.toLocaleTimeString('fr-FR')}] Notif programmée dans ${minutes}min ${secs}s → "${title}" à ${timeString}`);
+          const timeString = endTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          logger.log(`📱 [${now.toLocaleTimeString('fr-FR')}] Notif dans ${minutes}min ${secs}s → "${title}" à ${timeString}`);
         }
 
         return id;
       } catch (error) {
-        console.warn('⚠️ Error scheduling notification:', error.message);
-        // Fail silently - don't crash the app
+        logger.warn('Error scheduling notification', error.message);
         return null;
       } finally {
         schedulingInProgressRef.current = false;
@@ -173,9 +163,7 @@ export default function useNotificationTimer() {
     // CRITICAL: Wait for any in-progress scheduling to complete first
     // This prevents race conditions where cancel runs before schedule finishes
     if (schedulingInProgressRef.current && schedulingPromiseRef.current) {
-      if (__DEV__) {
-        console.warn('⚠️ Waiting for in-progress schedule to complete before canceling');
-      }
+      logger.log('Waiting for in-progress schedule before canceling…');
       await schedulingPromiseRef.current;
     }
 
@@ -184,12 +172,10 @@ export default function useNotificationTimer() {
         await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
         notificationIdRef.current = null;
 
-        if (__DEV__) {
-          console.warn('📱 Notification annulée');
-        }
+        logger.log('📱 Notification annulée');
       }
     } catch (error) {
-      console.warn('⚠️ Error canceling notification:', error.message);
+      logger.warn('Error canceling notification', error.message);
       // Fail silently
     }
   };

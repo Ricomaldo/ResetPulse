@@ -95,13 +95,9 @@ class AnalyticsService {
     } catch (error) {
       // Graceful fallback for Expo Go (native module unavailable)
       if (error.message?.includes('initialize') && __DEV__) {
-        console.warn('⚠️ [Analytics] Mixpanel unavailable in Expo Go');
-        console.warn('   → Use Development Build: npx expo run:ios');
-        console.warn('   → Or build production: eas build --profile preview');
-        console.warn('   → Analytics will work in production builds');
+        logger.warn('Mixpanel unavailable in Expo Go — use dev build: npx expo run:ios');
       } else {
-        console.error('❌ [Analytics] Mixpanel init failed:', error);
-        console.error('   Error details:', error.message);
+        logger.error('Mixpanel init failed', error.message);
       }
       this.isInitialized = false;
     }
@@ -126,8 +122,7 @@ class AnalyticsService {
     // Flush immediately in dev for debugging
     if (__DEV__) {
       this.mixpanel.flush();
-      console.warn('📊 [Analytics]', eventName, enrichedProperties);
-      console.warn('   ✈️  Event flushed to server');
+      logger.log(`📊 ${eventName}`, enrichedProperties);
     }
   }
 
@@ -141,7 +136,7 @@ class AnalyticsService {
     this.mixpanel.identify(userId);
 
     if (__DEV__) {
-      console.warn('👤 [Analytics] User identified:', userId);
+      logger.log('👤 Analytics user identified:', userId);
     }
   }
 

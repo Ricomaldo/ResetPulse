@@ -3,8 +3,9 @@
 // Utilise uniquement expo-audio SDK 54
 
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { useAudioPlayer, setAudioModeAsync } from 'expo-audio';
+import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
 import { getSoundById, DEFAULT_SOUND_ID } from '../config/sounds';
+import logger from '../utils/logger';
 
 // Configuration audio globale (une seule fois)
 let isGloballyConfigured = false;
@@ -24,9 +25,7 @@ const configureAudioOnce = async () => {
 
     isGloballyConfigured = true;
   } catch (error) {
-    if (__DEV__) {
-      console.warn('⚠️ Audio config warning:', error.message);
-    }
+    logger.warn('Audio config failed', error.message);
   }
 };
 
@@ -39,6 +38,7 @@ export default function useSimpleAudio(defaultSoundId = DEFAULT_SOUND_ID) {
   const [currentSoundFile, setCurrentSoundFile] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const player = useAudioPlayer(currentSoundFile);
+  const status = useAudioPlayerStatus(player);
   const lastSoundIdRef = useRef(null);
 
   // Configuration au premier mount de n'importe quel composant
@@ -54,41 +54,24 @@ export default function useSimpleAudio(defaultSoundId = DEFAULT_SOUND_ID) {
           await player.seekTo(0);
           await player.play();
           setIsPlaying(true);
-
-          if (__DEV__) {
-            console.warn('🔊 Playing sound:', lastSoundIdRef.current || 'preview');
-          }
+          logger.log('🔊 Playing sound:', lastSoundIdRef.current || 'preview');
         } catch (error) {
-          if (__DEV__) {
-            console.warn('🔇 Playback error:', error.message);
-          }
+          logger.warn('Playback error', error.message);
           setIsPlaying(false);
         }
       };
-
       play();
     }
   }, [currentSoundFile, player]);
 
-  // Listener pour savoir quand le son est terminé
+  // Détection fin de son via useAudioPlayerStatus (évite addListener sur UI thread)
   useEffect(() => {
-    if (!player) {return;}
-
-    const subscription = player.addListener('playbackStatusUpdate', (status) => {
-      if (status.isLoaded && status.didJustFinish) {
-        setIsPlaying(false);
-        setCurrentSoundFile(null); // Reset pour pouvoir rejouer le même son
-
-        if (__DEV__) {
-          console.warn('✅ Sound finished');
-        }
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [player]);
+    if (status?.didJustFinish) {
+      setIsPlaying(false);
+      setCurrentSoundFile(null);
+      logger.log('✅ Sound finished');
+    }
+  }, [status?.didJustFinish]);
 
   /**
    * Joue un son par ID ou fichier direct
@@ -127,9 +110,7 @@ export default function useSimpleAudio(defaultSoundId = DEFAULT_SOUND_ID) {
       setCurrentSoundFile(soundFile);
 
     } catch (error) {
-      if (__DEV__) {
-        console.warn('🔇 Sound error:', error);
-      }
+      logger.warn('Sound error', error.message);
     }
   }, [defaultSoundId, player, isPlaying]);
 
@@ -143,9 +124,7 @@ export default function useSimpleAudio(defaultSoundId = DEFAULT_SOUND_ID) {
         setIsPlaying(false);
         setCurrentSoundFile(null);
       } catch (error) {
-        if (__DEV__) {
-          console.warn('Stop error:', error.message);
-        }
+        logger.warn('Stop error', error.message);
       }
     }
   }, [player, isPlaying]);

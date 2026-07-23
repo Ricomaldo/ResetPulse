@@ -13,6 +13,7 @@ const C = {
   yellow: '\x1b[33m',
   green:  '\x1b[32m',
   blue:   '\x1b[34m',
+  red:    '\x1b[31m',
 };
 
 class Logger {
@@ -49,33 +50,37 @@ class Logger {
     };
   }
 
-  // Log simple en dev
+  // Action ou événement notable — contexte normal, blanc
   log(message, data) {
-    if (this.isDev) {
-      // eslint-disable-next-line no-console
-      data !== undefined ? console.log(`[ResetPulse] ${message}`, data) : console.log(`[ResetPulse] ${message}`);
-    }
+    if (!this.isDev) return;
+    const prefix = `${C.dim}[RP]${C.reset}`;
+    data !== undefined
+      ? console.log(`${prefix} ${message}`, data)
+      : console.log(`${prefix} ${message}`);
   }
 
-  // Warning en dev seulement
+  // Inattendu mais non-fatal — ANSI jaune via console.log
+  // Règle : console.warn (jaune Metro) est réservé aux warnings React/Expo natifs
   warn(message, data) {
-    if (this.isDev) {
-      data !== undefined ? console.warn(`[ResetPulse] ${message}`, data) : console.warn(`[ResetPulse] ${message}`);
-    }
+    if (!this.isDev) return;
+    const prefix = `${C.yellow}⚠${C.reset} ${C.dim}[RP]${C.reset}`;
+    data !== undefined
+      ? console.log(`${prefix} ${message}`, data)
+      : console.log(`${prefix} ${message}`);
   }
 
-  // Erreurs : console en dev, storage en prod
+  // Cassé ou irrécupérable — console.error (rouge Metro) + storage prod
   async error(message, data) {
     const errorData = {
       timestamp: new Date().toISOString(),
       message,
-      data: data || {}
+      data: data || {},
     };
 
     if (this.isDev) {
-      console.error(`[ResetPulse Error] ${message}`, data || '');
+      const prefix = `${C.red}✖${C.reset} ${C.dim}[RP]${C.reset}`;
+      console.error(`${prefix} ${message}`, data || '');
     } else {
-      // En production, stocker les erreurs critiques
       await this.storeError(errorData);
     }
   }
@@ -84,40 +89,32 @@ class Logger {
   async storeError(errorData) {
     try {
       const existingErrors = await this.getStoredErrors();
-
-      // Garder seulement les 10 dernières erreurs
       const updatedErrors = [errorData, ...existingErrors].slice(0, MAX_STORED_ERRORS);
-
       await AsyncStorage.setItem(ERROR_STORAGE_KEY, JSON.stringify(updatedErrors));
     } catch (e) {
-      // Silently fail - ne pas crasher à cause du logging
+      // Silently fail — ne pas crasher à cause du logging
     }
   }
 
-  // Récupérer les erreurs stockées (pour debug)
   async getStoredErrors() {
     try {
       const errors = await AsyncStorage.getItem(ERROR_STORAGE_KEY);
-      if (!errors) {
-        return [];
-      }
+      if (!errors) return [];
       try {
         return JSON.parse(errors);
-      } catch (parseError) {
-        // Malformed JSON, clear and return empty
+      } catch {
         await AsyncStorage.removeItem(ERROR_STORAGE_KEY);
         return [];
       }
-    } catch (e) {
+    } catch {
       return [];
     }
   }
 
-  // Nettoyer les erreurs stockées
   async clearErrors() {
     try {
       await AsyncStorage.removeItem(ERROR_STORAGE_KEY);
-    } catch (e) {
+    } catch {
       // Silently fail
     }
   }

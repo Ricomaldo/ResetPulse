@@ -9,6 +9,7 @@ import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from './useTranslation';
 import analytics from '../services/analytics';
 import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
+import logger from '../utils/logger';
 
 export default function useTimer(initialDuration = 240, onComplete) {
   // Translation hook for accessibility announcements
@@ -107,9 +108,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         // Vérifier si l'app était en background (notification a déjà sonné)
         const skipSound = wasInBackgroundRef.current;
 
-        if (__DEV__) {
-          console.warn(`🔔 Timer terminé. App était en background: ${skipSound}`);
-        }
+        logger.log(`🔔 Timer terminé — background: ${skipSound}`);
 
         // Feedback synchronisé : Audio + Haptic en parallèle
         // IMPORTANT: Skip audio si l'app était en background (notification a déjà sonné)
@@ -164,12 +163,11 @@ export default function useTimer(initialDuration = 240, onComplete) {
           }
         }, TIMER.COMPLETE_MESSAGE_DISPLAY_DURATION);
       }
-      // Log timer completion avec timecode
       if (__DEV__) {
         const now = new Date();
         const minutes = Math.floor(durationRef.current / 60);
         const secs = durationRef.current % 60;
-        console.warn(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé!`);
+        logger.log(`⏰ [${now.toLocaleTimeString('fr-FR')}] Timer de ${minutes}min ${secs}s terminé`);
       }
     }
   }, []); // No dependencies - uses refs only
@@ -370,7 +368,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
       const now = new Date();
       const minutes = Math.floor(effectiveRemaining / 60);
       const secs = effectiveRemaining % 60;
-      console.warn(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
+      logger.log(`⏱️ [${now.toLocaleTimeString('fr-FR')}] Timer démarré : ${minutes}min ${secs}s`);
     }
 
     setRunning(true);
@@ -413,9 +411,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     // Accessibility announcement
     AccessibilityInfo.announceForAccessibility(t('accessibility.timer.timerStopped'));
 
-    if (__DEV__) {
-      console.warn(`⏹️ [Stop] Timer abandonné après ${elapsed}s`);
-    }
+    logger.log(`⏹️ Timer abandonné après ${elapsed}s`);
   }, [cancelTimerNotification, t]);
 
   // resetTimer: Reset to initial state (used for COMPLETE → REST transition)
@@ -434,9 +430,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     // Cancel notification if scheduled
     cancelTimerNotification();
 
-    if (__DEV__) {
-      console.warn('🔄 [Reset] Timer réinitialisé');
-    }
+    logger.log('🔄 Timer réinitialisé');
   }, [cancelTimerNotification]);
 
   const setPresetDuration = useCallback((minutes) => {

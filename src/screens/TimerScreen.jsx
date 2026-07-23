@@ -12,6 +12,7 @@ import { useModalStack } from '../contexts/ModalStackContext';
 import { DialZone, AsideZone } from '../components/layout';
 import { getActivityStartMessage, getActivityEndMessage } from '../config/activityMessages';
 import analytics from '../services/analytics';
+import logger from '../utils/logger';
 
 function TimerScreenContent({ autoStart = false, onAutoStartConsumed, onResetOnboarding }) {
   const theme = useTheme();
@@ -214,7 +215,7 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed, onResetOnb
         }
       } catch (error) {
         // Non-blocking: review request is nice-to-have
-        console.warn('[TimerScreen] StoreReview error:', error.message);
+        logger.warn('StoreReview error', error.message);
       }
     }
   };

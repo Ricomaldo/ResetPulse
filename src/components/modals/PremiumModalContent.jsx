@@ -24,6 +24,7 @@ import { useModalStack } from '../../contexts/ModalStackContext';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import { fontWeights } from '../../theme/tokens';
+import logger from '../../utils/logger';
 
 /**
  * PremiumModalContent - Premium paywall UI
@@ -79,9 +80,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
           setDynamicPrice(offerings.availablePackages[0].product.priceString);
         }
       } catch (error) {
-        if (__DEV__) {
-          console.warn('[PremiumModalContent] Could not fetch dynamic price:', error);
-        }
+        logger.warn('Could not fetch dynamic price', error.message);
       } finally {
         setIsLoadingPrice(false);
       }
@@ -96,23 +95,15 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
 
   const handlePurchase = async () => {
     try {
-      if (__DEV__) {
-        console.warn('[IAP] 🚀 Starting purchase flow...');
-      }
+      logger.log('🚀 IAP purchase flow started');
       setIsPurchasing(true);
       haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
 
-      // Get offerings from RevenueCat
-      if (__DEV__) {
-        console.warn('[IAP] 📡 Fetching offerings from RevenueCat...');
-      }
       const offerings = await getOfferings();
 
-      // Log offerings structure for debugging
       if (__DEV__) {
-        console.warn('[IAP] 📦 Offerings received:', {
+        logger.log('📦 IAP offerings', {
           hasOfferings: !!offerings,
-          hasError: !!offerings?.error,
           errorType: offerings?.error || 'none',
           packagesCount: offerings?.availablePackages?.length || 0,
         });
@@ -120,7 +111,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
 
       // Handle network error from getOfferings
       if (offerings?.error === 'network') {
-        console.error('[IAP] ❌ Network error while fetching offerings');
+        logger.warn('IAP network error while fetching offerings');
         Alert.alert(
           t('premium.noConnection'),
           t('premium.noConnectionMessage'),
@@ -137,11 +128,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
         !offerings.availablePackages ||
         offerings.availablePackages.length === 0
       ) {
-        console.error('[IAP] ❌ No offerings available:', {
-          error: offerings?.error,
-          hasPackages: !!offerings?.availablePackages,
-          packagesLength: offerings?.availablePackages?.length
-        });
+        logger.warn('IAP no offerings available', { error: offerings?.error, packagesLength: offerings?.availablePackages?.length });
         Alert.alert(
           t('premium.error'),
           t('premium.errorOfferings'),
@@ -155,28 +142,10 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
       const premiumPackage = offerings.availablePackages[0];
 
       // Log package details
-      if (__DEV__) {
-        console.warn('[IAP] 📋 Package selected:', {
-          packageId: premiumPackage.identifier,
-          productId: premiumPackage.product.identifier,
-          price: premiumPackage.product.priceString,
-          title: premiumPackage.product.title,
-          description: premiumPackage.product.description,
-        });
-
-        console.warn('[IAP] 💳 Initiating purchase for product:', premiumPackage.product.identifier);
-      }
+      logger.log('💳 IAP package selected', { productId: premiumPackage.product.identifier, price: premiumPackage.product.priceString });
       const result = await purchaseProduct(premiumPackage.product.identifier);
 
-      if (__DEV__) {
-        console.warn('[IAP] ✅ Purchase result:', {
-          success: result.success,
-          cancelled: result.cancelled,
-          isNetworkError: result.isNetworkError,
-          isPaymentPending: result.isPaymentPending,
-          error: result.error || 'none',
-        });
-      }
+      logger.log('✅ IAP purchase result', { success: result.success, cancelled: result.cancelled, error: result.error || 'none' });
 
       if (result.success) {
         // Reset attempts on success
@@ -210,9 +179,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
             text: t('premium.contactSupport'),
             onPress: () => {
               // Future: open support email or link
-              if (__DEV__) {
-                console.warn('[PremiumModalContent] Contact support requested after 3 failed attempts');
-              }
+              logger.log('Contact support requested after 3 failed attempts');
             }
           });
         }
@@ -247,9 +214,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
           buttons.unshift({
             text: t('premium.contactSupport'),
             onPress: () => {
-              if (__DEV__) {
-                console.warn('[PremiumModalContent] Contact support requested after 3 failed attempts');
-              }
+              logger.log('Contact support requested after 3 failed attempts');
             }
           });
         }
@@ -261,7 +226,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
         );
       }
     } catch (error) {
-      console.error('[PremiumModalContent] Purchase error:', error);
+      logger.error('IAP purchase error', error.message);
       Alert.alert(t('premium.error'), t('premium.errorOfferings'), [
         { text: t('common.ok') },
       ]);
@@ -304,7 +269,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
         );
       }
     } catch (error) {
-      console.error('[PremiumModalContent] Restore error:', error);
+      logger.error('IAP restore error', error.message);
       Alert.alert(t('premium.error'), t('premium.unexpectedError'), [
         { text: t('common.ok') },
       ]);

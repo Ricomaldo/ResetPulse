@@ -3,6 +3,7 @@
 
 import { Platform, Vibration } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import logger from './logger';
 
 // Haptic feedback types (iOS-style naming, mapped for Android)
 const HapticTypes = {
@@ -106,9 +107,7 @@ class HapticManager {
       }
     } catch (e) {
       // Fallback to Vibration API if haptic library not available
-      if (__DEV__) {
-        console.warn('Expo Haptics not available, using fallback');
-      }
+      logger.warn('Expo Haptics not available, using fallback');
       this.fallbackVibration(type);
     }
   }
@@ -159,9 +158,7 @@ class HapticManager {
       }
     } catch (e) {
       // Fallback to native vibration patterns
-      if (__DEV__) {
-        console.warn('Expo Haptics not supported on this Android device, using vibration fallback');
-      }
+      logger.warn('Expo Haptics not supported on Android, using vibration fallback');
       const pattern = androidPatterns[type];
 
       if (Array.isArray(pattern)) {

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { TouchableOpacity } from '@gorhom/bottom-sheet';
+import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { Info } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';

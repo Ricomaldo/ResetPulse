@@ -1,6 +1,7 @@
 // src/hooks/usePersistedState.js
 import { useState, useEffect, useRef, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import logger from '../utils/logger';
 
 /**
  * Hook pour persister un état dans AsyncStorage
@@ -23,12 +24,12 @@ export function usePersistedState(key, defaultValue) {
             const parsed = JSON.parse(storedValue);
             setValue(parsed);
           } catch (parseError) {
-            console.warn(`Erreur lors du parsing JSON de ${key}:`, parseError.message);
+            logger.warn(`JSON parse error for key "${key}"`, parseError.message);
             // Keep default value
           }
         }
       } catch (error) {
-        console.warn(`Erreur lors du chargement de ${key}:`, error);
+        logger.warn(`Failed to load key "${key}"`, error.message);
       } finally {
         if (isMountedRef.current) {
           setIsLoading(false);
@@ -50,7 +51,7 @@ export function usePersistedState(key, defaultValue) {
         try {
           await AsyncStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
-          console.warn(`Erreur lors de la sauvegarde de ${key}:`, error);
+          logger.warn(`Failed to save key "${key}"`, error.message);
         }
       };
 
@@ -83,13 +84,13 @@ export function usePersistedObject(key, defaultValues) {
             // Merge avec les valeurs par défaut pour gérer les nouvelles propriétés
             setValues({ ...defaultValues, ...parsed });
           } catch (parseError) {
-            console.warn(`Erreur lors du parsing JSON de ${key}:`, parseError.message);
+            logger.warn(`JSON parse error for key "${key}"`, parseError.message);
             // Keep default values
             setValues(defaultValues);
           }
         }
       } catch (error) {
-        console.warn(`Erreur lors du chargement de ${key}:`, error);
+        logger.warn(`Failed to load key "${key}"`, error.message);
       } finally {
         if (isMountedRef.current) {
           setIsLoading(false);
@@ -111,7 +112,7 @@ export function usePersistedObject(key, defaultValues) {
         try {
           await AsyncStorage.setItem(key, JSON.stringify(values));
         } catch (error) {
-          console.warn(`Erreur lors de la sauvegarde de ${key}:`, error);
+          logger.warn(`Failed to save key "${key}"`, error.message);
         }
       };
 

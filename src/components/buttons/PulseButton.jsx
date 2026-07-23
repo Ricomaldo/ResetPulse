@@ -10,7 +10,7 @@
  */
 import React, { useRef, useCallback } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { TouchableOpacity, LongPressGestureHandler, State } from 'react-native-gesture-handler';
+import { TouchableOpacity, GestureDetector, Gesture } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
@@ -55,22 +55,6 @@ const PulseButton = React.memo(function PulseButton({
 
   const handleTap = useCallback(() => {
     haptics.selection().catch(() => {});
-    onTap?.();
-  }, [onTap]);
-
-  const handleLongPressStop = useCallback((event) => {
-    if (event.nativeEvent.state !== State.ACTIVE) return;
-    if (completedRef.current) return;
-    completedRef.current = true;
-    haptics.notification('warning').catch(() => {});
-    onLongPressComplete?.();
-  }, [onLongPressComplete]);
-
-  const handleLongPressStart = useCallback((event) => {
-    if (event.nativeEvent.state !== State.ACTIVE) return;
-    if (completedRef.current) return;
-    completedRef.current = true;
-    haptics.notification('success').catch(() => {});
     onTap?.();
   }, [onTap]);
 
@@ -143,28 +127,46 @@ const PulseButton = React.memo(function PulseButton({
     </View>
   );
 
+  const longPressStopGesture = React.useMemo(() =>
+    Gesture.LongPress()
+      .minDuration(longPressConfirmDuration)
+      .runOnJS(true)
+      .onBegin(resetCompletion)
+      .onStart(() => {
+        if (completedRef.current) { return; }
+        completedRef.current = true;
+        haptics.notification('warning').catch(() => {});
+        onLongPressComplete?.();
+      }),
+  [longPressConfirmDuration, resetCompletion, onLongPressComplete]);
+
+  const longPressStartGesture = React.useMemo(() =>
+    Gesture.LongPress()
+      .minDuration(longPressStartDuration)
+      .runOnJS(true)
+      .onBegin(resetCompletion)
+      .onStart(() => {
+        if (completedRef.current) { return; }
+        completedRef.current = true;
+        haptics.notification('success').catch(() => {});
+        onTap?.();
+      }),
+  [longPressStartDuration, resetCompletion, onTap]);
+
   const renderLongPressStop = () => (
-    <LongPressGestureHandler
-      minDurationMs={longPressConfirmDuration}
-      onHandlerStateChange={handleLongPressStop}
-      onBegan={resetCompletion}
-    >
+    <GestureDetector gesture={longPressStopGesture}>
       <View style={styles.container}>
         {buttonView}
       </View>
-    </LongPressGestureHandler>
+    </GestureDetector>
   );
 
   const renderLongPressStart = () => (
-    <LongPressGestureHandler
-      minDurationMs={longPressStartDuration}
-      onHandlerStateChange={handleLongPressStart}
-      onBegan={resetCompletion}
-    >
+    <GestureDetector gesture={longPressStartGesture}>
       <View style={styles.container}>
         {buttonView}
       </View>
-    </LongPressGestureHandler>
+    </GestureDetector>
   );
 
   if (state === 'rest') {
