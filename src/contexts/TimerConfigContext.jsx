@@ -9,6 +9,7 @@
  * - timer: currentActivity, currentDuration, selectedSoundId, clockwise, scaleMode
  * - display: shouldPulse, showDigitalTimer, showActivityEmoji, showTime
  * - system: keepAwakeEnabled
+ * - mode: current (Mixte/Focus/Complet — ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
  * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
  * - stats: activityDurations, completedTimersCount, hasSeenTwoTimersModal, hasSeenReviewRequest
@@ -74,6 +75,9 @@ export const TimerConfigProvider = ({ children }) => {
         system: {
           keepAwakeEnabled: true,
         },
+        mode: {
+          current: 'mixte',
+        },
         favorites: {
           favoriteActivities: ['work', 'break', 'meditation'],
           favoritePalettes: [],
@@ -114,6 +118,9 @@ export const TimerConfigProvider = ({ children }) => {
       },
       system: {
         keepAwakeEnabled: true,
+      },
+      mode: {
+        current: 'mixte',
       },
       favorites: {
         favoriteActivities: ['work', 'break', 'meditation'],
@@ -305,6 +312,9 @@ export const TimerConfigProvider = ({ children }) => {
     system: {
       keepAwakeEnabled: values.system.keepAwakeEnabled,
     },
+    mode: {
+      current: values.mode.current,
+    },
     favorites: {
       favoriteActivities: values.favorites.favoriteActivities,
       favoritePalettes: values.favorites.favoritePalettes,
@@ -398,6 +408,15 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         system: { ...prev.system, keepAwakeEnabled: enabled }
+      }));
+    },
+
+    // Mode (Mixte/Focus/Complet — écrit la valeur ; seul Mixte rend au Lot 2 C3,
+    // C4/C5 branchent Focus/Complet sur le rendu)
+    setMode: (mode) => {
+      setValues(prev => ({
+        ...prev,
+        mode: { ...prev.mode, current: mode }
       }));
     },
 

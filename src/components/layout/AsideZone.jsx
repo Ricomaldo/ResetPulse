@@ -2,11 +2,17 @@
  * @fileoverview AsideZone - Sheet léger custom Reanimated 4 (SCR-10, ADR-014)
  * V3 (2026-05-01) : migration @gorhom/bottom-sheet → Gesture.Pan + Reanimated 4.
  * Recentrage (2026-07-23) : 3 snaps / 7 sections → 2 états (fermé / ouvert
- * au swipe up) et 4 blocs — segmenté Mode (structure seule au Lot 1),
- * 3 toggles, Mes rituels, Palettes.
+ * au swipe up) et 4 blocs.
+ * Cycle 3 (Lot 2) : adoption — mécanisme + 4 blocs nés de la spec, gardés tels
+ * quels. Bloc 1 câblé sur `mode` (écrit la valeur ; Mixte seul rend, C4/C5
+ * brancheront Focus/Complet). Blocs 3/4 ramenés à des lignes placeholder
+ * inertes (contenu réel : C6) — les carrousels qu'ils embarquaient dupliquaient
+ * déjà `CompactRow` sans être la cible spec (liste SCR-16 / sous-écran PALC-PALE).
+ * `labelOverlay`/`MessageZone` retirés : legacy pré-Lot 2, dupliquait l'affichage
+ * de message que `TimerScreen` gère déjà nativement depuis C1/C2 (ADR-007).
  */
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView, Switch } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -22,8 +28,6 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
-import { MessageZone } from '../messaging';
-import { ActivityCarousel, PaletteCarousel } from '../carousels';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -32,24 +36,27 @@ const SNAP_Y_CLOSED = SCREEN_HEIGHT * 0.92;
 const SNAP_Y_OPEN = SCREEN_HEIGHT * 0.2;
 
 // Libellés SCR-10 hardcodés FR — batch i18n 15 langues au Lot 3 (src/i18n/TODO.md)
-const MODE_LABELS = ['Mixte', 'Focus', 'Complet'];
+const MODES = [
+  { key: 'mixte', label: 'Mixte' },
+  { key: 'focus', label: 'Focus' },
+  { key: 'complet', label: 'Complet' },
+];
 const RITUALS_LABEL = 'Mes rituels';
 const PALETTES_LABEL = 'Palettes';
 
-export default function AsideZone({ timerState, isTimerRunning, displayMessage, isCompleted, flashActivity }) {
+export default function AsideZone({ isTimerRunning }) {
   const theme = useTheme();
   const t = useTranslation();
   const {
-    timer: { currentActivity, clockwise },
+    timer: { clockwise },
     setClockwise,
     display: { showActivityEmoji },
     setShowActivityEmoji,
     system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
+    mode: { current: currentMode },
+    setMode,
   } = useTimerConfig();
-
-  const activityCarouselRef = useRef(null);
-  const paletteCarouselRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -146,14 +153,14 @@ export default function AsideZone({ timerState, isTimerRunning, displayMessage, 
       height: 5,
       width: 50,
     },
-    labelOverlay: {
-      alignItems: 'center',
-      bottom: SCREEN_HEIGHT * 0.35,
-      justifyContent: 'center',
-      pointerEvents: 'none',
-      position: 'absolute',
-      width: '100%',
-      zIndex: 0,
+    inertChevron: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16, 'min'),
+    },
+    inertRowLabel: {
+      color: theme.colors.text,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.medium,
     },
     optionLabel: {
       color: theme.colors.text,
@@ -174,15 +181,6 @@ export default function AsideZone({ timerState, isTimerRunning, displayMessage, 
     scrollContent: {
       paddingBottom: rs(24),
       paddingHorizontal: rs(16),
-    },
-    sectionLabel: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(12, 'min'),
-      fontWeight: fontWeights.semibold,
-      letterSpacing: 0.5,
-      marginBottom: rs(8),
-      marginTop: rs(16),
-      textTransform: 'uppercase',
     },
     segmentButton: {
       alignItems: 'center',
@@ -239,22 +237,9 @@ export default function AsideZone({ timerState, isTimerRunning, displayMessage, 
 
   return (
     <View style={styles.asideContainer}>
-      {currentActivity && (
-        <View style={styles.labelOverlay}>
-          <MessageZone
-            timerState={timerState}
-            label={currentActivity.label}
-            displayMessage={displayMessage}
-            isCompleted={isCompleted}
-            flashActivity={flashActivity}
-            isTimerRunning={isTimerRunning}
-          />
-        </View>
-      )}
-
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
-          {/* Handle */}
+          {/* Handle — affordance discrète du swipe up */}
           <View style={styles.handleContainer}>
             <View style={[styles.handleIndicator, { backgroundColor: theme.colors.textSecondary }]} />
           </View>
@@ -267,18 +252,31 @@ export default function AsideZone({ timerState, isTimerRunning, displayMessage, 
               showsVerticalScrollIndicator={false}
               nestedScrollEnabled={true}
             >
-              {/* Bloc 1 : segmenté Mode — structure seule au Lot 1 (non fonctionnel) */}
+              {/* Bloc 1 : segmenté Mode — écrit le réglage global ; seul Mixte
+                  rend au Lot 2 C3 (Focus/Complet se branchent en C4/C5) */}
               <View style={styles.segmentedControl}>
-                {MODE_LABELS.map((label, index) => (
-                  <View
-                    key={label}
-                    style={[styles.segmentButton, index === 0 && styles.segmentButtonActive]}
-                  >
-                    <Text style={[styles.segmentText, index === 0 && styles.segmentTextActive]}>
-                      {label}
-                    </Text>
-                  </View>
-                ))}
+                {MODES.map(({ key, label }) => {
+                  const isActive = currentMode === key;
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      accessible
+                      accessibilityRole="button"
+                      accessibilityLabel={label}
+                      accessibilityState={{ selected: isActive }}
+                      style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
+                      onPress={() => {
+                        haptics.selection().catch(() => {});
+                        setMode(key);
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
+                        {label}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
 
               {/* Bloc 2 : 3 toggles */}
@@ -305,13 +303,17 @@ export default function AsideZone({ timerState, isTimerRunning, displayMessage, 
                 ))}
               </View>
 
-              {/* Bloc 3 : Mes rituels */}
-              <Text style={styles.sectionLabel}>{RITUALS_LABEL}</Text>
-              <ActivityCarousel ref={activityCarouselRef} isRunning={isTimerRunning} />
+              {/* Bloc 3 : Mes rituels — placeholder inerte, contenu réel en C6 */}
+              <View style={styles.optionRow}>
+                <Text style={styles.inertRowLabel}>{RITUALS_LABEL}</Text>
+                <Text style={styles.inertChevron}>›</Text>
+              </View>
 
-              {/* Bloc 4 : Palettes */}
-              <Text style={styles.sectionLabel}>{PALETTES_LABEL}</Text>
-              <PaletteCarousel ref={paletteCarouselRef} />
+              {/* Bloc 4 : Palettes — placeholder inerte, contenu réel en C6 */}
+              <View style={[styles.optionRow, styles.optionRowLast]}>
+                <Text style={styles.inertRowLabel}>{PALETTES_LABEL}</Text>
+                <Text style={styles.inertChevron}>›</Text>
+              </View>
             </ScrollView>
           </Animated.View>
         </Animated.View>

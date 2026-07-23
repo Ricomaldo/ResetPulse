@@ -6,6 +6,8 @@
  * Cycle 1 : état repos (SCR-1). Cycle 2 : séance + fin (SCR-2/3) — tap sur le
  * disque pilote start/stop(rembobinage)/reset via la state machine récoltée
  * (useTimer, ADR-007) — aucune logique neuve, juste le branchement écran.
+ * Cycle 3 : sheet SCR-10 (`AsideZone`, adopté — né de la spec) monté en swipe
+ * up depuis Mixte.
  */
 import React, { useCallback, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -17,6 +19,7 @@ import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import DigitalTimer from '../components/controls/DigitalTimer';
 import Icons from '../components/layout/Icons';
+import AsideZone from '../components/layout/AsideZone';
 import { getFreeActivities } from '../config/activities';
 import { getPaletteColors } from '../config/timer-palettes';
 import { COLORS } from '../components/dial/timerConstants';
@@ -259,6 +262,7 @@ function TimerScreenContent() {
         <CompactRow />
         <DistractionButton />
       </View>
+      <AsideZone isTimerRunning={snapshot.running} />
     </SafeAreaView>
   );
 }
