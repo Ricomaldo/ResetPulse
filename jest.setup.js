@@ -12,18 +12,6 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
 
-// Mock Mixpanel (native module, requires mock)
-jest.mock('mixpanel-react-native', () => ({
-  Mixpanel: jest.fn().mockImplementation(() => ({
-    init: jest.fn().mockResolvedValue(undefined),
-    setServerURL: jest.fn(),
-    track: jest.fn(),
-    identify: jest.fn(),
-    registerSuperProperties: jest.fn(),
-    flush: jest.fn(),
-  })),
-}));
-
 // Mock expo-constants
 jest.mock('expo-constants', () => ({
   expoConfig: {
