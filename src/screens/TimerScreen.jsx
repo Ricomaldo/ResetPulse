@@ -1,5 +1,5 @@
 /**
- * @fileoverview TimerScreen — écran principal, Mode Mixte (SCR-1/2/3, ADR-014)
+ * @fileoverview TimerScreen — écran principal, modes Mixte + Focus (ADR-014)
  * Reconstruction Lot 2 (2026-07-23) : écran neuf, construit depuis
  * `_docs/specs/recentrage.md`. Récolte des primitives prouvées (TimeTimer,
  * ActivityItem, activities.js, timer-palettes.js) — pas de layout hérité.
@@ -8,6 +8,12 @@
  * (useTimer, ADR-007) — aucune logique neuve, juste le branchement écran.
  * Cycle 3 : sheet SCR-10 (`AsideZone`, adopté — né de la spec) monté en swipe
  * up depuis Mixte.
+ * Cycle 4 (SCR-4/5/6) : mode Focus branché sur le réglage global `mode`.
+ * `TimeTimer` reste monté en continu quel que soit le mode (state machine
+ * ADR-007 intouchable au changement de mode) — seul le chrome autour
+ * (rangée, 🎲, chiffre, message de fin) est conditionné par le mode. Focus
+ * n'ajoute qu'un hint discret au repos ; la fin ✨ plein-vert est déjà portée
+ * par le dial (`DialCenter`), pas par ce fichier.
  */
 import React, { useCallback, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -180,8 +186,31 @@ function DistractionButton() {
   );
 }
 
+// Focus (C4) : le seul texte de l'écran, au repos — libellé hardcodé FR,
+// même précédent que le sheet (batch i18n 15 langues au Lot 3).
+const FOCUS_HINT = 'balayer vers le haut';
+
+function FocusHint() {
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    hint: {
+      color: theme.colors.textLight,
+      fontSize: rs(13, 'min'),
+      marginTop: theme.spacing.lg,
+      textAlign: 'center',
+    },
+  });
+
+  return <Text style={styles.hint}>{FOCUS_HINT}</Text>;
+}
+
 function TimerScreenContent() {
   const theme = useTheme();
+  const {
+    mode: { current: currentMode },
+  } = useTimerConfig();
+  const isFocus = currentMode === 'focus';
 
   // Pont écran ↔ state machine récoltée (useTimer, via TimeTimer.onTimerRef).
   // Aucune logique de séance neuve : on lit running/isCompleted/remaining tels
@@ -253,14 +282,15 @@ function TimerScreenContent() {
     >
       <View style={styles.content}>
         <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} />
-        {snapshot.running && (
+        {!isFocus && snapshot.running && (
           <DigitalTimer remaining={snapshot.remaining} isRunning compact />
         )}
-        {snapshot.isCompleted && (
+        {!isFocus && snapshot.isCompleted && (
           <Text style={styles.completionMessage}>{snapshot.displayMessage}</Text>
         )}
-        <CompactRow />
-        <DistractionButton />
+        {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
+        {!isFocus && <CompactRow />}
+        {!isFocus && <DistractionButton />}
       </View>
       <AsideZone isTimerRunning={snapshot.running} />
     </SafeAreaView>

@@ -10,6 +10,9 @@
  * déjà `CompactRow` sans être la cible spec (liste SCR-16 / sous-écran PALC-PALE).
  * `labelOverlay`/`MessageZone` retirés : legacy pré-Lot 2, dupliquait l'affichage
  * de message que `TimerScreen` gère déjà nativement depuis C1/C2 (ADR-007).
+ * Cycle 4 : affûtage « signature des modes » (porte C3, Eric) — en Focus, le
+ * sheet ne montre plus que le segmenté (bloc 1). Un mode s'affirme par ce
+ * qu'il interdit : en Focus, on ne règle rien, on ne peut qu'en sortir.
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
@@ -57,6 +60,8 @@ export default function AsideZone({ isTimerRunning }) {
     mode: { current: currentMode },
     setMode,
   } = useTimerConfig();
+
+  const isFocus = currentMode === 'focus';
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -279,41 +284,47 @@ export default function AsideZone({ isTimerRunning }) {
                 })}
               </View>
 
-              {/* Bloc 2 : 3 toggles */}
-              <View style={styles.togglesCard}>
-                {toggles.map((toggle, index) => (
-                  <View
-                    key={toggle.key}
-                    style={[styles.optionRow, index === toggles.length - 1 && styles.optionRowLast]}
-                  >
-                    <Text style={styles.optionLabel}>{toggle.label}</Text>
-                    <Switch
-                      accessible={true}
-                      accessibilityLabel={toggle.label}
-                      accessibilityRole="switch"
-                      accessibilityState={{ checked: toggle.value }}
-                      value={toggle.value}
-                      onValueChange={(value) => {
-                        haptics.switchToggle().catch(() => {});
-                        toggle.onChange(value);
-                      }}
-                      {...theme.styles.switch(toggle.value)}
-                    />
+              {/* Blocs 2-4 : masqués en Focus — on ne règle rien, on ne peut
+                  qu'en sortir (cf. header). */}
+              {!isFocus && (
+                <>
+                  {/* Bloc 2 : 3 toggles */}
+                  <View style={styles.togglesCard}>
+                    {toggles.map((toggle, index) => (
+                      <View
+                        key={toggle.key}
+                        style={[styles.optionRow, index === toggles.length - 1 && styles.optionRowLast]}
+                      >
+                        <Text style={styles.optionLabel}>{toggle.label}</Text>
+                        <Switch
+                          accessible={true}
+                          accessibilityLabel={toggle.label}
+                          accessibilityRole="switch"
+                          accessibilityState={{ checked: toggle.value }}
+                          value={toggle.value}
+                          onValueChange={(value) => {
+                            haptics.switchToggle().catch(() => {});
+                            toggle.onChange(value);
+                          }}
+                          {...theme.styles.switch(toggle.value)}
+                        />
+                      </View>
+                    ))}
                   </View>
-                ))}
-              </View>
 
-              {/* Bloc 3 : Mes rituels — placeholder inerte, contenu réel en C6 */}
-              <View style={styles.optionRow}>
-                <Text style={styles.inertRowLabel}>{RITUALS_LABEL}</Text>
-                <Text style={styles.inertChevron}>›</Text>
-              </View>
+                  {/* Bloc 3 : Mes rituels — placeholder inerte, contenu réel en C6 */}
+                  <View style={styles.optionRow}>
+                    <Text style={styles.inertRowLabel}>{RITUALS_LABEL}</Text>
+                    <Text style={styles.inertChevron}>›</Text>
+                  </View>
 
-              {/* Bloc 4 : Palettes — placeholder inerte, contenu réel en C6 */}
-              <View style={[styles.optionRow, styles.optionRowLast]}>
-                <Text style={styles.inertRowLabel}>{PALETTES_LABEL}</Text>
-                <Text style={styles.inertChevron}>›</Text>
-              </View>
+                  {/* Bloc 4 : Palettes — placeholder inerte, contenu réel en C6 */}
+                  <View style={[styles.optionRow, styles.optionRowLast]}>
+                    <Text style={styles.inertRowLabel}>{PALETTES_LABEL}</Text>
+                    <Text style={styles.inertChevron}>›</Text>
+                  </View>
+                </>
+              )}
             </ScrollView>
           </Animated.View>
         </Animated.View>

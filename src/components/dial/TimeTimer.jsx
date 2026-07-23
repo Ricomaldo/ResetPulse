@@ -27,6 +27,7 @@ export default function TimeTimer({
     setTimerRemaining,
     display: { showActivityEmoji },
     palette: { currentColor },
+    mode: { current: currentMode },
   } = useTimerConfig();
 
   // Get custom activities for incrementing usage
@@ -97,8 +98,10 @@ export default function TimeTimer({
     }
   }, [timer.running, timer.remaining, currentActivity, incrementUsage]);
 
-  // Get responsive dimensions - zen mode: timer dominates
-  const { timerCircle } = getComponentSizes();
+  // Get responsive dimensions - zen mode: timer dominates. Le cadran ne se
+  // remonte jamais au changement de mode (state machine préservée) — seule
+  // sa taille varie (Focus C4 : dial seul, il respire davantage).
+  const { timerCircle } = getComponentSizes(currentMode);
   const circleSize = timerCircle; // No max limit - let it breathe
 
   const styles = StyleSheet.create({

@@ -134,20 +134,22 @@ export const getSafeAreaPadding = () => {
 };
 
 // Component size calculators
-export const getComponentSizes = () => {
+export const getComponentSizes = (mode = 'mixte') => {
   const { width, height, isLandscape, isTablet } = getDeviceInfo();
+  // Focus (C4) : zéro chrome sous le disque, il peut respirer davantage
+  const portraitRatio = mode === 'focus' ? 0.85 : 0.8;
 
   // Timer circle size - Adapté aux différentes tailles d'écran
   let timerCircle;
   if (isLandscape) {
     timerCircle = Math.min(width * 0.6, height * 0.9);
   } else if (isTablet) {
-    // iPad portrait: 80% de la largeur OU 650px max (bon équilibre)
-    timerCircle = Math.min(width * 0.8, 650);
+    // iPad portrait: ratio de largeur OU plafond px (bon équilibre)
+    timerCircle = Math.min(width * portraitRatio, mode === 'focus' ? 690 : 650);
   } else {
-    // iPhone portrait: 80% de la largeur (ADR-014 recentrage — le disque
+    // iPhone portrait: ratio de largeur (ADR-014 recentrage — le disque
     // est le produit, mais ne doit pas écraser le chrome sous lui)
-    timerCircle = width * 0.8;
+    timerCircle = width * portraitRatio;
   }
 
   return {
