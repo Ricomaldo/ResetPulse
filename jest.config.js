@@ -11,7 +11,4 @@ module.exports = {
     '/node_modules/',
     '/archive-sdk51/'  // Ignore archived tests
   ],
-  moduleNameMapper: {
-    '^@env$': '<rootDir>/__mocks__/@env.js',
-  },
 };
