@@ -8,7 +8,6 @@
  * State Namespaces:
  * - timer: currentActivity, currentDuration, selectedSoundId, clockwise, scaleMode
  * - display: shouldPulse, showDigitalTimer, showActivityEmoji, showTime
- * - interaction: interactionProfile, longPress*, startAnimation*
  * - system: keepAwakeEnabled
  * - favorites: favoriteActivities, favoritePalettes
  * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
@@ -72,16 +71,6 @@ export const TimerConfigProvider = ({ children }) => {
           showActivityEmoji: true,
           showTime: true,
         },
-        interaction: {
-          interactionProfile: 'ritualiste',
-          startRequiresLongPress: false,
-          stopRequiresLongPress: false,
-          longPressConfirmDuration: 2500,
-          longPressStartDuration: 3000,
-          startAnimationDuration: 1200,
-          customStartLongPress: true,
-          customStopLongPress: true,
-        },
         system: {
           keepAwakeEnabled: true,
         },
@@ -122,16 +111,6 @@ export const TimerConfigProvider = ({ children }) => {
         showDigitalTimer: false,
         showActivityEmoji: true,
         showTime: true,
-      },
-      interaction: {
-        interactionProfile: 'ritualiste',
-        startRequiresLongPress: false,
-        stopRequiresLongPress: false,
-        longPressConfirmDuration: 2500,
-        longPressStartDuration: 3000,
-        startAnimationDuration: 1200,
-        customStartLongPress: true,
-        customStopLongPress: true,
       },
       system: {
         keepAwakeEnabled: true,
@@ -206,14 +185,6 @@ export const TimerConfigProvider = ({ children }) => {
               showDigitalTimer: parsed.showDigitalTimer !== undefined ? parsed.showDigitalTimer : migratedValues.display.showDigitalTimer,
               showActivityEmoji: parsed.showActivityEmoji !== undefined ? parsed.showActivityEmoji : migratedValues.display.showActivityEmoji,
               showTime: parsed.showTime !== undefined ? parsed.showTime : migratedValues.display.showTime,
-            };
-            migratedValues.interaction = {
-              interactionProfile: parsed.interactionProfile || migratedValues.interaction.interactionProfile,
-              longPressConfirmDuration: parsed.longPressConfirmDuration || migratedValues.interaction.longPressConfirmDuration,
-              longPressStartDuration: parsed.longPressStartDuration || migratedValues.interaction.longPressStartDuration,
-              startAnimationDuration: parsed.startAnimationDuration || migratedValues.interaction.startAnimationDuration,
-              customStartLongPress: parsed.customStartLongPress !== undefined ? parsed.customStartLongPress : migratedValues.interaction.customStartLongPress,
-              customStopLongPress: parsed.customStopLongPress !== undefined ? parsed.customStopLongPress : migratedValues.interaction.customStopLongPress,
             };
             migratedValues.system = {
               keepAwakeEnabled: parsed.keepAwakeEnabled !== undefined ? parsed.keepAwakeEnabled : migratedValues.system.keepAwakeEnabled,
@@ -331,14 +302,6 @@ export const TimerConfigProvider = ({ children }) => {
       showActivityEmoji: values.display.showActivityEmoji,
       showTime: values.display.showTime,
     },
-    interaction: {
-      interactionProfile: values.interaction.interactionProfile,
-      longPressConfirmDuration: values.interaction.longPressConfirmDuration,
-      longPressStartDuration: values.interaction.longPressStartDuration,
-      startAnimationDuration: values.interaction.startAnimationDuration,
-      customStartLongPress: values.interaction.customStartLongPress,
-      customStopLongPress: values.interaction.customStopLongPress,
-    },
     system: {
       keepAwakeEnabled: values.system.keepAwakeEnabled,
     },
@@ -427,61 +390,6 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         display: { ...prev.display, showTime }
-      }));
-    },
-
-    // Interaction (with validation)
-    setInteractionProfile: (profile) => {
-      // Accept both string profiles and object with boolean flags
-      if (typeof profile === 'object' && profile !== null) {
-        setValues(prev => ({
-          ...prev,
-          interaction: {
-            ...prev.interaction,
-            startRequiresLongPress: profile.startRequiresLongPress || false,
-            stopRequiresLongPress: profile.stopRequiresLongPress || false,
-          }
-        }));
-      } else {
-        const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce', 'custom'];
-        if (validProfiles.includes(profile)) {
-          setValues(prev => ({
-            ...prev,
-            interaction: { ...prev.interaction, interactionProfile: profile }
-          }));
-        }
-      }
-    },
-    setLongPressConfirmDuration: (duration) => {
-      const clamped = Math.max(1000, Math.min(5000, duration));
-      setValues(prev => ({
-        ...prev,
-        interaction: { ...prev.interaction, longPressConfirmDuration: clamped }
-      }));
-    },
-    setLongPressStartDuration: (duration) => {
-      const clamped = Math.max(1000, Math.min(5000, duration));
-      setValues(prev => ({
-        ...prev,
-        interaction: { ...prev.interaction, longPressStartDuration: clamped }
-      }));
-    },
-    setStartAnimationDuration: (duration) => {
-      const clamped = Math.max(300, Math.min(2000, duration));
-      setValues(prev => ({
-        ...prev,
-        interaction: { ...prev.interaction, startAnimationDuration: clamped }
-      }));
-    },
-    setCustomInteraction: (startRequiresLongPress, stopRequiresLongPress) => {
-      setValues(prev => ({
-        ...prev,
-        interaction: {
-          ...prev.interaction,
-          interactionProfile: 'custom',
-          customStartLongPress: startRequiresLongPress,
-          customStopLongPress: stopRequiresLongPress,
-        }
       }));
     },
 
