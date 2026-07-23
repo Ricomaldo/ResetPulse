@@ -55,23 +55,8 @@ export default function useNotificationTimer() {
   const schedulingInProgressRef = useRef(false); // Prevent race conditions
   const schedulingPromiseRef = useRef(null); // Track in-flight schedule operation
 
-  // Demander permission au mount
+  // Listener pour l'état de l'app
   useEffect(() => {
-    const requestPermissions = async () => {
-      try {
-        const { status } = await Notifications.requestPermissionsAsync();
-
-        if (status !== 'granted') {
-          logger.warn('Notification permissions not granted');
-        }
-      } catch (error) {
-        logger.warn('Failed to request notification permissions', error.message);
-      }
-    };
-
-    requestPermissions();
-
-    // Listener pour l'état de l'app
     const subscription = AppState.addEventListener('change', nextAppState => {
       appStateRef.current = nextAppState;
     });
@@ -80,6 +65,24 @@ export default function useNotificationTimer() {
       subscription.remove();
     };
   }, []);
+
+  // Permission contextuelle (recentrage C2) : demandée au premier start de
+  // séance (useTimer.startTimer), plus au mount/boot. Idempotent côté OS —
+  // une fois tranchée (accordée/refusée), un appel ultérieur ne re-prompt pas.
+  const requestNotificationPermission = async () => {
+    if (!notificationsAvailable) {
+      return;
+    }
+    try {
+      const { status } = await Notifications.requestPermissionsAsync();
+
+      if (status !== 'granted') {
+        logger.warn('Notification permissions not granted');
+      }
+    } catch (error) {
+      logger.warn('Failed to request notification permissions', error.message);
+    }
+  };
 
   // Programmer une notification pour la fin du timer
   // @param {number} seconds - Temps avant fin en secondes
@@ -188,6 +191,7 @@ export default function useNotificationTimer() {
   return {
     scheduleTimerNotification,
     cancelTimerNotification,
-    isAppInBackground
+    isAppInBackground,
+    requestNotificationPermission
   };
 }

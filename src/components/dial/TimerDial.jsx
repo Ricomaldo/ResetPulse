@@ -76,7 +76,13 @@ function TimerDial({
   // === PROGRESS (direct, no animation — smooth transition layer to re-add) ===
   const maxMinutesForScale = getDialMode(scaleMode).maxMinutes;
   const currentMinutesForScale = duration / 60;
-  const displayProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
+  // Accompli plein-vert (arbitrage Eric, C2) : à l'état complete, le disque
+  // entier se remplit — pas seulement l'arc proportionnel à la durée réglée
+  // sur l'échelle du cadran. Affichage seulement, la state machine (progress
+  // réel de useTimer) reste intouchée.
+  const displayProgress = isCompleted
+    ? 1
+    : Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);

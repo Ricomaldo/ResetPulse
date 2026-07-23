@@ -1,11 +1,13 @@
 /**
- * @fileoverview TimerScreen — écran principal, Mode Mixte (SCR-1, ADR-014)
+ * @fileoverview TimerScreen — écran principal, Mode Mixte (SCR-1/2/3, ADR-014)
  * Reconstruction Lot 2 (2026-07-23) : écran neuf, construit depuis
  * `_docs/specs/recentrage.md`. Récolte des primitives prouvées (TimeTimer,
  * ActivityItem, activities.js, timer-palettes.js) — pas de layout hérité.
- * Cycle 1 : état repos uniquement. Pas de logique de séance (Cycle 2).
+ * Cycle 1 : état repos (SCR-1). Cycle 2 : séance + fin (SCR-2/3) — tap sur le
+ * disque pilote start/stop(rembobinage)/reset via la state machine récoltée
+ * (useTimer, ADR-007) — aucune logique neuve, juste le branchement écran.
  */
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
@@ -13,9 +15,11 @@ import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
+import DigitalTimer from '../components/controls/DigitalTimer';
 import Icons from '../components/layout/Icons';
 import { getFreeActivities } from '../config/activities';
 import { getPaletteColors } from '../config/timer-palettes';
+import { COLORS } from '../components/dial/timerConstants';
 import haptics from '../utils/haptics';
 
 const FREE_ACTIVITIES = getFreeActivities();
@@ -176,7 +180,60 @@ function DistractionButton() {
 function TimerScreenContent() {
   const theme = useTheme();
 
+  // Pont écran ↔ state machine récoltée (useTimer, via TimeTimer.onTimerRef).
+  // Aucune logique de séance neuve : on lit running/isCompleted/remaining tels
+  // que la machine ADR-007 les produit déjà, pour piloter l'affichage sous le
+  // disque et le tap (start / stop-rembobinage / reset).
+  const timerRef = useRef(null);
+  const [snapshot, setSnapshot] = useState({
+    running: false,
+    remaining: 0,
+    isCompleted: false,
+    displayMessage: '',
+  });
+
+  const handleTimerRef = useCallback((timer) => {
+    timerRef.current = timer;
+    setSnapshot((prev) => {
+      if (
+        prev.running === timer.running &&
+        prev.remaining === timer.remaining &&
+        prev.isCompleted === timer.isCompleted &&
+        prev.displayMessage === timer.displayMessage
+      ) {
+        return prev;
+      }
+      return {
+        running: timer.running,
+        remaining: timer.remaining,
+        isCompleted: timer.isCompleted,
+        displayMessage: timer.displayMessage,
+      };
+    });
+  }, []);
+
+  const handleDialTap = useCallback(() => {
+    const timer = timerRef.current;
+    if (!timer) {
+      return;
+    }
+    if (timer.isCompleted) {
+      timer.resetTimer();
+    } else if (timer.running) {
+      timer.stopTimer(); // ADR-007 : tap pendant la séance = rembobinage
+    } else {
+      timer.startTimer();
+    }
+  }, []);
+
   const styles = StyleSheet.create({
+    completionMessage: {
+      color: COLORS.COMPLETION_GREEN,
+      fontSize: rs(18, 'min'),
+      fontWeight: '600',
+      marginBottom: theme.spacing.sm,
+      textAlign: 'center',
+    },
     container: {
       flex: 1,
     },
@@ -192,7 +249,13 @@ function TimerScreenContent() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <View style={styles.content}>
-        <TimeTimer />
+        <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} />
+        {snapshot.running && (
+          <DigitalTimer remaining={snapshot.remaining} isRunning compact />
+        )}
+        {snapshot.isCompleted && (
+          <Text style={styles.completionMessage}>{snapshot.displayMessage}</Text>
+        )}
         <CompactRow />
         <DistractionButton />
       </View>

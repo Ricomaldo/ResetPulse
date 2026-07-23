@@ -160,7 +160,7 @@ export const TIMER_DURATIONS = {
 };
 
 export const COLORS = {
-  COMPLETION_GREEN: '#48BB78',
+  COMPLETION_GREEN: '#7FA86B', // aligné spec + monde crème/corail (arbitrage Eric, C2)
   RIPPLE_ANDROID: 'rgba(0,0,0,0.1)',
 };
 

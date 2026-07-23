@@ -41,6 +41,7 @@ const DialCenter = React.memo(function DialCenter({
     <View style={styles.container}>
       <PulseButton
         state={getState()}
+        emoji={isCompleted ? '✨' : null}
         activity={activity}
         onTap={onTap}
         clockwise={clockwise}
