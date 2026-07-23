@@ -68,7 +68,7 @@ function findNearestSnap(y, velocityY) {
   return nearest;
 }
 
-function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, paletteCarouselRef, isPremiumUser, onResetOnboarding, animatedTranslateY }) {
+function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, paletteCarouselRef, isPremiumUser, animatedTranslateY }) {
   const theme = useTheme();
 
   const containerHeightStyle = useAnimatedStyle(() => {
@@ -160,7 +160,6 @@ function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, p
         >
           <SettingsPanel
             isPremiumUser={isPremiumUser}
-            resetOnboarding={onResetOnboarding}
             onClose={() => {}}
           />
         </Animated.View>
@@ -169,7 +168,7 @@ function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, p
   );
 }
 
-export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onResetOnboarding }) {
+export default function AsideZone({ timerState, isTimerRunning, displayMessage, isCompleted, flashActivity }) {
   const theme = useTheme();
   const { timer: { currentActivity } } = useTimerConfig();
   const { isPremium: isPremiumUser } = usePremiumStatus();
@@ -248,7 +247,6 @@ export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: 
             activityCarouselRef={activityCarouselRef}
             paletteCarouselRef={paletteCarouselRef}
             isPremiumUser={isPremiumUser}
-            onResetOnboarding={onResetOnboarding}
             animatedTranslateY={animatedTranslateY}
           />
         </Animated.View>

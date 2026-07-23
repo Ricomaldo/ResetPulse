@@ -44,7 +44,6 @@ const OLD_KEYS = {
  * @returns {React.ReactElement}
  */
 export const TimerConfigProvider = ({ children }) => {
-  const hasLoadedOnboardingConfig = useRef(false);
   const hasMigratedOldKeys = useRef(false);
   const hasLoggedBoot = useRef(false);
 
@@ -292,75 +291,6 @@ export const TimerConfigProvider = ({ children }) => {
     };
 
     migrateOldKeys();
-  }, [isLoading, setValues]);
-
-  // Load onboarding v2.1 config once after initial load
-  useEffect(() => {
-    if (isLoading || hasLoadedOnboardingConfig.current) {
-      return;
-    }
-
-    const loadOnboardingConfig = async () => {
-      try {
-        // Load onboarding v2.1 config
-        const configStr = await AsyncStorage.getItem('onboarding_v2_config');
-        if (configStr) {
-          try {
-            const config = JSON.parse(configStr);
-            logger.log('[TimerConfigContext] Loading onboarding v2.1 config:', config);
-
-            // Apply favoriteToolMode (deprecated - Filter-020 is now preview only)
-            if (config.favoriteToolMode) {
-              setValues(prev => ({
-                ...prev,
-                layout: { ...prev.layout, favoriteToolMode: config.favoriteToolMode }
-              }));
-            }
-
-            // Apply persona → interactionProfile (Filter-050-test-stop)
-            if (config.persona) {
-              const personaId = typeof config.persona === 'string' ? config.persona : config.persona.id;
-              setValues(prev => ({
-                ...prev,
-                interaction: { ...prev.interaction, interactionProfile: personaId }
-              }));
-            }
-
-            // Apply selectedSoundId (Filter-060-sound)
-            if (config.selectedSoundId) {
-              setValues(prev => ({
-                ...prev,
-                timer: { ...prev.timer, selectedSoundId: config.selectedSoundId }
-              }));
-            }
-
-            // Apply customActivity (Filter-030-creation)
-            // Note: Activity will be loaded from useCustomActivities (already persisted there)
-            // We set it as currentActivity if it exists
-            if (config.customActivity) {
-              setValues(prev => ({
-                ...prev,
-                timer: { ...prev.timer, currentActivity: config.customActivity }
-              }));
-            }
-
-            // Cleanup after loading
-            await AsyncStorage.removeItem('onboarding_v2_config');
-
-            logger.log('[TimerConfigContext] Onboarding v2.1 config applied successfully');
-          } catch (parseError) {
-            logger.warn('[TimerConfigContext] Failed to parse onboarding config:', parseError.message);
-            await AsyncStorage.removeItem('onboarding_v2_config');
-          }
-        }
-
-        hasLoadedOnboardingConfig.current = true;
-      } catch (error) {
-        logger.warn('[TimerConfigContext] Failed to load onboarding config:', error);
-      }
-    };
-
-    loadOnboardingConfig();
   }, [isLoading, setValues]);
 
   // Handle activity selection with flash feedback (ADR-007 messaging)

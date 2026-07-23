@@ -1,28 +1,22 @@
 /**
- * @fileoverview AboutSection - About app + Restart guide + Dev tools
+ * @fileoverview AboutSection - About app
  * @created 2025-12-20
  */
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
 import { Info } from 'lucide-react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
-import haptics from '../../utils/haptics';
 import SettingsCard from './SettingsCard';
 import { CardTitle } from './CardTitle';
 
 /**
- * AboutSection - App info + Restart onboarding guide + Dev tools
- *
- * @param {Function} resetOnboarding - Callback to reset onboarding
- * @param {Function} onClose - Callback to close settings
+ * AboutSection - App info
  */
-function AboutSection({ resetOnboarding, onClose }) {
+function AboutSection() {
   const theme = useTheme();
   const t = useTranslation();
 
@@ -48,18 +42,12 @@ function AboutSection({ resetOnboarding, onClose }) {
     },
   });
 
-  const handleRestartGuide = () => {
-    haptics.selection().catch(() => {});
-    resetOnboarding();
-    onClose();
-  };
-
   return (
     <>
       {/* About Section */}
       <SettingsCard title={<CardTitle Icon={Info} label={t('settings.about.title')} theme={theme} />}>
         {/* App info */}
-        <View style={styles.optionRow}>
+        <View style={[styles.optionRow, styles.optionRowLast]}>
           <Text style={styles.label}>{t('settings.about.appName')}</Text>
           <Text style={styles.description}>
             {t('settings.about.appDescription')}
@@ -68,26 +56,9 @@ function AboutSection({ resetOnboarding, onClose }) {
             {t('settings.about.version')} 2.1.6
           </Text>
         </View>
-
-        {/* Restart guide */}
-        <TouchableOpacity
-          style={[styles.optionRow, styles.optionRowLast]}
-          onPress={handleRestartGuide}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.label}>{t('onboarding.restartGuide')}</Text>
-          <Text style={styles.description}>
-            {t('onboarding.restartGuideDescription')}
-          </Text>
-        </TouchableOpacity>
       </SettingsCard>
     </>
   );
 }
-
-AboutSection.propTypes = {
-  resetOnboarding: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
 
 export default AboutSection;

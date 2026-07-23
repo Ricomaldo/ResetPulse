@@ -14,7 +14,7 @@ import { getActivityStartMessage, getActivityEndMessage } from '../config/activi
 import analytics from '../services/analytics';
 import logger from '../utils/logger';
 
-function TimerScreenContent({ autoStart = false, onAutoStartConsumed, onResetOnboarding }) {
+function TimerScreenContent() {
   const theme = useTheme();
   const t = useTranslation();
   const { isLandscape } = useScreenOrientation(); // Detect orientation changes
@@ -27,40 +27,14 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed, onResetOnb
     transient: { flashActivity },
     timer: { currentActivity },
   } = useTimerConfig();
-  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [displayMessage, setDisplayMessage] = useState('');
   const [isTimerCompleted, setIsTimerCompleted] = useState(false);
   const [timerState, setTimerState] = useState('REST'); // 'REST' | 'RUNNING' | 'COMPLETE'
   const timerRef = useRef(null);
-  const autoStartConsumed = useRef(false);
 
   // Keep screen awake during timer
   useTimerKeepAwake();
-
-  // Auto-start timer after onboarding if requested
-  useEffect(() => {
-    if (!autoStart || autoStartConsumed.current) return;
-
-    // Poll until timerRef is ready (max 2 seconds)
-    let attempts = 0;
-    const maxAttempts = 20;
-    const interval = setInterval(() => {
-      attempts++;
-      if (timerRef.current && !timerRef.current.running) {
-        timerRef.current.startTimer();
-        autoStartConsumed.current = true;
-        clearInterval(interval);
-        if (onAutoStartConsumed) {
-          onAutoStartConsumed();
-        }
-      } else if (attempts >= maxAttempts) {
-        clearInterval(interval);
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [autoStart, onAutoStartConsumed]);
 
   // Helper to compute display message dynamically (avoids stale message issue)
   // Uses explicit activity message linkage (see src/config/activityMessages.js)
@@ -247,22 +221,16 @@ function TimerScreenContent({ autoStart = false, onAutoStartConsumed, onResetOnb
           isCompleted={isTimerCompleted}
           flashActivity={flashActivity}
           isTimerRunning={isTimerRunning}
-          onOpenSettings={() => setSettingsModalVisible(true)}
-          onResetOnboarding={onResetOnboarding}
         />
       )}
     </SafeAreaView>
   );
 }
 
-export default function TimerScreen({ autoStart, onAutoStartConsumed, onResetOnboarding }) {
+export default function TimerScreen() {
   return (
     <SafeAreaProvider>
-      <TimerScreenContent
-        autoStart={autoStart}
-        onAutoStartConsumed={onAutoStartConsumed}
-        onResetOnboarding={onResetOnboarding}
-      />
+      <TimerScreenContent />
     </SafeAreaProvider>
   );
 }

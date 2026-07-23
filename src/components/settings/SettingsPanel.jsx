@@ -35,10 +35,9 @@ import AboutSection from './AboutSection';
  * SettingsPanel - All settings sections (scrollable)
  *
  * @param {Function} onClose - Callback when closing settings (optional)
- * @param {Function} resetOnboarding - Callback to reset onboarding (optional)
  * @param {boolean} isPremiumUser - Whether user is premium (optional, defaults to false)
  */
-export default function SettingsPanel({ onClose = () => {}, resetOnboarding = () => {}, isPremiumUser = false }) {
+export default function SettingsPanel({ onClose = () => {}, isPremiumUser = false }) {
   const theme = useTheme();
   const t = useTranslation();
   const [showMoreActivitiesModal, setShowMoreActivitiesModal] = React.useState(false);
@@ -501,10 +500,7 @@ export default function SettingsPanel({ onClose = () => {}, resetOnboarding = ()
         <SectionHeader label={t('settings.sections.info')} />
 
         {/* About Section */}
-        <AboutSection
-          resetOnboarding={resetOnboarding}
-          onClose={onClose}
-        />
+        <AboutSection />
       </ScrollView>
     </View>
   );

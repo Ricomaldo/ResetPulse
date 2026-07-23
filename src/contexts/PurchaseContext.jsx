@@ -11,7 +11,6 @@ import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
 // TEST_MODE removed: dev override now handled by DevPremiumContext + usePremiumStatus
 import Analytics from '../services/analytics';
 import logger from '../utils/logger';
-import { cancelPostSkipReminders } from '../services/reminderNotifications';
 import i18n from '../i18n';
 
 const PurchaseContext = createContext();
@@ -81,13 +80,6 @@ export const PurchaseProvider = ({ children }) => {
   useEffect(() => {
     initializePurchases();
   }, []);
-
-  // Cancel post-skip reminder notifications when user becomes premium
-  useEffect(() => {
-    if (isPremium) {
-      cancelPostSkipReminders();
-    }
-  }, [isPremium]);
 
   const initializePurchases = async () => {
     try {

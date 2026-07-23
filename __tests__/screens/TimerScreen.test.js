@@ -242,6 +242,5 @@ describe('TimerScreen', () => {
     expect(asideZone.props.isTimerRunning).toBeDefined();
     expect(asideZone.props.isCompleted).toBeDefined();
     expect(asideZone.props.flashActivity).toBeDefined();
-    expect(asideZone.props.onOpenSettings).toBeDefined();
   });
 });
