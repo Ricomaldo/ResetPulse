@@ -499,5 +499,12 @@
   },
   "focus": {
     "hint": "swipe up"
+  },
+  "firstRun": {
+    "skip": "skip",
+    "welcome": "Welcome. Let's build your first ritual — start by touching an activity 👇",
+    "companion": "The emoji is your companion for the session 🙂",
+    "dialColor": "Drag the dial to set the duration, pick a color.",
+    "ready": "Your ritual is ready 🎉 Touch the disc to start."
   }
 }

@@ -499,5 +499,12 @@
   },
   "focus": {
     "hint": "balayer vers le haut"
+  },
+  "firstRun": {
+    "skip": "passer",
+    "welcome": "Bienvenue. Fabriquons ton premier rituel — commence par toucher une activité 👇",
+    "companion": "L'emoji, c'est ton compagnon de séance 🙂",
+    "dialColor": "Fais glisser le cadran pour la durée, choisis une couleur.",
+    "ready": "Ton rituel est prêt 🎉 Touche le disque pour démarrer."
   }
 }

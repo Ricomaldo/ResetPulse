@@ -15,15 +15,17 @@
  * n'ajoute qu'un hint discret au repos ; la fin ✨ plein-vert est déjà portée
  * par le dial (`DialCenter`), pas par ce fichier.
  */
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useFirstRun } from '../hooks/useFirstRun';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
+import FirstRunTips from '../components/first-run/FirstRunTips';
 import { getFreeActivities } from '../config/activities';
 import { COLORS } from '../components/dial/timerConstants';
 import haptics from '../utils/haptics';
@@ -32,7 +34,7 @@ const FREE_ACTIVITIES = getFreeActivities();
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
-function CompactRow() {
+function CompactRow({ onActivityTouch, onColorTouch }) {
   const theme = useTheme();
   const t = useTranslation();
   const {
@@ -111,6 +113,7 @@ function CompactRow() {
             onPress={() => {
               haptics.selection().catch(() => {});
               setCurrentActivity(activity);
+              onActivityTouch?.();
             }}
             activeOpacity={0.7}
           >
@@ -135,6 +138,7 @@ function CompactRow() {
           onPress={() => {
             haptics.selection().catch(() => {});
             setColorIndex(index);
+            onColorTouch?.();
           }}
           activeOpacity={0.7}
         >
@@ -266,6 +270,44 @@ function TimerScreenContent() {
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
 
+  // Première fois (Lot 2, C7) — flag persisté + moment dérivé de la
+  // progression réelle du rituel en construction (cf. useFirstRun).
+  const firstRun = useFirstRun();
+  const [barAnchor, setBarAnchor] = useState(null);
+  const [dialAnchor, setDialAnchor] = useState(null);
+  const initialDurationRef = useRef(currentDuration);
+  const hasCompletedFirstRunRef = useRef(false);
+  const barRef = useRef(null);
+
+  const handleBarLayout = useCallback(() => {
+    barRef.current?.measureInWindow((x, y, width, height) => {
+      setBarAnchor({ x, y, width, height });
+    });
+  }, []);
+
+  const handleDialRef = useCallback((node) => {
+    if (!node) {
+      return;
+    }
+    // measureInWindow juste après le layout initial (dial monté en continu,
+    // cf. header) — mesure approximative, suffisante pour un tip ancré.
+    requestAnimationFrame(() => {
+      node.measureInWindow?.((x, y, width, height) => {
+        setDialAnchor({ x, y, width, height });
+      });
+    });
+  }, []);
+
+  // Cadran touché (moment 2 → 3) : détecté via l'écart à la durée observée
+  // au montage — pas de plomberie neuve sur le geste de drag (TimerDial
+  // intouché). Repli permissif : une couleur choisie saute direct au
+  // moment 4 (cf. useFirstRun), donc cette détection reste secondaire.
+  useEffect(() => {
+    if (currentDuration !== initialDurationRef.current) {
+      firstRun.markDialTouched();
+    }
+  }, [currentDuration]);
+
   // Pont écran ↔ state machine récoltée (useTimer, via TimeTimer.onTimerRef).
   // Aucune logique de séance neuve : on lit running/isCompleted/remaining tels
   // que la machine ADR-007 les produit déjà, pour piloter l'affichage sous le
@@ -277,6 +319,15 @@ function TimerScreenContent() {
     isCompleted: false,
     displayMessage: '',
   });
+
+  // ADR-014 : ne bloque jamais rien — démarrer le timer complète la
+  // Première fois à N'IMPORTE QUEL moment (pas seulement au moment 4).
+  useEffect(() => {
+    if (snapshot.running && !hasCompletedFirstRunRef.current && !firstRun.hasSeenFirstRun) {
+      hasCompletedFirstRunRef.current = true;
+      firstRun.completeFirstRun();
+    }
+  }, [snapshot.running]);
 
   const handleTimerRef = useCallback((timer) => {
     timerRef.current = timer;
@@ -349,7 +400,7 @@ function TimerScreenContent() {
     >
       <TopTime seconds={topTimeSeconds} />
       <View style={styles.content}>
-        <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} />
+        <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} onDialRef={handleDialRef} />
         {!isFocus && (
           <View style={styles.completionMessageWrap}>
             <Text
@@ -360,11 +411,26 @@ function TimerScreenContent() {
             </Text>
           </View>
         )}
-        {!isFocus && <CompactRow />}
+        {!isFocus && (
+          <View ref={barRef} onLayout={handleBarLayout}>
+            <CompactRow
+              onActivityTouch={firstRun.markActivityTouched}
+              onColorTouch={firstRun.markColorTouched}
+            />
+          </View>
+        )}
         {!isFocus && <DistractionButton />}
       </View>
       {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
       <AsideZone isTimerRunning={snapshot.running} />
+      {!isFocus && (
+        <FirstRunTips
+          moment={firstRun.moment}
+          barAnchor={barAnchor}
+          dialAnchor={dialAnchor}
+          onSkip={firstRun.skipFirstRun}
+        />
+      )}
     </SafeAreaView>
   );
 }

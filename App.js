@@ -22,6 +22,8 @@ import logger from './src/utils/logger';
 
 // Storage key legacy onboarding V2 (nettoyage DevFab uniquement — Première fois au Lot 2)
 const ONBOARDING_COMPLETED_KEY = 'onboarding_v2_completed';
+// Première fois (Lot 2, C7) — cf. src/hooks/useFirstRun.js
+const FIRST_RUN_COMPLETED_KEY = '@ResetPulse:hasSeenFirstRun';
 
 function AppContent() {
   const theme = useTheme();
@@ -68,6 +70,9 @@ export default function App() {
     try {
       // Remove onboarding completion flag
       await AsyncStorage.removeItem(ONBOARDING_COMPLETED_KEY);
+
+      // Remove Première fois completion flag (Lot 2, C7)
+      await AsyncStorage.removeItem(FIRST_RUN_COMPLETED_KEY);
 
       // Remove unified config (timer, palette, layout)
       await AsyncStorage.removeItem('@ResetPulse:config');
@@ -140,6 +145,7 @@ export default function App() {
         // Onboarding
         ONBOARDING_COMPLETED_KEY,
         'onboarding_v2_config',
+        FIRST_RUN_COMPLETED_KEY,
 
         // App state
         'has_launched_before',
