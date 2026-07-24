@@ -316,7 +316,7 @@ function TimerScreenContent() {
   const {
     mode: { current: currentMode },
     setMode,
-    timer: { currentDuration },
+    timer: { currentDuration, currentActivity },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
 
@@ -407,6 +407,10 @@ function TimerScreenContent() {
   // `lastDistractionRef` survit au reset à null (pas cleared au timeout) :
   // c'est la mémoire "dernier mouvement montré", pas l'état d'affichage —
   // sinon deux taps espacés de plus de 2s pourraient répéter le même MOT.
+  // Exclusions du tirage : dernier montré + mouvement de l'activité + `breathe`
+  // (pouls ambiant du repos) — garantit un changement VISIBLE à chaque tap,
+  // quel que soit l'état du timer (l'état running vit dans TimeTimer, pas ici ;
+  // exclure les deux ambiants possibles évite de le faire remonter).
   const [distractionMovement, setDistractionMovement] = useState(null);
   const lastDistractionRef = useRef(null);
   const distractionTimeoutRef = useRef(null);
@@ -415,7 +419,11 @@ function TimerScreenContent() {
     if (distractionTimeoutRef.current) {
       clearTimeout(distractionTimeoutRef.current);
     }
-    const next = pickDistraction(lastDistractionRef.current);
+    const next = pickDistraction([
+      lastDistractionRef.current,
+      currentActivity?.movement,
+      'breathe',
+    ]);
     lastDistractionRef.current = next;
     setDistractionMovement(next);
     haptics.selection().catch(() => {});
@@ -423,7 +431,7 @@ function TimerScreenContent() {
       setDistractionMovement(null);
       distractionTimeoutRef.current = null;
     }, 2000);
-  }, []);
+  }, [currentActivity]);
 
   useEffect(() => () => {
     if (distractionTimeoutRef.current) {

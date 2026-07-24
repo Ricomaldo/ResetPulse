@@ -38,4 +38,25 @@ describe('pickDistraction', () => {
     expect(MOVEMENTS).toContain(result);
     expect(result).not.toBe('spin');
   });
+
+  test('excludes every movement of an array (ambient + last, finding Lot 3a)', () => {
+    const excluded = ['spin', 'beat', 'breathe'];
+    for (let i = 0; i <= 10; i += 1) {
+      const fraction = Math.min(i / 10, 0.999999);
+      const result = pickDistraction(excluded, () => fraction);
+      expect(MOVEMENTS).toContain(result);
+      expect(excluded).not.toContain(result);
+    }
+  });
+
+  test('ignores null/undefined entries inside the exclusion array', () => {
+    const result = pickDistraction([null, undefined, 'float'], () => 0);
+    expect(MOVEMENTS).toContain(result);
+    expect(result).not.toBe('float');
+  });
+
+  test('falls back to the full pool if exclusions would empty it (out of contract)', () => {
+    const result = pickDistraction([...MOVEMENTS], () => 0);
+    expect(MOVEMENTS).toContain(result);
+  });
 });
