@@ -42,7 +42,7 @@ import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialGraduations from './dial/DialGraduations';
 import DialCenter from './dial/DialCenter';
-import Svg, { Circle, Line } from 'react-native-svg';
+import Svg, { Circle, Line, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 /**
  * TimerDial - Main timer dial component
@@ -548,6 +548,33 @@ function TimerDial({
                 r={radiusBackground * 0.04}
                 fill={theme.colors.text}
                 opacity={0.4}
+              />
+            </Svg>
+          )}
+
+          {/* Bloom de fin (verdicts CD 25/07) : halo radial statique derrière
+              le hub, Ø ≈ 40 % du cadran, aucune animation (layer Lot 3). Ne
+              touche ni la state machine ni le timing d'auto-reset. */}
+          {isCompleted && (
+            <Svg
+              width={svgSize}
+              height={svgSize}
+              style={staticStyles.absoluteOverlay}
+              pointerEvents="none"
+              accessible={false}
+              importantForAccessibility="no"
+            >
+              <Defs>
+                <RadialGradient id="bloomGradient" cx="50%" cy="50%" r="50%">
+                  <Stop offset="0%" stopColor="#FFF4E6" stopOpacity={1} />
+                  <Stop offset="100%" stopColor="#FFF4E6" stopOpacity={0} />
+                </RadialGradient>
+              </Defs>
+              <Circle
+                cx={centerX}
+                cy={centerY}
+                r={circleSize * 0.2}
+                fill="url(#bloomGradient)"
               />
             </Svg>
           )}
