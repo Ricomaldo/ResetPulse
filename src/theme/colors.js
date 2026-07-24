@@ -44,7 +44,7 @@ const fixed = {
 // --- Light Theme ---
 // Hierarchy: background (screen) < surface (cards) < surfaceElevated (modals)
 const lightThemeProd = {
-  background: '#EBE3D8', // Cream réchauffé (harmonisé avec logo)
+  background: '#F4EFE7', // Crème chaud (fidélité maquettes CD, C6.2)
   surface: '#FFFFFF', // Pure white
   surfaceElevated: '#F8F6F3',
 };
