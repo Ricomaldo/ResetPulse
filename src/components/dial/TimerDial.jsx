@@ -359,22 +359,25 @@ function TimerDial({
   const handleAngleDeg = displayProgress * 360;
   const handleAngleRad = (handleAngleDeg * Math.PI) / 180;
 
-  // Handle segment: small radial line on the arc edge (parallel to radius)
-  // Positioned at the progress endpoint, within the arc thickness
-  const arcOuterRadius = radiusBackground; // Outer edge of arc
-  const arcInnerRadius = radiusBackground * 0.4; // Inner edge (roughly where arc ends toward center)
-  const segmentLength = rs(12); // Small segment within arc thickness
-
   // Direction vector (radial - pointing outward from center)
   const radialX = clockwise ? Math.sin(handleAngleRad) : -Math.sin(handleAngleRad);
   const radialY = -Math.cos(handleAngleRad);
 
-  // Segment from inner to outer edge of the arc (or partial)
-  const handleInnerRadius = arcOuterRadius - segmentLength;
+  // Poignée de drag (verdicts CD 25/07) : repère R = radiusBackground (rayon
+  // du cercle de graduations). Valeurs spec données pour R=105 — mise à
+  // l'échelle proportionnelle (handleScale) pour tout autre rayon. JAMAIS de
+  // rayon plein centre→bord : repos R−16→R+2, drag R−20→R+4.
+  const R = radiusBackground;
+  const handleScale = R / 105;
+  const handleInnerRadius = isDragging ? R - 20 * handleScale : R - 16 * handleScale;
+  const handleOuterRadius = isDragging ? R + 4 * handleScale : R + 2 * handleScale;
+  const handleStrokeWidth = (isDragging ? 5 : 4) * handleScale;
+  const handleOpacity = isDragging ? 1.0 : 0.55;
+  const handleHaloRadius = (22 * handleScale) / 2;
   const handleX1 = centerX + radialX * handleInnerRadius;
   const handleY1 = centerY + radialY * handleInnerRadius;
-  const handleX2 = centerX + radialX * arcOuterRadius;
-  const handleY2 = centerY + radialY * arcOuterRadius;
+  const handleX2 = centerX + radialX * handleOuterRadius;
+  const handleY2 = centerY + radialY * handleOuterRadius;
 
   // Static styles (moved outside render for performance)
   const staticStyles = StyleSheet.create({
@@ -488,9 +491,9 @@ function TimerDial({
             </Svg>
           )}
 
-          {/* Drag handle: small radial segment on the arc edge */}
-          {/* Same color as arc but darker for contrast */}
-          {/* Visible even when running to allow time adjustment */}
+          {/* Drag handle: barre radiale sur le bord de l'arc (verdicts CD
+              25/07) — jamais un rayon plein centre→bord, bouts ronds.
+              Visible même en séance pour permettre l'ajustement du temps. */}
           {displayProgress > 0 && (
             <View style={staticStyles.absoluteOverlay} pointerEvents="none">
               <Svg
@@ -499,15 +502,24 @@ function TimerDial({
                 accessible={false}
                 importantForAccessibility="no"
               >
+                {isDragging && (
+                  <Circle
+                    cx={handleX2}
+                    cy={handleY2}
+                    r={handleHaloRadius}
+                    fill={theme.colors.text}
+                    opacity={0.08}
+                  />
+                )}
                 <Line
                   x1={handleX1}
                   y1={handleY1}
                   x2={handleX2}
                   y2={handleY2}
-                  stroke={theme.colors.brand.deep}
-                  strokeWidth={isDragging ? 6 : 5}
+                  stroke={theme.colors.text}
+                  strokeWidth={handleStrokeWidth}
                   strokeLinecap="round"
-                  opacity={isDragging ? 1 : 0.85}
+                  opacity={handleOpacity}
                 />
               </Svg>
             </View>
