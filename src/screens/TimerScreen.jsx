@@ -23,7 +23,6 @@ import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
-import DigitalTimer from '../components/controls/DigitalTimer';
 import AsideZone from '../components/layout/AsideZone';
 import { getFreeActivities } from '../config/activities';
 import { COLORS } from '../components/dial/timerConstants';
@@ -175,6 +174,55 @@ function DistractionButton() {
   );
 }
 
+function formatTime(totalSecondsRaw) {
+  const totalSeconds = Math.floor(totalSecondsRaw);
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+// C6.2 (fidélité au rendu) : temps digital toujours monté EN HAUT d'écran,
+// hors du bloc centré — le start ne déplace plus rien sous le disque
+// (remplace l'ancien DigitalTimer conditionnel sur `running`, seule source
+// du saut de layout repos→séance).
+function TopTime({ seconds }) {
+  const theme = useTheme();
+  const t = useTranslation();
+  const { display: { showTime }, setShowTime } = useTimerConfig();
+
+  const styles = StyleSheet.create({
+    text: {
+      color: theme.colors.brand.neutral,
+      fontSize: rs(13, 'min'),
+      fontVariant: ['tabular-nums'],
+    },
+    wrap: {
+      alignItems: 'center',
+      paddingTop: theme.spacing.xs,
+    },
+  });
+
+  return (
+    <View style={styles.wrap}>
+      <TouchableOpacity
+        onPress={() => {
+          haptics.selection().catch(() => {});
+          setShowTime(!showTime);
+        }}
+        activeOpacity={0.7}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={showTime
+          ? t('controls.digitalTimer.timeLabel', { time: formatTime(seconds) })
+          : t('controls.digitalTimer.showTime')}
+        accessibilityHint={showTime ? t('controls.digitalTimer.tapToHide') : t('controls.digitalTimer.tapToShow')}
+      >
+        <Text style={styles.text}>{showTime ? formatTime(seconds) : '••:••'}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 // Focus (C4) : le seul texte de l'écran, au repos — libellé hardcodé FR,
 // même précédent que le sheet (batch i18n 15 langues au Lot 3).
 const FOCUS_HINT = 'balayer vers le haut';
@@ -198,6 +246,7 @@ function TimerScreenContent() {
   const theme = useTheme();
   const {
     mode: { current: currentMode },
+    timer: { currentDuration },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
 
@@ -252,8 +301,15 @@ function TimerScreenContent() {
       color: COLORS.COMPLETION_GREEN,
       fontSize: rs(18, 'min'),
       fontWeight: '600',
-      marginBottom: theme.spacing.sm,
       textAlign: 'center',
+    },
+    completionMessageHidden: {
+      opacity: 0,
+    },
+    completionMessageWrap: {
+      justifyContent: 'center',
+      marginBottom: theme.spacing.sm,
+      minHeight: rs(24, 'min'),
     },
     container: {
       flex: 1,
@@ -265,17 +321,28 @@ function TimerScreenContent() {
     },
   });
 
+  // Temps digital (top bar) : restant en séance/fin, durée réglée au repos —
+  // toujours le même élément, seuls les chiffres changent (zéro saut).
+  const topTimeSeconds = snapshot.running || snapshot.isCompleted
+    ? snapshot.remaining
+    : currentDuration;
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
+      <TopTime seconds={topTimeSeconds} />
       <View style={styles.content}>
         <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} />
-        {!isFocus && snapshot.running && (
-          <DigitalTimer remaining={snapshot.remaining} isRunning compact />
-        )}
-        {!isFocus && snapshot.isCompleted && (
-          <Text style={styles.completionMessage}>{snapshot.displayMessage}</Text>
+        {!isFocus && (
+          <View style={styles.completionMessageWrap}>
+            <Text
+              style={[styles.completionMessage, !snapshot.isCompleted && styles.completionMessageHidden]}
+              numberOfLines={1}
+            >
+              {snapshot.displayMessage || ' '}
+            </Text>
+          </View>
         )}
         {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
         {!isFocus && <CompactRow />}
