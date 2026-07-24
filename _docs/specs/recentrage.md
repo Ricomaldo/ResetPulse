@@ -171,6 +171,61 @@ entrées ; libellés provisoires [Standard | Focus] — naming définitif à la
 passe CD (piste : le défaut ne se nomme pas). L'affordance d'entrée en Focus
 reste une question ouverte CD (le segmenté-dans-settings est un intérim).
 
+## VERDICTS FERMÉS CD (25/07) — normatif, remplace tout ce qui contredit
+
+**Hub central (ex-pastille)** : plat, fond crème `#F4EFE7` (clairière du cadran,
+pas sticker), liseré interne 1px `rgba(0,0,0,0.06)`, ZÉRO ombre portée,
+Ø = 34 % du cadran, emoji = 20 % du cadran. Toujours présent, tous états.
+
+**Poignée de drag** (repère R = rayon graduations) : repos = barre radiale
+R−16→R+2, épaisseur 4, `#2D2520` à 55 %, à l'angle de progression ; drag =
+R−20→R+4, épaisseur 5, 100 %, halo cercle 22 `#2D2520` 8 % au bout.
+JAMAIS de rayon plein centre→bord.
+
+**⏱ Digital timer** : ui-monospace 700 26px, interlettre 0.03em, `#5A5147` ;
+glyphe ⏱ 12px `#A89B8F`, gap 6, à gauche ; haut-centre ~22px sous l'encoche ;
+optionnel (Show time) ; masqué en Focus.
+
+**Naming définitif** : segmenté = « ResetPulse » · « Focus » (Zen tué —
+collision palette ; Standard tué — technique). Le défaut porte le nom de
+l'objet (◉ du pouls en polish ultérieur).
+
+**Double-tap fond** = bascule Focus : fond nu uniquement, 2 taps < 300 ms,
+ignoré 1,5 s après réveil d'écran, NON destructif (ne touche pas au timer).
+Apprentissage : légende sous le toggle du sheet « astuce : double-tap le fond
+pour basculer », visible les 2 premières ouvertures du sheet, puis jamais.
+
+**Dé Distraction** : 🎲 seul au repos, rattaché à la famille des contrôles
+(carte blanche arrondie) ; intitulé « surprends-moi » en pastille au tout
+premier affichage post-onboarding, disparaît au premier geste ou après 4 s,
+ne réapparaît jamais ; ne s'anime qu'au tap (Lot 3) ; masqué en Focus.
+
+**Fin (Accompli)** : le vert `#7FA86B` MEURT. Disque plein dans LA COULEUR DU
+RITUEL + bloom radial `#FFF4E6`→transparent (~40 % du disque) derrière
+l'emoji + ✨ REJOINT l'emoji (ne le remplace pas) + message de fin d'Activité.
+Signal « done » éventuel : or `#D4A853`, jamais vert.
+
+**Palettes** — sections « Incluses » / « Ambiances » (pleine couleur, jamais
+cadenassées ; preview live ; invitation inline Lot 3 ; sélection non achetée
+revient au dernier inclus au redémarrage) :
+- Incluses (3) : serenity (défaut) · dusk · ocean
+- Retravailler : earth (saturation/contraste +, plus gratuite telle quelle),
+  dawn (foncer), zen (remplacer le greige #B8B0A8)
+- Tuer : darkLaser, autumn (fusion dans le rework earth)
+- Garder : softLaser, classic, tropical, soft, lavender, teal, forest
+
+**Voix (registre : complice, minuscules, présent, jamais culpabilisant)** :
+- work : « au boulot. » / « voilà, c'est fait. » · break : « on souffle. » /
+  « te revoilà, en douceur. » · meditation : « on respire. » / « te revoilà. »
+  · creativity : « laisse venir. » / « beau moment. »
+- invitation : « on y va ? » (ratifiée) · geste d'arrêt : « revenir à zéro »
+- Tips première fois : 1 « on commence par choisir une activité 👇 » ·
+  2 « cet emoji te tient compagnie. glisse le disque pour régler la durée. » ·
+  3 « une couleur ? elle change tout de suite. » · 4 « c'est prêt. touche le
+  disque pour lancer. »
+- Les 14 paires premium : CD attend la table du repo (devlog C7) pour les
+  traiter au même registre.
+
 ## Hors mission (après 3.0.0 — inscrits, pas abandonnés)
 
 - **SEQ-a puis SEQ-b** (enchaînements, Pomodoro)
