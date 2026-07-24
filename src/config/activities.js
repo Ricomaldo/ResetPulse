@@ -21,21 +21,7 @@
 import i18n from '../i18n';
 
 export const ACTIVITIES = [
-  // Basic timer - always first
-  {
-    id: 'none',
-    emoji: '',
-    get label() {
-      return i18n.t('activities.none');
-    },
-    defaultDuration: 2700, // 45 minutes
-    isPremium: false,
-    suggestedColor: 'calm',
-    description: 'Timer simple sans activité',
-    pulseDuration: 800, // Vitesse normale
-  },
-
-  // ===== FREE ACTIVITIES (4 total) =====
+  // ===== FREE ACTIVITIES (3 total) — asymétrie assumée vs 4 couleurs (ADR-014) =====
   {
     id: 'work',
     emoji: '💻',
@@ -47,6 +33,7 @@ export const ACTIVITIES = [
     suggestedColor: 'deep',
     description: 'Sessions de travail concentré',
     pulseDuration: 600, // Rapide - focus intense
+    movement: 'beat', // MOT-e Bat
   },
   {
     id: 'break',
@@ -59,6 +46,7 @@ export const ACTIVITIES = [
     suggestedColor: 'calm',
     description: 'Vraie déconnexion',
     pulseDuration: 1000, // Plus lent - repos
+    movement: 'breathe', // MOT-a Respire
   },
   {
     id: 'meditation',
@@ -71,6 +59,7 @@ export const ACTIVITIES = [
     suggestedColor: 'calm',
     description: 'Sessions de méditation guidée',
     pulseDuration: 1200, // Très lent - calme profond
+    movement: 'breathe', // MOT-a Respire
   },
   {
     id: 'creativity',
@@ -83,6 +72,7 @@ export const ACTIVITIES = [
     suggestedColor: 'focus',
     description: 'Dessin, écriture libre',
     pulseDuration: 750, // Modéré - flow créatif
+    movement: 'float', // MOT-c Flotte
   },
 
   // ===== PREMIUM ACTIVITIES (14 total) =====
@@ -97,6 +87,7 @@ export const ACTIVITIES = [
     suggestedColor: 'focus',
     description: 'Focus lecture profonde',
     pulseDuration: 900, // Lent - concentration calme
+    movement: 'breathe', // MOT-a Respire
   },
   {
     id: 'study',
@@ -109,6 +100,7 @@ export const ACTIVITIES = [
     pulseDuration: 700, // Modéré-rapide
     suggestedColor: 'focus',
     description: "Sessions d'apprentissage",
+    movement: 'beat', // MOT-e Bat
   },
   {
     id: 'yoga',
@@ -121,6 +113,7 @@ export const ACTIVITIES = [
     suggestedColor: 'calm',
     description: 'Étirements et postures',
     pulseDuration: 1100, // Très lent - flow
+    movement: 'breathe', // MOT-a Respire
   },
   {
     id: 'sport',
@@ -133,6 +126,7 @@ export const ACTIVITIES = [
     suggestedColor: 'energy',
     description: 'Étirements et exercices courts',
     pulseDuration: 500, // Très rapide - énergie
+    movement: 'bounce', // MOT-d Rebond
   },
   {
     id: 'walking',
@@ -145,6 +139,7 @@ export const ACTIVITIES = [
     suggestedColor: 'deep',
     description: 'Mouvement conscient',
     pulseDuration: 800, // Normal - rythme naturel
+    movement: 'spin', // MOT-b Tourne
   },
 
   // Premium - Autres activités
@@ -159,6 +154,7 @@ export const ACTIVITIES = [
     suggestedColor: 'energy',
     description: 'Préparation de repas',
     pulseDuration: 700, // Modéré-rapide - activité
+    movement: 'bounce', // MOT-d Rebond
   },
   {
     id: 'gaming',
@@ -171,6 +167,7 @@ export const ACTIVITIES = [
     suggestedColor: 'energy',
     description: "Temps d'écran contrôlé",
     pulseDuration: 550, // Rapide - attention soutenue
+    movement: 'beat', // MOT-e Bat (pulseDuration < 650, règle de repli)
   },
   {
     id: 'homework',
@@ -183,6 +180,7 @@ export const ACTIVITIES = [
     suggestedColor: 'focus',
     description: 'Aide aux devoirs',
     pulseDuration: 650, // Rapide - concentration
+    movement: 'spin', // MOT-b Tourne (650–799, règle de repli)
   },
   {
     id: 'music',
@@ -195,6 +193,7 @@ export const ACTIVITIES = [
     suggestedColor: 'calm',
     description: 'Pratique instrumentale',
     pulseDuration: 850, // Lent - flow musical
+    movement: 'float', // MOT-c Flotte (800–999, règle de repli)
   },
   {
     id: 'cleaning',
@@ -207,6 +206,7 @@ export const ACTIVITIES = [
     pulseDuration: 700, // Modéré-rapide - activité physique
     suggestedColor: 'energy',
     description: 'Tâches ménagères',
+    movement: 'spin', // MOT-b Tourne (650–799, règle de repli)
   },
   {
     id: 'nap',
@@ -219,6 +219,7 @@ export const ACTIVITIES = [
     suggestedColor: 'calm',
     description: 'Power nap récupérateur',
     pulseDuration: 1300, // Très lent - sommeil léger
+    movement: 'breathe', // MOT-a Respire (≥1000, règle de repli)
   },
   {
     id: 'writing',
@@ -231,6 +232,7 @@ export const ACTIVITIES = [
     suggestedColor: 'focus',
     description: 'Journaling, écriture libre',
     pulseDuration: 850, // Lent - introspection fluide
+    movement: 'float', // MOT-c Flotte (800–999, règle de repli)
   },
 ];
 
@@ -245,9 +247,8 @@ export const getAllActivities = () => ACTIVITIES;
 export const getActivityById = (id) =>
   ACTIVITIES.find((activity) => activity.id === id);
 
-// Get default activity
-export const getDefaultActivity = () =>
-  ACTIVITIES.find((activity) => activity.id === 'none');
+// Get default activity — première des activités gratuites (« none » retiré, ADR-014)
+export const getDefaultActivity = () => getFreeActivities()[0];
 
 // Check if an activity is custom (created by user)
 export const isCustomActivity = (activity) => activity?.isCustom === true;

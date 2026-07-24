@@ -19,15 +19,17 @@ export const TIMER_PALETTES = {
   },
 
   earth: {
-    colors: ['#7C9A92', '#A68B5B', '#9B6B5A', '#6B7F6B'],
+    colors: ['#5E8F82', '#B08540', '#A85B42', '#587D52'],
     get name() {
       return i18n.t('palettes.earth');
     },
-    isPremium: false,
+    // Verdicts CD 25/07 : passe Ambiances (rework saturation/contraste à
+    // venir, réservé pilote) — n'est plus incluse telle quelle.
+    isPremium: true,
     description: 'Tons naturels harmonisés avec cream',
   },
   zen: {
-    colors: ['#8BB880', '#95C7C9', '#B8B0A8', '#A89BBB'],
+    colors: ['#8BB880', '#95C7C9', '#C7A47E', '#A89BBB'],
     get name() {
       return i18n.t('palettes.zen');
     },
@@ -55,27 +57,11 @@ export const TIMER_PALETTES = {
     get name() {
       return i18n.t('palettes.dusk');
     },
-    isPremium: true,
+    isPremium: false,
     description: 'Coucher de soleil: corail, orange doré et lavande',
   },
-  darkLaser: {
-    colors: ['#5BA880', '#5A9AAF', '#9B6B9A', '#A89B5A'],
-    get name() {
-      return i18n.t('palettes.darkLaser');
-    },
-    isPremium: true,
-    description: 'Émeraude, pétrole, prune et olive mat',
-  },
-  autumn: {
-    colors: ['#C17A5E', '#B8925E', '#8B6B5A', '#C4A565'],
-    get name() {
-      return i18n.t('palettes.autumn');
-    },
-    isPremium: true,
-    description: 'Terre cuite, noisette, châtaigne et or automnal',
-  },
   dawn: {
-    colors: ['#E8A4AA', '#E8C49B', '#C4B8D4', '#D4C488'],
+    colors: ['#D9808B', '#DBA368', '#A192C2', '#C0A954'],
     get name() {
       return i18n.t('palettes.dawn');
     },
@@ -119,7 +105,7 @@ export const TIMER_PALETTES = {
     get name() {
       return i18n.t('palettes.ocean');
     },
-    isPremium: true,
+    isPremium: false,
     description: 'Bleu nuit, mer profonde, méditerranée et lagon',
   },
 };

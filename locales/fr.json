@@ -3,7 +3,8 @@
     "cancel": "Annuler",
     "ok": "OK",
     "retry": "Réessayer",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "back": "Retour"
   },
   "controls": {
     "digitalTimer": {
@@ -18,12 +19,15 @@
     "rotation": {
       "clockwise": "Sens horaire",
       "counterClockwise": "Sens anti-horaire"
+    },
+    "distraction": {
+      "tryMe": "surprends-moi"
     }
   },
   "welcome": {
     "title": "Bienvenue sur ResetPulse"
   },
-  "invitation": "...",
+  "invitation": "on y va ?",
   "onboarding": {
     "restartGuide": "Relancer le guide",
     "restartGuideDescription": "Afficher à nouveau l'écran de bienvenue et les conseils",
@@ -257,10 +261,8 @@
     "dawn": "Aurore",
     "dusk": "Crépuscule",
     "soft": "Douce",
-    "autumn": "Automne",
     "lavender": "Lavande",
-    "teal": "Canard",
-    "darkLaser": "Dark Laser"
+    "teal": "Canard"
   },
   "sounds": {
     "bell_classic": "Cloche",
@@ -277,6 +279,7 @@
   "accessibility": {
     "keepAwake": "Maintenir l'écran allumé",
     "rotationDirection": "Sens de rotation",
+    "showTime": "Afficher le temps",
     "activity": "Activité %{name}",
     "activityLocked": "Activité premium verrouillée",
     "moreActivities": "Plus d'activités",
@@ -296,6 +299,7 @@
     "restorePurchasesHint": "Restaurer l'accès premium si vous avez déjà acheté",
     "saveActivityHint": "Enregistre les modifications de cette activité",
     "unlockPremiumHint": "Commencer l'essai gratuit de 7 jours, puis paiement unique",
+    "distraction": "Distraction",
     "timer": {
       "dialAdjustable": "Ajustable. Glissez vers le haut ou le bas pour changer la durée.",
       "dialTapToToggle": "Appuyez pour démarrer ou mettre en pause le timer",
@@ -310,7 +314,13 @@
       "dial": "Cadran du timer, %{minutes} minutes définies, %{activity}"
     },
     "unlockPremium": "Débloquer le premium pour %{price}",
-    "paletteItem": "Palette de couleurs : %{name}"
+    "paletteItem": "Palette de couleurs : %{name}",
+    "applyRitual": "Appliquer le rituel %{name}",
+    "editRitual": "Modifier le rituel %{name}",
+    "createRitual": "Créer un rituel",
+    "closeRitualForm": "Fermer le formulaire de rituel",
+    "chooseCustomEmoji": "Choisir un autre emoji via le clavier",
+    "ritualNamePreset": "Rituel préconfiguré %{name}"
   },
   "discovery": {
     "defaultCta": "Essayer 7 jours gratuits",
@@ -372,20 +382,20 @@
       "endMessage": "Bravo 🎉"
     },
     "work": {
-      "startMessage": "Focus",
-      "endMessage": "Accompli ✨"
+      "startMessage": "au boulot.",
+      "endMessage": "voilà, c'est fait."
     },
     "break": {
-      "startMessage": "Repos",
-      "endMessage": "Rechargé 🔋"
+      "startMessage": "on souffle.",
+      "endMessage": "te revoilà, en douceur."
     },
     "meditation": {
-      "startMessage": "Respire",
-      "endMessage": "Centré 🪷"
+      "startMessage": "on respire.",
+      "endMessage": "te revoilà."
     },
     "creativity": {
-      "startMessage": "Crée",
-      "endMessage": "Inspiré ✨"
+      "startMessage": "laisse venir.",
+      "endMessage": "beau moment."
     },
     "reading": {
       "startMessage": "Plonge",
@@ -434,6 +444,10 @@
     "writing": {
       "startMessage": "Écris",
       "endMessage": "Libéré ✍️"
+    },
+    "custom": {
+      "startMessage": "C'est parti",
+      "endMessage": "Accompli ✨"
     }
   },
   "notifications": {
@@ -448,5 +462,58 @@
         "body": "Essai gratuit 7 jours — profites-en avant qu'il expire"
       }
     }
+  },
+  "rituals": {
+    "sheetRow": "Mes rituels",
+    "base": {
+      "meditation": "Respiration",
+      "break": "Pause café",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Mes rituels",
+      "createRow": "Créer un rituel",
+      "empty": "Aucun rituel pour l'instant",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Créer un rituel",
+      "editTitle": "Modifier le rituel",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Autre emoji",
+      "colorLabel": "Couleur",
+      "durationLabel": "Durée",
+      "soundLabel": "Son de fin",
+      "saveButton": "Enregistrer",
+      "deleteButton": "Supprimer",
+      "deleteConfirmTitle": "Supprimer ce rituel ?",
+      "deleteConfirmMessage": "Cette action est irréversible.",
+      "customActivityName": "Mon rituel"
+    }
+  },
+  "palettesPanel": {
+    "sheetRow": "Palettes",
+    "title": "Palettes",
+    "included": "Incluses",
+    "ambiances": "Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Focus"
+  },
+  "focus": {
+    "hint": "balayer vers le haut"
+  },
+  "firstRun": {
+    "skip": "passer",
+    "welcome": "on commence par choisir une activité 👇",
+    "companion": "cet emoji te tient compagnie. glisse le disque pour régler la durée.",
+    "dialColor": "une couleur ? elle change tout de suite.",
+    "ready": "c'est prêt. touche le disque pour lancer."
+  },
+  "aside": {
+    "exitFocus": "quitter le focus",
+    "doubleTapHint": "astuce : double-tap le fond pour basculer",
+    "handle": "ouvrir les réglages"
   }
 }

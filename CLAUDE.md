@@ -1,6 +1,6 @@
 ---
 created: '2025-12-07'
-updated: '2026-04-30'
+updated: '2026-07-24'
 status: active
 type: project-framework
 ---
@@ -11,9 +11,19 @@ type: project-framework
 
 This document defines the **project architecture, tech stack, and conventions**. It changes rarely.
 
+> ⚠️ **RECENTRAGE EN COURS (07/2026)** — l'app est en reconstruction par cycles
+> (ADR-014). Sources de vérité, dans l'ordre :
+> 1. `CONTEXT.md` (racine) — vocabulaire du domaine, obligatoire
+> 2. `_docs/decisions/adr-014-recentrage-signature.md` + `adr-015-modele-rituel-activite.md`
+> 3. `_docs/specs/recentrage.md` — spec des écrans cibles (SCR-x)
+> 4. `_cockpit/missions/active/recentrage.md` — méthode, suivi cycles, règles
+>
+> Toute section ci-dessous marquée 🕰️ décrit l'app d'avant — encore
+> partiellement en place, en cours de remplacement cycle par cycle.
+
 For **current missions, workflows, or next steps**, see:
 - **Orientation session** → `_cockpit/README.md` ← lire en premier
-- **Mission active** → `_cockpit/missions/active/`
+- **Mission active** → `_cockpit/missions/active/recentrage.md`
 - **Vision & cap** → `_cockpit/vision/index.md`
 - **Règles de pilotage** → `_cockpit/flow-rules.md`
 
@@ -27,9 +37,9 @@ ResetPulse est une application Time Timer visuel pour utilisateurs neuroatypique
 
 - **Framework**: React Native 0.83.6 + Expo SDK 55 (New Architecture activée)
 - **React**: 19.1.0
-- **État**: Context API (TimerPaletteContext, TimerOptionsContext, PurchaseContext)
-- **i18n**: i18n-js (15 langues supportées)
-- **Analytics**: Mixpanel
+- **État**: Context API (TimerConfigContext consolidé ADR-009, PurchaseContext)
+- **i18n**: i18n-js (15 langues — refonte en FR/EN, batch final en fin de Lot 3)
+- **Analytics**: sortie Mixpanel faite (adaptateur no-op) → PostHog au Lot 2
 - **IAP**: RevenueCat (react-native-purchases)
 - **Package manager**: npm
 
@@ -61,44 +71,35 @@ npm run version:set 1.2.5  # Set version spécifique
 ```
 src/
 ├── components/
-│   ├── modals/           # PremiumModal, DiscoveryModal, MoreActivitiesModal, MoreColorsModal
-│   ├── onboarding/       # OnboardingController, WelcomeScreen, HighlightOverlay, Tooltip
-│   └── timer/            # TimerDial, DialBase, DialProgress, DialCenter
+│   ├── dial/             # TimeTimer, TimerDial, DialCenter… (noyau visuel, récolté)
+│   ├── layout/           # AsideZone (sheet léger SCR-10), Icons
+│   └── modals/           # 🕰️ legacy — meurent en C6 (Rituels/Ambiances)
 ├── config/
-│   ├── activities.js     # Définition des activités (FREE: 4, PREMIUM: 14)
-│   ├── timerPalettes.js  # Palettes de couleurs (FREE: 2, PREMIUM: 13)
+│   ├── activities.js     # Activités (atomes d'identité, ADR-015)
+│   ├── timer-palettes.js # Palettes de couleurs
 │   ├── revenuecat.js     # Config RevenueCat
-│   └── testMode.js       # DEV_MODE toggle
-├── contexts/             # TimerPaletteContext, TimerOptionsContext, PurchaseContext
-├── dev/                  # DevPremiumContext, DevFab (toggle dev)
-├── hooks/                # useTimer, useTranslation, usePremiumStatus, useAnalytics
+│   └── test-mode.js      # DEV_MODE toggle
+├── contexts/             # TimerConfigContext (consolidé ADR-009), PurchaseContext
+├── dev/                  # DevPremiumContext + composants dev
+├── hooks/                # useTimer (noyau sacré), useNotificationTimer, useTranslation
 ├── i18n/                 # Traductions (15 langues)
-├── prototypes/           # OnboardingV2Prototype.jsx (en cours)
-├── screens/              # TimerScreen.jsx (écran principal)
-├── services/             # analytics.js (Mixpanel)
+├── screens/              # TimerScreen.jsx (écran neuf, reconstruction C1+)
+├── services/             # analytics.js (no-op, en attente PostHog)
 └── theme/                # ThemeProvider, tokens, colors
 ```
 
-## Modèle Freemium
+## Modèle Freemium — 🕰️ en refonte (ADR-014)
 
-### Activités gratuites (4)
-- `work` (💻 Travail) - 25min Pomodoro
-- `break` (☕ Pause) - 15min
-- `meditation` (🧘 Méditation) - 20min
-- `creativity` (🎨 Créativité) - 45min
-
-### Palettes gratuites (2)
-- `terre` - Bleu terre, vert, rouge brique, or
-- `softLaser` - Verts, cyans, magentas doux
-
-### Comportement UX Freemium
-- Carrousels affichent uniquement les items gratuits + bouton "+" en fin
-- Le bouton "+" ouvre une modale Discovery (aperçu des items premium)
-- Pendant l'onboarding: toast léger au lieu de modale payante
+Le modèle cible : **cœur gratuit entier** (disque, emoji, couleur en direct,
+activités et 3 rituels de base) + pack **Ambiances** en achat unique ≈ 4,99 €
+(mouvements, plein écran, exports, palettes complètes, rituels illimités).
+Détail : `_docs/specs/recentrage.md`. La répartition gratuit/payant des palettes
+est parquée — à trancher devant les écrans (C6+). L'ancien comportement
+(carrousels + modale Discovery) meurt en C6.
 
 ## Mode développement
 
-Le fichier `src/config/testMode.js` contient `DEV_MODE`:
+Le fichier `src/config/test-mode.js` contient `DEV_MODE`:
 - `true`: Affiche DevFab (coin haut-gauche) pour toggle App/Onboarding et Free/Premium
 - `false`: Production normale
 
@@ -111,19 +112,21 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 - Analytics Mixpanel actifs
 
 ### En cours
-- Mission P1 : simplifier app pour prestataire Fiverr (PulseButton, onboarding, console)
-- Séquence complète : `_cockpit/vision/fiverr-engagement.md`
+- **Mission Recentrage** (ADR-014) : reconstruction par cycles, cible v3.0.0
+- Suivi : `_cockpit/missions/active/recentrage.md` · Spec : `_docs/specs/recentrage.md`
 
 ### Tests
-- 161/161 passent
+- Les tests suivent le code (règle recentrage) : supprimés avec leurs composants,
+  sacrés pour le noyau (`useTimer`, state machine ADR-007). Compte courant dans
+  le dernier rapport de cycle.
 
 ## Fichiers clés à connaître
 
-- `App.js` - Point d'entrée, gère DEV_MODE et routing App/Onboarding
-- `src/screens/TimerScreen.jsx` - Écran principal de l'app
-- `src/components/ActivityCarousel.jsx` - Carrousel activités freemium
-- `src/components/PaletteCarousel.jsx` - Carrousel palettes freemium
-- `src/prototypes/OnboardingV2Prototype.jsx` - Prototype onboarding V2 (en dev)
+- `CONTEXT.md` - Glossaire du domaine (Rituel, Activité, Mode…) — lire en premier
+- `App.js` - Point d'entrée
+- `src/screens/TimerScreen.jsx` - Écran principal (neuf, reconstruction C1+)
+- `src/components/layout/AsideZone.jsx` - Sheet léger (SCR-10)
+- `src/components/dial/` - Noyau visuel du disque (récolté)
 - `CHANGELOG.md` - Historique des versions
 
 ## Conventions

@@ -1,66 +1,86 @@
 /**
- * @fileoverview PulseButton - Bouton principal ResetPulse
+ * @fileoverview PulseButton - Centre visuel du disque ResetPulse
+ * Purement visuel depuis C6.2 (fidélité au rendu) : le tap appartient au
+ * disque entier (`TimerDial.handleTapOnGraduation`, seule autorité — évite
+ * le double-déclenchement start→stop d'un ancien second `TouchableOpacity`
+ * ici). Petit disque discret dans la couleur courante (`color`), jamais
+ * translucide — le fantôme play-button (fond fixe + ombre marquée) meurt.
  *
- * Base simplifiée — couches d'animation à réajouter :
- *   [ ] breathing pulse (REST, shouldPulse)
- *   [ ] halos × 2 (RUNNING, shouldPulse)
- *   [ ] second hand + trail dots (RUNNING)
- *   [ ] interpolateColor + bounce (state transition)
- *   [ ] long-press progress circle (Reanimated useAnimatedProps + SVG)
+ * Mouvements MOT-a→e via useEmojiMovement (Lot 3a) + halo qui respire
+ * (useBreathingHalo — le pulse originel de l'app, restauré sur retour Eric ;
+ * la trotteuse legacy reste abandonnée, hors spec recentrage).
  */
-import React, { useRef, useCallback } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { TouchableOpacity, GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerConfig } from '../../contexts/TimerConfigContext';
-import { useTranslation } from '../../hooks/useTranslation';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
-import haptics from '../../utils/haptics';
+import useEmojiMovement from '../dial/movements/useEmojiMovement';
+import useBreathingHalo from '../dial/movements/useBreathingHalo';
 
-const DEFAULT_LONG_PRESS_DURATION = 2500;
+const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
 
 const PulseButton = React.memo(function PulseButton({
   state = 'rest',
   emoji = null,
   activity = null,
-  onTap,
-  onLongPressComplete,
+  color = null,
   size = 72,
   compact = false,
-  stopRequiresLongPress = true,
-  startRequiresLongPress = false,
-  shouldPulse = false, // reserved — animation layer not yet wired
-  clockwise = false,   // reserved — progress circle layer not yet wired
+  shouldPulse = false,
+  clockwise = false,   // reserved — dial rotation direction, no movement use yet
+  distraction = null,
 }) {
   const theme = useTheme();
-  const t = useTranslation();
-  const timerConfig = useTimerConfig();
-  const longPressConfirmDuration = timerConfig?.longPressConfirmDuration ?? DEFAULT_LONG_PRESS_DURATION;
-  const longPressStartDuration   = timerConfig?.longPressStartDuration   ?? DEFAULT_LONG_PRESS_DURATION;
+
+  // === MOUVEMENT (MOT-a→e, Lot 3a) ===
+  // REST + shouldPulse : le pouls-invitation « Respire » — signature de
+  // l'app, gratuit. RUNNING : mouvement propre de l'Activité, à son tempo.
+  // COMPLETE : aucun mouvement (le bloom du dial porte la fin). La
+  // Distraction (MOT-f, dé — `{ movement, variant }`) override le mouvement
+  // courant quand active, quel que soit l'état, avec sa variante d'intensité
+  // tirée au dé — `useEmojiMovement` coupe tout si reduce motion.
+  const tempo = activity?.pulseDuration || DEFAULT_TEMPO;
+  let movement = null;
+  let movementActive = false;
+  if (distraction?.movement) {
+    movement = distraction.movement;
+    movementActive = true;
+  } else if (state === 'rest' && shouldPulse) {
+    movement = 'breathe';
+    movementActive = true;
+  } else if (state === 'running' && activity?.movement) {
+    movement = activity.movement;
+    movementActive = true;
+  }
+  const emojiAnimatedStyle = useEmojiMovement({
+    movement,
+    tempo,
+    active: movementActive,
+    variant: distraction?.variant ?? null,
+  });
+
+  // === HALO (le pouls de la séance, restauré — retour Eric) ===
+  // Anneau couleur courante qui s'étend et s'estompe autour du hub : il se
+  // lance au tap start et bat tant que le temps s'écoule — la preuve visible
+  // que le timer vit. RUNNING uniquement, piloté par `shouldPulse`
+  // (optionnel mais standard), jamais en compact.
+  const haloActive = state === 'running' && shouldPulse && !compact;
+  const haloAnimatedStyle = useBreathingHalo({ tempo, active: haloActive });
 
   // === DIMENSIONS ===
-  const buttonSize = compact ? rs(48, 'min') : rs(size, 'min');
-  const iconSize   = compact ? rs(20, 'min') : rs(28, 'min');
-  const emojiSize  = compact ? rs(24, 'min') : rs(48, 'min');
+  // Hub structurel (verdicts CD 25/07) : Ø = 34 % du cadran (fourni par
+  // TimerDial via `size`), emoji = 20 % du cadran → 0.59 × hub.
+  const buttonSize = compact ? rs(48, 'min') : size;
+  const iconSize   = compact ? rs(20, 'min') : buttonSize * 0.42;
+  const emojiSize  = compact ? rs(24, 'min') : buttonSize * 0.59;
 
   // === COLOR ===
-  const bgColor = state === 'running'
-    ? theme.colors.brand.secondary + 'D9'
-    : theme.colors.brand.primary + 'D9';
-
-  // === CALLBACKS ===
-  const completedRef = useRef(false);
-
-  const handleTap = useCallback(() => {
-    haptics.selection().catch(() => {});
-    onTap?.();
-  }, [onTap]);
-
-  const resetCompletion = useCallback(() => {
-    completedRef.current = false;
-  }, []);
+  // Hub = CLAIRIÈRE DU CADRAN (verdicts CD Q1) : fond crème #F4EFE7 — pas un
+  // sticker blanc. Plat, liseré interne discret, zéro ombre portée.
+  const bgColor = theme.colors.background;
 
   // === STYLES ===
   const styles = StyleSheet.create({
@@ -72,14 +92,23 @@ const PulseButton = React.memo(function PulseButton({
     },
     button: {
       alignItems: 'center',
+      // Liseré interne 1px, ZÉRO ombre portée (verdicts CD Q1 : hub plat,
+      // « clairière », pas d'effet autocollant).
+      borderColor: 'rgba(0,0,0,0.06)',
       borderRadius: buttonSize / 2,
+      borderWidth: 1,
       height: buttonSize,
       justifyContent: 'center',
       width: buttonSize,
-      ...theme.shadow('md'),
     },
     emoji: {
       textAlign: 'center',
+    },
+    halo: {
+      borderRadius: buttonSize / 2,
+      height: buttonSize,
+      position: 'absolute',
+      width: buttonSize,
     },
   });
 
@@ -87,111 +116,57 @@ const PulseButton = React.memo(function PulseButton({
   const renderContent = () => {
     const displayEmoji = emoji || activity?.emoji;
     if (displayEmoji) {
-      return <Text style={[styles.emoji, { fontSize: emojiSize }]}>{displayEmoji}</Text>;
+      return (
+        <Animated.View style={emojiAnimatedStyle}>
+          <Text style={[styles.emoji, { fontSize: emojiSize }]}>{displayEmoji}</Text>
+        </Animated.View>
+      );
     }
-    const iconColor = theme.colors.fixed.white;
+    const iconColor = color || theme.colors.text; // fond surface désormais — icône sombre ou couleur courante
     switch (state) {
-      case 'running':  return <StopIcon  size={iconSize} color={iconColor} />;
-      case 'complete': return <ResetIcon size={iconSize} color={iconColor} />;
-      default:         return <PlayIcon  size={iconSize} color={iconColor} />;
-    }
-  };
-
-  const getAccessibilityLabel = () => {
-    switch (state) {
-      case 'running':  return t('accessibility.timer.stopTimer');
-      case 'complete': return t('accessibility.timer.resetTimer');
-      default:         return t('accessibility.timer.startTimer');
+    case 'running':  return <StopIcon  size={iconSize} color={iconColor} />;
+    case 'complete': return <ResetIcon size={iconSize} color={iconColor} />;
+    default:         return <PlayIcon  size={iconSize} color={iconColor} />;
     }
   };
 
   // === RENDER ===
-  const buttonView = (
-    <View style={[styles.button, { backgroundColor: bgColor }]}>
-      {renderContent()}
-    </View>
-  );
-
-  const renderSimpleButton = () => (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: bgColor }]}
-        onPress={handleTap}
-        activeOpacity={0.7}
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel={getAccessibilityLabel()}
-      >
+  // Décoratif : le disque entier (TimerDial) porte l'accessibilité (rôle
+  // 'adjustable'/'timer' + action 'activate') — ce View ne doit pas être un
+  // arrêt VoiceOver séparé.
+  const haloColor = color || theme.colors.text;
+  return (
+    <View style={styles.container} accessible={false} importantForAccessibility="no">
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.halo, { backgroundColor: haloColor }, haloAnimatedStyle]}
+      />
+      <View style={[styles.button, { backgroundColor: bgColor }]}>
         {renderContent()}
-      </TouchableOpacity>
+      </View>
     </View>
   );
-
-  const longPressStopGesture = React.useMemo(() =>
-    Gesture.LongPress()
-      .minDuration(longPressConfirmDuration)
-      .runOnJS(true)
-      .onBegin(resetCompletion)
-      .onStart(() => {
-        if (completedRef.current) { return; }
-        completedRef.current = true;
-        haptics.notification('warning').catch(() => {});
-        onLongPressComplete?.();
-      }),
-  [longPressConfirmDuration, resetCompletion, onLongPressComplete]);
-
-  const longPressStartGesture = React.useMemo(() =>
-    Gesture.LongPress()
-      .minDuration(longPressStartDuration)
-      .runOnJS(true)
-      .onBegin(resetCompletion)
-      .onStart(() => {
-        if (completedRef.current) { return; }
-        completedRef.current = true;
-        haptics.notification('success').catch(() => {});
-        onTap?.();
-      }),
-  [longPressStartDuration, resetCompletion, onTap]);
-
-  const renderLongPressStop = () => (
-    <GestureDetector gesture={longPressStopGesture}>
-      <View style={styles.container}>
-        {buttonView}
-      </View>
-    </GestureDetector>
-  );
-
-  const renderLongPressStart = () => (
-    <GestureDetector gesture={longPressStartGesture}>
-      <View style={styles.container}>
-        {buttonView}
-      </View>
-    </GestureDetector>
-  );
-
-  if (state === 'rest') {
-    return startRequiresLongPress ? renderLongPressStart() : renderSimpleButton();
-  }
-  if (state === 'running') {
-    return stopRequiresLongPress ? renderLongPressStop() : renderSimpleButton();
-  }
-  return renderSimpleButton();
 });
 
 PulseButton.displayName = 'PulseButton';
 
 PulseButton.propTypes = {
-  activity:               PropTypes.shape({ emoji: PropTypes.string }),
-  clockwise:              PropTypes.bool,
-  compact:                PropTypes.bool,
-  emoji:                  PropTypes.string,
-  onLongPressComplete:    PropTypes.func,
-  onTap:                  PropTypes.func,
-  shouldPulse:            PropTypes.bool,
-  size:                   PropTypes.number,
-  startRequiresLongPress: PropTypes.bool,
-  state:                  PropTypes.oneOf(['rest', 'running', 'complete']),
-  stopRequiresLongPress:  PropTypes.bool,
+  activity:            PropTypes.shape({
+    emoji: PropTypes.string,
+    movement: PropTypes.string,
+    pulseDuration: PropTypes.number,
+  }),
+  clockwise:           PropTypes.bool,
+  color:               PropTypes.string,
+  compact:             PropTypes.bool,
+  distraction:         PropTypes.shape({
+    movement: PropTypes.string,
+    variant: PropTypes.object,
+  }),
+  emoji:               PropTypes.string,
+  shouldPulse:         PropTypes.bool,
+  size:                PropTypes.number,
+  state:               PropTypes.oneOf(['rest', 'running', 'complete']),
 };
 
 export default PulseButton;

@@ -1,16 +1,19 @@
 // src/styles/responsive.js
 import { Dimensions, Platform } from 'react-native';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
 // Base dimensions (iPhone 13/14)
 const BASE_WIDTH = 390;
 const BASE_HEIGHT = 844;
 
-// Get device info
+// Get device info — lu à CHAQUE appel (pas de capture au chargement du
+// module). Un `Dimensions.get('window')` figé au niveau module devient
+// périmé (Fast Refresh, rotation, relance simulateur sans reset complet du
+// contexte JS) sans jamais se corriger ensuite — cause probable du
+// décalage de taille du dial signalé par Eric (Focus/Standard tantôt plus,
+// tantôt moins, d'une session à l'autre). `Dimensions.get` est un appel
+// natif synchrone bon marché, sûr à refaire à chaque render.
 export const getDeviceInfo = () => {
-  const width = screenWidth;
-  const height = screenHeight;
+  const { width, height } = Dimensions.get('window');
   const isLandscape = width > height;
   const aspectRatio = width / height;
 
@@ -134,19 +137,23 @@ export const getSafeAreaPadding = () => {
 };
 
 // Component size calculators
-export const getComponentSizes = () => {
+export const getComponentSizes = (mode = 'mixte') => {
   const { width, height, isLandscape, isTablet } = getDeviceInfo();
+  // Focus (C4, affûté C6.2) : zéro chrome sous le disque, nettement plus
+  // grand qu'en standard (fidélité au rendu, maquettes CD : ~88%).
+  const portraitRatio = mode === 'focus' ? 0.88 : 0.8;
 
   // Timer circle size - Adapté aux différentes tailles d'écran
   let timerCircle;
   if (isLandscape) {
     timerCircle = Math.min(width * 0.6, height * 0.9);
   } else if (isTablet) {
-    // iPad portrait: 80% de la largeur OU 650px max (bon équilibre)
-    timerCircle = Math.min(width * 0.8, 650);
+    // iPad portrait: ratio de largeur OU plafond px (bon équilibre)
+    timerCircle = Math.min(width * portraitRatio, mode === 'focus' ? 690 : 650);
   } else {
-    // iPhone: 95% de la largeur (comportement original)
-    timerCircle = width * 0.95;
+    // iPhone portrait: ratio de largeur (ADR-014 recentrage — le disque
+    // est le produit, mais ne doit pas écraser le chrome sous lui)
+    timerCircle = width * portraitRatio;
   }
 
   return {

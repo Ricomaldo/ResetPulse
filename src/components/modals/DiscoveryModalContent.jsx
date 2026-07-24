@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { BottomSheetView } from '@gorhom/bottom-sheet';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -151,7 +150,7 @@ export default function DiscoveryModalContent({
   });
 
   return (
-    <BottomSheetView style={styles.container}>
+    <View style={styles.container}>
       {/* Title */}
       <Text
         style={styles.title}
@@ -199,7 +198,7 @@ export default function DiscoveryModalContent({
       >
         <Text style={styles.secondaryButtonText}>{dismissTextFinal}</Text>
       </TouchableOpacity>
-    </BottomSheetView>
+    </View>
   );
 }
 

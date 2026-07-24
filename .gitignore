@@ -58,3 +58,7 @@ coverage/
 # Temporary folders
 /TEMP
 /tmp
+
+# Build artifacts — jamais dans l'historique (purge 23/07/2026)
+*.aab
+*.ipa

@@ -51,7 +51,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
   currentColorRef.current = currentColor;
 
   // Notifications pour background
-  const { scheduleTimerNotification, cancelTimerNotification } = useNotificationTimer();
+  const { scheduleTimerNotification, cancelTimerNotification, requestNotificationPermission } = useNotificationTimer();
 
   // Refs
   const intervalRef = useRef(null);
@@ -337,6 +337,10 @@ export default function useTimer(initialDuration = 240, onComplete) {
       setRemaining(durationRef.current);
     }
 
+    // Permission notifs contextuelle (recentrage C2) : demandée ici, au
+    // premier start réel, plus au boot de l'app
+    requestNotificationPermission();
+
     // CRITICAL: Cancel any existing notification before scheduling a new one
     // This prevents orphaned notifications if user rapidly starts/stops/starts
     cancelTimerNotification();
@@ -382,7 +386,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
       ? t('accessibility.timer.activityStarted', { activity: activityLabel })
       : t('accessibility.timer.timerRunning');
     AccessibilityInfo.announceForAccessibility(startMessage);
-  }, [scheduleTimerNotification, cancelTimerNotification,
+  }, [scheduleTimerNotification, cancelTimerNotification, requestNotificationPermission,
     activityDurations, saveActivityDuration, t]);
 
   // stopTimer: Called by long-press "rewind" gesture (ADR-007)

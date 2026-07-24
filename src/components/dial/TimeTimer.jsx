@@ -20,13 +20,14 @@ export default function TimeTimer({
   onDialRef,
   onDialTap,
   onTimerComplete,
+  distraction = null,
 }) {
   const {
     timer: { clockwise, scaleMode, currentActivity, currentDuration },
     setCurrentDuration,
     setTimerRemaining,
-    display: { showActivityEmoji },
     palette: { currentColor },
+    mode: { current: currentMode },
   } = useTimerConfig();
 
   // Get custom activities for incrementing usage
@@ -45,11 +46,6 @@ export default function TimeTimer({
   const timerRef = useRef(timer);
   // Sync timer ref on every render
   timerRef.current = timer;
-
-  // Stable stopTimer reference that doesn't change on every render
-  const handleStopTimer = useCallback(() => {
-    timerRef.current.stopTimer();
-  }, []);
 
   // Refs for onboarding
   const dialWrapperRef = useRef(null);
@@ -84,7 +80,7 @@ export default function TimeTimer({
     }
   }, [timer.running, onRunningChange]);
 
-  // Sync timer remaining to context for ControlBar display
+  // Sync timer remaining to context for TopTime display
   useEffect(() => {
     setTimerRemaining(timer.remaining);
   }, [timer.remaining, setTimerRemaining]);
@@ -102,8 +98,10 @@ export default function TimeTimer({
     }
   }, [timer.running, timer.remaining, currentActivity, incrementUsage]);
 
-  // Get responsive dimensions - zen mode: timer dominates
-  const { timerCircle } = getComponentSizes();
+  // Get responsive dimensions - zen mode: timer dominates. Le cadran ne se
+  // remonte jamais au changement de mode (state machine préservée) — seule
+  // sa taille varie (Focus C4 : dial seul, il respire davantage).
+  const { timerCircle } = getComponentSizes(currentMode);
   const circleSize = timerCircle; // No max limit - let it breathe
 
   const styles = StyleSheet.create({
@@ -150,7 +148,7 @@ export default function TimeTimer({
 
     timerRef.current.setDuration(newDuration);
 
-    // Sync to context so DigitalTimer in ControlBar updates
+    // Sync to context so TopTime updates
     setCurrentDuration(newDuration);
     lastSyncedContextDurationRef.current = newDuration;
   }, [scaleMode, setCurrentDuration]);
@@ -167,18 +165,15 @@ export default function TimeTimer({
           size={circleSize}
           clockwise={clockwise}
           scaleMode={scaleMode}
-          activityEmoji={
-            currentActivity?.id === 'none' ? null : currentActivity?.emoji
-          }
+          activityEmoji={currentActivity?.emoji}
           isRunning={timer.running}
-          showActivityEmoji={showActivityEmoji}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}
-          onDialLongPress={handleStopTimer}
           isCompleted={timer.isCompleted}
           currentActivity={currentActivity}
           showNumbers={true}
           showGraduations={true}
+          distraction={distraction}
         />
 
         {/* Message Overlay - removed, icon in center replaces this info */}
@@ -193,4 +188,5 @@ TimeTimer.propTypes = {
   onDialRef: PropTypes.func,
   onDialTap: PropTypes.func,
   onTimerComplete: PropTypes.func,
+  distraction: PropTypes.shape({ movement: PropTypes.string, variant: PropTypes.object }),
 };

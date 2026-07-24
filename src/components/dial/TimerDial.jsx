@@ -42,7 +42,7 @@ import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialGraduations from './dial/DialGraduations';
 import DialCenter from './dial/DialCenter';
-import Svg, { Circle, Line } from 'react-native-svg';
+import Svg, { Circle, Line, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 /**
  * TimerDial - Main timer dial component
@@ -61,7 +61,6 @@ function TimerDial({
   showActivityEmoji = true,
   onGraduationTap = null,
   onDialTap = null,
-  onDialLongPress = null,
   isCompleted = false,
   currentActivity = null,
   showNumbers = true,
@@ -69,6 +68,7 @@ function TimerDial({
   showPlayButton = true,
   showCenterDisk = false,
   centerImage = null,
+  distraction = null,
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -77,7 +77,13 @@ function TimerDial({
   // === PROGRESS (direct, no animation — smooth transition layer to re-add) ===
   const maxMinutesForScale = getDialMode(scaleMode).maxMinutes;
   const currentMinutesForScale = duration / 60;
-  const displayProgress = Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
+  // Accompli plein-vert (arbitrage Eric, C2) : à l'état complete, le disque
+  // entier se remplit — pas seulement l'arc proportionnel à la durée réglée
+  // sur l'échelle du cadran. Affichage seulement, la state machine (progress
+  // réel de useTimer) reste intouchée.
+  const displayProgress = isCompleted
+    ? 1
+    : Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);
@@ -215,18 +221,25 @@ function TimerDial({
     dragOffsetRef.current = 0;
   }, [onGraduationTap]);
 
-  // Handler for tap on graduations
+  // Handler for tap on graduations OR center (C6.2 : le tap reste sur tout
+  // le disque — zone intérieure = start/stop, seule autorité du tap central
+  // depuis le retrait du TouchableOpacity de PulseButton, cf. commentaire
+  // DialCenter). Un seul gestionnaire, une seule source de vérité.
   const handleTapOnGraduation = useCallback((tapX, tapY) => {
     const distanceFromCenter = Math.sqrt(
       Math.pow(tapX - centerX, 2) + Math.pow(tapY - centerY, 2)
     );
 
-    // Only handle taps on graduation zone (outer ring)
-    if (distanceFromCenter > outerZoneMinRadius && onGraduationTap) {
+    if (distanceFromCenter <= outerZoneMinRadius) {
+      onDialTap?.();
+      return;
+    }
+
+    if (onGraduationTap) {
       const tappedMinutes = dial.coordinatesToMinutes(tapX, tapY, centerX, centerY);
       onGraduationTap(tappedMinutes, true);
     }
-  }, [dial, centerX, centerY, outerZoneMinRadius, onGraduationTap]);
+  }, [dial, centerX, centerY, outerZoneMinRadius, onGraduationTap, onDialTap]);
 
   // === GESTURE: Pan (Drag to adjust duration) ===
   // All logic runs on JS thread via runOnJS (dial methods require JS)
@@ -234,6 +247,29 @@ function TimerDial({
   const panGesture = useMemo(() =>
     Gesture.Pan()
       .minDistance(10) // Minimum distance to start pan (differentiates from tap)
+      // Régression tap-start (2e cause, trouvée en retest avec Eric) :
+      // Gesture.Race(pan, tap) donne la main au PREMIER geste qui devient
+      // ACTIVE — au niveau natif, pas au niveau de ce worklet. Un tap au
+      // centre avec ne serait-ce que 10px de jitter (courant, doigt réel)
+      // satisfaisait déjà minDistance(10) et faisait ACTIVER pan (donc
+      // annuler tap dans la Race) AVANT que le check de zone morte ci-dessous
+      // ne s'exécute — celui-ci ne faisait plus alors que neutraliser pan
+      // (isDragValid=false), sans jamais redonner la main à tap. Résultat :
+      // rien ne se produit. Fix : `onTouchesDown` fait échouer pan dès le
+      // toucher initial si on est dans la zone morte, AVANT toute mesure de
+      // distance — pan ne peut alors plus jamais gagner la course au centre.
+      .onTouchesDown((event, stateManager) => {
+        'worklet';
+        const touch = event.changedTouches[0];
+        if (!touch) {
+          return;
+        }
+        const dx = touch.x - centerX;
+        const dy = touch.y - centerY;
+        if (Math.sqrt(dx * dx + dy * dy) <= centerZoneRadius) {
+          stateManager.fail();
+        }
+      })
       .onStart((event) => {
         'worklet';
         // Calculate distance from center in worklet (can modify SharedValue here)
@@ -274,11 +310,16 @@ function TimerDial({
   [handlePanStart, handlePanUpdate, handlePanEnd, centerX, centerY, centerZoneRadius]
   );
 
-  // === GESTURE: Tap (on graduations to set duration) ===
-
+  // === GESTURE: Tap (on graduations OR center, to set duration / start-stop) ===
+  // Pas de maxDuration custom (régression C6.2 point 1) : à 200ms, RNGH fait
+  // échouer le geste AVANT l'état ACTIVE dès qu'un tap dépasse cette fenêtre
+  // — `onEnd` ne se déclenche que depuis ACTIVE (doc RNGH), donc un tap
+  // humain normal (souvent >200ms) ne relance plus rien au centre. Le tap
+  // central partage ce même gestionnaire depuis le retrait du
+  // TouchableOpacity de PulseButton — la fenêtre doit couvrir les deux
+  // usages. Repli sur le défaut RNGH (500ms), pas de valeur maison.
   const tapGesture = useMemo(() =>
     Gesture.Tap()
-      .maxDuration(200) // Quick tap only
       .onEnd((event) => {
         'worklet';
         runOnJS(handleTapOnGraduation)(event.x, event.y);
@@ -319,22 +360,25 @@ function TimerDial({
   const handleAngleDeg = displayProgress * 360;
   const handleAngleRad = (handleAngleDeg * Math.PI) / 180;
 
-  // Handle segment: small radial line on the arc edge (parallel to radius)
-  // Positioned at the progress endpoint, within the arc thickness
-  const arcOuterRadius = radiusBackground; // Outer edge of arc
-  const arcInnerRadius = radiusBackground * 0.4; // Inner edge (roughly where arc ends toward center)
-  const segmentLength = rs(12); // Small segment within arc thickness
-
   // Direction vector (radial - pointing outward from center)
   const radialX = clockwise ? Math.sin(handleAngleRad) : -Math.sin(handleAngleRad);
   const radialY = -Math.cos(handleAngleRad);
 
-  // Segment from inner to outer edge of the arc (or partial)
-  const handleInnerRadius = arcOuterRadius - segmentLength;
+  // Poignée de drag (verdicts CD 25/07) : repère R = radiusBackground (rayon
+  // du cercle de graduations). Valeurs spec données pour R=105 — mise à
+  // l'échelle proportionnelle (handleScale) pour tout autre rayon. JAMAIS de
+  // rayon plein centre→bord : repos R−16→R+2, drag R−20→R+4.
+  const R = radiusBackground;
+  const handleScale = R / 105;
+  const handleInnerRadius = isDragging ? R - 20 * handleScale : R - 16 * handleScale;
+  const handleOuterRadius = isDragging ? R + 4 * handleScale : R + 2 * handleScale;
+  const handleStrokeWidth = (isDragging ? 5 : 4) * handleScale;
+  const handleOpacity = isDragging ? 1.0 : 0.55;
+  const handleHaloRadius = (22 * handleScale) / 2;
   const handleX1 = centerX + radialX * handleInnerRadius;
   const handleY1 = centerY + radialY * handleInnerRadius;
-  const handleX2 = centerX + radialX * arcOuterRadius;
-  const handleY2 = centerY + radialY * arcOuterRadius;
+  const handleX2 = centerX + radialX * handleOuterRadius;
+  const handleY2 = centerY + radialY * handleOuterRadius;
 
   // Static styles (moved outside render for performance)
   const staticStyles = StyleSheet.create({
@@ -361,6 +405,7 @@ function TimerDial({
     <View style={staticStyles.root}>
       <GestureDetector gesture={composedGesture}>
         <View
+          testID="timer.dial"
           style={svgContainerStyle}
           accessible={true}
           accessibilityRole={isRunning ? 'timer' : 'adjustable'}
@@ -414,7 +459,7 @@ function TimerDial({
             color={arcColor}
             isClockwise={clockwise}
             scaleMode={scaleMode}
-            animatedColor={isCompleted ? COLORS.COMPLETION_GREEN : null}
+            animatedColor={null} // fin = couleur du rituel, disque plein — le vert générique est mort (verdicts CD Q5)
             isRunning={isRunning}
           />
 
@@ -448,9 +493,9 @@ function TimerDial({
             </Svg>
           )}
 
-          {/* Drag handle: small radial segment on the arc edge */}
-          {/* Same color as arc but darker for contrast */}
-          {/* Visible even when running to allow time adjustment */}
+          {/* Drag handle: barre radiale sur le bord de l'arc (verdicts CD
+              25/07) — jamais un rayon plein centre→bord, bouts ronds.
+              Visible même en séance pour permettre l'ajustement du temps. */}
           {displayProgress > 0 && (
             <View style={staticStyles.absoluteOverlay} pointerEvents="none">
               <Svg
@@ -459,15 +504,24 @@ function TimerDial({
                 accessible={false}
                 importantForAccessibility="no"
               >
+                {isDragging && (
+                  <Circle
+                    cx={handleX2}
+                    cy={handleY2}
+                    r={handleHaloRadius}
+                    fill={theme.colors.text}
+                    opacity={0.08}
+                  />
+                )}
                 <Line
                   x1={handleX1}
                   y1={handleY1}
                   x2={handleX2}
                   y2={handleY2}
-                  stroke={theme.colors.brand.deep}
-                  strokeWidth={isDragging ? 6 : 5}
+                  stroke={theme.colors.text}
+                  strokeWidth={handleStrokeWidth}
                   strokeLinecap="round"
-                  opacity={isDragging ? 1 : 0.85}
+                  opacity={handleOpacity}
                 />
               </Svg>
             </View>
@@ -500,16 +554,45 @@ function TimerDial({
             </Svg>
           )}
 
-          {/* Center layer: PulseButton (ADR-007) */}
+          {/* Bloom de fin (verdicts CD 25/07) : halo radial statique derrière
+              le hub, Ø ≈ 40 % du cadran, aucune animation (layer Lot 3). Ne
+              touche ni la state machine ni le timing d'auto-reset. */}
+          {isCompleted && (
+            <Svg
+              width={svgSize}
+              height={svgSize}
+              style={staticStyles.absoluteOverlay}
+              pointerEvents="none"
+              accessible={false}
+              importantForAccessibility="no"
+            >
+              <Defs>
+                <RadialGradient id="bloomGradient" cx="50%" cy="50%" r="50%">
+                  <Stop offset="0%" stopColor="#FFF4E6" stopOpacity={1} />
+                  <Stop offset="100%" stopColor="#FFF4E6" stopOpacity={0} />
+                </RadialGradient>
+              </Defs>
+              <Circle
+                cx={centerX}
+                cy={centerY}
+                r={circleSize * 0.2}
+                fill="url(#bloomGradient)"
+              />
+            </Svg>
+          )}
+
+          {/* Center layer: PulseButton (ADR-007) — petit disque discret dans
+              la couleur courante (fidélité au rendu C6.2), purement visuel :
+              le tap est géré par `handleTapOnGraduation` ci-dessus. */}
           {showPlayButton && (
             <DialCenter
               activity={showActivityEmoji ? currentActivity : null}
               isRunning={isRunning}
               isCompleted={isCompleted}
-              onTap={onDialTap}
-              onLongPressComplete={onDialLongPress}
+              color={arcColor}
               clockwise={clockwise}
-              size={circleSize * 0.25}
+              size={circleSize * 0.34} // hub structurel Ø 34 % du cadran (verdicts CD 25/07)
+              distraction={distraction}
             />
           )}
 
@@ -572,7 +655,6 @@ TimerDial.propTypes = {
   showActivityEmoji: PropTypes.bool,
   onGraduationTap: PropTypes.func,
   onDialTap: PropTypes.func,
-  onDialLongPress: PropTypes.func,
   isCompleted: PropTypes.bool,
   currentActivity: PropTypes.object,
   showNumbers: PropTypes.bool,
@@ -580,6 +662,7 @@ TimerDial.propTypes = {
   showPlayButton: PropTypes.bool,
   showCenterDisk: PropTypes.bool,
   centerImage: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  distraction: PropTypes.shape({ movement: PropTypes.string, variant: PropTypes.object }),
 };
 
 // Export memoized version
@@ -597,7 +680,6 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.isRunning === nextProps.isRunning &&
     prevProps.onDialTap === nextProps.onDialTap &&
     prevProps.onGraduationTap === nextProps.onGraduationTap &&
-    prevProps.onDialLongPress === nextProps.onDialLongPress &&
     prevProps.isCompleted === nextProps.isCompleted &&
     prevProps.currentActivity === nextProps.currentActivity &&
     prevProps.showNumbers === nextProps.showNumbers &&
@@ -605,6 +687,7 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.showActivityEmoji === nextProps.showActivityEmoji &&
     prevProps.showPlayButton === nextProps.showPlayButton &&
     prevProps.showCenterDisk === nextProps.showCenterDisk &&
-    prevProps.centerImage === nextProps.centerImage
+    prevProps.centerImage === nextProps.centerImage &&
+    prevProps.distraction === nextProps.distraction
   );
 });

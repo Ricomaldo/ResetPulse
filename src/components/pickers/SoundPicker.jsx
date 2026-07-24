@@ -1,275 +1,82 @@
 /**
- * @fileoverview Sound picker component for selecting timer completion sounds
- * @created 2025-12-14
- * @updated 2025-12-14
+ * @fileoverview SoundPicker — picker neuf et sobre (C6, formulaire Rituel SCR-16)
+ * @description Reconstruit à neuf (mission recentrage, note C3 : l'ancien
+ * SoundPicker meurt avec SettingsPanel). Liste des sons existants
+ * (config/sounds.js), tap = sélectionne + prévisualise. Pas d'animation de
+ * progression — la sobriété est la spec.
  */
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
-import { TIMER_SOUNDS, getSoundById } from '../../config/sounds';
-import { PauseIcon, PlayIcon } from '../layout/Icons';
+import React, { useCallback } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TIMER_SOUNDS } from '../../config/sounds';
 import { fontWeights } from '../../theme/tokens';
 import { useTheme } from '../../theme/ThemeProvider';
 import useSimpleAudio from '../../hooks/useSimpleAudio';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
-// Color constants
-const TRANSPARENT = 'transparent';
-
-// Composant de loader circulaire style iOS
-const CircularProgress = React.memo(function CircularProgress({ color, duration, size = 24, strokeWidth = 2 }) {
-  const animatedValue = useRef(new Animated.Value(0)).current;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-
-  useEffect(() => {
-    // Reset et redémarrer l'animation
-    animatedValue.setValue(0);
-    Animated.timing(animatedValue, {
-      toValue: 1,
-      duration: duration * 1000, // Convertir en ms
-      useNativeDriver: true,
-    }).start();
-  }, [duration]);
-
-  const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-
-  return (
-    <Svg width={size} height={size} style={{ transform: [{ rotate: '-90deg' }] }}>
-      {/* Cercle de fond */}
-      <Circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        stroke={color + '20'}
-        strokeWidth={strokeWidth}
-        fill="none"
-      />
-      {/* Cercle animé */}
-      <AnimatedCircle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        stroke={color}
-        strokeWidth={strokeWidth}
-        strokeDasharray={circumference}
-        strokeDashoffset={animatedValue.interpolate({
-          inputRange: [0, 1],
-          outputRange: [circumference, 0],
-        })}
-        strokeLinecap="round"
-        fill="none"
-      />
-    </Svg>
-  );
-});
-
-CircularProgress.displayName = 'CircularProgress';
-CircularProgress.propTypes = {
-  color: PropTypes.string.isRequired,
-  duration: PropTypes.number.isRequired,
-  size: PropTypes.number,
-  strokeWidth: PropTypes.number,
-};
-
 export default function SoundPicker({ onSoundSelect, selectedSoundId }) {
   const theme = useTheme();
-  const { playSound, stopSound, isPlaying } = useSimpleAudio('preview');
-  const [playingId, setPlayingId] = useState(null);
-  const timeoutRef = useRef(null);
+  const { playSound, isPlaying } = useSimpleAudio(selectedSoundId);
 
-  // Helper pour convertir la durée en millisecondes
-  const parseDuration = (durationStr) => {
-    const match = durationStr.match(/(\d+)s/);
-    return match ? parseInt(match[1]) : 2; // Default 2s
-  };
-
-  const handleSoundPress = useCallback(async (soundId) => {
-    haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
-
-    // Si on appuie sur le son actuellement en lecture, on l'arrête
-    if (playingId === soundId && isPlaying) {
-      await stopSound();
-      setPlayingId(null);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-      return;
-    }
-
-    // Arrêter tout son en cours
-    if (isPlaying) {
-      await stopSound();
-    }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    // Sélectionner le son
+  const handlePress = useCallback((soundId) => {
+    haptics.selection().catch(() => {});
     onSoundSelect(soundId);
-
-    // Jouer l'aperçu
-    setPlayingId(soundId);
-
-    try {
-      const sound = getSoundById(soundId);
-      await playSound(sound.file);
-
-      // Auto-reset après la durée réelle du son
-      const duration = parseDuration(sound.duration);
-      timeoutRef.current = setTimeout(() => {
-        setPlayingId(null);
-      }, duration * 1000);
-    } catch (error) {
-      // Silent error handling - preview failure is non-critical
-      setPlayingId(null);
-    }
-  }, [playingId, isPlaying, onSoundSelect, playSound, stopSound]);
-
-  // Cleanup au démontage
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+    playSound(soundId).catch(() => {});
+  }, [onSoundSelect, playSound]);
 
   const styles = StyleSheet.create({
-    container: {
-      marginTop: theme.spacing.sm,
-    },
-
-    playIcon: {
-      color: theme.colors.brand.primary,
-      fontSize: rs(16, 'min'),
-    },
-
-    playIndicator: {
-      alignItems: 'center',
-      height: 24,
-      justifyContent: 'center',
-      marginLeft: theme.spacing.sm,
-      position: 'relative',
-      width: 24,
-    },
-
-    playIndicatorInner: {
-      alignItems: 'center',
-      bottom: 0,
-      justifyContent: 'center',
-      left: 0,
-      position: 'absolute',
-      right: 0,
-      top: 0,
-    },
-
-    soundEmoji: {
-      fontSize: rs(20, 'min'),
+    emoji: {
+      fontSize: rs(18, 'min'),
       marginRight: theme.spacing.sm,
     },
-
-    soundInfo: {
-      flex: 1,
+    list: {
+      maxHeight: rs(180, 'min'),
     },
-
-    soundItem: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.background, // Cards use background (not surface)
-      borderColor: theme.colors.border,
-      borderRadius: theme.borderRadius.md,
-      borderWidth: 1,
-      flexDirection: 'row',
-      marginBottom: theme.spacing.xs,
-      minHeight: 44,
-      paddingHorizontal: theme.spacing.sm,
-      paddingVertical: theme.spacing.sm,
-    },
-
-    soundItemActive: {
-      backgroundColor: theme.colors.background,
-      borderColor: theme.colors.brand.accent, // Selection = accent (orange)
-      borderWidth: 2,
-      ...theme.shadow('sm'),
-    },
-
-    soundItemPlaying: {
-      backgroundColor: theme.colors.brand.primary + '10',
-    },
-
-    soundList: {
-      maxHeight: 200,
-    },
-
-    soundName: {
+    name: {
       color: theme.colors.text,
-      fontSize: rs(13, 'min'),
-      fontWeight: fontWeights.medium,
+      flex: 1,
+      fontSize: rs(14, 'min'),
+    },
+    row: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      minHeight: 44,
+      paddingVertical: rs(10),
+    },
+    rowLast: {
+      borderBottomWidth: 0,
+    },
+    selectedMark: {
+      color: theme.colors.brand.primary,
+      fontSize: rs(16, 'min'),
+      fontWeight: fontWeights.semibold,
     },
   });
 
-  // Plus besoin de loader, le hook est synchrone
-
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.soundList}
-        showsVerticalScrollIndicator={false}
-        nestedScrollEnabled={true}
-      >
-        {TIMER_SOUNDS.map((sound) => {
+    <View>
+      <ScrollView style={styles.list} nestedScrollEnabled showsVerticalScrollIndicator={false}>
+        {TIMER_SOUNDS.map((sound, index) => {
           const isActive = selectedSoundId === sound.id;
-          const isCurrentlyPlaying = playingId === sound.id && isPlaying;
-          const soundDuration = parseDuration(sound.duration);
-
           return (
             <TouchableOpacity
               key={sound.id}
-              style={[
-                styles.soundItem,
-                isActive && styles.soundItemActive,
-                isCurrentlyPlaying && styles.soundItemPlaying,
-              ]}
-              onPress={() => handleSoundPress(sound.id)}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={sound.name}
+              accessibilityState={{ selected: isActive }}
+              style={[styles.row, index === TIMER_SOUNDS.length - 1 && styles.rowLast]}
+              onPress={() => handlePress(sound.id)}
               activeOpacity={0.7}
             >
-              <Text style={styles.soundEmoji}>{sound.emoji}</Text>
-
-              <View style={styles.soundInfo}>
-                <Text style={styles.soundName}>{sound.name}</Text>
-              </View>
-
-              <View style={styles.playIndicator}>
-                {isCurrentlyPlaying ? (
-                  <>
-                    {/* Loader circulaire en arrière-plan */}
-                    <CircularProgress
-                      duration={soundDuration}
-                      size={24}
-                      strokeWidth={2.5}
-                      color={theme.colors.brand.primary}
-                    />
-                    {/* Icône pause au centre */}
-                    <View style={styles.playIndicatorInner}>
-                      <PauseIcon size={12} color={theme.colors.brand.primary} />
-                    </View>
-                  </>
-                ) : isActive ? (
-                  <Text style={styles.playIcon}>✓</Text>
-                ) : (
-                  <PlayIcon size={16} color={theme.colors.brand.primary + '30'} />
-                )}
-              </View>
+              <Text style={styles.emoji}>{sound.emoji}</Text>
+              <Text style={styles.name}>{sound.name}</Text>
+              {isActive && (
+                <Text style={styles.selectedMark}>{isPlaying ? '♪' : '✓'}</Text>
+              )}
             </TouchableOpacity>
           );
         })}

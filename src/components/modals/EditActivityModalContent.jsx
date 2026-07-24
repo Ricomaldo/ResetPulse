@@ -14,8 +14,9 @@ import {
   Platform,
   Alert,
   KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
@@ -409,7 +410,7 @@ export default function EditActivityModalContent({
       </View>
 
       {/* Content */}
-      <BottomSheetScrollView
+      <ScrollView
         style={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -502,7 +503,7 @@ export default function EditActivityModalContent({
             </View>
           </View>
         )}
-      </BottomSheetScrollView>
+      </ScrollView>
 
       {/* Footer */}
       <View style={styles.footer}>

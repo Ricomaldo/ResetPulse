@@ -7,13 +7,15 @@
  *
  * State Namespaces:
  * - timer: currentActivity, currentDuration, selectedSoundId, clockwise, scaleMode
- * - display: shouldPulse, showDigitalTimer, showActivityEmoji, showTime
- * - interaction: interactionProfile, longPress*, startAnimation*
+ * - display: shouldPulse, showDigitalTimer, showTime
  * - system: keepAwakeEnabled
+ * - mode: current (Mixte/Focus — Complet mort C6.2 ; ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
  * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
  * - stats: activityDurations, completedTimersCount, hasSeenTwoTimersModal, hasSeenReviewRequest
- * - palette: currentPalette, selectedColorIndex, paletteInfo, paletteColors, timerColors, currentColor
+ * - palette: currentPalette, currentColor (source de vérité, hex — C6.2),
+ *   selectedColorIndex (dérivé, -1 si currentColor n'est pas dans la palette
+ *   active — ex. couleur de Rituel propre), paletteInfo, paletteColors, timerColors
  * - transient: timerRemaining, flashActivity, isLoading
  */
 
@@ -44,7 +46,6 @@ const OLD_KEYS = {
  * @returns {React.ReactElement}
  */
 export const TimerConfigProvider = ({ children }) => {
-  const hasLoadedOnboardingConfig = useRef(false);
   const hasMigratedOldKeys = useRef(false);
   const hasLoggedBoot = useRef(false);
 
@@ -70,21 +71,13 @@ export const TimerConfigProvider = ({ children }) => {
         display: {
           shouldPulse: false,
           showDigitalTimer: false,
-          showActivityEmoji: true,
           showTime: true,
-        },
-        interaction: {
-          interactionProfile: 'ritualiste',
-          startRequiresLongPress: false,
-          stopRequiresLongPress: false,
-          longPressConfirmDuration: 2500,
-          longPressStartDuration: 3000,
-          startAnimationDuration: 1200,
-          customStartLongPress: true,
-          customStopLongPress: true,
         },
         system: {
           keepAwakeEnabled: true,
+        },
+        mode: {
+          current: 'mixte',
         },
         favorites: {
           favoriteActivities: ['work', 'break', 'meditation'],
@@ -103,7 +96,7 @@ export const TimerConfigProvider = ({ children }) => {
         },
         palette: {
           currentPalette: 'serenity',
-          selectedColorIndex: 0,
+          currentColor: TIMER_PALETTES.serenity.colors[0],
         },
       };
     }
@@ -121,21 +114,13 @@ export const TimerConfigProvider = ({ children }) => {
       display: {
         shouldPulse: false,
         showDigitalTimer: false,
-        showActivityEmoji: true,
         showTime: true,
-      },
-      interaction: {
-        interactionProfile: 'ritualiste',
-        startRequiresLongPress: false,
-        stopRequiresLongPress: false,
-        longPressConfirmDuration: 2500,
-        longPressStartDuration: 3000,
-        startAnimationDuration: 1200,
-        customStartLongPress: true,
-        customStopLongPress: true,
       },
       system: {
         keepAwakeEnabled: true,
+      },
+      mode: {
+        current: 'mixte',
       },
       favorites: {
         favoriteActivities: ['work', 'break', 'meditation'],
@@ -180,11 +165,12 @@ export const TimerConfigProvider = ({ children }) => {
           return;
         }
 
-        // Load old keys
-        const [oldTimerOptions, oldPalette, oldColorIndex, oldFavoriteToolMode] = await Promise.all([
+        // Load old keys — selectedColor (index legacy) n'est plus migré : le
+        // modèle palette est passé à currentColor en valeur (C6.2), un vieil
+        // index numérique n'a plus de sens à traduire.
+        const [oldTimerOptions, oldPalette, oldFavoriteToolMode] = await Promise.all([
           AsyncStorage.getItem(OLD_KEYS.timerOptions),
           AsyncStorage.getItem(OLD_KEYS.timerPalette),
-          AsyncStorage.getItem(OLD_KEYS.selectedColor),
           AsyncStorage.getItem(OLD_KEYS.favoriteToolMode),
         ]);
 
@@ -205,16 +191,7 @@ export const TimerConfigProvider = ({ children }) => {
             migratedValues.display = {
               shouldPulse: parsed.shouldPulse !== undefined ? parsed.shouldPulse : migratedValues.display.shouldPulse,
               showDigitalTimer: parsed.showDigitalTimer !== undefined ? parsed.showDigitalTimer : migratedValues.display.showDigitalTimer,
-              showActivityEmoji: parsed.showActivityEmoji !== undefined ? parsed.showActivityEmoji : migratedValues.display.showActivityEmoji,
               showTime: parsed.showTime !== undefined ? parsed.showTime : migratedValues.display.showTime,
-            };
-            migratedValues.interaction = {
-              interactionProfile: parsed.interactionProfile || migratedValues.interaction.interactionProfile,
-              longPressConfirmDuration: parsed.longPressConfirmDuration || migratedValues.interaction.longPressConfirmDuration,
-              longPressStartDuration: parsed.longPressStartDuration || migratedValues.interaction.longPressStartDuration,
-              startAnimationDuration: parsed.startAnimationDuration || migratedValues.interaction.startAnimationDuration,
-              customStartLongPress: parsed.customStartLongPress !== undefined ? parsed.customStartLongPress : migratedValues.interaction.customStartLongPress,
-              customStopLongPress: parsed.customStopLongPress !== undefined ? parsed.customStopLongPress : migratedValues.interaction.customStopLongPress,
             };
             migratedValues.system = {
               keepAwakeEnabled: parsed.keepAwakeEnabled !== undefined ? parsed.keepAwakeEnabled : migratedValues.system.keepAwakeEnabled,
@@ -251,17 +228,6 @@ export const TimerConfigProvider = ({ children }) => {
           }
         }
 
-        // Migrate Color Index
-        if (oldColorIndex) {
-          try {
-            const parsed = JSON.parse(oldColorIndex);
-            migratedValues.palette.selectedColorIndex = parsed !== undefined ? parsed : migratedValues.palette.selectedColorIndex;
-            needsMigration = true;
-          } catch (e) {
-            logger.warn('[TimerConfigContext] Failed to parse old colorIndex:', e.message);
-          }
-        }
-
         // Migrate FavoriteToolMode
         if (oldFavoriteToolMode) {
           migratedValues.layout.favoriteToolMode = oldFavoriteToolMode;
@@ -294,74 +260,35 @@ export const TimerConfigProvider = ({ children }) => {
     migrateOldKeys();
   }, [isLoading, setValues]);
 
-  // Load onboarding v2.1 config once after initial load
+  // C5 : « none » retiré de la barre d'activités (asymétrie 3 activités |
+  // 4 couleurs, ADR-014) — bascule tout état persisté qui le référence encore.
   useEffect(() => {
-    if (isLoading || hasLoadedOnboardingConfig.current) {
-      return;
+    if (!isLoading && values.timer.currentActivity?.id === 'none') {
+      updateValue('timer', { ...values.timer, currentActivity: getDefaultActivity() });
     }
+  }, [isLoading, values.timer, updateValue]);
 
-    const loadOnboardingConfig = async () => {
-      try {
-        // Load onboarding v2.1 config
-        const configStr = await AsyncStorage.getItem('onboarding_v2_config');
-        if (configStr) {
-          try {
-            const config = JSON.parse(configStr);
-            logger.log('[TimerConfigContext] Loading onboarding v2.1 config:', config);
+  // C6.2 : mode « complet » mort (segmenté à 2 entrées) — bascule tout état
+  // persisté qui le référence encore vers le défaut (même patron que le
+  // garde « none » ci-dessus, pas une couche de migration générique).
+  useEffect(() => {
+    if (!isLoading && values.mode.current === 'complet') {
+      updateValue('mode', { current: 'mixte' });
+    }
+  }, [isLoading, values.mode, updateValue]);
 
-            // Apply favoriteToolMode (deprecated - Filter-020 is now preview only)
-            if (config.favoriteToolMode) {
-              setValues(prev => ({
-                ...prev,
-                layout: { ...prev.layout, favoriteToolMode: config.favoriteToolMode }
-              }));
-            }
-
-            // Apply persona → interactionProfile (Filter-050-test-stop)
-            if (config.persona) {
-              const personaId = typeof config.persona === 'string' ? config.persona : config.persona.id;
-              setValues(prev => ({
-                ...prev,
-                interaction: { ...prev.interaction, interactionProfile: personaId }
-              }));
-            }
-
-            // Apply selectedSoundId (Filter-060-sound)
-            if (config.selectedSoundId) {
-              setValues(prev => ({
-                ...prev,
-                timer: { ...prev.timer, selectedSoundId: config.selectedSoundId }
-              }));
-            }
-
-            // Apply customActivity (Filter-030-creation)
-            // Note: Activity will be loaded from useCustomActivities (already persisted there)
-            // We set it as currentActivity if it exists
-            if (config.customActivity) {
-              setValues(prev => ({
-                ...prev,
-                timer: { ...prev.timer, currentActivity: config.customActivity }
-              }));
-            }
-
-            // Cleanup after loading
-            await AsyncStorage.removeItem('onboarding_v2_config');
-
-            logger.log('[TimerConfigContext] Onboarding v2.1 config applied successfully');
-          } catch (parseError) {
-            logger.warn('[TimerConfigContext] Failed to parse onboarding config:', parseError.message);
-            await AsyncStorage.removeItem('onboarding_v2_config');
-          }
-        }
-
-        hasLoadedOnboardingConfig.current = true;
-      } catch (error) {
-        logger.warn('[TimerConfigContext] Failed to load onboarding config:', error);
-      }
-    };
-
-    loadOnboardingConfig();
-  }, [isLoading, setValues]);
+  // Verdicts CD 25/07 : darkLaser/autumn supprimées de TIMER_PALETTES —
+  // bascule tout état persisté qui référence encore une palette morte vers
+  // serenity (même patron que les gardes « none »/« complet » ci-dessus).
+  useEffect(() => {
+    if (!isLoading && !TIMER_PALETTES[values.palette.currentPalette]) {
+      updateValue('palette', {
+        ...values.palette,
+        currentPalette: 'serenity',
+        currentColor: TIMER_PALETTES.serenity.colors[0],
+      });
+    }
+  }, [isLoading, values.palette, updateValue]);
 
   // Handle activity selection with flash feedback (ADR-007 messaging)
   const handleActivitySelect = useCallback((activity) => {
@@ -375,15 +302,19 @@ export const TimerConfigProvider = ({ children }) => {
   }, []);
 
   // Compute derived palette state (memoized to avoid unnecessary recalculations)
+  // currentColor est la source de vérité (hex, C6.2) — selectedColorIndex est
+  // dérivé pour l'affichage (quelle pastille entourer), -1 si la couleur
+  // courante (ex. couleur propre d'un Rituel) n'est pas dans la palette active.
   const paletteData = useMemo(() => {
     const info = TIMER_PALETTES[values.palette.currentPalette] || TIMER_PALETTES.serenity;
     const colors = info.colors;
     const colors_timer = getTimerColors(values.palette.currentPalette);
-    const color = colors[values.palette.selectedColorIndex] || colors[0];
-    return { paletteInfo: info, paletteColors: colors, timerColors: colors_timer, currentColor: color };
-  }, [values.palette.currentPalette, values.palette.selectedColorIndex]);
+    const color = values.palette.currentColor || colors[0];
+    const selectedColorIndex = colors.indexOf(color);
+    return { paletteInfo: info, paletteColors: colors, timerColors: colors_timer, currentColor: color, selectedColorIndex };
+  }, [values.palette.currentPalette, values.palette.currentColor]);
 
-  const { paletteInfo, paletteColors, timerColors, currentColor } = paletteData;
+  const { paletteInfo, paletteColors, timerColors, currentColor, selectedColorIndex } = paletteData;
 
   // Context value with grouped namespaces - MUST BE IN useMemo to trigger updates
   const value = useMemo(() => ({
@@ -398,19 +329,13 @@ export const TimerConfigProvider = ({ children }) => {
     display: {
       shouldPulse: values.display.shouldPulse,
       showDigitalTimer: values.display.showDigitalTimer,
-      showActivityEmoji: values.display.showActivityEmoji,
       showTime: values.display.showTime,
-    },
-    interaction: {
-      interactionProfile: values.interaction.interactionProfile,
-      longPressConfirmDuration: values.interaction.longPressConfirmDuration,
-      longPressStartDuration: values.interaction.longPressStartDuration,
-      startAnimationDuration: values.interaction.startAnimationDuration,
-      customStartLongPress: values.interaction.customStartLongPress,
-      customStopLongPress: values.interaction.customStopLongPress,
     },
     system: {
       keepAwakeEnabled: values.system.keepAwakeEnabled,
+    },
+    mode: {
+      current: values.mode.current,
     },
     favorites: {
       favoriteActivities: values.favorites.favoriteActivities,
@@ -429,7 +354,7 @@ export const TimerConfigProvider = ({ children }) => {
     },
     palette: {
       currentPalette: values.palette.currentPalette,
-      selectedColorIndex: values.palette.selectedColorIndex,
+      selectedColorIndex,
       paletteInfo,
       paletteColors,
       timerColors,
@@ -487,71 +412,10 @@ export const TimerConfigProvider = ({ children }) => {
         display: { ...prev.display, showDigitalTimer }
       }));
     },
-    setShowActivityEmoji: (showActivityEmoji) => {
-      setValues(prev => ({
-        ...prev,
-        display: { ...prev.display, showActivityEmoji }
-      }));
-    },
     setShowTime: (showTime) => {
       setValues(prev => ({
         ...prev,
         display: { ...prev.display, showTime }
-      }));
-    },
-
-    // Interaction (with validation)
-    setInteractionProfile: (profile) => {
-      // Accept both string profiles and object with boolean flags
-      if (typeof profile === 'object' && profile !== null) {
-        setValues(prev => ({
-          ...prev,
-          interaction: {
-            ...prev.interaction,
-            startRequiresLongPress: profile.startRequiresLongPress || false,
-            stopRequiresLongPress: profile.stopRequiresLongPress || false,
-          }
-        }));
-      } else {
-        const validProfiles = ['impulsif', 'abandonniste', 'ritualiste', 'veloce', 'custom'];
-        if (validProfiles.includes(profile)) {
-          setValues(prev => ({
-            ...prev,
-            interaction: { ...prev.interaction, interactionProfile: profile }
-          }));
-        }
-      }
-    },
-    setLongPressConfirmDuration: (duration) => {
-      const clamped = Math.max(1000, Math.min(5000, duration));
-      setValues(prev => ({
-        ...prev,
-        interaction: { ...prev.interaction, longPressConfirmDuration: clamped }
-      }));
-    },
-    setLongPressStartDuration: (duration) => {
-      const clamped = Math.max(1000, Math.min(5000, duration));
-      setValues(prev => ({
-        ...prev,
-        interaction: { ...prev.interaction, longPressStartDuration: clamped }
-      }));
-    },
-    setStartAnimationDuration: (duration) => {
-      const clamped = Math.max(300, Math.min(2000, duration));
-      setValues(prev => ({
-        ...prev,
-        interaction: { ...prev.interaction, startAnimationDuration: clamped }
-      }));
-    },
-    setCustomInteraction: (startRequiresLongPress, stopRequiresLongPress) => {
-      setValues(prev => ({
-        ...prev,
-        interaction: {
-          ...prev.interaction,
-          interactionProfile: 'custom',
-          customStartLongPress: startRequiresLongPress,
-          customStopLongPress: stopRequiresLongPress,
-        }
       }));
     },
 
@@ -560,6 +424,14 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         system: { ...prev.system, keepAwakeEnabled: enabled }
+      }));
+    },
+
+    // Mode (Mixte/Focus — Complet mort C6.2, segmenté à 2 entrées)
+    setMode: (mode) => {
+      setValues(prev => ({
+        ...prev,
+        mode: { ...prev.mode, current: mode }
       }));
     },
 
@@ -662,30 +534,43 @@ export const TimerConfigProvider = ({ children }) => {
       }));
     },
 
-    // Palette
+    // Palette — currentColor est la source de vérité (hex, C6.2) ; setColorIndex
+    // et setColorByType restent des raccourcis pratiques qui résolvent un
+    // index vers le hex de la palette ACTIVE au moment de l'appel.
     setPalette: (paletteName) => {
       if (TIMER_PALETTES[paletteName]) {
         setValues(prev => ({
           ...prev,
-          palette: { ...prev.palette, currentPalette: paletteName, selectedColorIndex: 0 }
+          palette: { ...prev.palette, currentPalette: paletteName, currentColor: TIMER_PALETTES[paletteName].colors[0] }
         }));
       }
     },
     setColorIndex: (index) => {
       if (index >= 0 && index < 4) {
-        setValues(prev => ({
-          ...prev,
-          palette: { ...prev.palette, selectedColorIndex: index }
-        }));
+        setValues(prev => {
+          const colors = (TIMER_PALETTES[prev.palette.currentPalette] || TIMER_PALETTES.serenity).colors;
+          return { ...prev, palette: { ...prev.palette, currentColor: colors[index] } };
+        });
       }
     },
     setColorByType: (type) => {
       const typeToIndex = { energy: 0, focus: 1, calm: 2, deep: 3 };
       const index = typeToIndex[type];
       if (index !== undefined) {
+        setValues(prev => {
+          const colors = (TIMER_PALETTES[prev.palette.currentPalette] || TIMER_PALETTES.serenity).colors;
+          return { ...prev, palette: { ...prev.palette, currentColor: colors[index] } };
+        });
+      }
+    },
+    // Couleur en valeur directe (ex. couleur propre d'un Rituel, C6.2) — peut
+    // ne correspondre à aucune pastille de la palette active (selectedColorIndex
+    // dérivé retombe alors à -1, aucune pastille en surbrillance : attendu).
+    setColorByValue: (hex) => {
+      if (hex) {
         setValues(prev => ({
           ...prev,
-          palette: { ...prev.palette, selectedColorIndex: index }
+          palette: { ...prev.palette, currentColor: hex }
         }));
       }
     },

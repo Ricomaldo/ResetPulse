@@ -12,9 +12,10 @@ import {
   StyleSheet,
   Platform,
   ActivityIndicator,
+  ScrollView,
   Alert,
 } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { usePurchases } from '../../contexts/PurchaseContext';
@@ -406,7 +407,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
   });
 
   return (
-    <BottomSheetScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text
@@ -496,7 +497,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
           )}
         </TouchableOpacity>
       </View>
-    </BottomSheetScrollView>
+    </ScrollView>
   );
 }
 

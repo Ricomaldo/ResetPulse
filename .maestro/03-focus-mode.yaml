@@ -1,0 +1,20 @@
+appId: com.irimwebforge.resetpulse
+---
+- launchApp
+# Garde anti-réveil (TimerScreen.jsx, handleBackgroundDoubleTap) : le
+# double-tap est ignoré durant les 1,5s qui suivent un retour AppState
+# 'active' (anti-poche/réveil). waitForAnimationToEnd laisse ce délai
+# s'écouler avant le geste — sans cette pause le double-tap juste après
+# launchApp est silencieusement avalé.
+- waitForAnimationToEnd:
+    timeout: 2000
+# Double-tap sur le fond nu (au-dessus du disque, hors disque/rangée/dé/sheet)
+# → bascule Mixte → Focus.
+- doubleTapOn:
+    point: "50%,20%"
+- assertNotVisible:
+    id: "timer.dice"
+- tapOn:
+    id: "aside.handle"
+- tapOn:
+    id: "aside.exit-focus"

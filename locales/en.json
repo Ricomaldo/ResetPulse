@@ -3,7 +3,8 @@
     "cancel": "Cancel",
     "ok": "OK",
     "retry": "Retry",
-    "continue": "Continue"
+    "continue": "Continue",
+    "back": "Back"
   },
   "controls": {
     "digitalTimer": {
@@ -18,9 +19,12 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "surprise me"
     }
   },
-  "invitation": "Ready?",
+  "invitation": "ready?",
   "welcome": {
     "title": "Welcome to ResetPulse"
   },
@@ -257,10 +261,8 @@
     "dawn": "Aurora",
     "dusk": "Twilight",
     "soft": "Gentle",
-    "autumn": "Autumn",
     "lavender": "Lavender",
-    "teal": "Teal",
-    "darkLaser": "Dark Laser"
+    "teal": "Teal"
   },
   "sounds": {
     "bell_classic": "Bell",
@@ -277,6 +279,7 @@
   "accessibility": {
     "keepAwake": "Keep screen awake",
     "rotationDirection": "Rotation direction",
+    "showTime": "Show time",
     "activity": "Activity %{name}",
     "activityLocked": "Premium activity locked",
     "moreActivities": "More activities",
@@ -301,6 +304,7 @@
     "closeModalHint": "Closes this dialog and returns to the app",
     "unlockPremium": "Unlock premium for %{price}",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "distraction": "Distraction",
     "restorePurchases": "Restore previous purchases",
     "restorePurchasesHint": "Restore premium access if you already purchased",
     "paletteItem": "Color palette: %{name}",
@@ -310,7 +314,13 @@
     "saveActivityHint": "Saves changes to this activity",
     "deleteActivityHint": "Permanently deletes this custom activity",
     "celebrationEmoji": "Celebration",
-    "exploreSettingsHint": "Opens settings to discover premium features"
+    "exploreSettingsHint": "Opens settings to discover premium features",
+    "applyRitual": "Apply the %{name} ritual",
+    "editRitual": "Edit the %{name} ritual",
+    "createRitual": "Create a ritual",
+    "closeRitualForm": "Close the ritual form",
+    "chooseCustomEmoji": "Choose another emoji via the keyboard",
+    "ritualNamePreset": "Preset ritual %{name}"
   },
   "discovery": {
     "defaultCta": "Try 7 days free",
@@ -372,20 +382,20 @@
       "endMessage": "Well done 🎉"
     },
     "work": {
-      "startMessage": "Focus",
-      "endMessage": "Accomplished ✨"
+      "startMessage": "to work.",
+      "endMessage": "that's done."
     },
     "break": {
-      "startMessage": "Rest",
-      "endMessage": "Recharged 🔋"
+      "startMessage": "take a breath.",
+      "endMessage": "back, gently."
     },
     "meditation": {
-      "startMessage": "Breathe",
-      "endMessage": "Centered 🪷"
+      "startMessage": "breathe.",
+      "endMessage": "welcome back."
     },
     "creativity": {
-      "startMessage": "Create",
-      "endMessage": "Inspired ✨"
+      "startMessage": "let it come.",
+      "endMessage": "lovely moment."
     },
     "reading": {
       "startMessage": "Dive in",
@@ -434,6 +444,10 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Let's go",
+      "endMessage": "Done ✨"
     }
   },
   "notifications": {
@@ -448,5 +462,58 @@
         "body": "7-day free trial — grab it before it expires"
       }
     }
+  },
+  "rituals": {
+    "sheetRow": "My rituals",
+    "base": {
+      "meditation": "Breathing",
+      "break": "Coffee break",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "My rituals",
+      "createRow": "Create a ritual",
+      "empty": "No rituals yet",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Create a ritual",
+      "editTitle": "Edit ritual",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Other emoji",
+      "colorLabel": "Color",
+      "durationLabel": "Duration",
+      "soundLabel": "End sound",
+      "saveButton": "Save",
+      "deleteButton": "Delete",
+      "deleteConfirmTitle": "Delete this ritual?",
+      "deleteConfirmMessage": "This action is irreversible.",
+      "customActivityName": "My ritual"
+    }
+  },
+  "palettesPanel": {
+    "sheetRow": "Palettes",
+    "title": "Palettes",
+    "included": "Included",
+    "ambiances": "Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Focus"
+  },
+  "focus": {
+    "hint": "swipe up"
+  },
+  "firstRun": {
+    "skip": "skip",
+    "welcome": "let's start by picking an activity 👇",
+    "companion": "this emoji keeps you company. slide the disc to set your time.",
+    "dialColor": "a color? it changes right away.",
+    "ready": "all set. touch the disc to start."
+  },
+  "aside": {
+    "exitFocus": "leave focus",
+    "doubleTapHint": "tip: double-tap the background to switch",
+    "handle": "open settings"
   }
 }

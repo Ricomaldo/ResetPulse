@@ -1,11 +1,11 @@
 /**
  * @fileoverview CreateActivityModalContent - Modal wrapper for creating custom activities
- * @description Handles business logic (premium gate, analytics) and wraps form with BottomSheetScrollView
+ * @description Handles business logic (premium gate, analytics) and wraps form with ScrollView
  * @created 2025-12-21
  * @updated 2025-12-22 - Refactored to use CreateActivityForm
  */
 import React from 'react';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { ScrollView } from 'react-native';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useModalStack } from '../../contexts/ModalStackContext';
@@ -74,13 +74,13 @@ export default function CreateActivityModalContent({
       showHeader={true}
     >
       {(formContent, scrollContentStyle) => (
-        <BottomSheetScrollView
+        <ScrollView
           style={scrollContentStyle}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
           {formContent}
-        </BottomSheetScrollView>
+        </ScrollView>
       )}
     </CreateActivityForm>
   );

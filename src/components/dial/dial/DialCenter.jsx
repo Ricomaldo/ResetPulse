@@ -2,14 +2,14 @@
  * @fileoverview DialCenter - Centre du dial avec PulseButton (ADR-007)
  * @description Simplifié: utilise uniquement PulseButton pour tous les états
  * @created 2025-12-14
- * @updated 2025-12-19 (ADR-007: simplifié avec PulseButton)
+ * @updated 2026-07-25 (C6.2 fidélité au rendu : purement visuel, le tap
+ * appartient au disque entier via TimerDial — `onTap` retiré)
  */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PulseButton } from '../../buttons';
 import { useTimerConfig } from '../../../contexts/TimerConfigContext';
-import { getProfileConfig } from '../../../utils/interactionProfileConfig';
 
 /**
  * DialCenter - Affiche PulseButton au centre du dial
@@ -17,28 +17,23 @@ import { getProfileConfig } from '../../../utils/interactionProfileConfig';
  * @param {Object} activity - Objet activité (contient emoji et propriétés)
  * @param {boolean} isRunning - Timer en cours
  * @param {boolean} isCompleted - Timer terminé
- * @param {function} onTap - Callback tap (REST → start, COMPLETE → reset)
- * @param {function} onLongPressComplete - Callback long press (RUNNING → stop)
+ * @param {string} color - Couleur courante du disque (suit la palette en direct)
  * @param {boolean} clockwise - Sens du timer (pour animation)
  * @param {number} size - Taille du bouton
- * @param {number} progress - Progress du timer (0-1, utilisé pour position initiale du long press)
+ * @param {Object|null} distraction - Tirage MOT-f (dé Distraction),
+ *   `{ movement, variant }` — override le mouvement courant de PulseButton
+ *   quand non-null, variante d'intensité incluse (Lot 3a)
  */
 const DialCenter = React.memo(function DialCenter({
   activity,
   isRunning,
   isCompleted = false,
-  onTap,
-  onLongPressComplete,
+  color = null,
   clockwise = false,
   size = 72,
-  progress = 1,
+  distraction = null,
 }) {
-  // Get pulse setting and interaction profile from context
-  const { display: { shouldPulse }, interaction: { interactionProfile, customStartLongPress, customStopLongPress } } = useTimerConfig();
-  const profileConfig = getProfileConfig(interactionProfile, {
-    startRequiresLongPress: customStartLongPress,
-    stopRequiresLongPress: customStopLongPress,
-  });
+  const { display: { shouldPulse } } = useTimerConfig();
 
   // Déterminer l'état du bouton
   const getState = () => {
@@ -51,14 +46,15 @@ const DialCenter = React.memo(function DialCenter({
     <View style={styles.container}>
       <PulseButton
         state={getState()}
+        // ✨ REJOINT l'emoji, ne le remplace pas — le compagnon reste jusqu'au
+        // bout (verdicts CD Q5). Sans emoji d'activité : ✨ seul.
+        emoji={isCompleted ? `${activity?.emoji ?? ''}✨` : null}
         activity={activity}
-        onTap={onTap}
-        onLongPressComplete={onLongPressComplete}
+        color={color}
         clockwise={clockwise}
         size={size}
-        stopRequiresLongPress={profileConfig.stopRequiresLongPress}
-        startRequiresLongPress={profileConfig.startRequiresLongPress}
         shouldPulse={shouldPulse}
+        distraction={distraction}
       />
     </View>
   );
@@ -68,12 +64,14 @@ DialCenter.displayName = 'DialCenter';
 DialCenter.propTypes = {
   activity: PropTypes.shape({
     emoji: PropTypes.string,
+    movement: PropTypes.string,
+    pulseDuration: PropTypes.number,
   }),
   clockwise: PropTypes.bool,
+  color: PropTypes.string,
+  distraction: PropTypes.shape({ movement: PropTypes.string, variant: PropTypes.object }),
   isCompleted: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,
-  onLongPressComplete: PropTypes.func,
-  onTap: PropTypes.func,
   size: PropTypes.number,
 };
 

@@ -1,11 +1,34 @@
 /**
- * @fileoverview AsideZone V3 - Custom drawer Reanimated 4
- * Migration: @gorhom/bottom-sheet → Gesture.Pan + Reanimated 4 (2026-05-01)
- * Reason: @gorhom/bottom-sheet v5.x incompatible with Reanimated 4.x (Expo SDK 55)
- * See devlog: _cockpit/devlogs/2026-05-01_aside-custom-drawer-reanimated4.md
+ * @fileoverview AsideZone - Sheet léger custom Reanimated 4 (SCR-10, ADR-014)
+ * V3 (2026-05-01) : migration @gorhom/bottom-sheet → Gesture.Pan + Reanimated 4.
+ * Recentrage (2026-07-23) : 3 snaps / 7 sections → 2 états (fermé / ouvert
+ * au swipe up) et 4 blocs.
+ * Cycle 3 (Lot 2) : adoption — mécanisme + 4 blocs nés de la spec, gardés tels
+ * quels. Bloc 1 câblé sur `mode` (écrit la valeur ; Mixte seul rend, C4/C5
+ * brancheront Focus/Complet). Blocs 3/4 ramenés à des lignes placeholder
+ * inertes (contenu réel : C6) — les carrousels qu'ils embarquaient dupliquaient
+ * déjà `CompactRow` sans être la cible spec (liste SCR-16 / sous-écran PALC-PALE).
+ * `labelOverlay`/`MessageZone` retirés : legacy pré-Lot 2, dupliquait l'affichage
+ * de message que `TimerScreen` gère déjà nativement depuis C1/C2 (ADR-007).
+ * Cycle 4 : affûtage « signature des modes » (porte C3, Eric) — en Focus, le
+ * sheet ne montre plus que le segmenté (bloc 1). Un mode s'affirme par ce
+ * qu'il interdit : en Focus, on ne règle rien, on ne peut qu'en sortir.
+ * Cycle 5 (porte C4) : sheet trop grand pour son contenu — snap ouvert calculé
+ * sur la hauteur réelle mesurée (`onLayout`, plus poignée), plafonné à 65 % de
+ * l'écran. Le sheet ne couvre plus 80 % pour 2-4 lignes, le dial reste visible
+ * sheet ouvert. Toggle « emoji au centre » retiré (signature ADR-014, pas une
+ * option, veto Eric à la porte C4) — 2 réglages globaux restants.
+ * Cycle 6.1 : bloc 4 Palettes câblé — sous-écran réel (`PalettesPanel`), même
+ * mécanisme que le bloc 3 Rituels. `CompactRow` (TimerScreen) corrigé pour
+ * suivre la palette courante (lisait `serenity` en dur).
+ * Cycle 6.2 (fidélité au rendu) : Complet meurt (acté Eric 25/07 ×2) —
+ * segmenté à 2 entrées, libellés i18n provisoires [Standard | Focus] (clé
+ * interne `mixte` inchangée, naming définitif à la passe CD). Sélection
+ * segmenté sombre (#2D2520), plus doré. Palette : sous-écran ne referme plus
+ * le sheet au tap (préviz live, porte C6.1).
  */
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -17,298 +40,487 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
-import { usePremiumStatus } from '../../hooks/usePremiumStatus';
-import { MessageZone } from '../messaging';
-import { FavoriteToolBox, ToolBox } from './aside-content';
-import { SettingsPanel } from '../settings';
+import { useTranslation } from '../../hooks/useTranslation';
+import { usePersistedState } from '../../hooks/usePersistedState';
+import { useAnalytics } from '../../hooks/useAnalytics';
+import { rs } from '../../styles/responsive';
+import { fontWeights } from '../../theme/tokens';
+import haptics from '../../utils/haptics';
+import RitualsPanel from '../rituals/RitualsPanel';
+import PalettesPanel from '../palettes/PalettesPanel';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-// Container heights per snap (content area, slightly smaller than snap to account for handle)
-const LAYER_1_HEIGHT = SCREEN_HEIGHT * 0.1;
-const CONTAINER_SNAP_1 = SCREEN_HEIGHT * 0.13;
-const CONTAINER_SNAP_2 = SCREEN_HEIGHT * 0.27;
-const CONTAINER_SNAP_3 = SCREEN_HEIGHT * 0.8;
+// 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
+// Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
+// indicator) — tap dessus = geste home, sheet inaccessible au doigt (prouvé au
+// tap-robot). Cause racine : les snaps étaient calculés en % de l'ÉCRAN alors
+// que le drawer est positionné dans la SafeArea du parent (~62 pt d'offset
+// haut) — tout était décalé vers le bas depuis le début. Désormais : repère =
+// hauteur MESURÉE du conteneur (onLayout), bande fermée FIXE de 92 pt — la
+// barre du handle reste ~65 pt au-dessus de la zone système, sur tout device.
+const CLOSED_VISIBLE = 92;
+// Plafond : le sheet ne couvre jamais plus de 65% de l'écran — le dial reste visible
+const MAX_OPEN_COVERAGE = 0.65;
+const HANDLE_HEIGHT = 28; // handleContainer paddingTop(14)+paddingBottom(8) + handleIndicator height(6)
+const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 
-// Drawer translateY values per snap point
-// Higher Y = more collapsed (less of drawer visible)
-const SNAP_Y_0 = SCREEN_HEIGHT * 0.82; // snap 0: 18% visible
-const SNAP_Y_1 = SCREEN_HEIGHT * 0.68; // snap 1: 32% visible
-const SNAP_Y_2 = SCREEN_HEIGHT * 0.10; // snap 2: 90% visible
-const SNAP_YS = [SNAP_Y_0, SNAP_Y_1, SNAP_Y_2];
+// Complet meurt (C6.2, acté Eric 25/07 ×2) — segmenté à 2 entrées. Clé
+// interne `mixte` conservée (naming définitif à la passe CD, piste : le
+// défaut ne se nomme pas) ; libellé affiché "Standard" (i18n, provisoire).
+export default function AsideZone({ isTimerRunning }) {
+  const theme = useTheme();
+  const t = useTranslation();
+  const analytics = useAnalytics();
+  const {
+    timer: { clockwise },
+    setClockwise,
+    system: { keepAwakeEnabled },
+    setKeepAwakeEnabled,
+    display: { showTime },
+    setShowTime,
+    mode: { current: currentMode },
+    setMode,
+  } = useTimerConfig();
 
-// Opacity threshold: allOpacity starts at 80% of the way from snap 1 → snap 2
-const SNAP_Y_ALL_THRESHOLD = SNAP_Y_1 + 0.8 * (SNAP_Y_2 - SNAP_Y_1);
+  const isFocus = currentMode === 'focus';
 
-const SPRING_CONFIG = {
-  damping: 80,
-  stiffness: 450,
-  overshootClamping: true,
-  restDisplacementThreshold: 0.01,
-  restSpeedThreshold: 0.01,
-};
+  const MODES = [
+    { key: 'mixte', label: t('mode.standard') },
+    { key: 'focus', label: t('mode.focus') },
+  ];
 
-// Worklet: find nearest snap index, with velocity bias (1 step in swipe direction)
-// Index 0 = most collapsed (snap 18%), Index 2 = most expanded (snap 90%)
-// velocityY > 0 → swiping down → collapse → lower snap index
-// velocityY < 0 → swiping up → expand → higher snap index
-function findNearestSnap(y, velocityY) {
-  'worklet';
-  let nearest = 0;
-  let minDist = Infinity;
-  for (let i = 0; i < SNAP_YS.length; i++) {
-    const dist = Math.abs(SNAP_YS[i] - y);
-    if (dist < minDist) {
-      minDist = dist;
-      nearest = i;
+  const [isOpen, setIsOpen] = useState(false);
+  // Sous-écran Rituels (bloc 3, C6) — remplace les blocs 1-4 quand ouvert.
+  const [ritualsOpen, setRitualsOpen] = useState(false);
+  // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  // Apprentissage double-tap (verdicts CD 25/07) : légende visible les 2
+  // PREMIÈRES ouvertures du sheet, puis plus jamais — compteur persisté,
+  // incrémenté sur la seule transition fermé→ouvert (pas à chaque render).
+  const [asideOpenCount, setAsideOpenCount, asideOpenCountLoading] =
+    usePersistedState('@ResetPulse:asideOpenCount', 0);
+  const wasOpenRef = useRef(false);
+  useEffect(() => {
+    if (isOpen && !wasOpenRef.current && !asideOpenCountLoading) {
+      setAsideOpenCount((count) => count + 1);
     }
-  }
-  if (velocityY > 500) return Math.max(0, nearest - 1);
-  if (velocityY < -500) return Math.min(2, nearest + 1);
-  return nearest;
-}
+    wasOpenRef.current = isOpen;
+  }, [isOpen, asideOpenCountLoading, setAsideOpenCount]);
+  const showDoubleTapHint = !asideOpenCountLoading && asideOpenCount <= 2;
+  // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
+  // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
+  const [contentHeight, setContentHeight] = useState(SCREEN_HEIGHT * 0.6);
+  // Hauteur RÉELLE du conteneur (SafeArea du parent) — le seul repère honnête
+  // pour positionner le drawer (cf. commentaire CLOSED_VISIBLE).
+  const [containerH, setContainerH] = useState(SCREEN_HEIGHT);
+  const snapClosed = containerH - CLOSED_VISIBLE;
 
-function SheetContent({ currentSnapIndex, isTimerRunning, activityCarouselRef, paletteCarouselRef, isPremiumUser, onResetOnboarding, animatedTranslateY }) {
-  const theme = useTheme();
-
-  const containerHeightStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_2, SNAP_Y_1, SNAP_Y_0],
-      [CONTAINER_SNAP_3, CONTAINER_SNAP_2, CONTAINER_SNAP_1],
-      Extrapolation.CLAMP
-    );
-    return { height };
-  });
-
-  const favoriteOpacityStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_1, SNAP_Y_0],
-      [0, 1],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  const baseOpacityStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_2, SNAP_Y_1, SNAP_Y_0],
-      [0, 1, 0],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  const allOpacityStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      animatedTranslateY.value,
-      [SNAP_Y_2, SNAP_Y_ALL_THRESHOLD, SNAP_Y_1, SNAP_Y_0],
-      [1, 0, 0, 0],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContent}
-      scrollEnabled={currentSnapIndex === 2}
-      bounces={currentSnapIndex === 2}
-      overScrollMode="never"
-      showsVerticalScrollIndicator={currentSnapIndex === 2}
-      nestedScrollEnabled={true}
-    >
-      <Animated.View style={[styles.layerContainer, containerHeightStyle]}>
-        {/* Snap 18%: FavoriteToolBox */}
-        <Animated.View
-          style={[
-            styles.layerAbsolute,
-            { backgroundColor: theme.colors.fixed.transparent, height: LAYER_1_HEIGHT },
-            favoriteOpacityStyle,
-          ]}
-          pointerEvents={currentSnapIndex === 0 ? 'auto' : 'none'}
-        >
-          <FavoriteToolBox isTimerRunning={isTimerRunning} />
-        </Animated.View>
-
-        {/* Snap 32%: ToolBox */}
-        <Animated.View
-          style={[
-            styles.layerAbsolute,
-            { backgroundColor: theme.colors.fixed.transparent },
-            baseOpacityStyle,
-          ]}
-          pointerEvents={currentSnapIndex === 1 ? 'auto' : 'none'}
-        >
-          <ToolBox
-            isTimerRunning={isTimerRunning}
-            activityCarouselRef={activityCarouselRef}
-            paletteCarouselRef={paletteCarouselRef}
-          />
-        </Animated.View>
-
-        {/* Snap 90%: SettingsPanel */}
-        <Animated.View
-          style={[
-            styles.layerAbsolute,
-            { backgroundColor: theme.colors.fixed.transparent },
-            allOpacityStyle,
-          ]}
-          pointerEvents={currentSnapIndex === 2 ? 'auto' : 'none'}
-        >
-          <SettingsPanel
-            isPremiumUser={isPremiumUser}
-            resetOnboarding={onResetOnboarding}
-            onClose={() => {}}
-          />
-        </Animated.View>
-      </Animated.View>
-    </ScrollView>
+  const openY = Math.max(
+    containerH * (1 - MAX_OPEN_COVERAGE),
+    containerH - HANDLE_HEIGHT - contentHeight - BOTTOM_SAFETY
   );
-}
 
-export default function AsideZone({ timerState, isTimerRunning, onOpenSettings: _onOpenSettings, displayMessage, isCompleted, flashActivity, onResetOnboarding }) {
-  const theme = useTheme();
-  const { timer: { currentActivity } } = useTimerConfig();
-  const { isPremium: isPremiumUser } = usePremiumStatus();
-
-  const activityCarouselRef = useRef(null);
-  const paletteCarouselRef = useRef(null);
-
-  const [currentSnapIndex, setCurrentSnapIndex] = useState(0);
-
-  const animatedTranslateY = useSharedValue(SNAP_Y_0);
-  const startY = useSharedValue(SNAP_Y_0);
-
-  const snapToIndex = (index) => {
-    animatedTranslateY.value = withSpring(SNAP_YS[index], SPRING_CONFIG);
-    setCurrentSnapIndex(index);
+  const handleContentLayout = (e) => {
+    setContentHeight(e.nativeEvent.layout.height);
   };
 
-  // Auto-collapse to snap 0 when timer starts
+  const translateY = useSharedValue(SCREEN_HEIGHT); // offscreen avant mesure
+  const startY = useSharedValue(SCREEN_HEIGHT);
+
+  // Recale la position fermée dès que le conteneur est mesuré
   useEffect(() => {
-    if (isTimerRunning && currentSnapIndex !== 0) {
-      snapToIndex(0);
+    if (!isOpen) {
+      translateY.value = snapClosed;
     }
-  }, [isTimerRunning]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [snapClosed]);
+
+  const snapTo = (open) => {
+    translateY.value = withSpring(open ? openY : snapClosed, {
+      damping: 80,
+      stiffness: 450,
+      overshootClamping: true,
+      restDisplacementThreshold: 0.01,
+      restSpeedThreshold: 0.01,
+    });
+    setIsOpen(open);
+  };
+
+  // Auto-collapse when timer starts
+  useEffect(() => {
+    if (isTimerRunning && isOpen) {
+      snapTo(false);
+    }
+  }, [isTimerRunning]); // volontairement limité : réagit au seul démarrage du timer
+
+  // Sheet fermé (swipe, auto-collapse ou application d'un rituel/palette) :
+  // les sous-écrans ne restent pas ouverts pour la prochaine ouverture.
+  useEffect(() => {
+    if (!isOpen) {
+      setRitualsOpen(false);
+      setPaletteOpen(false);
+    }
+  }, [isOpen]);
+
+  // Recale la position ouverte si le contenu mesuré change pendant que le
+  // sheet est ouvert (ex: bascule de mode qui ajoute/retire des blocs)
+  useEffect(() => {
+    if (isOpen) {
+      translateY.value = withSpring(openY, {
+        damping: 80,
+        stiffness: 450,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+      });
+    }
+  }, [openY]);
 
   const panGesture = useMemo(() => Gesture.Pan()
     .activeOffsetY([-20, 20])
     .failOffsetX([-15, 15])
     .onBegin(() => {
-      startY.value = animatedTranslateY.value;
+      startY.value = translateY.value;
     })
     .onUpdate((e) => {
       const newY = startY.value + e.translationY;
-      animatedTranslateY.value = Math.max(SNAP_Y_2, Math.min(SNAP_Y_0, newY));
+      translateY.value = Math.max(openY, Math.min(snapClosed, newY));
     })
     .onEnd((e) => {
-      const snapIndex = findNearestSnap(animatedTranslateY.value, e.velocityY);
-      animatedTranslateY.value = withSpring(SNAP_YS[snapIndex], SPRING_CONFIG);
-      runOnJS(setCurrentSnapIndex)(snapIndex);
+      const midpoint = (openY + snapClosed) / 2;
+      let open = translateY.value < midpoint;
+      if (e.velocityY > 500) { open = false; }
+      if (e.velocityY < -500) { open = true; }
+      translateY.value = withSpring(open ? openY : snapClosed, {
+        damping: 80,
+        stiffness: 450,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+      });
+      runOnJS(setIsOpen)(open);
     }),
-  [animatedTranslateY, startY]);
+  [translateY, startY, openY]);
 
   const drawerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: animatedTranslateY.value }],
+    transform: [{ translateY: translateY.value }],
   }));
 
-  const dynamicBackgroundStyle = {
-    backgroundColor: currentSnapIndex === 2 ? theme.colors.surfaceElevated : theme.colors.surface,
-  };
+  const contentAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateY.value,
+      [openY, snapClosed],
+      [1, 0],
+      Extrapolation.CLAMP
+    ),
+  }), [openY, snapClosed]);
+
+  const styles = StyleSheet.create({
+    asideContainer: {
+      bottom: 0,
+      left: 0,
+      pointerEvents: 'box-none',
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      zIndex: 50,
+    },
+    content: {
+      flex: 1,
+    },
+    drawer: {
+      backgroundColor: theme.colors.surface,
+      borderTopLeftRadius: 16,
+      borderTopRightRadius: 16,
+      height: SCREEN_HEIGHT,
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      top: 0,
+    },
+    handleContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      // Asymétrique : la barre vit dans le haut de la bande fermée, loin de
+      // l'indicateur home iOS (porte Eric 25/07).
+      paddingBottom: 8,
+      paddingTop: 14,
+    },
+    handleIndicator: {
+      borderRadius: 3,
+      height: 6,
+      width: 56,
+    },
+    inertChevron: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(16, 'min'),
+    },
+    inertRowLabel: {
+      color: theme.colors.text,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.medium,
+    },
+    optionLabel: {
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(14, 'min'),
+    },
+    optionRow: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: rs(12),
+    },
+    optionRowLast: {
+      borderBottomWidth: 0,
+    },
+    scrollContent: {
+      paddingBottom: rs(24),
+      paddingHorizontal: rs(16),
+    },
+    segmentButton: {
+      alignItems: 'center',
+      borderRadius: theme.borderRadius.md - 2,
+      flex: 1,
+      paddingVertical: rs(8),
+    },
+    segmentButtonActive: {
+      backgroundColor: theme.colors.text,
+    },
+    segmentText: {
+      color: theme.colors.text,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.medium,
+      textAlign: 'center',
+    },
+    segmentTextActive: {
+      color: theme.colors.fixed.white,
+    },
+    segmentedControl: {
+      backgroundColor: theme.colors.segmentInactive,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.md,
+      borderWidth: 1,
+      flexDirection: 'row',
+      marginTop: rs(4),
+      padding: rs(2),
+    },
+    togglesCard: {
+      marginTop: rs(16),
+    },
+    doubleTapHint: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(11, 'min'),
+      marginTop: rs(8),
+      textAlign: 'center',
+    },
+  });
+
+  const toggles = [
+    {
+      key: 'keepAwake',
+      label: t('accessibility.keepAwake'),
+      value: keepAwakeEnabled,
+      onChange: setKeepAwakeEnabled,
+    },
+    {
+      key: 'clockwise',
+      label: t('accessibility.rotationDirection'),
+      value: clockwise,
+      onChange: setClockwise,
+    },
+    {
+      key: 'showTime',
+      label: t('accessibility.showTime'),
+      value: showTime,
+      onChange: setShowTime,
+    },
+  ];
 
   return (
-    <View style={styles.asideContainer}>
-      {currentActivity && (
-        <View style={styles.labelOverlay}>
-          <MessageZone
-            timerState={timerState}
-            label={currentActivity.label}
-            displayMessage={displayMessage}
-            isCompleted={isCompleted}
-            flashActivity={flashActivity}
-            isTimerRunning={isTimerRunning}
-          />
-        </View>
-      )}
-
+    <View
+      style={styles.asideContainer}
+      onLayout={(e) => setContainerH(e.nativeEvent.layout.height)}
+    >
       <GestureDetector gesture={panGesture}>
-        <Animated.View style={[styles.drawer, dynamicBackgroundStyle, drawerAnimatedStyle, theme.shadow('xl')]}>
-          {/* Handle */}
-          <View style={styles.handleContainer}>
+        <Animated.View testID="aside.sheet" style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
+          {/* Handle — affordance du sheet : swipe up OU tap (porte Eric 25/07,
+              la bande fermée doit s'ouvrir au doigt, pas seulement au geste) */}
+          <TouchableOpacity
+            testID="aside.handle"
+            style={styles.handleContainer}
+            activeOpacity={0.8}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={t('aside.handle')}
+            onPress={() => {
+              haptics.selection().catch(() => {});
+              if (!isOpen) {
+                analytics.trackSheetOpened();
+              }
+              snapTo(!isOpen);
+            }}
+          >
             <View style={[styles.handleIndicator, { backgroundColor: theme.colors.textSecondary }]} />
-          </View>
+          </TouchableOpacity>
 
-          {/* Content */}
-          <SheetContent
-            currentSnapIndex={currentSnapIndex}
-            isTimerRunning={isTimerRunning}
-            activityCarouselRef={activityCarouselRef}
-            paletteCarouselRef={paletteCarouselRef}
-            isPremiumUser={isPremiumUser}
-            onResetOnboarding={onResetOnboarding}
-            animatedTranslateY={animatedTranslateY}
-          />
+          {/* SCR-10 : 4 blocs */}
+          <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
+            <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              scrollEnabled={isOpen}
+              showsVerticalScrollIndicator={false}
+              nestedScrollEnabled={true}
+            >
+              <View onLayout={handleContentLayout}>
+                {ritualsOpen ? (
+                  /* Sous-écran Rituels (bloc 3, C6) — remplace les 4 blocs le
+                     temps de la liste/formulaire (SCR-16/17). */
+                  <RitualsPanel
+                    onBack={() => setRitualsOpen(false)}
+                    onApplied={() => snapTo(false)}
+                  />
+                ) : paletteOpen ? (
+                  /* Sous-écran Palettes (bloc 4, C6.1/C6.2) — la liste reste
+                     ouverte au tap (préviz live, porte C6.1) : pas d'onApplied. */
+                  <PalettesPanel onBack={() => setPaletteOpen(false)} />
+                ) : (
+                  <>
+                    {/* Bloc 1 : segmenté Mode — écrit le réglage global. En Focus,
+                        pas de segmenté (deux tabs pour un mode sans réglage = absurde,
+                        porte Eric 25/07) : une seule action, sortir. L'affordance
+                        définitive d'entrée/sortie de Focus = question ouverte CD. */}
+                    {isFocus ? (
+                      <TouchableOpacity
+                        testID="aside.exit-focus"
+                        accessible
+                        accessibilityRole="button"
+                        accessibilityLabel={t('aside.exitFocus')}
+                        style={{
+                          alignItems: 'center',
+                          backgroundColor: theme.colors.text,
+                          borderRadius: theme.borderRadius.md,
+                          paddingVertical: theme.spacing.sm,
+                        }}
+                        onPress={() => {
+                          haptics.selection().catch(() => {});
+                          analytics.trackFocusExited();
+                          setMode('mixte');
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Text style={{ color: theme.colors.fixed.white, fontSize: rs(13, 'min'), fontWeight: '600' }}>
+                          {t('aside.exitFocus')}
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <>
+                        <View style={styles.segmentedControl}>
+                          {MODES.map(({ key, label }) => {
+                            const isActive = currentMode === key;
+                            return (
+                              <TouchableOpacity
+                                key={key}
+                                accessible
+                                accessibilityRole="button"
+                                accessibilityLabel={label}
+                                accessibilityState={{ selected: isActive }}
+                                style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
+                                onPress={() => {
+                                  haptics.selection().catch(() => {});
+                                  if (key === 'focus' && !isActive) {
+                                    analytics.trackFocusEntered('sheet');
+                                  }
+                                  setMode(key);
+                                }}
+                                activeOpacity={0.7}
+                              >
+                                <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
+                                  {label}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </View>
+                        {/* Apprentissage double-tap (verdicts CD 25/07) — les 2
+                            premières ouvertures du sheet seulement. */}
+                        {showDoubleTapHint && (
+                          <Text style={styles.doubleTapHint}>{t('aside.doubleTapHint')}</Text>
+                        )}
+                      </>
+                    )}
+
+                    {/* Blocs 2-4 : masqués en Focus — on ne règle rien, on ne peut
+                        qu'en sortir (cf. header). */}
+                    {!isFocus && (
+                      <>
+                        {/* Bloc 2 : 2 toggles */}
+                        <View style={styles.togglesCard}>
+                          {toggles.map((toggle, index) => (
+                            <View
+                              key={toggle.key}
+                              style={[styles.optionRow, index === toggles.length - 1 && styles.optionRowLast]}
+                            >
+                              <Text style={styles.optionLabel}>{toggle.label}</Text>
+                              <Switch
+                                accessible={true}
+                                accessibilityLabel={toggle.label}
+                                accessibilityRole="switch"
+                                accessibilityState={{ checked: toggle.value }}
+                                value={toggle.value}
+                                onValueChange={(value) => {
+                                  haptics.switchToggle().catch(() => {});
+                                  toggle.onChange(value);
+                                }}
+                                {...theme.styles.switch(toggle.value)}
+                              />
+                            </View>
+                          ))}
+                        </View>
+
+                        {/* Bloc 3 : Mes rituels — sous-écran réel (C6) */}
+                        <TouchableOpacity
+                          style={styles.optionRow}
+                          accessible
+                          accessibilityRole="button"
+                          accessibilityLabel={t('rituals.sheetRow')}
+                          onPress={() => {
+                            haptics.selection().catch(() => {});
+                            setRitualsOpen(true);
+                          }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.inertRowLabel}>{t('rituals.sheetRow')}</Text>
+                          <Text style={styles.inertChevron}>›</Text>
+                        </TouchableOpacity>
+
+                        {/* Bloc 4 : Palettes — sous-écran réel (C6.1) */}
+                        <TouchableOpacity
+                          style={[styles.optionRow, styles.optionRowLast]}
+                          accessible
+                          accessibilityRole="button"
+                          accessibilityLabel={t('palettesPanel.sheetRow')}
+                          onPress={() => {
+                            haptics.selection().catch(() => {});
+                            setPaletteOpen(true);
+                          }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.inertRowLabel}>{t('palettesPanel.sheetRow')}</Text>
+                          <Text style={styles.inertChevron}>›</Text>
+                        </TouchableOpacity>
+                      </>
+                    )}
+                  </>
+                )}
+              </View>
+            </ScrollView>
+          </Animated.View>
         </Animated.View>
       </GestureDetector>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  asideContainer: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 50,
-    pointerEvents: 'box-none',
-  },
-  labelOverlay: {
-    alignItems: 'center',
-    bottom: SCREEN_HEIGHT * 0.35,
-    justifyContent: 'center',
-    pointerEvents: 'none',
-    position: 'absolute',
-    width: '100%',
-    zIndex: 0,
-  },
-  drawer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: SCREEN_HEIGHT,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-  handleContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-  },
-  handleIndicator: {
-    width: 50,
-    height: 5,
-    borderRadius: 3,
-  },
-  layerAbsolute: {
-    borderRadius: 12,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  layerContainer: {
-    position: 'relative',
-  },
-  scrollContent: {
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-    paddingTop: 0,
-  },
-});

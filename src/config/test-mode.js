@@ -6,12 +6,13 @@
 
 // Active le mode développement général
 // true = mode dev, false = production
-export const DEV_MODE = false;
+export const DEV_MODE = true;
 
 // Affiche le FAB wrench pour contrôle dev (premium, onboarding reset, etc.)
 // true = FAB visible, false = FAB caché
 // Note: Nécessite DEV_MODE = true pour fonctionner
 // DEPLOY: Set to false before production build, true for local dev
+// (false le 25/07 : screenshots propres pour la revue Claude design)
 export const SHOW_DEV_FAB = false;
 
 // État premium par défaut au lancement

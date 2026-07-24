@@ -1,178 +1,122 @@
 // src/services/analytics.js
 /**
- * Mixpanel Analytics Service - ResetPulse
- *
- * 6 events critiques:
- * - app_opened (attribution baseline)
- * - onboarding_completed (funnel top)
- * - paywall_viewed (reach measurement)
- * - trial_started (intention achat)
- * - purchase_completed (revenue tracking)
- * - purchase_failed (friction debug)
- *
- * @see docs/development/MIXPANEL_IMPLEMENTATION.md
- * @see docs/decisions/analytics-strategy.md
+ * Analytics adapter — PostHog (Lot 2 recentrage, ADR-014).
+ * Mixpanel est sorti (Lot 1). Client no-op tant que POSTHOG_API_KEY est null
+ * (src/config/posthog.js) — aucun réseau, aucun throw.
+ * L'API est conservée : tout appel (track, identify, événements) est absorbé
+ * sans effet si non initialisé, les consommateurs (useAnalytics, contexts,
+ * modales legacy) restent inchangés — Proxy volontaire, cf. plus bas.
  */
-
-import { Mixpanel } from 'mixpanel-react-native';
-import { Platform } from 'react-native';
-import Constants from 'expo-constants';
-import { MIXPANEL_TOKEN } from '@env';
+import { PostHog } from 'posthog-react-native';
+import { POSTHOG_API_KEY, POSTHOG_HOST } from '../config/posthog';
 import logger from '../utils/logger';
-import {
-  onboardingEvents,
-  timerEvents,
-  conversionEvents,
-  settingsEvents,
-  customActivitiesEvents,
-} from './analytics/index';
 
+const noop = () => {};
 
-class AnalyticsService {
-  constructor() {
-    this.mixpanel = null;
-    this.isInitialized = false;
+// Normalise activity (objet ou id selon l'appel, cf. useTimer.js) vers un id
+// seul — jamais de label/emoji en clair dans les payloads (pas de PII).
+const activityId = (activity) => activity?.id ?? activity ?? null;
 
-    // Bind feature modules to this instance
-    this._bindModules();
-  }
+const analyticsAdapter = {
+  isInitialized: false,
+  _client: null,
 
-  /**
-   * Bind all feature module methods to the singleton instance
-   * @private
-   */
-  _bindModules() {
-    const modules = [
-      onboardingEvents,
-      timerEvents,
-      conversionEvents,
-      settingsEvents,
-      customActivitiesEvents,
-    ];
-
-    modules.forEach((module) => {
-      Object.keys(module).forEach((methodName) => {
-        // Bind the module method to this instance
-        this[methodName] = module[methodName].bind(this);
-      });
-    });
-  }
-
-  /**
-   * Initialize Mixpanel SDK
-   * À appeler dans App.js au startup
-   */
   async init() {
-    if (!MIXPANEL_TOKEN) {
-      logger.boot.step('analytics', 'disabled (no token)');
+    if (!POSTHOG_API_KEY) {
+      logger.boot.step('analytics', 'no-op (clé PostHog absente)');
       return;
     }
 
-    try {
-      // Mixpanel v3+ API: new Mixpanel() then .init()
-      // Ref: https://github.com/mixpanel/mixpanel-react-native
-      const trackAutomaticEvents = false; // Manual tracking only
-      const useNative = true; // Use native module (required for device builds)
-
-      this.mixpanel = new Mixpanel(MIXPANEL_TOKEN, trackAutomaticEvents, useNative);
-
-      // Configure EU data residency (RGPD compliance)
-      // Ref: https://docs.mixpanel.com/docs/tracking-methods/sdks/react-native#eu-data-residency
-      await this.mixpanel.init();
-      this.mixpanel.setServerURL('https://api-eu.mixpanel.com'); // EU servers
-
-      this.isInitialized = true;
-
-      // Super properties (persistent toutes sessions)
-      const appVersion = Constants.expoConfig?.version || '1.1.7';
-      const platformName = Platform.OS === 'ios' ? 'iOS' : 'Android';
-      this.setSuperProperties({
-        platform: platformName,
-        app_version: appVersion,
-      });
-
-      logger.boot.step('analytics', `ready (${Platform.OS} v${appVersion})`);
-    } catch (error) {
-      // Graceful fallback for Expo Go (native module unavailable)
-      if (error.message?.includes('initialize') && __DEV__) {
-        logger.warn('Mixpanel unavailable in Expo Go — use dev build: npx expo run:ios');
-      } else {
-        logger.error('Mixpanel init failed', error.message);
-      }
-      this.isInitialized = false;
-    }
-  }
-
-  /**
-   * Track event générique (internal use)
-   */
-  track(eventName, properties = {}) {
-    if (!this.isInitialized || !this.mixpanel) {
-      return;
-    }
-
-    // Enrichir avec timestamp
-    const enrichedProperties = {
-      ...properties,
-      timestamp: new Date().toISOString(),
-    };
-
-    this.mixpanel.track(eventName, enrichedProperties);
-
-    // Flush immediately in dev for debugging
-    if (__DEV__) {
-      this.mixpanel.flush();
-      logger.log(`📊 ${eventName}`, enrichedProperties);
-    }
-  }
-
-  /**
-   * Identify user (après purchase RevenueCat)
-   * @param {string} userId - RevenueCat customerInfo.originalAppUserId
-   */
-  identify(userId) {
-    if (!this.isInitialized || !this.mixpanel) {return;}
-
-    this.mixpanel.identify(userId);
-
-    if (__DEV__) {
-      logger.log('👤 Analytics user identified:', userId);
-    }
-  }
-
-  /**
-   * Set super properties (persistent)
-   * @param {Object} properties - Key-value pairs
-   */
-  setSuperProperties(properties) {
-    if (!this.isInitialized || !this.mixpanel) {return;}
-    this.mixpanel.registerSuperProperties(properties);
-  }
-
-  // ============================================
-  // CRITICAL EVENT - App Lifecycle
-  // ============================================
-
-  /**
-   * Event 1: App Opened
-   * Trigger: App.js useEffect (first launch + subsequent)
-   *
-   * @param {boolean} isFirstLaunch - True si premier démarrage app
-   */
-  trackAppOpened(isFirstLaunch = false) {
-    this.track('app_opened', {
-      is_first_launch: isFirstLaunch,
+    this._client = new PostHog(POSTHOG_API_KEY, {
+      host: POSTHOG_HOST,
+      captureAppLifecycleEvents: false, // on trace nous-mêmes (trackAppOpened)
     });
-  }
+    this.isInitialized = true;
 
-  // All other tracking methods are injected from feature modules via _bindModules()
-  // See ./analytics/* for method implementations:
-  // - onboarding-events.js (17 methods)
-  // - timer-events.js (3 methods)
-  // - conversion-events.js (11 methods)
-  // - settings-events.js (1 method)
-  // - custom-activities-events.js (6 methods)
-}
+    logger.boot.step('analytics', 'PostHog initialisé (EU)');
+  },
 
-// Singleton export
-export default new AnalyticsService();
+  track(eventName, properties) {
+    if (!this.isInitialized || !this._client) {return;}
+    this._client.capture(eventName, properties);
+  },
+
+  identify(distinctId, properties) {
+    if (!this.isInitialized || !this._client) {return;}
+    this._client.identify(distinctId, properties);
+  },
+
+  setSuperProperties(properties) {
+    if (!this.isInitialized || !this._client) {return;}
+    this._client.register(properties);
+  },
+
+  trackAppOpened() {
+    this.track('app_opened');
+  },
+
+  trackTimerStarted(duration, activity, color, palette) {
+    this.track('timer_started', {
+      duration_minutes: duration ? Math.round(duration / 60) : 0,
+      activity_id: activityId(activity),
+      color,
+      palette,
+    });
+  },
+
+  trackTimerCompleted(duration, activity) {
+    this.track('timer_completed', {
+      duration_minutes: duration ? Math.round(duration / 60) : 0,
+      activity_id: activityId(activity),
+    });
+  },
+
+  trackTimerAbandoned(duration, elapsed, reason, activity) {
+    this.track('timer_abandoned', {
+      duration_minutes: duration ? Math.round(duration / 60) : 0,
+      elapsed_seconds: elapsed,
+      activity_id: activityId(activity),
+    });
+  },
+
+  trackFocusEntered(via) {
+    this.track('focus_entered', { via });
+  },
+
+  trackFocusExited() {
+    this.track('focus_exited');
+  },
+
+  trackDiceRolled() {
+    this.track('dice_rolled');
+  },
+
+  trackSheetOpened() {
+    this.track('sheet_opened');
+  },
+
+  trackActivitySelected(activityIdValue) {
+    this.track('activity_selected', { activity_id: activityIdValue });
+  },
+
+  trackPaletteSelected(palette) {
+    this.track('palette_selected', { palette });
+  },
+
+  trackColorSelected(color) {
+    this.track('color_selected', { color });
+  },
+};
+
+// Proxy : absorbe toute méthode d'événement sans maintenir la liste exhaustive
+// (les modales legacy appellent des méthodes qu'on ne mappe plus — no-op
+// silencieux, jamais de throw).
+export default new Proxy(analyticsAdapter, {
+  get(target, prop) {
+    if (prop in target) {
+      const value = target[prop];
+      return typeof value === 'function' ? value.bind(target) : value;
+    }
+    return noop;
+  },
+});
