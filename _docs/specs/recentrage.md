@@ -133,6 +133,44 @@ rituel custom, basculer de mode, ouvrir/fermer le sheet.
 FR/EN pendant les lots (nouvelles clés : tips, rituels, sheet, notifs).
 Batch 15 langues en fin de Lot 3, avant build store.
 
+## Fidélité au rendu — valeurs exactes des maquettes CD (ajout 25/07, C6.2)
+
+Extraites du canvas `screen-flow.dc.html` (source d'autorité visuelle).
+L'écart au rendu se mesure contre CES valeurs, pas au goût.
+
+**Tokens couleur (monde crème/corail) :**
+- Fond écran : `#F4EFE7` (crème chaud) — pas de gris-beige froid
+- Corail marque : `#E89665` · Accompli : `#7FA86B` · Encre : `#2D2520`
+- Texte secondaire : `#5A5147` · Texte léger/hints : `#A89B8F`
+- Surfaces (rangée, sheet, cartes) : `#FFFFFF` pur, ombres douces
+  (`0 1px 4px rgba(0,0,0,0.08)`)
+
+**Le centre du dial (SCR-1/2) — le point le plus sensible :**
+- Emoji net, AUCUN overlay au-dessus (le fantôme play-button meurt —
+  `showPlayButton` overlay retiré du rendu, le tap reste sur tout le disque)
+- Centre = petit disque discret, jamais un rond translucide baveux qui
+  recouvre l'emoji
+
+**Chips et pastilles :**
+- Activité sélectionnée : cercle **sombre `#2D2520`** (le doré n'existe pas
+  dans les maquettes) · non-sélectionnée : blanc, bord `#E3DACB` 1.5px
+- Couleur sélectionnée : anneau `#2D2520` 2px · autres : bord `rgba(0,0,0,0.08)`
+- Segmenté : sélection **sombre `#2D2520` texte blanc**, fond `#F1EADF` pour
+  les inactifs
+
+**Focus (SCR-4/5/6) :**
+- Dial nettement plus grand qu'en standard (maquette : 208 vs 192 sur 236 de
+  large → ~88 % vs ~81 %)
+- Hint « balayer vers le haut » : discret, EN BAS d'écran, couleur `#A89B8F`,
+  petite taille — et passé en i18n (fin de l'exception hardcode C4)
+- Rien d'autre : pas de ⚙ visible (vérifier bulle Expo Dev Client vs code app
+  — si code app, mort)
+
+**Modes → 2 états (acté Eric 25/07, ×2) :** Complet meurt. Segmenté à 2
+entrées ; libellés provisoires [Standard | Focus] — naming définitif à la
+passe CD (piste : le défaut ne se nomme pas). L'affordance d'entrée en Focus
+reste une question ouverte CD (le segmenté-dans-settings est un intérim).
+
 ## Hors mission (après 3.0.0 — inscrits, pas abandonnés)
 
 - **SEQ-a puis SEQ-b** (enchaînements, Pomodoro)
