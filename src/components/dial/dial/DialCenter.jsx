@@ -42,7 +42,9 @@ const DialCenter = React.memo(function DialCenter({
     <View style={styles.container}>
       <PulseButton
         state={getState()}
-        emoji={isCompleted ? '✨' : null}
+        // ✨ REJOINT l'emoji, ne le remplace pas — le compagnon reste jusqu'au
+        // bout (verdicts CD Q5). Sans emoji d'activité : ✨ seul.
+        emoji={isCompleted ? `${activity?.emoji ?? ''}✨` : null}
         activity={activity}
         color={color}
         clockwise={clockwise}

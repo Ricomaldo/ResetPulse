@@ -21,7 +21,7 @@
       "counterClockwise": "Counter-clockwise"
     }
   },
-  "invitation": "Ready?",
+  "invitation": "ready?",
   "welcome": {
     "title": "Welcome to ResetPulse"
   },
@@ -381,20 +381,20 @@
       "endMessage": "Well done 🎉"
     },
     "work": {
-      "startMessage": "Focus",
-      "endMessage": "Accomplished ✨"
+      "startMessage": "to work.",
+      "endMessage": "that's done."
     },
     "break": {
-      "startMessage": "Rest",
-      "endMessage": "Recharged 🔋"
+      "startMessage": "take a breath.",
+      "endMessage": "back, gently."
     },
     "meditation": {
-      "startMessage": "Breathe",
-      "endMessage": "Centered 🪷"
+      "startMessage": "breathe.",
+      "endMessage": "welcome back."
     },
     "creativity": {
-      "startMessage": "Create",
-      "endMessage": "Inspired ✨"
+      "startMessage": "let it come.",
+      "endMessage": "lovely moment."
     },
     "reading": {
       "startMessage": "Dive in",
@@ -495,7 +495,7 @@
     "title": "Palettes"
   },
   "mode": {
-    "standard": "Standard",
+    "standard": "ResetPulse",
     "focus": "Focus"
   },
   "focus": {
@@ -503,10 +503,10 @@
   },
   "firstRun": {
     "skip": "skip",
-    "welcome": "Welcome. Let's build your first ritual — start by touching an activity 👇",
-    "companion": "The emoji is your session companion 🙂 Drag the dial to set your duration.",
-    "dialColor": "Pick a color — it changes live.",
-    "ready": "Your ritual is ready 🎉 Touch the disc to start."
+    "welcome": "let's start by picking an activity 👇",
+    "companion": "this emoji keeps you company. slide the disc to set your time.",
+    "dialColor": "a color? it changes right away.",
+    "ready": "all set. touch the disc to start."
   },
   "aside": {
     "exitFocus": "leave focus"

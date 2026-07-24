@@ -454,7 +454,7 @@ function TimerDial({
             color={arcColor}
             isClockwise={clockwise}
             scaleMode={scaleMode}
-            animatedColor={isCompleted ? COLORS.COMPLETION_GREEN : null}
+            animatedColor={null} // fin = couleur du rituel, disque plein — le vert générique est mort (verdicts CD Q5)
             isRunning={isRunning}
           />
 
@@ -550,7 +550,7 @@ function TimerDial({
               isCompleted={isCompleted}
               color={arcColor}
               clockwise={clockwise}
-              size={Math.max(rs(44, 'min'), circleSize * 0.16)}
+              size={circleSize * 0.34} // hub structurel Ø 34 % du cadran (verdicts CD 25/07)
             />
           )}
 

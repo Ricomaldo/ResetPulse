@@ -27,7 +27,6 @@ import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import { getFreeActivities } from '../config/activities';
-import { COLORS } from '../components/dial/timerConstants';
 import haptics from '../utils/haptics';
 
 const FREE_ACTIVITIES = getFreeActivities();
@@ -204,11 +203,18 @@ function TopTime({ seconds }) {
       // brand.neutral donnait 2.37:1 sur le fond crème (#F4EFE7) — bien sous
       // WCAG AA (4.5:1), quasi illisible à 13px (trouvé en retest Eric,
       // rapporté comme "timer invisible"). textSecondary : 5.41:1.
+      // Verdicts CD (25/07) : ui-monospace 700 26px, encre douce #5A5147
+      // (= textSecondary), interlettre 0.03em — se distingue du wall-clock.
       color: theme.colors.textSecondary,
-      fontSize: rs(17, 'min'), // 13px était timide — maquette SCR-8 : chiffre affirmé
+      fontSize: rs(26, 'min'),
       fontVariant: ['tabular-nums'],
-      fontWeight: '600',
-      letterSpacing: 0.5,
+      fontWeight: '700',
+      letterSpacing: rs(26, 'min') * 0.03,
+    },
+    glyph: {
+      color: theme.colors.textLight,
+      fontSize: rs(12, 'min'),
+      marginRight: 6,
     },
     wrap: {
       alignItems: 'center',
@@ -231,7 +237,10 @@ function TopTime({ seconds }) {
           : t('controls.digitalTimer.showTime')}
         accessibilityHint={showTime ? t('controls.digitalTimer.tapToHide') : t('controls.digitalTimer.tapToShow')}
       >
-        <Text style={styles.text}>{showTime ? formatTime(seconds) : '••:••'}</Text>
+        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+          <Text style={styles.glyph}>⏱</Text>
+          <Text style={styles.text}>{showTime ? formatTime(seconds) : '••:••'}</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -375,7 +384,7 @@ function TimerScreenContent() {
 
   const styles = StyleSheet.create({
     completionMessage: {
-      color: COLORS.COMPLETION_GREEN,
+      color: theme.colors.textSecondary, // encre douce — le vert générique est mort (verdicts CD Q5)
       fontSize: rs(18, 'min'),
       fontWeight: '600',
       textAlign: 'center',

@@ -24,7 +24,7 @@
   "welcome": {
     "title": "Bienvenue sur ResetPulse"
   },
-  "invitation": "...",
+  "invitation": "on y va ?",
   "onboarding": {
     "restartGuide": "Relancer le guide",
     "restartGuideDescription": "Afficher à nouveau l'écran de bienvenue et les conseils",
@@ -381,20 +381,20 @@
       "endMessage": "Bravo 🎉"
     },
     "work": {
-      "startMessage": "Focus",
-      "endMessage": "Accompli ✨"
+      "startMessage": "au boulot.",
+      "endMessage": "voilà, c'est fait."
     },
     "break": {
-      "startMessage": "Repos",
-      "endMessage": "Rechargé 🔋"
+      "startMessage": "on souffle.",
+      "endMessage": "te revoilà, en douceur."
     },
     "meditation": {
-      "startMessage": "Respire",
-      "endMessage": "Centré 🪷"
+      "startMessage": "on respire.",
+      "endMessage": "te revoilà."
     },
     "creativity": {
-      "startMessage": "Crée",
-      "endMessage": "Inspiré ✨"
+      "startMessage": "laisse venir.",
+      "endMessage": "beau moment."
     },
     "reading": {
       "startMessage": "Plonge",
@@ -495,7 +495,7 @@
     "title": "Palettes"
   },
   "mode": {
-    "standard": "Standard",
+    "standard": "ResetPulse",
     "focus": "Focus"
   },
   "focus": {
@@ -503,10 +503,10 @@
   },
   "firstRun": {
     "skip": "passer",
-    "welcome": "Bienvenue. Fabriquons ton premier rituel — commence par toucher une activité 👇",
-    "companion": "L'emoji, c'est ton compagnon de séance 🙂 Fais glisser le cadran pour régler ta durée.",
-    "dialColor": "Choisis une couleur — elle change en direct.",
-    "ready": "Ton rituel est prêt 🎉 Touche le disque pour démarrer."
+    "welcome": "on commence par choisir une activité 👇",
+    "companion": "cet emoji te tient compagnie. glisse le disque pour régler la durée.",
+    "dialColor": "une couleur ? elle change tout de suite.",
+    "ready": "c'est prêt. touche le disque pour lancer."
   },
   "aside": {
     "exitFocus": "quitter le focus"

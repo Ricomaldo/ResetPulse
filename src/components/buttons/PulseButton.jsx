@@ -32,16 +32,16 @@ const PulseButton = React.memo(function PulseButton({
   const theme = useTheme();
 
   // === DIMENSIONS ===
-  const buttonSize = compact ? rs(48, 'min') : rs(size, 'min');
-  const iconSize   = compact ? rs(20, 'min') : rs(28, 'min');
-  const emojiSize  = compact ? rs(24, 'min') : rs(48, 'min');
+  // Hub structurel (verdicts CD 25/07) : Ø = 34 % du cadran (fourni par
+  // TimerDial via `size`), emoji = 20 % du cadran → 0.59 × hub.
+  const buttonSize = compact ? rs(48, 'min') : size;
+  const iconSize   = compact ? rs(20, 'min') : buttonSize * 0.42;
+  const emojiSize  = compact ? rs(24, 'min') : buttonSize * 0.59;
 
   // === COLOR ===
-  // Centre = disque SURFACE (blanc cassé), un seul traitement pour tous les
-  // états et modes — maquette hero CD (le centre coloré « suit la couleur »
-  // de C6.2 créait la bouillie : centre fondu dans le fill, liseré blanc de
-  // rattrapage — les deux meurent ici, reprise pilote 25/07).
-  const bgColor = theme.colors.surface;
+  // Hub = CLAIRIÈRE DU CADRAN (verdicts CD Q1) : fond crème #F4EFE7 — pas un
+  // sticker blanc. Plat, liseré interne discret, zéro ombre portée.
+  const bgColor = theme.colors.background;
 
   // === STYLES ===
   const styles = StyleSheet.create({
@@ -53,15 +53,14 @@ const PulseButton = React.memo(function PulseButton({
     },
     button: {
       alignItems: 'center',
-      // Filet neutre discret : lisibilité sur la moitié vide du cadran
-      // (surface sur surface), invisible sur les fills colorés.
+      // Liseré interne 1px, ZÉRO ombre portée (verdicts CD Q1 : hub plat,
+      // « clairière », pas d'effet autocollant).
       borderColor: 'rgba(0,0,0,0.06)',
       borderRadius: buttonSize / 2,
       borderWidth: 1,
       height: buttonSize,
       justifyContent: 'center',
       width: buttonSize,
-      ...theme.shadow('sm'),
     },
     emoji: {
       textAlign: 'center',
