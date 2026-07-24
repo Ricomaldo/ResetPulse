@@ -39,9 +39,11 @@ const DEFAULT_TEMPO = 800; // repli si tempo absent/invalide (pulseDuration moye
  * @param {string|null} params.movement - Un membre de MOVEMENTS, ou null/inconnu → neutre
  * @param {number} params.tempo - pulseDuration (ms) de l'Activité, rythme de base
  * @param {boolean} params.active - Mouvement autorisé dans l'état courant (REST/RUNNING)
+ * @param {Object|null} [params.variant] - Variante d'intensité (MOVEMENT_VARIANTS,
+ * tirée par le dé) — null = valeurs d'ambiance par défaut
  * @returns {Object} Style animé à poser sur l'Animated.View enveloppant l'emoji
  */
-export default function useEmojiMovement({ movement, tempo, active }) {
+export default function useEmojiMovement({ movement, tempo, active, variant = null }) {
   const reduceMotionEnabled = useReducedMotion();
 
   // Shared values — toujours créées, jamais conditionnelles (règle Reanimated).
@@ -72,12 +74,12 @@ export default function useEmojiMovement({ movement, tempo, active }) {
 
     switch (movement) {
     case 'breathe': {
-      // scale 1 → 1.09 → 1, période = tempo × 2 (moitié montée, moitié
-      // descente). Amplitude relevée (retour Eric : trop timide) — le halo
-      // (useBreathingHalo) porte le reste du souffle.
+      // scale 1 → peak → 1, période = tempo × 2 (moitié montée, moitié
+      // descente). Variante du dé : souffle plus ample (jusqu'à 1.2).
+      const peak = variant?.scale ?? 1.09;
       scale.value = withRepeat(
         withSequence(
-          withTiming(1.09, { duration: safeTempo, easing: Easing.inOut(Easing.ease) }),
+          withTiming(peak, { duration: safeTempo, easing: Easing.inOut(Easing.ease) }),
           withTiming(1, { duration: safeTempo, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
@@ -86,24 +88,40 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       break;
     }
     case 'spin': {
-      // Rotation continue linéaire, 360° en tempo × 4 — un tour se VOIT
-      // (à ×8 la rotation était imperceptible, retour Eric).
+      // Ambiance : rotation continue linéaire, 360° en tempo × 4.
+      // Variante du dé < 360° : aller-retour pendulaire jusqu'à `degrees`
+      // (un quart de tour qui revient se lit mieux qu'une boucle qui saute).
+      const degrees = variant?.degrees ?? 360;
       rotate.value = 0;
-      rotate.value = withRepeat(
-        withTiming(360, { duration: safeTempo * 4, easing: Easing.linear }),
-        -1,
-        false
-      );
+      if (degrees >= 360) {
+        rotate.value = withRepeat(
+          withTiming(360, { duration: safeTempo * 4, easing: Easing.linear }),
+          -1,
+          false
+        );
+      } else {
+        const swing = safeTempo * 4 * (degrees / 360);
+        rotate.value = withRepeat(
+          withSequence(
+            withTiming(degrees, { duration: swing, easing: Easing.inOut(Easing.ease) }),
+            withTiming(0, { duration: swing, easing: Easing.inOut(Easing.ease) })
+          ),
+          -1,
+          false
+        );
+      }
       break;
     }
     case 'float': {
-      // translateY 0 → −10 → 0 + fondu opacity 1 → 0.6 → 1 + léger roulis
+      // translateY 0 → rise → 0 + fondu opacity 1 → fade → 1 + léger roulis
       // rotate ±4° (le flottement a une dérive, pas juste un ascenseur),
-      // période = tempo × 3.
+      // période = tempo × 3. Variante du dé : fade 0 = disparition TOTALE.
+      const rise = variant?.rise ?? -10;
+      const fade = variant?.fade ?? 0.6;
       const half = (safeTempo * 3) / 2;
       translateY.value = withRepeat(
         withSequence(
-          withTiming(-10, { duration: half, easing: Easing.inOut(Easing.ease) }),
+          withTiming(rise, { duration: half, easing: Easing.inOut(Easing.ease) }),
           withTiming(0, { duration: half, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
@@ -111,7 +129,7 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       );
       opacity.value = withRepeat(
         withSequence(
-          withTiming(0.6, { duration: half, easing: Easing.inOut(Easing.ease) }),
+          withTiming(fade, { duration: half, easing: Easing.inOut(Easing.ease) }),
           withTiming(1, { duration: half, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
@@ -128,13 +146,14 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       break;
     }
     case 'bounce': {
-      // Rebond ressort (withSpring), amplitude ~9 avec écrasement à
-      // l'atterrissage (scale 0.94 bref) — un vrai rebond a du squash.
-      // Un rebond par période tempo × 2, repos physique entre deux.
+      // Rebond ressort (withSpring) avec écrasement à l'atterrissage
+      // (scale 0.94 bref) — un vrai rebond a du squash. Un rebond par
+      // période tempo × 2, repos physique entre deux. Variante : hauteur.
+      const height = variant?.height ?? -9;
       const rest = Math.max(0, safeTempo * 2 * 0.5);
       translateY.value = withRepeat(
         withSequence(
-          withSpring(-9, { damping: 5, stiffness: 220 }),
+          withSpring(height, { damping: 5, stiffness: 220 }),
           withSpring(0, { damping: 7, stiffness: 190 }),
           withTiming(0, { duration: rest })
         ),
@@ -154,16 +173,18 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       break;
     }
     case 'beat': {
-      // Battement de cœur : double pulsation 1 → 1.16 → 1 → 1.1 → 1 puis
-      // repos, période totale = tempo × 2. Le lub-dub doit se SENTIR
-      // (amplitudes relevées, retour Eric).
+      // Battement de cœur : double pulsation 1 → strong → 1 → soft → 1 puis
+      // repos, période totale = tempo × 2. Le lub-dub doit se SENTIR.
+      // Variante du dé : battement jusqu'à 1.28.
+      const strong = variant?.strong ?? 1.16;
+      const soft = variant?.soft ?? 1.1;
       const beatUnit = safeTempo * 0.15;
       const restUnit = Math.max(0, safeTempo * 2 - beatUnit * 4);
       scale.value = withRepeat(
         withSequence(
-          withTiming(1.16, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
+          withTiming(strong, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
           withTiming(1, { duration: beatUnit, easing: Easing.in(Easing.ease) }),
-          withTiming(1.1, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
+          withTiming(soft, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
           withTiming(1, { duration: beatUnit, easing: Easing.in(Easing.ease) }),
           withTiming(1, { duration: restUnit })
         ),
@@ -187,12 +208,14 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       cancelAnimation(rotate);
       cancelAnimation(opacity);
     };
-    // Deps volontairement restreintes à [movement, safeTempo, isActive] : les
-    // shared values (scale/translateY/rotate/opacity) sont des refs stables
-    // (useSharedValue), jamais recréées — les inclure ne changerait rien et
-    // alourdirait la lecture (pas de plugin react-hooks/exhaustive-deps dans
-    // ce projet pour l'imposer, cf. .eslintrc).
-  }, [movement, safeTempo, isActive]);
+    // Deps volontairement restreintes à [movement, safeTempo, isActive,
+    // variant] : les shared values (scale/translateY/rotate/opacity) sont des
+    // refs stables (useSharedValue), jamais recréées — les inclure ne
+    // changerait rien et alourdirait la lecture (pas de plugin
+    // react-hooks/exhaustive-deps dans ce projet pour l'imposer, cf.
+    // .eslintrc). `variant` vient d'un state amont : identité stable entre
+    // deux tirages du dé.
+  }, [movement, safeTempo, isActive, variant]);
 
   return useAnimatedStyle(() => ({
     opacity: opacity.value,

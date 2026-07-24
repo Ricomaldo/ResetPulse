@@ -68,7 +68,7 @@ function TimerDial({
   showPlayButton = true,
   showCenterDisk = false,
   centerImage = null,
-  distractionMovement = null,
+  distraction = null,
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -592,7 +592,7 @@ function TimerDial({
               color={arcColor}
               clockwise={clockwise}
               size={circleSize * 0.34} // hub structurel Ø 34 % du cadran (verdicts CD 25/07)
-              distractionMovement={distractionMovement}
+              distraction={distraction}
             />
           )}
 
@@ -662,7 +662,7 @@ TimerDial.propTypes = {
   showPlayButton: PropTypes.bool,
   showCenterDisk: PropTypes.bool,
   centerImage: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  distractionMovement: PropTypes.string,
+  distraction: PropTypes.shape({ movement: PropTypes.string, variant: PropTypes.object }),
 };
 
 // Export memoized version
@@ -688,6 +688,6 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.showPlayButton === nextProps.showPlayButton &&
     prevProps.showCenterDisk === nextProps.showCenterDisk &&
     prevProps.centerImage === nextProps.centerImage &&
-    prevProps.distractionMovement === nextProps.distractionMovement
+    prevProps.distraction === nextProps.distraction
   );
 });

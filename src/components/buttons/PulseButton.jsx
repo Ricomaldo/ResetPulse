@@ -31,7 +31,7 @@ const PulseButton = React.memo(function PulseButton({
   compact = false,
   shouldPulse = false,
   clockwise = false,   // reserved — dial rotation direction, no movement use yet
-  distractionMovement = null,
+  distraction = null,
 }) {
   const theme = useTheme();
 
@@ -39,13 +39,14 @@ const PulseButton = React.memo(function PulseButton({
   // REST + shouldPulse : le pouls-invitation « Respire » — signature de
   // l'app, gratuit. RUNNING : mouvement propre de l'Activité, à son tempo.
   // COMPLETE : aucun mouvement (le bloom du dial porte la fin). La
-  // Distraction (MOT-f, dé) override le mouvement courant quand active,
-  // quel que soit l'état — `useEmojiMovement` coupe tout si reduce motion.
+  // Distraction (MOT-f, dé — `{ movement, variant }`) override le mouvement
+  // courant quand active, quel que soit l'état, avec sa variante d'intensité
+  // tirée au dé — `useEmojiMovement` coupe tout si reduce motion.
   const tempo = activity?.pulseDuration || DEFAULT_TEMPO;
   let movement = null;
   let movementActive = false;
-  if (distractionMovement) {
-    movement = distractionMovement;
+  if (distraction?.movement) {
+    movement = distraction.movement;
     movementActive = true;
   } else if (state === 'rest' && shouldPulse) {
     movement = 'breathe';
@@ -54,13 +55,19 @@ const PulseButton = React.memo(function PulseButton({
     movement = activity.movement;
     movementActive = true;
   }
-  const emojiAnimatedStyle = useEmojiMovement({ movement, tempo, active: movementActive });
+  const emojiAnimatedStyle = useEmojiMovement({
+    movement,
+    tempo,
+    active: movementActive,
+    variant: distraction?.variant ?? null,
+  });
 
-  // === HALO (le pulse originel, restauré) ===
-  // Anneau couleur courante qui s'étend et s'estompe autour du hub — actif
-  // au repos ET en séance quand `shouldPulse` (optionnel mais standard),
-  // jamais à COMPLETE (le bloom porte la fin), jamais en compact.
-  const haloActive = shouldPulse && state !== 'complete' && !compact;
+  // === HALO (le pouls de la séance, restauré — retour Eric) ===
+  // Anneau couleur courante qui s'étend et s'estompe autour du hub : il se
+  // lance au tap start et bat tant que le temps s'écoule — la preuve visible
+  // que le timer vit. RUNNING uniquement, piloté par `shouldPulse`
+  // (optionnel mais standard), jamais en compact.
+  const haloActive = state === 'running' && shouldPulse && !compact;
   const haloAnimatedStyle = useBreathingHalo({ tempo, active: haloActive });
 
   // === DIMENSIONS ===
@@ -152,7 +159,10 @@ PulseButton.propTypes = {
   clockwise:           PropTypes.bool,
   color:               PropTypes.string,
   compact:             PropTypes.bool,
-  distractionMovement: PropTypes.string,
+  distraction:         PropTypes.shape({
+    movement: PropTypes.string,
+    variant: PropTypes.object,
+  }),
   emoji:               PropTypes.string,
   shouldPulse:         PropTypes.bool,
   size:                PropTypes.number,

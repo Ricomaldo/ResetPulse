@@ -32,6 +32,7 @@ import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import { getFreeActivities } from '../config/activities';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
+import { pickVariant } from '../components/dial/movements/movements';
 import haptics from '../utils/haptics';
 
 const FREE_ACTIVITIES = getFreeActivities();
@@ -411,7 +412,7 @@ function TimerScreenContent() {
   // (pouls ambiant du repos) — garantit un changement VISIBLE à chaque tap,
   // quel que soit l'état du timer (l'état running vit dans TimeTimer, pas ici ;
   // exclure les deux ambiants possibles évite de le faire remonter).
-  const [distractionMovement, setDistractionMovement] = useState(null);
+  const [distraction, setDistraction] = useState(null);
   const lastDistractionRef = useRef(null);
   const distractionTimeoutRef = useRef(null);
 
@@ -425,10 +426,13 @@ function TimerScreenContent() {
       'breathe',
     ]);
     lastDistractionRef.current = next;
-    setDistractionMovement(next);
+    // Double tirage (retour Eric) : le mouvement ET son intensité — même MOT,
+    // effet différent d'un tap à l'autre (Tourne 90° ou 360°, Flotte jusqu'à
+    // la disparition totale…).
+    setDistraction({ movement: next, variant: pickVariant(next) });
     haptics.selection().catch(() => {});
     distractionTimeoutRef.current = setTimeout(() => {
-      setDistractionMovement(null);
+      setDistraction(null);
       distractionTimeoutRef.current = null;
     }, 2000);
   }, [currentActivity]);
@@ -569,7 +573,7 @@ function TimerScreenContent() {
               onDialTap={handleDialTap}
               onTimerRef={handleTimerRef}
               onDialRef={handleDialRef}
-              distractionMovement={distractionMovement}
+              distraction={distraction}
             />
             {!isFocus && (
               <View style={styles.completionMessageWrap}>
