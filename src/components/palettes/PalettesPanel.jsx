@@ -17,6 +17,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
@@ -29,6 +30,7 @@ const AMBIANCE_KEYS = PALETTE_KEYS.filter((key) => TIMER_PALETTES[key].isPremium
 export default function PalettesPanel({ onBack }) {
   const theme = useTheme();
   const t = useTranslation();
+  const analytics = useAnalytics();
   const {
     palette: { currentPalette },
     setPalette,
@@ -37,6 +39,7 @@ export default function PalettesPanel({ onBack }) {
   const handleApply = (key) => {
     haptics.impact('light').catch(() => {});
     setPalette(key);
+    analytics.trackPaletteSelected(key);
   };
 
   const styles = StyleSheet.create({

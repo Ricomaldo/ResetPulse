@@ -25,6 +25,7 @@ import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useFirstRun } from '../hooks/useFirstRun';
 import { usePersistedState } from '../hooks/usePersistedState';
+import { useAnalytics } from '../hooks/useAnalytics';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
@@ -39,6 +40,7 @@ const COLOR_DOT_SIZE = rs(26, 'min');
 function CompactRow({ onActivityTouch, onColorTouch }) {
   const theme = useTheme();
   const t = useTranslation();
+  const analytics = useAnalytics();
   const {
     timer: { currentActivity },
     palette: { currentColor, paletteColors },
@@ -105,6 +107,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
         return (
           <TouchableOpacity
             key={activity.id}
+            testID={`activity.item.${activity.id}`}
             accessible
             accessibilityRole="button"
             accessibilityLabel={t('accessibility.activity', {
@@ -115,6 +118,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
             onPress={() => {
               haptics.selection().catch(() => {});
               setCurrentActivity(activity);
+              analytics.trackActivitySelected(activity.id);
               onActivityTouch?.();
             }}
             activeOpacity={0.7}
@@ -129,6 +133,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
       {paletteColors.map((color, index) => (
         <TouchableOpacity
           key={color}
+          testID={`palette.dot.${index}`}
           accessible
           accessibilityRole="button"
           accessibilityLabel={t('accessibility.colorNumber', { number: index + 1 })}
@@ -140,6 +145,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
           onPress={() => {
             haptics.selection().catch(() => {});
             setColorIndex(index);
+            analytics.trackColorSelected(color);
             onColorTouch?.();
           }}
           activeOpacity={0.7}
@@ -158,6 +164,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
 function DistractionButton({ showLabel }) {
   const theme = useTheme();
   const t = useTranslation();
+  const analytics = useAnalytics();
 
   const styles = StyleSheet.create({
     button: {
@@ -184,11 +191,14 @@ function DistractionButton({ showLabel }) {
   return (
     <TouchableOpacity
       style={styles.button}
+      testID="timer.dice"
       accessible
       accessibilityRole="button"
       accessibilityLabel={t('accessibility.distraction')}
       activeOpacity={0.7}
-      onPress={() => {}}
+      onPress={() => {
+        analytics.trackDiceRolled();
+      }}
     >
       <Text style={styles.emoji}>🎲</Text>
       {showLabel && <Text style={styles.label}>{t('controls.distraction.tryMe')}</Text>}
@@ -239,6 +249,7 @@ function TopTime({ seconds }) {
   return (
     <View style={styles.wrap}>
       <TouchableOpacity
+        testID="timer.digital"
         onPress={() => {
           haptics.selection().catch(() => {});
           setShowTime(!showTime);
@@ -297,6 +308,7 @@ function FocusHint() {
 
 function TimerScreenContent() {
   const theme = useTheme();
+  const analytics = useAnalytics();
   const {
     mode: { current: currentMode },
     setMode,
@@ -322,8 +334,11 @@ function TimerScreenContent() {
       return;
     }
     haptics.selection().catch(() => {});
+    if (!isFocus) {
+      analytics.trackFocusEntered('double_tap');
+    }
     setMode(isFocus ? 'mixte' : 'focus');
-  }, [isFocus, setMode]);
+  }, [isFocus, setMode, analytics]);
 
   // GestureDetector posé en ancêtre du contenu (cf. return) : les vues
   // interactives descendantes (TimeTimer, CompactRow, dé, AsideZone — chacune

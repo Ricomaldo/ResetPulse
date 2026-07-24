@@ -42,6 +42,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { usePersistedState } from '../../hooks/usePersistedState';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
@@ -70,6 +71,7 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 export default function AsideZone({ isTimerRunning }) {
   const theme = useTheme();
   const t = useTranslation();
+  const analytics = useAnalytics();
   const {
     timer: { clockwise },
     setClockwise,
@@ -344,10 +346,11 @@ export default function AsideZone({ isTimerRunning }) {
       onLayout={(e) => setContainerH(e.nativeEvent.layout.height)}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
+        <Animated.View testID="aside.sheet" style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
           {/* Handle — affordance du sheet : swipe up OU tap (porte Eric 25/07,
               la bande fermée doit s'ouvrir au doigt, pas seulement au geste) */}
           <TouchableOpacity
+            testID="aside.handle"
             style={styles.handleContainer}
             activeOpacity={0.8}
             accessible
@@ -355,6 +358,9 @@ export default function AsideZone({ isTimerRunning }) {
             accessibilityLabel={t('aside.handle')}
             onPress={() => {
               haptics.selection().catch(() => {});
+              if (!isOpen) {
+                analytics.trackSheetOpened();
+              }
               snapTo(!isOpen);
             }}
           >
@@ -389,6 +395,7 @@ export default function AsideZone({ isTimerRunning }) {
                         définitive d'entrée/sortie de Focus = question ouverte CD. */}
                     {isFocus ? (
                       <TouchableOpacity
+                        testID="aside.exit-focus"
                         accessible
                         accessibilityRole="button"
                         accessibilityLabel={t('aside.exitFocus')}
@@ -400,6 +407,7 @@ export default function AsideZone({ isTimerRunning }) {
                         }}
                         onPress={() => {
                           haptics.selection().catch(() => {});
+                          analytics.trackFocusExited();
                           setMode('mixte');
                         }}
                         activeOpacity={0.7}
@@ -423,6 +431,9 @@ export default function AsideZone({ isTimerRunning }) {
                                 style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
                                 onPress={() => {
                                   haptics.selection().catch(() => {});
+                                  if (key === 'focus' && !isActive) {
+                                    analytics.trackFocusEntered('sheet');
+                                  }
                                   setMode(key);
                                 }}
                                 activeOpacity={0.7}
