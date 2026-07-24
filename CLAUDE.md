@@ -108,11 +108,16 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 ## État actuel du projet
 
 ### En production
-- v2.1.6 sur Apple App Store et Google Play
-- Analytics Mixpanel actifs
+- v2.1.6 sur Apple App Store et Google Play (code d'AVANT le recentrage)
+- Analytics : Mixpanel sorti ; PostHog branché dormant (clé `null` dans
+  `src/config/posthog.js` — no-op tant qu'Eric n'a pas collé sa clé)
 
 ### En cours
-- **Mission Recentrage** (ADR-014) : reconstruction par cycles, cible v3.0.0
+- **`main` = le reborn 3.0** (merge 26/07/2026, Lots 1-2 + 3a) — pas encore
+  buildable en release stores : voir « Reste avant deploy » dans
+  `_cockpit/README.md`
+- **Mission Recentrage** (ADR-014) : Lots 1-2 clos, Lot 3 (Ambiances) en cours
+  3a→3f, cible v3.0.0
 - Suivi : `_cockpit/missions/active/recentrage.md` · Spec : `_docs/specs/recentrage.md`
 
 ### Tests
