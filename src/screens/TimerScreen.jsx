@@ -22,6 +22,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useFirstRun } from '../hooks/useFirstRun';
+import { usePersistedState } from '../hooks/usePersistedState';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
@@ -148,7 +149,11 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
   );
 }
 
-function DistractionButton() {
+// Dé Distraction (verdicts CD 25/07) : rejoint la FAMILLE des contrôles —
+// même carte blanche arrondie que la rangée (CompactRow.row), plus un
+// cercle flottant orphelin. Reste inactif (Lot 3), masqué en Focus
+// (inchangé, géré par le parent).
+function DistractionButton({ showLabel }) {
   const theme = useTheme();
   const t = useTranslation();
 
@@ -157,14 +162,20 @@ function DistractionButton() {
       alignItems: 'center',
       backgroundColor: theme.colors.surface,
       borderRadius: theme.borderRadius.round,
-      height: rs(48, 'min'),
+      flexDirection: 'row',
+      gap: theme.spacing.xs,
       justifyContent: 'center',
       marginTop: theme.spacing.lg,
-      width: rs(48, 'min'),
+      paddingHorizontal: showLabel ? theme.spacing.sm : rs(13, 'min'),
+      paddingVertical: theme.spacing.xs,
       ...theme.shadow('sm'),
     },
     emoji: {
       fontSize: rs(22, 'min'),
+    },
+    label: {
+      color: theme.colors.text,
+      fontSize: rs(13, 'min'),
     },
   });
 
@@ -178,6 +189,7 @@ function DistractionButton() {
       onPress={() => {}}
     >
       <Text style={styles.emoji}>🎲</Text>
+      {showLabel && <Text style={styles.label}>{t('controls.distraction.tryMe')}</Text>}
     </TouchableOpacity>
   );
 }
@@ -298,6 +310,35 @@ function TimerScreenContent() {
   const hasCompletedFirstRunRef = useRef(false);
   const barRef = useRef(null);
 
+  // Pastille « surprends-moi » (verdicts CD 25/07) : un seul affichage, au
+  // tout premier montage post-première-fois — flag persisté distinct de
+  // useFirstRun (ne se rejoue jamais). Disparaît au premier geste sur
+  // l'écran (onTouchStart racine, cf. return) ou après 4 s.
+  const [hasSeenDistractionLabel, setHasSeenDistractionLabel, distractionLabelLoading] =
+    usePersistedState('@ResetPulse:hasSeenDistractionLabel', false);
+  const [showDistractionLabel, setShowDistractionLabel] = useState(false);
+
+  useEffect(() => {
+    if (distractionLabelLoading || hasSeenDistractionLabel) {
+      return;
+    }
+    setShowDistractionLabel(true);
+    const timeout = setTimeout(() => {
+      setShowDistractionLabel(false);
+      setHasSeenDistractionLabel(true);
+    }, 4000);
+    return () => clearTimeout(timeout);
+  }, [distractionLabelLoading, hasSeenDistractionLabel]);
+
+  const dismissDistractionLabel = useCallback(() => {
+    setShowDistractionLabel((wasShown) => {
+      if (wasShown) {
+        setHasSeenDistractionLabel(true);
+      }
+      return false;
+    });
+  }, [setHasSeenDistractionLabel]);
+
   const handleBarLayout = useCallback(() => {
     barRef.current?.measureInWindow((x, y, width, height) => {
       setBarAnchor({ x, y, width, height });
@@ -416,6 +457,7 @@ function TimerScreenContent() {
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
+      onTouchStart={dismissDistractionLabel}
     >
       {!isFocus && <TopTime seconds={topTimeSeconds} />}
       <View style={styles.content}>
@@ -438,7 +480,7 @@ function TimerScreenContent() {
             />
           </View>
         )}
-        {!isFocus && <DistractionButton />}
+        {!isFocus && <DistractionButton showLabel={showDistractionLabel} />}
       </View>
       {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
       <AsideZone isTimerRunning={snapshot.running} />

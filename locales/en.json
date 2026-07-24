@@ -19,6 +19,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "surprise me"
     }
   },
   "invitation": "ready?",

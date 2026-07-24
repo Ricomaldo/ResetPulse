@@ -19,6 +19,9 @@
     "rotation": {
       "clockwise": "Sens horaire",
       "counterClockwise": "Sens anti-horaire"
+    },
+    "distraction": {
+      "tryMe": "surprends-moi"
     }
   },
   "welcome": {
