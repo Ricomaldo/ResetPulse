@@ -10,11 +10,12 @@
  * en plein flow, il recouvre naturellement le tip (cas de bord annoncé au
  * rapport, pas de plomberie dédiée).
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
+import logger from '../../utils/logger';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const TIP_GAP = rs(14, 'min');
@@ -38,6 +39,12 @@ function bottomOffsetFromAnchor(anchor, fallbackRatio) {
 export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) {
   const theme = useTheme();
   const t = useTranslation();
+
+  // Diagnostic (C7) : distingue « le hook dit moment=X » de « le composant
+  // ne monte rien » — à retirer une fois le mystère élucidé (cf. useFirstRun).
+  useEffect(() => {
+    logger.log('[FirstRunTips] render', { moment, hasBarAnchor: !!barAnchor, hasDialAnchor: !!dialAnchor });
+  }, [moment, barAnchor, dialAnchor]);
 
   if (!moment) {
     return null;

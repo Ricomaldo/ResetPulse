@@ -4,8 +4,9 @@
 // rituel en construction (pas un compteur impératif à 4 pas). ADR-014 :
 // aucune collecte, aucun profilage, ne bloque jamais rien.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePersistedState } from './usePersistedState';
+import logger from '../utils/logger';
 
 const STORAGE_KEY = '@ResetPulse:hasSeenFirstRun';
 
@@ -30,6 +31,13 @@ export const useFirstRun = () => {
       moment = 1;
     }
   }
+
+  // Diagnostic (C7) : trace l'état résolu à chaque changement — cherché en
+  // retest live (Eric signale ne jamais voir la Première fois se charger).
+  // À retirer une fois le mystère élucidé.
+  useEffect(() => {
+    logger.log('[FirstRun] state', { isLoading, hasSeenFirstRun, moment });
+  }, [isLoading, hasSeenFirstRun, moment]);
 
   const markActivityTouched = () => setActivityTouched(true);
   const markDialTouched = () => setDialTouched(true);
