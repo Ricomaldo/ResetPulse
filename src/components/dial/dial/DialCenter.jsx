@@ -2,7 +2,8 @@
  * @fileoverview DialCenter - Centre du dial avec PulseButton (ADR-007)
  * @description Simplifié: utilise uniquement PulseButton pour tous les états
  * @created 2025-12-14
- * @updated 2025-12-19 (ADR-007: simplifié avec PulseButton)
+ * @updated 2026-07-25 (C6.2 fidélité au rendu : purement visuel, le tap
+ * appartient au disque entier via TimerDial — `onTap` retiré)
  */
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -16,7 +17,7 @@ import { useTimerConfig } from '../../../contexts/TimerConfigContext';
  * @param {Object} activity - Objet activité (contient emoji et propriétés)
  * @param {boolean} isRunning - Timer en cours
  * @param {boolean} isCompleted - Timer terminé
- * @param {function} onTap - Callback tap (REST → start, RUNNING → stop, COMPLETE → reset)
+ * @param {string} color - Couleur courante du disque (suit la palette en direct)
  * @param {boolean} clockwise - Sens du timer (pour animation)
  * @param {number} size - Taille du bouton
  */
@@ -24,7 +25,7 @@ const DialCenter = React.memo(function DialCenter({
   activity,
   isRunning,
   isCompleted = false,
-  onTap,
+  color = null,
   clockwise = false,
   size = 72,
 }) {
@@ -43,7 +44,7 @@ const DialCenter = React.memo(function DialCenter({
         state={getState()}
         emoji={isCompleted ? '✨' : null}
         activity={activity}
-        onTap={onTap}
+        color={color}
         clockwise={clockwise}
         size={size}
         shouldPulse={shouldPulse}
@@ -58,9 +59,9 @@ DialCenter.propTypes = {
     emoji: PropTypes.string,
   }),
   clockwise: PropTypes.bool,
+  color: PropTypes.string,
   isCompleted: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,
-  onTap: PropTypes.func,
   size: PropTypes.number,
 };
 

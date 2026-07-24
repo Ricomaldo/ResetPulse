@@ -220,18 +220,25 @@ function TimerDial({
     dragOffsetRef.current = 0;
   }, [onGraduationTap]);
 
-  // Handler for tap on graduations
+  // Handler for tap on graduations OR center (C6.2 : le tap reste sur tout
+  // le disque — zone intérieure = start/stop, seule autorité du tap central
+  // depuis le retrait du TouchableOpacity de PulseButton, cf. commentaire
+  // DialCenter). Un seul gestionnaire, une seule source de vérité.
   const handleTapOnGraduation = useCallback((tapX, tapY) => {
     const distanceFromCenter = Math.sqrt(
       Math.pow(tapX - centerX, 2) + Math.pow(tapY - centerY, 2)
     );
 
-    // Only handle taps on graduation zone (outer ring)
-    if (distanceFromCenter > outerZoneMinRadius && onGraduationTap) {
+    if (distanceFromCenter <= outerZoneMinRadius) {
+      onDialTap?.();
+      return;
+    }
+
+    if (onGraduationTap) {
       const tappedMinutes = dial.coordinatesToMinutes(tapX, tapY, centerX, centerY);
       onGraduationTap(tappedMinutes, true);
     }
-  }, [dial, centerX, centerY, outerZoneMinRadius, onGraduationTap]);
+  }, [dial, centerX, centerY, outerZoneMinRadius, onGraduationTap, onDialTap]);
 
   // === GESTURE: Pan (Drag to adjust duration) ===
   // All logic runs on JS thread via runOnJS (dial methods require JS)
@@ -505,15 +512,17 @@ function TimerDial({
             </Svg>
           )}
 
-          {/* Center layer: PulseButton (ADR-007) */}
+          {/* Center layer: PulseButton (ADR-007) — petit disque discret dans
+              la couleur courante (fidélité au rendu C6.2), purement visuel :
+              le tap est géré par `handleTapOnGraduation` ci-dessus. */}
           {showPlayButton && (
             <DialCenter
               activity={showActivityEmoji ? currentActivity : null}
               isRunning={isRunning}
               isCompleted={isCompleted}
-              onTap={onDialTap}
+              color={arcColor}
               clockwise={clockwise}
-              size={circleSize * 0.25}
+              size={Math.max(rs(44, 'min'), circleSize * 0.16)}
             />
           )}
 

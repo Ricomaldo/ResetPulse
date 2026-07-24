@@ -1,6 +1,10 @@
 /**
- * @fileoverview PulseButton - Bouton principal ResetPulse
- * Tap franc sur les 3 états (ADR-014 recentrage — la pression sensible sort).
+ * @fileoverview PulseButton - Centre visuel du disque ResetPulse
+ * Purement visuel depuis C6.2 (fidélité au rendu) : le tap appartient au
+ * disque entier (`TimerDial.handleTapOnGraduation`, seule autorité — évite
+ * le double-déclenchement start→stop d'un ancien second `TouchableOpacity`
+ * ici). Petit disque discret dans la couleur courante (`color`), jamais
+ * translucide — le fantôme play-button (fond fixe + ombre marquée) meurt.
  *
  * Base simplifiée — couches d'animation à réajouter :
  *   [ ] breathing pulse (REST, shouldPulse)
@@ -8,28 +12,24 @@
  *   [ ] second hand + trail dots (RUNNING)
  *   [ ] interpolateColor + bounce (state transition)
  */
-import React, { useCallback } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTranslation } from '../../hooks/useTranslation';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
-import haptics from '../../utils/haptics';
 
 const PulseButton = React.memo(function PulseButton({
   state = 'rest',
   emoji = null,
   activity = null,
-  onTap,
+  color = null,
   size = 72,
   compact = false,
   shouldPulse = false, // reserved — animation layer not yet wired
   clockwise = false,   // reserved — animation layer not yet wired
 }) {
   const theme = useTheme();
-  const t = useTranslation();
 
   // === DIMENSIONS ===
   const buttonSize = compact ? rs(48, 'min') : rs(size, 'min');
@@ -37,14 +37,9 @@ const PulseButton = React.memo(function PulseButton({
   const emojiSize  = compact ? rs(24, 'min') : rs(48, 'min');
 
   // === COLOR ===
-  const bgColor = state === 'running'
-    ? theme.colors.brand.secondary + 'D9'
-    : theme.colors.brand.primary + 'D9';
-
-  const handleTap = useCallback(() => {
-    haptics.selection().catch(() => {});
-    onTap?.();
-  }, [onTap]);
+  // Couleur courante du disque, pleine opacité — jamais translucide
+  // (fidélité au rendu C6.2 : « jamais un rond translucide baveux »).
+  const bgColor = color || theme.colors.brand.primary;
 
   // === STYLES ===
   const styles = StyleSheet.create({
@@ -60,7 +55,7 @@ const PulseButton = React.memo(function PulseButton({
       height: buttonSize,
       justifyContent: 'center',
       width: buttonSize,
-      ...theme.shadow('md'),
+      ...theme.shadow('sm'),
     },
     emoji: {
       textAlign: 'center',
@@ -81,27 +76,15 @@ const PulseButton = React.memo(function PulseButton({
     }
   };
 
-  const getAccessibilityLabel = () => {
-    switch (state) {
-    case 'running':  return t('accessibility.timer.stopTimer');
-    case 'complete': return t('accessibility.timer.resetTimer');
-    default:         return t('accessibility.timer.startTimer');
-    }
-  };
-
   // === RENDER ===
+  // Décoratif : le disque entier (TimerDial) porte l'accessibilité (rôle
+  // 'adjustable'/'timer' + action 'activate') — ce View ne doit pas être un
+  // arrêt VoiceOver séparé.
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: bgColor }]}
-        onPress={handleTap}
-        activeOpacity={0.7}
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel={getAccessibilityLabel()}
-      >
+    <View style={styles.container} accessible={false} importantForAccessibility="no">
+      <View style={[styles.button, { backgroundColor: bgColor }]}>
         {renderContent()}
-      </TouchableOpacity>
+      </View>
     </View>
   );
 });
@@ -111,9 +94,9 @@ PulseButton.displayName = 'PulseButton';
 PulseButton.propTypes = {
   activity:    PropTypes.shape({ emoji: PropTypes.string }),
   clockwise:   PropTypes.bool,
+  color:       PropTypes.string,
   compact:     PropTypes.bool,
   emoji:       PropTypes.string,
-  onTap:       PropTypes.func,
   shouldPulse: PropTypes.bool,
   size:        PropTypes.number,
   state:       PropTypes.oneOf(['rest', 'running', 'complete']),
