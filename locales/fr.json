@@ -512,6 +512,7 @@
     "ready": "c'est prêt. touche le disque pour lancer."
   },
   "aside": {
-    "exitFocus": "quitter le focus"
+    "exitFocus": "quitter le focus",
+    "doubleTapHint": "astuce : double-tap le fond pour basculer"
   }
 }

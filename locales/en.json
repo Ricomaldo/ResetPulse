@@ -512,6 +512,7 @@
     "ready": "all set. touch the disc to start."
   },
   "aside": {
-    "exitFocus": "leave focus"
+    "exitFocus": "leave focus",
+    "doubleTapHint": "tip: double-tap the background to switch"
   }
 }

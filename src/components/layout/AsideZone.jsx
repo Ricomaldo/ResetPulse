@@ -27,7 +27,7 @@
  * segmenté sombre (#2D2520), plus doré. Palette : sous-écran ne referme plus
  * le sheet au tap (préviz live, porte C6.1).
  */
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -41,6 +41,7 @@ import Animated, {
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
+import { usePersistedState } from '../../hooks/usePersistedState';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
@@ -85,6 +86,20 @@ export default function AsideZone({ isTimerRunning }) {
   const [ritualsOpen, setRitualsOpen] = useState(false);
   // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.
   const [paletteOpen, setPaletteOpen] = useState(false);
+
+  // Apprentissage double-tap (verdicts CD 25/07) : légende visible les 2
+  // PREMIÈRES ouvertures du sheet, puis plus jamais — compteur persisté,
+  // incrémenté sur la seule transition fermé→ouvert (pas à chaque render).
+  const [asideOpenCount, setAsideOpenCount, asideOpenCountLoading] =
+    usePersistedState('@ResetPulse:asideOpenCount', 0);
+  const wasOpenRef = useRef(false);
+  useEffect(() => {
+    if (isOpen && !wasOpenRef.current && !asideOpenCountLoading) {
+      setAsideOpenCount((count) => count + 1);
+    }
+    wasOpenRef.current = isOpen;
+  }, [isOpen, asideOpenCountLoading, setAsideOpenCount]);
+  const showDoubleTapHint = !asideOpenCountLoading && asideOpenCount <= 2;
   // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
   // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
   const [contentHeight, setContentHeight] = useState(SCREEN_HEIGHT * 0.6);
@@ -273,6 +288,12 @@ export default function AsideZone({ isTimerRunning }) {
     togglesCard: {
       marginTop: rs(16),
     },
+    doubleTapHint: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(11, 'min'),
+      marginTop: rs(8),
+      textAlign: 'center',
+    },
   });
 
   const toggles = [
@@ -353,30 +374,37 @@ export default function AsideZone({ isTimerRunning }) {
                         </Text>
                       </TouchableOpacity>
                     ) : (
-                      <View style={styles.segmentedControl}>
-                        {MODES.map(({ key, label }) => {
-                          const isActive = currentMode === key;
-                          return (
-                            <TouchableOpacity
-                              key={key}
-                              accessible
-                              accessibilityRole="button"
-                              accessibilityLabel={label}
-                              accessibilityState={{ selected: isActive }}
-                              style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
-                              onPress={() => {
-                                haptics.selection().catch(() => {});
-                                setMode(key);
-                              }}
-                              activeOpacity={0.7}
-                            >
-                              <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
-                                {label}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        })}
-                      </View>
+                      <>
+                        <View style={styles.segmentedControl}>
+                          {MODES.map(({ key, label }) => {
+                            const isActive = currentMode === key;
+                            return (
+                              <TouchableOpacity
+                                key={key}
+                                accessible
+                                accessibilityRole="button"
+                                accessibilityLabel={label}
+                                accessibilityState={{ selected: isActive }}
+                                style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
+                                onPress={() => {
+                                  haptics.selection().catch(() => {});
+                                  setMode(key);
+                                }}
+                                activeOpacity={0.7}
+                              >
+                                <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
+                                  {label}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </View>
+                        {/* Apprentissage double-tap (verdicts CD 25/07) — les 2
+                            premières ouvertures du sheet seulement. */}
+                        {showDoubleTapHint && (
+                          <Text style={styles.doubleTapHint}>{t('aside.doubleTapHint')}</Text>
+                        )}
+                      </>
                     )}
 
                     {/* Blocs 2-4 : masqués en Focus — on ne règle rien, on ne peut

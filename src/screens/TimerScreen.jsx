@@ -15,9 +15,11 @@
  * n'ajoute qu'un hint discret au repos ; la fin ✨ plein-vert est déjà portée
  * par le dial (`DialCenter`), pas par ce fichier.
  */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppState, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS } from 'react-native-reanimated';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
@@ -297,9 +299,50 @@ function TimerScreenContent() {
   const theme = useTheme();
   const {
     mode: { current: currentMode },
+    setMode,
     timer: { currentDuration },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
+
+  // Double-tap fond → bascule Focus (verdicts CD 25/07). Ignoré 1,5s après
+  // un retour AppState 'active' (anti-poche/réveil). Non destructif : ne
+  // touche jamais au timer (bascule uniquement le réglage global `mode`).
+  const lastActiveAtRef = useRef(Date.now());
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        lastActiveAtRef.current = Date.now();
+      }
+    });
+    return () => subscription.remove();
+  }, []);
+
+  const handleBackgroundDoubleTap = useCallback(() => {
+    if (Date.now() - lastActiveAtRef.current < 1500) {
+      return;
+    }
+    haptics.selection().catch(() => {});
+    setMode(isFocus ? 'mixte' : 'focus');
+  }, [isFocus, setMode]);
+
+  // GestureDetector posé en ancêtre du contenu (cf. return) : les vues
+  // interactives descendantes (TimeTimer, CompactRow, dé, AsideZone — chacune
+  // avec son propre geste/Touchable) captent le toucher dans leurs propres
+  // bornes en premier ; seul le fond nu (hors disque, rangée, dé, sheet)
+  // laisse remonter ce Tap. Un drag (sheet ou cadran) dépasse le seuil de
+  // déplacement du Tap et le fait échouer naturellement — pas de conflit.
+  const backgroundDoubleTap = useMemo(() =>
+    Gesture.Tap()
+      .numberOfTaps(2)
+      .maxDelay(300)
+      .onEnd((_event, success) => {
+        'worklet';
+        if (success) {
+          runOnJS(handleBackgroundDoubleTap)();
+        }
+      }),
+  [handleBackgroundDoubleTap]
+  );
 
   // Première fois (Lot 2, C7) — flag persisté + moment dérivé de la
   // progression réelle du rituel en construction (cf. useFirstRun).
@@ -459,39 +502,45 @@ function TimerScreenContent() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       onTouchStart={dismissDistractionLabel}
     >
-      {!isFocus && <TopTime seconds={topTimeSeconds} />}
-      <View style={styles.content}>
-        <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} onDialRef={handleDialRef} />
-        {!isFocus && (
-          <View style={styles.completionMessageWrap}>
-            <Text
-              style={[styles.completionMessage, !snapshot.isCompleted && styles.completionMessageHidden]}
-              numberOfLines={1}
-            >
-              {snapshot.displayMessage || ' '}
-            </Text>
+      {/* Fond nu = zone du double-tap (hors disque/rangée/dé/sheet, chacun
+          capte son propre toucher avant qu'il ne remonte ici). */}
+      <GestureDetector gesture={backgroundDoubleTap}>
+        <View style={styles.container}>
+          {!isFocus && <TopTime seconds={topTimeSeconds} />}
+          <View style={styles.content}>
+            <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} onDialRef={handleDialRef} />
+            {!isFocus && (
+              <View style={styles.completionMessageWrap}>
+                <Text
+                  style={[styles.completionMessage, !snapshot.isCompleted && styles.completionMessageHidden]}
+                  numberOfLines={1}
+                >
+                  {snapshot.displayMessage || ' '}
+                </Text>
+              </View>
+            )}
+            {!isFocus && (
+              <View ref={barRef} onLayout={handleBarLayout}>
+                <CompactRow
+                  onActivityTouch={firstRun.markActivityTouched}
+                  onColorTouch={firstRun.markColorTouched}
+                />
+              </View>
+            )}
+            {!isFocus && <DistractionButton showLabel={showDistractionLabel} />}
           </View>
-        )}
-        {!isFocus && (
-          <View ref={barRef} onLayout={handleBarLayout}>
-            <CompactRow
-              onActivityTouch={firstRun.markActivityTouched}
-              onColorTouch={firstRun.markColorTouched}
+          {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
+          <AsideZone isTimerRunning={snapshot.running} />
+          {!isFocus && (
+            <FirstRunTips
+              moment={firstRun.moment}
+              barAnchor={barAnchor}
+              dialAnchor={dialAnchor}
+              onSkip={firstRun.skipFirstRun}
             />
-          </View>
-        )}
-        {!isFocus && <DistractionButton showLabel={showDistractionLabel} />}
-      </View>
-      {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
-      <AsideZone isTimerRunning={snapshot.running} />
-      {!isFocus && (
-        <FirstRunTips
-          moment={firstRun.moment}
-          barAnchor={barAnchor}
-          dialAnchor={dialAnchor}
-          onSkip={firstRun.skipFirstRun}
-        />
-      )}
+          )}
+        </View>
+      </GestureDetector>
     </SafeAreaView>
   );
 }
