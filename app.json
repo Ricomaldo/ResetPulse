@@ -30,7 +30,16 @@
           "icon": "./assets/icon.png",
           "color": "#4A5568",
           "sounds": [
-            "./assets/sounds/bell_short.wav"
+            "./assets/sounds/bell_short.wav",
+            "./assets/sounds/634089__aj_heels__timercomplete01.wav",
+            "./assets/sounds/815533__mihacappy__bell01.wav",
+            "./assets/sounds/135873__crz1990__vintage-microwave-timer-bell-ring-26-november-2011-113900-pm.wav",
+            "./assets/sounds/609725__theplax__microwave-ping.wav",
+            "./assets/sounds/149506__dland__kitchen-timer-done.wav",
+            "./assets/sounds/204103__maphill__kitchen-timer.wav",
+            "./assets/sounds/490326__knufds__bell-egg-timer.wav",
+            "./assets/sounds/564623__azumarill__toaster-oven-or-liftelevator-bell.wav",
+            "./assets/sounds/615949__julesv4__ding-effect.wav"
           ]
         }
       ],

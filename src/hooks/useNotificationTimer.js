@@ -121,7 +121,11 @@ export default function useNotificationTimer() {
           content: {
             title,
             body: '', // Corps vide - tout est dans le titre
-            sound: '634089__aj_heels__timercomplete01.wav', // Son bell_classic
+            // Son fixe (timer_complete/DEFAULT_SOUND_ID, cf. sounds-mapping.js)
+            // — ignore le son choisi par l'user sur le rituel/l'activité,
+            // constaté en C7, non corrigé ici (hors scope : nécessite de
+            // faire remonter selectedSoundId jusqu'à scheduleTimerNotification).
+            sound: '634089__aj_heels__timercomplete01.wav',
             // Pour Android 8+ le son du channel est utilisé
           },
           trigger: {
