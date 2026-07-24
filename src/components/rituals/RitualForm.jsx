@@ -131,14 +131,16 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
       fontSize: rs(18, 'min'),
     },
     colorDot: {
+      borderColor: theme.colors.shadow,
       borderRadius: theme.borderRadius.round,
-      borderWidth: 2,
+      borderWidth: 1.5,
       height: rs(32, 'min'),
       padding: 3,
       width: rs(32, 'min'),
     },
     colorDotActive: {
-      transform: [{ scale: 1.15 }],
+      borderColor: theme.colors.text,
+      borderWidth: 2,
     },
     colorDotInner: {
       borderRadius: theme.borderRadius.round,
@@ -304,7 +306,6 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
                 key={paletteColor}
                 style={[
                   styles.colorDot,
-                  { borderColor: paletteColor },
                   color === paletteColor && styles.colorDotActive,
                 ]}
                 onPress={() => {

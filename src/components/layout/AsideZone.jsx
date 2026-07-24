@@ -241,7 +241,7 @@ export default function AsideZone({ isTimerRunning }) {
       paddingVertical: rs(8),
     },
     segmentButtonActive: {
-      backgroundColor: theme.colors.brand.accent,
+      backgroundColor: theme.colors.text,
     },
     segmentText: {
       color: theme.colors.text,
@@ -253,7 +253,7 @@ export default function AsideZone({ isTimerRunning }) {
       color: theme.colors.fixed.white,
     },
     segmentedControl: {
-      backgroundColor: theme.colors.surfaceElevated,
+      backgroundColor: theme.colors.segmentInactive,
       borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.md,
       borderWidth: 1,

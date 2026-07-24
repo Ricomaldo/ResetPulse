@@ -45,26 +45,32 @@ function CompactRow() {
   const styles = StyleSheet.create({
     activityButton: {
       alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.chipBorder,
       borderRadius: theme.borderRadius.round,
+      borderWidth: 1.5,
       height: ACTIVITY_SIZE,
       justifyContent: 'center',
       width: ACTIVITY_SIZE,
     },
     activityButtonActive: {
-      backgroundColor: theme.colors.brand.accent,
+      backgroundColor: theme.colors.text,
+      borderColor: theme.colors.text,
     },
     activityEmoji: {
       fontSize: rs(20, 'min'),
     },
     colorDot: {
+      borderColor: theme.colors.shadow,
       borderRadius: theme.borderRadius.round,
-      borderWidth: 2,
+      borderWidth: 1.5,
       height: COLOR_DOT_SIZE,
       padding: 3,
       width: COLOR_DOT_SIZE,
     },
     colorDotActive: {
-      transform: [{ scale: 1.15 }],
+      borderColor: theme.colors.text,
+      borderWidth: 2,
     },
     colorDotInner: {
       borderRadius: theme.borderRadius.round,
@@ -124,7 +130,6 @@ function CompactRow() {
           accessibilityState={{ selected: currentColor === color }}
           style={[
             styles.colorDot,
-            { borderColor: color },
             currentColor === color && styles.colorDotActive,
           ]}
           onPress={() => {

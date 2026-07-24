@@ -74,6 +74,11 @@ export const lightTheme = {
   // Borders
   border: brandLight.primary + '40',
   divider: brandLight.neutral + '20',
+  // Chips/pastilles (fidélité au rendu C6.2, maquettes CD) : bord inactif
+  // d'une chip (activité) et fond inactif du segmenté. Sélection/anneau
+  // actif = `text` (#2D2520) et `shadow` (rgba(0,0,0,0.08)), déjà présents.
+  chipBorder: '#E3DACB',
+  segmentInactive: '#F1EADF',
 
   // Effects
   shadow: 'rgba(0, 0, 0, 0.08)',
@@ -104,6 +109,10 @@ export const darkTheme = {
 
   border: brandDark.primary + '50',
   divider: brandDark.neutral + '30',
+  // Pas de valeurs CD dédiées au dark (maquettes = monde clair uniquement) —
+  // repli sur les tokens dark existants les plus proches.
+  chipBorder: brandDark.primary + '50',
+  segmentInactive: '#3A3A3A',
 
   shadow: 'rgba(0, 0, 0, 0.3)',
   overlay: 'rgba(0, 0, 0, 0.7)',
