@@ -255,7 +255,10 @@ function FocusHint() {
     },
     wrap: {
       alignItems: 'center',
-      bottom: theme.spacing.lg,
+      // Au-dessus de la poignée du sheet fermé (~60px + safe area) — à
+      // spacing.lg le hint se cachait DERRIÈRE elle (zIndex AsideZone
+      // supérieur) : invisible en Focus repos (boucle visuelle pilote 25/07).
+      bottom: rs(96, 'min'),
       left: 0,
       position: 'absolute',
       right: 0,

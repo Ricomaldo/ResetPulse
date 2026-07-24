@@ -117,13 +117,21 @@ const DialProgress = React.memo(function DialProgress({
     </Svg>
   );
 }, (prevProps, nextProps) => {
-  // Only re-render if progress, orientation, or running state changes
+  // Re-render si progress/orientation/couleur/running OU GÉOMÉTRIE change.
+  // Bug attrapé en boucle visuelle pilote (25/07) : le comparateur ignorait
+  // la taille → après un changement de mode (Focus 0.88 ↔ Standard 0.80),
+  // l'arc gardait son ancien rayon et débordait de l'anneau.
   return (
     prevProps.progress === nextProps.progress &&
     prevProps.isClockwise === nextProps.isClockwise &&
     prevProps.scaleMode === nextProps.scaleMode &&
     prevProps.color === nextProps.color &&
-    prevProps.isRunning === nextProps.isRunning
+    prevProps.isRunning === nextProps.isRunning &&
+    prevProps.centerX === nextProps.centerX &&
+    prevProps.centerY === nextProps.centerY &&
+    prevProps.centerRadius === nextProps.centerRadius &&
+    prevProps.svgSize === nextProps.svgSize &&
+    prevProps.progressPath === nextProps.progressPath
   );
 });
 
