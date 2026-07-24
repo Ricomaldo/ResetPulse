@@ -196,7 +196,6 @@ describe('timerPalettes Configuration', () => {
         'dawn',
         'dusk',
         'soft',
-        'autumn',
         'lavender',
         'teal',
       ];
@@ -212,6 +211,23 @@ describe('timerPalettes Configuration', () => {
       const free = getFreePalettes();
       // serenity should be in free palettes
       expect(free).toContain('serenity');
+    });
+  });
+
+  describe('Verdicts CD structure (25/07)', () => {
+    test('Incluses = serenity, dusk, ocean', () => {
+      const free = getFreePalettes();
+      expect(new Set(free)).toEqual(new Set(['serenity', 'dusk', 'ocean']));
+    });
+
+    test('earth est passée Ambiances (isPremium: true)', () => {
+      expect(TIMER_PALETTES.earth.isPremium).toBe(true);
+    });
+
+    test('darkLaser et autumn sont supprimées', () => {
+      const allKeys = Object.keys(TIMER_PALETTES);
+      expect(allKeys).not.toContain('darkLaser');
+      expect(allKeys).not.toContain('autumn');
     });
   });
 

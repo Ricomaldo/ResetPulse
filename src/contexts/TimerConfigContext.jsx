@@ -277,6 +277,19 @@ export const TimerConfigProvider = ({ children }) => {
     }
   }, [isLoading, values.mode, updateValue]);
 
+  // Verdicts CD 25/07 : darkLaser/autumn supprimées de TIMER_PALETTES —
+  // bascule tout état persisté qui référence encore une palette morte vers
+  // serenity (même patron que les gardes « none »/« complet » ci-dessus).
+  useEffect(() => {
+    if (!isLoading && !TIMER_PALETTES[values.palette.currentPalette]) {
+      updateValue('palette', {
+        ...values.palette,
+        currentPalette: 'serenity',
+        currentColor: TIMER_PALETTES.serenity.colors[0],
+      });
+    }
+  }, [isLoading, values.palette, updateValue]);
+
   // Handle activity selection with flash feedback (ADR-007 messaging)
   const handleActivitySelect = useCallback((activity) => {
     if (flashTimeoutRef.current) {

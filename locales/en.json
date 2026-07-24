@@ -261,10 +261,8 @@
     "dawn": "Aurora",
     "dusk": "Twilight",
     "soft": "Gentle",
-    "autumn": "Autumn",
     "lavender": "Lavender",
-    "teal": "Teal",
-    "darkLaser": "Dark Laser"
+    "teal": "Teal"
   },
   "sounds": {
     "bell_classic": "Bell",
@@ -495,7 +493,9 @@
   },
   "palettesPanel": {
     "sheetRow": "Palettes",
-    "title": "Palettes"
+    "title": "Palettes",
+    "included": "Included",
+    "ambiances": "Ambiances"
   },
   "mode": {
     "standard": "ResetPulse",

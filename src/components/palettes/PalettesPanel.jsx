@@ -9,6 +9,8 @@
  * applique 4 réglages d'un coup, une palette n'en change qu'un). Aucun
  * gating premium (Cycle 6.1) : la répartition gratuit/payant des palettes
  * est parquée, à trancher devant les écrans.
+ * Verdicts CD (25/07) : 2 sections « Incluses »/« Ambiances » — Ambiances en
+ * pleine couleur, aucun cadenas (gating réservé Lot 3b).
  */
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -21,6 +23,8 @@ import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
 const PALETTE_KEYS = Object.keys(TIMER_PALETTES);
+const INCLUDED_KEYS = PALETTE_KEYS.filter((key) => !TIMER_PALETTES[key].isPremium);
+const AMBIANCE_KEYS = PALETTE_KEYS.filter((key) => TIMER_PALETTES[key].isPremium);
 
 export default function PalettesPanel({ onBack }) {
   const theme = useTheme();
@@ -77,6 +81,14 @@ export default function PalettesPanel({ onBack }) {
       overflow: 'hidden',
       width: rs(56, 'min'),
     },
+    sectionTitle: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginBottom: theme.spacing.xs,
+      marginTop: theme.spacing.sm,
+      textTransform: 'uppercase',
+    },
     swatchColor: {
       flex: 1,
     },
@@ -86,6 +98,31 @@ export default function PalettesPanel({ onBack }) {
       fontWeight: fontWeights.semibold,
     },
   });
+
+  const renderPaletteRow = (key) => {
+    const { colors, name } = TIMER_PALETTES[key];
+    const isActive = currentPalette === key;
+    return (
+      <TouchableOpacity
+        key={key}
+        style={styles.paletteRow}
+        onPress={() => handleApply(key)}
+        activeOpacity={0.7}
+        accessible
+        accessibilityRole="button"
+        accessibilityState={{ selected: isActive }}
+        accessibilityLabel={t('accessibility.paletteItem', { name })}
+      >
+        <View style={styles.swatch}>
+          {colors.map((color, index) => (
+            <View key={index} style={[styles.swatchColor, { backgroundColor: color }]} />
+          ))}
+        </View>
+        <Text style={styles.paletteName}>{name}</Text>
+        {isActive && <Text style={styles.checkmark}>✓</Text>}
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View>
@@ -102,30 +139,11 @@ export default function PalettesPanel({ onBack }) {
         <Text style={styles.title}>{t('palettesPanel.title')}</Text>
       </View>
 
-      {PALETTE_KEYS.map((key) => {
-        const { colors, name } = TIMER_PALETTES[key];
-        const isActive = currentPalette === key;
-        return (
-          <TouchableOpacity
-            key={key}
-            style={styles.paletteRow}
-            onPress={() => handleApply(key)}
-            activeOpacity={0.7}
-            accessible
-            accessibilityRole="button"
-            accessibilityState={{ selected: isActive }}
-            accessibilityLabel={t('accessibility.paletteItem', { name })}
-          >
-            <View style={styles.swatch}>
-              {colors.map((color, index) => (
-                <View key={index} style={[styles.swatchColor, { backgroundColor: color }]} />
-              ))}
-            </View>
-            <Text style={styles.paletteName}>{name}</Text>
-            {isActive && <Text style={styles.checkmark}>✓</Text>}
-          </TouchableOpacity>
-        );
-      })}
+      <Text style={styles.sectionTitle}>{t('palettesPanel.included')}</Text>
+      {INCLUDED_KEYS.map(renderPaletteRow)}
+
+      <Text style={styles.sectionTitle}>{t('palettesPanel.ambiances')}</Text>
+      {AMBIANCE_KEYS.map(renderPaletteRow)}
     </View>
   );
 }
