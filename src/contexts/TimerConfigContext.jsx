@@ -13,7 +13,9 @@
  * - favorites: favoriteActivities, favoritePalettes
  * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
  * - stats: activityDurations, completedTimersCount, hasSeenTwoTimersModal, hasSeenReviewRequest
- * - palette: currentPalette, selectedColorIndex, paletteInfo, paletteColors, timerColors, currentColor
+ * - palette: currentPalette, currentColor (source de vérité, hex — C6.2),
+ *   selectedColorIndex (dérivé, -1 si currentColor n'est pas dans la palette
+ *   active — ex. couleur de Rituel propre), paletteInfo, paletteColors, timerColors
  * - transient: timerRemaining, flashActivity, isLoading
  */
 
@@ -94,7 +96,7 @@ export const TimerConfigProvider = ({ children }) => {
         },
         palette: {
           currentPalette: 'serenity',
-          selectedColorIndex: 0,
+          currentColor: TIMER_PALETTES.serenity.colors[0],
         },
       };
     }
@@ -163,11 +165,12 @@ export const TimerConfigProvider = ({ children }) => {
           return;
         }
 
-        // Load old keys
-        const [oldTimerOptions, oldPalette, oldColorIndex, oldFavoriteToolMode] = await Promise.all([
+        // Load old keys — selectedColor (index legacy) n'est plus migré : le
+        // modèle palette est passé à currentColor en valeur (C6.2), un vieil
+        // index numérique n'a plus de sens à traduire.
+        const [oldTimerOptions, oldPalette, oldFavoriteToolMode] = await Promise.all([
           AsyncStorage.getItem(OLD_KEYS.timerOptions),
           AsyncStorage.getItem(OLD_KEYS.timerPalette),
-          AsyncStorage.getItem(OLD_KEYS.selectedColor),
           AsyncStorage.getItem(OLD_KEYS.favoriteToolMode),
         ]);
 
@@ -225,17 +228,6 @@ export const TimerConfigProvider = ({ children }) => {
           }
         }
 
-        // Migrate Color Index
-        if (oldColorIndex) {
-          try {
-            const parsed = JSON.parse(oldColorIndex);
-            migratedValues.palette.selectedColorIndex = parsed !== undefined ? parsed : migratedValues.palette.selectedColorIndex;
-            needsMigration = true;
-          } catch (e) {
-            logger.warn('[TimerConfigContext] Failed to parse old colorIndex:', e.message);
-          }
-        }
-
         // Migrate FavoriteToolMode
         if (oldFavoriteToolMode) {
           migratedValues.layout.favoriteToolMode = oldFavoriteToolMode;
@@ -288,15 +280,19 @@ export const TimerConfigProvider = ({ children }) => {
   }, []);
 
   // Compute derived palette state (memoized to avoid unnecessary recalculations)
+  // currentColor est la source de vérité (hex, C6.2) — selectedColorIndex est
+  // dérivé pour l'affichage (quelle pastille entourer), -1 si la couleur
+  // courante (ex. couleur propre d'un Rituel) n'est pas dans la palette active.
   const paletteData = useMemo(() => {
     const info = TIMER_PALETTES[values.palette.currentPalette] || TIMER_PALETTES.serenity;
     const colors = info.colors;
     const colors_timer = getTimerColors(values.palette.currentPalette);
-    const color = colors[values.palette.selectedColorIndex] || colors[0];
-    return { paletteInfo: info, paletteColors: colors, timerColors: colors_timer, currentColor: color };
-  }, [values.palette.currentPalette, values.palette.selectedColorIndex]);
+    const color = values.palette.currentColor || colors[0];
+    const selectedColorIndex = colors.indexOf(color);
+    return { paletteInfo: info, paletteColors: colors, timerColors: colors_timer, currentColor: color, selectedColorIndex };
+  }, [values.palette.currentPalette, values.palette.currentColor]);
 
-  const { paletteInfo, paletteColors, timerColors, currentColor } = paletteData;
+  const { paletteInfo, paletteColors, timerColors, currentColor, selectedColorIndex } = paletteData;
 
   // Context value with grouped namespaces - MUST BE IN useMemo to trigger updates
   const value = useMemo(() => ({
@@ -336,7 +332,7 @@ export const TimerConfigProvider = ({ children }) => {
     },
     palette: {
       currentPalette: values.palette.currentPalette,
-      selectedColorIndex: values.palette.selectedColorIndex,
+      selectedColorIndex,
       paletteInfo,
       paletteColors,
       timerColors,
@@ -517,30 +513,43 @@ export const TimerConfigProvider = ({ children }) => {
       }));
     },
 
-    // Palette
+    // Palette — currentColor est la source de vérité (hex, C6.2) ; setColorIndex
+    // et setColorByType restent des raccourcis pratiques qui résolvent un
+    // index vers le hex de la palette ACTIVE au moment de l'appel.
     setPalette: (paletteName) => {
       if (TIMER_PALETTES[paletteName]) {
         setValues(prev => ({
           ...prev,
-          palette: { ...prev.palette, currentPalette: paletteName, selectedColorIndex: 0 }
+          palette: { ...prev.palette, currentPalette: paletteName, currentColor: TIMER_PALETTES[paletteName].colors[0] }
         }));
       }
     },
     setColorIndex: (index) => {
       if (index >= 0 && index < 4) {
-        setValues(prev => ({
-          ...prev,
-          palette: { ...prev.palette, selectedColorIndex: index }
-        }));
+        setValues(prev => {
+          const colors = (TIMER_PALETTES[prev.palette.currentPalette] || TIMER_PALETTES.serenity).colors;
+          return { ...prev, palette: { ...prev.palette, currentColor: colors[index] } };
+        });
       }
     },
     setColorByType: (type) => {
       const typeToIndex = { energy: 0, focus: 1, calm: 2, deep: 3 };
       const index = typeToIndex[type];
       if (index !== undefined) {
+        setValues(prev => {
+          const colors = (TIMER_PALETTES[prev.palette.currentPalette] || TIMER_PALETTES.serenity).colors;
+          return { ...prev, palette: { ...prev.palette, currentColor: colors[index] } };
+        });
+      }
+    },
+    // Couleur en valeur directe (ex. couleur propre d'un Rituel, C6.2) — peut
+    // ne correspondre à aucune pastille de la palette active (selectedColorIndex
+    // dérivé retombe alors à -1, aucune pastille en surbrillance : attendu).
+    setColorByValue: (hex) => {
+      if (hex) {
         setValues(prev => ({
           ...prev,
-          palette: { ...prev.palette, selectedColorIndex: index }
+          palette: { ...prev.palette, currentColor: hex }
         }));
       }
     },

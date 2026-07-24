@@ -2,7 +2,7 @@
 // Store des Rituels (ADR-015) — CRUD persisté, calqué sur useCustomActivities
 
 import { usePersistedState } from './usePersistedState';
-import { RITUAL_ID_PREFIX, getDefaultRituals, clampRitualDuration } from '../config/rituals';
+import { RITUAL_ID_PREFIX, getDefaultRituals, clampRitualDuration, DEFAULT_RITUAL_COLOR } from '../config/rituals';
 
 const STORAGE_KEY = '@ResetPulse:rituals';
 
@@ -16,15 +16,15 @@ export const useRituals = () => {
 
   /**
    * Crée un nouveau rituel.
-   * @param {Object} fields - { name, activityId, colorIndex, duration, soundId }
+   * @param {Object} fields - { name, activityId, color, duration, soundId }
    * @returns {Object} Le rituel créé
    */
-  const createRitual = ({ name, activityId, colorIndex, duration, soundId }) => {
+  const createRitual = ({ name, activityId, color, duration, soundId }) => {
     const newRitual = {
       id: `${RITUAL_ID_PREFIX}${Date.now()}`,
       name,
       activityId,
-      colorIndex: Math.min(3, Math.max(0, colorIndex ?? 0)),
+      color: color || DEFAULT_RITUAL_COLOR,
       duration: clampRitualDuration(duration),
       soundId,
       steps: [],
@@ -48,8 +48,8 @@ export const useRituals = () => {
         if (updates.duration !== undefined) {
           merged.duration = clampRitualDuration(updates.duration);
         }
-        if (updates.colorIndex !== undefined) {
-          merged.colorIndex = Math.min(3, Math.max(0, updates.colorIndex));
+        if (updates.color !== undefined) {
+          merged.color = updates.color || DEFAULT_RITUAL_COLOR;
         }
         return merged;
       })

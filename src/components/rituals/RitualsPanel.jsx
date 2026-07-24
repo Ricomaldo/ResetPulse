@@ -24,7 +24,7 @@ export default function RitualsPanel({ onBack, onApplied }) {
   const t = useTranslation();
   const { rituals, createRitual, updateRitual, deleteRitual, getRitualById } = useRituals();
   const { customActivities } = useCustomActivities();
-  const { setCurrentActivity, setCurrentDuration, setSelectedSoundId, setColorIndex } = useTimerConfig();
+  const { setCurrentActivity, setCurrentDuration, setSelectedSoundId, setColorByValue } = useTimerConfig();
 
   const [view, setView] = useState('list'); // 'list' | 'form'
   const [editingId, setEditingId] = useState(null);
@@ -35,7 +35,7 @@ export default function RitualsPanel({ onBack, onApplied }) {
     setCurrentActivity(payload.activity);
     setCurrentDuration(payload.duration);
     setSelectedSoundId(payload.soundId);
-    setColorIndex(payload.colorIndex);
+    setColorByValue(payload.color);
     onApplied();
   };
 

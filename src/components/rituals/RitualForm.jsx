@@ -11,7 +11,7 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { useTranslation } from '../../hooks/useTranslation';
 import { getActivityById } from '../../config/activities';
-import { deriveRitualName, resolveRitualActivity, suggestedColorIndexFor } from '../../config/rituals';
+import { deriveRitualName, resolveRitualActivity, suggestedColorFor } from '../../config/rituals';
 import { DEFAULT_SOUND_ID } from '../../config/sounds';
 import DurationSlider from '../pickers/DurationSlider';
 import SoundPicker from '../pickers/SoundPicker';
@@ -39,8 +39,8 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
   const [pendingCustomEmoji, setPendingCustomEmoji] = useState(
     initialBuiltInId ? null : initialActivity?.emoji || null
   );
-  const [colorIndex, setColorIndex] = useState(
-    initialRitual ? initialRitual.colorIndex : suggestedColorIndexFor(initialActivity)
+  const [color, setColor] = useState(
+    initialRitual ? initialRitual.color : suggestedColorFor(initialActivity)
   );
   const [duration, setDuration] = useState(
     initialRitual ? initialRitual.duration : initialActivity?.defaultDuration
@@ -90,7 +90,7 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
       return; // pas de sélection possible — le premier bouton est présélectionné
     }
 
-    onSave({ name, activityId, colorIndex, duration, soundId });
+    onSave({ name, activityId, color, duration, soundId });
   };
 
   const handleDelete = () => {
@@ -299,25 +299,25 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t('rituals.form.colorLabel')}</Text>
           <View style={styles.colorRow}>
-            {paletteColors.map((color, index) => (
+            {paletteColors.map((paletteColor, index) => (
               <TouchableOpacity
-                key={color}
+                key={paletteColor}
                 style={[
                   styles.colorDot,
-                  { borderColor: color },
-                  colorIndex === index && styles.colorDotActive,
+                  { borderColor: paletteColor },
+                  color === paletteColor && styles.colorDotActive,
                 ]}
                 onPress={() => {
                   haptics.selection().catch(() => {});
-                  setColorIndex(index);
+                  setColor(paletteColor);
                 }}
                 activeOpacity={0.7}
                 accessible
                 accessibilityRole="button"
                 accessibilityLabel={t('accessibility.colorNumber', { number: index + 1 })}
-                accessibilityState={{ selected: colorIndex === index }}
+                accessibilityState={{ selected: color === paletteColor }}
               >
-                <View style={[styles.colorDotInner, { backgroundColor: color }]} />
+                <View style={[styles.colorDotInner, { backgroundColor: paletteColor }]} />
               </TouchableOpacity>
             ))}
           </View>

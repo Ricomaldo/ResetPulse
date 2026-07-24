@@ -4,26 +4,35 @@
  * par id (`activityId`) + porte durée/couleur/son. `steps` réservé au build n+1
  * (séquences/Pomodoro), toujours vide au recentrage.
  *
- * Rituel { id, name, activityId, colorIndex, duration, soundId, steps }
+ * Rituel { id, name, activityId, color, duration, soundId, steps }
+ *
+ * `color` (C6.2, arbitrage pilote) : hex EN VALEUR, pas un index dans la
+ * palette courante — un rituel garde SA couleur, changer de palette
+ * (`timer-palettes.js`) ne le recolore pas. `colorIndex` (référence,
+ * silencieusement recolorée par C6.1) est mort.
  */
 import i18n from '../i18n';
 import { getActivityById, getDefaultActivity } from './activities';
 import { DEFAULT_SOUND_ID } from './sounds';
 import { MIN_DURATION, MAX_DURATION } from './durations';
+import { getTimerColors } from './timer-palettes';
 
 export const RITUAL_ID_PREFIX = 'ritual_';
 
-// suggestedColor (activities.js) → slot dans la palette courante (ADR-014 : 4 teintes)
-const SUGGESTED_COLOR_TO_INDEX = { energy: 0, focus: 1, calm: 2, deep: 3 };
+// Palette de référence pour les seeds/repli — un rituel de base doit exister
+// même avant tout choix de palette utilisateur (ADR-014 : serenity = défaut).
+const SEED_COLORS = getTimerColors('serenity');
+export const DEFAULT_RITUAL_COLOR = SEED_COLORS.energy;
 
 /**
- * Slot couleur (0-3) suggéré par l'activité, pour préremplir le champ
- * Couleur du formulaire à la création d'un rituel.
+ * Couleur (hex) suggérée par l'activité, pour préremplir le champ Couleur
+ * du formulaire à la création d'un rituel — dérivée de `suggestedColor`
+ * (energy/focus/calm/deep) via la palette de référence.
  * @param {Object} activity
- * @returns {number}
+ * @returns {string}
  */
-export const suggestedColorIndexFor = (activity) =>
-  SUGGESTED_COLOR_TO_INDEX[activity?.suggestedColor] ?? 0;
+export const suggestedColorFor = (activity) =>
+  SEED_COLORS[activity?.suggestedColor] ?? DEFAULT_RITUAL_COLOR;
 
 // 3 rituels de base (C6) — chacun référence une activité gratuite existante,
 // zéro nouveau contenu d'identité.
@@ -45,7 +54,7 @@ export const getDefaultRituals = () =>
       id: `${RITUAL_ID_PREFIX}${activityId}`,
       name: i18n.t(`rituals.base.${activityId}`),
       activityId,
-      colorIndex: suggestedColorIndexFor(activity),
+      color: suggestedColorFor(activity),
       duration,
       soundId: DEFAULT_SOUND_ID,
       steps: [],
@@ -100,11 +109,11 @@ export const deriveRitualName = (activity) => {
  * React, pour rester testable indépendamment du branchement écran.
  * @param {Object} ritual
  * @param {Array<Object>} customActivities
- * @returns {{activity: Object, duration: number, soundId: string, colorIndex: number}}
+ * @returns {{activity: Object, duration: number, soundId: string, color: string}}
  */
 export const buildRitualApplyPayload = (ritual, customActivities = []) => ({
   activity: resolveRitualActivity(ritual, customActivities),
   duration: clampRitualDuration(ritual.duration),
   soundId: ritual.soundId || DEFAULT_SOUND_ID,
-  colorIndex: Math.min(3, Math.max(0, ritual.colorIndex ?? 0)),
+  color: ritual.color || DEFAULT_RITUAL_COLOR,
 });

@@ -1,15 +1,19 @@
 // __tests__/config/rituals.test.js
 import {
   RITUAL_ID_PREFIX,
+  DEFAULT_RITUAL_COLOR,
   getDefaultRituals,
   clampRitualDuration,
   resolveRitualActivity,
   deriveRitualName,
   buildRitualApplyPayload,
-  suggestedColorIndexFor,
+  suggestedColorFor,
 } from '../../src/config/rituals';
 import { getActivityById, getDefaultActivity } from '../../src/config/activities';
 import { MIN_DURATION, MAX_DURATION } from '../../src/config/durations';
+import { getTimerColors } from '../../src/config/timer-palettes';
+
+const SERENITY_COLORS = getTimerColors('serenity');
 
 describe('rituals Configuration', () => {
   describe('getDefaultRituals', () => {
@@ -32,10 +36,16 @@ describe('rituals Configuration', () => {
         expect(ritual).toHaveProperty('id');
         expect(ritual).toHaveProperty('name');
         expect(ritual).toHaveProperty('activityId');
-        expect(ritual).toHaveProperty('colorIndex');
+        expect(ritual).toHaveProperty('color');
         expect(ritual).toHaveProperty('duration');
         expect(ritual).toHaveProperty('soundId');
         expect(ritual.steps).toEqual([]);
+      });
+    });
+
+    test('color is a hex value (in value, not a palette-relative index)', () => {
+      rituals.forEach((ritual) => {
+        expect(ritual.color).toMatch(/^#[0-9A-Fa-f]{6}$/);
       });
     });
 
@@ -120,33 +130,39 @@ describe('rituals Configuration', () => {
     });
   });
 
-  describe('suggestedColorIndexFor', () => {
-    test('maps each suggestedColor type to its slot 0-3', () => {
-      expect(suggestedColorIndexFor({ suggestedColor: 'energy' })).toBe(0);
-      expect(suggestedColorIndexFor({ suggestedColor: 'focus' })).toBe(1);
-      expect(suggestedColorIndexFor({ suggestedColor: 'calm' })).toBe(2);
-      expect(suggestedColorIndexFor({ suggestedColor: 'deep' })).toBe(3);
+  describe('suggestedColorFor', () => {
+    test('maps each suggestedColor type to its serenity hex', () => {
+      expect(suggestedColorFor({ suggestedColor: 'energy' })).toBe(SERENITY_COLORS.energy);
+      expect(suggestedColorFor({ suggestedColor: 'focus' })).toBe(SERENITY_COLORS.focus);
+      expect(suggestedColorFor({ suggestedColor: 'calm' })).toBe(SERENITY_COLORS.calm);
+      expect(suggestedColorFor({ suggestedColor: 'deep' })).toBe(SERENITY_COLORS.deep);
     });
 
-    test('defaults to 0 for an unknown or missing type', () => {
-      expect(suggestedColorIndexFor({ suggestedColor: 'unknown' })).toBe(0);
-      expect(suggestedColorIndexFor(null)).toBe(0);
+    test('defaults to DEFAULT_RITUAL_COLOR for an unknown or missing type', () => {
+      expect(suggestedColorFor({ suggestedColor: 'unknown' })).toBe(DEFAULT_RITUAL_COLOR);
+      expect(suggestedColorFor(null)).toBe(DEFAULT_RITUAL_COLOR);
     });
   });
 
   describe('buildRitualApplyPayload', () => {
-    test('resolves activity, clamps duration and colorIndex', () => {
-      const ritual = { activityId: 'break', duration: 999999, colorIndex: 9, soundId: 'bell_classic' };
+    test('resolves activity, clamps duration, keeps the ritual color in value', () => {
+      const ritual = { activityId: 'break', duration: 999999, color: '#6BC4C4', soundId: 'bell_classic' };
       const payload = buildRitualApplyPayload(ritual, []);
 
       expect(payload.activity).toEqual(getActivityById('break'));
       expect(payload.duration).toBe(MAX_DURATION);
-      expect(payload.colorIndex).toBe(3);
+      expect(payload.color).toBe('#6BC4C4');
       expect(payload.soundId).toBe('bell_classic');
     });
 
+    test('falls back to DEFAULT_RITUAL_COLOR when the ritual has no color (legacy colorIndex ritual)', () => {
+      const ritual = { activityId: 'break', duration: 600, soundId: 'bell_classic' };
+      const payload = buildRitualApplyPayload(ritual, []);
+      expect(payload.color).toBe(DEFAULT_RITUAL_COLOR);
+    });
+
     test('guard: a ritual pointing at a deleted custom activity still produces a valid payload', () => {
-      const ritual = { activityId: 'custom_deleted', duration: 600, colorIndex: 1, soundId: 'timer_complete' };
+      const ritual = { activityId: 'custom_deleted', duration: 600, color: '#C97070', soundId: 'timer_complete' };
       const payload = buildRitualApplyPayload(ritual, []);
 
       expect(payload.activity).toEqual(getDefaultActivity());
@@ -154,7 +170,7 @@ describe('rituals Configuration', () => {
     });
 
     test('falls back to the default sound when soundId is missing', () => {
-      const ritual = { activityId: 'work', duration: 600, colorIndex: 0 };
+      const ritual = { activityId: 'work', duration: 600, color: '#5A7BA8' };
       const payload = buildRitualApplyPayload(ritual, []);
       expect(typeof payload.soundId).toBe('string');
       expect(payload.soundId.length).toBeGreaterThan(0);

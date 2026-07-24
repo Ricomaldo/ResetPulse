@@ -2,6 +2,7 @@
 import { renderHook, act } from '../test-utils';
 import { useRituals } from '../../src/hooks/useRituals';
 import { MAX_DURATION, MIN_DURATION } from '../../src/config/durations';
+import { DEFAULT_RITUAL_COLOR } from '../../src/config/rituals';
 
 const mockSetRituals = jest.fn((updater) => {
   if (typeof updater === 'function') {
@@ -49,7 +50,7 @@ describe('useRituals', () => {
         created = result.current.createRitual({
           name: 'Lecture',
           activityId: 'reading',
-          colorIndex: 1,
+          color: '#D4A853',
           duration: 1800,
           soundId: 'bell_classic',
         });
@@ -58,13 +59,13 @@ describe('useRituals', () => {
       expect(created.id).toMatch(/^ritual_\d+$/);
       expect(created.name).toBe('Lecture');
       expect(created.activityId).toBe('reading');
-      expect(created.colorIndex).toBe(1);
+      expect(created.color).toBe('#D4A853');
       expect(created.duration).toBe(1800);
       expect(created.soundId).toBe('bell_classic');
       expect(created.steps).toEqual([]);
     });
 
-    it('clamps duration and colorIndex on creation', () => {
+    it('clamps duration on creation, keeps color in value', () => {
       const { result } = renderHook(() => useRituals());
 
       let created;
@@ -72,14 +73,30 @@ describe('useRituals', () => {
         created = result.current.createRitual({
           name: 'Trop long',
           activityId: 'work',
-          colorIndex: 99,
+          color: '#6B9B6B',
           duration: 999999,
           soundId: 'timer_complete',
         });
       });
 
       expect(created.duration).toBe(MAX_DURATION);
-      expect(created.colorIndex).toBe(3);
+      expect(created.color).toBe('#6B9B6B');
+    });
+
+    it('falls back to DEFAULT_RITUAL_COLOR when no color is given', () => {
+      const { result } = renderHook(() => useRituals());
+
+      let created;
+      act(() => {
+        created = result.current.createRitual({
+          name: 'Sans couleur',
+          activityId: 'work',
+          duration: 600,
+          soundId: 'timer_complete',
+        });
+      });
+
+      expect(created.color).toBe(DEFAULT_RITUAL_COLOR);
     });
 
     it('calls setRituals to add the ritual', () => {
@@ -89,7 +106,7 @@ describe('useRituals', () => {
         result.current.createRitual({
           name: 'Test',
           activityId: 'work',
-          colorIndex: 0,
+          color: '#5A7BA8',
           duration: 600,
           soundId: 'timer_complete',
         });
@@ -104,7 +121,7 @@ describe('useRituals', () => {
       id: 'ritual_123',
       name: 'Deep Work',
       activityId: 'work',
-      colorIndex: 3,
+      color: '#6B9B6B',
       duration: 3000,
       soundId: 'timer_complete',
       steps: [],
@@ -131,6 +148,48 @@ describe('useRituals', () => {
       expect(updaterResult[0].name).toBe('Deep Work XL');
       expect(updaterResult[0].duration).toBe(3600);
       expect(updaterResult[0].activityId).toBe('work'); // untouched fields survive
+    });
+
+    it('updates the color in value, independent of any palette', () => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [existing],
+        mockSetRituals,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useRituals());
+
+      let updaterResult;
+      mockSetRituals.mockImplementation((updater) => {
+        updaterResult = updater([existing]);
+      });
+
+      act(() => {
+        result.current.updateRitual('ritual_123', { color: '#E8857A' });
+      });
+
+      expect(updaterResult[0].color).toBe('#E8857A');
+    });
+
+    it('falls back to DEFAULT_RITUAL_COLOR if color is updated to a falsy value', () => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [existing],
+        mockSetRituals,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useRituals());
+
+      let updaterResult;
+      mockSetRituals.mockImplementation((updater) => {
+        updaterResult = updater([existing]);
+      });
+
+      act(() => {
+        result.current.updateRitual('ritual_123', { color: null });
+      });
+
+      expect(updaterResult[0].color).toBe(DEFAULT_RITUAL_COLOR);
     });
 
     it('clamps duration when updated above MAX_DURATION', () => {
@@ -250,7 +309,7 @@ describe('useRituals', () => {
         created = result.current.createRitual({
           name: 'Trop court',
           activityId: 'work',
-          colorIndex: 0,
+          color: '#5A7BA8',
           duration: 0,
           soundId: 'timer_complete',
         });
