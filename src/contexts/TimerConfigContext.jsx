@@ -7,7 +7,7 @@
  *
  * State Namespaces:
  * - timer: currentActivity, currentDuration, selectedSoundId, clockwise, scaleMode
- * - display: shouldPulse, showDigitalTimer, showActivityEmoji, showTime
+ * - display: shouldPulse, showDigitalTimer, showTime
  * - system: keepAwakeEnabled
  * - mode: current (Mixte/Focus/Complet — ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
@@ -69,7 +69,6 @@ export const TimerConfigProvider = ({ children }) => {
         display: {
           shouldPulse: false,
           showDigitalTimer: false,
-          showActivityEmoji: true,
           showTime: true,
         },
         system: {
@@ -113,7 +112,6 @@ export const TimerConfigProvider = ({ children }) => {
       display: {
         shouldPulse: false,
         showDigitalTimer: false,
-        showActivityEmoji: true,
         showTime: true,
       },
       system: {
@@ -190,7 +188,6 @@ export const TimerConfigProvider = ({ children }) => {
             migratedValues.display = {
               shouldPulse: parsed.shouldPulse !== undefined ? parsed.shouldPulse : migratedValues.display.shouldPulse,
               showDigitalTimer: parsed.showDigitalTimer !== undefined ? parsed.showDigitalTimer : migratedValues.display.showDigitalTimer,
-              showActivityEmoji: parsed.showActivityEmoji !== undefined ? parsed.showActivityEmoji : migratedValues.display.showActivityEmoji,
               showTime: parsed.showTime !== undefined ? parsed.showTime : migratedValues.display.showTime,
             };
             migratedValues.system = {
@@ -306,7 +303,6 @@ export const TimerConfigProvider = ({ children }) => {
     display: {
       shouldPulse: values.display.shouldPulse,
       showDigitalTimer: values.display.showDigitalTimer,
-      showActivityEmoji: values.display.showActivityEmoji,
       showTime: values.display.showTime,
     },
     system: {
@@ -388,12 +384,6 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         display: { ...prev.display, showDigitalTimer }
-      }));
-    },
-    setShowActivityEmoji: (showActivityEmoji) => {
-      setValues(prev => ({
-        ...prev,
-        display: { ...prev.display, showActivityEmoji }
       }));
     },
     setShowTime: (showTime) => {

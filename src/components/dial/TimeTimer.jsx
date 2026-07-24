@@ -25,7 +25,6 @@ export default function TimeTimer({
     timer: { clockwise, scaleMode, currentActivity, currentDuration },
     setCurrentDuration,
     setTimerRemaining,
-    display: { showActivityEmoji },
     palette: { currentColor },
     mode: { current: currentMode },
   } = useTimerConfig();
@@ -169,7 +168,6 @@ export default function TimeTimer({
             currentActivity?.id === 'none' ? null : currentActivity?.emoji
           }
           isRunning={timer.running}
-          showActivityEmoji={showActivityEmoji}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}
           isCompleted={timer.isCompleted}
