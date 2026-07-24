@@ -201,7 +201,10 @@ function TopTime({ seconds }) {
 
   const styles = StyleSheet.create({
     text: {
-      color: theme.colors.brand.neutral,
+      // brand.neutral donnait 2.37:1 sur le fond crème (#F4EFE7) — bien sous
+      // WCAG AA (4.5:1), quasi illisible à 13px (trouvé en retest Eric,
+      // rapporté comme "timer invisible"). textSecondary : 5.41:1.
+      color: theme.colors.textSecondary,
       fontSize: rs(13, 'min'),
       fontVariant: ['tabular-nums'],
     },
@@ -242,7 +245,9 @@ function FocusHint() {
 
   const styles = StyleSheet.create({
     hint: {
-      color: theme.colors.brand.neutral,
+      // Même correctif que TopTime : brand.neutral = 2.37:1 sur le fond
+      // crème, sous WCAG AA. textSecondary = 5.41:1.
+      color: theme.colors.textSecondary,
       fontSize: rs(12, 'min'),
       textAlign: 'center',
     },
