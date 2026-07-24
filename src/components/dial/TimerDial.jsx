@@ -246,6 +246,29 @@ function TimerDial({
   const panGesture = useMemo(() =>
     Gesture.Pan()
       .minDistance(10) // Minimum distance to start pan (differentiates from tap)
+      // Régression tap-start (2e cause, trouvée en retest avec Eric) :
+      // Gesture.Race(pan, tap) donne la main au PREMIER geste qui devient
+      // ACTIVE — au niveau natif, pas au niveau de ce worklet. Un tap au
+      // centre avec ne serait-ce que 10px de jitter (courant, doigt réel)
+      // satisfaisait déjà minDistance(10) et faisait ACTIVER pan (donc
+      // annuler tap dans la Race) AVANT que le check de zone morte ci-dessous
+      // ne s'exécute — celui-ci ne faisait plus alors que neutraliser pan
+      // (isDragValid=false), sans jamais redonner la main à tap. Résultat :
+      // rien ne se produit. Fix : `onTouchesDown` fait échouer pan dès le
+      // toucher initial si on est dans la zone morte, AVANT toute mesure de
+      // distance — pan ne peut alors plus jamais gagner la course au centre.
+      .onTouchesDown((event, stateManager) => {
+        'worklet';
+        const touch = event.changedTouches[0];
+        if (!touch) {
+          return;
+        }
+        const dx = touch.x - centerX;
+        const dy = touch.y - centerY;
+        if (Math.sqrt(dx * dx + dy * dy) <= centerZoneRadius) {
+          stateManager.fail();
+        }
+      })
       .onStart((event) => {
         'worklet';
         // Calculate distance from center in worklet (can modify SharedValue here)
