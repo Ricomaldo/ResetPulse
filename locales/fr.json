@@ -3,7 +3,8 @@
     "cancel": "Annuler",
     "ok": "OK",
     "retry": "Réessayer",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "back": "Retour"
   },
   "controls": {
     "digitalTimer": {
@@ -311,7 +312,13 @@
       "dial": "Cadran du timer, %{minutes} minutes définies, %{activity}"
     },
     "unlockPremium": "Débloquer le premium pour %{price}",
-    "paletteItem": "Palette de couleurs : %{name}"
+    "paletteItem": "Palette de couleurs : %{name}",
+    "applyRitual": "Appliquer le rituel %{name}",
+    "editRitual": "Modifier le rituel %{name}",
+    "createRitual": "Créer un rituel",
+    "closeRitualForm": "Fermer le formulaire de rituel",
+    "chooseCustomEmoji": "Choisir un autre emoji via le clavier",
+    "ritualNamePreset": "Rituel préconfiguré %{name}"
   },
   "discovery": {
     "defaultCta": "Essayer 7 jours gratuits",
@@ -435,6 +442,10 @@
     "writing": {
       "startMessage": "Écris",
       "endMessage": "Libéré ✍️"
+    },
+    "custom": {
+      "startMessage": "C'est parti",
+      "endMessage": "Accompli ✨"
     }
   },
   "notifications": {
@@ -448,6 +459,34 @@
         "title": "Dernière chance",
         "body": "Essai gratuit 7 jours — profites-en avant qu'il expire"
       }
+    }
+  },
+  "rituals": {
+    "sheetRow": "Mes rituels",
+    "base": {
+      "meditation": "Respiration",
+      "break": "Pause café",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Mes rituels",
+      "createRow": "Créer un rituel",
+      "empty": "Aucun rituel pour l'instant",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Créer un rituel",
+      "editTitle": "Modifier le rituel",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Autre emoji",
+      "colorLabel": "Couleur",
+      "durationLabel": "Durée",
+      "soundLabel": "Son de fin",
+      "saveButton": "Enregistrer",
+      "deleteButton": "Supprimer",
+      "deleteConfirmTitle": "Supprimer ce rituel ?",
+      "deleteConfirmMessage": "Cette action est irréversible.",
+      "customActivityName": "Mon rituel"
     }
   }
 }

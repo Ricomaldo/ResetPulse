@@ -3,7 +3,8 @@
     "cancel": "Cancel",
     "ok": "OK",
     "retry": "Retry",
-    "continue": "Continue"
+    "continue": "Continue",
+    "back": "Back"
   },
   "controls": {
     "digitalTimer": {
@@ -311,7 +312,13 @@
     "saveActivityHint": "Saves changes to this activity",
     "deleteActivityHint": "Permanently deletes this custom activity",
     "celebrationEmoji": "Celebration",
-    "exploreSettingsHint": "Opens settings to discover premium features"
+    "exploreSettingsHint": "Opens settings to discover premium features",
+    "applyRitual": "Apply the %{name} ritual",
+    "editRitual": "Edit the %{name} ritual",
+    "createRitual": "Create a ritual",
+    "closeRitualForm": "Close the ritual form",
+    "chooseCustomEmoji": "Choose another emoji via the keyboard",
+    "ritualNamePreset": "Preset ritual %{name}"
   },
   "discovery": {
     "defaultCta": "Try 7 days free",
@@ -435,6 +442,10 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Let's go",
+      "endMessage": "Done ✨"
     }
   },
   "notifications": {
@@ -448,6 +459,34 @@
         "title": "Last chance",
         "body": "7-day free trial — grab it before it expires"
       }
+    }
+  },
+  "rituals": {
+    "sheetRow": "My rituals",
+    "base": {
+      "meditation": "Breathing",
+      "break": "Coffee break",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "My rituals",
+      "createRow": "Create a ritual",
+      "empty": "No rituals yet",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Create a ritual",
+      "editTitle": "Edit ritual",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Other emoji",
+      "colorLabel": "Color",
+      "durationLabel": "Duration",
+      "soundLabel": "End sound",
+      "saveButton": "Save",
+      "deleteButton": "Delete",
+      "deleteConfirmTitle": "Delete this ritual?",
+      "deleteConfirmMessage": "This action is irreversible.",
+      "customActivityName": "My ritual"
     }
   }
 }

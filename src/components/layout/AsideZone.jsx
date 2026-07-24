@@ -36,6 +36,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
+import RitualsPanel from '../rituals/RitualsPanel';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -52,7 +53,6 @@ const MODES = [
   { key: 'focus', label: 'Focus' },
   { key: 'complet', label: 'Complet' },
 ];
-const RITUALS_LABEL = 'Mes rituels';
 const PALETTES_LABEL = 'Palettes';
 
 export default function AsideZone({ isTimerRunning }) {
@@ -70,6 +70,8 @@ export default function AsideZone({ isTimerRunning }) {
   const isFocus = currentMode === 'focus';
 
   const [isOpen, setIsOpen] = useState(false);
+  // Sous-écran Rituels (bloc 3, C6) — remplace les blocs 1-4 quand ouvert.
+  const [ritualsOpen, setRitualsOpen] = useState(false);
   // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
   // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
   const [contentHeight, setContentHeight] = useState(SCREEN_HEIGHT * 0.6);
@@ -103,6 +105,14 @@ export default function AsideZone({ isTimerRunning }) {
       snapTo(false);
     }
   }, [isTimerRunning]); // volontairement limité : réagit au seul démarrage du timer
+
+  // Sheet fermé (swipe, auto-collapse ou application d'un rituel) : le
+  // sous-écran Rituels ne reste pas ouvert pour la prochaine ouverture.
+  useEffect(() => {
+    if (!isOpen) {
+      setRitualsOpen(false);
+    }
+  }, [isOpen]);
 
   // Recale la position ouverte si le contenu mesuré change pendant que le
   // sheet est ouvert (ex: bascule de mode qui ajoute/retire des blocs)
@@ -284,72 +294,93 @@ export default function AsideZone({ isTimerRunning }) {
               nestedScrollEnabled={true}
             >
               <View onLayout={handleContentLayout}>
-                {/* Bloc 1 : segmenté Mode — écrit le réglage global ; seul Mixte
-                    rend au Lot 2 C3 (Focus/Complet se branchent en C4/C5) */}
-                <View style={styles.segmentedControl}>
-                  {MODES.map(({ key, label }) => {
-                    const isActive = currentMode === key;
-                    return (
-                      <TouchableOpacity
-                        key={key}
-                        accessible
-                        accessibilityRole="button"
-                        accessibilityLabel={label}
-                        accessibilityState={{ selected: isActive }}
-                        style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
-                        onPress={() => {
-                          haptics.selection().catch(() => {});
-                          setMode(key);
-                        }}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
-                          {label}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-
-                {/* Blocs 2-4 : masqués en Focus — on ne règle rien, on ne peut
-                    qu'en sortir (cf. header). */}
-                {!isFocus && (
+                {ritualsOpen ? (
+                  /* Sous-écran Rituels (bloc 3, C6) — remplace les 4 blocs le
+                     temps de la liste/formulaire (SCR-16/17). */
+                  <RitualsPanel
+                    onBack={() => setRitualsOpen(false)}
+                    onApplied={() => snapTo(false)}
+                  />
+                ) : (
                   <>
-                    {/* Bloc 2 : 2 toggles */}
-                    <View style={styles.togglesCard}>
-                      {toggles.map((toggle, index) => (
-                        <View
-                          key={toggle.key}
-                          style={[styles.optionRow, index === toggles.length - 1 && styles.optionRowLast]}
-                        >
-                          <Text style={styles.optionLabel}>{toggle.label}</Text>
-                          <Switch
-                            accessible={true}
-                            accessibilityLabel={toggle.label}
-                            accessibilityRole="switch"
-                            accessibilityState={{ checked: toggle.value }}
-                            value={toggle.value}
-                            onValueChange={(value) => {
-                              haptics.switchToggle().catch(() => {});
-                              toggle.onChange(value);
+                    {/* Bloc 1 : segmenté Mode — écrit le réglage global ; seul Mixte
+                        rend au Lot 2 C3 (Focus/Complet se branchent en C4/C5) */}
+                    <View style={styles.segmentedControl}>
+                      {MODES.map(({ key, label }) => {
+                        const isActive = currentMode === key;
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            accessible
+                            accessibilityRole="button"
+                            accessibilityLabel={label}
+                            accessibilityState={{ selected: isActive }}
+                            style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
+                            onPress={() => {
+                              haptics.selection().catch(() => {});
+                              setMode(key);
                             }}
-                            {...theme.styles.switch(toggle.value)}
-                          />
+                            activeOpacity={0.7}
+                          >
+                            <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
+                              {label}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+
+                    {/* Blocs 2-4 : masqués en Focus — on ne règle rien, on ne peut
+                        qu'en sortir (cf. header). */}
+                    {!isFocus && (
+                      <>
+                        {/* Bloc 2 : 2 toggles */}
+                        <View style={styles.togglesCard}>
+                          {toggles.map((toggle, index) => (
+                            <View
+                              key={toggle.key}
+                              style={[styles.optionRow, index === toggles.length - 1 && styles.optionRowLast]}
+                            >
+                              <Text style={styles.optionLabel}>{toggle.label}</Text>
+                              <Switch
+                                accessible={true}
+                                accessibilityLabel={toggle.label}
+                                accessibilityRole="switch"
+                                accessibilityState={{ checked: toggle.value }}
+                                value={toggle.value}
+                                onValueChange={(value) => {
+                                  haptics.switchToggle().catch(() => {});
+                                  toggle.onChange(value);
+                                }}
+                                {...theme.styles.switch(toggle.value)}
+                              />
+                            </View>
+                          ))}
                         </View>
-                      ))}
-                    </View>
 
-                    {/* Bloc 3 : Mes rituels — placeholder inerte, contenu réel en C6 */}
-                    <View style={styles.optionRow}>
-                      <Text style={styles.inertRowLabel}>{RITUALS_LABEL}</Text>
-                      <Text style={styles.inertChevron}>›</Text>
-                    </View>
+                        {/* Bloc 3 : Mes rituels — sous-écran réel (C6) */}
+                        <TouchableOpacity
+                          style={styles.optionRow}
+                          accessible
+                          accessibilityRole="button"
+                          accessibilityLabel={t('rituals.sheetRow')}
+                          onPress={() => {
+                            haptics.selection().catch(() => {});
+                            setRitualsOpen(true);
+                          }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.inertRowLabel}>{t('rituals.sheetRow')}</Text>
+                          <Text style={styles.inertChevron}>›</Text>
+                        </TouchableOpacity>
 
-                    {/* Bloc 4 : Palettes — placeholder inerte, contenu réel en C6 */}
-                    <View style={[styles.optionRow, styles.optionRowLast]}>
-                      <Text style={styles.inertRowLabel}>{PALETTES_LABEL}</Text>
-                      <Text style={styles.inertChevron}>›</Text>
-                    </View>
+                        {/* Bloc 4 : Palettes — placeholder inerte, contenu réel en C6+ */}
+                        <View style={[styles.optionRow, styles.optionRowLast]}>
+                          <Text style={styles.inertRowLabel}>{PALETTES_LABEL}</Text>
+                          <Text style={styles.inertChevron}>›</Text>
+                        </View>
+                      </>
+                    )}
                   </>
                 )}
               </View>
