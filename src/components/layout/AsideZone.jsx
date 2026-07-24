@@ -132,7 +132,7 @@ export default function AsideZone({ isTimerRunning }) {
     if (!isOpen) {
       translateY.value = snapClosed;
     }
-  }, [snapClosed]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [snapClosed]);
 
   const snapTo = (open) => {
     translateY.value = withSpring(open ? openY : snapClosed, {
