@@ -398,7 +398,7 @@ function TimerScreenContent() {
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <TopTime seconds={topTimeSeconds} />
+      {!isFocus && <TopTime seconds={topTimeSeconds} />}
       <View style={styles.content}>
         <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} onDialRef={handleDialRef} />
         {!isFocus && (

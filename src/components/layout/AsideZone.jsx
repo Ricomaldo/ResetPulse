@@ -67,6 +67,8 @@ export default function AsideZone({ isTimerRunning }) {
     setClockwise,
     system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
+    display: { showTime },
+    setShowTime,
     mode: { current: currentMode },
     setMode,
   } = useTimerConfig();
@@ -285,6 +287,12 @@ export default function AsideZone({ isTimerRunning }) {
       label: t('accessibility.rotationDirection'),
       value: clockwise,
       onChange: setClockwise,
+    },
+    {
+      key: 'showTime',
+      label: t('accessibility.showTime'),
+      value: showTime,
+      onChange: setShowTime,
     },
   ];
 

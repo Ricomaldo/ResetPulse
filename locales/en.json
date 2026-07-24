@@ -278,6 +278,7 @@
   "accessibility": {
     "keepAwake": "Keep screen awake",
     "rotationDirection": "Rotation direction",
+    "showTime": "Show time",
     "activity": "Activity %{name}",
     "activityLocked": "Premium activity locked",
     "moreActivities": "More activities",
