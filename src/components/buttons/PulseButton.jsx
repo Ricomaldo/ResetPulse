@@ -51,7 +51,14 @@ const PulseButton = React.memo(function PulseButton({
     },
     button: {
       alignItems: 'center',
+      // Liseré blanc : sans lui, le disque devient invisible dès que
+      // `color` (currentColor, C6.2) matche le remplissage du cadran juste
+      // en dessous — trouvé en retest Eric (couleur lavande = disque fondu
+      // dans le fond). Garde l'intention « suit la couleur », rend le
+      // disque lisible dans tous les cas.
+      borderColor: theme.colors.surface,
       borderRadius: buttonSize / 2,
+      borderWidth: 2,
       height: buttonSize,
       justifyContent: 'center',
       width: buttonSize,
