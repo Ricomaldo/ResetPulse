@@ -513,6 +513,7 @@
   },
   "aside": {
     "exitFocus": "quitter le focus",
-    "doubleTapHint": "astuce : double-tap le fond pour basculer"
+    "doubleTapHint": "astuce : double-tap le fond pour basculer",
+    "handle": "ouvrir les réglages"
   }
 }

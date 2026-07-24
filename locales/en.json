@@ -513,6 +513,7 @@
   },
   "aside": {
     "exitFocus": "leave focus",
-    "doubleTapHint": "tip: double-tap the background to switch"
+    "doubleTapHint": "tip: double-tap the background to switch",
+    "handle": "open settings"
   }
 }

@@ -19,7 +19,7 @@ export const TIMER_PALETTES = {
   },
 
   earth: {
-    colors: ['#7C9A92', '#A68B5B', '#9B6B5A', '#6B7F6B'],
+    colors: ['#5E8F82', '#B08540', '#A85B42', '#587D52'],
     get name() {
       return i18n.t('palettes.earth');
     },
@@ -29,7 +29,7 @@ export const TIMER_PALETTES = {
     description: 'Tons naturels harmonisés avec cream',
   },
   zen: {
-    colors: ['#8BB880', '#95C7C9', '#B8B0A8', '#A89BBB'],
+    colors: ['#8BB880', '#95C7C9', '#C7A47E', '#A89BBB'],
     get name() {
       return i18n.t('palettes.zen');
     },
@@ -61,7 +61,7 @@ export const TIMER_PALETTES = {
     description: 'Coucher de soleil: corail, orange doré et lavande',
   },
   dawn: {
-    colors: ['#E8A4AA', '#E8C49B', '#C4B8D4', '#D4C488'],
+    colors: ['#D9808B', '#DBA368', '#A192C2', '#C0A954'],
     get name() {
       return i18n.t('palettes.dawn');
     },

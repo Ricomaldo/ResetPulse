@@ -56,7 +56,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#E07B4F"
       },
       "package": "com.irimwebforge.resetpulse",
       "permissions": [

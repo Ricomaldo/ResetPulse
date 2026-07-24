@@ -50,11 +50,18 @@ import PalettesPanel from '../palettes/PalettesPanel';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-// 2 snaps : fermé (handle visible) / ouvert (hauteur du contenu réel, cf. openY)
-const SNAP_Y_CLOSED = SCREEN_HEIGHT * 0.92;
+// 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
+// Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
+// indicator) — tap dessus = geste home, sheet inaccessible au doigt (prouvé au
+// tap-robot). Cause racine : les snaps étaient calculés en % de l'ÉCRAN alors
+// que le drawer est positionné dans la SafeArea du parent (~62 pt d'offset
+// haut) — tout était décalé vers le bas depuis le début. Désormais : repère =
+// hauteur MESURÉE du conteneur (onLayout), bande fermée FIXE de 92 pt — la
+// barre du handle reste ~65 pt au-dessus de la zone système, sur tout device.
+const CLOSED_VISIBLE = 92;
 // Plafond : le sheet ne couvre jamais plus de 65% de l'écran — le dial reste visible
 const MAX_OPEN_COVERAGE = 0.65;
-const HANDLE_HEIGHT = 25; // handleContainer paddingVertical(10)*2 + handleIndicator height(5)
+const HANDLE_HEIGHT = 28; // handleContainer paddingTop(14)+paddingBottom(8) + handleIndicator height(6)
 const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 
 // Complet meurt (C6.2, acté Eric 25/07 ×2) — segmenté à 2 entrées. Clé
@@ -103,21 +110,32 @@ export default function AsideZone({ isTimerRunning }) {
   // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
   // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
   const [contentHeight, setContentHeight] = useState(SCREEN_HEIGHT * 0.6);
+  // Hauteur RÉELLE du conteneur (SafeArea du parent) — le seul repère honnête
+  // pour positionner le drawer (cf. commentaire CLOSED_VISIBLE).
+  const [containerH, setContainerH] = useState(SCREEN_HEIGHT);
+  const snapClosed = containerH - CLOSED_VISIBLE;
 
   const openY = Math.max(
-    SCREEN_HEIGHT * (1 - MAX_OPEN_COVERAGE),
-    SCREEN_HEIGHT - HANDLE_HEIGHT - contentHeight - BOTTOM_SAFETY
+    containerH * (1 - MAX_OPEN_COVERAGE),
+    containerH - HANDLE_HEIGHT - contentHeight - BOTTOM_SAFETY
   );
 
   const handleContentLayout = (e) => {
     setContentHeight(e.nativeEvent.layout.height);
   };
 
-  const translateY = useSharedValue(SNAP_Y_CLOSED);
-  const startY = useSharedValue(SNAP_Y_CLOSED);
+  const translateY = useSharedValue(SCREEN_HEIGHT); // offscreen avant mesure
+  const startY = useSharedValue(SCREEN_HEIGHT);
+
+  // Recale la position fermée dès que le conteneur est mesuré
+  useEffect(() => {
+    if (!isOpen) {
+      translateY.value = snapClosed;
+    }
+  }, [snapClosed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const snapTo = (open) => {
-    translateY.value = withSpring(open ? openY : SNAP_Y_CLOSED, {
+    translateY.value = withSpring(open ? openY : snapClosed, {
       damping: 80,
       stiffness: 450,
       overshootClamping: true,
@@ -165,14 +183,14 @@ export default function AsideZone({ isTimerRunning }) {
     })
     .onUpdate((e) => {
       const newY = startY.value + e.translationY;
-      translateY.value = Math.max(openY, Math.min(SNAP_Y_CLOSED, newY));
+      translateY.value = Math.max(openY, Math.min(snapClosed, newY));
     })
     .onEnd((e) => {
-      const midpoint = (openY + SNAP_Y_CLOSED) / 2;
+      const midpoint = (openY + snapClosed) / 2;
       let open = translateY.value < midpoint;
       if (e.velocityY > 500) { open = false; }
       if (e.velocityY < -500) { open = true; }
-      translateY.value = withSpring(open ? openY : SNAP_Y_CLOSED, {
+      translateY.value = withSpring(open ? openY : snapClosed, {
         damping: 80,
         stiffness: 450,
         overshootClamping: true,
@@ -190,11 +208,11 @@ export default function AsideZone({ isTimerRunning }) {
   const contentAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       translateY.value,
-      [openY, SNAP_Y_CLOSED],
+      [openY, snapClosed],
       [1, 0],
       Extrapolation.CLAMP
     ),
-  }), [openY]);
+  }), [openY, snapClosed]);
 
   const styles = StyleSheet.create({
     asideContainer: {
@@ -222,12 +240,15 @@ export default function AsideZone({ isTimerRunning }) {
     handleContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: 10,
+      // Asymétrique : la barre vit dans le haut de la bande fermée, loin de
+      // l'indicateur home iOS (porte Eric 25/07).
+      paddingBottom: 8,
+      paddingTop: 14,
     },
     handleIndicator: {
       borderRadius: 3,
-      height: 5,
-      width: 50,
+      height: 6,
+      width: 56,
     },
     inertChevron: {
       color: theme.colors.textSecondary,
@@ -318,13 +339,27 @@ export default function AsideZone({ isTimerRunning }) {
   ];
 
   return (
-    <View style={styles.asideContainer}>
+    <View
+      style={styles.asideContainer}
+      onLayout={(e) => setContainerH(e.nativeEvent.layout.height)}
+    >
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
-          {/* Handle — affordance discrète du swipe up */}
-          <View style={styles.handleContainer}>
+          {/* Handle — affordance du sheet : swipe up OU tap (porte Eric 25/07,
+              la bande fermée doit s'ouvrir au doigt, pas seulement au geste) */}
+          <TouchableOpacity
+            style={styles.handleContainer}
+            activeOpacity={0.8}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={t('aside.handle')}
+            onPress={() => {
+              haptics.selection().catch(() => {});
+              snapTo(!isOpen);
+            }}
+          >
             <View style={[styles.handleIndicator, { backgroundColor: theme.colors.textSecondary }]} />
-          </View>
+          </TouchableOpacity>
 
           {/* SCR-10 : 4 blocs */}
           <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
