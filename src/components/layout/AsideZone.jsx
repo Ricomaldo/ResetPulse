@@ -13,6 +13,10 @@
  * Cycle 4 : affûtage « signature des modes » (porte C3, Eric) — en Focus, le
  * sheet ne montre plus que le segmenté (bloc 1). Un mode s'affirme par ce
  * qu'il interdit : en Focus, on ne règle rien, on ne peut qu'en sortir.
+ * Cycle 5 (porte C4) : sheet trop grand pour son contenu — snap ouvert calculé
+ * sur la hauteur réelle mesurée (`onLayout`, plus poignée), plafonné à 65 % de
+ * l'écran. Le sheet ne couvre plus 80 % pour 2-4 lignes, le dial reste visible
+ * sheet ouvert.
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
@@ -34,9 +38,12 @@ import haptics from '../../utils/haptics';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-// 2 snaps : fermé (handle visible) / ouvert (sheet 80%)
+// 2 snaps : fermé (handle visible) / ouvert (hauteur du contenu réel, cf. openY)
 const SNAP_Y_CLOSED = SCREEN_HEIGHT * 0.92;
-const SNAP_Y_OPEN = SCREEN_HEIGHT * 0.2;
+// Plafond : le sheet ne couvre jamais plus de 65% de l'écran — le dial reste visible
+const MAX_OPEN_COVERAGE = 0.65;
+const HANDLE_HEIGHT = 25; // handleContainer paddingVertical(10)*2 + handleIndicator height(5)
+const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 
 // Libellés SCR-10 hardcodés FR — batch i18n 15 langues au Lot 3 (src/i18n/TODO.md)
 const MODES = [
@@ -64,12 +71,24 @@ export default function AsideZone({ isTimerRunning }) {
   const isFocus = currentMode === 'focus';
 
   const [isOpen, setIsOpen] = useState(false);
+  // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
+  // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
+  const [contentHeight, setContentHeight] = useState(SCREEN_HEIGHT * 0.6);
+
+  const openY = Math.max(
+    SCREEN_HEIGHT * (1 - MAX_OPEN_COVERAGE),
+    SCREEN_HEIGHT - HANDLE_HEIGHT - contentHeight - BOTTOM_SAFETY
+  );
+
+  const handleContentLayout = (e) => {
+    setContentHeight(e.nativeEvent.layout.height);
+  };
 
   const translateY = useSharedValue(SNAP_Y_CLOSED);
   const startY = useSharedValue(SNAP_Y_CLOSED);
 
   const snapTo = (open) => {
-    translateY.value = withSpring(open ? SNAP_Y_OPEN : SNAP_Y_CLOSED, {
+    translateY.value = withSpring(open ? openY : SNAP_Y_CLOSED, {
       damping: 80,
       stiffness: 450,
       overshootClamping: true,
@@ -86,6 +105,20 @@ export default function AsideZone({ isTimerRunning }) {
     }
   }, [isTimerRunning]); // volontairement limité : réagit au seul démarrage du timer
 
+  // Recale la position ouverte si le contenu mesuré change pendant que le
+  // sheet est ouvert (ex: bascule de mode qui ajoute/retire des blocs)
+  useEffect(() => {
+    if (isOpen) {
+      translateY.value = withSpring(openY, {
+        damping: 80,
+        stiffness: 450,
+        overshootClamping: true,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+      });
+    }
+  }, [openY]);
+
   const panGesture = useMemo(() => Gesture.Pan()
     .activeOffsetY([-20, 20])
     .failOffsetX([-15, 15])
@@ -94,14 +127,14 @@ export default function AsideZone({ isTimerRunning }) {
     })
     .onUpdate((e) => {
       const newY = startY.value + e.translationY;
-      translateY.value = Math.max(SNAP_Y_OPEN, Math.min(SNAP_Y_CLOSED, newY));
+      translateY.value = Math.max(openY, Math.min(SNAP_Y_CLOSED, newY));
     })
     .onEnd((e) => {
-      const midpoint = (SNAP_Y_OPEN + SNAP_Y_CLOSED) / 2;
+      const midpoint = (openY + SNAP_Y_CLOSED) / 2;
       let open = translateY.value < midpoint;
       if (e.velocityY > 500) { open = false; }
       if (e.velocityY < -500) { open = true; }
-      translateY.value = withSpring(open ? SNAP_Y_OPEN : SNAP_Y_CLOSED, {
+      translateY.value = withSpring(open ? openY : SNAP_Y_CLOSED, {
         damping: 80,
         stiffness: 450,
         overshootClamping: true,
@@ -110,7 +143,7 @@ export default function AsideZone({ isTimerRunning }) {
       });
       runOnJS(setIsOpen)(open);
     }),
-  [translateY, startY]);
+  [translateY, startY, openY]);
 
   const drawerAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -119,11 +152,11 @@ export default function AsideZone({ isTimerRunning }) {
   const contentAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       translateY.value,
-      [SNAP_Y_OPEN, SNAP_Y_CLOSED],
+      [openY, SNAP_Y_CLOSED],
       [1, 0],
       Extrapolation.CLAMP
     ),
-  }));
+  }), [openY]);
 
   const styles = StyleSheet.create({
     asideContainer: {
@@ -257,6 +290,7 @@ export default function AsideZone({ isTimerRunning }) {
               showsVerticalScrollIndicator={false}
               nestedScrollEnabled={true}
             >
+              <View onLayout={handleContentLayout}>
               {/* Bloc 1 : segmenté Mode — écrit le réglage global ; seul Mixte
                   rend au Lot 2 C3 (Focus/Complet se branchent en C4/C5) */}
               <View style={styles.segmentedControl}>
@@ -325,6 +359,7 @@ export default function AsideZone({ isTimerRunning }) {
                   </View>
                 </>
               )}
+              </View>
             </ScrollView>
           </Animated.View>
         </Animated.View>
@@ -332,4 +367,3 @@ export default function AsideZone({ isTimerRunning }) {
     </View>
   );
 }
-
