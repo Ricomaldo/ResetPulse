@@ -37,9 +37,11 @@ const PulseButton = React.memo(function PulseButton({
   const emojiSize  = compact ? rs(24, 'min') : rs(48, 'min');
 
   // === COLOR ===
-  // Couleur courante du disque, pleine opacité — jamais translucide
-  // (fidélité au rendu C6.2 : « jamais un rond translucide baveux »).
-  const bgColor = color || theme.colors.brand.primary;
+  // Centre = disque SURFACE (blanc cassé), un seul traitement pour tous les
+  // états et modes — maquette hero CD (le centre coloré « suit la couleur »
+  // de C6.2 créait la bouillie : centre fondu dans le fill, liseré blanc de
+  // rattrapage — les deux meurent ici, reprise pilote 25/07).
+  const bgColor = theme.colors.surface;
 
   // === STYLES ===
   const styles = StyleSheet.create({
@@ -51,14 +53,11 @@ const PulseButton = React.memo(function PulseButton({
     },
     button: {
       alignItems: 'center',
-      // Liseré blanc : sans lui, le disque devient invisible dès que
-      // `color` (currentColor, C6.2) matche le remplissage du cadran juste
-      // en dessous — trouvé en retest Eric (couleur lavande = disque fondu
-      // dans le fond). Garde l'intention « suit la couleur », rend le
-      // disque lisible dans tous les cas.
-      borderColor: theme.colors.surface,
+      // Filet neutre discret : lisibilité sur la moitié vide du cadran
+      // (surface sur surface), invisible sur les fills colorés.
+      borderColor: 'rgba(0,0,0,0.06)',
       borderRadius: buttonSize / 2,
-      borderWidth: 2,
+      borderWidth: 1,
       height: buttonSize,
       justifyContent: 'center',
       width: buttonSize,
@@ -75,7 +74,7 @@ const PulseButton = React.memo(function PulseButton({
     if (displayEmoji) {
       return <Text style={[styles.emoji, { fontSize: emojiSize }]}>{displayEmoji}</Text>;
     }
-    const iconColor = theme.colors.fixed.white;
+    const iconColor = color || theme.colors.text; // fond surface désormais — icône sombre ou couleur courante
     switch (state) {
     case 'running':  return <StopIcon  size={iconSize} color={iconColor} />;
     case 'complete': return <ResetIcon size={iconSize} color={iconColor} />;

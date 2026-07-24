@@ -63,34 +63,44 @@ export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) 
       top: 0,
       zIndex: 40, // sous AsideZone (50) : occulté si le sheet s'ouvre
     },
+    // Pill « passer » : lisible (fond surface + ombre), sous la status bar —
+    // l'ancien texte gris nu se perdait sous la batterie (porte Eric 25/07).
     skip: {
-      paddingHorizontal: theme.spacing.sm,
+      backgroundColor: theme.colors.surface,
+      borderRadius: 999,
+      paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.xs,
       position: 'absolute',
       right: theme.spacing.md,
-      top: theme.spacing.xl,
+      top: rs(58, 'min'),
+      ...theme.shadow('sm'),
     },
     skipText: {
-      color: theme.colors.textLight,
+      color: theme.colors.textSecondary,
       fontSize: rs(13, 'min'),
     },
+    // Bulle CD (SCR-11) : brun chaud, coins arrondis avec une QUEUE vers
+    // l'élément désigné (coin bas-gauche quasi net), largeur contenue —
+    // jamais une barre pleine largeur (porte Eric 25/07).
     tip: {
       alignSelf: 'center',
       backgroundColor: theme.colors.text,
-      borderRadius: theme.borderRadius.lg,
+      borderBottomLeftRadius: 3,
+      borderBottomRightRadius: theme.borderRadius.lg,
+      borderTopLeftRadius: theme.borderRadius.lg,
+      borderTopRightRadius: theme.borderRadius.lg,
       bottom,
-      left: theme.spacing.xl,
+      maxWidth: '76%',
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.sm,
       position: 'absolute',
-      right: theme.spacing.xl,
       ...theme.shadow('md'),
     },
     tipText: {
       color: theme.colors.fixed.white,
-      fontSize: rs(14, 'min'),
-      lineHeight: rs(19, 'min'),
-      textAlign: 'center',
+      fontSize: rs(13, 'min'),
+      lineHeight: rs(18, 'min'),
+      textAlign: 'left',
     },
   });
 

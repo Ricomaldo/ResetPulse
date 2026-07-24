@@ -327,32 +327,57 @@ export default function AsideZone({ isTimerRunning }) {
                   <PalettesPanel onBack={() => setPaletteOpen(false)} />
                 ) : (
                   <>
-                    {/* Bloc 1 : segmenté Mode — écrit le réglage global ; seul Mixte
-                        rend au Lot 2 C3 (Focus/Complet se branchent en C4/C5) */}
-                    <View style={styles.segmentedControl}>
-                      {MODES.map(({ key, label }) => {
-                        const isActive = currentMode === key;
-                        return (
-                          <TouchableOpacity
-                            key={key}
-                            accessible
-                            accessibilityRole="button"
-                            accessibilityLabel={label}
-                            accessibilityState={{ selected: isActive }}
-                            style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
-                            onPress={() => {
-                              haptics.selection().catch(() => {});
-                              setMode(key);
-                            }}
-                            activeOpacity={0.7}
-                          >
-                            <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
-                              {label}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </View>
+                    {/* Bloc 1 : segmenté Mode — écrit le réglage global. En Focus,
+                        pas de segmenté (deux tabs pour un mode sans réglage = absurde,
+                        porte Eric 25/07) : une seule action, sortir. L'affordance
+                        définitive d'entrée/sortie de Focus = question ouverte CD. */}
+                    {isFocus ? (
+                      <TouchableOpacity
+                        accessible
+                        accessibilityRole="button"
+                        accessibilityLabel={t('aside.exitFocus')}
+                        style={{
+                          alignItems: 'center',
+                          backgroundColor: theme.colors.text,
+                          borderRadius: theme.borderRadius.md,
+                          paddingVertical: theme.spacing.sm,
+                        }}
+                        onPress={() => {
+                          haptics.selection().catch(() => {});
+                          setMode('mixte');
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Text style={{ color: theme.colors.fixed.white, fontSize: rs(13, 'min'), fontWeight: '600' }}>
+                          {t('aside.exitFocus')}
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={styles.segmentedControl}>
+                        {MODES.map(({ key, label }) => {
+                          const isActive = currentMode === key;
+                          return (
+                            <TouchableOpacity
+                              key={key}
+                              accessible
+                              accessibilityRole="button"
+                              accessibilityLabel={label}
+                              accessibilityState={{ selected: isActive }}
+                              style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
+                              onPress={() => {
+                                haptics.selection().catch(() => {});
+                                setMode(key);
+                              }}
+                              activeOpacity={0.7}
+                            >
+                              <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
+                                {label}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </View>
+                    )}
 
                     {/* Blocs 2-4 : masqués en Focus — on ne règle rien, on ne peut
                         qu'en sortir (cf. header). */}

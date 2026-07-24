@@ -78,10 +78,12 @@ const DialProgress = React.memo(function DialProgress({
     wasRunningRef.current = isRunning;
   }, [isRunning, startGlowAnim]);
 
-  // Calculate opacity based on glow animation
+  // Fill à PLEINE opacité en permanence — le 0.85 au repos délavait toutes
+  // les couleurs (maquettes CD = couleur pleine ; reprise pilote 25/07).
+  // L'infra du glow reste en place pour le layer animations du Lot 3.
   const arcOpacity = startGlowAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.85, 1.0], // Fade from 85% to 100%
+    outputRange: [1.0, 1.0],
   });
 
   if (progress <= 0) {return null;}

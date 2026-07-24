@@ -205,8 +205,10 @@ function TopTime({ seconds }) {
       // WCAG AA (4.5:1), quasi illisible à 13px (trouvé en retest Eric,
       // rapporté comme "timer invisible"). textSecondary : 5.41:1.
       color: theme.colors.textSecondary,
-      fontSize: rs(13, 'min'),
+      fontSize: rs(17, 'min'), // 13px était timide — maquette SCR-8 : chiffre affirmé
       fontVariant: ['tabular-nums'],
+      fontWeight: '600',
+      letterSpacing: 0.5,
     },
     wrap: {
       alignItems: 'center',

@@ -504,8 +504,11 @@
   "firstRun": {
     "skip": "passer",
     "welcome": "Bienvenue. Fabriquons ton premier rituel — commence par toucher une activité 👇",
-    "companion": "L'emoji, c'est ton compagnon de séance 🙂",
-    "dialColor": "Fais glisser le cadran pour la durée, choisis une couleur.",
+    "companion": "L'emoji, c'est ton compagnon de séance 🙂 Fais glisser le cadran pour régler ta durée.",
+    "dialColor": "Choisis une couleur — elle change en direct.",
     "ready": "Ton rituel est prêt 🎉 Touche le disque pour démarrer."
+  },
+  "aside": {
+    "exitFocus": "quitter le focus"
   }
 }

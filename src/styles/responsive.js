@@ -1,16 +1,19 @@
 // src/styles/responsive.js
 import { Dimensions, Platform } from 'react-native';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
 // Base dimensions (iPhone 13/14)
 const BASE_WIDTH = 390;
 const BASE_HEIGHT = 844;
 
-// Get device info
+// Get device info — lu à CHAQUE appel (pas de capture au chargement du
+// module). Un `Dimensions.get('window')` figé au niveau module devient
+// périmé (Fast Refresh, rotation, relance simulateur sans reset complet du
+// contexte JS) sans jamais se corriger ensuite — cause probable du
+// décalage de taille du dial signalé par Eric (Focus/Standard tantôt plus,
+// tantôt moins, d'une session à l'autre). `Dimensions.get` est un appel
+// natif synchrone bon marché, sûr à refaire à chaque render.
 export const getDeviceInfo = () => {
-  const width = screenWidth;
-  const height = screenHeight;
+  const { width, height } = Dimensions.get('window');
   const isLandscape = width > height;
   const aspectRatio = width / height;
 

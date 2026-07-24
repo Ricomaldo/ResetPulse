@@ -504,8 +504,11 @@
   "firstRun": {
     "skip": "skip",
     "welcome": "Welcome. Let's build your first ritual — start by touching an activity 👇",
-    "companion": "The emoji is your companion for the session 🙂",
-    "dialColor": "Drag the dial to set the duration, pick a color.",
+    "companion": "The emoji is your session companion 🙂 Drag the dial to set your duration.",
+    "dialColor": "Pick a color — it changes live.",
     "ready": "Your ritual is ready 🎉 Touch the disc to start."
+  },
+  "aside": {
+    "exitFocus": "leave focus"
   }
 }
