@@ -286,11 +286,16 @@ function TimerDial({
   [handlePanStart, handlePanUpdate, handlePanEnd, centerX, centerY, centerZoneRadius]
   );
 
-  // === GESTURE: Tap (on graduations to set duration) ===
-
+  // === GESTURE: Tap (on graduations OR center, to set duration / start-stop) ===
+  // Pas de maxDuration custom (régression C6.2 point 1) : à 200ms, RNGH fait
+  // échouer le geste AVANT l'état ACTIVE dès qu'un tap dépasse cette fenêtre
+  // — `onEnd` ne se déclenche que depuis ACTIVE (doc RNGH), donc un tap
+  // humain normal (souvent >200ms) ne relance plus rien au centre. Le tap
+  // central partage ce même gestionnaire depuis le retrait du
+  // TouchableOpacity de PulseButton — la fenêtre doit couvrir les deux
+  // usages. Repli sur le défaut RNGH (500ms), pas de valeur maison.
   const tapGesture = useMemo(() =>
     Gesture.Tap()
-      .maxDuration(200) // Quick tap only
       .onEnd((event) => {
         'worklet';
         runOnJS(handleTapOnGraduation)(event.x, event.y);
