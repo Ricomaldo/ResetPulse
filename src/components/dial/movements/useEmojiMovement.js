@@ -72,10 +72,12 @@ export default function useEmojiMovement({ movement, tempo, active }) {
 
     switch (movement) {
     case 'breathe': {
-      // scale 1 → 1.06 → 1, période = tempo × 2 (moitié montée, moitié descente)
+      // scale 1 → 1.09 → 1, période = tempo × 2 (moitié montée, moitié
+      // descente). Amplitude relevée (retour Eric : trop timide) — le halo
+      // (useBreathingHalo) porte le reste du souffle.
       scale.value = withRepeat(
         withSequence(
-          withTiming(1.06, { duration: safeTempo, easing: Easing.inOut(Easing.ease) }),
+          withTiming(1.09, { duration: safeTempo, easing: Easing.inOut(Easing.ease) }),
           withTiming(1, { duration: safeTempo, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
@@ -84,21 +86,24 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       break;
     }
     case 'spin': {
-      // Rotation continue linéaire, 360° en tempo × 8 — lente et régulière.
+      // Rotation continue linéaire, 360° en tempo × 4 — un tour se VOIT
+      // (à ×8 la rotation était imperceptible, retour Eric).
       rotate.value = 0;
       rotate.value = withRepeat(
-        withTiming(360, { duration: safeTempo * 8, easing: Easing.linear }),
+        withTiming(360, { duration: safeTempo * 4, easing: Easing.linear }),
         -1,
         false
       );
       break;
     }
     case 'float': {
-      // translateY 0 → −6 → 0 + fondu opacity 1 → 0.75 → 1, période = tempo × 3
+      // translateY 0 → −10 → 0 + fondu opacity 1 → 0.6 → 1 + léger roulis
+      // rotate ±4° (le flottement a une dérive, pas juste un ascenseur),
+      // période = tempo × 3.
       const half = (safeTempo * 3) / 2;
       translateY.value = withRepeat(
         withSequence(
-          withTiming(-6, { duration: half, easing: Easing.inOut(Easing.ease) }),
+          withTiming(-10, { duration: half, easing: Easing.inOut(Easing.ease) }),
           withTiming(0, { duration: half, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
@@ -106,25 +111,42 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       );
       opacity.value = withRepeat(
         withSequence(
-          withTiming(0.75, { duration: half, easing: Easing.inOut(Easing.ease) }),
+          withTiming(0.6, { duration: half, easing: Easing.inOut(Easing.ease) }),
           withTiming(1, { duration: half, easing: Easing.inOut(Easing.ease) })
         ),
         -1,
         false
       );
+      rotate.value = withRepeat(
+        withSequence(
+          withTiming(4, { duration: half, easing: Easing.inOut(Easing.ease) }),
+          withTiming(-4, { duration: half, easing: Easing.inOut(Easing.ease) })
+        ),
+        -1,
+        true
+      );
       break;
     }
     case 'bounce': {
-      // Rebond ressort (withSpring), amplitude ~5, un rebond par période tempo × 2.
-      // Le repli (withDelay implicite via withTiming(0, ~30% de la période
-      // restante)) laisse un temps de repos avant le rebond suivant — sans
-      // dépendre d'une durée fixe de spring (physique, pas linéaire).
+      // Rebond ressort (withSpring), amplitude ~9 avec écrasement à
+      // l'atterrissage (scale 0.94 bref) — un vrai rebond a du squash.
+      // Un rebond par période tempo × 2, repos physique entre deux.
       const rest = Math.max(0, safeTempo * 2 * 0.5);
       translateY.value = withRepeat(
         withSequence(
-          withSpring(-5, { damping: 6, stiffness: 180 }),
-          withSpring(0, { damping: 8, stiffness: 160 }),
+          withSpring(-9, { damping: 5, stiffness: 220 }),
+          withSpring(0, { damping: 7, stiffness: 190 }),
           withTiming(0, { duration: rest })
+        ),
+        -1,
+        false
+      );
+      scale.value = withRepeat(
+        withSequence(
+          withTiming(1.04, { duration: safeTempo * 0.3, easing: Easing.out(Easing.ease) }),
+          withTiming(0.94, { duration: safeTempo * 0.25, easing: Easing.in(Easing.ease) }),
+          withTiming(1, { duration: safeTempo * 0.25, easing: Easing.out(Easing.ease) }),
+          withTiming(1, { duration: Math.max(0, safeTempo * 2 - safeTempo * 0.8) })
         ),
         -1,
         false
@@ -132,16 +154,16 @@ export default function useEmojiMovement({ movement, tempo, active }) {
       break;
     }
     case 'beat': {
-      // Battement de cœur : double pulsation 1 → 1.1 → 1 → 1.06 → 1 puis repos,
-      // période totale = tempo × 2. Les 4 transitions sont rapides (lub-dub),
-      // le repos occupe le reste de la période.
+      // Battement de cœur : double pulsation 1 → 1.16 → 1 → 1.1 → 1 puis
+      // repos, période totale = tempo × 2. Le lub-dub doit se SENTIR
+      // (amplitudes relevées, retour Eric).
       const beatUnit = safeTempo * 0.15;
       const restUnit = Math.max(0, safeTempo * 2 - beatUnit * 4);
       scale.value = withRepeat(
         withSequence(
-          withTiming(1.1, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
+          withTiming(1.16, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
           withTiming(1, { duration: beatUnit, easing: Easing.in(Easing.ease) }),
-          withTiming(1.06, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
+          withTiming(1.1, { duration: beatUnit, easing: Easing.out(Easing.ease) }),
           withTiming(1, { duration: beatUnit, easing: Easing.in(Easing.ease) }),
           withTiming(1, { duration: restUnit })
         ),

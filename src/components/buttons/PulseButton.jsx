@@ -6,8 +6,9 @@
  * ici). Petit disque discret dans la couleur courante (`color`), jamais
  * translucide — le fantôme play-button (fond fixe + ombre marquée) meurt.
  *
- * Mouvements MOT-a→e via useEmojiMovement (Lot 3a) — halos/trotteuse legacy
- * abandonnés (hors spec recentrage).
+ * Mouvements MOT-a→e via useEmojiMovement (Lot 3a) + halo qui respire
+ * (useBreathingHalo — le pulse originel de l'app, restauré sur retour Eric ;
+ * la trotteuse legacy reste abandonnée, hors spec recentrage).
  */
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
@@ -17,6 +18,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
+import useBreathingHalo from '../dial/movements/useBreathingHalo';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
 
@@ -54,6 +56,13 @@ const PulseButton = React.memo(function PulseButton({
   }
   const emojiAnimatedStyle = useEmojiMovement({ movement, tempo, active: movementActive });
 
+  // === HALO (le pulse originel, restauré) ===
+  // Anneau couleur courante qui s'étend et s'estompe autour du hub — actif
+  // au repos ET en séance quand `shouldPulse` (optionnel mais standard),
+  // jamais à COMPLETE (le bloom porte la fin), jamais en compact.
+  const haloActive = shouldPulse && state !== 'complete' && !compact;
+  const haloAnimatedStyle = useBreathingHalo({ tempo, active: haloActive });
+
   // === DIMENSIONS ===
   // Hub structurel (verdicts CD 25/07) : Ø = 34 % du cadran (fourni par
   // TimerDial via `size`), emoji = 20 % du cadran → 0.59 × hub.
@@ -88,6 +97,12 @@ const PulseButton = React.memo(function PulseButton({
     emoji: {
       textAlign: 'center',
     },
+    halo: {
+      borderRadius: buttonSize / 2,
+      height: buttonSize,
+      position: 'absolute',
+      width: buttonSize,
+    },
   });
 
   // === CONTENT ===
@@ -112,8 +127,13 @@ const PulseButton = React.memo(function PulseButton({
   // Décoratif : le disque entier (TimerDial) porte l'accessibilité (rôle
   // 'adjustable'/'timer' + action 'activate') — ce View ne doit pas être un
   // arrêt VoiceOver séparé.
+  const haloColor = color || theme.colors.text;
   return (
     <View style={styles.container} accessible={false} importantForAccessibility="no">
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.halo, { backgroundColor: haloColor }, haloAnimatedStyle]}
+      />
       <View style={[styles.button, { backgroundColor: bgColor }]}>
         {renderContent()}
       </View>
