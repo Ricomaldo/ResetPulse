@@ -488,5 +488,9 @@
       "deleteConfirmMessage": "This action is irreversible.",
       "customActivityName": "My ritual"
     }
+  },
+  "palettesPanel": {
+    "sheetRow": "Palettes",
+    "title": "Palettes"
   }
 }

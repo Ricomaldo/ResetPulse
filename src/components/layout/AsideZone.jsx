@@ -18,6 +18,9 @@
  * l'écran. Le sheet ne couvre plus 80 % pour 2-4 lignes, le dial reste visible
  * sheet ouvert. Toggle « emoji au centre » retiré (signature ADR-014, pas une
  * option, veto Eric à la porte C4) — 2 réglages globaux restants.
+ * Cycle 6.1 : bloc 4 Palettes câblé — sous-écran réel (`PalettesPanel`), même
+ * mécanisme que le bloc 3 Rituels. `CompactRow` (TimerScreen) corrigé pour
+ * suivre la palette courante (lisait `serenity` en dur).
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
@@ -37,6 +40,7 @@ import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
+import PalettesPanel from '../palettes/PalettesPanel';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -53,8 +57,6 @@ const MODES = [
   { key: 'focus', label: 'Focus' },
   { key: 'complet', label: 'Complet' },
 ];
-const PALETTES_LABEL = 'Palettes';
-
 export default function AsideZone({ isTimerRunning }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -72,6 +74,8 @@ export default function AsideZone({ isTimerRunning }) {
   const [isOpen, setIsOpen] = useState(false);
   // Sous-écran Rituels (bloc 3, C6) — remplace les blocs 1-4 quand ouvert.
   const [ritualsOpen, setRitualsOpen] = useState(false);
+  // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.
+  const [paletteOpen, setPaletteOpen] = useState(false);
   // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
   // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
   const [contentHeight, setContentHeight] = useState(SCREEN_HEIGHT * 0.6);
@@ -106,11 +110,12 @@ export default function AsideZone({ isTimerRunning }) {
     }
   }, [isTimerRunning]); // volontairement limité : réagit au seul démarrage du timer
 
-  // Sheet fermé (swipe, auto-collapse ou application d'un rituel) : le
-  // sous-écran Rituels ne reste pas ouvert pour la prochaine ouverture.
+  // Sheet fermé (swipe, auto-collapse ou application d'un rituel/palette) :
+  // les sous-écrans ne restent pas ouverts pour la prochaine ouverture.
   useEffect(() => {
     if (!isOpen) {
       setRitualsOpen(false);
+      setPaletteOpen(false);
     }
   }, [isOpen]);
 
@@ -301,6 +306,12 @@ export default function AsideZone({ isTimerRunning }) {
                     onBack={() => setRitualsOpen(false)}
                     onApplied={() => snapTo(false)}
                   />
+                ) : paletteOpen ? (
+                  /* Sous-écran Palettes (bloc 4, C6.1) — même mécanisme. */
+                  <PalettesPanel
+                    onBack={() => setPaletteOpen(false)}
+                    onApplied={() => snapTo(false)}
+                  />
                 ) : (
                   <>
                     {/* Bloc 1 : segmenté Mode — écrit le réglage global ; seul Mixte
@@ -374,11 +385,21 @@ export default function AsideZone({ isTimerRunning }) {
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
 
-                        {/* Bloc 4 : Palettes — placeholder inerte, contenu réel en C6+ */}
-                        <View style={[styles.optionRow, styles.optionRowLast]}>
-                          <Text style={styles.inertRowLabel}>{PALETTES_LABEL}</Text>
+                        {/* Bloc 4 : Palettes — sous-écran réel (C6.1) */}
+                        <TouchableOpacity
+                          style={[styles.optionRow, styles.optionRowLast]}
+                          accessible
+                          accessibilityRole="button"
+                          accessibilityLabel={t('palettesPanel.sheetRow')}
+                          onPress={() => {
+                            haptics.selection().catch(() => {});
+                            setPaletteOpen(true);
+                          }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.inertRowLabel}>{t('palettesPanel.sheetRow')}</Text>
                           <Text style={styles.inertChevron}>›</Text>
-                        </View>
+                        </TouchableOpacity>
                       </>
                     )}
                   </>

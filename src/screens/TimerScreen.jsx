@@ -26,12 +26,10 @@ import TimeTimer from '../components/dial/TimeTimer';
 import DigitalTimer from '../components/controls/DigitalTimer';
 import AsideZone from '../components/layout/AsideZone';
 import { getFreeActivities } from '../config/activities';
-import { getPaletteColors } from '../config/timer-palettes';
 import { COLORS } from '../components/dial/timerConstants';
 import haptics from '../utils/haptics';
 
 const FREE_ACTIVITIES = getFreeActivities();
-const SERENITY_COLORS = getPaletteColors('serenity');
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
@@ -40,7 +38,7 @@ function CompactRow() {
   const t = useTranslation();
   const {
     timer: { currentActivity },
-    palette: { currentColor },
+    palette: { currentColor, paletteColors },
     setCurrentActivity,
     setColorIndex,
   } = useTimerConfig();
@@ -118,7 +116,7 @@ function CompactRow() {
 
       <View style={styles.separator} />
 
-      {SERENITY_COLORS.map((color, index) => (
+      {paletteColors.map((color, index) => (
         <TouchableOpacity
           key={color}
           accessible

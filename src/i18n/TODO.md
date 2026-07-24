@@ -30,7 +30,7 @@ Liste des composants avec textes hardcodés en français à traduire avant relea
 ### AsideZone.jsx
 - [ ] MODE_LABELS : "Mixte", "Focus", "Complet"
 - [x] RITUALS_LABEL : "Mes rituels" — `rituals.sheetRow` (C6)
-- [ ] PALETTES_LABEL : "Palettes"
+- [x] PALETTES_LABEL : "Palettes" — `palettesPanel.sheetRow` (C6.1)
 
 ## Carrousels
 
