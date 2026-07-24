@@ -79,7 +79,7 @@ export default function TimeTimer({
     }
   }, [timer.running, onRunningChange]);
 
-  // Sync timer remaining to context for ControlBar display
+  // Sync timer remaining to context for TopTime display
   useEffect(() => {
     setTimerRemaining(timer.remaining);
   }, [timer.remaining, setTimerRemaining]);
@@ -147,7 +147,7 @@ export default function TimeTimer({
 
     timerRef.current.setDuration(newDuration);
 
-    // Sync to context so DigitalTimer in ControlBar updates
+    // Sync to context so TopTime updates
     setCurrentDuration(newDuration);
     lastSyncedContextDurationRef.current = newDuration;
   }, [scaleMode, setCurrentDuration]);
