@@ -268,6 +268,14 @@ export const TimerConfigProvider = ({ children }) => {
     migrateOldKeys();
   }, [isLoading, setValues]);
 
+  // C5 : « none » retiré de la barre d'activités (asymétrie 3 activités |
+  // 4 couleurs, ADR-014) — bascule tout état persisté qui le référence encore.
+  useEffect(() => {
+    if (!isLoading && values.timer.currentActivity?.id === 'none') {
+      updateValue('timer', { ...values.timer, currentActivity: getDefaultActivity() });
+    }
+  }, [isLoading, values.timer, updateValue]);
+
   // Handle activity selection with flash feedback (ADR-007 messaging)
   const handleActivitySelect = useCallback((activity) => {
     if (flashTimeoutRef.current) {

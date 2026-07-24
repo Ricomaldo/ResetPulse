@@ -164,9 +164,7 @@ export default function TimeTimer({
           size={circleSize}
           clockwise={clockwise}
           scaleMode={scaleMode}
-          activityEmoji={
-            currentActivity?.id === 'none' ? null : currentActivity?.emoji
-          }
+          activityEmoji={currentActivity?.emoji}
           isRunning={timer.running}
           onGraduationTap={handleGraduationTap}
           onDialTap={onDialTap}

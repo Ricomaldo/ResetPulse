@@ -24,7 +24,6 @@ import { useTranslation } from '../hooks/useTranslation';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import DigitalTimer from '../components/controls/DigitalTimer';
-import Icons from '../components/layout/Icons';
 import AsideZone from '../components/layout/AsideZone';
 import { getFreeActivities } from '../config/activities';
 import { getPaletteColors } from '../config/timer-palettes';
@@ -112,15 +111,7 @@ function CompactRow() {
             }}
             activeOpacity={0.7}
           >
-            {activity.id === 'none' ? (
-              <Icons
-                name="timer"
-                size={rs(18, 'min')}
-                color={isActive ? theme.colors.fixed.white : theme.colors.textSecondary}
-              />
-            ) : (
-              <Text style={styles.activityEmoji}>{activity.emoji}</Text>
-            )}
+            <Text style={styles.activityEmoji}>{activity.emoji}</Text>
           </TouchableOpacity>
         );
       })}

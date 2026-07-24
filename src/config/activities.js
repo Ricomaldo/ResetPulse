@@ -21,21 +21,7 @@
 import i18n from '../i18n';
 
 export const ACTIVITIES = [
-  // Basic timer - always first
-  {
-    id: 'none',
-    emoji: '',
-    get label() {
-      return i18n.t('activities.none');
-    },
-    defaultDuration: 2700, // 45 minutes
-    isPremium: false,
-    suggestedColor: 'calm',
-    description: 'Timer simple sans activité',
-    pulseDuration: 800, // Vitesse normale
-  },
-
-  // ===== FREE ACTIVITIES (4 total) =====
+  // ===== FREE ACTIVITIES (3 total) — asymétrie assumée vs 4 couleurs (ADR-014) =====
   {
     id: 'work',
     emoji: '💻',
@@ -245,9 +231,8 @@ export const getAllActivities = () => ACTIVITIES;
 export const getActivityById = (id) =>
   ACTIVITIES.find((activity) => activity.id === id);
 
-// Get default activity
-export const getDefaultActivity = () =>
-  ACTIVITIES.find((activity) => activity.id === 'none');
+// Get default activity — première des activités gratuites (« none » retiré, ADR-014)
+export const getDefaultActivity = () => getFreeActivities()[0];
 
 // Check if an activity is custom (created by user)
 export const isCustomActivity = (activity) => activity?.isCustom === true;
