@@ -136,8 +136,9 @@ export const getSafeAreaPadding = () => {
 // Component size calculators
 export const getComponentSizes = (mode = 'mixte') => {
   const { width, height, isLandscape, isTablet } = getDeviceInfo();
-  // Focus (C4) : zéro chrome sous le disque, il peut respirer davantage
-  const portraitRatio = mode === 'focus' ? 0.85 : 0.8;
+  // Focus (C4, affûté C6.2) : zéro chrome sous le disque, nettement plus
+  // grand qu'en standard (fidélité au rendu, maquettes CD : ~88%).
+  const portraitRatio = mode === 'focus' ? 0.88 : 0.8;
 
   // Timer circle size - Adapté aux différentes tailles d'écran
   let timerCircle;

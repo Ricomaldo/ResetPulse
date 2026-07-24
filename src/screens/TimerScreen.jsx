@@ -228,23 +228,34 @@ function TopTime({ seconds }) {
   );
 }
 
-// Focus (C4) : le seul texte de l'écran, au repos — libellé hardcodé FR,
-// même précédent que le sheet (batch i18n 15 langues au Lot 3).
-const FOCUS_HINT = 'balayer vers le haut';
-
+// Focus, affûté C6.2 (fidélité au rendu) : hint discret ANCRÉ EN BAS
+// d'écran (plus centré sous le disque — hors du bloc centré `content`,
+// donc son montage/démontage ne déplace jamais le dial), i18n (fin de
+// l'exception hardcode C4).
 function FocusHint() {
   const theme = useTheme();
+  const t = useTranslation();
 
   const styles = StyleSheet.create({
     hint: {
-      color: theme.colors.textLight,
-      fontSize: rs(13, 'min'),
-      marginTop: theme.spacing.lg,
+      color: theme.colors.brand.neutral,
+      fontSize: rs(12, 'min'),
       textAlign: 'center',
+    },
+    wrap: {
+      alignItems: 'center',
+      bottom: theme.spacing.lg,
+      left: 0,
+      position: 'absolute',
+      right: 0,
     },
   });
 
-  return <Text style={styles.hint}>{FOCUS_HINT}</Text>;
+  return (
+    <View style={styles.wrap} pointerEvents="none">
+      <Text style={styles.hint}>{t('focus.hint')}</Text>
+    </View>
+  );
 }
 
 function TimerScreenContent() {
@@ -349,10 +360,10 @@ function TimerScreenContent() {
             </Text>
           </View>
         )}
-        {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
         {!isFocus && <CompactRow />}
         {!isFocus && <DistractionButton />}
       </View>
+      {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
       <AsideZone isTimerRunning={snapshot.running} />
     </SafeAreaView>
   );

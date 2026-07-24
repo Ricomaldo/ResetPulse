@@ -496,5 +496,8 @@
   "mode": {
     "standard": "Standard",
     "focus": "Focus"
+  },
+  "focus": {
+    "hint": "balayer vers le haut"
   }
 }
