@@ -1,0 +1,16 @@
+appId: com.irimwebforge.resetpulse
+---
+# Repos → séance → stop-rembobinage (ADR-007 : pas de pause, un tap pendant
+# la séance rembobine).
+- launchApp
+- assertVisible:
+    id: "timer.digital"
+- tapOn:
+    id: "timer.dial"
+# Maestro n'a pas de commande "sleep" à durée fixe — waitForAnimationToEnd
+# est le mécanisme disponible le plus proche pour laisser la séance tourner
+# ~1s avant le second tap.
+- waitForAnimationToEnd:
+    timeout: 1000
+- tapOn:
+    id: "timer.dial"

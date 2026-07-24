@@ -1,0 +1,8 @@
+appId: com.irimwebforge.resetpulse
+---
+# Ouverture du sheet SCR-10 (AsideZone) au tap sur la poignée.
+- launchApp
+- tapOn:
+    id: "aside.handle"
+- assertVisible:
+    id: "aside.sheet"

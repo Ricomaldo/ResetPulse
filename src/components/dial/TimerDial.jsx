@@ -404,6 +404,7 @@ function TimerDial({
     <View style={staticStyles.root}>
       <GestureDetector gesture={composedGesture}>
         <View
+          testID="timer.dial"
           style={svgContainerStyle}
           accessible={true}
           accessibilityRole={isRunning ? 'timer' : 'adjustable'}
