@@ -3,9 +3,12 @@
  * @description Monté dans AsideZone à la place des blocs 1-4 quand ouvert.
  * Liste des palettes de couleurs (`timer-palettes.js`) — tap applique la
  * palette (les 4 pastilles de la barre principale changent, couleur active
- * bascule sur la 1re teinte) et referme le sheet, même pattern que « Mes
- * rituels ». Aucun gating premium (Cycle 6.1) : la répartition gratuit/payant
- * des palettes est parquée, à trancher devant les écrans.
+ * bascule sur la 1re teinte) ; la liste reste ouverte (préviz live, porte
+ * C6.1) — retour par ‹ ou fermeture du sheet, pas d'auto-close au tap
+ * (diffère de « Mes rituels », dont l'apply ferme tout : un rituel
+ * applique 4 réglages d'un coup, une palette n'en change qu'un). Aucun
+ * gating premium (Cycle 6.1) : la répartition gratuit/payant des palettes
+ * est parquée, à trancher devant les écrans.
  */
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -19,7 +22,7 @@ import haptics from '../../utils/haptics';
 
 const PALETTE_KEYS = Object.keys(TIMER_PALETTES);
 
-export default function PalettesPanel({ onBack, onApplied }) {
+export default function PalettesPanel({ onBack }) {
   const theme = useTheme();
   const t = useTranslation();
   const {
@@ -30,7 +33,6 @@ export default function PalettesPanel({ onBack, onApplied }) {
   const handleApply = (key) => {
     haptics.impact('light').catch(() => {});
     setPalette(key);
-    onApplied();
   };
 
   const styles = StyleSheet.create({

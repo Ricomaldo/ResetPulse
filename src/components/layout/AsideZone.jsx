@@ -307,11 +307,9 @@ export default function AsideZone({ isTimerRunning }) {
                     onApplied={() => snapTo(false)}
                   />
                 ) : paletteOpen ? (
-                  /* Sous-écran Palettes (bloc 4, C6.1) — même mécanisme. */
-                  <PalettesPanel
-                    onBack={() => setPaletteOpen(false)}
-                    onApplied={() => snapTo(false)}
-                  />
+                  /* Sous-écran Palettes (bloc 4, C6.1/C6.2) — la liste reste
+                     ouverte au tap (préviz live, porte C6.1) : pas d'onApplied. */
+                  <PalettesPanel onBack={() => setPaletteOpen(false)} />
                 ) : (
                   <>
                     {/* Bloc 1 : segmenté Mode — écrit le réglage global ; seul Mixte
