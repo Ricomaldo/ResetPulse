@@ -31,6 +31,7 @@ import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import { getFreeActivities } from '../config/activities';
+import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import haptics from '../utils/haptics';
 
 const FREE_ACTIVITIES = getFreeActivities();
@@ -157,11 +158,13 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
   );
 }
 
-// Dé Distraction (verdicts CD 25/07) : rejoint la FAMILLE des contrôles —
-// même carte blanche arrondie que la rangée (CompactRow.row), plus un
-// cercle flottant orphelin. Reste inactif (Lot 3), masqué en Focus
-// (inchangé, géré par le parent).
-function DistractionButton({ showLabel }) {
+// Dé Distraction (verdicts CD 25/07 + MOT-f Lot 3a) : rejoint la FAMILLE des
+// contrôles — même carte blanche arrondie que la rangée (CompactRow.row),
+// plus un cercle flottant orphelin. Masqué en Focus (inchangé, géré par le
+// parent). Le tirage/timeout vit dans TimerScreen (`onDistraction`, lifté
+// pour redescendre jusqu'à PulseButton via TimeTimer → TimerDial →
+// DialCenter) — ce composant reste un déclencheur sobre, sans état.
+function DistractionButton({ showLabel, onDistraction }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -198,6 +201,7 @@ function DistractionButton({ showLabel }) {
       activeOpacity={0.7}
       onPress={() => {
         analytics.trackDiceRolled();
+        onDistraction?.();
       }}
     >
       <Text style={styles.emoji}>🎲</Text>
@@ -397,6 +401,36 @@ function TimerScreenContent() {
     });
   }, [setHasSeenDistractionLabel]);
 
+  // Distraction MOT-f (Lot 3a) : tap → mouvement aléatoire ~2 s, jamais deux
+  // fois le même d'affilée (pickDistraction), retour à l'anim de séance.
+  // N'affecte ni durée ni timer — aucun contact avec useTimer/timerRef.
+  // `lastDistractionRef` survit au reset à null (pas cleared au timeout) :
+  // c'est la mémoire "dernier mouvement montré", pas l'état d'affichage —
+  // sinon deux taps espacés de plus de 2s pourraient répéter le même MOT.
+  const [distractionMovement, setDistractionMovement] = useState(null);
+  const lastDistractionRef = useRef(null);
+  const distractionTimeoutRef = useRef(null);
+
+  const handleDistraction = useCallback(() => {
+    if (distractionTimeoutRef.current) {
+      clearTimeout(distractionTimeoutRef.current);
+    }
+    const next = pickDistraction(lastDistractionRef.current);
+    lastDistractionRef.current = next;
+    setDistractionMovement(next);
+    haptics.selection().catch(() => {});
+    distractionTimeoutRef.current = setTimeout(() => {
+      setDistractionMovement(null);
+      distractionTimeoutRef.current = null;
+    }, 2000);
+  }, []);
+
+  useEffect(() => () => {
+    if (distractionTimeoutRef.current) {
+      clearTimeout(distractionTimeoutRef.current);
+    }
+  }, []);
+
   const handleBarLayout = useCallback(() => {
     barRef.current?.measureInWindow((x, y, width, height) => {
       setBarAnchor({ x, y, width, height });
@@ -523,7 +557,12 @@ function TimerScreenContent() {
         <View style={styles.container}>
           {!isFocus && <TopTime seconds={topTimeSeconds} />}
           <View style={styles.content}>
-            <TimeTimer onDialTap={handleDialTap} onTimerRef={handleTimerRef} onDialRef={handleDialRef} />
+            <TimeTimer
+              onDialTap={handleDialTap}
+              onTimerRef={handleTimerRef}
+              onDialRef={handleDialRef}
+              distractionMovement={distractionMovement}
+            />
             {!isFocus && (
               <View style={styles.completionMessageWrap}>
                 <Text
@@ -542,7 +581,12 @@ function TimerScreenContent() {
                 />
               </View>
             )}
-            {!isFocus && <DistractionButton showLabel={showDistractionLabel} />}
+            {!isFocus && (
+              <DistractionButton
+                showLabel={showDistractionLabel}
+                onDistraction={handleDistraction}
+              />
+            )}
           </View>
           {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
           <AsideZone isTimerRunning={snapshot.running} />

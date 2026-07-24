@@ -6,18 +6,19 @@
  * ici). Petit disque discret dans la couleur courante (`color`), jamais
  * translucide — le fantôme play-button (fond fixe + ombre marquée) meurt.
  *
- * Base simplifiée — couches d'animation à réajouter :
- *   [ ] breathing pulse (REST, shouldPulse)
- *   [ ] halos × 2 (RUNNING, shouldPulse)
- *   [ ] second hand + trail dots (RUNNING)
- *   [ ] interpolateColor + bounce (state transition)
+ * Mouvements MOT-a→e via useEmojiMovement (Lot 3a) — halos/trotteuse legacy
+ * abandonnés (hors spec recentrage).
  */
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../theme/ThemeProvider';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
+import useEmojiMovement from '../dial/movements/useEmojiMovement';
+
+const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
 
 const PulseButton = React.memo(function PulseButton({
   state = 'rest',
@@ -26,10 +27,32 @@ const PulseButton = React.memo(function PulseButton({
   color = null,
   size = 72,
   compact = false,
-  shouldPulse = false, // reserved — animation layer not yet wired
-  clockwise = false,   // reserved — animation layer not yet wired
+  shouldPulse = false,
+  clockwise = false,   // reserved — dial rotation direction, no movement use yet
+  distractionMovement = null,
 }) {
   const theme = useTheme();
+
+  // === MOUVEMENT (MOT-a→e, Lot 3a) ===
+  // REST + shouldPulse : le pouls-invitation « Respire » — signature de
+  // l'app, gratuit. RUNNING : mouvement propre de l'Activité, à son tempo.
+  // COMPLETE : aucun mouvement (le bloom du dial porte la fin). La
+  // Distraction (MOT-f, dé) override le mouvement courant quand active,
+  // quel que soit l'état — `useEmojiMovement` coupe tout si reduce motion.
+  const tempo = activity?.pulseDuration || DEFAULT_TEMPO;
+  let movement = null;
+  let movementActive = false;
+  if (distractionMovement) {
+    movement = distractionMovement;
+    movementActive = true;
+  } else if (state === 'rest' && shouldPulse) {
+    movement = 'breathe';
+    movementActive = true;
+  } else if (state === 'running' && activity?.movement) {
+    movement = activity.movement;
+    movementActive = true;
+  }
+  const emojiAnimatedStyle = useEmojiMovement({ movement, tempo, active: movementActive });
 
   // === DIMENSIONS ===
   // Hub structurel (verdicts CD 25/07) : Ø = 34 % du cadran (fourni par
@@ -71,7 +94,11 @@ const PulseButton = React.memo(function PulseButton({
   const renderContent = () => {
     const displayEmoji = emoji || activity?.emoji;
     if (displayEmoji) {
-      return <Text style={[styles.emoji, { fontSize: emojiSize }]}>{displayEmoji}</Text>;
+      return (
+        <Animated.View style={emojiAnimatedStyle}>
+          <Text style={[styles.emoji, { fontSize: emojiSize }]}>{displayEmoji}</Text>
+        </Animated.View>
+      );
     }
     const iconColor = color || theme.colors.text; // fond surface désormais — icône sombre ou couleur courante
     switch (state) {
@@ -97,14 +124,19 @@ const PulseButton = React.memo(function PulseButton({
 PulseButton.displayName = 'PulseButton';
 
 PulseButton.propTypes = {
-  activity:    PropTypes.shape({ emoji: PropTypes.string }),
-  clockwise:   PropTypes.bool,
-  color:       PropTypes.string,
-  compact:     PropTypes.bool,
-  emoji:       PropTypes.string,
-  shouldPulse: PropTypes.bool,
-  size:        PropTypes.number,
-  state:       PropTypes.oneOf(['rest', 'running', 'complete']),
+  activity:            PropTypes.shape({
+    emoji: PropTypes.string,
+    movement: PropTypes.string,
+    pulseDuration: PropTypes.number,
+  }),
+  clockwise:           PropTypes.bool,
+  color:               PropTypes.string,
+  compact:             PropTypes.bool,
+  distractionMovement: PropTypes.string,
+  emoji:               PropTypes.string,
+  shouldPulse:         PropTypes.bool,
+  size:                PropTypes.number,
+  state:               PropTypes.oneOf(['rest', 'running', 'complete']),
 };
 
 export default PulseButton;

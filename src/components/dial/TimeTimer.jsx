@@ -20,6 +20,7 @@ export default function TimeTimer({
   onDialRef,
   onDialTap,
   onTimerComplete,
+  distractionMovement = null,
 }) {
   const {
     timer: { clockwise, scaleMode, currentActivity, currentDuration },
@@ -172,6 +173,7 @@ export default function TimeTimer({
           currentActivity={currentActivity}
           showNumbers={true}
           showGraduations={true}
+          distractionMovement={distractionMovement}
         />
 
         {/* Message Overlay - removed, icon in center replaces this info */}
@@ -186,4 +188,5 @@ TimeTimer.propTypes = {
   onDialRef: PropTypes.func,
   onDialTap: PropTypes.func,
   onTimerComplete: PropTypes.func,
+  distractionMovement: PropTypes.string,
 };

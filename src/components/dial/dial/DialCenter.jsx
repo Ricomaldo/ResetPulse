@@ -20,6 +20,8 @@ import { useTimerConfig } from '../../../contexts/TimerConfigContext';
  * @param {string} color - Couleur courante du disque (suit la palette en direct)
  * @param {boolean} clockwise - Sens du timer (pour animation)
  * @param {number} size - Taille du bouton
+ * @param {string|null} distractionMovement - Mouvement MOT-f (dé Distraction),
+ *   override le mouvement courant de PulseButton quand non-null (Lot 3a)
  */
 const DialCenter = React.memo(function DialCenter({
   activity,
@@ -28,6 +30,7 @@ const DialCenter = React.memo(function DialCenter({
   color = null,
   clockwise = false,
   size = 72,
+  distractionMovement = null,
 }) {
   const { display: { shouldPulse } } = useTimerConfig();
 
@@ -50,6 +53,7 @@ const DialCenter = React.memo(function DialCenter({
         clockwise={clockwise}
         size={size}
         shouldPulse={shouldPulse}
+        distractionMovement={distractionMovement}
       />
     </View>
   );
@@ -59,9 +63,12 @@ DialCenter.displayName = 'DialCenter';
 DialCenter.propTypes = {
   activity: PropTypes.shape({
     emoji: PropTypes.string,
+    movement: PropTypes.string,
+    pulseDuration: PropTypes.number,
   }),
   clockwise: PropTypes.bool,
   color: PropTypes.string,
+  distractionMovement: PropTypes.string,
   isCompleted: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,
   size: PropTypes.number,
