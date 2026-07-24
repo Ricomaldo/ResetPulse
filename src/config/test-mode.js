@@ -12,7 +12,8 @@ export const DEV_MODE = true;
 // true = FAB visible, false = FAB caché
 // Note: Nécessite DEV_MODE = true pour fonctionner
 // DEPLOY: Set to false before production build, true for local dev
-export const SHOW_DEV_FAB = true;
+// (false le 25/07 : screenshots propres pour la revue Claude design)
+export const SHOW_DEV_FAB = false;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
