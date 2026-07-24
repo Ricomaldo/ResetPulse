@@ -492,5 +492,9 @@
   "palettesPanel": {
     "sheetRow": "Palettes",
     "title": "Palettes"
+  },
+  "mode": {
+    "standard": "Standard",
+    "focus": "Focus"
   }
 }

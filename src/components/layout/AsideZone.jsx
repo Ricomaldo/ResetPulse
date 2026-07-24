@@ -21,6 +21,11 @@
  * Cycle 6.1 : bloc 4 Palettes câblé — sous-écran réel (`PalettesPanel`), même
  * mécanisme que le bloc 3 Rituels. `CompactRow` (TimerScreen) corrigé pour
  * suivre la palette courante (lisait `serenity` en dur).
+ * Cycle 6.2 (fidélité au rendu) : Complet meurt (acté Eric 25/07 ×2) —
+ * segmenté à 2 entrées, libellés i18n provisoires [Standard | Focus] (clé
+ * interne `mixte` inchangée, naming définitif à la passe CD). Sélection
+ * segmenté sombre (#2D2520), plus doré. Palette : sous-écran ne referme plus
+ * le sheet au tap (préviz live, porte C6.1).
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
@@ -51,12 +56,9 @@ const MAX_OPEN_COVERAGE = 0.65;
 const HANDLE_HEIGHT = 25; // handleContainer paddingVertical(10)*2 + handleIndicator height(5)
 const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 
-// Libellés SCR-10 hardcodés FR — batch i18n 15 langues au Lot 3 (src/i18n/TODO.md)
-const MODES = [
-  { key: 'mixte', label: 'Mixte' },
-  { key: 'focus', label: 'Focus' },
-  { key: 'complet', label: 'Complet' },
-];
+// Complet meurt (C6.2, acté Eric 25/07 ×2) — segmenté à 2 entrées. Clé
+// interne `mixte` conservée (naming définitif à la passe CD, piste : le
+// défaut ne se nomme pas) ; libellé affiché "Standard" (i18n, provisoire).
 export default function AsideZone({ isTimerRunning }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -70,6 +72,11 @@ export default function AsideZone({ isTimerRunning }) {
   } = useTimerConfig();
 
   const isFocus = currentMode === 'focus';
+
+  const MODES = [
+    { key: 'mixte', label: t('mode.standard') },
+    { key: 'focus', label: t('mode.focus') },
+  ];
 
   const [isOpen, setIsOpen] = useState(false);
   // Sous-écran Rituels (bloc 3, C6) — remplace les blocs 1-4 quand ouvert.

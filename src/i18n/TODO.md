@@ -28,7 +28,7 @@ Liste des composants avec textes hardcodés en français à traduire avant relea
 ## Sheet SCR-10 (recentrage Lot 1 — batch i18n au Lot 3)
 
 ### AsideZone.jsx
-- [ ] MODE_LABELS : "Mixte", "Focus", "Complet"
+- [x] MODE_LABELS : Complet mort (C6.2) — `mode.standard`/`mode.focus` (libellés provisoires)
 - [x] RITUALS_LABEL : "Mes rituels" — `rituals.sheetRow` (C6)
 - [x] PALETTES_LABEL : "Palettes" — `palettesPanel.sheetRow` (C6.1)
 

@@ -9,7 +9,7 @@
  * - timer: currentActivity, currentDuration, selectedSoundId, clockwise, scaleMode
  * - display: shouldPulse, showDigitalTimer, showTime
  * - system: keepAwakeEnabled
- * - mode: current (Mixte/Focus/Complet — ADR-014, réglage global unique)
+ * - mode: current (Mixte/Focus — Complet mort C6.2 ; ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
  * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
  * - stats: activityDurations, completedTimersCount, hasSeenTwoTimersModal, hasSeenReviewRequest
@@ -268,6 +268,15 @@ export const TimerConfigProvider = ({ children }) => {
     }
   }, [isLoading, values.timer, updateValue]);
 
+  // C6.2 : mode « complet » mort (segmenté à 2 entrées) — bascule tout état
+  // persisté qui le référence encore vers le défaut (même patron que le
+  // garde « none » ci-dessus, pas une couche de migration générique).
+  useEffect(() => {
+    if (!isLoading && values.mode.current === 'complet') {
+      updateValue('mode', { current: 'mixte' });
+    }
+  }, [isLoading, values.mode, updateValue]);
+
   // Handle activity selection with flash feedback (ADR-007 messaging)
   const handleActivitySelect = useCallback((activity) => {
     if (flashTimeoutRef.current) {
@@ -405,8 +414,7 @@ export const TimerConfigProvider = ({ children }) => {
       }));
     },
 
-    // Mode (Mixte/Focus/Complet — écrit la valeur ; seul Mixte rend au Lot 2 C3,
-    // C4/C5 branchent Focus/Complet sur le rendu)
+    // Mode (Mixte/Focus — Complet mort C6.2, segmenté à 2 entrées)
     setMode: (mode) => {
       setValues(prev => ({
         ...prev,
