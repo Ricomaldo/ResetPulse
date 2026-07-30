@@ -266,16 +266,15 @@
     "teal": "Canard"
   },
   "sounds": {
-    "bell_classic": "Cloche",
-    "bell_melodic": "Carillon",
-    "microwave_vintage": "Rétro",
-    "microwave_ping": "Ping",
-    "kitchen_timer": "Ding",
-    "kitchen_timer_2": "Signal",
-    "egg_timer": "Tilt",
-    "toaster_bell": "Pop",
-    "ding_effect": "Cristal",
-    "timer_complete": "Accompli"
+    "jingle_achievement": "Accompli",
+    "singing_bowl": "Bol chantant",
+    "contrabass_pluck": "Corde grave",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibraphone",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Marimba montant",
+    "up_chime": "Carillon",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Maintenir l'écran allumé",

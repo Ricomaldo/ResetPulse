@@ -266,16 +266,15 @@
     "teal": "Teal"
   },
   "sounds": {
-    "bell_classic": "Bell",
-    "bell_melodic": "Chime",
-    "microwave_vintage": "Retro",
-    "microwave_ping": "Ping",
-    "kitchen_timer": "Ding",
-    "kitchen_timer_2": "Signal",
-    "egg_timer": "Tilt",
-    "toaster_bell": "Pop",
-    "ding_effect": "Crystal",
-    "timer_complete": "Done"
+    "jingle_achievement": "Achievement",
+    "singing_bowl": "Singing bowl",
+    "contrabass_pluck": "Low string",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibraphone",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Rising marimba",
+    "up_chime": "Chime",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Keep screen awake",
