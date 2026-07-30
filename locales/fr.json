@@ -499,12 +499,18 @@
     "welcome": "on commence par choisir une activité 👇",
     "companion": "cet emoji te tient compagnie. glisse le disque pour régler la durée.",
     "dialColor": "une couleur ? elle change tout de suite.",
-    "ready": "c'est prêt. touche le disque pour lancer."
+    "ready": "c'est prêt. touche le disque pour lancer.",
+    "keepMoment": "garde ce moment ?",
+    "momentKept": "gardé ✨"
   },
   "aside": {
     "exitFocus": "quitter le focus",
     "doubleTapHint": "astuce : double-tap le fond pour basculer",
     "handle": "ouvrir les réglages",
     "closedLabel": "rituels & réglages"
+  },
+  "dormantTips": {
+    "palettes": "t'as vu ? tes couleurs ont des palettes entières — dans les réglages",
+    "focus": "envie d'un écran nu ? le mode focus t'attend dans les réglages"
   }
 }

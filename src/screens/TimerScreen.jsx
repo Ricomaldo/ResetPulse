@@ -24,6 +24,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useFirstRun } from '../hooks/useFirstRun';
+import { useDormantTips } from '../hooks/useDormantTips';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useSessionImmersion } from '../hooks/useSessionImmersion';
@@ -31,7 +32,8 @@ import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
-import { buildRitualApplyPayload } from '../config/rituals';
+import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
+import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
 import { useSessionCount } from '../hooks/useSessionCount';
@@ -238,6 +240,42 @@ function DistractionButton({ showLabel, onDistraction }) {
   );
 }
 
+// Astuce dormante v1 (ADR-016 §4, Lambda C) : même famille visuelle que le
+// dé (pill blanche, ombre légère) — une ligne discrète, jamais un mur.
+// Textes i18n FLAGGÉS pour review Claude design (formulation provisoire,
+// cf. dormantTips.palettes/focus dans locales/).
+function DormantTipPill({ tip }) {
+  const theme = useTheme();
+  const t = useTranslation();
+
+  const styles = StyleSheet.create({
+    pill: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.round,
+      marginTop: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: theme.spacing.xs,
+      ...theme.shadow('sm'),
+    },
+    text: {
+      color: theme.colors.text,
+      fontSize: rs(12, 'min'),
+      textAlign: 'center',
+    },
+  });
+
+  if (!tip) {
+    return null;
+  }
+
+  return (
+    <View style={styles.pill} testID={`dormantTip.${tip}`}>
+      <Text style={styles.text}>{t(`dormantTips.${tip}`)}</Text>
+    </View>
+  );
+}
+
 function formatTime(totalSecondsRaw) {
   const totalSeconds = Math.floor(totalSecondsRaw);
   const mins = Math.floor(totalSeconds / 60);
@@ -358,7 +396,8 @@ function TimerScreenContent() {
   const {
     mode: { current: currentMode },
     setMode,
-    timer: { currentDuration, currentActivity },
+    timer: { currentDuration, currentActivity, selectedSoundId },
+    palette: { currentColor },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
   // porte-2 (retour Eric « le mode horizontal est complètement raté ») :
@@ -532,10 +571,14 @@ function TimerScreenContent() {
 
   // ADR-014 : ne bloque jamais rien — démarrer le timer complète la
   // Première fois à N'IMPORTE QUEL moment (pas seulement au moment 4).
+  // Ce point de passage n'a lieu qu'UNE fois dans la vie de l'app (garde
+  // !hasSeenFirstRun) : c'est aussi le premier démarrage de timer, donc le
+  // point de mesure `first_moment_started` (ADR-016 §6).
   useEffect(() => {
     if (snapshot.running && !hasCompletedFirstRunRef.current && !firstRun.hasSeenFirstRun) {
       hasCompletedFirstRunRef.current = true;
       firstRun.completeFirstRun();
+      analytics.trackFirstMomentStarted();
     }
   }, [snapshot.running]);
 
@@ -580,8 +623,14 @@ function TimerScreenContent() {
   // useTimer.js:150 (onCompleteRef appelé uniquement dans la branche
   // hasTriggeredCompletion, pas dans stopTimer).
   const handleTimerComplete = useCallback(() => {
+    // completedSessions vaut encore la valeur D'AVANT l'incrément ici (lu
+    // depuis la closure) : 0 signifie que ce Moment est le tout premier
+    // accompli de la vie de l'app — c'est le passage 0→1 (ADR-016 §6).
+    if (completedSessions === 0) {
+      analytics.trackFirstMomentCompleted();
+    }
     incrementSessionCount();
-  }, [incrementSessionCount]);
+  }, [completedSessions, incrementSessionCount, analytics]);
 
   // Invitation « fais-le respirer » (Lot 3b, mandat Eric) : jamais un mur —
   // une ligne discrète sous le message de fin, une seule fois dans la vie de
@@ -648,6 +697,91 @@ function TimerScreenContent() {
     modalStack.push('premium', { highlightedFeature: 'breathe_invitation' });
   }, [analytics, modalStack]);
 
+  // « garde ce moment ? » (ADR-016 §3) — naissance du Rituel, au sommet
+  // émotionnel (fin du tout premier Moment). Même latch que l'invitation
+  // Ambiances ci-dessus (fired + reset à la sortie de l'état complété).
+  // Cohabitation : structurellement exclusive de showBreatheInvitation —
+  // celle-ci exige completedSessions >= 2 (shouldShowBreatheInvitation),
+  // celle-là exige completedSessions === 1 (le tout premier) : les deux
+  // conditions ne peuvent jamais être vraies ensemble, même flag ou pas.
+  const { rituals, updateRitual, createRitual } = useRituals();
+  const [hasSeenKeepMoment, setHasSeenKeepMoment, keepMomentLoading] =
+    usePersistedState('@ResetPulse:hasSeenKeepMoment', false);
+  const [keepMomentFired, setKeepMomentFired] = useState(false);
+  const keepMomentFiredRef = useRef(false);
+  // Confirmation discrète après le tap (« gardé ✨ ») — dure ce que dure
+  // l'état complété, ne se repropose jamais (flag déjà posé à l'affichage).
+  const [momentKept, setMomentKept] = useState(false);
+
+  useEffect(() => {
+    if (keepMomentFiredRef.current) {
+      return;
+    }
+    if (sessionCountLoading || keepMomentLoading) {
+      return;
+    }
+    if (snapshot.isCompleted && completedSessions === 1 && !hasSeenKeepMoment) {
+      keepMomentFiredRef.current = true;
+      setKeepMomentFired(true);
+      setHasSeenKeepMoment(true);
+    }
+  }, [
+    snapshot.isCompleted,
+    completedSessions,
+    hasSeenKeepMoment,
+    sessionCountLoading,
+    keepMomentLoading,
+    setHasSeenKeepMoment,
+  ]);
+
+  const showKeepMoment = keepMomentFired && snapshot.isCompleted;
+
+  useEffect(() => {
+    if (!snapshot.isCompleted && keepMomentFired) {
+      setKeepMomentFired(false);
+      setMomentKept(false);
+    }
+  }, [snapshot.isCompleted, keepMomentFired]);
+
+  const handleKeepMomentTap = useCallback(() => {
+    if (momentKept) {
+      return;
+    }
+    haptics.selection().catch(() => {});
+    // La durée du Moment vécu = la durée TOTALE de la séance qui vient de
+    // finir (timerRef.current.duration, exposé par useTimer) — PAS
+    // `snapshot.remaining`, qui vaut 0 à la fin.
+    const duration = timerRef.current?.duration ?? currentDuration;
+    const existingRitual = findRitualToKeep(rituals, currentActivity?.id);
+    if (existingRitual) {
+      updateRitual(existingRitual.id, {
+        duration,
+        color: currentColor,
+        soundId: selectedSoundId,
+      });
+    } else {
+      createRitual({
+        name: deriveRitualName(currentActivity),
+        activityId: currentActivity?.id,
+        color: currentColor,
+        duration,
+        soundId: selectedSoundId,
+      });
+    }
+    analytics.trackRitualKept();
+    setMomentKept(true);
+  }, [
+    momentKept,
+    rituals,
+    currentActivity,
+    currentColor,
+    selectedSoundId,
+    currentDuration,
+    updateRitual,
+    createRitual,
+    analytics,
+  ]);
+
   // Immersion (cadrage 3c) : RUNNING + IMMERSION_DELAY sans toucher → le
   // chrome s'efface, le disque devient décor. Machine d'état extraite
   // (useSessionImmersion) — ce composant ne fait qu'observer running/
@@ -665,6 +799,25 @@ function TimerScreenContent() {
   useEffect(() => {
     immersionValue.value = withTiming(immersed ? 1 : 0, { duration: IMMERSION_FADE_MS });
   }, [immersed, immersionValue]);
+
+  // Astuces dormantes v1 (ADR-016 §4, Lambda C) : jamais pendant un Moment
+  // qui tourne, jamais pendant la Première fois, jamais en immersion ni en
+  // Focus — ce hook ne connaît aucune de ces conditions, elles vivent ici
+  // (`enabled`), côté écran, comme prescrit par le brief.
+  const canShowDormantTips =
+    !snapshot.running && firstRun.hasSeenFirstRun && !immersed && !isFocus;
+  const dormantTips = useDormantTips({ enabled: canShowDormantTips });
+  const showDormantTip = Boolean(dormantTips.activeTip) && canShowDormantTips;
+
+  // hasTriedFocus (Lambda C) : marqué au premier passage en Focus, quel que
+  // soit le chemin (segmenté du sheet OU double-tap fond) — les deux
+  // écrivent `currentMode` via TimerConfigContext, donc un seul effet ici
+  // les capte tous.
+  useEffect(() => {
+    if (isFocus) {
+      dormantTips.markFocusTried();
+    }
+  }, [isFocus]);
 
   // Chrome (TopTime, rangée compacte, dé) : fondu d'opacité pur — le layout
   // garde sa place réservée, seul le disque se recentre par transform (cf.
@@ -697,8 +850,9 @@ function TimerScreenContent() {
 
   const handleRootTouchStart = useCallback(() => {
     dismissDistractionLabel();
+    dormantTips.dismissActiveTip();
     registerActivity();
-  }, [dismissDistractionLabel, registerActivity]);
+  }, [dismissDistractionLabel, dormantTips, registerActivity]);
 
   const styles = StyleSheet.create({
     completionMessage: {
@@ -756,6 +910,13 @@ function TimerScreenContent() {
       ...StyleSheet.absoluteFillObject,
       zIndex: 100,
     },
+    // Le seuil (ADR-016 §1) : par-dessus TOUT, y compris AsideZone (50) et
+    // l'overlay d'immersion (100) — rien du dessous n'est atteignable tant
+    // qu'il est monté.
+    firstRunThresholdOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      zIndex: 200,
+    },
   });
 
   // Temps digital (top bar) : restant en séance/fin, durée réglée au repos —
@@ -807,15 +968,38 @@ function TimerScreenContent() {
                   >
                     {snapshot.displayMessage || ' '}
                   </Text>
+                  {/* Ligne partagée : « fais-le respirer » (>= 2 séances) et
+                      « garde ce moment ? » (1re séance) ne coexistent jamais
+                      (cf. showKeepMoment ci-dessus) — même slot réservé,
+                      jamais les deux montées en même temps. */}
                   <Text
-                    style={[styles.breatheInvitationText, !showBreatheInvitation && styles.completionMessageHidden]}
+                    style={[
+                      styles.breatheInvitationText,
+                      !(showBreatheInvitation || showKeepMoment) && styles.completionMessageHidden,
+                    ]}
                     numberOfLines={1}
-                    onPress={showBreatheInvitation ? handleBreatheInvitationTap : undefined}
-                    accessible={showBreatheInvitation}
+                    onPress={
+                      showBreatheInvitation
+                        ? handleBreatheInvitationTap
+                        : showKeepMoment && !momentKept
+                          ? handleKeepMomentTap
+                          : undefined
+                    }
+                    accessible={showBreatheInvitation || (showKeepMoment && !momentKept)}
                     accessibilityRole="button"
-                    accessibilityLabel={t('ambiances.breatheInvitation')}
+                    accessibilityLabel={
+                      showBreatheInvitation
+                        ? t('ambiances.breatheInvitation')
+                        : momentKept
+                          ? t('firstRun.momentKept')
+                          : t('firstRun.keepMoment')
+                    }
                   >
-                    {t('ambiances.breatheInvitation')}
+                    {showBreatheInvitation
+                      ? t('ambiances.breatheInvitation')
+                      : showKeepMoment
+                        ? (momentKept ? t('firstRun.momentKept') : t('firstRun.keepMoment'))
+                        : ' '}
                   </Text>
                 </View>
                 <View ref={barRef} onLayout={handleBarLayout}>
@@ -828,11 +1012,16 @@ function TimerScreenContent() {
                   showLabel={showDistractionLabel}
                   onDistraction={handleDistraction}
                 />
+                {showDormantTip && <DormantTipPill tip={dormantTips.activeTip} />}
               </Animated.View>
             )}
           </View>
           {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
-          <AsideZone isTimerRunning={snapshot.running} hidden={immersed} />
+          <AsideZone
+            isTimerRunning={snapshot.running}
+            hidden={immersed}
+            onPaletteOpened={dormantTips.markPalettesOpened}
+          />
           {!isFocus && (
             <FirstRunTips
               moment={firstRun.moment}
@@ -850,6 +1039,16 @@ function TimerScreenContent() {
               style={styles.immersionOverlay}
               onPressIn={registerActivity}
             />
+          )}
+          {/* Le seuil (ADR-016 §1) : ne se rejoue JAMAIS (flag distinct
+              hasSeenThreshold, Monde B) — par défaut false, donc les users
+              existants (déjà passés par la 2.0 ou pas) REVOIENT le seuil une
+              fois au premier lancement de la 3.0. Accepté (reborn assumé),
+              pas de migration de flag prévue. */}
+          {!firstRun.isLoading && !firstRun.hasSeenThreshold && (
+            <View style={styles.firstRunThresholdOverlay} testID="firstRun.threshold.overlay">
+              <FirstRunThreshold onComplete={firstRun.completeThreshold} />
+            </View>
           )}
         </View>
       </GestureDetector>

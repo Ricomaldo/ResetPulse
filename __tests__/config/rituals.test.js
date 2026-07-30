@@ -9,6 +9,7 @@ import {
   buildRitualApplyPayload,
   suggestedColorFor,
   shouldDeriveNameFromActivity,
+  findRitualToKeep,
 } from '../../src/config/rituals';
 import { getActivityById, getDefaultActivity } from '../../src/config/activities';
 import { MIN_DURATION, MAX_DURATION } from '../../src/config/durations';
@@ -200,6 +201,44 @@ describe('rituals Configuration', () => {
       const payload = buildRitualApplyPayload(ritual, []);
       expect(typeof payload.soundId).toBe('string');
       expect(payload.soundId.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('findRitualToKeep (ADR-016 §3)', () => {
+    test('returns the ritual matching activityId', () => {
+      const meditation = { id: 'ritual_meditation', activityId: 'meditation' };
+      const rituals = [meditation, { id: 'ritual_break', activityId: 'break' }];
+
+      expect(findRitualToKeep(rituals, 'meditation')).toBe(meditation);
+    });
+
+    test('returns null when no ritual matches the activityId', () => {
+      const rituals = [{ id: 'ritual_break', activityId: 'break' }];
+
+      expect(findRitualToKeep(rituals, 'meditation')).toBeNull();
+    });
+
+    test('returns null for an empty ritual list', () => {
+      expect(findRitualToKeep([], 'meditation')).toBeNull();
+    });
+
+    test('prefers the base ritual (non-custom) among several matches', () => {
+      const custom = { id: 'ritual_1690000000000', activityId: 'work' };
+      const base = { id: 'ritual_work', activityId: 'work' };
+      // Le custom apparaît AVANT le base dans le tableau : sans préférence
+      // explicite, "le premier" renverrait le custom — ce n'est pas ce qu'on
+      // veut (cf. décision ADR-016 §3, met à jour le rituel de base).
+      const rituals = [custom, base];
+
+      expect(findRitualToKeep(rituals, 'work')).toBe(base);
+    });
+
+    test('without a base ritual among several matches, returns the first one', () => {
+      const first = { id: 'ritual_1690000000000', activityId: 'work' };
+      const second = { id: 'ritual_1690000000001', activityId: 'work' };
+      const rituals = [first, second];
+
+      expect(findRitualToKeep(rituals, 'work')).toBe(first);
     });
   });
 });

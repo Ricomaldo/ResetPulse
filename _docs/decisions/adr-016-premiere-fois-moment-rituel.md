@@ -53,9 +53,9 @@ collision par le mécanisme « garde ce moment ».
 ### 1. Le seuil — deux écrans chaleureux, zéro question
 
 La Première fois s'ouvre par un **seuil de deux écrans** repris de la 2.0
-(les deux qu'Eric revendique) : ① l'accueil qui respire — le disque, une
-phrase (« Un timer qui s'adapte à toi »), rien à répondre ; ② la main
-tendue — « **Créer mon moment** » — dont le bouton n'ouvre PAS un
+(les deux qu'Eric revendique) : ① l'accueil qui respire — logo, phrase de
+bienvenue, le disque qui respire, rien à répondre ; ② la main tendue —
+« Un timer qui s'adapte à toi » + « **Créer mon moment** » — dont le bouton n'ouvre PAS un
 formulaire : il fait entrer dans la vraie app. ~15 secondes de chaleur,
 puis le réel. AUCUN autre écran : les questions psycho (liées au bouton
 intelligent abandonné), l'écran notifications (permission désormais

@@ -144,6 +144,21 @@ const analyticsAdapter = {
   trackColorSelected(color) {
     this.track('color_selected', { color });
   },
+
+  // Preuve par les chiffres de l'ADR-016 (§6) — funnel Première fois : sortie
+  // du seuil → premier Moment accompli → naissance du Rituel. Tranche le
+  // deuil du tour guidé par la réalité, pas par une opinion.
+  trackFirstMomentStarted() {
+    this.track('first_moment_started');
+  },
+
+  trackFirstMomentCompleted() {
+    this.track('first_moment_completed');
+  },
+
+  trackRitualKept() {
+    this.track('ritual_kept');
+  },
 };
 
 // Proxy : absorbe toute méthode d'événement sans maintenir la liste exhaustive

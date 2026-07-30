@@ -1,8 +1,17 @@
 // Tests for useRituals hook - C6 (ADR-015)
+// Lambda D (ADR-016) : l'état vit désormais dans un contexte PARTAGÉ
+// (RitualsContext) — renderHook monte le provider ; l'API du hook est
+// inchangée. Calqué sur __tests__/hooks/useCustomActivities.test.js.
+import React from 'react';
 import { renderHook, act } from '../test-utils';
 import { useRituals } from '../../src/hooks/useRituals';
+import { RitualsProvider } from '../../src/contexts/RitualsContext';
 import { MAX_DURATION, MIN_DURATION } from '../../src/config/durations';
 import { DEFAULT_RITUAL_COLOR } from '../../src/config/rituals';
+
+const wrapper = ({ children }) => (
+  <RitualsProvider>{children}</RitualsProvider>
+);
 
 const mockSetRituals = jest.fn((updater) => {
   if (typeof updater === 'function') {
@@ -31,7 +40,7 @@ describe('useRituals', () => {
 
   describe('Initialization', () => {
     it('provides all expected methods', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       expect(typeof result.current.createRitual).toBe('function');
       expect(typeof result.current.updateRitual).toBe('function');
@@ -43,7 +52,7 @@ describe('useRituals', () => {
 
   describe('createRitual', () => {
     it('creates a ritual with a unique id and the given fields', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let created;
       act(() => {
@@ -66,7 +75,7 @@ describe('useRituals', () => {
     });
 
     it('clamps duration on creation, keeps color in value', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let created;
       act(() => {
@@ -84,7 +93,7 @@ describe('useRituals', () => {
     });
 
     it('falls back to DEFAULT_RITUAL_COLOR when no color is given', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let created;
       act(() => {
@@ -100,7 +109,7 @@ describe('useRituals', () => {
     });
 
     it('calls setRituals to add the ritual', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       act(() => {
         result.current.createRitual({
@@ -134,7 +143,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -157,7 +166,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -178,7 +187,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -199,7 +208,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -221,7 +230,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -249,7 +258,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -278,13 +287,13 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       expect(result.current.getRitualById('ritual_b').name).toBe('B');
     });
 
     it('returns undefined when not found', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       expect(result.current.getRitualById('nope')).toBeUndefined();
     });
   });
@@ -292,7 +301,7 @@ describe('useRituals', () => {
   describe('Default seed', () => {
     it('is used as the persisted-state default value (3 base rituals)', () => {
       const usePersistedStateMock = require('../../src/hooks/usePersistedState').usePersistedState;
-      renderHook(() => useRituals());
+      renderHook(() => useRituals(), { wrapper });
 
       const defaultArg = usePersistedStateMock.mock.calls[usePersistedStateMock.mock.calls.length - 1][1];
       expect(defaultArg).toHaveLength(3);
@@ -302,7 +311,7 @@ describe('useRituals', () => {
 
   describe('hasMissingBaseRituals (D8, hotfix-porte-1)', () => {
     it('is true when no base ritual is present', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       expect(result.current.hasMissingBaseRituals).toBe(true);
     });
 
@@ -317,7 +326,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       expect(result.current.hasMissingBaseRituals).toBe(false);
     });
 
@@ -328,7 +337,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       expect(result.current.hasMissingBaseRituals).toBe(true);
     });
   });
@@ -342,7 +351,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -373,7 +382,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -402,7 +411,7 @@ describe('useRituals', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let updaterResult;
       mockSetRituals.mockImplementation((updater) => {
@@ -420,7 +429,7 @@ describe('useRituals', () => {
 
   describe('Guard: MIN_DURATION floor is respected', () => {
     it('never returns a duration below MIN_DURATION on create', () => {
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
 
       let created;
       act(() => {
@@ -458,13 +467,13 @@ describe('useRituals', () => {
 
     it('sans favori explicite, les 3 premiers font office (rangée d\'accueil)', () => {
       seed([mk('a'), mk('b'), mk('c'), mk('d')]);
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       expect(result.current.favoriteRituals.map((r) => r.id)).toEqual(['a', 'b', 'c']);
     });
 
     it('toggleFavorite refuse une 4e étoile (max 3) et retourne false', () => {
       seed([mk('a', true), mk('b', true), mk('c', true), mk('d', false)]);
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       let accepted;
       act(() => {
         accepted = result.current.toggleFavorite('d');
@@ -475,7 +484,7 @@ describe('useRituals', () => {
 
     it('le retrait d\'une étoile est toujours permis et matérialise la migration', () => {
       seed([mk('a'), mk('b'), mk('c'), mk('d')]); // aucun favori explicite
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       let accepted;
       act(() => {
         accepted = result.current.toggleFavorite('a'); // retrait d'un implicite
@@ -489,7 +498,7 @@ describe('useRituals', () => {
 
     it('élire un favori quand une place est libre retourne true', () => {
       seed([mk('a', true), mk('b', true), mk('c', false), mk('d', false)]);
-      const { result } = renderHook(() => useRituals());
+      const { result } = renderHook(() => useRituals(), { wrapper });
       let accepted;
       act(() => {
         accepted = result.current.toggleFavorite('d');

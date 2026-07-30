@@ -499,12 +499,18 @@
     "welcome": "let's start by picking an activity 👇",
     "companion": "this emoji keeps you company. slide the disc to set your time.",
     "dialColor": "a color? it changes right away.",
-    "ready": "all set. touch the disc to start."
+    "ready": "all set. touch the disc to start.",
+    "keepMoment": "keep this moment?",
+    "momentKept": "kept ✨"
   },
   "aside": {
     "exitFocus": "leave focus",
     "doubleTapHint": "tip: double-tap the background to switch",
     "handle": "open settings",
     "closedLabel": "rituals & settings"
+  },
+  "dormantTips": {
+    "palettes": "psst — your colors come in full palettes, in settings",
+    "focus": "want a bare screen? focus mode awaits in settings"
   }
 }
