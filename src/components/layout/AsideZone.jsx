@@ -26,6 +26,9 @@
  * interne `mixte` inchangée, naming définitif à la passe CD). Sélection
  * segmenté sombre (#2D2520), plus doré. Palette : sous-écran ne referme plus
  * le sheet au tap (préviz live, porte C6.1).
+ * 3c (immersion) : prop `hidden` — le drawer entier (bande fermée comprise)
+ * s'efface en fondu/glissement quand la séance devient décor (TimerScreen).
+ * Jamais démonté : isOpen/sous-écrans survivent à l'immersion.
  */
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
@@ -35,6 +38,7 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
   withSpring,
+  withTiming,
   runOnJS,
   Extrapolation,
 } from 'react-native-reanimated';
@@ -68,7 +72,7 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 // Complet meurt (C6.2, acté Eric 25/07 ×2) — segmenté à 2 entrées. Clé
 // interne `mixte` conservée (naming définitif à la passe CD, piste : le
 // défaut ne se nomme pas) ; libellé affiché "Standard" (i18n, provisoire).
-export default function AsideZone({ isTimerRunning }) {
+export default function AsideZone({ isTimerRunning, hidden = false }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -144,6 +148,14 @@ export default function AsideZone({ isTimerRunning }) {
 
   const translateY = useSharedValue(SCREEN_HEIGHT); // offscreen avant mesure
   const startY = useSharedValue(SCREEN_HEIGHT);
+
+  // Immersion (cadrage 3c) : `hidden` fait disparaître la bande fermée en
+  // fondu — opacité + léger glissement vers le bas — SANS démonter le
+  // drawer, l'état (ouvert/fermé, sous-écran) survit à l'immersion.
+  const hiddenValue = useSharedValue(0);
+  useEffect(() => {
+    hiddenValue.value = withTiming(hidden ? 1 : 0, { duration: 600 });
+  }, [hidden, hiddenValue]);
 
   // Recale la position fermée dès que le conteneur est mesuré
   useEffect(() => {
@@ -222,7 +234,8 @@ export default function AsideZone({ isTimerRunning }) {
   [translateY, startY, openY, boundedSubScreen]);
 
   const drawerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
+    opacity: 1 - hiddenValue.value,
+    transform: [{ translateY: translateY.value + hiddenValue.value * CLOSED_VISIBLE }],
   }));
 
   const contentAnimatedStyle = useAnimatedStyle(() => ({
@@ -252,7 +265,6 @@ export default function AsideZone({ isTimerRunning }) {
     asideContainer: {
       bottom: 0,
       left: 0,
-      pointerEvents: 'box-none',
       position: 'absolute',
       right: 0,
       top: 0,
@@ -392,6 +404,7 @@ export default function AsideZone({ isTimerRunning }) {
     <View
       style={styles.asideContainer}
       onLayout={(e) => setContainerH(e.nativeEvent.layout.height)}
+      pointerEvents={hidden ? 'none' : 'box-none'}
     >
       <GestureDetector gesture={panGesture}>
         <Animated.View testID="aside.sheet" style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>

@@ -16,16 +16,17 @@
  * par le dial (`DialCenter`), pas par ce fichier.
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { AppState, View, Text, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useFirstRun } from '../hooks/useFirstRun';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { useAnalytics } from '../hooks/useAnalytics';
+import { useSessionImmersion } from '../hooks/useSessionImmersion';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
@@ -34,6 +35,11 @@ import { getFreeActivities } from '../config/activities';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
 import haptics from '../utils/haptics';
+
+// Immersion (cadrage 3c) : durée du fondu chrome ↔ décor, et l'échelle que
+// prend le disque quand il devient décor plein cadre.
+const IMMERSION_FADE_MS = 600;
+const IMMERSION_DIAL_SCALE = 1.12;
 
 const FREE_ACTIVITIES = getFreeActivities();
 const ACTIVITY_SIZE = rs(40, 'min');
@@ -518,6 +524,50 @@ function TimerScreenContent() {
     }
   }, []);
 
+  // Immersion (cadrage 3c) : RUNNING + IMMERSION_DELAY sans toucher → le
+  // chrome s'efface, le disque devient décor. Machine d'état extraite
+  // (useSessionImmersion) — ce composant ne fait qu'observer running/
+  // isCompleted et piloter le fondu/l'échelle à l'écran.
+  const { immersed, registerActivity } = useSessionImmersion({
+    running: snapshot.running,
+    isCompleted: snapshot.isCompleted,
+  });
+
+  const immersionValue = useSharedValue(0);
+  useEffect(() => {
+    immersionValue.value = withTiming(immersed ? 1 : 0, { duration: IMMERSION_FADE_MS });
+  }, [immersed, immersionValue]);
+
+  // Chrome (TopTime, rangée compacte, dé) : fondu d'opacité pur — le layout
+  // garde sa place réservée, seul le disque se recentre par transform (cf.
+  // dialAnimatedStyle) pour ne jamais faire rejouer la géométrie SVG.
+  const chromeAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: 1 - immersionValue.value,
+  }));
+
+  // Hauteurs mesurées du chrome au-dessus/en-dessous du disque (TopTime vs
+  // message+rangée+dé) — recentrage vertical du disque en immersion, PUR
+  // transform (translateY + scale), zéro redraw du dial (TimerDial/SVG
+  // intouchés). Se remesure naturellement à la rotation (onLayout).
+  const [aboveChromeHeight, setAboveChromeHeight] = useState(0);
+  const [belowChromeHeight, setBelowChromeHeight] = useState(0);
+  const dialOffsetY = (aboveChromeHeight - belowChromeHeight) / 2;
+
+  const dialAnimatedStyle = useAnimatedStyle(() => {
+    const t = immersionValue.value;
+    return {
+      transform: [
+        { translateY: t * dialOffsetY },
+        { scale: 1 + t * (IMMERSION_DIAL_SCALE - 1) },
+      ],
+    };
+  }, [dialOffsetY]);
+
+  const handleRootTouchStart = useCallback(() => {
+    dismissDistractionLabel();
+    registerActivity();
+  }, [dismissDistractionLabel, registerActivity]);
+
   const styles = StyleSheet.create({
     completionMessage: {
       color: theme.colors.textSecondary, // encre douce — le vert générique est mort (verdicts CD Q5)
@@ -541,6 +591,24 @@ function TimerScreenContent() {
       flex: 1,
       justifyContent: 'center',
     },
+    // Wrappers du chrome fondu en immersion : `alignItems: center` préserve
+    // le comportement d'avant (chaque bloc centré, taille intrinsèque) —
+    // sans lui, le groupement sous un seul Animated.View les ferait
+    // s'étirer en largeur (`stretch`, défaut flexbox).
+    chromeAbove: {
+      alignItems: 'center',
+    },
+    chromeBelow: {
+      alignItems: 'center',
+    },
+    // Overlay de sortie d'immersion (cadrage 3c) : monté SEULEMENT quand
+    // immersed — au-dessus de tout (AsideZone = zIndex 50), il capte le
+    // PREMIER toucher pour qu'il n'atteigne jamais le disque (sinon
+    // stop-rembobinage involontaire, destructif).
+    immersionOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      zIndex: 100,
+    },
   });
 
   // Temps digital (top bar) : restant en séance/fin, durée réglée au repos —
@@ -552,53 +620,77 @@ function TimerScreenContent() {
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
-      onTouchStart={dismissDistractionLabel}
+      onTouchStart={handleRootTouchStart}
     >
       {/* Fond nu = zone du double-tap (hors disque/rangée/dé/sheet, chacun
           capte son propre toucher avant qu'il ne remonte ici). */}
       <GestureDetector gesture={backgroundDoubleTap}>
         <View style={styles.container}>
-          {!isFocus && <TopTime seconds={topTimeSeconds} />}
+          {!isFocus && (
+            <Animated.View
+              style={[styles.chromeAbove, chromeAnimatedStyle]}
+              onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
+              pointerEvents={immersed ? 'none' : 'auto'}
+            >
+              <TopTime seconds={topTimeSeconds} />
+            </Animated.View>
+          )}
           <View style={styles.content}>
-            <TimeTimer
-              onDialTap={handleDialTap}
-              onTimerRef={handleTimerRef}
-              onDialRef={handleDialRef}
-              distraction={distraction}
-            />
-            {!isFocus && (
-              <View style={styles.completionMessageWrap}>
-                <Text
-                  style={[styles.completionMessage, !snapshot.isCompleted && styles.completionMessageHidden]}
-                  numberOfLines={1}
-                >
-                  {snapshot.displayMessage || ' '}
-                </Text>
-              </View>
-            )}
-            {!isFocus && (
-              <View ref={barRef} onLayout={handleBarLayout}>
-                <CompactRow
-                  onActivityTouch={firstRun.markActivityTouched}
-                  onColorTouch={firstRun.markColorTouched}
-                />
-              </View>
-            )}
-            {!isFocus && (
-              <DistractionButton
-                showLabel={showDistractionLabel}
-                onDistraction={handleDistraction}
+            {/* Le disque devient décor en immersion : transform pur
+                (scale + recentrage vertical), zéro redraw du dial. */}
+            <Animated.View style={dialAnimatedStyle}>
+              <TimeTimer
+                onDialTap={handleDialTap}
+                onTimerRef={handleTimerRef}
+                onDialRef={handleDialRef}
+                distraction={distraction}
               />
+            </Animated.View>
+            {!isFocus && (
+              <Animated.View
+                style={[styles.chromeBelow, chromeAnimatedStyle]}
+                onLayout={(e) => setBelowChromeHeight(e.nativeEvent.layout.height)}
+                pointerEvents={immersed ? 'none' : 'auto'}
+              >
+                <View style={styles.completionMessageWrap}>
+                  <Text
+                    style={[styles.completionMessage, !snapshot.isCompleted && styles.completionMessageHidden]}
+                    numberOfLines={1}
+                  >
+                    {snapshot.displayMessage || ' '}
+                  </Text>
+                </View>
+                <View ref={barRef} onLayout={handleBarLayout}>
+                  <CompactRow
+                    onActivityTouch={firstRun.markActivityTouched}
+                    onColorTouch={firstRun.markColorTouched}
+                  />
+                </View>
+                <DistractionButton
+                  showLabel={showDistractionLabel}
+                  onDistraction={handleDistraction}
+                />
+              </Animated.View>
             )}
           </View>
           {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
-          <AsideZone isTimerRunning={snapshot.running} />
+          <AsideZone isTimerRunning={snapshot.running} hidden={immersed} />
           {!isFocus && (
             <FirstRunTips
               moment={firstRun.moment}
               barAnchor={barAnchor}
               dialAnchor={dialAnchor}
               onSkip={firstRun.skipFirstRun}
+            />
+          )}
+          {/* Sortie d'immersion (cadrage 3c Q1) : premier toucher CONSOMMÉ
+              ici, jamais transmis au disque. */}
+          {immersed && (
+            <Pressable
+              testID="immersion.overlay"
+              accessible={false}
+              style={styles.immersionOverlay}
+              onPressIn={registerActivity}
             />
           )}
         </View>
