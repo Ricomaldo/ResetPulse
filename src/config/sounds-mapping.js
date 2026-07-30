@@ -6,20 +6,23 @@ import i18n from '../i18n';
 // Clé = identifiant interne stable
 // Valeur = require() du fichier audio
 //
-// Curation sons (retour Eric) : legacy entièrement retiré (aucun utilisateur
-// du reborn à migrer), remplacé par 9 sons doux/organiques répartis en 4
-// gratuits (un par famille, isPremium: false dans SOUND_METADATA) + 5 en
-// réserve pack Ambiances (isPremium: true) — cf. structure 4+8 visée à terme.
-// Le câblage du gating premium lui-même est un chantier séparé (3b) ; ici,
-// isPremium n'est qu'une donnée.
+// Curation sons (retour Eric) : 12 sons au total — 3 survivants de la
+// sélection d'origine (Accompli/Ping/Pop, kitchen_timer alias "Ding" retiré)
+// + 9 nouveaux sons doux/organiques. Répartition 4 gratuits (isPremium:
+// false) / 8 Ambiances (isPremium: true, donnée seulement — le câblage du
+// gating est un chantier séparé, 3b). Tous les fichiers sont normalisés en
+// crête à -1 dBFS pour un niveau perçu homogène à volume device constant.
 export const SOUND_FILES = {
-  // Gratuits — un par famille (suggestedColor des activités)
-  'jingle_achievement': require('../../assets/sounds/270404__littlerobotsoundfactory__jingle-achievement.wav'),
+  // Gratuits (4) — 2 legacy + 2 nouveaux, variété de textures
+  'timer_complete': require('../../assets/sounds/634089__aj_heels__timercomplete01.wav'),
+  'microwave_ping': require('../../assets/sounds/609725__theplax__microwave-ping.wav'),
   'singing_bowl': require('../../assets/sounds/271370__inoshirodesign__singing-bowl-strike.wav'),
   'contrabass_pluck': require('../../assets/sounds/373053__sgossner__contrabass-pizzicato-c2.wav'),
-  'kalimba': require('../../assets/sounds/331047__foochie_foochie__kalimba-c-note.wav'),
 
-  // Ambiances (premium, données seulement — pas de gating ici)
+  // Ambiances (8, premium — données seulement)
+  'toaster_bell': require('../../assets/sounds/564623__azumarill__toaster-oven-or-liftelevator-bell.wav'),
+  'jingle_achievement': require('../../assets/sounds/270404__littlerobotsoundfactory__jingle-achievement.wav'),
+  'kalimba': require('../../assets/sounds/331047__foochie_foochie__kalimba-c-note.wav'),
   'vibraphone_chord': require('../../assets/sounds/495674__jack_urbanski__vibraphone-chord.wav'),
   'marimba_dry': require('../../assets/sounds/577692__joesh2__marimba-c3.wav'),
   'marimba_ascending': require('../../assets/sounds/401722__pogmothoin__marimba-ascending.wav'),
@@ -27,78 +30,85 @@ export const SOUND_FILES = {
   'success_glissando': require('../../assets/sounds/109662__grunz__success.wav'),
 };
 
-// Métadonnées des sons (nom affiché, durée, emoji, famille, gating)
+// Métadonnées des sons (nom affiché, durée, emoji, gating)
 // Les noms utilisent des getters pour supporter i18n dynamique
-// family = même vocabulaire que suggestedColor des activités (calm/deep/focus/energy)
 export const SOUND_METADATA = {
-  'jingle_achievement': {
-    get name() { return i18n.t('sounds.jingle_achievement'); },
+  'timer_complete': {
+    get name() { return i18n.t('sounds.timer_complete'); },
     duration: '4s',
-    emoji: '🏆',
-    family: 'energy',
+    emoji: '🏁',
+    isPremium: false
+  },
+  'microwave_ping': {
+    get name() { return i18n.t('sounds.microwave_ping'); },
+    duration: '4s',
+    emoji: '📍',
     isPremium: false
   },
   'singing_bowl': {
     get name() { return i18n.t('sounds.singing_bowl'); },
     duration: '6s',
     emoji: '🔔',
-    family: 'calm',
     isPremium: false
   },
   'contrabass_pluck': {
     get name() { return i18n.t('sounds.contrabass_pluck'); },
     duration: '2s',
     emoji: '🎻',
-    family: 'deep',
     isPremium: false
+  },
+  'toaster_bell': {
+    get name() { return i18n.t('sounds.toaster_bell'); },
+    duration: '4s',
+    emoji: '💫',
+    isPremium: true
+  },
+  'jingle_achievement': {
+    get name() { return i18n.t('sounds.jingle_achievement'); },
+    duration: '4s',
+    emoji: '🏆',
+    isPremium: true
   },
   'kalimba': {
     get name() { return i18n.t('sounds.kalimba'); },
     duration: '4s',
     emoji: '🎶',
-    family: 'focus',
-    isPremium: false
+    isPremium: true
   },
   'vibraphone_chord': {
     get name() { return i18n.t('sounds.vibraphone_chord'); },
     duration: '2s',
     emoji: '✨',
-    family: 'calm',
     isPremium: true
   },
   'marimba_dry': {
     get name() { return i18n.t('sounds.marimba_dry'); },
     duration: '2s',
     emoji: '🪵',
-    family: 'deep',
     isPremium: true
   },
   'marimba_ascending': {
     get name() { return i18n.t('sounds.marimba_ascending'); },
     duration: '4s',
     emoji: '🎼',
-    family: 'focus',
     isPremium: true
   },
   'up_chime': {
     get name() { return i18n.t('sounds.up_chime'); },
     duration: '1s',
     emoji: '🎵',
-    family: 'energy',
     isPremium: true
   },
   'success_glissando': {
     get name() { return i18n.t('sounds.success_glissando'); },
     duration: '1s',
     emoji: '🌟',
-    family: 'energy',
     isPremium: true
   },
 };
 
-// Son par défaut — jingle d'accomplissement, gratuit, universel (pas
-// spécifique à une famille contemplative comme le bol ou la contrebasse)
-export const DEFAULT_SOUND_ID = 'jingle_achievement';
+// Son par défaut — celui d'origine, gratuit, universel
+export const DEFAULT_SOUND_ID = 'timer_complete';
 
 // Fichiers déclarés dans app.json (plugin expo-notifications, clé `sounds`) —
 // nécessaires pour référencer un son custom depuis une NOTIFICATION native.
@@ -108,9 +118,12 @@ export const DEFAULT_SOUND_ID = 'jingle_achievement';
 // app.json → plugins → expo-notifications → sounds ET avec assets/sounds/
 // (Lot 3e, fix packaging custom-sound, finding C2).
 export const NOTIFICATION_SOUND_FILES = {
-  jingle_achievement: '270404__littlerobotsoundfactory__jingle-achievement.wav',
+  timer_complete: '634089__aj_heels__timercomplete01.wav',
+  microwave_ping: '609725__theplax__microwave-ping.wav',
   singing_bowl: '271370__inoshirodesign__singing-bowl-strike.wav',
   contrabass_pluck: '373053__sgossner__contrabass-pizzicato-c2.wav',
+  toaster_bell: '564623__azumarill__toaster-oven-or-liftelevator-bell.wav',
+  jingle_achievement: '270404__littlerobotsoundfactory__jingle-achievement.wav',
   kalimba: '331047__foochie_foochie__kalimba-c-note.wav',
   vibraphone_chord: '495674__jack_urbanski__vibraphone-chord.wav',
   marimba_dry: '577692__joesh2__marimba-c3.wav',
@@ -156,14 +169,9 @@ export const getSoundById = (id) => {
   };
 };
 
-// Helper pour obtenir les sons par famille (calm/deep/focus/energy)
-export const getSoundsByFamily = () => {
-  const families = {
-    calm: [],
-    deep: [],
-    focus: [],
-    energy: []
-  };
+// Helper pour obtenir les sons gratuits / Ambiances (premium)
+export const getSoundsByTier = () => {
+  const tiers = { free: [], premium: [] };
 
   Object.keys(SOUND_FILES).forEach(id => {
     const sound = {
@@ -171,9 +179,8 @@ export const getSoundsByFamily = () => {
       file: SOUND_FILES[id],
       ...SOUND_METADATA[id]
     };
-    const family = SOUND_METADATA[id]?.family;
-    if (families[family]) families[family].push(sound);
+    (SOUND_METADATA[id]?.isPremium ? tiers.premium : tiers.free).push(sound);
   });
 
-  return families;
+  return tiers;
 };
