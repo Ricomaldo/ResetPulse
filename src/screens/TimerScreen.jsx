@@ -31,6 +31,7 @@ import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
+import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload } from '../config/rituals';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -756,6 +757,13 @@ function TimerScreenContent() {
       ...StyleSheet.absoluteFillObject,
       zIndex: 100,
     },
+    // Le seuil (ADR-016 §1) : par-dessus TOUT, y compris AsideZone (50) et
+    // l'overlay d'immersion (100) — rien du dessous n'est atteignable tant
+    // qu'il est monté.
+    firstRunThresholdOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      zIndex: 200,
+    },
   });
 
   // Temps digital (top bar) : restant en séance/fin, durée réglée au repos —
@@ -850,6 +858,16 @@ function TimerScreenContent() {
               style={styles.immersionOverlay}
               onPressIn={registerActivity}
             />
+          )}
+          {/* Le seuil (ADR-016 §1) : ne se rejoue JAMAIS (flag distinct
+              hasSeenThreshold, Monde B) — par défaut false, donc les users
+              existants (déjà passés par la 2.0 ou pas) REVOIENT le seuil une
+              fois au premier lancement de la 3.0. Accepté (reborn assumé),
+              pas de migration de flag prévue. */}
+          {!firstRun.isLoading && !firstRun.hasSeenThreshold && (
+            <View style={styles.firstRunThresholdOverlay} testID="firstRun.threshold.overlay">
+              <FirstRunThreshold onComplete={firstRun.completeThreshold} />
+            </View>
           )}
         </View>
       </GestureDetector>
