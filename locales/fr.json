@@ -505,8 +505,6 @@
     "exitFocus": "quitter le focus",
     "doubleTapHint": "astuce : double-tap le fond pour basculer",
     "handle": "ouvrir les réglages",
-    "closedLabel": "rituels & réglages",
-    "wallpaperExport": "garder en fond d'écran",
-    "wallpaperUnavailable": "disponible au prochain build"
+    "closedLabel": "rituels & réglages"
   }
 }

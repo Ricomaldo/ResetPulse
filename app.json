@@ -44,8 +44,7 @@
       ],
       "expo-localization",
       "expo-asset",
-      "expo-audio",
-      "expo-sharing"
+      "expo-audio"
     ],
     "notification": {
       "icon": "./assets/icon.png",
