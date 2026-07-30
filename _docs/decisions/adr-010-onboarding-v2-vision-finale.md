@@ -5,7 +5,7 @@ type: architecture-decision-record
 context: 'ResetPulse Onboarding v2.1 - Vision finale avant implémentation'
 stakeholders: 'Eric (product), Chrysalis (architecture), Claude Code (implementation)'
 supersedes: 'OB v2 proto (non déployé)'
-superseded_by: 'adr-014-recentrage-signature.md'
+superseded_by: 'adr-014-recentrage-signature.md, adr-016-premiere-fois-moment-rituel.md (le seuil chaleureux reprend ses 2 premiers écrans)'
 updated: '2026-07-23'
 ---
 
