@@ -32,7 +32,7 @@ import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
-import { buildRitualApplyPayload } from '../config/rituals';
+import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
 import { useSessionCount } from '../hooks/useSessionCount';
@@ -359,7 +359,8 @@ function TimerScreenContent() {
   const {
     mode: { current: currentMode },
     setMode,
-    timer: { currentDuration, currentActivity },
+    timer: { currentDuration, currentActivity, selectedSoundId },
+    palette: { currentColor },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
   // porte-2 (retour Eric « le mode horizontal est complètement raté ») :
@@ -533,10 +534,14 @@ function TimerScreenContent() {
 
   // ADR-014 : ne bloque jamais rien — démarrer le timer complète la
   // Première fois à N'IMPORTE QUEL moment (pas seulement au moment 4).
+  // Ce point de passage n'a lieu qu'UNE fois dans la vie de l'app (garde
+  // !hasSeenFirstRun) : c'est aussi le premier démarrage de timer, donc le
+  // point de mesure `first_moment_started` (ADR-016 §6).
   useEffect(() => {
     if (snapshot.running && !hasCompletedFirstRunRef.current && !firstRun.hasSeenFirstRun) {
       hasCompletedFirstRunRef.current = true;
       firstRun.completeFirstRun();
+      analytics.trackFirstMomentStarted();
     }
   }, [snapshot.running]);
 
@@ -581,8 +586,14 @@ function TimerScreenContent() {
   // useTimer.js:150 (onCompleteRef appelé uniquement dans la branche
   // hasTriggeredCompletion, pas dans stopTimer).
   const handleTimerComplete = useCallback(() => {
+    // completedSessions vaut encore la valeur D'AVANT l'incrément ici (lu
+    // depuis la closure) : 0 signifie que ce Moment est le tout premier
+    // accompli de la vie de l'app — c'est le passage 0→1 (ADR-016 §6).
+    if (completedSessions === 0) {
+      analytics.trackFirstMomentCompleted();
+    }
     incrementSessionCount();
-  }, [incrementSessionCount]);
+  }, [completedSessions, incrementSessionCount, analytics]);
 
   // Invitation « fais-le respirer » (Lot 3b, mandat Eric) : jamais un mur —
   // une ligne discrète sous le message de fin, une seule fois dans la vie de
@@ -648,6 +659,91 @@ function TimerScreenContent() {
     analytics.trackAmbiancesInvitationTapped('post_session');
     modalStack.push('premium', { highlightedFeature: 'breathe_invitation' });
   }, [analytics, modalStack]);
+
+  // « garde ce moment ? » (ADR-016 §3) — naissance du Rituel, au sommet
+  // émotionnel (fin du tout premier Moment). Même latch que l'invitation
+  // Ambiances ci-dessus (fired + reset à la sortie de l'état complété).
+  // Cohabitation : structurellement exclusive de showBreatheInvitation —
+  // celle-ci exige completedSessions >= 2 (shouldShowBreatheInvitation),
+  // celle-là exige completedSessions === 1 (le tout premier) : les deux
+  // conditions ne peuvent jamais être vraies ensemble, même flag ou pas.
+  const { rituals, updateRitual, createRitual } = useRituals();
+  const [hasSeenKeepMoment, setHasSeenKeepMoment, keepMomentLoading] =
+    usePersistedState('@ResetPulse:hasSeenKeepMoment', false);
+  const [keepMomentFired, setKeepMomentFired] = useState(false);
+  const keepMomentFiredRef = useRef(false);
+  // Confirmation discrète après le tap (« gardé ✨ ») — dure ce que dure
+  // l'état complété, ne se repropose jamais (flag déjà posé à l'affichage).
+  const [momentKept, setMomentKept] = useState(false);
+
+  useEffect(() => {
+    if (keepMomentFiredRef.current) {
+      return;
+    }
+    if (sessionCountLoading || keepMomentLoading) {
+      return;
+    }
+    if (snapshot.isCompleted && completedSessions === 1 && !hasSeenKeepMoment) {
+      keepMomentFiredRef.current = true;
+      setKeepMomentFired(true);
+      setHasSeenKeepMoment(true);
+    }
+  }, [
+    snapshot.isCompleted,
+    completedSessions,
+    hasSeenKeepMoment,
+    sessionCountLoading,
+    keepMomentLoading,
+    setHasSeenKeepMoment,
+  ]);
+
+  const showKeepMoment = keepMomentFired && snapshot.isCompleted;
+
+  useEffect(() => {
+    if (!snapshot.isCompleted && keepMomentFired) {
+      setKeepMomentFired(false);
+      setMomentKept(false);
+    }
+  }, [snapshot.isCompleted, keepMomentFired]);
+
+  const handleKeepMomentTap = useCallback(() => {
+    if (momentKept) {
+      return;
+    }
+    haptics.selection().catch(() => {});
+    // La durée du Moment vécu = la durée TOTALE de la séance qui vient de
+    // finir (timerRef.current.duration, exposé par useTimer) — PAS
+    // `snapshot.remaining`, qui vaut 0 à la fin.
+    const duration = timerRef.current?.duration ?? currentDuration;
+    const existingRitual = findRitualToKeep(rituals, currentActivity?.id);
+    if (existingRitual) {
+      updateRitual(existingRitual.id, {
+        duration,
+        color: currentColor,
+        soundId: selectedSoundId,
+      });
+    } else {
+      createRitual({
+        name: deriveRitualName(currentActivity),
+        activityId: currentActivity?.id,
+        color: currentColor,
+        duration,
+        soundId: selectedSoundId,
+      });
+    }
+    analytics.trackRitualKept();
+    setMomentKept(true);
+  }, [
+    momentKept,
+    rituals,
+    currentActivity,
+    currentColor,
+    selectedSoundId,
+    currentDuration,
+    updateRitual,
+    createRitual,
+    analytics,
+  ]);
 
   // Immersion (cadrage 3c) : RUNNING + IMMERSION_DELAY sans toucher → le
   // chrome s'efface, le disque devient décor. Machine d'état extraite
@@ -815,15 +911,38 @@ function TimerScreenContent() {
                   >
                     {snapshot.displayMessage || ' '}
                   </Text>
+                  {/* Ligne partagée : « fais-le respirer » (>= 2 séances) et
+                      « garde ce moment ? » (1re séance) ne coexistent jamais
+                      (cf. showKeepMoment ci-dessus) — même slot réservé,
+                      jamais les deux montées en même temps. */}
                   <Text
-                    style={[styles.breatheInvitationText, !showBreatheInvitation && styles.completionMessageHidden]}
+                    style={[
+                      styles.breatheInvitationText,
+                      !(showBreatheInvitation || showKeepMoment) && styles.completionMessageHidden,
+                    ]}
                     numberOfLines={1}
-                    onPress={showBreatheInvitation ? handleBreatheInvitationTap : undefined}
-                    accessible={showBreatheInvitation}
+                    onPress={
+                      showBreatheInvitation
+                        ? handleBreatheInvitationTap
+                        : showKeepMoment && !momentKept
+                          ? handleKeepMomentTap
+                          : undefined
+                    }
+                    accessible={showBreatheInvitation || (showKeepMoment && !momentKept)}
                     accessibilityRole="button"
-                    accessibilityLabel={t('ambiances.breatheInvitation')}
+                    accessibilityLabel={
+                      showBreatheInvitation
+                        ? t('ambiances.breatheInvitation')
+                        : momentKept
+                          ? t('firstRun.momentKept')
+                          : t('firstRun.keepMoment')
+                    }
                   >
-                    {t('ambiances.breatheInvitation')}
+                    {showBreatheInvitation
+                      ? t('ambiances.breatheInvitation')
+                      : showKeepMoment
+                        ? (momentKept ? t('firstRun.momentKept') : t('firstRun.keepMoment'))
+                        : ' '}
                   </Text>
                 </View>
                 <View ref={barRef} onLayout={handleBarLayout}>
