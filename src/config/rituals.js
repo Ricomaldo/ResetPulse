@@ -136,3 +136,26 @@ export const buildRitualApplyPayload = (ritual, customActivities = []) => ({
   soundId: ritual.soundId || DEFAULT_SOUND_ID,
   color: ritual.color || DEFAULT_RITUAL_COLOR,
 });
+
+/**
+ * Trouve le Rituel à mettre à jour quand un Moment est gardé (ADR-016 §3).
+ * Comme le Moment part toujours d'un rituel existant (rangée d'accueil, dé,
+ * sheet…), « garder » met à jour CE rituel plutôt que d'en créer un nouveau —
+ * le cap gratuit (3) reste intact, zéro mur jour 1. Préfère le rituel de
+ * BASE (id `ritual_${activityId}`, cf. getDefaultRituals) si présent parmi
+ * les matchs — sinon le premier qui matche, dans l'ordre du tableau. Pur.
+ * @param {Array<Object>} rituals
+ * @param {string} activityId
+ * @returns {Object|null}
+ */
+export const findRitualToKeep = (rituals = [], activityId) => {
+  if (!activityId) {
+    return null;
+  }
+  const matches = rituals.filter((ritual) => ritual.activityId === activityId);
+  if (matches.length === 0) {
+    return null;
+  }
+  const baseRitualId = `${RITUAL_ID_PREFIX}${activityId}`;
+  return matches.find((ritual) => ritual.id === baseRitualId) || matches[0];
+};
