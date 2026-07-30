@@ -67,7 +67,9 @@ describe('scaleHelpers — helpers existants (non testés jusqu\'ici)', () => {
     expect(getOptimalScale(25)).toBe(30);
     expect(getOptimalScale(42)).toBe(45);
     expect(getOptimalScale(58)).toBe(60);
-    expect(getOptimalScale(90)).toBe(60);
+    expect(getOptimalScale(60)).toBe(60);   // borne exacte 60
+    expect(getOptimalScale(90)).toBe(120);  // porte-2 : échelle 2h
+    expect(getOptimalScale(120)).toBe(120); // borne exacte 120
   });
 
   test('scaleToMode / modeToScale sont symétriques sur les 5 échelles actives', () => {
@@ -82,8 +84,8 @@ describe('scaleHelpers — helpers existants (non testés jusqu\'ici)', () => {
 // ============================================================
 
 describe('proto drag-échelle — SCALE_STEPS et voisinage', () => {
-  test('SCALE_STEPS est le miroir ordonné des 5 échelles de DIAL_MODES', () => {
-    expect(SCALE_STEPS).toEqual([5, 15, 30, 45, 60]);
+  test('SCALE_STEPS est le miroir ordonné des 6 échelles de DIAL_MODES', () => {
+    expect(SCALE_STEPS).toEqual([5, 15, 30, 45, 60, 120]);
     SCALE_STEPS.forEach((scale) => {
       expect(DIAL_MODES[scaleToMode(scale)]).toBeDefined();
     });
@@ -94,7 +96,8 @@ describe('proto drag-échelle — SCALE_STEPS et voisinage', () => {
     expect(getNextScaleUp(15)).toBe(30);
     expect(getNextScaleUp(30)).toBe(45);
     expect(getNextScaleUp(45)).toBe(60);
-    expect(getNextScaleUp(60)).toBeNull();
+    expect(getNextScaleUp(60)).toBe(120);
+    expect(getNextScaleUp(120)).toBeNull();
     expect(getNextScaleUp(25)).toBeNull(); // échelle dépréciée : jamais un cran
   });
 
@@ -121,7 +124,7 @@ describe('proto drag-échelle — shouldEscalateOnRelease (mécanique A)', () =>
   });
 
   test('pas d’escalade à 60 : pas de cran au-dessus', () => {
-    expect(shouldEscalateOnRelease(60 * 60, 60)).toBe(false);
+    expect(shouldEscalateOnRelease(120 * 60, 120)).toBe(false); // plafond désormais 120
   });
 });
 

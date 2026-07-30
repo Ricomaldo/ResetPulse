@@ -95,6 +95,18 @@ export const DIAL_MODES = {
     numberInterval: 5,
     defaultDuration: 30 * 60,
   },
+  // porte-2 : échelle 2h (révision Eric du « 60 max » — les temps longs
+  // existent avant SEQ). Graduations aérées : tick toutes les 5, numéros
+  // toutes les 15 (8 chiffres, lisible sur un tour complet).
+  '120min': {
+    maxMinutes: 120,
+    label: '2 heures',
+    description: 'Sessions très longues',
+    graduationInterval: 5,
+    majorTickInterval: 15,
+    numberInterval: 15,
+    defaultDuration: 90 * 60,
+  },
 };
 
 export function getDialMode(mode) {

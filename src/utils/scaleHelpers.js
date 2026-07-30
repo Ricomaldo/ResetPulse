@@ -26,7 +26,8 @@ export const getOptimalScale = (durationMinutes) => {
   if (durationMinutes <= 15) return 15;
   if (durationMinutes <= 30) return 30;
   if (durationMinutes <= 45) return 45;
-  return 60;
+  if (durationMinutes <= 60) return 60;
+  return 120; // porte-2 : échelle 2h (révision Eric du « 60 max » 3b-4)
 };
 
 /**
@@ -65,7 +66,7 @@ export const modeToScale = (scaleMode) => {
  * isSupportedScale('25min') // => false
  */
 export const isSupportedScale = (scaleMode) => {
-  const supportedScales = ['5min', '15min', '30min', '45min', '60min'];
+  const supportedScales = ['5min', '15min', '30min', '45min', '60min', '120min'];
   return supportedScales.includes(scaleMode);
 };
 
@@ -100,8 +101,8 @@ export const deriveScaleMode = (durationSeconds) => {
 // consolider ; sinon, supprimer ce bloc avec la branche.
 // ============================================================
 
-/** Les 5 échelles actives, en minutes, ordonnées (miroir de DIAL_MODES). */
-export const SCALE_STEPS = [5, 15, 30, 45, 60];
+/** Les 6 échelles actives, en minutes, ordonnées (miroir de DIAL_MODES). */
+export const SCALE_STEPS = [5, 15, 30, 45, 60, 120];
 
 /**
  * Échelle au cran SUPÉRIEUR d'une échelle donnée.
