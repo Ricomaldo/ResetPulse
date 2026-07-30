@@ -9,10 +9,20 @@ export const SOUND_FILES = {
   // Son recommandé (par défaut)
   'timer_complete': require('../../assets/sounds/634089__aj_heels__timercomplete01.wav'),
 
-  // Sons de minuteur cuisine — 4 survivants de la sélection d'origine (retour Eric, curation sons)
+  // Sons de cloche
+  'bell_classic': require('../../assets/sounds/bell_short.wav'),
+  'bell_melodic': require('../../assets/sounds/815533__mihacappy__bell01.wav'),
+
+  // Sons de minuteur cuisine
+  'microwave_vintage': require('../../assets/sounds/135873__crz1990__vintage-microwave-timer-bell-ring-26-november-2011-113900-pm.wav'),
   'microwave_ping': require('../../assets/sounds/609725__theplax__microwave-ping.wav'),
   'kitchen_timer': require('../../assets/sounds/149506__dland__kitchen-timer-done.wav'),
+  'kitchen_timer_2': require('../../assets/sounds/204103__maphill__kitchen-timer.wav'),
+  'egg_timer': require('../../assets/sounds/490326__knufds__bell-egg-timer.wav'),
   'toaster_bell': require('../../assets/sounds/564623__azumarill__toaster-oven-or-liftelevator-bell.wav'),
+
+  // Sons génériques
+  'ding_effect': require('../../assets/sounds/615949__julesv4__ding-effect.wav'),
 };
 
 // Métadonnées des sons (nom affiché, durée, emoji)
@@ -23,6 +33,24 @@ export const SOUND_METADATA = {
     duration: '2s',
     emoji: '🏁',
     category: 'modern'
+  },
+  'bell_classic': {
+    get name() { return i18n.t('sounds.bell_classic'); },
+    duration: '2s',
+    emoji: '🔔',
+    category: 'classic'
+  },
+  'bell_melodic': {
+    get name() { return i18n.t('sounds.bell_melodic'); },
+    duration: '2s',
+    emoji: '🎶',
+    category: 'classic'
+  },
+  'microwave_vintage': {
+    get name() { return i18n.t('sounds.microwave_vintage'); },
+    duration: '3s',
+    emoji: '📻',
+    category: 'kitchen'
   },
   'microwave_ping': {
     get name() { return i18n.t('sounds.microwave_ping'); },
@@ -36,11 +64,29 @@ export const SOUND_METADATA = {
     emoji: '🛎️',
     category: 'kitchen'
   },
+  'kitchen_timer_2': {
+    get name() { return i18n.t('sounds.kitchen_timer_2'); },
+    duration: '2s',
+    emoji: '📢',
+    category: 'kitchen'
+  },
+  'egg_timer': {
+    get name() { return i18n.t('sounds.egg_timer'); },
+    duration: '1s',
+    emoji: '🎯',
+    category: 'kitchen'
+  },
   'toaster_bell': {
     get name() { return i18n.t('sounds.toaster_bell'); },
     duration: '1s',
     emoji: '💫',
     category: 'kitchen'
+  },
+  'ding_effect': {
+    get name() { return i18n.t('sounds.ding_effect'); },
+    duration: '1s',
+    emoji: '✨',
+    category: 'modern'
   },
 };
 
@@ -56,9 +102,15 @@ export const DEFAULT_SOUND_ID = 'timer_complete';
 // (Lot 3e, fix packaging custom-sound, finding C2).
 export const NOTIFICATION_SOUND_FILES = {
   timer_complete: '634089__aj_heels__timercomplete01.wav',
+  bell_classic: 'bell_short.wav',
+  bell_melodic: '815533__mihacappy__bell01.wav',
+  microwave_vintage: '135873__crz1990__vintage-microwave-timer-bell-ring-26-november-2011-113900-pm.wav',
   microwave_ping: '609725__theplax__microwave-ping.wav',
   kitchen_timer: '149506__dland__kitchen-timer-done.wav',
+  kitchen_timer_2: '204103__maphill__kitchen-timer.wav',
+  egg_timer: '490326__knufds__bell-egg-timer.wav',
   toaster_bell: '564623__azumarill__toaster-oven-or-liftelevator-bell.wav',
+  ding_effect: '615949__julesv4__ding-effect.wav',
 };
 
 /**
