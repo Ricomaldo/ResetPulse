@@ -24,7 +24,9 @@ export const DEFAULT_PREMIUM = false;
 export const DEV_DEFAULT_TIMER_CONFIG = {
   activity: 'meditation', // 20 minutes par défaut
   duration: 1200, // 20 minutes en secondes
-  scaleMode: '25min', // Échelle adaptée (20min rentre dans 25min)
+  // scaleMode retiré (hotfix-porte-1 B2) : '25min' était une échelle
+  // DÉPRÉCIÉE (absente de DIAL_MODES) — le scaleMode est désormais toujours
+  // dérivé de `duration` (deriveScaleMode), plus jamais choisi ici.
 };
 
 // Legacy export pour compatibilité

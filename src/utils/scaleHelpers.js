@@ -68,3 +68,25 @@ export const isSupportedScale = (scaleMode) => {
   const supportedScales = ['5min', '15min', '30min', '45min', '60min'];
   return supportedScales.includes(scaleMode);
 };
+
+/**
+ * Derive the scale mode directly from a duration in SECONDS — fonction pure,
+ * source de vérité unique pour TimerConfigContext (hotfix-porte-1 B2).
+ * Le scaleMode n'est plus jamais persisté/choisi manuellement : il se
+ * déduit toujours de `currentDuration`, la plus petite échelle (parmi les 5
+ * de DIAL_MODES) dont maxMinutes ≥ durée. Purge le défaut déprécié '25min'
+ * (repli silencieux vers 30min, arc plein pour tout rituel > 30min) — toute
+ * durée, quel que soit un éventuel scaleMode persisté d'un état existant,
+ * retombe sur une échelle valide sans crash (migration douce).
+ *
+ * @param {number} durationSeconds - currentDuration en secondes
+ * @returns {string} - scaleMode ('5min' | '15min' | '30min' | '45min' | '60min')
+ *
+ * @example
+ * deriveScaleMode(1200) // 20min -> '30min'
+ * deriveScaleMode(3000) // 50min (Deep Work) -> '60min'
+ */
+export const deriveScaleMode = (durationSeconds) => {
+  const durationMinutes = (durationSeconds || 0) / 60;
+  return scaleToMode(getOptimalScale(durationMinutes));
+};

@@ -128,6 +128,19 @@ export default function TimeTimer({
    * @param {boolean} isRelease - True if this is the final value (release), false if dragging
    */
   const handleGraduationTap = useCallback((minutes, isRelease = false) => {
+    // scaleMode vient du contexte, désormais DÉRIVÉ de currentDuration
+    // (hotfix-porte-1 B2, deriveScaleMode) — plus jamais bloqué sur
+    // l'ancienne échelle dépréciée '25min'. Le clamp ci-dessous suit donc
+    // l'échelle réellement dérivée, pas une valeur figée.
+    // Limite structurelle vérifiée (inchangée par B2, décrite au rapport
+    // hotfix-porte-1) : `minutes` arrive déjà borné par TimerDial
+    // (handlePanUpdate clampe à `dial.maxMinutes` de l'échelle EN COURS avant
+    // même d'atteindre ce handler) — un drag continu ne peut donc pas
+    // franchir vers l'échelle supérieure en une seule fois : il sature au
+    // max courant. Passer à l'échelle du dessus par drag demande de relâcher
+    // puis de repartir une fois que `currentDuration` (donc scaleMode) a
+    // bougé — ex. via un Rituel qui pose directement `setCurrentDuration`
+    // au-delà du max courant.
     const dialMode = getDialMode(scaleMode);
 
     // Clamp to current scale mode's max (0 to maxMinutes)
