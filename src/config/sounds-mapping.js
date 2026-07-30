@@ -5,47 +5,100 @@ import i18n from '../i18n';
 // Mapping des fichiers audio
 // Clé = identifiant interne stable
 // Valeur = require() du fichier audio
+//
+// Curation sons (retour Eric) : legacy entièrement retiré (aucun utilisateur
+// du reborn à migrer), remplacé par 9 sons doux/organiques répartis en 4
+// gratuits (un par famille, isPremium: false dans SOUND_METADATA) + 5 en
+// réserve pack Ambiances (isPremium: true) — cf. structure 4+8 visée à terme.
+// Le câblage du gating premium lui-même est un chantier séparé (3b) ; ici,
+// isPremium n'est qu'une donnée.
 export const SOUND_FILES = {
-  // Son recommandé (par défaut)
-  'timer_complete': require('../../assets/sounds/634089__aj_heels__timercomplete01.wav'),
+  // Gratuits — un par famille (suggestedColor des activités)
+  'jingle_achievement': require('../../assets/sounds/270404__littlerobotsoundfactory__jingle-achievement.wav'),
+  'singing_bowl': require('../../assets/sounds/271370__inoshirodesign__singing-bowl-strike.wav'),
+  'contrabass_pluck': require('../../assets/sounds/373053__sgossner__contrabass-pizzicato-c2.wav'),
+  'kalimba': require('../../assets/sounds/331047__foochie_foochie__kalimba-c-note.wav'),
 
-  // Sons de minuteur cuisine — 4 survivants de la sélection d'origine (retour Eric, curation sons)
-  'microwave_ping': require('../../assets/sounds/609725__theplax__microwave-ping.wav'),
-  'kitchen_timer': require('../../assets/sounds/149506__dland__kitchen-timer-done.wav'),
-  'toaster_bell': require('../../assets/sounds/564623__azumarill__toaster-oven-or-liftelevator-bell.wav'),
+  // Ambiances (premium, données seulement — pas de gating ici)
+  'vibraphone_chord': require('../../assets/sounds/495674__jack_urbanski__vibraphone-chord.wav'),
+  'marimba_dry': require('../../assets/sounds/577692__joesh2__marimba-c3.wav'),
+  'marimba_ascending': require('../../assets/sounds/401722__pogmothoin__marimba-ascending.wav'),
+  'up_chime': require('../../assets/sounds/352666__foolboymedia__up-chime-2.wav'),
+  'success_glissando': require('../../assets/sounds/109662__grunz__success.wav'),
 };
 
-// Métadonnées des sons (nom affiché, durée, emoji)
+// Métadonnées des sons (nom affiché, durée, emoji, famille, gating)
 // Les noms utilisent des getters pour supporter i18n dynamique
+// family = même vocabulaire que suggestedColor des activités (calm/deep/focus/energy)
 export const SOUND_METADATA = {
-  'timer_complete': {
-    get name() { return i18n.t('sounds.timer_complete'); },
+  'jingle_achievement': {
+    get name() { return i18n.t('sounds.jingle_achievement'); },
+    duration: '4s',
+    emoji: '🏆',
+    family: 'energy',
+    isPremium: false
+  },
+  'singing_bowl': {
+    get name() { return i18n.t('sounds.singing_bowl'); },
+    duration: '6s',
+    emoji: '🔔',
+    family: 'calm',
+    isPremium: false
+  },
+  'contrabass_pluck': {
+    get name() { return i18n.t('sounds.contrabass_pluck'); },
     duration: '2s',
-    emoji: '🏁',
-    category: 'modern'
+    emoji: '🎻',
+    family: 'deep',
+    isPremium: false
   },
-  'microwave_ping': {
-    get name() { return i18n.t('sounds.microwave_ping'); },
-    duration: '1s',
-    emoji: '📍',
-    category: 'kitchen'
+  'kalimba': {
+    get name() { return i18n.t('sounds.kalimba'); },
+    duration: '4s',
+    emoji: '🎶',
+    family: 'focus',
+    isPremium: false
   },
-  'kitchen_timer': {
-    get name() { return i18n.t('sounds.kitchen_timer'); },
-    duration: '1s',
-    emoji: '🛎️',
-    category: 'kitchen'
+  'vibraphone_chord': {
+    get name() { return i18n.t('sounds.vibraphone_chord'); },
+    duration: '2s',
+    emoji: '✨',
+    family: 'calm',
+    isPremium: true
   },
-  'toaster_bell': {
-    get name() { return i18n.t('sounds.toaster_bell'); },
+  'marimba_dry': {
+    get name() { return i18n.t('sounds.marimba_dry'); },
+    duration: '2s',
+    emoji: '🪵',
+    family: 'deep',
+    isPremium: true
+  },
+  'marimba_ascending': {
+    get name() { return i18n.t('sounds.marimba_ascending'); },
+    duration: '4s',
+    emoji: '🎼',
+    family: 'focus',
+    isPremium: true
+  },
+  'up_chime': {
+    get name() { return i18n.t('sounds.up_chime'); },
     duration: '1s',
-    emoji: '💫',
-    category: 'kitchen'
+    emoji: '🎵',
+    family: 'energy',
+    isPremium: true
+  },
+  'success_glissando': {
+    get name() { return i18n.t('sounds.success_glissando'); },
+    duration: '1s',
+    emoji: '🌟',
+    family: 'energy',
+    isPremium: true
   },
 };
 
-// Son par défaut
-export const DEFAULT_SOUND_ID = 'timer_complete';
+// Son par défaut — jingle d'accomplissement, gratuit, universel (pas
+// spécifique à une famille contemplative comme le bol ou la contrebasse)
+export const DEFAULT_SOUND_ID = 'jingle_achievement';
 
 // Fichiers déclarés dans app.json (plugin expo-notifications, clé `sounds`) —
 // nécessaires pour référencer un son custom depuis une NOTIFICATION native.
@@ -55,10 +108,15 @@ export const DEFAULT_SOUND_ID = 'timer_complete';
 // app.json → plugins → expo-notifications → sounds ET avec assets/sounds/
 // (Lot 3e, fix packaging custom-sound, finding C2).
 export const NOTIFICATION_SOUND_FILES = {
-  timer_complete: '634089__aj_heels__timercomplete01.wav',
-  microwave_ping: '609725__theplax__microwave-ping.wav',
-  kitchen_timer: '149506__dland__kitchen-timer-done.wav',
-  toaster_bell: '564623__azumarill__toaster-oven-or-liftelevator-bell.wav',
+  jingle_achievement: '270404__littlerobotsoundfactory__jingle-achievement.wav',
+  singing_bowl: '271370__inoshirodesign__singing-bowl-strike.wav',
+  contrabass_pluck: '373053__sgossner__contrabass-pizzicato-c2.wav',
+  kalimba: '331047__foochie_foochie__kalimba-c-note.wav',
+  vibraphone_chord: '495674__jack_urbanski__vibraphone-chord.wav',
+  marimba_dry: '577692__joesh2__marimba-c3.wav',
+  marimba_ascending: '401722__pogmothoin__marimba-ascending.wav',
+  up_chime: '352666__foolboymedia__up-chime-2.wav',
+  success_glissando: '109662__grunz__success.wav',
 };
 
 /**
@@ -98,12 +156,13 @@ export const getSoundById = (id) => {
   };
 };
 
-// Helper pour obtenir les sons par catégorie
-export const getSoundsByCategory = () => {
-  const categories = {
-    classic: [],
-    kitchen: [],
-    modern: []
+// Helper pour obtenir les sons par famille (calm/deep/focus/energy)
+export const getSoundsByFamily = () => {
+  const families = {
+    calm: [],
+    deep: [],
+    focus: [],
+    energy: []
   };
 
   Object.keys(SOUND_FILES).forEach(id => {
@@ -112,9 +171,9 @@ export const getSoundsByCategory = () => {
       file: SOUND_FILES[id],
       ...SOUND_METADATA[id]
     };
-    const category = SOUND_METADATA[id]?.category || 'modern';
-    categories[category].push(sound);
+    const family = SOUND_METADATA[id]?.family;
+    if (families[family]) families[family].push(sound);
   });
 
-  return categories;
+  return families;
 };
