@@ -3,6 +3,10 @@ import { useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
 import { AppState, Platform } from 'react-native';
 import logger from '../utils/logger';
+import { useTimerConfig } from '../contexts/TimerConfigContext';
+import { useTranslation } from './useTranslation';
+import { getNotificationSoundFile } from '../config/sounds';
+import { REMINDER_NOTIFICATION_ID, getReminderTime, normalizeReminderSlot } from '../config/reminderSlots';
 
 // Configuration pour les notifications (SDK 54+)
 // Protection contre les modules natifs manquants (iOS Simulator notamment)
@@ -22,34 +26,57 @@ try {
   logger.log('ℹ️ Notifications not available (iOS Simulator or missing module)');
 }
 
-// Créer le channel Android pour les notifications du timer
-// REQUIS pour Android 8.0+ (API 26+)
-const setupAndroidChannel = async () => {
+// Créer les channels Android — REQUIS pour Android 8.0+ (API 26+).
+// Deux channels distincts (Lot 3e) : 'timer' (fin de séance, urgent) et
+// 'reminder' (rappel doux quotidien, discret — jamais l'alarme de fin de
+// séance pour une notification que l'user n'attend pas dans l'instant).
+// Limitation Android connue et documentée (pas un raccourci pris ici) : le
+// son d'un channel est figé à sa création et ne peut plus être changé — le
+// channel 'timer' garde donc TOUJOURS le son par défaut, quel que soit
+// selectedSoundId. Seul iOS (content.sound, par notification) respecte le
+// son choisi par l'user. Résoudre côté Android nécessiterait un channel par
+// son (clutter des réglages système) — hors scope de ce lot, signalé au
+// rapport.
+const setupAndroidChannels = async () => {
   if (Platform.OS !== 'android') {return;}
 
   try {
     await Notifications.setNotificationChannelAsync('timer', {
-      name: 'Timer Notifications',
-      description: 'Notifications when timer completes',
+      name: 'Fin de séance',
+      description: 'Notification à la fin d\'un rituel',
       importance: Notifications.AndroidImportance.HIGH, // Bannière + son
-      sound: '634089__aj_heels__timercomplete01.wav', // Son par défaut (bell_classic)
+      sound: '634089__aj_heels__timercomplete01.wav', // Son fixe (limitation channel Android, cf. commentaire ci-dessus)
       vibrationPattern: [0, 250, 250, 250], // Vibration courte
       enableLights: true,
       lightColor: '#4A5568', // Couleur thème app
       enableVibrate: true,
       showBadge: true,
     });
-
     logger.log('✅ Android notification channel "timer" created');
+
+    await Notifications.setNotificationChannelAsync('reminder', {
+      name: 'Rappel quotidien',
+      description: 'Rappel doux, opt-in — jamais actif par défaut',
+      importance: Notifications.AndroidImportance.DEFAULT, // Discret, pas d'alarme
+      vibrationPattern: [0, 150],
+      showBadge: false,
+      // Pas de `sound` custom : son système par défaut, volontairement plus
+      // sobre que l'alarme de fin de séance.
+    });
+    logger.log('✅ Android notification channel "reminder" created');
   } catch (error) {
     logger.warn('Failed to create Android notification channel', error.message);
   }
 };
 
-// Initialiser le channel au chargement du module
-setupAndroidChannel();
+// Initialiser les channels au chargement du module
+setupAndroidChannels();
 
 export default function useNotificationTimer() {
+  const t = useTranslation();
+  const {
+    timer: { selectedSoundId },
+  } = useTimerConfig();
   const notificationIdRef = useRef(null);
   const appStateRef = useRef(AppState.currentState);
   const schedulingInProgressRef = useRef(false); // Prevent race conditions
@@ -112,20 +139,24 @@ export default function useNotificationTimer() {
           notificationIdRef.current = null;
         }
 
-        // Format 2: emoji + endMessage (sans durée)
+        // Voix de l'Activité (recentrage, ADR-014) : emoji + endMessage i18n
+        // de l'Activité — jamais un libellé générique ("Temps écoulé !" etc).
+        // Repli sur le endMessage neutre ('none', "Bravo 🎉"/"Well done 🎉")
+        // si l'appelant n'en fournit pas — jamais un mot brut en dur.
         const activityEmoji = activity?.emoji || '⏰';
-        const title = `${activityEmoji} ${endMessage || 'Terminé'}`;
+        const title = `${activityEmoji} ${endMessage || t('timerMessages.none.endMessage')}`;
 
         // Programmer nouvelle notification
         const id = await Notifications.scheduleNotificationAsync({
           content: {
             title,
             body: '', // Corps vide - tout est dans le titre
-            // Son fixe (timer_complete/DEFAULT_SOUND_ID, cf. sounds-mapping.js)
-            // — ignore le son choisi par l'user sur le rituel/l'activité,
-            // constaté en C7, non corrigé ici (hors scope : nécessite de
-            // faire remonter selectedSoundId jusqu'à scheduleTimerNotification).
-            sound: '634089__aj_heels__timercomplete01.wav',
+            // Son du rituel courant (selectedSoundId) — respecté sur iOS,
+            // où `sound` est lu par notification. Sur Android, le son est
+            // celui du channel 'timer' (fixe, cf. commentaire à la création
+            // du channel plus haut) : limitation plateforme, pas un
+            // raccourci pris ici (channel-sound immuable après création).
+            sound: getNotificationSoundFile(selectedSoundId),
             // Pour Android 8+ le son du channel est utilisé
           },
           trigger: {
@@ -192,10 +223,76 @@ export default function useNotificationTimer() {
     return appStateRef.current === 'background' || appStateRef.current === 'inactive';
   };
 
+  // Rappel doux quotidien (Lot 3e, opt-in strict — cf. AsideZone pour le
+  // toggle). Identifiant STABLE (REMINDER_NOTIFICATION_ID) plutôt qu'une ref
+  // en mémoire : le rappel doit pouvoir être annulé/replanifié même après un
+  // redémarrage de l'app (l'id généré par scheduleNotificationAsync ne
+  // survit pas, contrairement à un identifier choisi). Jamais de demande de
+  // permission ici — c'est le geste d'opt-in (toggle ON) qui la déclenche,
+  // pas cette fonction (appelée aussi au changement de créneau).
+  const scheduleReminderNotification = async (slotId) => {
+    if (!notificationsAvailable) {
+      return null;
+    }
+
+    try {
+      // 1/jour MAX : toute planification antérieure est annulée avant la
+      // nouvelle (même identifier, donc idempotent — pas d'accumulation).
+      await Notifications.cancelScheduledNotificationAsync(REMINDER_NOTIFICATION_ID).catch(() => {});
+
+      const { hour, minute } = getReminderTime(slotId);
+      const slot = normalizeReminderSlot(slotId);
+      const body = t(`reminder.notification.${slot}`);
+
+      const id = await Notifications.scheduleNotificationAsync({
+        identifier: REMINDER_NOTIFICATION_ID,
+        content: {
+          title: body,
+          body: '',
+          // Pas de `sound` custom : le channel 'reminder' (Android) / le son
+          // système par défaut (iOS) suffisent — un rappel doux n'emprunte
+          // jamais l'alarme de fin de séance.
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DAILY,
+          hour,
+          minute,
+          channelId: 'reminder',
+        },
+      });
+
+      if (__DEV__) {
+        logger.log(`🔔 Rappel quotidien programmé (${slot}, ${hour}:${String(minute).padStart(2, '0')}) → "${body}"`);
+      }
+
+      return id;
+    } catch (error) {
+      logger.warn('Error scheduling reminder notification', error.message);
+      return null;
+    }
+  };
+
+  // Annuler le rappel quotidien — toggle off, ou avant réinscription.
+  const cancelReminderNotification = async () => {
+    if (!notificationsAvailable) {
+      return;
+    }
+
+    try {
+      await Notifications.cancelScheduledNotificationAsync(REMINDER_NOTIFICATION_ID);
+      logger.log('🔔 Rappel quotidien annulé');
+    } catch (error) {
+      // Fail silently — peut légitimement ne rien annuler (jamais programmé)
+      logger.warn('Error canceling reminder notification', error.message);
+    }
+  };
+
   return {
     scheduleTimerNotification,
     cancelTimerNotification,
     isAppInBackground,
-    requestNotificationPermission
+    requestNotificationPermission,
+    scheduleReminderNotification,
+    cancelReminderNotification,
   };
 }
