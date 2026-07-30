@@ -95,6 +95,10 @@ export default function AsideZone({ isTimerRunning }) {
   const [ritualsOpen, setRitualsOpen] = useState(false);
   // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.
   const [paletteOpen, setPaletteOpen] = useState(false);
+  // Miroir de l'état interne liste/formulaire de RitualsPanel (hotfix-porte-1
+  // A3/D5) — remonté via onViewChange, pour arbitrer scroll extérieur et pan
+  // de fermeture sans qu'AsideZone connaisse le détail du sous-écran.
+  const [ritualsView, setRitualsView] = useState('list');
 
   // Apprentissage double-tap (verdicts CD 25/07) : légende visible les 2
   // PREMIÈRES ouvertures du sheet, puis plus jamais — compteur persisté,
@@ -121,6 +125,18 @@ export default function AsideZone({ isTimerRunning }) {
     containerH * (1 - MAX_OPEN_COVERAGE),
     containerH - HANDLE_HEIGHT - contentHeight - BOTTOM_SAFETY
   );
+
+  // A2 (hotfix-porte-1) : hauteur utile pour un sous-écran à scroll propre
+  // (RitualForm, PalettesPanel) — le plafond des 65%, moins la poignée et la
+  // marge basse. Toujours calculée et transmise (pas seulement quand
+  // `boundedSubScreen` est vrai) : évite un frame où le sous-écran rendrait
+  // sans hauteur bornée pendant que le miroir d'état (ritualsView) remonte.
+  const subScreenHeight = Math.max(0, containerH * MAX_OPEN_COVERAGE - HANDLE_HEIGHT - BOTTOM_SAFETY);
+
+  // A3/D5 : le pan de fermeture ET le scroll extérieur cèdent la main à un
+  // sous-écran qui gère son propre scroll — Palettes, ou le formulaire de
+  // Rituels (pas sa liste : elle reste sur le scroll extérieur, plus courte).
+  const boundedSubScreen = paletteOpen || (ritualsOpen && ritualsView === 'form');
 
   const handleContentLayout = (e) => {
     setContentHeight(e.nativeEvent.layout.height);
@@ -160,6 +176,7 @@ export default function AsideZone({ isTimerRunning }) {
     if (!isOpen) {
       setRitualsOpen(false);
       setPaletteOpen(false);
+      setRitualsView('list');
     }
   }, [isOpen]);
 
@@ -178,6 +195,7 @@ export default function AsideZone({ isTimerRunning }) {
   }, [openY]);
 
   const panGesture = useMemo(() => Gesture.Pan()
+    .enabled(!boundedSubScreen)
     .activeOffsetY([-20, 20])
     .failOffsetX([-15, 15])
     .onBegin(() => {
@@ -201,7 +219,7 @@ export default function AsideZone({ isTimerRunning }) {
       });
       runOnJS(setIsOpen)(open);
     }),
-  [translateY, startY, openY]);
+  [translateY, startY, openY, boundedSubScreen]);
 
   const drawerAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -371,22 +389,28 @@ export default function AsideZone({ isTimerRunning }) {
           <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
             <ScrollView
               contentContainerStyle={styles.scrollContent}
-              scrollEnabled={isOpen}
+              scrollEnabled={isOpen && !boundedSubScreen}
               showsVerticalScrollIndicator={false}
               nestedScrollEnabled={true}
             >
               <View onLayout={handleContentLayout}>
                 {ritualsOpen ? (
                   /* Sous-écran Rituels (bloc 3, C6) — remplace les 4 blocs le
-                     temps de la liste/formulaire (SCR-16/17). */
+                     temps de la liste/formulaire (SCR-16/17). maxHeight ne
+                     sert qu'au formulaire (A2) ; onViewChange remonte
+                     liste/form à AsideZone (A3/D5). */
                   <RitualsPanel
                     onBack={() => setRitualsOpen(false)}
                     onApplied={() => snapTo(false)}
+                    onViewChange={setRitualsView}
+                    maxHeight={subScreenHeight}
                   />
                 ) : paletteOpen ? (
                   /* Sous-écran Palettes (bloc 4, C6.1/C6.2) — la liste reste
-                     ouverte au tap (préviz live, porte C6.1) : pas d'onApplied. */
-                  <PalettesPanel onBack={() => setPaletteOpen(false)} />
+                     ouverte au tap (préviz live, porte C6.1) : pas d'onApplied.
+                     maxHeight borne son propre scroll (A2 — même dette que le
+                     formulaire de rituel, elle explosera avec la liste). */
+                  <PalettesPanel onBack={() => setPaletteOpen(false)} maxHeight={subScreenHeight} />
                 ) : (
                   <>
                     {/* Bloc 1 : segmenté Mode — écrit le réglage global. En Focus,

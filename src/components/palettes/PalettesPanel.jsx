@@ -13,7 +13,7 @@
  * pleine couleur, aucun cadenas (gating réservé Lot 3b).
  */
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -27,7 +27,7 @@ const PALETTE_KEYS = Object.keys(TIMER_PALETTES);
 const INCLUDED_KEYS = PALETTE_KEYS.filter((key) => !TIMER_PALETTES[key].isPremium);
 const AMBIANCE_KEYS = PALETTE_KEYS.filter((key) => TIMER_PALETTES[key].isPremium);
 
-export default function PalettesPanel({ onBack }) {
+export default function PalettesPanel({ onBack, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -43,6 +43,15 @@ export default function PalettesPanel({ onBack }) {
   };
 
   const styles = StyleSheet.create({
+    // A2 (hotfix-porte-1) : la liste dépendait entièrement du scroll
+    // extérieur d'AsideZone (même dette que RitualForm) — bornée + scroll
+    // propre, elle ne débordera plus quand elle grandira.
+    panelContainer: {
+      height: maxHeight,
+    },
+    scrollBody: {
+      flex: 1,
+    },
     backButton: {
       minHeight: 44,
       minWidth: 44,
@@ -128,7 +137,7 @@ export default function PalettesPanel({ onBack }) {
   };
 
   return (
-    <View>
+    <View style={styles.panelContainer}>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -142,11 +151,13 @@ export default function PalettesPanel({ onBack }) {
         <Text style={styles.title}>{t('palettesPanel.title')}</Text>
       </View>
 
-      <Text style={styles.sectionTitle}>{t('palettesPanel.included')}</Text>
-      {INCLUDED_KEYS.map(renderPaletteRow)}
+      <ScrollView style={styles.scrollBody} showsVerticalScrollIndicator={false}>
+        <Text style={styles.sectionTitle}>{t('palettesPanel.included')}</Text>
+        {INCLUDED_KEYS.map(renderPaletteRow)}
 
-      <Text style={styles.sectionTitle}>{t('palettesPanel.ambiances')}</Text>
-      {AMBIANCE_KEYS.map(renderPaletteRow)}
+        <Text style={styles.sectionTitle}>{t('palettesPanel.ambiances')}</Text>
+        {AMBIANCE_KEYS.map(renderPaletteRow)}
+      </ScrollView>
     </View>
   );
 }

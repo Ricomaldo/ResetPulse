@@ -21,7 +21,7 @@ import haptics from '../../utils/haptics';
 
 const FORM_ACTIVITY_IDS = ['meditation', 'break', 'work'];
 
-export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }) {
+export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
   const {
@@ -105,6 +105,17 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
   };
 
   const styles = StyleSheet.create({
+    // A2 (hotfix-porte-1) : hauteur bornée passée par AsideZone (via
+    // RitualsPanel) — sans elle, le footer Save débordait hors champ au lieu
+    // de scroller (le ScrollView interne n'avait rien pour borner sa hauteur
+    // disponible). header/footer en flux normal, ScrollView flex:1 prend le
+    // reste — pas de calcul manuel de leurs hauteurs.
+    formContainer: {
+      height: maxHeight,
+    },
+    scrollBody: {
+      flex: 1,
+    },
     cancelButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.surface,
@@ -234,7 +245,7 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
   });
 
   return (
-    <View>
+    <View style={styles.formContainer}>
       <View style={styles.header}>
         <Text style={styles.title} accessibilityRole="header">
           {initialRitual ? t('rituals.form.editTitle') : t('rituals.form.createTitle')}
@@ -250,7 +261,7 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete }
         </TouchableOpacity>
       </View>
 
-      <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollBody} nestedScrollEnabled showsVerticalScrollIndicator={false}>
         {/* 1. Emoji */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t('rituals.form.emojiLabel')}</Text>

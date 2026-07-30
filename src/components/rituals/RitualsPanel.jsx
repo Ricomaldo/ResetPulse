@@ -5,7 +5,7 @@
  * (« un tap = tout est prêt ») ; édition discrète par rituel ; création via
  * le même formulaire, vide (ADR-015).
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
@@ -19,15 +19,21 @@ import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import RitualForm from './RitualForm';
 
-export default function RitualsPanel({ onBack, onApplied }) {
+export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
-  const { rituals, createRitual, updateRitual, deleteRitual, getRitualById } = useRituals();
+  const { rituals, createRitual, updateRitual, deleteRitual, getRitualById, restoreBaseRituals, hasMissingBaseRituals } = useRituals();
   const { customActivities } = useCustomActivities();
   const { setCurrentActivity, setCurrentDuration, setSelectedSoundId, setColorByValue } = useTimerConfig();
 
   const [view, setView] = useState('list'); // 'list' | 'form'
   const [editingId, setEditingId] = useState(null);
+
+  // A3/D5 (hotfix-porte-1) : remonte liste/form à AsideZone — elle arbitre
+  // scroll extérieur + pan de fermeture selon le sous-écran actif.
+  useEffect(() => {
+    onViewChange?.(view);
+  }, [view, onViewChange]);
 
   const handleApply = (ritual) => {
     const payload = buildRitualApplyPayload(ritual, customActivities);
@@ -43,6 +49,14 @@ export default function RitualsPanel({ onBack, onApplied }) {
     haptics.selection().catch(() => {});
     setEditingId(null);
     setView('form');
+  };
+
+  // D8 (hotfix-porte-1) : la suppression reste libre, mais l'user peut se
+  // retrouver sans base — ré-insère les rituels de base manquants (aucun
+  // doublon, aucun écrasement d'un custom).
+  const handleRestoreBase = () => {
+    haptics.selection().catch(() => {});
+    restoreBaseRituals();
   };
 
   const handleEditPress = (id) => {
@@ -93,13 +107,19 @@ export default function RitualsPanel({ onBack, onApplied }) {
       marginRight: theme.spacing.sm,
     },
     editAffordance: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.md,
+      borderWidth: StyleSheet.hairlineWidth,
+      justifyContent: 'center',
+      marginLeft: theme.spacing.sm,
+      minHeight: 36,
+      minWidth: 36,
+    },
+    editAffordanceText: {
       color: theme.colors.textSecondary,
-      fontSize: rs(16, 'min'),
-      minHeight: 44,
-      minWidth: 44,
-      paddingLeft: theme.spacing.sm,
-      textAlign: 'center',
-      textAlignVertical: 'center',
+      fontSize: rs(15, 'min'),
     },
     emoji: {
       fontSize: rs(20, 'min'),
@@ -109,6 +129,14 @@ export default function RitualsPanel({ onBack, onApplied }) {
       color: theme.colors.textSecondary,
       fontSize: rs(13, 'min'),
       paddingVertical: rs(12),
+    },
+    restoreRow: {
+      alignItems: 'center',
+      paddingVertical: rs(10),
+    },
+    restoreText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
     },
     header: {
       alignItems: 'center',
@@ -147,6 +175,7 @@ export default function RitualsPanel({ onBack, onApplied }) {
         onSave={handleFormSave}
         onCancel={() => { setEditingId(null); setView('list'); }}
         onDelete={handleFormDelete}
+        maxHeight={maxHeight}
       />
     );
   }
@@ -187,12 +216,14 @@ export default function RitualsPanel({ onBack, onApplied }) {
               <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              style={styles.editAffordance}
               onPress={() => handleEditPress(ritual.id)}
+              activeOpacity={0.7}
               accessible
               accessibilityRole="button"
               accessibilityLabel={t('accessibility.editRitual', { name: ritual.name })}
             >
-              <Text style={styles.editAffordance}>›</Text>
+              <Text style={styles.editAffordanceText}>✎</Text>
             </TouchableOpacity>
           </View>
         );
@@ -207,6 +238,19 @@ export default function RitualsPanel({ onBack, onApplied }) {
       >
         <Text style={styles.createText}>{t('rituals.list.createRow')}</Text>
       </TouchableOpacity>
+
+      {hasMissingBaseRituals && (
+        <TouchableOpacity
+          style={styles.restoreRow}
+          onPress={handleRestoreBase}
+          activeOpacity={0.7}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel={t('rituals.restoreBase')}
+        >
+          <Text style={styles.restoreText}>{t('rituals.restoreBase')}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

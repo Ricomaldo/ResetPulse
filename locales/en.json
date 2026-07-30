@@ -489,7 +489,8 @@
       "deleteConfirmTitle": "Delete this ritual?",
       "deleteConfirmMessage": "This action is irreversible.",
       "customActivityName": "My ritual"
-    }
+    },
+    "restoreBase": "restore base rituals"
   },
   "palettesPanel": {
     "sheetRow": "Palettes",
