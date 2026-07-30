@@ -99,6 +99,14 @@ const analyticsAdapter = {
     this.track('activity_selected', { activity_id: activityIdValue });
   },
 
+  // LA mesure d'activation (vision gagner-de-largent) : « un tap sur un
+  // rituel et ça tourne » — distingue qui vit par ses rituels de qui
+  // configure à la main. source : 'home_row' (rangée d'accueil) | 'list'
+  // (liste du sheet).
+  trackRitualApplied(source) {
+    this.track('ritual_applied', { source });
+  },
+
   trackPaletteSelected(palette) {
     this.track('palette_selected', { palette });
   },

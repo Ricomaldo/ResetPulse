@@ -45,6 +45,16 @@ import logger from '../../utils/logger';
  * @param {string} highlightedFeature - Feature that triggered paywall (for analytics)
  * @param {string} modalId - Modal ID in ModalStack (for pop)
  */
+// Paywall adaptatif : la ligne du pack correspondant à la porte d'entrée
+// passe en tête (cf. vision/gagner-de-largent.md — les trois cerveaux ne
+// paient pas pour la même chose). Portes inconnues → ordre par défaut.
+const DEFAULT_FEATURE_ORDER = ['palettes', 'rituals', 'sounds'];
+const FEATURE_ORDER_BY_SOURCE = {
+  rituals_cap: ['rituals', 'palettes', 'sounds'],
+  palettes: ['palettes', 'rituals', 'sounds'],
+  breathe_invitation: ['sounds', 'palettes', 'rituals'],
+};
+
 export default function PremiumModalContent({ onClose, highlightedFeature, modalId }) {
   const modalStack = useModalStack();
   const theme = useTheme();
@@ -429,11 +439,16 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
           {t('ambiances.pitch')}
         </Text>
 
-        {/* Contenus réels du pack (3.0) — 3 lignes fixes */}
+        {/* Contenus réels du pack (3.0) — 3 lignes, ORDONNÉES par la porte
+            d'entrée (paywall adaptatif, stratégie gagner-de-largent) : les
+            trois cerveaux ne paient pas pour la même chose — celui qui
+            arrive par le cap rituels voit « rituels illimités » en premier,
+            par les palettes voit les palettes, par la fin de séance voit
+            les sons. highlightedFeature = la porte, déjà tracée. */}
         <View style={styles.features}>
-          <Text style={styles.featureLine}>· {t('ambiances.features.palettes')}</Text>
-          <Text style={styles.featureLine}>· {t('ambiances.features.rituals')}</Text>
-          <Text style={styles.featureLine}>· {t('ambiances.features.sounds')}</Text>
+          {(FEATURE_ORDER_BY_SOURCE[highlightedFeature] || DEFAULT_FEATURE_ORDER).map((featureKey) => (
+            <Text key={featureKey} style={styles.featureLine}>· {t(`ambiances.features.${featureKey}`)}</Text>
+          ))}
           <Text style={styles.priceText}>
             {t('ambiances.price', { price: dynamicPrice || '4,99€' })}
           </Text>

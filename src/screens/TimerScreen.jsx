@@ -147,6 +147,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
               setSelectedSoundId(payload.soundId);
               setColorByValue(payload.color);
               analytics.trackActivitySelected(payload.activity?.id);
+              analytics.trackRitualApplied('home_row');
               onActivityTouch?.();
             }}
             activeOpacity={0.7}
