@@ -13,6 +13,7 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { useRituals } from '../../hooks/useRituals';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useModalStack } from '../../contexts/ModalStackContext';
 import { buildRitualApplyPayload, resolveRitualActivity } from '../../config/rituals';
@@ -35,6 +36,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
   const { setCurrentActivity, setCurrentDuration, setSelectedSoundId, setColorByValue } = useTimerConfig();
   const { isPremium } = usePremiumStatus();
   const modalStack = useModalStack();
+  const analytics = useAnalytics();
 
   const [view, setView] = useState('list'); // 'list' | 'form'
   const [editingId, setEditingId] = useState(null);
@@ -52,6 +54,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
     setCurrentDuration(payload.duration);
     setSelectedSoundId(payload.soundId);
     setColorByValue(payload.color);
+    analytics.trackRitualApplied('list');
     onApplied();
   };
 
