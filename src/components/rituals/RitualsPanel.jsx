@@ -24,7 +24,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
   const theme = useTheme();
   const t = useTranslation();
   const { rituals, createRitual, updateRitual, deleteRitual, getRitualById, restoreBaseRituals, hasMissingBaseRituals, favoriteRituals, toggleFavorite } = useRituals();
-  const { customActivities } = useCustomActivities();
+  const { customActivities, deleteActivity } = useCustomActivities();
   const { setCurrentActivity, setCurrentDuration, setSelectedSoundId, setColorByValue } = useTimerConfig();
 
   const [view, setView] = useState('list'); // 'list' | 'form'
@@ -66,9 +66,34 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
     setView('form');
   };
 
+  // Hygiène (fuite tracée au handoff porte-2, corrigeable depuis le contexte
+  // partagé) : une activité custom ANONYME (créée à la volée par le
+  // formulaire, ADR-015 — invisible pour l'user) devient orpheline quand plus
+  // aucun rituel ne la référence. On la supprime au moment où sa dernière
+  // référence disparaît : édition qui change d'emoji, ou suppression du
+  // rituel. `rituals` est l'état d'AVANT le geste → on exclut le rituel
+  // touché du comptage. Le cadran n'est pas affecté (setCurrentActivity
+  // stocke l'OBJET activité, et resolveRitualActivity a un fallback
+  // activité-manquante).
+  const cleanupOrphanActivity = (oldActivityId, { excludeRitualId, newActivityId = null }) => {
+    if (!oldActivityId || !oldActivityId.startsWith('custom_')) {return;}
+    if (oldActivityId === newActivityId) {return;}
+    const stillReferenced = rituals.some(
+      (r) => r.id !== excludeRitualId && r.activityId === oldActivityId
+    );
+    if (!stillReferenced) {
+      deleteActivity(oldActivityId);
+    }
+  };
+
   const handleFormSave = (fields) => {
     if (editingId) {
+      const previousActivityId = getRitualById(editingId)?.activityId;
       updateRitual(editingId, fields);
+      cleanupOrphanActivity(previousActivityId, {
+        excludeRitualId: editingId,
+        newActivityId: fields.activityId,
+      });
     } else {
       createRitual(fields);
     }
@@ -76,8 +101,16 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
     setView('list');
   };
 
+  const handleDeleteRitual = (ritual) => {
+    deleteRitual(ritual.id);
+    cleanupOrphanActivity(ritual.activityId, { excludeRitualId: ritual.id });
+  };
+
   const handleFormDelete = (id) => {
-    deleteRitual(id);
+    const ritual = getRitualById(id);
+    if (ritual) {
+      handleDeleteRitual(ritual);
+    }
     setEditingId(null);
     setView('list');
   };
@@ -242,7 +275,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
                 style={styles.deleteAction}
                 onPress={() => {
                   haptics.impact('medium').catch(() => {});
-                  deleteRitual(ritual.id);
+                  handleDeleteRitual(ritual);
                 }}
                 accessible
                 accessibilityRole="button"
