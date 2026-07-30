@@ -6,7 +6,9 @@
  * @created 2025-12-21
  *
  * State Namespaces:
- * - timer: currentActivity, currentDuration, selectedSoundId, clockwise, scaleMode
+ * - timer: currentActivity, currentDuration, selectedSoundId, clockwise,
+ *   scaleMode (DÉRIVÉ de currentDuration depuis hotfix-porte-1 B2 — jamais
+ *   persisté ni settable, cf. deriveScaleMode/utils/scaleHelpers.js)
  * - display: shouldPulse, showDigitalTimer, showTime
  * - system: keepAwakeEnabled
  * - mode: current (Mixte/Focus — Complet mort C6.2 ; ADR-014, réglage global unique)
@@ -16,7 +18,10 @@
  * - palette: currentPalette, currentColor (source de vérité, hex — C6.2),
  *   selectedColorIndex (dérivé, -1 si currentColor n'est pas dans la palette
  *   active — ex. couleur de Rituel propre), paletteInfo, paletteColors, timerColors
- * - transient: timerRemaining, flashActivity, isLoading
+ * - transient: flashActivity, isLoading
+ *   (timerRemaining sorti vers TimerRemainingContext, hotfix-porte-1 C4 —
+ *   écrit à 60 Hz par TimeTimer.jsx, il faisait re-rendre TOUT consommateur
+ *   de ce contexte à chaque tick tant qu'il vivait dans ce useMemo)
  */
 
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
@@ -28,6 +33,7 @@ import { getDefaultActivity, getActivityById } from '../config/activities';
 import { DEV_MODE, DEV_DEFAULT_TIMER_CONFIG } from '../config/test-mode';
 import { TIMER_PALETTES, getTimerColors } from '../config/timer-palettes';
 import { DEFAULT_SOUND_ID } from '../config/sounds';
+import { deriveScaleMode } from '../utils/scaleHelpers';
 
 const TimerConfigContext = createContext(null);
 
@@ -50,7 +56,8 @@ export const TimerConfigProvider = ({ children }) => {
   const hasLoggedBoot = useRef(false);
 
   // Transient state (not persisted)
-  const [timerRemaining, setTimerRemaining] = useState(0);
+  // timerRemaining vit dans TimerRemainingContext (hotfix-porte-1 C4) — plus
+  // ici, pour ne plus faire re-rendre tout consommateur à 60 Hz.
   const [flashActivity, setFlashActivity] = useState(null);
   const flashTimeoutRef = useRef(null);
 
@@ -66,7 +73,8 @@ export const TimerConfigProvider = ({ children }) => {
           currentDuration: DEV_DEFAULT_TIMER_CONFIG.duration,
           selectedSoundId: DEFAULT_SOUND_ID,
           clockwise: false,
-          scaleMode: DEV_DEFAULT_TIMER_CONFIG.scaleMode,
+          // scaleMode retiré (hotfix-porte-1 B2) : toujours dérivé de
+          // currentDuration via deriveScaleMode, plus jamais stocké/choisi.
         },
         display: {
           shouldPulse: false,
@@ -109,7 +117,10 @@ export const TimerConfigProvider = ({ children }) => {
         currentDuration: 1500, // 25 minutes
         selectedSoundId: DEFAULT_SOUND_ID,
         clockwise: false,
-        scaleMode: '25min',
+        // scaleMode retiré (hotfix-porte-1 B2) : le défaut '25min' était une
+        // échelle DÉPRÉCIÉE (DIAL_MODES ne la porte plus depuis 2026-01-15),
+        // repli silencieux vers 30min — toujours dérivé de currentDuration
+        // désormais, cf. deriveScaleMode plus bas.
       },
       display: {
         shouldPulse: false,
@@ -186,7 +197,10 @@ export const TimerConfigProvider = ({ children }) => {
               currentDuration: parsed.currentDuration || migratedValues.timer.currentDuration,
               selectedSoundId: parsed.selectedSoundId || migratedValues.timer.selectedSoundId,
               clockwise: parsed.clockwise !== undefined ? parsed.clockwise : migratedValues.timer.clockwise,
-              scaleMode: parsed.scaleMode || migratedValues.timer.scaleMode,
+              // scaleMode non migré (hotfix-porte-1 B2) : toujours dérivé de
+              // currentDuration, un éventuel vieux scaleMode persisté (y
+              // compris '25min' déprécié) est simplement ignoré — migration
+              // douce sans crash.
             };
             migratedValues.display = {
               shouldPulse: parsed.shouldPulse !== undefined ? parsed.shouldPulse : migratedValues.display.shouldPulse,
@@ -316,6 +330,14 @@ export const TimerConfigProvider = ({ children }) => {
 
   const { paletteInfo, paletteColors, timerColors, currentColor, selectedColorIndex } = paletteData;
 
+  // scaleMode dérivé (hotfix-porte-1 B2) : jamais persisté ni choisi
+  // manuellement — toujours la plus petite échelle de DIAL_MODES qui
+  // contient `currentDuration` (deriveScaleMode, fonction pure testée).
+  // Placé ici (pas dans un effet + setScaleMode) : dérivation directe au
+  // rendu, aucun état supplémentaire à synchroniser, zéro risque de valeur
+  // en retard d'un tick sur currentDuration.
+  const derivedScaleMode = deriveScaleMode(values.timer.currentDuration);
+
   // Context value with grouped namespaces - MUST BE IN useMemo to trigger updates
   const value = useMemo(() => ({
     // === STATE NAMESPACES ===
@@ -324,7 +346,7 @@ export const TimerConfigProvider = ({ children }) => {
       currentDuration: values.timer.currentDuration,
       selectedSoundId: values.timer.selectedSoundId,
       clockwise: values.timer.clockwise,
-      scaleMode: values.timer.scaleMode,
+      scaleMode: derivedScaleMode,
     },
     display: {
       shouldPulse: values.display.shouldPulse,
@@ -361,7 +383,6 @@ export const TimerConfigProvider = ({ children }) => {
       currentColor,
     },
     transient: {
-      timerRemaining,
       flashActivity,
       isLoading,
     },
@@ -392,12 +413,10 @@ export const TimerConfigProvider = ({ children }) => {
         timer: { ...prev.timer, clockwise: clockwise }
       }));
     },
-    setScaleMode: (scaleMode) => {
-      setValues(prev => ({
-        ...prev,
-        timer: { ...prev.timer, scaleMode: scaleMode }
-      }));
-    },
+    // setScaleMode retiré (hotfix-porte-1 B2) : scaleMode est entièrement
+    // dérivé de currentDuration (deriveScaleMode ci-dessus) — l'audit avait
+    // constaté que setScaleMode n'était appelé nulle part ; il n'y a
+    // désormais plus rien à settre, la dérivation est la seule autorité.
 
     // Display
     setShouldPulse: (shouldPulse) => {
@@ -582,10 +601,9 @@ export const TimerConfigProvider = ({ children }) => {
     },
 
     // Transient
-    setTimerRemaining,
     setFlashActivity,
     handleActivitySelect,
-  }), [values, setValues, timerRemaining, flashActivity, isLoading, paletteData, setTimerRemaining, setFlashActivity, handleActivitySelect]);
+  }), [values, setValues, flashActivity, isLoading, paletteData, derivedScaleMode, setFlashActivity, handleActivitySelect]);
 
   // Block children render until loaded
   if (isLoading) {

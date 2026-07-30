@@ -260,11 +260,13 @@ export default function CreateActivityForm({
       fontWeight: fontWeights.bold,
     },
 
+    // C3 (hotfix-porte-1) : 0×0 refusait le focus iOS (pas de clavier emoji
+    // au tap) — 1×1 reste visuellement invisible (opacity 0) mais focusable.
     hiddenEmojiInput: {
-      height: 0,
+      height: 1,
       opacity: 0,
       position: 'absolute',
-      width: 0,
+      width: 1,
     },
 
     input: {

@@ -8,6 +8,7 @@ import {
   deriveRitualName,
   buildRitualApplyPayload,
   suggestedColorFor,
+  shouldDeriveNameFromActivity,
 } from '../../src/config/rituals';
 import { getActivityById, getDefaultActivity } from '../../src/config/activities';
 import { MIN_DURATION, MAX_DURATION } from '../../src/config/durations';
@@ -127,6 +128,31 @@ describe('rituals Configuration', () => {
 
     test('falls back to a generic name when activity is missing', () => {
       expect(typeof deriveRitualName(null)).toBe('string');
+    });
+  });
+
+  describe('shouldDeriveNameFromActivity (C1b, hotfix-porte-1)', () => {
+    test('creation (no initialRitual) with an activity selected: derive', () => {
+      expect(shouldDeriveNameFromActivity('work', null)).toBe(true);
+    });
+
+    test('creation with no activity selected: nothing to derive from', () => {
+      expect(shouldDeriveNameFromActivity(null, null)).toBe(false);
+    });
+
+    test('edit, same built-in activity untouched: do NOT derive (bug regression)', () => {
+      const initialRitual = { activityId: 'meditation', name: 'Nom custom conservé' };
+      expect(shouldDeriveNameFromActivity('meditation', initialRitual)).toBe(false);
+    });
+
+    test('edit, user picks a different built-in activity: derive', () => {
+      const initialRitual = { activityId: 'meditation', name: 'Nom custom conservé' };
+      expect(shouldDeriveNameFromActivity('work', initialRitual)).toBe(true);
+    });
+
+    test('edit, custom-emoji ritual, no built-in selected: do NOT derive', () => {
+      const initialRitual = { activityId: 'custom_42', name: 'Mon rituel' };
+      expect(shouldDeriveNameFromActivity(null, initialRitual)).toBe(false);
     });
   });
 

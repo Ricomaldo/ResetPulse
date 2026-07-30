@@ -12,8 +12,8 @@ export const DEV_MODE = true;
 // true = FAB visible, false = FAB caché
 // Note: Nécessite DEV_MODE = true pour fonctionner
 // DEPLOY: Set to false before production build, true for local dev
-// (false le 25/07 : screenshots propres pour la revue Claude design)
-export const SHOW_DEV_FAB = false;
+// (true sur la branche proto-drag-echelle : sélecteur « Drag échelle »)
+export const SHOW_DEV_FAB = true;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
@@ -24,7 +24,9 @@ export const DEFAULT_PREMIUM = false;
 export const DEV_DEFAULT_TIMER_CONFIG = {
   activity: 'meditation', // 20 minutes par défaut
   duration: 1200, // 20 minutes en secondes
-  scaleMode: '25min', // Échelle adaptée (20min rentre dans 25min)
+  // scaleMode retiré (hotfix-porte-1 B2) : '25min' était une échelle
+  // DÉPRÉCIÉE (absente de DIAL_MODES) — le scaleMode est désormais toujours
+  // dérivé de `duration` (deriveScaleMode), plus jamais choisi ici.
 };
 
 // Legacy export pour compatibilité

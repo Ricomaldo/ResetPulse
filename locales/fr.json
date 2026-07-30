@@ -489,7 +489,8 @@
       "deleteConfirmTitle": "Supprimer ce rituel ?",
       "deleteConfirmMessage": "Cette action est irréversible.",
       "customActivityName": "Mon rituel"
-    }
+    },
+    "restoreBase": "restaurer les rituels de base"
   },
   "palettesPanel": {
     "sheetRow": "Palettes",
@@ -514,6 +515,9 @@
   "aside": {
     "exitFocus": "quitter le focus",
     "doubleTapHint": "astuce : double-tap le fond pour basculer",
-    "handle": "ouvrir les réglages"
+    "handle": "ouvrir les réglages",
+    "closedLabel": "rituels & réglages",
+    "wallpaperExport": "garder en fond d'écran",
+    "wallpaperUnavailable": "disponible au prochain build"
   }
 }

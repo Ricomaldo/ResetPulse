@@ -104,6 +104,25 @@ export const deriveRitualName = (activity) => {
 };
 
 /**
+ * Détermine si le nom d'un rituel doit être re-dérivé depuis l'activité
+ * BUILT-IN sélectionnée dans RitualForm au moment de la sauvegarde.
+ *
+ * Bug C1b (hotfix-porte-1, audit 30/07) : `selectedActivityId` est
+ * pré-rempli à l'activité courante dès l'ouverture du formulaire en édition
+ * — re-dériver le nom dès que `activityId` est truthy écrasait donc
+ * systématiquement un nom custom (« Respiration » → « Méditation ») même
+ * quand l'user n'avait rien touché. Ne re-dériver que si l'activité
+ * sélectionnée diffère RÉELLEMENT de celle du rituel édité (ou s'il n'y a
+ * pas de rituel édité — création). Pur, testable sans monter le formulaire
+ * (l'infra de test du projet n'a pas de fireEvent/testing-library).
+ * @param {string|null} selectedActivityId
+ * @param {Object|null} initialRitual
+ * @returns {boolean}
+ */
+export const shouldDeriveNameFromActivity = (selectedActivityId, initialRitual) =>
+  Boolean(selectedActivityId) && (!initialRitual || selectedActivityId !== initialRitual.activityId);
+
+/**
  * Calcule le payload d'application d'un rituel (activité résolue + valeurs
  * plafonnées/validées) — pur, sans effet de bord ni dépendance à un contexte
  * React, pour rester testable indépendamment du branchement écran.

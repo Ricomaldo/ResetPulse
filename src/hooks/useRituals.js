@@ -71,12 +71,38 @@ export const useRituals = () => {
    */
   const getRitualById = (id) => rituals.find((ritual) => ritual.id === id);
 
+  // D8 (hotfix-porte-1) : la suppression d'un rituel de base reste libre —
+  // ce garde ré-insère les manquants sans dupliquer ni écraser les customs
+  // (comparaison par id, `ritual_${activityId}` pour un rituel de base,
+  // cf. getDefaultRituals).
+  const missingBaseRituals = getDefaultRituals().filter(
+    (base) => !rituals.some((ritual) => ritual.id === base.id)
+  );
+  const hasMissingBaseRituals = missingBaseRituals.length > 0;
+
+  /**
+   * Ré-insère les rituels de base manquants (aucun doublon, aucun écrasement
+   * d'un rituel existant — custom ou base déjà présent).
+   */
+  const restoreBaseRituals = () => {
+    setRituals((prev) => {
+      const existingIds = new Set(prev.map((ritual) => ritual.id));
+      const toRestore = getDefaultRituals().filter((base) => !existingIds.has(base.id));
+      if (toRestore.length === 0) {
+        return prev;
+      }
+      return [...prev, ...toRestore];
+    });
+  };
+
   return {
     rituals,
     createRitual,
     updateRitual,
     deleteRitual,
     getRitualById,
+    restoreBaseRituals,
+    hasMissingBaseRituals,
     isLoading,
   };
 };

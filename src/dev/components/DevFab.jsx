@@ -14,6 +14,7 @@ import { SHOW_DEV_FAB } from '../../config/test-mode';
 import { fontWeights } from '../../theme/tokens';
 import { devColors } from '../../theme/colors';
 import { useDevPremium } from '../DevPremiumContext';
+import { useDevDragScale, DRAG_SCALE_MECHANICS } from '../DevDragScaleContext';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 
 /**
@@ -33,6 +34,13 @@ const FAVORITE_TOOL_OPTIONS = [
   { value: 'none', label: '∅ Rien' },
 ];
 
+// PROTO drag-échelle : les 3 positions du sélecteur (branche proto-drag-echelle)
+const DRAG_SCALE_OPTIONS = [
+  { value: DRAG_SCALE_MECHANICS.OFF, label: '∅ OFF' },
+  { value: DRAG_SCALE_MECHANICS.RELEASE, label: '🫳 Relâche' },
+  { value: DRAG_SCALE_MECHANICS.HOLD, label: '👆 Maintien' },
+];
+
 export default function DevFab({
   onResetOnboarding,
   onGoToApp,
@@ -43,6 +51,7 @@ export default function DevFab({
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
   const { devPremiumOverride, setDevPremiumOverride: setDevPremiumOverrideOriginal } = useDevPremium();
+  const { dragScaleMechanic, setDragScaleMechanic } = useDevDragScale();
   const { layout: { favoriteToolMode }, setFavoriteToolMode } = useTimerConfig();
 
   // Wrapper for setting premium override
@@ -231,6 +240,31 @@ export default function DevFab({
                 <Text style={[
                   styles.selectText,
                   favoriteToolMode === option.value && styles.selectTextActive
+                ]}>
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* PROTO : Drag échelle (branche proto-drag-echelle) */}
+        <View style={styles.menuSection}>
+          <Text style={styles.menuLabel}>Drag échelle</Text>
+          <View style={styles.selectRow}>
+            {DRAG_SCALE_OPTIONS.map(option => (
+              <TouchableOpacity
+                key={option.value}
+                style={[
+                  styles.selectOption,
+                  dragScaleMechanic === option.value && styles.selectOptionActive
+                ]}
+                onPress={() => handleOptionPress(() => setDragScaleMechanic(option.value))}
+                activeOpacity={0.7}
+              >
+                <Text style={[
+                  styles.selectText,
+                  dragScaleMechanic === option.value && styles.selectTextActive
                 ]}>
                   {option.label}
                 </Text>

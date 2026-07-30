@@ -300,6 +300,124 @@ describe('useRituals', () => {
     });
   });
 
+  describe('hasMissingBaseRituals (D8, hotfix-porte-1)', () => {
+    it('is true when no base ritual is present', () => {
+      const { result } = renderHook(() => useRituals());
+      expect(result.current.hasMissingBaseRituals).toBe(true);
+    });
+
+    it('is false when all 3 base rituals are present', () => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [
+          { id: 'ritual_meditation', name: 'Respiration', activityId: 'meditation', duration: 300, steps: [] },
+          { id: 'ritual_break', name: 'Pause café', activityId: 'break', duration: 900, steps: [] },
+          { id: 'ritual_work', name: 'Deep Work', activityId: 'work', duration: 3000, steps: [] },
+        ],
+        mockSetRituals,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useRituals());
+      expect(result.current.hasMissingBaseRituals).toBe(false);
+    });
+
+    it('is true when only some base rituals are present', () => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [{ id: 'ritual_meditation', name: 'Respiration', activityId: 'meditation', duration: 300, steps: [] }],
+        mockSetRituals,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useRituals());
+      expect(result.current.hasMissingBaseRituals).toBe(true);
+    });
+  });
+
+  describe('restoreBaseRituals (D8, hotfix-porte-1)', () => {
+    it('adds all base rituals when none are present, without touching customs', () => {
+      const custom = { id: 'ritual_1700000000000', name: 'Lecture', activityId: 'reading', duration: 1800, steps: [] };
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [custom],
+        mockSetRituals,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useRituals());
+
+      let updaterResult;
+      mockSetRituals.mockImplementation((updater) => {
+        updaterResult = updater([custom]);
+      });
+
+      act(() => {
+        result.current.restoreBaseRituals();
+      });
+
+      expect(updaterResult).toHaveLength(4);
+      expect(updaterResult).toContainEqual(custom); // le custom n'est ni écrasé ni dupliqué
+      const restoredIds = updaterResult.map((r) => r.id);
+      expect(restoredIds).toEqual(expect.arrayContaining(['ritual_meditation', 'ritual_break', 'ritual_work']));
+    });
+
+    it('only restores the missing base ritual, leaves an already-present base ritual untouched', () => {
+      const existingMeditation = {
+        id: 'ritual_meditation',
+        name: 'Nom custom conservé', // preuve : pas écrasé par le seed
+        activityId: 'meditation',
+        duration: 600,
+        steps: [],
+      };
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [existingMeditation],
+        mockSetRituals,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useRituals());
+
+      let updaterResult;
+      mockSetRituals.mockImplementation((updater) => {
+        updaterResult = updater([existingMeditation]);
+      });
+
+      act(() => {
+        result.current.restoreBaseRituals();
+      });
+
+      expect(updaterResult).toHaveLength(3);
+      expect(updaterResult).toContainEqual(existingMeditation);
+      const restoredIds = updaterResult.map((r) => r.id);
+      expect(restoredIds).toEqual(expect.arrayContaining(['ritual_meditation', 'ritual_break', 'ritual_work']));
+    });
+
+    it('is a no-op (same content) when all base rituals are already present', () => {
+      const rituals = [
+        { id: 'ritual_meditation', name: 'Respiration', activityId: 'meditation', duration: 300, steps: [] },
+        { id: 'ritual_break', name: 'Pause café', activityId: 'break', duration: 900, steps: [] },
+        { id: 'ritual_work', name: 'Deep Work', activityId: 'work', duration: 3000, steps: [] },
+      ];
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        rituals,
+        mockSetRituals,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useRituals());
+
+      let updaterResult;
+      mockSetRituals.mockImplementation((updater) => {
+        updaterResult = updater(rituals);
+      });
+
+      act(() => {
+        result.current.restoreBaseRituals();
+      });
+
+      expect(updaterResult).toHaveLength(3);
+      expect(updaterResult).toEqual(rituals);
+    });
+  });
+
   describe('Guard: MIN_DURATION floor is respected', () => {
     it('never returns a duration below MIN_DURATION on create', () => {
       const { result } = renderHook(() => useRituals());
