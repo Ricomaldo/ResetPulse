@@ -16,6 +16,7 @@ import { TimerConfigProvider } from './src/contexts/TimerConfigContext';
 import { TimerRemainingProvider } from './src/contexts/TimerRemainingContext';
 import { CustomActivitiesProvider } from './src/contexts/CustomActivitiesContext';
 import { SessionCountProvider } from './src/contexts/SessionCountContext';
+import { RitualsProvider } from './src/contexts/RitualsContext';
 import { ModalStackProvider } from './src/contexts/ModalStackContext';
 import ModalStackRenderer from './src/components/modals/ModalStackRenderer';
 import TimerScreen from './src/screens/TimerScreen';
@@ -206,17 +207,19 @@ export default function App() {
         <TimerRemainingProvider>
           <CustomActivitiesProvider>
             <SessionCountProvider>
-              <DevPremiumProvider>
-                <GestureHandlerRootView style={styles.container}>
-                  {renderContent()}
-                  <DevFab
-                    onResetOnboarding={handleResetOnboarding}
-                    onResetTimerConfig={handleResetTimerConfig}
-                    onResetTooltip={handleResetTooltip}
-                    onResetToVanilla={handleResetToVanilla}
-                  />
-                </GestureHandlerRootView>
-              </DevPremiumProvider>
+              <RitualsProvider>
+                <DevPremiumProvider>
+                  <GestureHandlerRootView style={styles.container}>
+                    {renderContent()}
+                    <DevFab
+                      onResetOnboarding={handleResetOnboarding}
+                      onResetTimerConfig={handleResetTimerConfig}
+                      onResetTooltip={handleResetTooltip}
+                      onResetToVanilla={handleResetToVanilla}
+                    />
+                  </GestureHandlerRootView>
+                </DevPremiumProvider>
+              </RitualsProvider>
             </SessionCountProvider>
           </CustomActivitiesProvider>
         </TimerRemainingProvider>
@@ -231,11 +234,13 @@ export default function App() {
       <TimerRemainingProvider>
         <CustomActivitiesProvider>
           <SessionCountProvider>
-            <DevPremiumProvider>
-              <GestureHandlerRootView style={styles.container}>
-                {renderContent()}
-              </GestureHandlerRootView>
-            </DevPremiumProvider>
+            <RitualsProvider>
+              <DevPremiumProvider>
+                <GestureHandlerRootView style={styles.container}>
+                  {renderContent()}
+                </GestureHandlerRootView>
+              </DevPremiumProvider>
+            </RitualsProvider>
           </SessionCountProvider>
         </CustomActivitiesProvider>
       </TimerRemainingProvider>

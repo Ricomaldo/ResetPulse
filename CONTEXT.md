@@ -11,15 +11,22 @@ L'atome d'identité d'un moment : emoji + messages de début/fin + rythme propre
 Référentiel non lançable — c'est le Rituel qui se lance.
 _Avoid_: task, tâche, preset
 
+**Moment** · **Moment**:
+Ce qui se vit quand le disque tourne — éphémère, réglé à la volée (activité,
+durée, couleur), jamais sauvegardé par lui-même. La Première fois construit
+un Moment. (ADR-016 — terme réhabilité, plus « le langage d'avant ».)
+_Avoid_: séance (clinique), session, timer en cours
+
 **Rituel** · **Ritual**:
-L'objet lançable en un tap : référence une Activité + durée + couleur + son
-(+ étapes en n+1). Un preset, une cuisson d'œuf et un Pomodoro sont le même objet.
+**Un Moment gardé** — l'objet lançable en un tap : référence une Activité +
+durée + couleur + son (+ étapes en n+1). Naît par « garde ce moment ? » en
+fin de Moment, ou au formulaire du sheet.
 _Avoid_: preset, favori, timer configuré
 
 **Mode** · **Mode**:
-Le niveau d'affichage de l'écran timer, réglage global unique. Trois valeurs :
-Mixte (la signature, défaut), Focus (extra-minimaliste), Complet (extra-complet).
-Chaque profil TDAH en déteste un, en adore un, en tolère un — c'est voulu.
+Le niveau d'affichage de l'écran timer, réglage global unique. Deux valeurs :
+Mixte (la signature, affichée « ResetPulse », défaut) et Focus
+(extra-minimaliste). « Complet » est mort en C6.2 — le sheet couvre le besoin.
 _Avoid_: layout, vue, profil d'affichage
 
 **Palette de couleurs** · **Color Palette**:

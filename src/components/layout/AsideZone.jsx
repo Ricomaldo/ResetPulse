@@ -21,6 +21,11 @@
  * Cycle 6.1 : bloc 4 Palettes câblé — sous-écran réel (`PalettesPanel`), même
  * mécanisme que le bloc 3 Rituels. `CompactRow` (TimerScreen) corrigé pour
  * suivre la palette courante (lisait `serenity` en dur).
+ * Astuces dormantes v1 (ADR-016 §4, Lambda C) : prop `onPaletteOpened`,
+ * appelée au moment où le sous-écran Palettes s'ouvre — marque le flag
+ * "fonction touchée" côté TimerScreen (useDormantTips). Callback prop
+ * plutôt qu'une deuxième instance de usePersistedState sur la même clé ici :
+ * évite la fenêtre de désynchronisation RAM entre deux instances.
  * Cycle 6.2 (fidélité au rendu) : Complet meurt (acté Eric 25/07 ×2) —
  * segmenté à 2 entrées, libellés i18n provisoires [Standard | Focus] (clé
  * interne `mixte` inchangée, naming définitif à la passe CD). Sélection
@@ -73,7 +78,7 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 // Complet meurt (C6.2, acté Eric 25/07 ×2) — segmenté à 2 entrées. Clé
 // interne `mixte` conservée (naming définitif à la passe CD, piste : le
 // défaut ne se nomme pas) ; libellé affiché "Standard" (i18n, provisoire).
-export default function AsideZone({ isTimerRunning, hidden = false }) {
+export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -627,6 +632,7 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                           onPress={() => {
                             haptics.selection().catch(() => {});
                             setPaletteOpen(true);
+                            onPaletteOpened?.();
                           }}
                           activeOpacity={0.7}
                         >

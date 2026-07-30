@@ -9,9 +9,18 @@ import { usePersistedState } from './usePersistedState';
 import logger from '../utils/logger';
 
 const STORAGE_KEY = '@ResetPulse:hasSeenFirstRun';
+// ADR-016 §1 — flag distinct pour le seuil (2 écrans chaleureux), qui ne se
+// rejoue JAMAIS (Monde B). Séparé de hasSeenFirstRun (les tips C7, eux,
+// vivent après le seuil, sur l'écran réel).
+const THRESHOLD_STORAGE_KEY = '@ResetPulse:hasSeenThreshold';
 
 export const useFirstRun = () => {
-  const [hasSeenFirstRun, setHasSeenFirstRun, isLoading] = usePersistedState(STORAGE_KEY, false);
+  const [hasSeenFirstRun, setHasSeenFirstRun, isFirstRunLoading] = usePersistedState(STORAGE_KEY, false);
+  const [hasSeenThreshold, setHasSeenThreshold, isThresholdLoading] = usePersistedState(
+    THRESHOLD_STORAGE_KEY,
+    false
+  );
+  const isLoading = isFirstRunLoading || isThresholdLoading;
   const [activityTouched, setActivityTouched] = useState(false);
   const [dialTouched, setDialTouched] = useState(false);
   const [colorTouched, setColorTouched] = useState(false);
@@ -47,16 +56,21 @@ export const useFirstRun = () => {
   // se rejoue jamais » ne distingue pas comment l'user en est sorti.
   const completeFirstRun = () => setHasSeenFirstRun(true);
   const skipFirstRun = () => setHasSeenFirstRun(true);
+  // Le seuil (ADR-016 §1) ne se rejoue jamais — un seul geste de sortie
+  // (le CTA de la page 2), pas de skip distinct.
+  const completeThreshold = () => setHasSeenThreshold(true);
 
   return {
     isLoading,
     hasSeenFirstRun,
+    hasSeenThreshold,
     moment,
     markActivityTouched,
     markDialTouched,
     markColorTouched,
     completeFirstRun,
     skipFirstRun,
+    completeThreshold,
   };
 };
 

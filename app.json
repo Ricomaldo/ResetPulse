@@ -31,9 +31,12 @@
           "icon": "./assets/icon.png",
           "color": "#4A5568",
           "sounds": [
-            "./assets/sounds/270404__littlerobotsoundfactory__jingle-achievement.wav",
+            "./assets/sounds/634089__aj_heels__timercomplete01.wav",
+            "./assets/sounds/609725__theplax__microwave-ping.wav",
             "./assets/sounds/271370__inoshirodesign__singing-bowl-strike.wav",
             "./assets/sounds/373053__sgossner__contrabass-pizzicato-c2.wav",
+            "./assets/sounds/564623__azumarill__toaster-oven-or-liftelevator-bell.wav",
+            "./assets/sounds/270404__littlerobotsoundfactory__jingle-achievement.wav",
             "./assets/sounds/331047__foochie_foochie__kalimba-c-note.wav",
             "./assets/sounds/495674__jack_urbanski__vibraphone-chord.wav",
             "./assets/sounds/577692__joesh2__marimba-c3.wav",
