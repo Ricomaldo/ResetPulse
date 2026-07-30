@@ -21,6 +21,7 @@ import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
+const HALO_TEMPO = 1100; // rythme UNIQUE du halo (période 2,2s = HALO_TEMPO×2, useBreathingHalo) — indépendant du pulseDuration de l'Activité (verdict Eric hotfix-porte-1 B1/D1)
 
 const PulseButton = React.memo(function PulseButton({
   state = 'rest',
@@ -67,8 +68,11 @@ const PulseButton = React.memo(function PulseButton({
   // lance au tap start et bat tant que le temps s'écoule — la preuve visible
   // que le timer vit. RUNNING uniquement, piloté par `shouldPulse`
   // (optionnel mais standard), jamais en compact.
+  // Rythme UNIQUE (hotfix-porte-1 B1/D1, verdict Eric) : le halo bat au pouls
+  // de la SÉANCE, pas de l'Activité — HALO_TEMPO fixe, jamais `tempo`. Le
+  // mouvement de l'emoji (useEmojiMovement ci-dessus) garde son tempo propre.
   const haloActive = state === 'running' && shouldPulse && !compact;
-  const haloAnimatedStyle = useBreathingHalo({ tempo, active: haloActive });
+  const haloAnimatedStyle = useBreathingHalo({ tempo: HALO_TEMPO, active: haloActive });
 
   // === DIMENSIONS ===
   // Hub structurel (verdicts CD 25/07) : Ø = 34 % du cadran (fourni par
@@ -76,6 +80,7 @@ const PulseButton = React.memo(function PulseButton({
   const buttonSize = compact ? rs(48, 'min') : size;
   const iconSize   = compact ? rs(20, 'min') : buttonSize * 0.42;
   const emojiSize  = compact ? rs(24, 'min') : buttonSize * 0.59;
+  const badgeSize  = emojiSize * 0.35; // badge ✨ fin de séance (hotfix-porte-1 B4/D2)
 
   // === COLOR ===
   // Hub = CLAIRIÈRE DU CADRAN (verdicts CD Q1) : fond crème #F4EFE7 — pas un
@@ -110,6 +115,14 @@ const PulseButton = React.memo(function PulseButton({
       position: 'absolute',
       width: buttonSize,
     },
+    completionBadge: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+    },
+    completionBadgeEmoji: {
+      textAlign: 'center',
+    },
   });
 
   // === CONTENT ===
@@ -143,6 +156,22 @@ const PulseButton = React.memo(function PulseButton({
       />
       <View style={[styles.button, { backgroundColor: bgColor }]}>
         {renderContent()}
+        {/* ✨ fin de séance = badge superposé, coin haut-droit du hub — l'emoji
+            d'activité reste SEUL plein cadre dans le Text (hotfix-porte-1
+            B4/D2 : la concaténation `${emoji}✨` débordait le Text pensé pour
+            UN caractère). pointerEvents none, aucun impact accessibilité (le
+            hub est déjà `accessible={false}` ci-dessus). */}
+        {state === 'complete' && (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.completionBadge,
+              { width: badgeSize, height: badgeSize, top: -badgeSize * 0.15, right: -badgeSize * 0.15 },
+            ]}
+          >
+            <Text style={[styles.completionBadgeEmoji, { fontSize: badgeSize }]}>✨</Text>
+          </View>
+        )}
       </View>
     </View>
   );

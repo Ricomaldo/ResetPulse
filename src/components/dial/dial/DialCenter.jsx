@@ -46,9 +46,10 @@ const DialCenter = React.memo(function DialCenter({
     <View style={styles.container}>
       <PulseButton
         state={getState()}
-        // ✨ REJOINT l'emoji, ne le remplace pas — le compagnon reste jusqu'au
-        // bout (verdicts CD Q5). Sans emoji d'activité : ✨ seul.
-        emoji={isCompleted ? `${activity?.emoji ?? ''}✨` : null}
+        // hotfix-porte-1 B4/D2 : ✨ n'est plus concaténé à l'emoji (débordait
+        // le Text, prévu pour UN caractère) — l'emoji d'activité reste SEUL
+        // plein cadre, PulseButton pose ✨ en badge superposé quand
+        // state === 'complete'.
         activity={activity}
         color={color}
         clockwise={clockwise}
