@@ -24,6 +24,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useFirstRun } from '../hooks/useFirstRun';
+import { useDormantTips } from '../hooks/useDormantTips';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useSessionImmersion } from '../hooks/useSessionImmersion';
@@ -236,6 +237,42 @@ function DistractionButton({ showLabel, onDistraction }) {
       <Text style={styles.emoji}>🎲</Text>
       {showLabel && <Text style={styles.label}>{t('controls.distraction.tryMe')}</Text>}
     </TouchableOpacity>
+  );
+}
+
+// Astuce dormante v1 (ADR-016 §4, Lambda C) : même famille visuelle que le
+// dé (pill blanche, ombre légère) — une ligne discrète, jamais un mur.
+// Textes i18n FLAGGÉS pour review Claude design (formulation provisoire,
+// cf. dormantTips.palettes/focus dans locales/).
+function DormantTipPill({ tip }) {
+  const theme = useTheme();
+  const t = useTranslation();
+
+  const styles = StyleSheet.create({
+    pill: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.round,
+      marginTop: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: theme.spacing.xs,
+      ...theme.shadow('sm'),
+    },
+    text: {
+      color: theme.colors.text,
+      fontSize: rs(12, 'min'),
+      textAlign: 'center',
+    },
+  });
+
+  if (!tip) {
+    return null;
+  }
+
+  return (
+    <View style={styles.pill} testID={`dormantTip.${tip}`}>
+      <Text style={styles.text}>{t(`dormantTips.${tip}`)}</Text>
+    </View>
   );
 }
 
@@ -763,6 +800,25 @@ function TimerScreenContent() {
     immersionValue.value = withTiming(immersed ? 1 : 0, { duration: IMMERSION_FADE_MS });
   }, [immersed, immersionValue]);
 
+  // Astuces dormantes v1 (ADR-016 §4, Lambda C) : jamais pendant un Moment
+  // qui tourne, jamais pendant la Première fois, jamais en immersion ni en
+  // Focus — ce hook ne connaît aucune de ces conditions, elles vivent ici
+  // (`enabled`), côté écran, comme prescrit par le brief.
+  const canShowDormantTips =
+    !snapshot.running && firstRun.hasSeenFirstRun && !immersed && !isFocus;
+  const dormantTips = useDormantTips({ enabled: canShowDormantTips });
+  const showDormantTip = Boolean(dormantTips.activeTip) && canShowDormantTips;
+
+  // hasTriedFocus (Lambda C) : marqué au premier passage en Focus, quel que
+  // soit le chemin (segmenté du sheet OU double-tap fond) — les deux
+  // écrivent `currentMode` via TimerConfigContext, donc un seul effet ici
+  // les capte tous.
+  useEffect(() => {
+    if (isFocus) {
+      dormantTips.markFocusTried();
+    }
+  }, [isFocus]);
+
   // Chrome (TopTime, rangée compacte, dé) : fondu d'opacité pur — le layout
   // garde sa place réservée, seul le disque se recentre par transform (cf.
   // dialAnimatedStyle) pour ne jamais faire rejouer la géométrie SVG.
@@ -794,8 +850,9 @@ function TimerScreenContent() {
 
   const handleRootTouchStart = useCallback(() => {
     dismissDistractionLabel();
+    dormantTips.dismissActiveTip();
     registerActivity();
-  }, [dismissDistractionLabel, registerActivity]);
+  }, [dismissDistractionLabel, dormantTips, registerActivity]);
 
   const styles = StyleSheet.create({
     completionMessage: {
@@ -955,11 +1012,16 @@ function TimerScreenContent() {
                   showLabel={showDistractionLabel}
                   onDistraction={handleDistraction}
                 />
+                {showDormantTip && <DormantTipPill tip={dormantTips.activeTip} />}
               </Animated.View>
             )}
           </View>
           {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
-          <AsideZone isTimerRunning={snapshot.running} hidden={immersed} />
+          <AsideZone
+            isTimerRunning={snapshot.running}
+            hidden={immersed}
+            onPaletteOpened={dormantTips.markPalettesOpened}
+          />
           {!isFocus && (
             <FirstRunTips
               moment={firstRun.moment}

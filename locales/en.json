@@ -508,5 +508,9 @@
     "doubleTapHint": "tip: double-tap the background to switch",
     "handle": "open settings",
     "closedLabel": "rituals & settings"
+  },
+  "dormantTips": {
+    "palettes": "psst — your colors come in full palettes, in settings",
+    "focus": "want a bare screen? focus mode awaits in settings"
   }
 }

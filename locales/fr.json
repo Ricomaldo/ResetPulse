@@ -508,5 +508,9 @@
     "doubleTapHint": "astuce : double-tap le fond pour basculer",
     "handle": "ouvrir les réglages",
     "closedLabel": "rituels & réglages"
+  },
+  "dormantTips": {
+    "palettes": "t'as vu ? tes couleurs ont des palettes entières — dans les réglages",
+    "focus": "envie d'un écran nu ? le mode focus t'attend dans les réglages"
   }
 }
