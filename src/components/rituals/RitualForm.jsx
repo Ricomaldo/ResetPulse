@@ -5,7 +5,7 @@
  * Activité anonyme à la volée (ADR-015) — invisible pour l'user.
  */
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Keyboard, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
@@ -135,6 +135,11 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
   const t = useTranslation();
   const { customActivities, createActivity } = useCustomActivities();
   const [showEmojiGrid, setShowEmojiGrid] = useState(false);
+  // porte-3 (demande Eric) : « autre… » — en complément de la grille curée,
+  // un TextInput VISIBLE (le clavier emoji ne s'ouvre pas programmatiquement
+  // sur iOS ; l'utilisateur bascule lui-même via le globe 🌐) — accès à TOUS
+  // les emojis. Premier contenu saisi = emoji retenu, même chemin que la grille.
+  const [showFreeEmojiInput, setShowFreeEmojiInput] = useState(false);
 
   const initialActivity = initialRitual
     ? resolveRitualActivity(initialRitual, customActivities)
@@ -169,6 +174,16 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
     setPendingCustomEmoji(emoji);
     setSelectedActivityId(null);
     setShowEmojiGrid(false);
+    setShowFreeEmojiInput(false);
+  };
+
+  const handleFreeEmojiChange = (text) => {
+    const value = text.trim();
+    if (!value) {return;}
+    // iOS livre l'emoji complet (multi-codepoints compris) en UN événement —
+    // on le prend tel quel et on referme (grille + input + clavier).
+    Keyboard.dismiss();
+    handlePickCustomEmoji(value);
   };
 
   const handleSave = () => {
@@ -301,6 +316,28 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
       gap: theme.spacing.xs,
       marginTop: theme.spacing.sm,
     },
+    freeEmojiHint: {
+      color: theme.colors.textSecondary,
+      flex: 1,
+      fontSize: rs(11, 'min'),
+    },
+    freeEmojiInput: {
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border,
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 1,
+      fontSize: rs(22, 'min'),
+      minHeight: rs(48, 'min'),
+      minWidth: rs(64, 'min'),
+      paddingHorizontal: theme.spacing.sm,
+      textAlign: 'center',
+    },
+    freeEmojiRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
+    },
     saveButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.brand.primary,
@@ -401,6 +438,36 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
                   <Text style={styles.emojiButtonText}>{emoji}</Text>
                 </TouchableOpacity>
               ))}
+              {/* « autre… » : ouvre le TextInput libre ci-dessous */}
+              <TouchableOpacity
+                style={[styles.emojiButton, showFreeEmojiInput && styles.emojiButtonActive]}
+                onPress={() => {
+                  haptics.selection().catch(() => {});
+                  setShowFreeEmojiInput((visible) => !visible);
+                }}
+                activeOpacity={0.7}
+                accessible
+                accessibilityRole="button"
+                accessibilityLabel={t('rituals.form.customEmojiOther')}
+              >
+                <Text style={styles.emojiCustomButtonText}>…</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {showEmojiGrid && showFreeEmojiInput && (
+            <View style={styles.freeEmojiRow}>
+              <TextInput
+                style={styles.freeEmojiInput}
+                autoFocus
+                value=""
+                onChangeText={handleFreeEmojiChange}
+                maxLength={16}
+                placeholder={t('rituals.form.customEmojiPlaceholder')}
+                placeholderTextColor={theme.colors.textSecondary}
+                accessible
+                accessibilityLabel={t('rituals.form.customEmojiPlaceholder')}
+              />
+              <Text style={styles.freeEmojiHint}>{t('rituals.form.customEmojiHint')}</Text>
             </View>
           )}
         </View>

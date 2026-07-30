@@ -563,8 +563,12 @@ function TimerScreenContent() {
   // chrome s'efface, le disque devient décor. Machine d'état extraite
   // (useSessionImmersion) — ce composant ne fait qu'observer running/
   // isCompleted et piloter le fondu/l'échelle à l'écran.
+  // porte-3 V2 (verdict Eric) : FOCUS UNIQUEMENT — en standard, l'immersion
+  // imposait un Focus de fait et cachait le changement de couleur en direct
+  // (le cœur de la signature). Gaté à la source : hors Focus la machine ne
+  // s'arme jamais (et sortir de Focus en séance dissout l'immersion).
   const { immersed, registerActivity } = useSessionImmersion({
-    running: snapshot.running,
+    running: snapshot.running && isFocus,
     isCompleted: snapshot.isCompleted,
   });
 

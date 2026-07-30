@@ -29,13 +29,11 @@
  * 3c (immersion) : prop `hidden` — le drawer entier (bande fermée comprise)
  * s'efface en fondu/glissement quand la séance devient décor (TimerScreen).
  * Jamais démonté : isOpen/sous-écrans survivent à l'immersion.
- * 3c (export) : bloc 5 « garder en fond d'écran » — composition dédiée
- * (`WallpaperComposition`) montée hors-écran, capturée à la demande
- * (react-native-view-shot) puis partagée (expo-sharing). Modules natifs
- * requis en lazy dans le handler (jamais top-level) : dégrade en feedback
- * discret si absents du dev client courant.
+ * porte-3 V4 : l'export « garder en fond d'écran » est MORT (ligne de spec
+ * ère-CD mal interprétée) — l'idée d'origine d'Eric (image perso en FOND de
+ * l'app, item Ambiances) est tracée au backlog.
  */
-import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -52,13 +50,11 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { usePersistedState } from '../../hooks/usePersistedState';
 import { useAnalytics } from '../../hooks/useAnalytics';
-import useNotificationTimer from '../../hooks/useNotificationTimer';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
-import WallpaperComposition from '../export/WallpaperComposition';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -88,7 +84,7 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   // ScrollView si on démarre en paysage puis pivote en portrait).
   const { height: windowHeight } = useWindowDimensions();
   const {
-    timer: { clockwise, currentActivity },
+    timer: { clockwise },
     setClockwise,
     system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
@@ -96,7 +92,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
     setShowTime,
     mode: { current: currentMode },
     setMode,
-    palette: { currentColor },
   } = useTimerConfig();
 
   // Rappel doux (Lot 3e, opt-in strict) — la permission n'est demandée qu'au
@@ -280,41 +275,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
     ),
   }), [openY, snapClosed]);
 
-  // Export « garder en fond d'écran » (cadrage 3c Q3) : une composition
-  // dédiée (disque courant + emoji), rendue HORS ÉCRAN via
-  // `WallpaperComposition` (ci-dessous, montée en position absolue loin du
-  // viewport) et capturée via `react-native-view-shot` → partagée via
-  // `expo-sharing` (le share sheet iOS offre « Enregistrer dans Photos »,
-  // aucune permission à déclarer). react-native-view-shot/expo-sharing sont
-  // des modules NATIFS potentiellement absents du dev client courant — un
-  // require() PARESSEUX dans le handler (jamais un import top-level) évite
-  // tout crash au boot du bundle ; l'échec dégrade en feedback discret.
-  const wallpaperRef = useRef(null);
-  const [wallpaperUnavailable, setWallpaperUnavailable] = useState(false);
-
-  const handleWallpaperExport = useCallback(async () => {
-    haptics.selection().catch(() => {});
-    setWallpaperUnavailable(false);
-    try {
-      // eslint-disable-next-line global-require
-      const { captureRef } = require('react-native-view-shot');
-      // eslint-disable-next-line global-require
-      const Sharing = require('expo-sharing');
-
-      if (!wallpaperRef.current) {
-        throw new Error('WallpaperComposition not mounted');
-      }
-      const uri = await captureRef(wallpaperRef, { format: 'png', quality: 1 });
-      const canShare = await Sharing.isAvailableAsync();
-      if (!canShare) {
-        throw new Error('Sharing.isAvailableAsync: false');
-      }
-      await Sharing.shareAsync(uri, { mimeType: 'image/png', dialogTitle: t('aside.wallpaperExport') });
-    } catch (error) {
-      setWallpaperUnavailable(true);
-    }
-  }, [t]);
-
   const styles = StyleSheet.create({
     backdrop: {
       ...StyleSheet.absoluteFillObject,
@@ -435,19 +395,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       fontSize: rs(11, 'min'),
       marginTop: rs(8),
       textAlign: 'center',
-    },
-    wallpaperFeedback: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(11, 'min'),
-      paddingBottom: rs(8),
-      textAlign: 'center',
-    },
-    // Composition d'export (3c) : montée mais jamais visible — loin du
-    // viewport, capturée par react-native-view-shot au geste export.
-    wallpaperOffscreen: {
-      left: -9999,
-      position: 'absolute',
-      top: -9999,
     },
   });
 
@@ -593,6 +540,13 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                                   haptics.selection().catch(() => {});
                                   if (key === 'focus' && !isActive) {
                                     analytics.trackFocusEntered('sheet');
+                                    // porte-3 (5e point Eric, fix immédiat) :
+                                    // l'épure ne laisse pas traîner une nappe
+                                    // blanche — basculer sur Focus referme le
+                                    // sheet. (La grammaire complète des
+                                    // transitions vers l'épure reste OUVERTE,
+                                    // à griller avec Eric.)
+                                    snapTo(false);
                                   }
                                   setMode(key);
                                 }}
@@ -663,9 +617,10 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
 
-                        {/* Bloc 4 : Palettes — sous-écran réel (C6.1) */}
+                        {/* Bloc 4 : Palettes — sous-écran réel (C6.1),
+                            dernière rangée depuis la mort de l'export (V4) */}
                         <TouchableOpacity
-                          style={styles.optionRow}
+                          style={[styles.optionRow, styles.optionRowLast]}
                           accessible
                           accessibilityRole="button"
                           accessibilityLabel={t('palettesPanel.sheetRow')}
@@ -678,26 +633,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                           <Text style={styles.inertRowLabel}>{t('palettesPanel.sheetRow')}</Text>
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
-
-                        {/* Bloc 5 : export fond d'écran (cadrage 3c Q3) —
-                            action directe (pas un sous-écran), visible en
-                            séance comme au repos : la composition prend la
-                            couleur/emoji COURANTS. */}
-                        <TouchableOpacity
-                          testID="aside.wallpaper-export"
-                          style={[styles.optionRow, styles.optionRowLast]}
-                          accessible
-                          accessibilityRole="button"
-                          accessibilityLabel={t('aside.wallpaperExport')}
-                          onPress={handleWallpaperExport}
-                          activeOpacity={0.7}
-                        >
-                          <Text style={styles.inertRowLabel}>{t('aside.wallpaperExport')}</Text>
-                          <Text style={styles.inertChevron}>↓</Text>
-                        </TouchableOpacity>
-                        {wallpaperUnavailable && (
-                          <Text style={styles.wallpaperFeedback}>{t('aside.wallpaperUnavailable')}</Text>
-                        )}
                       </>
                     )}
                   </>
@@ -707,12 +642,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
           </Animated.View>
         </Animated.View>
       </GestureDetector>
-
-      {/* Composition d'export hors-écran (3c Q3) — jamais montrée, capturée
-          au geste « garder en fond d'écran ». */}
-      <View style={styles.wallpaperOffscreen} pointerEvents="none">
-        <WallpaperComposition ref={wallpaperRef} color={currentColor} emoji={currentActivity?.emoji} />
-      </View>
     </View>
   );
 }

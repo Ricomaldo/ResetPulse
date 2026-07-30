@@ -477,7 +477,10 @@
       "deleteButton": "Supprimer",
       "deleteConfirmTitle": "Supprimer ce rituel ?",
       "deleteConfirmMessage": "Cette action est irréversible.",
-      "customActivityName": "Mon rituel"
+      "customActivityName": "Mon rituel",
+      "customEmojiOther": "autre…",
+      "customEmojiPlaceholder": "ton emoji",
+      "customEmojiHint": "bascule ton clavier emoji avec le globe 🌐"
     },
     "restoreBase": "restaurer les rituels de base"
   },
@@ -505,8 +508,6 @@
     "exitFocus": "quitter le focus",
     "doubleTapHint": "astuce : double-tap le fond pour basculer",
     "handle": "ouvrir les réglages",
-    "closedLabel": "rituels & réglages",
-    "wallpaperExport": "garder en fond d'écran",
-    "wallpaperUnavailable": "disponible au prochain build"
+    "closedLabel": "rituels & réglages"
   }
 }
