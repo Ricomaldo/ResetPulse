@@ -43,15 +43,21 @@ const PulseButton = React.memo(function PulseButton({
   // Distraction (MOT-f, dé — `{ movement, variant }`) override le mouvement
   // courant quand active, quel que soit l'état, avec sa variante d'intensité
   // tirée au dé — `useEmojiMovement` coupe tout si reduce motion.
-  const tempo = activity?.pulseDuration || DEFAULT_TEMPO;
+  // porte-2 (retour Eric) : la respiration de REPOS est unifiée au tempo
+  // calme de l'app (HALO_TEMPO) — le pouls-invitation est la signature, même
+  // souffle partout. L'identité par activité ne s'exprime qu'EN SÉANCE, par
+  // le mouvement (tempo = pulseDuration).
+  const activityTempo = activity?.pulseDuration || DEFAULT_TEMPO;
   let movement = null;
   let movementActive = false;
+  let tempo = activityTempo;
   if (distraction?.movement) {
     movement = distraction.movement;
     movementActive = true;
   } else if (state === 'rest' && shouldPulse) {
     movement = 'breathe';
     movementActive = true;
+    tempo = HALO_TEMPO;
   } else if (state === 'running' && activity?.movement) {
     movement = activity.movement;
     movementActive = true;
