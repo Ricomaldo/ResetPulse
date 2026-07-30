@@ -3,23 +3,35 @@
     "cancel": "إلغاء",
     "ok": "حسناً",
     "retry": "إعادة محاولة",
-    "continue": "متابعة"
+    "continue": "متابعة",
+    "back": "رجوع",
+    "delete": "حذف"
   },
+  "controls": {
+    "digitalTimer": {
+      "decreaseDuration": "Decrease duration",
+      "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
+      "showTime": "Show time",
+      "tapToHide": "Tap to hide",
+      "tapToShow": "Tap to show"
+    },
+    "rotation": {
+      "clockwise": "Clockwise",
+      "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "فاجئني"
+    }
+  },
+  "invitation": "هل أنت مستعد?",
   "welcome": {
     "title": "مرحباً بك في ResetPulse"
   },
-  "invitation": "هل أنت مستعد?",
   "onboarding": {
     "restartGuide": "إعادة تشغيل الدليل",
     "restartGuideDescription": "عرض شاشة الترحيب والنصائح مرة أخرى",
-    "paywall": {
-      "title": "لقد أنشأت لحظتك الأولى",
-      "profile": "الملف الشخصي:",
-      "question": "هل تريد إنشاء المزيد?",
-      "valueProposition": "15 لوح · 16 نشاط · إنشاءات غير محدودة",
-      "price": "4,99€ — مرة واحدة، إلى الأبد",
-      "ctaTrial": "جرب 7 أيام مجاناً"
-    },
     "intentions": {
       "title": "What's it for?",
       "relax": {
@@ -70,6 +82,14 @@
       "cta": "Create my moment",
       "durationLabel": "How long?",
       "namePlaceholder": "Name your moment..."
+    },
+    "paywall": {
+      "title": "لقد أنشأت لحظتك الأولى",
+      "profile": "الملف الشخصي:",
+      "question": "هل تريد إنشاء المزيد?",
+      "valueProposition": "15 لوح · 16 نشاط · إنشاءات غير محدودة",
+      "price": "4,99€ — مرة واحدة، إلى الأبد",
+      "ctaTrial": "جرب 7 أيام مجاناً"
     },
     "launch": {
       "title": "Let's go!",
@@ -211,6 +231,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "لوحات كاملة، طقوس غير محدودة، أصوات هادئة تُضفي أجواءً على جلساتك — كل ما تحتاجه لجعل قرصك ينبض، بوتيرتك الخاصة.",
+    "features": {
+      "palettes": "10 لوحات ألوان إضافية",
+      "rituals": "طقوس غير محدودة",
+      "sounds": "أصوات Ambiances"
+    },
+    "price": "%{price}، مرة واحدة. ملكك للأبد.",
+    "startTrial": "جرب 7 أيام مجاناً",
+    "breatheInvitation": "هل تريد أن تجعله يتنفس؟ اكتشف Ambiances"
+  },
   "activities": {
     "none": "أساسي",
     "work": "عمل",
@@ -241,27 +273,25 @@
     "dawn": "الشفق",
     "dusk": "الغسق",
     "soft": "لطيف",
-    "autumn": "الخريف",
     "lavender": "الخزامى",
     "teal": "أزرق مخضر",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "جرس كلاسيكي",
-    "bell_melodic": "جرس لحني",
-    "microwave_vintage": "ميكروويف عتيق",
-    "microwave_ping": "تنبيه ميكروويف",
-    "kitchen_timer": "مؤقت مطبخ",
-    "kitchen_timer_2": "مؤقت ميكانيكي",
-    "egg_timer": "مؤقت البيض",
-    "toaster_bell": "محمصة خبز",
-    "ding_effect": "رنين بسيط",
-    "timer_complete": "اكتمال المؤقت"
+    "jingle_achievement": "إنجاز",
+    "singing_bowl": "الوعاء الغنائي",
+    "contrabass_pluck": "وتر عميق",
+    "kalimba": "كاليمبا",
+    "vibraphone_chord": "فيبرافون",
+    "marimba_dry": "ماريمبا",
+    "marimba_ascending": "ماريمبا صاعدة",
+    "up_chime": "رنين الجرس",
+    "success_glissando": "غليساندو"
   },
   "accessibility": {
     "keepAwake": "إبقاء الشاشة مضاءة",
     "rotationDirection": "اتجاه الدوران",
+    "showTime": "إظهار الوقت",
     "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
@@ -281,6 +311,7 @@
     "restorePurchasesHint": "Restore premium access if you already purchased",
     "saveActivityHint": "Saves changes to this activity",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "distraction": "إلهاء",
     "timer": {
       "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
       "dialTapToToggle": "Tap to start or pause timer",
@@ -295,21 +326,21 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
+    "paletteItem": "Color palette: %{name}",
+    "applyRitual": "تطبيق طقس %{name}",
+    "editRitual": "تعديل الطقس %{name}",
+    "createRitual": "إنشاء طقس",
+    "closeRitualForm": "إغلاق نموذج الطقس",
+    "chooseCustomEmoji": "اختيار رمز تعبيري آخر عبر لوحة المفاتيح",
+    "ritualNamePreset": "طقس جاهز %{name}",
+    "deleteRitual": "حذف الطقس %{name}",
+    "favoriteRitual": "الطقس المفضل %{name}"
   },
-  "discovery": {
-    "defaultCta": "جرب 7 أيام مجانًا",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+  "twoTimers": {
+    "title": "You've created 2 moments!",
+    "message": "Want to explore more colors and activities?",
+    "explore": "اكتشف",
+    "dismiss": "Maybe later"
   },
   "customActivities": {
     "toast": {
@@ -344,40 +375,6 @@
     "duration": {
       "minutes": "min"
     }
-  },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "لحظة لنفسك؟",
-        "bodyPersonalized": "{{name}} الخاص بك ينتظرك {{emoji}} — {{duration}} دقيقة لك؟",
-        "bodyGeneric": "مؤقتك ينتظرك — خذ لحظة لنفسك"
-      },
-      "day7": {
-        "title": "فرصتك الأخيرة",
-        "body": "تجربة مجانية لمدة 7 أيام — احصل عليها قبل انتهاء صلاحيتها"
-      }
-    }
-  },
-  "controls": {
-    "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
-    },
-    "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
-    }
-  },
-  "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
-    "explore": "اكتشف",
-    "dismiss": "Maybe later"
   },
   "timerMessages": {
     "none": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "هيا بنا",
+      "endMessage": "تم ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "طقوسي",
+    "base": {
+      "meditation": "التنفس",
+      "break": "استراحة قهوة",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "طقوسي",
+      "createRow": "إنشاء طقس",
+      "empty": "لا توجد طقوس بعد",
+      "durationBadge": "%{minutes} د"
+    },
+    "form": {
+      "createTitle": "إنشاء طقس",
+      "editTitle": "تعديل الطقس",
+      "emojiLabel": "الرمز التعبيري",
+      "emojiCustomButton": "رمز تعبيري آخر",
+      "colorLabel": "اللون",
+      "durationLabel": "المدة",
+      "soundLabel": "صوت النهاية",
+      "saveButton": "حفظ",
+      "deleteButton": "حذف",
+      "deleteConfirmTitle": "حذف هذا الطقس؟",
+      "deleteConfirmMessage": "هذا الإجراء لا يمكن التراجع عنه.",
+      "customActivityName": "طقسي",
+      "customEmojiOther": "آخر…",
+      "customEmojiPlaceholder": "الرمز التعبيري الخاص بك",
+      "customEmojiHint": "بدّل إلى لوحة الرموز التعبيرية عبر أيقونة الكرة الأرضية 🌐"
+    },
+    "restoreBase": "استعادة الطقوس الأساسية"
+  },
+  "palettesPanel": {
+    "sheetRow": "اللوحات",
+    "title": "اللوحات",
+    "included": "مُضمّن",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "لوحة Ambiances — جرّبها بحرية",
+    "ambiancesDiscover": "اكتشف Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "التركيز"
+  },
+  "focus": {
+    "hint": "مرر لأعلى"
+  },
+  "firstRun": {
+    "skip": "تخطي",
+    "welcome": "لنبدأ باختيار نشاط 👇",
+    "companion": "هذا الرمز التعبيري يرافقك. مرر القرص لتحديد الوقت.",
+    "dialColor": "لون؟ يتغيّر فوراً.",
+    "ready": "كل شيء جاهز. المس القرص للبدء."
+  },
+  "aside": {
+    "exitFocus": "الخروج من وضع التركيز",
+    "doubleTapHint": "نصيحة: انقر مرتين على الخلفية للتبديل",
+    "handle": "فتح الإعدادات",
+    "closedLabel": "الطقوس والإعدادات"
   }
 }

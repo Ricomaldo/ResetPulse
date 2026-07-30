@@ -3,23 +3,35 @@
     "cancel": "Отмена",
     "ok": "ОК",
     "retry": "Повторить",
-    "continue": "Продолжить"
+    "continue": "Продолжить",
+    "back": "Назад",
+    "delete": "Удалить"
   },
+  "controls": {
+    "digitalTimer": {
+      "decreaseDuration": "Decrease duration",
+      "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
+      "showTime": "Show time",
+      "tapToHide": "Tap to hide",
+      "tapToShow": "Tap to show"
+    },
+    "rotation": {
+      "clockwise": "Clockwise",
+      "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "Удиви меня"
+    }
+  },
+  "invitation": "Готов?",
   "welcome": {
     "title": "Добро пожаловать в ResetPulse"
   },
-  "invitation": "Готов?",
   "onboarding": {
     "restartGuide": "Перезапустить руководство",
     "restartGuideDescription": "Показать приветственный экран и подсказки снова",
-    "paywall": {
-      "title": "Ты создал свой первый момент",
-      "profile": "Профиль:",
-      "question": "Хочешь создать ещё?",
-      "valueProposition": "15 палитр · 16 активностей · Неограниченное творчество",
-      "price": "4,99€ — Один раз, навсегда",
-      "ctaTrial": "7 дней бесплатно"
-    },
     "intentions": {
       "title": "What's it for?",
       "relax": {
@@ -70,6 +82,14 @@
       "cta": "Create my moment",
       "durationLabel": "How long?",
       "namePlaceholder": "Name your moment..."
+    },
+    "paywall": {
+      "title": "Ты создал свой первый момент",
+      "profile": "Профиль:",
+      "question": "Хочешь создать ещё?",
+      "valueProposition": "15 палитр · 16 активностей · Неограниченное творчество",
+      "price": "4,99€ — Один раз, навсегда",
+      "ctaTrial": "7 дней бесплатно"
     },
     "launch": {
       "title": "Let's go!",
@@ -211,6 +231,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Полные палитры, неограниченные ритуалы, мягкие звуки для твоих сессий — всё, чтобы циферблат ожил, в твоём темпе.",
+    "features": {
+      "palettes": "Ещё 10 цветовых палитр",
+      "rituals": "Неограниченные ритуалы",
+      "sounds": "Звуки Ambiances"
+    },
+    "price": "%{price}, один раз. Твоё навсегда.",
+    "startTrial": "Попробовать 7 дней бесплатно",
+    "breatheInvitation": "Хочешь заставить его дышать? Открой Ambiances"
+  },
   "activities": {
     "none": "Базовая",
     "work": "Работа",
@@ -241,27 +273,25 @@
     "dawn": "Аврора",
     "dusk": "Сумерки",
     "soft": "Нежность",
-    "autumn": "Осень",
     "lavender": "Лаванда",
     "teal": "Бирюзовый",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "Классический звонок",
-    "bell_melodic": "Мелодичный звонок",
-    "microwave_vintage": "Винтажная микроволновка",
-    "microwave_ping": "Пинг микроволновки",
-    "kitchen_timer": "Кухонный таймер",
-    "kitchen_timer_2": "Механический таймер",
-    "egg_timer": "Таймер для яиц",
-    "toaster_bell": "Тостер",
-    "ding_effect": "Простой динь",
-    "timer_complete": "Таймер завершен"
+    "jingle_achievement": "Достижение",
+    "singing_bowl": "Поющая чаша",
+    "contrabass_pluck": "Низкая струна",
+    "kalimba": "Калимба",
+    "vibraphone_chord": "Вибрафон",
+    "marimba_dry": "Маримба",
+    "marimba_ascending": "Восходящая маримба",
+    "up_chime": "Перезвон",
+    "success_glissando": "Глиссандо"
   },
   "accessibility": {
     "keepAwake": "Не блокировать экран",
     "rotationDirection": "Направление вращения",
+    "showTime": "Показать время",
     "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
@@ -281,6 +311,7 @@
     "restorePurchasesHint": "Restore premium access if you already purchased",
     "saveActivityHint": "Saves changes to this activity",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "distraction": "Отвлечение",
     "timer": {
       "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
       "dialTapToToggle": "Tap to start or pause timer",
@@ -295,21 +326,21 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
+    "paletteItem": "Color palette: %{name}",
+    "applyRitual": "Применить ритуал %{name}",
+    "editRitual": "Изменить ритуал %{name}",
+    "createRitual": "Создать ритуал",
+    "closeRitualForm": "Закрыть форму ритуала",
+    "chooseCustomEmoji": "Выбрать другой эмодзи с клавиатуры",
+    "ritualNamePreset": "Готовый ритуал %{name}",
+    "deleteRitual": "Удалить ритуал %{name}",
+    "favoriteRitual": "Избранный ритуал %{name}"
   },
-  "discovery": {
-    "defaultCta": "Попробовать 7 дней бесплатно",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+  "twoTimers": {
+    "title": "You've created 2 moments!",
+    "message": "Want to explore more colors and activities?",
+    "explore": "Открыть",
+    "dismiss": "Maybe later"
   },
   "customActivities": {
     "toast": {
@@ -344,40 +375,6 @@
     "duration": {
       "minutes": "min"
     }
-  },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "Момент для себя?",
-        "bodyPersonalized": "Твой {{name}} тебя ждет {{emoji}} — {{duration}} мин для тебя?",
-        "bodyGeneric": "Твой таймер тебя ждет — возьми момент для себя"
-      },
-      "day7": {
-        "title": "Последний шанс",
-        "body": "7 дней бесплатно — используй это предложение пока не истекло"
-      }
-    }
-  },
-  "controls": {
-    "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
-    },
-    "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
-    }
-  },
-  "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
-    "explore": "Открыть",
-    "dismiss": "Maybe later"
   },
   "timerMessages": {
     "none": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Начинаем",
+      "endMessage": "Готово ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Мои ритуалы",
+    "base": {
+      "meditation": "Дыхание",
+      "break": "Перерыв на кофе",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Мои ритуалы",
+      "createRow": "Создать ритуал",
+      "empty": "Пока нет ритуалов",
+      "durationBadge": "%{minutes} мин"
+    },
+    "form": {
+      "createTitle": "Создать ритуал",
+      "editTitle": "Изменить ритуал",
+      "emojiLabel": "Эмодзи",
+      "emojiCustomButton": "Другой эмодзи",
+      "colorLabel": "Цвет",
+      "durationLabel": "Длительность",
+      "soundLabel": "Звук окончания",
+      "saveButton": "Сохранить",
+      "deleteButton": "Удалить",
+      "deleteConfirmTitle": "Удалить этот ритуал?",
+      "deleteConfirmMessage": "Это действие необратимо.",
+      "customActivityName": "Мой ритуал",
+      "customEmojiOther": "другое…",
+      "customEmojiPlaceholder": "твой эмодзи",
+      "customEmojiHint": "Переключись на эмодзи-клавиатуру с помощью значка глобуса 🌐"
+    },
+    "restoreBase": "Восстановить базовые ритуалы"
+  },
+  "palettesPanel": {
+    "sheetRow": "Палитры",
+    "title": "Палитры",
+    "included": "Включено",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Палитра Ambiances — попробуй бесплатно",
+    "ambiancesDiscover": "Открой Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Фокус"
+  },
+  "focus": {
+    "hint": "Смахни вверх"
+  },
+  "firstRun": {
+    "skip": "Пропустить",
+    "welcome": "Начнём с выбора активности 👇",
+    "companion": "Этот эмодзи составит тебе компанию. Проведи по диску, чтобы задать время.",
+    "dialColor": "Цвет? Он меняется сразу же.",
+    "ready": "Всё готово. Коснись диска, чтобы начать."
+  },
+  "aside": {
+    "exitFocus": "Выйти из фокуса",
+    "doubleTapHint": "Совет: дважды нажми на фон, чтобы переключить",
+    "handle": "Открыть настройки",
+    "closedLabel": "Ритуалы и настройки"
   }
 }

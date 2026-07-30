@@ -3,23 +3,35 @@
     "cancel": "Avbryt",
     "ok": "OK",
     "retry": "Prøv igjen",
-    "continue": "Fortsett"
+    "continue": "Fortsett",
+    "back": "Tilbake",
+    "delete": "Slett"
   },
+  "controls": {
+    "digitalTimer": {
+      "decreaseDuration": "Decrease duration",
+      "increaseDuration": "Increase duration",
+      "timeLabel": "Time: %{time}",
+      "durationLabel": "Duration: %{time}",
+      "showTime": "Show time",
+      "tapToHide": "Tap to hide",
+      "tapToShow": "Tap to show"
+    },
+    "rotation": {
+      "clockwise": "Clockwise",
+      "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "Overrask meg"
+    }
+  },
+  "invitation": "Klar?",
   "welcome": {
     "title": "Velkommen til ResetPulse"
   },
-  "invitation": "Klar?",
   "onboarding": {
     "restartGuide": "Start guiden på nytt",
     "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen",
-    "paywall": {
-      "title": "Du opprettet ditt første moment",
-      "profile": "Profil:",
-      "question": "Vil du opprett flere?",
-      "valueProposition": "15 paletter · 16 aktiviteter · Ubegrenset kreativitet",
-      "price": "4,99€ — En gang, for alltid",
-      "ctaTrial": "Prøv 7 dager gratis"
-    },
     "intentions": {
       "title": "What's it for?",
       "relax": {
@@ -70,6 +82,14 @@
       "cta": "Create my moment",
       "durationLabel": "How long?",
       "namePlaceholder": "Name your moment..."
+    },
+    "paywall": {
+      "title": "Du opprettet ditt første moment",
+      "profile": "Profil:",
+      "question": "Vil du opprett flere?",
+      "valueProposition": "15 paletter · 16 aktiviteter · Ubegrenset kreativitet",
+      "price": "4,99€ — En gang, for alltid",
+      "ctaTrial": "Prøv 7 dager gratis"
     },
     "launch": {
       "title": "Let's go!",
@@ -211,6 +231,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Fullstendige paletter, ubegrensede ritualer, milde lyder som pynter øktene dine — alt for å få skiven din til å puste, i ditt tempo.",
+    "features": {
+      "palettes": "10 fargepaletter til",
+      "rituals": "Ubegrensede ritualer",
+      "sounds": "Ambiances-lyder"
+    },
+    "price": "%{price}, én gang. Din for alltid.",
+    "startTrial": "Prøv 7 dager gratis",
+    "breatheInvitation": "Vil du få den til å puste? Utforsk Ambiances"
+  },
   "activities": {
     "none": "Grunnleggende",
     "work": "Arbeid",
@@ -241,27 +273,25 @@
     "dawn": "Aurora",
     "dusk": "Skumring",
     "soft": "Mild",
-    "autumn": "Høst",
     "lavender": "Lavendel",
     "teal": "Blågrønn",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "Klassisk bjelle",
-    "bell_melodic": "Melodisk bjelle",
-    "microwave_vintage": "Vintage mikrobølgeovn",
-    "microwave_ping": "Mikrobølgeovn ping",
-    "kitchen_timer": "Kjøkkentimer",
-    "kitchen_timer_2": "Mekanisk timer",
-    "egg_timer": "Eggtimer",
-    "toaster_bell": "Brødrister",
-    "ding_effect": "Enkel ding",
-    "timer_complete": "Timer fullført"
+    "jingle_achievement": "Prestasjon",
+    "singing_bowl": "Klangskål",
+    "contrabass_pluck": "Dyp streng",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibrafon",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Stigende marimba",
+    "up_chime": "Klokkespill",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Hold skjermen våken",
     "rotationDirection": "Rotasjonsretning",
+    "showTime": "Vis tid",
     "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
@@ -281,6 +311,7 @@
     "restorePurchasesHint": "Restore premium access if you already purchased",
     "saveActivityHint": "Saves changes to this activity",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "distraction": "Distraksjon",
     "timer": {
       "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
       "dialTapToToggle": "Tap to start or pause timer",
@@ -295,21 +326,21 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
+    "paletteItem": "Color palette: %{name}",
+    "applyRitual": "Bruk ritualet %{name}",
+    "editRitual": "Rediger ritualet %{name}",
+    "createRitual": "Opprett et ritual",
+    "closeRitualForm": "Lukk ritualskjemaet",
+    "chooseCustomEmoji": "Velg en annen emoji via tastaturet",
+    "ritualNamePreset": "Forhåndsdefinert ritual %{name}",
+    "deleteRitual": "Slett ritualet %{name}",
+    "favoriteRitual": "Favorittritual %{name}"
   },
-  "discovery": {
-    "defaultCta": "Prøv 7 dager gratis",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+  "twoTimers": {
+    "title": "You've created 2 moments!",
+    "message": "Want to explore more colors and activities?",
+    "explore": "Oppdag",
+    "dismiss": "Maybe later"
   },
   "customActivities": {
     "toast": {
@@ -344,40 +375,6 @@
     "duration": {
       "minutes": "min"
     }
-  },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "Et øyeblikk for deg selv?",
-        "bodyPersonalized": "Din {{name}} venter på deg {{emoji}} — {{duration}} min for deg?",
-        "bodyGeneric": "Din timer venter — ta et øyeblikk for deg selv"
-      },
-      "day7": {
-        "title": "Siste sjanse",
-        "body": "7 dagers gratis prøveperiode — ta den før den utløper"
-      }
-    }
-  },
-  "controls": {
-    "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
-    },
-    "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
-    }
-  },
-  "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
-    "explore": "Oppdag",
-    "dismiss": "Maybe later"
   },
   "timerMessages": {
     "none": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Sett i gang",
+      "endMessage": "Ferdig ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Mine ritualer",
+    "base": {
+      "meditation": "Pusting",
+      "break": "Kaffepause",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Mine ritualer",
+      "createRow": "Opprett et ritual",
+      "empty": "Ingen ritualer ennå",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Opprett et ritual",
+      "editTitle": "Rediger ritual",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Annen emoji",
+      "colorLabel": "Farge",
+      "durationLabel": "Varighet",
+      "soundLabel": "Sluttlyd",
+      "saveButton": "Lagre",
+      "deleteButton": "Slett",
+      "deleteConfirmTitle": "Slette dette ritualet?",
+      "deleteConfirmMessage": "Denne handlingen kan ikke angres.",
+      "customActivityName": "Mitt ritual",
+      "customEmojiOther": "annet…",
+      "customEmojiPlaceholder": "din emoji",
+      "customEmojiHint": "Bytt til emoji-tastaturet med globusen 🌐"
+    },
+    "restoreBase": "Gjenopprett grunnritualer"
+  },
+  "palettesPanel": {
+    "sheetRow": "Paletter",
+    "title": "Paletter",
+    "included": "Inkludert",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-palett — prøv den fritt",
+    "ambiancesDiscover": "Utforsk Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Fokus"
+  },
+  "focus": {
+    "hint": "Sveip opp"
+  },
+  "firstRun": {
+    "skip": "Hopp over",
+    "welcome": "La oss starte med å velge en aktivitet 👇",
+    "companion": "Denne emojien holder deg med selskap. Skyv skiven for å stille inn tiden.",
+    "dialColor": "En farge? Den endres med en gang.",
+    "ready": "Alt er klart. Trykk på skiven for å starte."
+  },
+  "aside": {
+    "exitFocus": "Forlat fokus",
+    "doubleTapHint": "Tips: dobbelttrykk på bakgrunnen for å bytte",
+    "handle": "Åpne innstillinger",
+    "closedLabel": "Ritualer og innstillinger"
   }
 }
