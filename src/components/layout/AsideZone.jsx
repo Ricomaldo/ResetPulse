@@ -31,7 +31,7 @@
  * Jamais démonté : isOpen/sous-écrans survivent à l'immersion.
  */
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -52,8 +52,6 @@ import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -76,6 +74,12 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
+  // Continuité paysage (3c) : useWindowDimensions (pas Dimensions.get figé
+  // au chargement du module) — la hauteur totale du drawer (style `drawer`)
+  // doit suivre la rotation, sinon son contenu se retrouve borné par la
+  // hauteur de l'ORIENTATION AU DÉMARRAGE de l'app (clip possible du
+  // ScrollView si on démarre en paysage puis pivote en portrait).
+  const { height: windowHeight } = useWindowDimensions();
   const {
     timer: { clockwise },
     setClockwise,
@@ -119,10 +123,10 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   const showDoubleTapHint = !asideOpenCountLoading && asideOpenCount <= 2;
   // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
   // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
-  const [contentHeight, setContentHeight] = useState(SCREEN_HEIGHT * 0.6);
+  const [contentHeight, setContentHeight] = useState(windowHeight * 0.6);
   // Hauteur RÉELLE du conteneur (SafeArea du parent) — le seul repère honnête
   // pour positionner le drawer (cf. commentaire CLOSED_VISIBLE).
-  const [containerH, setContainerH] = useState(SCREEN_HEIGHT);
+  const [containerH, setContainerH] = useState(windowHeight);
   const snapClosed = containerH - CLOSED_VISIBLE;
 
   const openY = Math.max(
@@ -146,8 +150,8 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
     setContentHeight(e.nativeEvent.layout.height);
   };
 
-  const translateY = useSharedValue(SCREEN_HEIGHT); // offscreen avant mesure
-  const startY = useSharedValue(SCREEN_HEIGHT);
+  const translateY = useSharedValue(windowHeight); // offscreen avant mesure
+  const startY = useSharedValue(windowHeight);
 
   // Immersion (cadrage 3c) : `hidden` fait disparaître la bande fermée en
   // fondu — opacité + léger glissement vers le bas — SANS démonter le
@@ -277,7 +281,7 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       backgroundColor: theme.colors.surface,
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
-      height: SCREEN_HEIGHT,
+      height: windowHeight,
       left: 0,
       position: 'absolute',
       right: 0,

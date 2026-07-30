@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTimerRemaining } from '../../contexts/TimerRemainingContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
+import { useScreenOrientation } from '../../hooks/useScreenOrientation';
 import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
 import TimerDial from './TimerDial';
@@ -179,6 +180,14 @@ export default function TimeTimer({
       hasIncrementedUsage.current = false;
     }
   }, [timer.running, timer.remaining, currentActivity, incrementUsage]);
+
+  // Continuité paysage (3c) : `getComponentSizes`/`rs` relisent
+  // Dimensions.get('window') à CHAQUE appel (déjà vrai), mais rien ne
+  // déclenchait de re-render à la rotation quand le timer est à l'arrêt
+  // (running déclenche déjà un re-render ~1/s via useTimer). useWindowDimensions
+  // (via useScreenOrientation, hook déjà présent mais orphelin) s'abonne aux
+  // changements d'orientation — le disque suit la rotation même au repos.
+  useScreenOrientation();
 
   // Get responsive dimensions - zen mode: timer dominates. Le cadran ne se
   // remonte jamais au changement de mode (state machine préservée) — seule
