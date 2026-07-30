@@ -274,11 +274,6 @@
     "keepAwake": "画面をスリープさせない",
     "rotationDirection": "回転方向",
     "showTime": "時間を表示",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
     "colorNumber": "カラー %{number}",
     "discoverMorePalettes": "タップしてさらにパレットを見る",
     "celebrationEmoji": "お祝い",
@@ -325,7 +320,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "アクティビティを作成",
       "namePlaceholder": "例：ギター、料理...",

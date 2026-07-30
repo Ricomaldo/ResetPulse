@@ -261,11 +261,6 @@
   "accessibility": {
     "keepAwake": "保持屏幕常亮",
     "rotationDirection": "旋转方向",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
     "colorNumber": "颜色 %{number}",
     "discoverMorePalettes": "点按以发现更多调色板",
     "celebrationEmoji": "庆祝",
@@ -313,7 +308,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "创建活动",
       "namePlaceholder": "例如：吉他、烹饪...",

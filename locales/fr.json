@@ -292,11 +292,6 @@
     "keepAwake": "Maintenir l'écran allumé",
     "rotationDirection": "Sens de rotation",
     "showTime": "Afficher le temps",
-    "activity": "Activité %{name}",
-    "activityLocked": "Activité premium verrouillée",
-    "moreActivities": "Plus d'activités",
-    "discoverPremium": "Découvrir les activités premium",
-    "customActivityHint": "Maintenez appuye pour modifier cette activite personnalisee",
     "colorNumber": "Couleur %{number}",
     "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
     "celebrationEmoji": "Célébration",
@@ -369,7 +364,6 @@
       "minutes": "min"
     },
     "addButton": "Creer une activite",
-    "addButtonHint": "Creer une activite personnalisee",
     "toast": {
       "created": "Activite creee !",
       "updated": "Activite modifiee",

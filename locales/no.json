@@ -292,11 +292,6 @@
     "keepAwake": "Hold skjermen våken",
     "rotationDirection": "Rotasjonsretning",
     "showTime": "Vis tid",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
     "colorNumber": "Farge %{number}",
     "discoverMorePalettes": "Trykk for å oppdage flere paletter",
     "celebrationEmoji": "Feiring",
@@ -349,7 +344,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "Opprett aktivitet",
       "namePlaceholder": "F.eks: Gitar, Matlaging...",

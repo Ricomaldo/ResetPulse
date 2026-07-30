@@ -273,11 +273,6 @@
   "accessibility": {
     "keepAwake": "Scherm wakker houden",
     "rotationDirection": "Draairichting",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
     "colorNumber": "Kleur %{number}",
     "discoverMorePalettes": "Tik om meer paletten te ontdekken",
     "celebrationEmoji": "Viering",
@@ -325,7 +320,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "Activiteit aanmaken",
       "namePlaceholder": "Bijv: Gitaar, Koken...",

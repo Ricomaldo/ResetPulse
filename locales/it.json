@@ -273,11 +273,6 @@
   "accessibility": {
     "keepAwake": "Mantieni schermo attivo",
     "rotationDirection": "Direzione di rotazione",
-    "activity": "Attività %{name}",
-    "activityLocked": "Attività premium bloccata",
-    "customActivityHint": "Tieni premuto per modificare questa attività personalizzata",
-    "moreActivities": "Più attività",
-    "discoverPremium": "Scopri le attività premium",
     "colorNumber": "Colore %{number}",
     "discoverMorePalettes": "Tocca per scoprire più palette",
     "celebrationEmoji": "Celebrazione",
@@ -325,7 +320,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "Crea attività",
       "namePlaceholder": "Es: Chitarra, Cucina...",

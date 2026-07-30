@@ -273,11 +273,6 @@
   "accessibility": {
     "keepAwake": "Håll skärmen vaken",
     "rotationDirection": "Rotationsriktning",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
     "colorNumber": "Färg %{number}",
     "discoverMorePalettes": "Tryck för att upptäcka fler paletter",
     "celebrationEmoji": "Firande",
@@ -325,7 +320,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "Skapa aktivitet",
       "namePlaceholder": "T.ex: Gitarr, Matlagning...",

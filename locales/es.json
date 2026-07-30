@@ -273,11 +273,6 @@
   "accessibility": {
     "keepAwake": "Mantener pantalla activa",
     "rotationDirection": "Dirección de rotación",
-    "activity": "Actividad %{name}",
-    "activityLocked": "Actividad premium bloqueada",
-    "customActivityHint": "Mantén presionado para editar esta actividad personalizada",
-    "moreActivities": "Más actividades",
-    "discoverPremium": "Descubrir actividades premium",
     "colorNumber": "Color %{number}",
     "discoverMorePalettes": "Toca para descubrir más paletas",
     "celebrationEmoji": "Celebración",
@@ -325,7 +320,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "Crear actividad",
       "namePlaceholder": "Ej: Guitarra, Cocina...",

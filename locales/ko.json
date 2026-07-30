@@ -274,11 +274,6 @@
     "keepAwake": "화면 켜짐 유지",
     "rotationDirection": "회전 방향",
     "showTime": "시간 표시",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
     "colorNumber": "색상 %{number}",
     "discoverMorePalettes": "탭하여 더 많은 팔레트 보기",
     "celebrationEmoji": "축하",
@@ -325,7 +320,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "활동 만들기",
       "namePlaceholder": "예: 기타, 요리...",

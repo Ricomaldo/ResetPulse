@@ -292,11 +292,6 @@
     "keepAwake": "Не блокировать экран",
     "rotationDirection": "Направление вращения",
     "showTime": "Показать время",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
     "colorNumber": "Цвет %{number}",
     "discoverMorePalettes": "Нажмите, чтобы увидеть больше палитр",
     "celebrationEmoji": "Празднование",
@@ -349,7 +344,6 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
       "title": "Создать активность",
       "namePlaceholder": "Например: гитара, готовка...",

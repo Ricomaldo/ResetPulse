@@ -292,11 +292,6 @@
     "keepAwake": "Keep screen awake",
     "rotationDirection": "Rotation direction",
     "showTime": "Show time",
-    "activity": "Activity %{name}",
-    "activityLocked": "Premium activity locked",
-    "moreActivities": "More activities",
-    "discoverPremium": "Discover premium activities",
-    "customActivityHint": "Long press to edit this custom activity",
     "colorNumber": "Color %{number}",
     "discoverMorePalettes": "Tap to discover more palettes",
     "timer": {
@@ -369,7 +364,6 @@
       "minutes": "min"
     },
     "addButton": "Create activity",
-    "addButtonHint": "Create a custom activity",
     "toast": {
       "created": "Activity created!",
       "updated": "Activity updated",
