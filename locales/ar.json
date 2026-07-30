@@ -134,14 +134,14 @@
       "soundDescription": "اختر الصوت الذي سيتم تشغيله عند انتهاء المؤقت",
       "keepAwakeDescriptionOn": "تبقى الشاشة مضاءة أثناء المؤقت",
       "keepAwakeDescriptionOff": "يمكن قفل الشاشة أثناء المؤقت",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "تفعيل الضغط المطول للبدء",
+      "longPressStartDescriptionOn": "اضغط مطولاً لبدء المؤقت",
+      "longPressStartDescriptionOff": "ضغطة بسيطة للبدء",
+      "longPressStop": "تفعيل الضغط المطول للإيقاف",
+      "longPressStopDescriptionOn": "اضغط مطولاً لإيقاف المؤقت",
+      "longPressStopDescriptionOff": "ضغطة بسيطة للإيقاف",
+      "dialScale": "نطاق القرص",
+      "dialScaleDescription": "المدة القصوى المعروضة على القرص"
     },
     "appearance": {
       "themeLight": "☀️ فاتح",
@@ -158,47 +158,47 @@
       "version": "الإصدار"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "وضع العرض المبسط",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "إبداعي",
+        "description": "دائري الألوان"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "متعدد المهام",
+        "description": "دائري الأنشطة"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "دقة",
+        "description": "مؤقت رقمي مع أزرار +/-"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "الإعدادات",
+      "timerOptions": "خيارات المؤقت",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "صوت الإشعار",
+      "theme": "المظهر",
+      "favorites": "المفضلة لديك",
       "ambiance": "AMBIANCE",
-      "info": "INFO"
+      "info": "معلومات"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "اللوحات المفضلة",
+        "description": "اختر حتى 4 لوحات مفضلة (%{count}/4)",
+        "morePalettes": "المزيد من اللوحات"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "الأنشطة المفضلة",
+        "description": "اختر حتى 4 أنشطة مفضلة (%{count}/4)",
+        "more": "المزيد"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "رمز النشاط التعبيري في المنتصف",
+      "activityEmojiDescriptionOn": "يظهر الرمز التعبيري في منتصف القرص",
+      "activityEmojiDescriptionOff": "الرمز التعبيري مخفي",
+      "pulseAnimation": "حركة النبض"
     }
   },
   "premium": {
@@ -225,11 +225,11 @@
     "unexpectedError": "حدث خطأ غير متوقع.",
     "contactSupport": "الاتصال بالدعم",
     "tooManyAttempts": "يرجى الاتصال بالدعم إذا استمرت المشكلة.",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "لا يوجد اتصال بالإنترنت. تحقق من شبكتك وأعد المحاولة.",
+    "errorStore": "مشكلة في المتجر. حاول مرة أخرى لاحقاً.",
+    "errorPaymentPending": "الدفع قيد الانتظار. تحقق من مشترياتك خلال دقائق قليلة.",
+    "errorRestoreGeneric": "خطأ في الاستعادة",
+    "errorGeneric": "حدث خطأ"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -337,10 +337,10 @@
     "favoriteRitual": "الطقس المفضل %{name}"
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "لقد أنشأت لحظتين!",
+    "message": "هل تريد استكشاف المزيد من الألوان والأنشطة؟",
     "explore": "اكتشف",
-    "dismiss": "Maybe later"
+    "dismiss": "ربما لاحقاً"
   },
   "customActivities": {
     "toast": {
@@ -373,13 +373,13 @@
       "usageStats": "استُخدم %{count} مرة"
     },
     "duration": {
-      "minutes": "min"
+      "minutes": "د"
     }
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "جاهز",
+      "endMessage": "أحسنت 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -398,52 +398,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "انغمس",
+      "endMessage": "أثريت نفسك 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "تعلّم",
+      "endMessage": "تقدّمت 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "تنفّس",
+      "endMessage": "هادئ 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "تحرّك",
+      "endMessage": "مفعم بالطاقة ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "امشِ",
+      "endMessage": "منتعش الحيوية 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "حضّر",
+      "endMessage": "شبعان 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "العب",
+      "endMessage": "مسترخٍ 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "ركّز",
+      "endMessage": "مكتمل ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "اعزف",
+      "endMessage": "متناغم 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "رتّب",
+      "endMessage": "هادئ ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "استرح",
+      "endMessage": "منتعش 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "اكتب",
+      "endMessage": "متحرر ✍️"
     },
     "custom": {
       "startMessage": "هيا بنا",

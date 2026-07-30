@@ -134,14 +134,14 @@
       "soundDescription": "Velg lyden som skal spilles når timeren er ferdig",
       "keepAwakeDescriptionOn": "Skjermen forblir våken under timeren",
       "keepAwakeDescriptionOff": "Skjermen kan låses under timeren",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop"
+      "dialScale": "Skiveområde",
+      "dialScaleDescription": "Maksimal varighet vist på skiven",
+      "longPressStart": "Aktiver langt trykk for å starte",
+      "longPressStartDescriptionOn": "Hold inne for å starte timeren",
+      "longPressStartDescriptionOff": "Enkelt trykk for å starte",
+      "longPressStop": "Aktiver langt trykk for å stoppe",
+      "longPressStopDescriptionOn": "Hold inne for å stoppe timeren",
+      "longPressStopDescriptionOff": "Enkelt trykk for å stoppe"
     },
     "appearance": {
       "themeLight": "☀️ Lys",
@@ -158,47 +158,47 @@
       "version": "Versjon"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "Minimal visningsmodus",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "Kreativ",
+        "description": "Fargekarusell"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "Multitasking",
+        "description": "Aktivitetskarusell"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "Presisjon",
+        "description": "Digital timer med +/- kontroller"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "KONFIGURASJON",
+      "timerOptions": "Timervalg",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "Varsellyd",
+      "theme": "Tema",
+      "favorites": "DINE FAVORITTER",
       "ambiance": "AMBIANCE",
       "info": "INFO"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "Favorittpaletter",
+        "description": "Velg opptil 4 favorittpaletter (%{count}/4)",
+        "morePalettes": "Flere paletter"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "Favorittaktiviteter",
+        "description": "Velg opptil 4 favorittaktiviteter (%{count}/4)",
+        "more": "Mer"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "Aktivitetsemoji i midten",
+      "activityEmojiDescriptionOn": "Emoji vises i midten av skiven",
+      "activityEmojiDescriptionOff": "Emoji er skjult",
+      "pulseAnimation": "Pulsanimasjon"
     }
   },
   "premium": {
@@ -225,11 +225,11 @@
     "unexpectedError": "En uventet feil oppstod.",
     "contactSupport": "Kontakt support",
     "tooManyAttempts": "Vennligst kontakt support hvis problemet vedvarer.",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "Ingen internettforbindelse. Sjekk nettverket ditt og prøv igjen.",
+    "errorStore": "Problem med butikken. Prøv igjen senere.",
+    "errorPaymentPending": "Betaling venter. Sjekk kjøpene dine om noen minutter.",
+    "errorRestoreGeneric": "Gjenopprettingsfeil",
+    "errorGeneric": "En feil oppstod"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -270,7 +270,7 @@
     "zen": "Zen",
     "forest": "Skog",
     "ocean": "Hav",
-    "dawn": "Aurora",
+    "dawn": "Morgenrøde",
     "dusk": "Skumring",
     "soft": "Mild",
     "lavender": "Lavendel",
@@ -337,10 +337,10 @@
     "favoriteRitual": "Favorittritual %{name}"
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "Du har opprettet 2 øyeblikk!",
+    "message": "Vil du utforske flere farger og aktiviteter?",
     "explore": "Oppdag",
-    "dismiss": "Maybe later"
+    "dismiss": "Kanskje senere"
   },
   "customActivities": {
     "toast": {
@@ -378,8 +378,8 @@
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "Klar",
+      "endMessage": "Bra jobbet 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -398,52 +398,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "Dykk ned",
+      "endMessage": "Beriket 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "Lær",
+      "endMessage": "Fremgang 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "Pust",
+      "endMessage": "Fredfull 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "Beveg deg",
+      "endMessage": "Energisk ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "Gå",
+      "endMessage": "Revitalisert 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "Forbered",
+      "endMessage": "Fornøyd 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "Spill",
+      "endMessage": "Avslappet 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "Fokuser",
+      "endMessage": "Fullført ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "Spill",
+      "endMessage": "Harmonisk 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "Rydd",
+      "endMessage": "Rolig ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "Hvil",
+      "endMessage": "Uthvilt 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "Skriv",
+      "endMessage": "Befridd ✍️"
     },
     "custom": {
       "startMessage": "Sett i gang",

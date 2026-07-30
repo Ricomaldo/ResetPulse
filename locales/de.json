@@ -116,14 +116,14 @@
       "soundDescription": "Wähle den Ton, der am Ende des Timers abgespielt wird",
       "keepAwakeDescriptionOn": "Bildschirm bleibt während Timer wach",
       "keepAwakeDescriptionOff": "Bildschirm kann sich während Timer sperren",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "Langes Tippen zum Starten aktivieren",
+      "longPressStartDescriptionOn": "Halten, um den Timer zu starten",
+      "longPressStartDescriptionOff": "Einfaches Tippen zum Starten",
+      "longPressStop": "Langes Tippen zum Stoppen aktivieren",
+      "longPressStopDescriptionOn": "Halten, um den Timer zu stoppen",
+      "longPressStopDescriptionOff": "Einfaches Tippen zum Stoppen",
+      "dialScale": "Zifferblattbereich",
+      "dialScaleDescription": "Maximale Dauer, die auf dem Zifferblatt angezeigt wird"
     },
     "appearance": {
       "themeLight": "☀️ Hell",
@@ -140,47 +140,47 @@
       "version": "Version"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "Minimaler Anzeigemodus",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "Kreativ",
+        "description": "Farbkarussell"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "Multitasking",
+        "description": "Aktivitätenkarussell"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "Präzision",
+        "description": "Digitaler Timer mit +/- Steuerung"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "KONFIGURATION",
+      "timerOptions": "Timer-Optionen",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "Benachrichtigungston",
+      "theme": "Design",
+      "favorites": "DEINE FAVORITEN",
       "ambiance": "AMBIANCE",
       "info": "INFO"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "Lieblingspaletten",
+        "description": "Wähle bis zu 4 Lieblingspaletten (%{count}/4)",
+        "morePalettes": "Mehr Paletten"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "Lieblingsaktivitäten",
+        "description": "Wähle bis zu 4 Lieblingsaktivitäten (%{count}/4)",
+        "more": "Mehr"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "Aktivitäts-Emoji in der Mitte",
+      "activityEmojiDescriptionOn": "Emoji wird in der Mitte des Zifferblatts angezeigt",
+      "activityEmojiDescriptionOff": "Emoji ist ausgeblendet",
+      "pulseAnimation": "Pulsanimation"
     }
   },
   "premium": {
@@ -207,11 +207,11 @@
     "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
     "contactSupport": "Support kontaktieren",
     "tooManyAttempts": "Bitte kontaktieren Sie den Support, wenn das Problem weiterhin besteht.",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "Keine Internetverbindung. Überprüfe dein Netzwerk und versuche es erneut.",
+    "errorStore": "Problem mit dem Store. Versuche es später erneut.",
+    "errorPaymentPending": "Zahlung ausstehend. Überprüfe deine Käufe in ein paar Minuten.",
+    "errorRestoreGeneric": "Fehler bei der Wiederherstellung",
+    "errorGeneric": "Ein Fehler ist aufgetreten"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -252,7 +252,7 @@
     "zen": "Zen",
     "forest": "Wald",
     "ocean": "Ozean",
-    "dawn": "Aurora",
+    "dawn": "Morgenröte",
     "dusk": "Dämmerung",
     "soft": "Sanft",
     "lavender": "Lavendel",
@@ -371,15 +371,15 @@
     }
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "Du hast 2 Momente erstellt!",
+    "message": "Möchtest du mehr Farben und Aktivitäten entdecken?",
     "explore": "Entdecken",
-    "dismiss": "Maybe later"
+    "dismiss": "Vielleicht später"
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "Bereit",
+      "endMessage": "Gut gemacht 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -398,52 +398,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "Eintauchen",
+      "endMessage": "Bereichert 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "Lernen",
+      "endMessage": "Fortgeschritten 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "Atmen",
+      "endMessage": "Friedlich 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "Bewegen",
+      "endMessage": "Energiegeladen ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "Gehen",
+      "endMessage": "Belebt 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "Zubereiten",
+      "endMessage": "Zufrieden 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "Spielen",
+      "endMessage": "Entspannt 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "Konzentriere dich",
+      "endMessage": "Erledigt ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "Spielen",
+      "endMessage": "Harmonisch 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "Aufräumen",
+      "endMessage": "Heiter ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "Ausruhen",
+      "endMessage": "Erholt 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "Schreiben",
+      "endMessage": "Befreit ✍️"
     },
     "custom": {
       "startMessage": "Los geht's",

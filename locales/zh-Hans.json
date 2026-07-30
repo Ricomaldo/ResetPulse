@@ -116,14 +116,14 @@
       "soundDescription": "选择计时器结束时播放的声音",
       "keepAwakeDescriptionOn": "计时器运行时屏幕保持常亮",
       "keepAwakeDescriptionOff": "计时器运行时屏幕可以锁定",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "启用长按启动",
+      "longPressStartDescriptionOn": "长按以启动计时器",
+      "longPressStartDescriptionOff": "轻按即可启动",
+      "longPressStop": "启用长按停止",
+      "longPressStopDescriptionOn": "长按以停止计时器",
+      "longPressStopDescriptionOff": "轻按即可停止",
+      "dialScale": "表盘范围",
+      "dialScaleDescription": "表盘上显示的最长时长"
     },
     "appearance": {
       "themeLight": "☀️ 浅色",
@@ -140,47 +140,47 @@
       "version": "版本"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "极简显示模式",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "创意",
+        "description": "颜色轮播"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "多任务",
+        "description": "活动轮播"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "精确",
+        "description": "带+/-控制的数字计时器"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "配置",
+      "timerOptions": "计时器选项",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "通知声音",
+      "theme": "主题",
+      "favorites": "你的收藏",
       "ambiance": "AMBIANCE",
-      "info": "INFO"
+      "info": "信息"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "喜爱的调色板",
+        "description": "最多选择4个喜爱的调色板 (%{count}/4)",
+        "morePalettes": "更多调色板"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "喜爱的活动",
+        "description": "最多选择4个喜爱的活动 (%{count}/4)",
+        "more": "更多"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "中心显示活动表情符号",
+      "activityEmojiDescriptionOn": "表情符号显示在表盘中心",
+      "activityEmojiDescriptionOff": "表情符号已隐藏",
+      "pulseAnimation": "脉冲动画"
     }
   },
   "premium": {
@@ -207,11 +207,11 @@
     "unexpectedError": "发生意外错误。",
     "contactSupport": "联系支持",
     "tooManyAttempts": "如果问题仍未解决，请联系支持。",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "无网络连接。请检查网络后重试。",
+    "errorStore": "商店出现问题，请稍后再试。",
+    "errorPaymentPending": "付款处理中。请稍后几分钟查看您的购买记录。",
+    "errorRestoreGeneric": "恢复错误",
+    "errorGeneric": "发生错误"
   },
   "activities": {
     "none": "基础",
@@ -337,7 +337,7 @@
       "usageStats": "已使用 %{count} 次"
     },
     "duration": {
-      "minutes": "min"
+      "minutes": "分钟"
     }
   },
   "controls": {
@@ -359,15 +359,15 @@
     }
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "你已创建了2个时刻！",
+    "message": "想探索更多颜色和活动吗？",
     "explore": "发现",
-    "dismiss": "Maybe later"
+    "dismiss": "以后再说"
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "准备就绪",
+      "endMessage": "太棒了 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -386,52 +386,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "沉浸其中",
+      "endMessage": "收获满满 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "学习",
+      "endMessage": "取得进步 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "呼吸",
+      "endMessage": "平静祥和 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "动起来",
+      "endMessage": "活力满满 ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "散步",
+      "endMessage": "焕发活力 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "准备",
+      "endMessage": "满足 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "游戏",
+      "endMessage": "放松 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "专注",
+      "endMessage": "已完成 ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "演奏",
+      "endMessage": "和谐 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "整理",
+      "endMessage": "宁静 ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "休息",
+      "endMessage": "焕然一新 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "写作",
+      "endMessage": "释放自我 ✍️"
     },
     "custom": {
       "startMessage": "开始吧",

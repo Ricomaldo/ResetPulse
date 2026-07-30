@@ -116,14 +116,14 @@
       "soundDescription": "타이머 종료 시 재생할 소리 선택",
       "keepAwakeDescriptionOn": "타이머 실행 중 화면 켜짐 유지",
       "keepAwakeDescriptionOff": "타이머 실행 중 화면 잠금 가능",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "길게 눌러 시작 활성화",
+      "longPressStartDescriptionOn": "길게 눌러 타이머 시작",
+      "longPressStartDescriptionOff": "탭으로 시작",
+      "longPressStop": "길게 눌러 정지 활성화",
+      "longPressStopDescriptionOn": "길게 눌러 타이머 정지",
+      "longPressStopDescriptionOff": "탭으로 정지",
+      "dialScale": "다이얼 범위",
+      "dialScaleDescription": "다이얼에 표시되는 최대 시간"
     },
     "appearance": {
       "themeLight": "☀️ 라이트",
@@ -140,47 +140,47 @@
       "version": "버전"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "미니멀 표시 모드",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "크리에이티브",
+        "description": "컬러 캐러셀"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "멀티태스크",
+        "description": "활동 캐러셀"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "정밀",
+        "description": "+/- 버튼이 있는 디지털 타이머"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "설정",
+      "timerOptions": "타이머 옵션",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "알림음",
+      "theme": "테마",
+      "favorites": "즐겨찾기",
       "ambiance": "AMBIANCE",
-      "info": "INFO"
+      "info": "정보"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "즐겨찾는 팔레트",
+        "description": "즐겨찾기 팔레트를 최대 4개까지 선택하세요 (%{count}/4)",
+        "morePalettes": "더 많은 팔레트"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "즐겨찾는 활동",
+        "description": "즐겨찾기 활동을 최대 4개까지 선택하세요 (%{count}/4)",
+        "more": "더보기"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "중앙에 활동 이모지 표시",
+      "activityEmojiDescriptionOn": "이모지가 다이얼 중앙에 표시됩니다",
+      "activityEmojiDescriptionOff": "이모지가 숨겨져 있습니다",
+      "pulseAnimation": "펄스 애니메이션"
     }
   },
   "premium": {
@@ -207,11 +207,11 @@
     "unexpectedError": "예기치 않은 오류가 발생했습니다.",
     "contactSupport": "지원팀에 문의",
     "tooManyAttempts": "문제가 계속되면 지원팀에 문의하세요.",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "인터넷 연결이 없습니다. 네트워크를 확인하고 다시 시도해 주세요.",
+    "errorStore": "스토어에 문제가 있습니다. 나중에 다시 시도해 주세요.",
+    "errorPaymentPending": "결제 대기 중입니다. 몇 분 후 구매 내역을 확인해 주세요.",
+    "errorRestoreGeneric": "복원 오류",
+    "errorGeneric": "오류가 발생했습니다"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -349,7 +349,7 @@
       "usageStats": "%{count}회 사용됨"
     },
     "duration": {
-      "minutes": "min"
+      "minutes": "분"
     }
   },
   "controls": {
@@ -371,15 +371,15 @@
     }
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "2개의 순간을 만들었어요!",
+    "message": "더 많은 색상과 활동을 살펴보시겠어요?",
     "explore": "발견하다",
-    "dismiss": "Maybe later"
+    "dismiss": "나중에요"
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "준비됨",
+      "endMessage": "잘했어요 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -398,52 +398,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "몰입하기",
+      "endMessage": "풍요로워짐 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "배우기",
+      "endMessage": "발전함 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "호흡하기",
+      "endMessage": "평온함 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "움직이기",
+      "endMessage": "에너지 충전됨 ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "걷기",
+      "endMessage": "활력 회복 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "준비하기",
+      "endMessage": "만족스러움 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "놀기",
+      "endMessage": "편안함 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "집중하기",
+      "endMessage": "완료 ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "연주하기",
+      "endMessage": "조화로움 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "정리하기",
+      "endMessage": "평온함 ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "쉬기",
+      "endMessage": "재충전됨 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "글쓰기",
+      "endMessage": "해방감 ✍️"
     },
     "custom": {
       "startMessage": "시작해요",

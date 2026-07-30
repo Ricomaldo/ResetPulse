@@ -116,14 +116,14 @@
       "soundDescription": "タイマー終了時に再生するサウンドを選択",
       "keepAwakeDescriptionOn": "タイマー動作中は画面をスリープさせない",
       "keepAwakeDescriptionOff": "タイマー動作中も画面をスリープ可能",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "長押しで開始を有効にする",
+      "longPressStartDescriptionOn": "長押しでタイマーを開始",
+      "longPressStartDescriptionOff": "タップで開始",
+      "longPressStop": "長押しで停止を有効にする",
+      "longPressStopDescriptionOn": "長押しでタイマーを停止",
+      "longPressStopDescriptionOff": "タップで停止",
+      "dialScale": "ダイヤルの範囲",
+      "dialScaleDescription": "ダイヤルに表示される最大時間"
     },
     "appearance": {
       "themeLight": "☀️ ライト",
@@ -140,47 +140,47 @@
       "version": "バージョン"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "ミニマル表示モード",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "クリエイティブ",
+        "description": "カラーカルーセル"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "マルチタスク",
+        "description": "アクティビティカルーセル"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "精密",
+        "description": "+/- ボタン付きデジタルタイマー"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "設定",
+      "timerOptions": "タイマーのオプション",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "通知音",
+      "theme": "テーマ",
+      "favorites": "お気に入り",
       "ambiance": "AMBIANCE",
-      "info": "INFO"
+      "info": "情報"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "お気に入りのパレット",
+        "description": "お気に入りのパレットを4つまで選択（%{count}/4）",
+        "morePalettes": "もっとパレットを見る"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "お気に入りのアクティビティ",
+        "description": "お気に入りのアクティビティを4つまで選択（%{count}/4）",
+        "more": "もっと見る"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "中央にアクティビティの絵文字を表示",
+      "activityEmojiDescriptionOn": "絵文字がダイヤルの中央に表示されます",
+      "activityEmojiDescriptionOff": "絵文字は非表示です",
+      "pulseAnimation": "パルスアニメーション"
     }
   },
   "premium": {
@@ -207,11 +207,11 @@
     "unexpectedError": "予期しないエラーが発生しました。",
     "contactSupport": "サポートに連絡",
     "tooManyAttempts": "問題が解決しない場合はサポートにお問い合わせください。",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "インターネット接続がありません。ネットワークを確認して再試行してください。",
+    "errorStore": "ストアで問題が発生しました。後でもう一度お試しください。",
+    "errorPaymentPending": "支払い処理中です。数分後に購入状況をご確認ください。",
+    "errorRestoreGeneric": "復元エラー",
+    "errorGeneric": "エラーが発生しました"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -349,7 +349,7 @@
       "usageStats": "%{count}回使用"
     },
     "duration": {
-      "minutes": "min"
+      "minutes": "分"
     }
   },
   "controls": {
@@ -371,15 +371,15 @@
     }
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "2つの瞬間を作成しました！",
+    "message": "もっと色やアクティビティを試してみますか？",
     "explore": "発見する",
-    "dismiss": "Maybe later"
+    "dismiss": "また今度"
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "準備完了",
+      "endMessage": "よくできました 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -398,52 +398,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "没頭する",
+      "endMessage": "豊かになった 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "学ぶ",
+      "endMessage": "上達した 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "呼吸する",
+      "endMessage": "安らか 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "動く",
+      "endMessage": "エネルギッシュ ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "歩く",
+      "endMessage": "リフレッシュ 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "準備する",
+      "endMessage": "満足 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "遊ぶ",
+      "endMessage": "リラックス 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "集中する",
+      "endMessage": "完了 ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "演奏する",
+      "endMessage": "調和 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "片づける",
+      "endMessage": "すっきり ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "休む",
+      "endMessage": "リフレッシュ 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "書く",
+      "endMessage": "解放された ✍️"
     },
     "custom": {
       "startMessage": "はじめよう",

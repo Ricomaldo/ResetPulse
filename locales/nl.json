@@ -116,14 +116,14 @@
       "soundDescription": "Kies het geluid dat aan het einde van de timer wordt afgespeeld",
       "keepAwakeDescriptionOn": "Scherm blijft wakker tijdens timer",
       "keepAwakeDescriptionOff": "Scherm kan vergrendelen tijdens timer",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "Lang indrukken om te starten inschakelen",
+      "longPressStartDescriptionOn": "Ingedrukt houden om de timer te starten",
+      "longPressStartDescriptionOff": "Eenvoudige tik om te starten",
+      "longPressStop": "Lang indrukken om te stoppen inschakelen",
+      "longPressStopDescriptionOn": "Ingedrukt houden om de timer te stoppen",
+      "longPressStopDescriptionOff": "Eenvoudige tik om te stoppen",
+      "dialScale": "Wijzerplaatbereik",
+      "dialScaleDescription": "Maximale duur die op de wijzerplaat wordt weergegeven"
     },
     "appearance": {
       "themeLight": "☀️ Licht",
@@ -140,47 +140,47 @@
       "version": "Versie"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "Minimale weergavemodus",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "Creatief",
+        "description": "Kleurcarrousel"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "Multitasken",
+        "description": "Activiteitencarrousel"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "Precisie",
+        "description": "Digitale timer met +/- bediening"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "CONFIGURATIE",
+      "timerOptions": "Timeropties",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "Meldingsgeluid",
+      "theme": "Thema",
+      "favorites": "JOUW FAVORIETEN",
       "ambiance": "AMBIANCE",
       "info": "INFO"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "Favoriete paletten",
+        "description": "Selecteer tot 4 favoriete paletten (%{count}/4)",
+        "morePalettes": "Meer paletten"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "Favoriete activiteiten",
+        "description": "Selecteer tot 4 favoriete activiteiten (%{count}/4)",
+        "more": "Meer"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "Activiteitsemoji in het midden",
+      "activityEmojiDescriptionOn": "Emoji wordt in het midden van de wijzerplaat getoond",
+      "activityEmojiDescriptionOff": "Emoji is verborgen",
+      "pulseAnimation": "Pulsanimatie"
     }
   },
   "premium": {
@@ -207,11 +207,11 @@
     "unexpectedError": "Er is een onverwachte fout opgetreden.",
     "contactSupport": "Neem contact op met ondersteuning",
     "tooManyAttempts": "Neem contact op met de ondersteuning als het probleem aanhoudt.",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "Geen internetverbinding. Controleer je netwerk en probeer het opnieuw.",
+    "errorStore": "Probleem met de store. Probeer het later opnieuw.",
+    "errorPaymentPending": "Betaling in behandeling. Controleer je aankopen over een paar minuten.",
+    "errorRestoreGeneric": "Herstelfout",
+    "errorGeneric": "Er is een fout opgetreden"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -252,7 +252,7 @@
     "zen": "Zen",
     "forest": "Bos",
     "ocean": "Oceaan",
-    "dawn": "Aurora",
+    "dawn": "Dageraad",
     "dusk": "Schemering",
     "soft": "Zacht",
     "lavender": "Lavendel",
@@ -371,15 +371,15 @@
     }
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "Je hebt 2 momenten gemaakt!",
+    "message": "Wil je meer kleuren en activiteiten ontdekken?",
     "explore": "Ontdekken",
-    "dismiss": "Maybe later"
+    "dismiss": "Misschien later"
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "Klaar",
+      "endMessage": "Goed gedaan 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -398,52 +398,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "Duik erin",
+      "endMessage": "Verrijkt 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "Leer",
+      "endMessage": "Gevorderd 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "Adem",
+      "endMessage": "Vredig 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "Bewegen",
+      "endMessage": "Energiek ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "Wandel",
+      "endMessage": "Verkwikt 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "Bereiden",
+      "endMessage": "Voldaan 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "Spelen",
+      "endMessage": "Ontspannen 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "Concentreer",
+      "endMessage": "Voltooid ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "Speel",
+      "endMessage": "Harmonieus 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "Opruimen",
+      "endMessage": "Sereen ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "Rusten",
+      "endMessage": "Verfrist 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "Schrijf",
+      "endMessage": "Bevrijd ✍️"
     },
     "custom": {
       "startMessage": "Daar gaan we",
