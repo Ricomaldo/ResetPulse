@@ -21,14 +21,8 @@ import {
   modeToScale,
   scaleToMode,
   getNextScaleUp,
+  shouldEscalateOnRelease,
 } from '../../utils/scaleHelpers';
-
-// Drag-échelle « Maintien au bord » — durée de maintien continu à la butée
-// avant escalade en plein geste (~400 ms au mandat).
-const HOLD_AT_EDGE_MS = 400;
-// Tolérance de butée (minutes) : la valeur clampée atteint exactement le max
-// quand le doigt pousse au-delà — l'epsilon n'absorbe que le bruit flottant.
-const EDGE_EPSILON_MINUTES = 0.001;
 
 export default function TimeTimer({
   onRunningChange,
@@ -57,14 +51,16 @@ export default function TimeTimer({
   // Track last synced context duration to prevent drag reset
   const lastSyncedContextDurationRef = useRef(currentDuration);
 
-  // ========== Drag-échelle « Maintien au bord » (consolidé porte-2) ==========
-  // Verdict Eric 30/07 : Maintien gagne, Relâche meurt, et LA DESCENTE
-  // AUTOMATIQUE MEURT — un cadran ne rétrécit jamais tout seul (15 min sur
-  // un cadran d'une heure = un quart d'arc, fidèle à l'objet physique).
+  // ========== Drag-échelle « Relâcher » (porte-3 V3) ==========
+  // Verdict Eric 30/07 soir, inversé en main : le Maintien (hold 400 ms à la
+  // butée) se comportait bizarrement — le Relâcher (escalade au
+  // relâcher-au-max, respiration + haptic doux) était la bonne. LA DESCENTE
+  // AUTOMATIQUE RESTE MORTE — un cadran ne rétrécit jamais tout seul (15 min
+  // sur un cadran d'une heure = un quart d'arc, fidèle à l'objet physique).
   //
   // « Plancher d'échelle » (minutes, null = aucun) : maintient le cadran sur
   // une échelle SUPÉRIEURE à celle que deriveScaleMode donnerait — posé par
-  // l'escalade au maintien, il ne redescend JAMAIS par le drag. Seul un
+  // l'escalade au relâcher, il ne redescend JAMAIS par le drag. Seul un
   // CHANGEMENT DE CONTEXTE le réinitialise : appliquer un Rituel (durée
   // posée par le contexte), changer d'Activité, relancer l'app (non
   // persisté). Chaque recomposition du cadran a une cause visible.
@@ -76,18 +72,6 @@ export default function TimeTimer({
   // tire vers le bas) n'agit qu'au relâcher. Ref et non state : sa valeur au
   // gel == l'échelle déjà affichée, aucun re-rendu n'est nécessaire.
   const gestureScaleRef = useRef(null);
-
-  // Mécanique B : timer de maintien à la butée (null = pas armé). Armé quand
-  // la valeur clampée atteint le max de l'échelle du geste, désarmé dès que
-  // la durée quitte la butée ou que le geste se termine.
-  const holdTimerRef = useRef(null);
-  const clearHoldTimer = useCallback(() => {
-    if (holdTimerRef.current) {
-      clearTimeout(holdTimerRef.current);
-      holdTimerRef.current = null;
-    }
-  }, []);
-  useEffect(() => clearHoldTimer, [clearHoldTimer]); // cleanup au démontage
 
   // Animation « le cadran respire » : pulse ponctuel (jamais continu) quand
   // l'échelle se recompose au relâcher — contrainte sensorielle TDAH/TSA.
@@ -222,8 +206,8 @@ export default function TimeTimer({
     // arrive déjà borné par TimerDial (handlePanUpdate clampe à
     // `dial.maxMinutes` de l'échelle EN COURS) — un drag continu sature au
     // max courant, impossible d'atteindre l'échelle supérieure. C'est
-    // exactement ce que les deux mécaniques proto ci-dessous attaquent.
-    // ========== Drag-échelle « Maintien au bord » (consolidé) ==========
+    // exactement ce que la mécanique « Relâcher » ci-dessous attaque.
+    // ========== Drag-échelle « Relâcher » (porte-3 V3) ==========
     const baseScale = Math.max(modeToScale(scaleMode), scaleFloor || 0);
 
     if (!isRelease && gestureScaleRef.current == null) {
@@ -231,8 +215,7 @@ export default function TimeTimer({
       // jusqu'au relâcher (hystérésis, la dérivation n'agit qu'à la fin).
       gestureScaleRef.current = baseScale;
     }
-    // Échelle du geste : le gel, éventuellement relevé par un plancher posé
-    // en plein geste (mécanique B). Pour un tap sec (jamais de gel), c'est
+    // Échelle du geste : le gel. Pour un tap sec (jamais de gel), c'est
     // l'échelle affichée.
     const gestureScale = Math.max(gestureScaleRef.current || baseScale, scaleFloor || 0);
     const gestureScaleMode = scaleToMode(gestureScale);
@@ -248,37 +231,27 @@ export default function TimeTimer({
     lastSyncedContextDurationRef.current = newDuration;
 
     if (!isRelease) {
-      // ---------- Mécanique B « Maintien au bord » ----------
-      // Le doigt tient la butée (valeur clampée == max du geste) pendant
-      // HOLD_AT_EDGE_MS continus → escalade EN PLEIN GESTE : haptic net,
-      // le cadran se recompose UNE fois (setScaleFloor → re-rendu), la durée
-      // ne bouge pas — c'est l'angle qui se recale (ré-ancrage tactile côté
-      // TimerDial, prop resyncTouchOnScaleChange). Le timer est désarmé dès
-      // que la durée quitte la butée.
-      const atEdge = clampedMinutes >= gestureScale - EDGE_EPSILON_MINUTES;
-      const next = getNextScaleUp(gestureScale);
-      if (atEdge && next) {
-        if (!holdTimerRef.current) {
-          holdTimerRef.current = setTimeout(() => {
-            holdTimerRef.current = null;
-            gestureScaleRef.current = next;
-            setScaleFloor(next);
-            haptics.impact('medium').catch(() => {});
-          }, HOLD_AT_EDGE_MS);
-        }
-      } else {
-        clearHoldTimer();
-      }
+      // En plein geste : rien d'autre — le cadran ne se recompose JAMAIS
+      // sous le doigt (le Maintien 400 ms est mort, porte-3 V3).
       return;
     }
 
     // ---------- Relâcher ----------
-    // Pas de descente automatique (porte-2) : le plancher tient, l'échelle
-    // atteinte reste affichée quelle que soit la durée relâchée. Le gel du
-    // geste se libère simplement.
-    clearHoldTimer();
+    // Mécanique « Relâche et ça respire » : relâché au max de l'échelle du
+    // geste après un VRAI drag (un tap posé pile au max ne déclenche pas)
+    // → le plancher passe au cran supérieur, le cadran se recompose UNE
+    // fois — respiration + haptic doux, la durée ne bouge pas. Pas de
+    // descente automatique : le plancher tient quelle que soit la durée
+    // relâchée.
+    const wasDrag = gestureScaleRef.current != null;
+    if (wasDrag && shouldEscalateOnRelease(newDuration, gestureScale)) {
+      const next = getNextScaleUp(gestureScale);
+      setScaleFloor(next);
+      haptics.selection().catch(() => {});
+      runBreathe();
+    }
     gestureScaleRef.current = null;
-  }, [scaleMode, scaleFloor, setCurrentDuration, clearHoldTimer]);
+  }, [scaleMode, scaleFloor, setCurrentDuration, runBreathe]);
 
   return (
     <View style={styles.container}>

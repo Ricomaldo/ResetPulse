@@ -93,9 +93,9 @@ export const deriveScaleMode = (durationSeconds) => {
 };
 
 // ============================================================
-// Drag-échelle « Maintien au bord » (consolidé porte-2, verdict Eric 30/07)
-// Le plancher d'échelle monte par escalade au maintien, ne descend JAMAIS
-// par le drag — reset uniquement au changement de contexte (TimeTimer).
+// Drag-échelle « Relâcher » (porte-3 V3, verdict Eric inversé en main)
+// Le plancher d'échelle monte par escalade au relâcher-au-max, ne descend
+// JAMAIS par le drag — reset uniquement au changement de contexte (TimeTimer).
 // ============================================================
 
 /** Les 6 échelles actives, en minutes, ordonnées (miroir de DIAL_MODES). */
@@ -112,4 +112,14 @@ export const getNextScaleUp = (scaleMinutes) => {
   return SCALE_STEPS[idx + 1];
 };
 
-
+/**
+ * Mécanique « Relâcher » : faut-il escalader au relâcher ?
+ * Vrai si la durée relâchée (snappée) est AU max de l'échelle du geste et
+ * qu'il existe un cran au-dessus. (Restauré de la branche proto-drag-echelle,
+ * commit 8c5fc14 — porte-3 V3.)
+ * @param {number} durationSeconds - Durée relâchée, en secondes (post-snap)
+ * @param {number} scaleMinutes - Échelle du geste, en minutes
+ * @returns {boolean}
+ */
+export const shouldEscalateOnRelease = (durationSeconds, scaleMinutes) =>
+  durationSeconds >= scaleMinutes * 60 && getNextScaleUp(scaleMinutes) !== null;

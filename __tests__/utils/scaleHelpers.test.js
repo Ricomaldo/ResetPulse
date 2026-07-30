@@ -10,6 +10,7 @@ import {
   isSupportedScale,
   SCALE_STEPS,
   getNextScaleUp,
+  shouldEscalateOnRelease,
 } from '../../src/utils/scaleHelpers';
 import { DIAL_MODES } from '../../src/components/dial/timerConstants';
 
@@ -100,4 +101,20 @@ describe('proto drag-échelle — SCALE_STEPS et voisinage', () => {
 
 });
 
+describe('drag-échelle « Relâcher » — shouldEscalateOnRelease (porte-3 V3)', () => {
+  test('escalade au max exact de l’échelle du geste', () => {
+    expect(shouldEscalateOnRelease(30 * 60, 30)).toBe(true);
+    expect(shouldEscalateOnRelease(5 * 60, 5)).toBe(true);
+    expect(shouldEscalateOnRelease(45 * 60, 45)).toBe(true);
+    expect(shouldEscalateOnRelease(60 * 60, 60)).toBe(true); // 60 → 120 existe
+  });
 
+  test('pas d’escalade sous le max', () => {
+    expect(shouldEscalateOnRelease(30 * 60 - 1, 30)).toBe(false);
+    expect(shouldEscalateOnRelease(0, 5)).toBe(false);
+  });
+
+  test('pas d’escalade à 120 : pas de cran au-dessus', () => {
+    expect(shouldEscalateOnRelease(120 * 60, 120)).toBe(false);
+  });
+});
