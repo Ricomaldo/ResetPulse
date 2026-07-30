@@ -34,6 +34,7 @@ import FirstRunTips from '../components/first-run/FirstRunTips';
 import { buildRitualApplyPayload } from '../config/rituals';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
+import { useSessionCount } from '../hooks/useSessionCount';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
 import haptics from '../utils/haptics';
@@ -341,6 +342,7 @@ function FocusHint() {
 function TimerScreenContent() {
   const theme = useTheme();
   const analytics = useAnalytics();
+  const { incrementSessionCount } = useSessionCount();
   const {
     mode: { current: currentMode },
     setMode,
@@ -559,6 +561,16 @@ function TimerScreenContent() {
     }
   }, []);
 
+  // Compteur global de séances (Lot 3b, mandat Eric) : callback de fin de
+  // séance existant (useTimer → TimeTimer.onTimerComplete), jamais câblé
+  // jusqu'ici. Ne se déclenche QUE sur la fin naturelle (remaining atteint
+  // 0) — jamais au stop/rembobinage manuel (tap pendant la séance), cf.
+  // useTimer.js:150 (onCompleteRef appelé uniquement dans la branche
+  // hasTriggeredCompletion, pas dans stopTimer).
+  const handleTimerComplete = useCallback(() => {
+    incrementSessionCount();
+  }, [incrementSessionCount]);
+
   // Immersion (cadrage 3c) : RUNNING + IMMERSION_DELAY sans toucher → le
   // chrome s'efface, le disque devient décor. Machine d'état extraite
   // (useSessionImmersion) — ce composant ne fait qu'observer running/
@@ -688,6 +700,7 @@ function TimerScreenContent() {
                 onDialTap={handleDialTap}
                 onTimerRef={handleTimerRef}
                 onDialRef={handleDialRef}
+                onTimerComplete={handleTimerComplete}
                 distraction={distraction}
               />
             </Animated.View>
