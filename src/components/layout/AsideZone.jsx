@@ -36,7 +36,7 @@
  * discret si absents du dev client courant.
  */
 import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -168,10 +168,12 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   const [containerH, setContainerH] = useState(windowHeight);
   const snapClosed = containerH - CLOSED_VISIBLE;
 
-  const openY = Math.max(
-    containerH * (1 - MAX_OPEN_COVERAGE),
-    containerH - HANDLE_HEIGHT - contentHeight - BOTTOM_SAFETY
-  );
+  // porte-2 (retour Eric « ça donne le tournis ») : hauteur d'ouverture
+  // FIXE — le drawer s'ouvre TOUJOURS à 65 % du conteneur, quel que soit le
+  // contenu (toggles, liste, formulaire). Le contenu vit DEDANS (scroll si
+  // débordement) : plus aucun yo-yo entre sous-écrans. L'ancienne hauteur-
+  // de-contenu (C5) meurt ici.
+  const openY = containerH * (1 - MAX_OPEN_COVERAGE);
 
   // A2 (hotfix-porte-1) : hauteur utile pour un sous-écran à scroll propre
   // (RitualForm, PalettesPanel) — le plafond des 65%, moins la poignée et la
@@ -340,6 +342,10 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   }, [t]);
 
   const styles = StyleSheet.create({
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0,0,0,0.08)',
+    },
     asideContainer: {
       bottom: 0,
       left: 0,
@@ -381,14 +387,15 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       right: 0,
       top: HANDLE_HEIGHT,
     },
+    // porte-2 (retour Eric « pas sérieux ») : registre DS — capitale
+    // discrète, interlettre large, encre légère. Un seul élément, pas de
+    // caret orphelin : la barre-poignée porte déjà le geste.
     closedLabelText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(12, 'min'),
-    },
-    closedLabelChevron: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(13, 'min'),
-      marginTop: rs(2),
+      color: theme.colors.textLight,
+      fontSize: rs(11, 'min'),
+      fontWeight: '600',
+      letterSpacing: rs(11, 'min') * 0.14,
+      textTransform: 'uppercase',
     },
     inertChevron: {
       color: theme.colors.textSecondary,
@@ -528,6 +535,20 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       onLayout={(e) => setContainerH(e.nativeEvent.layout.height)}
       pointerEvents={hidden ? 'none' : 'box-none'}
     >
+      {/* porte-2 (retour Eric) : tap à l'extérieur = fermer — la base de
+          l'affordance d'un bottom sheet. Voile très léger pour la profondeur,
+          monté seulement ouvert. */}
+      {isOpen && (
+        <Pressable
+          testID="aside.backdrop"
+          style={styles.backdrop}
+          accessible={false}
+          onPress={() => {
+            haptics.selection().catch(() => {});
+            snapTo(false);
+          }}
+        />
+      )}
       <GestureDetector gesture={panGesture}>
         <Animated.View testID="aside.sheet" style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
           {/* Handle — affordance du sheet : swipe up OU tap (porte Eric 25/07,
@@ -554,14 +575,14 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
               visible fermé, s'efface à l'ouverture. */}
           <Animated.View style={[styles.closedLabel, closedLabelAnimatedStyle]} pointerEvents="none">
             <Text style={styles.closedLabelText}>{t('aside.closedLabel')}</Text>
-            <Text style={styles.closedLabelChevron}>˄</Text>
           </Animated.View>
 
           {/* SCR-10 : 4 blocs */}
           <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
             <ScrollView
               contentContainerStyle={styles.scrollContent}
-              scrollEnabled={isOpen && !boundedSubScreen}
+              scrollEnabled={isOpen && !boundedSubScreen && contentHeight > subScreenHeight}
+              bounces={false}
               showsVerticalScrollIndicator={false}
               nestedScrollEnabled={true}
             >
