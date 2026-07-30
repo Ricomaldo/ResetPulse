@@ -280,7 +280,6 @@
     "keepAwake": "Keep screen awake",
     "rotationDirection": "Rotation direction",
     "showTime": "Show time",
-    "dailyReminder": "Daily reminder",
     "activity": "Activity %{name}",
     "activityLocked": "Premium activity locked",
     "moreActivities": "More activities",
@@ -449,16 +448,6 @@
     "custom": {
       "startMessage": "Let's go",
       "endMessage": "Done ✨"
-    }
-  },
-  "reminder": {
-    "morning": "morning",
-    "midday": "midday",
-    "evening": "evening",
-    "notification": {
-      "morning": "your morning ritual awaits",
-      "midday": "your midday ritual awaits",
-      "evening": "your evening ritual awaits"
     }
   },
   "rituals": {

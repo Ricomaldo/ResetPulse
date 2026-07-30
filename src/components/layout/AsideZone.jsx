@@ -59,7 +59,6 @@ import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
 import WallpaperComposition from '../export/WallpaperComposition';
-import { REMINDER_SLOT_IDS } from '../../config/reminderSlots';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -93,9 +92,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
     setClockwise,
     system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
-    reminder: { enabled: reminderEnabled, slot: reminderSlot },
-    setReminderEnabled,
-    setReminderSlot,
     display: { showTime },
     setShowTime,
     mode: { current: currentMode },
@@ -106,29 +102,7 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   // Rappel doux (Lot 3e, opt-in strict) — la permission n'est demandée qu'au
   // geste d'opt-in (toggle ON), jamais au boot ni à chaque changement de
   // créneau (pattern permission contextuelle existant, cf. useTimer.startTimer).
-  const { requestNotificationPermission, scheduleReminderNotification, cancelReminderNotification } = useNotificationTimer();
 
-  const handleReminderToggle = useCallback((value) => {
-    setReminderEnabled(value);
-    if (value) {
-      // Permission demandée seulement ici, au geste d'opt-in — idempotent
-      // côté OS (cf. requestNotificationPermission), jamais reproposée si
-      // déjà tranchée. Analytics : hors scope volontairement (recentrage.md
-      // §Analytics — funnel figé, « rien d'autre au départ »).
-      requestNotificationPermission();
-      scheduleReminderNotification(reminderSlot);
-    } else {
-      cancelReminderNotification();
-    }
-  }, [reminderSlot, setReminderEnabled, requestNotificationPermission, scheduleReminderNotification, cancelReminderNotification]);
-
-  const handleReminderSlotChange = useCallback((slotId) => {
-    setReminderSlot(slotId);
-    // Changement de créneau = replanification immédiate (1/jour max, pas
-    // d'accumulation : scheduleReminderNotification annule l'ancienne
-    // planification avant la nouvelle, même identifier).
-    scheduleReminderNotification(slotId);
-  }, [setReminderSlot, scheduleReminderNotification]);
 
   const isFocus = currentMode === 'focus';
 
@@ -456,31 +430,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
     togglesCard: {
       marginTop: rs(16),
     },
-    reminderSlots: {
-      flexDirection: 'row',
-      gap: theme.spacing.sm,
-      paddingBottom: rs(12),
-      paddingTop: rs(4),
-    },
-    reminderPill: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.segmentInactive,
-      borderRadius: theme.borderRadius.round,
-      flex: 1,
-      paddingVertical: rs(6),
-    },
-    reminderPillActive: {
-      backgroundColor: theme.colors.text,
-    },
-    reminderPillText: {
-      color: theme.colors.text,
-      fontSize: rs(12, 'min'),
-      fontWeight: fontWeights.medium,
-      textAlign: 'center',
-    },
-    reminderPillTextActive: {
-      color: theme.colors.fixed.white,
-    },
     doubleTapHint: {
       color: theme.colors.textSecondary,
       fontSize: rs(11, 'min'),
@@ -520,12 +469,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       label: t('accessibility.showTime'),
       value: showTime,
       onChange: setShowTime,
-    },
-    {
-      key: 'dailyReminder',
-      label: t('accessibility.dailyReminder'),
-      value: reminderEnabled,
-      onChange: handleReminderToggle,
     },
   ];
 
@@ -680,11 +623,10 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                         <View style={styles.togglesCard}>
                           {toggles.map((toggle, index) => {
                             const isLast = index === toggles.length - 1;
-                            const showReminderSlots = toggle.key === 'dailyReminder' && reminderEnabled;
                             return (
                               <React.Fragment key={toggle.key}>
                                 <View
-                                  style={[styles.optionRow, isLast && !showReminderSlots && styles.optionRowLast]}
+                                  style={[styles.optionRow, isLast && styles.optionRowLast]}
                                 >
                                   <Text style={styles.optionLabel}>{toggle.label}</Text>
                                   <Switch
@@ -700,33 +642,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                                     {...theme.styles.switch(toggle.value)}
                                   />
                                 </View>
-                                {showReminderSlots && (
-                                  <View style={styles.reminderSlots} accessibilityRole="radiogroup">
-                                    {REMINDER_SLOT_IDS.map((slotId) => {
-                                      const isActive = reminderSlot === slotId;
-                                      return (
-                                        <TouchableOpacity
-                                          key={slotId}
-                                          testID={`aside.reminder-slot.${slotId}`}
-                                          accessible
-                                          accessibilityRole="radio"
-                                          accessibilityState={{ selected: isActive }}
-                                          accessibilityLabel={t(`reminder.${slotId}`)}
-                                          style={[styles.reminderPill, isActive && styles.reminderPillActive]}
-                                          onPress={() => {
-                                            haptics.selection().catch(() => {});
-                                            handleReminderSlotChange(slotId);
-                                          }}
-                                          activeOpacity={0.7}
-                                        >
-                                          <Text style={[styles.reminderPillText, isActive && styles.reminderPillTextActive]}>
-                                            {t(`reminder.${slotId}`)}
-                                          </Text>
-                                        </TouchableOpacity>
-                                      );
-                                    })}
-                                  </View>
-                                )}
                               </React.Fragment>
                             );
                           })}
