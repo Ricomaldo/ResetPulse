@@ -516,6 +516,8 @@
     "exitFocus": "leave focus",
     "doubleTapHint": "tip: double-tap the background to switch",
     "handle": "open settings",
-    "closedLabel": "rituals & settings"
+    "closedLabel": "rituals & settings",
+    "wallpaperExport": "save as wallpaper",
+    "wallpaperUnavailable": "available after next build"
   }
 }
