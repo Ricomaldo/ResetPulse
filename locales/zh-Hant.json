@@ -3,7 +3,9 @@
     "cancel": "取消",
     "ok": "確定",
     "retry": "重試",
-    "continue": "繼續"
+    "continue": "繼續",
+    "back": "返回",
+    "delete": "刪除"
   },
   "welcome": {
     "title": "歡迎使用 ResetPulse"
@@ -241,23 +243,20 @@
     "dawn": "極光",
     "dusk": "黃昏",
     "soft": "溫柔",
-    "autumn": "秋天",
     "lavender": "薰衣草",
     "teal": "青綠",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "經典鈴聲",
-    "bell_melodic": "旋律鈴聲",
-    "microwave_vintage": "復古微波爐",
-    "microwave_ping": "微波爐提示音",
-    "kitchen_timer": "廚房計時器",
-    "kitchen_timer_2": "機械計時器",
-    "egg_timer": "煮蛋計時器",
-    "toaster_bell": "烤麵包機",
-    "ding_effect": "簡單叮聲",
-    "timer_complete": "計時器完成"
+    "contrabass_pluck": "低音弦",
+    "jingle_achievement": "成就",
+    "kalimba": "卡林巴琴",
+    "marimba_ascending": "漸升馬林巴",
+    "marimba_dry": "馬林巴",
+    "singing_bowl": "頌缽",
+    "success_glissando": "滑音",
+    "up_chime": "鐘聲",
+    "vibraphone_chord": "顫音琴"
   },
   "accessibility": {
     "keepAwake": "保持螢幕常亮",
@@ -295,21 +294,17 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "免費試用7天",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "showTime": "顯示時間",
+    "distraction": "分心",
+    "applyRitual": "套用「%{name}」儀式",
+    "editRitual": "編輯「%{name}」儀式",
+    "createRitual": "建立儀式",
+    "closeRitualForm": "關閉儀式表單",
+    "chooseCustomEmoji": "透過鍵盤選擇其他表情符號",
+    "ritualNamePreset": "預設儀式「%{name}」",
+    "deleteRitual": "刪除儀式「%{name}」",
+    "favoriteRitual": "收藏儀式「%{name}」"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +340,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "為自己留出一刻?",
-        "bodyPersonalized": "你的{{name}}在等你 {{emoji}} — {{duration}}分鐘怎麼樣?",
-        "bodyGeneric": "你的計時器在等待 — 為自己留出一刻"
-      },
-      "day7": {
-        "title": "最後機會",
-        "body": "7天免費試用 — 趕在過期前獲取"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +353,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "給我一個驚喜"
     }
   },
   "twoTimers": {
@@ -447,6 +432,82 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "開始吧",
+      "endMessage": "完成 ✨"
     }
+  },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "完整調色盤、無限儀式、舒緩音效點綴你的時刻——讓錶盤隨你的節奏自由呼吸。",
+    "features": {
+      "palettes": "另外 10 款調色盤",
+      "rituals": "無限儀式",
+      "sounds": "Ambiances 音效"
+    },
+    "price": "%{price}，一次性，永久擁有。",
+    "startTrial": "免費試用 7 天",
+    "breatheInvitation": "想讓它呼吸嗎?來發現 Ambiances"
+  },
+  "rituals": {
+    "sheetRow": "我的儀式",
+    "base": {
+      "meditation": "呼吸",
+      "break": "咖啡時間",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "我的儀式",
+      "createRow": "建立儀式",
+      "empty": "還沒有儀式",
+      "durationBadge": "%{minutes} 分鐘"
+    },
+    "form": {
+      "createTitle": "建立儀式",
+      "editTitle": "編輯儀式",
+      "emojiLabel": "表情符號",
+      "emojiCustomButton": "其他表情符號",
+      "colorLabel": "顏色",
+      "durationLabel": "時長",
+      "soundLabel": "結束音效",
+      "saveButton": "儲存",
+      "deleteButton": "刪除",
+      "deleteConfirmTitle": "刪除這個儀式?",
+      "deleteConfirmMessage": "此操作無法復原。",
+      "customActivityName": "我的儀式",
+      "customEmojiOther": "其他…",
+      "customEmojiPlaceholder": "你的表情符號",
+      "customEmojiHint": "點擊🌐切換到表情符號鍵盤"
+    },
+    "restoreBase": "還原基礎儀式"
+  },
+  "palettesPanel": {
+    "sheetRow": "調色盤",
+    "title": "調色盤",
+    "included": "已包含",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances 調色盤 — 自由試用",
+    "ambiancesDiscover": "發現 Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "專注"
+  },
+  "focus": {
+    "hint": "向上滑動"
+  },
+  "firstRun": {
+    "skip": "略過",
+    "welcome": "先選一個活動開始吧 👇",
+    "companion": "這個表情陪著你。滑動圓盤來設定時間。",
+    "dialColor": "顏色?馬上就會改變。",
+    "ready": "準備好了。點一下圓盤開始。"
+  },
+  "aside": {
+    "exitFocus": "退出專注",
+    "doubleTapHint": "提示:雙擊背景切換",
+    "handle": "開啟設定",
+    "closedLabel": "儀式與設定"
   }
 }

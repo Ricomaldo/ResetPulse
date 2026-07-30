@@ -3,7 +3,9 @@
     "cancel": "取消",
     "ok": "确定",
     "retry": "重试",
-    "continue": "继续"
+    "continue": "继续",
+    "back": "返回",
+    "delete": "删除"
   },
   "welcome": {
     "title": "欢迎使用 ResetPulse"
@@ -241,23 +243,20 @@
     "dawn": "极光",
     "dusk": "黄昏",
     "soft": "温柔",
-    "autumn": "秋天",
     "lavender": "薰衣草",
     "teal": "青绿",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "经典铃声",
-    "bell_melodic": "旋律铃声",
-    "microwave_vintage": "复古微波炉",
-    "microwave_ping": "微波炉提示音",
-    "kitchen_timer": "厨房计时器",
-    "kitchen_timer_2": "机械计时器",
-    "egg_timer": "煮蛋计时器",
-    "toaster_bell": "烤面包机",
-    "ding_effect": "简单叮声",
-    "timer_complete": "计时器完成"
+    "contrabass_pluck": "低音弦",
+    "jingle_achievement": "成就",
+    "kalimba": "卡林巴琴",
+    "marimba_ascending": "上行马林巴",
+    "marimba_dry": "马林巴",
+    "singing_bowl": "颂钵",
+    "success_glissando": "滑音",
+    "up_chime": "钟声",
+    "vibraphone_chord": "颤音琴"
   },
   "accessibility": {
     "keepAwake": "保持屏幕常亮",
@@ -295,21 +294,17 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "免费试用7天",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "showTime": "显示时间",
+    "distraction": "分心",
+    "applyRitual": "应用「%{name}」仪式",
+    "editRitual": "编辑「%{name}」仪式",
+    "createRitual": "创建仪式",
+    "closeRitualForm": "关闭仪式表单",
+    "chooseCustomEmoji": "通过键盘选择其他表情符号",
+    "ritualNamePreset": "预设仪式「%{name}」",
+    "deleteRitual": "删除仪式「%{name}」",
+    "favoriteRitual": "收藏仪式「%{name}」"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +340,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "为自己留出一刻?",
-        "bodyPersonalized": "你的{{name}}在等你 {{emoji}} — {{duration}}分钟怎么样?",
-        "bodyGeneric": "你的计时器在等待 — 为自己留出一刻"
-      },
-      "day7": {
-        "title": "最后机会",
-        "body": "7天免费试用 — 赶在过期前获取"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +353,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "给我个惊喜"
     }
   },
   "twoTimers": {
@@ -447,6 +432,82 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "开始吧",
+      "endMessage": "完成 ✨"
     }
+  },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "完整调色板、无限仪式、舒缓音效点缀你的时刻——让表盘随你的节奏自由呼吸。",
+    "features": {
+      "palettes": "另外 10 款调色板",
+      "rituals": "无限仪式",
+      "sounds": "Ambiances 音效"
+    },
+    "price": "%{price}，一次性付费，永久拥有。",
+    "startTrial": "免费试用 7 天",
+    "breatheInvitation": "想让它呼吸起来?去发现 Ambiances"
+  },
+  "rituals": {
+    "sheetRow": "我的仪式",
+    "base": {
+      "meditation": "呼吸",
+      "break": "咖啡休息",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "我的仪式",
+      "createRow": "创建仪式",
+      "empty": "还没有仪式",
+      "durationBadge": "%{minutes} 分钟"
+    },
+    "form": {
+      "createTitle": "创建仪式",
+      "editTitle": "编辑仪式",
+      "emojiLabel": "表情符号",
+      "emojiCustomButton": "其他表情符号",
+      "colorLabel": "颜色",
+      "durationLabel": "时长",
+      "soundLabel": "结束音效",
+      "saveButton": "保存",
+      "deleteButton": "删除",
+      "deleteConfirmTitle": "删除这个仪式?",
+      "deleteConfirmMessage": "此操作无法撤销。",
+      "customActivityName": "我的仪式",
+      "customEmojiOther": "其他…",
+      "customEmojiPlaceholder": "你的表情符号",
+      "customEmojiHint": "点击🌐切换到表情符号键盘"
+    },
+    "restoreBase": "恢复基础仪式"
+  },
+  "palettesPanel": {
+    "sheetRow": "调色板",
+    "title": "调色板",
+    "included": "已包含",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances 调色板 — 自由试用",
+    "ambiancesDiscover": "发现 Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "专注"
+  },
+  "focus": {
+    "hint": "向上滑动"
+  },
+  "firstRun": {
+    "skip": "跳过",
+    "welcome": "先选一个活动开始吧 👇",
+    "companion": "这个表情陪伴着你。滑动圆盘设置时长。",
+    "dialColor": "颜色?马上就能看到变化。",
+    "ready": "准备就绪。点击圆盘开始。"
+  },
+  "aside": {
+    "exitFocus": "退出专注",
+    "doubleTapHint": "提示:双击背景切换",
+    "handle": "打开设置",
+    "closedLabel": "仪式与设置"
   }
 }
