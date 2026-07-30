@@ -18,7 +18,10 @@
  * - palette: currentPalette, currentColor (source de vérité, hex — C6.2),
  *   selectedColorIndex (dérivé, -1 si currentColor n'est pas dans la palette
  *   active — ex. couleur de Rituel propre), paletteInfo, paletteColors, timerColors
- * - transient: timerRemaining, flashActivity, isLoading
+ * - transient: flashActivity, isLoading
+ *   (timerRemaining sorti vers TimerRemainingContext, hotfix-porte-1 C4 —
+ *   écrit à 60 Hz par TimeTimer.jsx, il faisait re-rendre TOUT consommateur
+ *   de ce contexte à chaque tick tant qu'il vivait dans ce useMemo)
  */
 
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
@@ -53,7 +56,8 @@ export const TimerConfigProvider = ({ children }) => {
   const hasLoggedBoot = useRef(false);
 
   // Transient state (not persisted)
-  const [timerRemaining, setTimerRemaining] = useState(0);
+  // timerRemaining vit dans TimerRemainingContext (hotfix-porte-1 C4) — plus
+  // ici, pour ne plus faire re-rendre tout consommateur à 60 Hz.
   const [flashActivity, setFlashActivity] = useState(null);
   const flashTimeoutRef = useRef(null);
 
@@ -379,7 +383,6 @@ export const TimerConfigProvider = ({ children }) => {
       currentColor,
     },
     transient: {
-      timerRemaining,
       flashActivity,
       isLoading,
     },
@@ -598,10 +601,9 @@ export const TimerConfigProvider = ({ children }) => {
     },
 
     // Transient
-    setTimerRemaining,
     setFlashActivity,
     handleActivitySelect,
-  }), [values, setValues, timerRemaining, flashActivity, isLoading, paletteData, derivedScaleMode, setTimerRemaining, setFlashActivity, handleActivitySelect]);
+  }), [values, setValues, flashActivity, isLoading, paletteData, derivedScaleMode, setFlashActivity, handleActivitySelect]);
 
   // Block children render until loaded
   if (isLoading) {

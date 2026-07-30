@@ -8,6 +8,7 @@ import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 // theme provider not used in this component
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
+import { useTimerRemaining } from '../../contexts/TimerRemainingContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { rs, getComponentSizes } from '../../styles/responsive';
 import useTimer from '../../hooks/useTimer';
@@ -25,10 +26,12 @@ export default function TimeTimer({
   const {
     timer: { clockwise, scaleMode, currentActivity, currentDuration },
     setCurrentDuration,
-    setTimerRemaining,
     palette: { currentColor },
     mode: { current: currentMode },
   } = useTimerConfig();
+  // C4 (hotfix-porte-1) : timerRemaining vit à part — écrit à 60 Hz, il ne
+  // doit plus faire re-rendre tout consommateur de useTimerConfig().
+  const { setTimerRemaining } = useTimerRemaining();
 
   // Get custom activities for incrementing usage
   const { incrementUsage } = useCustomActivities();
@@ -80,7 +83,11 @@ export default function TimeTimer({
     }
   }, [timer.running, onRunningChange]);
 
-  // Sync timer remaining to context for TopTime display
+  // Publie timerRemaining (TimerRemainingContext, hotfix-porte-1 C4) — audit
+  // 30/07 : aucun consommateur actuel ne LIT cette valeur (TopTime est
+  // alimenté par le pont local timerRef/snapshot de TimerScreen depuis B3/D3,
+  // pas par ce contexte). Gardé en écriture pour un futur consommateur ; le
+  // point important du fix est qu'elle n'était plus dans le useMemo géant.
   useEffect(() => {
     setTimerRemaining(timer.remaining);
   }, [timer.remaining, setTimerRemaining]);
