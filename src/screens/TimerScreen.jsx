@@ -240,35 +240,50 @@ function TopTime({ seconds }) {
       // brand.neutral donnait 2.37:1 sur le fond crème (#F4EFE7) — bien sous
       // WCAG AA (4.5:1), quasi illisible à 13px (trouvé en retest Eric,
       // rapporté comme "timer invisible"). textSecondary : 5.41:1.
-      // Verdicts CD (25/07) : ui-monospace 700 26px, encre douce #5A5147
+      // Verdicts CD (25/07) : ui-monospace 700, encre douce #5A5147
       // (= textSecondary), interlettre 0.03em — se distingue du wall-clock.
       color: theme.colors.textSecondary,
-      fontSize: rs(26, 'min'),
+      fontSize: rs(22, 'min'),
       fontVariant: ['tabular-nums'],
       fontWeight: '700',
-      letterSpacing: rs(26, 'min') * 0.03,
+      letterSpacing: rs(22, 'min') * 0.03,
     },
     glyph: {
       color: theme.colors.textLight,
       fontSize: rs(12, 'min'),
       marginRight: 6,
     },
-    wrap: {
+    // porte-2 (retour Eric ×2 « trop haut, aucun design, le cadran bouge ») :
+    // 1) SLOT à hauteur CONSTANTE, toujours monté — montrer/masquer ne
+    //    déplace plus jamais le cadran (l'ancien `return null` retirait
+    //    l'espace réservé) ;
+    // 2) descendu du bord (paddingTop lg) ;
+    // 3) habillé famille : la pill blanche des contrôles (CompactRow, dé).
+    slot: {
       alignItems: 'center',
-      paddingTop: theme.spacing.xs,
+      height: rs(64, 'min'),
+      justifyContent: 'center',
+      paddingTop: theme.spacing.lg,
+    },
+    pill: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.round,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xxs,
+      ...theme.shadow('sm'),
     },
   });
 
-  if (!showTime) {
-    return null;
-  }
-
   return (
-    <View style={styles.wrap} testID="timer.digital">
-      <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-        <Text style={styles.glyph}>⏱</Text>
-        <Text style={styles.text}>{formatTime(seconds)}</Text>
-      </View>
+    <View style={styles.slot} testID="timer.digital">
+      {showTime && (
+        <View style={styles.pill}>
+          <Text style={styles.glyph}>⏱</Text>
+          <Text style={styles.text}>{formatTime(seconds)}</Text>
+        </View>
+      )}
     </View>
   );
 }
