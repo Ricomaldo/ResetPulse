@@ -68,7 +68,7 @@ export default function PalettesPanel({ onBack, maxHeight }) {
 
   const handleDiscoverAmbiances = () => {
     analytics.trackAmbiancesInvitationTapped('palettes');
-    modalStack.push('premium');
+    modalStack.push('premium', { highlightedFeature: 'palettes' });
   };
 
   const styles = StyleSheet.create({
