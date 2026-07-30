@@ -7,6 +7,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
@@ -22,7 +23,7 @@ import RitualForm from './RitualForm';
 export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
-  const { rituals, createRitual, updateRitual, deleteRitual, getRitualById, restoreBaseRituals, hasMissingBaseRituals } = useRituals();
+  const { rituals, createRitual, updateRitual, deleteRitual, getRitualById, restoreBaseRituals, hasMissingBaseRituals, favoriteRituals, toggleFavorite } = useRituals();
   const { customActivities } = useCustomActivities();
   const { setCurrentActivity, setCurrentDuration, setSelectedSoundId, setColorByValue } = useTimerConfig();
 
@@ -148,6 +149,32 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
       flex: 1,
       fontSize: rs(14, 'min'),
     },
+    deleteAction: {
+      alignItems: 'center',
+      backgroundColor: '#A85B42', // terracotta du DS — destructif sans crier
+      borderRadius: theme.borderRadius.md,
+      justifyContent: 'center',
+      marginVertical: rs(2),
+      paddingHorizontal: theme.spacing.md,
+    },
+    deleteActionText: {
+      color: '#FFFFFF',
+      fontSize: rs(13, 'min'),
+      fontWeight: '600',
+    },
+    favoriteAffordance: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: 36,
+    },
+    favoriteStar: {
+      color: theme.colors.textLight,
+      fontSize: rs(18, 'min'),
+    },
+    favoriteStarActive: {
+      color: '#D4A853', // l'or « done » du DS — jamais le vert
+    },
     ritualRow: {
       alignItems: 'center',
       borderBottomColor: theme.colors.border,
@@ -201,31 +228,74 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
 
       {rituals.map((ritual) => {
         const activity = resolveRitualActivity(ritual, customActivities);
+        const isFavorite = favoriteRituals.some((fav) => fav.id === ritual.id);
         return (
-          <View key={ritual.id} style={styles.ritualRow}>
-            <TouchableOpacity
-              style={styles.ritualTouchable}
-              onPress={() => handleApply(ritual)}
-              activeOpacity={0.7}
-              accessible
-              accessibilityRole="button"
-              accessibilityLabel={t('accessibility.applyRitual', { name: ritual.name })}
-            >
-              <Text style={styles.emoji}>{activity?.emoji}</Text>
-              <Text style={styles.ritualName}>{ritual.name}</Text>
-              <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.editAffordance}
-              onPress={() => handleEditPress(ritual.id)}
-              activeOpacity={0.7}
-              accessible
-              accessibilityRole="button"
-              accessibilityLabel={t('accessibility.editRitual', { name: ritual.name })}
-            >
-              <Text style={styles.editAffordanceText}>✎</Text>
-            </TouchableOpacity>
-          </View>
+          // porte-2 (retour Eric) : swipe gauche = supprimer (Swipeable RNGH),
+          // étoile = élire aux 3 favoris de la rangée d'accueil.
+          <Swipeable
+            key={ritual.id}
+            friction={2}
+            rightThreshold={40}
+            overshootRight={false}
+            renderRightActions={() => (
+              <TouchableOpacity
+                style={styles.deleteAction}
+                onPress={() => {
+                  haptics.impact('medium').catch(() => {});
+                  deleteRitual(ritual.id);
+                }}
+                accessible
+                accessibilityRole="button"
+                accessibilityLabel={t('accessibility.deleteRitual', { name: ritual.name })}
+              >
+                <Text style={styles.deleteActionText}>{t('common.delete')}</Text>
+              </TouchableOpacity>
+            )}
+          >
+            <View style={styles.ritualRow}>
+              <TouchableOpacity
+                style={styles.favoriteAffordance}
+                onPress={() => {
+                  const changed = toggleFavorite(ritual.id);
+                  haptics.selection().catch(() => {});
+                  if (!changed && !isFavorite) {
+                    // 4e étoile refusée : libérer une place d'abord (max 3)
+                    haptics.impact('light').catch(() => {});
+                  }
+                }}
+                accessible
+                accessibilityRole="button"
+                accessibilityState={{ selected: isFavorite }}
+                accessibilityLabel={t('accessibility.favoriteRitual', { name: ritual.name })}
+              >
+                <Text style={[styles.favoriteStar, isFavorite && styles.favoriteStarActive]}>
+                  {isFavorite ? '★' : '☆'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.ritualTouchable}
+                onPress={() => handleApply(ritual)}
+                activeOpacity={0.7}
+                accessible
+                accessibilityRole="button"
+                accessibilityLabel={t('accessibility.applyRitual', { name: ritual.name })}
+              >
+                <Text style={styles.emoji}>{activity?.emoji}</Text>
+                <Text style={styles.ritualName}>{ritual.name}</Text>
+                <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.editAffordance}
+                onPress={() => handleEditPress(ritual.id)}
+                activeOpacity={0.7}
+                accessible
+                accessibilityRole="button"
+                accessibilityLabel={t('accessibility.editRitual', { name: ritual.name })}
+              >
+                <Text style={styles.editAffordanceText}>✎</Text>
+              </TouchableOpacity>
+            </View>
+          </Swipeable>
         );
       })}
 

@@ -95,6 +95,52 @@ export const useRituals = () => {
     });
   };
 
+  // ===== Favoris (porte-2, retour Eric) =====
+  // La rangée d'accueil montre les 3 rituels FAVORIS (« un tap = tout est
+  // prêt »). `favorite: true` sur le rituel, MAX_FAVORITES = 3. Migration
+  // douce : un état persisté sans aucun favori élit les 3 premiers (les
+  // base au premier lancement). Ordre d'affichage = ordre du tableau.
+  const MAX_FAVORITES = 3;
+  const hasAnyFavorite = rituals.some((ritual) => ritual.favorite);
+  const favoriteRituals = (hasAnyFavorite
+    ? rituals.filter((ritual) => ritual.favorite)
+    : rituals.slice(0, MAX_FAVORITES)
+  ).slice(0, MAX_FAVORITES);
+
+  /**
+   * Bascule le statut favori d'un rituel. Refuse (return false) d'en élire
+   * un 4e — il faut d'abord en libérer un (le retrait est toujours permis).
+   * @param {string} id
+   * @returns {boolean} - true si la bascule a eu lieu
+   */
+  const toggleFavorite = (id) => {
+    const target = rituals.find((ritual) => ritual.id === id);
+    if (!target) {
+      return false;
+    }
+    // Sans aucun favori explicite, les 3 premiers font office (migration) —
+    // matérialise-les avant de basculer, pour que le retrait d'un implicite
+    // fonctionne comme attendu.
+    const materialized = hasAnyFavorite
+      ? rituals
+      : rituals.map((ritual, index) => ({ ...ritual, favorite: index < MAX_FAVORITES }));
+    const current = materialized.find((ritual) => ritual.id === id);
+    const favoriteCount = materialized.filter((ritual) => ritual.favorite).length;
+    if (!current.favorite && favoriteCount >= MAX_FAVORITES) {
+      return false;
+    }
+    setRituals((prev) => {
+      const prevHasAny = prev.some((ritual) => ritual.favorite);
+      const prevMaterialized = prevHasAny
+        ? prev
+        : prev.map((ritual, index) => ({ ...ritual, favorite: index < MAX_FAVORITES }));
+      return prevMaterialized.map((ritual) =>
+        ritual.id === id ? { ...ritual, favorite: !ritual.favorite } : ritual
+      );
+    });
+    return true;
+  };
+
   return {
     rituals,
     createRitual,
@@ -103,6 +149,8 @@ export const useRituals = () => {
     getRitualById,
     restoreBaseRituals,
     hasMissingBaseRituals,
+    favoriteRituals,
+    toggleFavorite,
     isLoading,
   };
 };

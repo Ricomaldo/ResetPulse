@@ -4,7 +4,8 @@
     "ok": "OK",
     "retry": "Retry",
     "continue": "Continue",
-    "back": "Back"
+    "back": "Back",
+    "delete": "Delete"
   },
   "controls": {
     "digitalTimer": {
@@ -320,7 +321,9 @@
     "createRitual": "Create a ritual",
     "closeRitualForm": "Close the ritual form",
     "chooseCustomEmoji": "Choose another emoji via the keyboard",
-    "ritualNamePreset": "Preset ritual %{name}"
+    "ritualNamePreset": "Preset ritual %{name}",
+    "deleteRitual": "Delete ritual %{name}",
+    "favoriteRitual": "Favorite ritual %{name}"
   },
   "discovery": {
     "defaultCta": "Try 7 days free",

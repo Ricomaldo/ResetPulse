@@ -4,7 +4,8 @@
     "ok": "OK",
     "retry": "Réessayer",
     "continue": "Continuer",
-    "back": "Retour"
+    "back": "Retour",
+    "delete": "Supprimer"
   },
   "controls": {
     "digitalTimer": {
@@ -320,7 +321,9 @@
     "createRitual": "Créer un rituel",
     "closeRitualForm": "Fermer le formulaire de rituel",
     "chooseCustomEmoji": "Choisir un autre emoji via le clavier",
-    "ritualNamePreset": "Rituel préconfiguré %{name}"
+    "ritualNamePreset": "Rituel préconfiguré %{name}",
+    "deleteRitual": "Supprimer le rituel %{name}",
+    "favoriteRitual": "Rituel favori %{name}"
   },
   "discovery": {
     "defaultCta": "Essayer 7 jours gratuits",

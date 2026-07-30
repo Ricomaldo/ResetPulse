@@ -31,7 +31,9 @@ import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
-import { getFreeActivities } from '../config/activities';
+import { buildRitualApplyPayload } from '../config/rituals';
+import { useRituals } from '../hooks/useRituals';
+import { useCustomActivities } from '../hooks/useCustomActivities';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
 import haptics from '../utils/haptics';
@@ -41,7 +43,6 @@ import haptics from '../utils/haptics';
 const IMMERSION_FADE_MS = 600;
 const IMMERSION_DIAL_SCALE = 1.12;
 
-const FREE_ACTIVITIES = getFreeActivities();
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
@@ -53,8 +54,18 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
     timer: { currentActivity },
     palette: { currentColor, paletteColors },
     setCurrentActivity,
+    setCurrentDuration,
+    setSelectedSoundId,
+    setColorByValue,
     setColorIndex,
   } = useTimerConfig();
+  // porte-2 (retour Eric « activer un rituel demande 3 taps ») : la rangée
+  // d'accueil montre les 3 rituels FAVORIS — le lançable, pas l'atome. Un
+  // tap = activité + couleur + durée + son, tout est prêt (la signature
+  // remonte à la surface). Créer/étoiler un rituel met la rangée à jour
+  // (même store useRituals). Les couleurs restent à côté : réglage en direct.
+  const { favoriteRituals } = useRituals();
+  const { customActivities } = useCustomActivities();
 
   const styles = StyleSheet.create({
     activityButton: {
@@ -110,28 +121,32 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
 
   return (
     <View style={styles.row}>
-      {FREE_ACTIVITIES.map((activity) => {
-        const isActive = currentActivity?.id === activity.id;
+      {favoriteRituals.map((ritual) => {
+        const payload = buildRitualApplyPayload(ritual, customActivities);
+        const isActive = currentActivity?.id === payload.activity?.id;
         return (
           <TouchableOpacity
-            key={activity.id}
-            testID={`activity.item.${activity.id}`}
+            key={ritual.id}
+            testID={`ritual.item.${ritual.id}`}
             accessible
             accessibilityRole="button"
-            accessibilityLabel={t('accessibility.activity', {
-              name: activity.label,
+            accessibilityLabel={t('accessibility.applyRitual', {
+              name: ritual.name,
             })}
             accessibilityState={{ selected: isActive }}
             style={[styles.activityButton, isActive && styles.activityButtonActive]}
             onPress={() => {
-              haptics.selection().catch(() => {});
-              setCurrentActivity(activity);
-              analytics.trackActivitySelected(activity.id);
+              haptics.impact('light').catch(() => {});
+              setCurrentActivity(payload.activity);
+              setCurrentDuration(payload.duration);
+              setSelectedSoundId(payload.soundId);
+              setColorByValue(payload.color);
+              analytics.trackActivitySelected(payload.activity?.id);
               onActivityTouch?.();
             }}
             activeOpacity={0.7}
           >
-            <Text style={styles.activityEmoji}>{activity.emoji}</Text>
+            <Text style={styles.activityEmoji}>{payload.activity?.emoji}</Text>
           </TouchableOpacity>
         );
       })}
