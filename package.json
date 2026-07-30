@@ -33,6 +33,7 @@
     "i18n:validate": "npm run i18n:audit"
   },
   "dependencies": {
+    "@bacons/apple-targets": "^5.0.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@types/jest": "29.5.14",
     "babel-preset-expo": "~55.0.8",

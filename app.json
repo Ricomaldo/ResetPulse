@@ -20,7 +20,8 @@
       "bundleIdentifier": "com.irimwebforge.resetpulse",
       "buildNumber": "28",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSSupportsLiveActivities": true
       }
     },
     "plugins": [
@@ -44,7 +45,8 @@
       ],
       "expo-localization",
       "expo-asset",
-      "expo-audio"
+      "expo-audio",
+      "@bacons/apple-targets"
     ],
     "notification": {
       "icon": "./assets/icon.png",
