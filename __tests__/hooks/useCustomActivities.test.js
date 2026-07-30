@@ -1,6 +1,15 @@
 // Tests for useCustomActivities hook - P0
+// porte-3 (bug emoji custom) : l'état vit désormais dans un contexte PARTAGÉ
+// (CustomActivitiesContext) — renderHook monte le provider ; l'API du hook
+// est inchangée.
+import React from 'react';
 import { renderHook, act } from '../test-utils';
 import { useCustomActivities } from '../../src/hooks/useCustomActivities';
+import { CustomActivitiesProvider } from '../../src/contexts/CustomActivitiesContext';
+
+const wrapper = ({ children }) => (
+  <CustomActivitiesProvider>{children}</CustomActivitiesProvider>
+);
 
 // Mock usePersistedState to simulate AsyncStorage without actual storage
 const mockSetCustomActivities = jest.fn((updater) => {
@@ -31,14 +40,14 @@ describe('useCustomActivities', () => {
 
   describe('Initialization', () => {
     it('initializes with empty activities array', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       expect(result.current.customActivities).toEqual([]);
       expect(result.current.isLoading).toBe(false);
     });
 
     it('provides all expected methods', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       expect(typeof result.current.createActivity).toBe('function');
       expect(typeof result.current.updateActivity).toBe('function');
@@ -51,7 +60,7 @@ describe('useCustomActivities', () => {
 
   describe('createActivity', () => {
     it('creates activity with unique id', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let newActivity;
       act(() => {
@@ -66,7 +75,7 @@ describe('useCustomActivities', () => {
     });
 
     it('creates activity with correct default properties', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let newActivity;
       act(() => {
@@ -82,7 +91,7 @@ describe('useCustomActivities', () => {
     });
 
     it('calls setCustomActivities to add activity', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       act(() => {
         result.current.createActivity('🎮', 'Gaming', 3600);
@@ -112,7 +121,7 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       act(() => {
         result.current.updateActivity('custom_123', { name: 'Deep Focus', defaultDuration: 1800 });
@@ -136,7 +145,7 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       // Capture the updater function to verify behavior
       let updaterResult;
@@ -168,7 +177,7 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let updaterResult;
       mockSetCustomActivities.mockImplementation((updater) => {
@@ -200,7 +209,7 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let updaterResult;
       mockSetCustomActivities.mockImplementation((updater) => {
@@ -229,7 +238,7 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let updaterResult;
       mockSetCustomActivities.mockImplementation((updater) => {
@@ -259,7 +268,7 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       const found = result.current.getActivityById('custom_b');
 
@@ -274,7 +283,7 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       const found = result.current.getActivityById('nonexistent');
 
@@ -296,13 +305,13 @@ describe('useCustomActivities', () => {
         false,
       ]);
 
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       expect(result.current.getCustomActivitiesCount()).toBe(3);
     });
 
     it('returns 0 for empty array', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       expect(result.current.getCustomActivitiesCount()).toBe(0);
     });
@@ -310,7 +319,7 @@ describe('useCustomActivities', () => {
 
   describe('Edge cases', () => {
     it('handles emoji with multi-codepoint characters', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let newActivity;
       act(() => {
@@ -322,7 +331,7 @@ describe('useCustomActivities', () => {
     });
 
     it('handles long activity names', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let newActivity;
       act(() => {
@@ -334,7 +343,7 @@ describe('useCustomActivities', () => {
     });
 
     it('handles special characters in activity names', () => {
-      const { result } = renderHook(() => useCustomActivities());
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
 
       let newActivity;
       act(() => {
