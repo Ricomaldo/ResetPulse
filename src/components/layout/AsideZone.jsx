@@ -234,6 +234,20 @@ export default function AsideZone({ isTimerRunning }) {
     ),
   }), [openY, snapClosed]);
 
+  // A1/D4 (hotfix-porte-1) : bande fermée muette — seule la poignée (28pt)
+  // était visible, le reste des 92pt blanc nu (le contenu s'éteint à
+  // opacité 0 avec `content`). Élément-SŒUR de `content` (pas dedans, sinon
+  // il hérite de la même opacité) : opacité INVERSE, visible fermé, s'efface
+  // à l'ouverture. pointerEvents none — jamais dans le chemin du tap/pan.
+  const closedLabelAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateY.value,
+      [openY, snapClosed],
+      [0, 1],
+      Extrapolation.CLAMP
+    ),
+  }), [openY, snapClosed]);
+
   const styles = StyleSheet.create({
     asideContainer: {
       bottom: 0,
@@ -269,6 +283,22 @@ export default function AsideZone({ isTimerRunning }) {
       borderRadius: 3,
       height: 6,
       width: 56,
+    },
+    closedLabel: {
+      alignItems: 'center',
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      top: HANDLE_HEIGHT,
+    },
+    closedLabelText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+    },
+    closedLabelChevron: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(13, 'min'),
+      marginTop: rs(2),
     },
     inertChevron: {
       color: theme.colors.textSecondary,
@@ -384,6 +414,13 @@ export default function AsideZone({ isTimerRunning }) {
           >
             <View style={[styles.handleIndicator, { backgroundColor: theme.colors.textSecondary }]} />
           </TouchableOpacity>
+
+          {/* Bande fermée (A1/D4) : sœur de `content`, opacité inverse —
+              visible fermé, s'efface à l'ouverture. */}
+          <Animated.View style={[styles.closedLabel, closedLabelAnimatedStyle]} pointerEvents="none">
+            <Text style={styles.closedLabelText}>{t('aside.closedLabel')}</Text>
+            <Text style={styles.closedLabelChevron}>˄</Text>
+          </Animated.View>
 
           {/* SCR-10 : 4 blocs */}
           <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
