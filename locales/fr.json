@@ -474,7 +474,9 @@
     "sheetRow": "Palettes",
     "title": "Palettes",
     "included": "Incluses",
-    "ambiances": "Ambiances"
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "palette Ambiances — essaie-la librement",
+    "ambiancesDiscover": "découvrir Ambiances"
   },
   "mode": {
     "standard": "ResetPulse",
