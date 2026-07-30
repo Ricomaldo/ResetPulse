@@ -93,6 +93,36 @@ export const SOUND_METADATA = {
 // Son par défaut
 export const DEFAULT_SOUND_ID = 'timer_complete';
 
+// Fichiers déclarés dans app.json (plugin expo-notifications, clé `sounds`) —
+// nécessaires pour référencer un son custom depuis une NOTIFICATION native.
+// Le require() de SOUND_FILES ci-dessus ne donne qu'un id d'asset Metro (pour
+// la lecture audio en direct via expo-audio) ; l'API notifications a besoin
+// du nom de fichier tel que packagé nativement. Garder synchronisé avec
+// app.json → plugins → expo-notifications → sounds ET avec assets/sounds/
+// (Lot 3e, fix packaging custom-sound, finding C2).
+export const NOTIFICATION_SOUND_FILES = {
+  timer_complete: '634089__aj_heels__timercomplete01.wav',
+  bell_classic: 'bell_short.wav',
+  bell_melodic: '815533__mihacappy__bell01.wav',
+  microwave_vintage: '135873__crz1990__vintage-microwave-timer-bell-ring-26-november-2011-113900-pm.wav',
+  microwave_ping: '609725__theplax__microwave-ping.wav',
+  kitchen_timer: '149506__dland__kitchen-timer-done.wav',
+  kitchen_timer_2: '204103__maphill__kitchen-timer.wav',
+  egg_timer: '490326__knufds__bell-egg-timer.wav',
+  toaster_bell: '564623__azumarill__toaster-oven-or-liftelevator-bell.wav',
+  ding_effect: '615949__julesv4__ding-effect.wav',
+};
+
+/**
+ * Nom de fichier natif pour un son de notification — repli silencieux sur le
+ * son par défaut si l'id est invalide/manquant (jamais de crash sur une
+ * valeur persistée corrompue).
+ * @param {string} soundId
+ * @returns {string}
+ */
+export const getNotificationSoundFile = (soundId) =>
+  NOTIFICATION_SOUND_FILES[soundId] || NOTIFICATION_SOUND_FILES[DEFAULT_SOUND_ID];
+
 // Helper pour obtenir la liste des sons formatée
 export const getTimerSounds = () => {
   return Object.keys(SOUND_FILES).map(id => ({
