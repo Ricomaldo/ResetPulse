@@ -13,6 +13,8 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { useRituals } from '../../hooks/useRituals';
 import { useTranslation } from '../../hooks/useTranslation';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useModalStack } from '../../contexts/ModalStackContext';
 import { buildRitualApplyPayload, resolveRitualActivity } from '../../config/rituals';
 import { formatDuration } from '../../config/durations';
 import { fontWeights } from '../../theme/tokens';
@@ -20,12 +22,19 @@ import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import RitualForm from './RitualForm';
 
+// Lot 3b (verdict Eric) : SEUL cap dur du modèle Ambiances — 3 rituels en
+// gratuit, illimité en Ambiances. Le bouton + reste visible/actif : au-delà
+// du cap, il ouvre l'invitation Ambiances plutôt que le formulaire.
+const RITUALS_FREE_CAP = 3;
+
 export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
   const { rituals, createRitual, updateRitual, deleteRitual, getRitualById, restoreBaseRituals, hasMissingBaseRituals, favoriteRituals, toggleFavorite } = useRituals();
   const { customActivities, deleteActivity } = useCustomActivities();
   const { setCurrentActivity, setCurrentDuration, setSelectedSoundId, setColorByValue } = useTimerConfig();
+  const { isPremium } = usePremiumStatus();
+  const modalStack = useModalStack();
 
   const [view, setView] = useState('list'); // 'list' | 'form'
   const [editingId, setEditingId] = useState(null);
@@ -48,6 +57,10 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
 
   const handleCreatePress = () => {
     haptics.selection().catch(() => {});
+    if (!isPremium && rituals.length >= RITUALS_FREE_CAP) {
+      modalStack.push('premium', { highlightedFeature: 'rituals_cap' });
+      return;
+    }
     setEditingId(null);
     setView('form');
   };

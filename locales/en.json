@@ -208,8 +208,8 @@
     "price": "Then %{price} once.\nYours forever.",
     "startTrial": "Try 7 days free",
     "restore": "Restore my purchases",
-    "welcomeTitle": "Welcome Premium! 🎉",
-    "welcomeMessage": "All palettes and activities are now unlocked.",
+    "welcomeTitle": "Welcome to Ambiances! 🎉",
+    "welcomeMessage": "All palettes, unlimited rituals and Ambiances sounds are now unlocked.",
     "welcomeButton": "Awesome!",
     "noConnection": "No connection",
     "noConnectionMessage": "Unable to load offers. Check your internet connection.",
@@ -223,13 +223,25 @@
     "errorGeneric": "An error occurred",
     "paymentPending": "Payment in progress",
     "restoreSuccess": "Restore successful",
-    "restoreSuccessMessage": "Your purchases have been restored. All premium features are unlocked.",
+    "restoreSuccessMessage": "Your purchases have been restored. All Ambiances features are unlocked.",
     "restoreNone": "No purchase found",
     "restoreNoneMessage": "No previous purchase was found for this account.",
     "restoreError": "Unable to restore your purchases.",
     "unexpectedError": "An unexpected error occurred.",
     "contactSupport": "Contact Support",
     "tooManyAttempts": "Please contact support if the issue persists."
+  },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Full palettes, unlimited rituals, gentle sounds to dress up your sessions — everything to make your dial breathe, at your pace.",
+    "features": {
+      "palettes": "10 more color palettes",
+      "rituals": "unlimited rituals",
+      "sounds": "Ambiances sounds"
+    },
+    "price": "%{price}, once. Yours forever.",
+    "startTrial": "try 7 days free",
+    "breatheInvitation": "want to make it breathe? discover Ambiances"
   },
   "activities": {
     "none": "Basic",
@@ -300,13 +312,13 @@
       "stopTimer": "Stop timer",
       "resetTimer": "Reset timer"
     },
-    "closePremiumModal": "Close premium offer",
+    "closePremiumModal": "Close Ambiances offer",
     "closeModalHint": "Closes this dialog and returns to the app",
-    "unlockPremium": "Unlock premium for %{price}",
+    "unlockPremium": "Unlock Ambiances for %{price}",
     "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
     "distraction": "Distraction",
     "restorePurchases": "Restore previous purchases",
-    "restorePurchasesHint": "Restore premium access if you already purchased",
+    "restorePurchasesHint": "Restore Ambiances access if you already purchased",
     "paletteItem": "Color palette: %{name}",
     "closeCreateActivity": "Close create activity",
     "createActivityHint": "Creates the custom activity and adds it to your list",
@@ -323,20 +335,6 @@
     "ritualNamePreset": "Preset ritual %{name}",
     "deleteRitual": "Delete ritual %{name}",
     "favoriteRitual": "Favorite ritual %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Try 7 days free",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    },
-    "activities": "Premium activities"
   },
   "twoTimers": {
     "title": "You've created 2 moments!",
@@ -488,7 +486,9 @@
     "sheetRow": "Palettes",
     "title": "Palettes",
     "included": "Included",
-    "ambiances": "Ambiances"
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances palette — try it freely",
+    "ambiancesDiscover": "discover Ambiances"
   },
   "mode": {
     "standard": "ResetPulse",

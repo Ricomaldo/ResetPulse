@@ -8,7 +8,6 @@ import React from 'react';
 import { useModalStack } from '../../contexts/ModalStackContext';
 import BottomSheetModal from './BottomSheetModal';
 import PremiumModalContent from './PremiumModalContent';
-import DiscoveryModalContent from './DiscoveryModalContent';
 import CreateActivityModalContent from './CreateActivityModalContent';
 import EditActivityModalContent from './EditActivityModalContent';
 import TwoTimersModalContent from './TwoTimersModalContent';
@@ -19,14 +18,12 @@ import logger from '../../utils/logger';
  *
  * Usage:
  * - modalStack.push('premium', { highlightedFeature: 'activity' })
- * - modalStack.push('discovery', { title: 'More Activities', children: <Grid /> })
  * - modalStack.push('createActivity', { onActivityCreated: handleCreate })
  * - modalStack.push('editActivity', { activity, onActivityUpdated, onActivityDeleted })
  * - modalStack.push('twoTimers', { onExplore: handleExplore })
  */
 const MODAL_TYPES = {
   premium: PremiumModalContent,
-  discovery: DiscoveryModalContent,
   createActivity: CreateActivityModalContent,
   editActivity: EditActivityModalContent,
   twoTimers: TwoTimersModalContent,

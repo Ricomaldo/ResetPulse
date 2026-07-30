@@ -11,14 +11,22 @@
  * est parquée, à trancher devant les écrans.
  * Verdicts CD (25/07) : 2 sections « Incluses »/« Ambiances » — Ambiances en
  * pleine couleur, aucun cadenas (gating réservé Lot 3b).
+ * Lot 3b (soft-gating, mandat Eric) : toujours aucun mur — un FREE peut
+ * appliquer une palette Ambiances librement (comportement inchangé). Quand
+ * la palette active est Ambiances et l'utilisateur FREE, une ligne
+ * d'invitation discrète apparaît sous la grille (registre DS : petite
+ * taille, textSecondary). Le retour au dernier inclus au redémarrage vit
+ * dans usePaletteGating (TimerScreen), pas ici.
  */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAnalytics } from '../../hooks/useAnalytics';
-import { TIMER_PALETTES } from '../../config/timer-palettes';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useModalStack } from '../../contexts/ModalStackContext';
+import { TIMER_PALETTES, isPalettePremium } from '../../config/timer-palettes';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
@@ -31,6 +39,8 @@ export default function PalettesPanel({ onBack, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
+  const { isPremium } = usePremiumStatus();
+  const modalStack = useModalStack();
   const {
     palette: { currentPalette },
     setPalette,
@@ -40,6 +50,25 @@ export default function PalettesPanel({ onBack, maxHeight }) {
     haptics.impact('light').catch(() => {});
     setPalette(key);
     analytics.trackPaletteSelected(key);
+  };
+
+  // Ligne d'invitation : jamais pour un premium, seulement quand la palette
+  // active est Ambiances. « Une fois par ouverture du panel » — un ref
+  // (pas un state) qui verrouille dès le premier affichage de ce montage,
+  // pas à chaque re-render/changement de palette pendant que le panel reste
+  // ouvert.
+  const showAmbiancesHint = !isPremium && isPalettePremium(currentPalette);
+  const hasTrackedShownRef = useRef(false);
+  useEffect(() => {
+    if (showAmbiancesHint && !hasTrackedShownRef.current) {
+      hasTrackedShownRef.current = true;
+      analytics.trackAmbiancesInvitationShown('palettes');
+    }
+  }, [showAmbiancesHint, analytics]);
+
+  const handleDiscoverAmbiances = () => {
+    analytics.trackAmbiancesInvitationTapped('palettes');
+    modalStack.push('premium', { highlightedFeature: 'palettes' });
   };
 
   const styles = StyleSheet.create({
@@ -109,6 +138,20 @@ export default function PalettesPanel({ onBack, maxHeight }) {
       fontSize: rs(16, 'min'),
       fontWeight: fontWeights.semibold,
     },
+    ambiancesHint: {
+      marginTop: theme.spacing.sm,
+      paddingTop: theme.spacing.xs,
+    },
+    ambiancesHintText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+    },
+    ambiancesHintLink: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.semibold,
+      textDecorationLine: 'underline',
+    },
   });
 
   const renderPaletteRow = (key) => {
@@ -157,6 +200,23 @@ export default function PalettesPanel({ onBack, maxHeight }) {
 
         <Text style={styles.sectionTitle}>{t('palettesPanel.ambiances')}</Text>
         {AMBIANCE_KEYS.map(renderPaletteRow)}
+
+        {showAmbiancesHint && (
+          <View style={styles.ambiancesHint}>
+            <Text style={styles.ambiancesHintText}>
+              {t('palettesPanel.ambiancesTrialHint')}
+              {' · '}
+              <Text
+                style={styles.ambiancesHintLink}
+                onPress={handleDiscoverAmbiances}
+                accessible
+                accessibilityRole="button"
+              >
+                {t('palettesPanel.ambiancesDiscover')}
+              </Text>
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </View>
   );

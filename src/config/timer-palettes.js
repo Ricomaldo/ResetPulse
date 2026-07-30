@@ -119,6 +119,28 @@ export const getAllPalettes = (isPremiumUser = false) =>
 export const isPalettePremium = (paletteName) =>
   TIMER_PALETTES[paletteName]?.isPremium || false;
 
+/**
+ * Résout la palette qui doit être active au lancement (Lot 3b, mandat Eric
+ * — soft-gating palettes, « jamais de mur »). Fonction pure : pas d'état,
+ * pas de hook, testable isolément — cf. usePaletteGating pour le
+ * déclenchement (une fois par montage, cf. src/hooks/usePaletteGating.js).
+ *
+ * - Premium : jamais de retour forcé, la palette active reste telle quelle.
+ * - FREE + palette active gratuite : rien à faire.
+ * - FREE + palette active Ambiances (essai libre en cours) : retour au
+ *   dernier inclus connu, ou 'serenity' par défaut si aucun connu.
+ *
+ * @param {boolean} isPremium
+ * @param {string} currentPalette
+ * @param {string|null} lastIncludedPalette
+ * @returns {string} La clé de palette qui doit être active
+ */
+export const resolvePaletteOnLaunch = (isPremium, currentPalette, lastIncludedPalette) => {
+  if (isPremium) return currentPalette;
+  if (!isPalettePremium(currentPalette)) return currentPalette;
+  return lastIncludedPalette || 'serenity';
+};
+
 export const getPaletteInfo = (paletteName) =>
   TIMER_PALETTES[paletteName] || null;
 

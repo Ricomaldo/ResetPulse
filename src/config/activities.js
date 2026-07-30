@@ -21,7 +21,10 @@
 import i18n from '../i18n';
 
 export const ACTIVITIES = [
-  // ===== FREE ACTIVITIES (3 total) — asymétrie assumée vs 4 couleurs (ADR-014) =====
+  // ===== TOUTES GRATUITES (requalif 3b, verdict Eric 30/07) =====
+  // La frontière Ambiances recentrée = palettes / mouvements-par-rituel /
+  // rituels illimités — PAS les activités (atomes d'identité, ADR-015).
+  // Le champ isPremium reste en données (compat), plus aucun gate ne le lit.
   {
     id: 'work',
     emoji: '💻',
@@ -68,7 +71,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.creativity');
     },
     defaultDuration: 2700, // 45 minutes
-    isPremium: true, // PREMIUM - Onboarding v2.1 freemium strategy
+    isPremium: false,
     suggestedColor: 'focus',
     description: 'Dessin, écriture libre',
     pulseDuration: 750, // Modéré - flow créatif
@@ -83,7 +86,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.reading');
     },
     defaultDuration: 1800, // 30 minutes
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'focus',
     description: 'Focus lecture profonde',
     pulseDuration: 900, // Lent - concentration calme
@@ -96,7 +99,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.study');
     },
     defaultDuration: 2700, // 45 minutes
-    isPremium: true,
+    isPremium: false,
     pulseDuration: 700, // Modéré-rapide
     suggestedColor: 'focus',
     description: "Sessions d'apprentissage",
@@ -109,7 +112,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.yoga');
     },
     defaultDuration: 900, // 15 minutes
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'calm',
     description: 'Étirements et postures',
     pulseDuration: 1100, // Très lent - flow
@@ -122,7 +125,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.sport');
     },
     defaultDuration: 900, // 15 minutes (aligned with 5 scales)
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'energy',
     description: 'Étirements et exercices courts',
     pulseDuration: 500, // Très rapide - énergie
@@ -135,7 +138,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.walking');
     },
     defaultDuration: 900, // 15 minutes (aligned with 5 scales)
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'deep',
     description: 'Mouvement conscient',
     pulseDuration: 800, // Normal - rythme naturel
@@ -150,7 +153,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.cooking');
     },
     defaultDuration: 1800, // 30 minutes
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'energy',
     description: 'Préparation de repas',
     pulseDuration: 700, // Modéré-rapide - activité
@@ -163,7 +166,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.gaming');
     },
     defaultDuration: 900, // 15 minutes (aligned with 5 scales)
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'energy',
     description: "Temps d'écran contrôlé",
     pulseDuration: 550, // Rapide - attention soutenue
@@ -176,7 +179,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.homework');
     },
     defaultDuration: 1800, // 30 minutes
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'focus',
     description: 'Aide aux devoirs',
     pulseDuration: 650, // Rapide - concentration
@@ -189,7 +192,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.music');
     },
     defaultDuration: 1800, // 30 minutes
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'calm',
     description: 'Pratique instrumentale',
     pulseDuration: 850, // Lent - flow musical
@@ -202,7 +205,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.cleaning');
     },
     defaultDuration: 900, // 15 minutes
-    isPremium: true,
+    isPremium: false,
     pulseDuration: 700, // Modéré-rapide - activité physique
     suggestedColor: 'energy',
     description: 'Tâches ménagères',
@@ -215,7 +218,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.nap');
     },
     defaultDuration: 900, // 15 minutes (aligned with 5 scales) - cycle sieste optimal
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'calm',
     description: 'Power nap récupérateur',
     pulseDuration: 1300, // Très lent - sommeil léger
@@ -228,7 +231,7 @@ export const ACTIVITIES = [
       return i18n.t('activities.writing');
     },
     defaultDuration: 900, // 15 minutes (aligned with 5 scales) - morning pages
-    isPremium: true,
+    isPremium: false,
     suggestedColor: 'focus',
     description: 'Journaling, écriture libre',
     pulseDuration: 850, // Lent - introspection fluide

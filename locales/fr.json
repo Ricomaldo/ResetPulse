@@ -208,8 +208,8 @@
     "price": "Puis %{price} une fois.\nÀ toi pour toujours.",
     "startTrial": "Essayer 7 jours gratuit",
     "restore": "Restaurer mes achats",
-    "welcomeTitle": "Bienvenue Premium ! 🎉",
-    "welcomeMessage": "Toutes les palettes et activités sont maintenant débloquées.",
+    "welcomeTitle": "Bienvenue dans Ambiances ! 🎉",
+    "welcomeMessage": "Toutes les palettes, les rituels illimités et les sons Ambiances sont débloqués.",
     "welcomeButton": "Super !",
     "noConnection": "Pas de connexion",
     "noConnectionMessage": "Impossible de charger les offres. Vérifiez votre connexion internet.",
@@ -223,13 +223,25 @@
     "errorGeneric": "Une erreur est survenue",
     "paymentPending": "Paiement en cours",
     "restoreSuccess": "Restauration réussie",
-    "restoreSuccessMessage": "Vos achats ont été restaurés. Toutes les fonctionnalités premium sont débloquées.",
+    "restoreSuccessMessage": "Vos achats ont été restaurés. Toutes les fonctionnalités Ambiances sont débloquées.",
     "restoreNone": "Aucun achat trouvé",
     "restoreNoneMessage": "Aucun achat précédent n'a été trouvé pour ce compte.",
     "restoreError": "Impossible de restaurer vos achats.",
     "unexpectedError": "Une erreur inattendue est survenue.",
     "contactSupport": "Contacter le support",
     "tooManyAttempts": "Veuillez contacter le support si le problème persiste."
+  },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Palettes complètes, rituels illimités, sons doux pour habiller tes séances — de quoi faire respirer ton cadran, à ton rythme.",
+    "features": {
+      "palettes": "10 palettes de couleurs en plus",
+      "rituals": "rituels illimités",
+      "sounds": "sons Ambiances"
+    },
+    "price": "%{price}, une fois. Pour toujours.",
+    "startTrial": "essayer 7 jours gratuits",
+    "breatheInvitation": "envie de le faire respirer ? découvre Ambiances"
   },
   "activities": {
     "none": "Basique",
@@ -291,12 +303,12 @@
     "closeCreateActivity": "Fermer la création d'activité",
     "closeEditActivity": "Fermer l'édition d'activité",
     "closeModalHint": "Ferme cette boîte de dialogue et retourne à l'application",
-    "closePremiumModal": "Fermer l'offre premium",
+    "closePremiumModal": "Fermer l'offre Ambiances",
     "createActivityHint": "Crée l'activité personnalisée et l'ajoute à votre liste",
     "deleteActivityHint": "Supprime définitivement cette activité personnalisée",
     "exploreSettingsHint": "Ouvre les paramètres pour découvrir les fonctionnalités premium",
     "restorePurchases": "Restaurer les achats précédents",
-    "restorePurchasesHint": "Restaurer l'accès premium si vous avez déjà acheté",
+    "restorePurchasesHint": "Restaurer l'accès Ambiances si vous avez déjà acheté",
     "saveActivityHint": "Enregistre les modifications de cette activité",
     "unlockPremiumHint": "Commencer l'essai gratuit de 7 jours, puis paiement unique",
     "distraction": "Distraction",
@@ -313,7 +325,7 @@
       "resetTimer": "Réinitialiser le timer",
       "dial": "Cadran du timer, %{minutes} minutes définies, %{activity}"
     },
-    "unlockPremium": "Débloquer le premium pour %{price}",
+    "unlockPremium": "Débloquer Ambiances pour %{price}",
     "paletteItem": "Palette de couleurs : %{name}",
     "applyRitual": "Appliquer le rituel %{name}",
     "editRitual": "Modifier le rituel %{name}",
@@ -323,20 +335,6 @@
     "ritualNamePreset": "Rituel préconfiguré %{name}",
     "deleteRitual": "Supprimer le rituel %{name}",
     "favoriteRitual": "Rituel favori %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Essayer 7 jours gratuits",
-    "moreColors": {
-      "title": "Encore plus de couleurs",
-      "subtitle": "Océan, forêt, lavande, canard...",
-      "tagline": "Chaque humeur, son ambiance."
-    },
-    "moreActivities": {
-      "title": "Encore plus de moments",
-      "subtitle": "16 activités + créations illimitées",
-      "tagline": "Ton focus, tes règles."
-    },
-    "activities": "Activités premium"
   },
   "twoTimers": {
     "title": "Tu as créé 2 moments !",
@@ -488,7 +486,9 @@
     "sheetRow": "Palettes",
     "title": "Palettes",
     "included": "Incluses",
-    "ambiances": "Ambiances"
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "palette Ambiances — essaie-la librement",
+    "ambiancesDiscover": "découvrir Ambiances"
   },
   "mode": {
     "standard": "ResetPulse",

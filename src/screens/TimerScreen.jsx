@@ -34,8 +34,13 @@ import FirstRunTips from '../components/first-run/FirstRunTips';
 import { buildRitualApplyPayload } from '../config/rituals';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
+import { useSessionCount } from '../hooks/useSessionCount';
+import { usePaletteGating } from '../hooks/usePaletteGating';
+import { usePremiumStatus } from '../hooks/usePremiumStatus';
+import { useModalStack } from '../contexts/ModalStackContext';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
+import { shouldShowBreatheInvitation } from '../utils/breatheInvitation';
 import haptics from '../utils/haptics';
 
 // Immersion (cadrage 3c) : durée du fondu chrome ↔ décor, et l'échelle que
@@ -340,7 +345,15 @@ function FocusHint() {
 
 function TimerScreenContent() {
   const theme = useTheme();
+  const t = useTranslation();
   const analytics = useAnalytics();
+  const { completedSessions, incrementSessionCount, isLoading: sessionCountLoading } = useSessionCount();
+  const { isPremium } = usePremiumStatus();
+  const modalStack = useModalStack();
+  // Soft-gating palettes (Lot 3b) : mémoire du dernier inclus + retour au
+  // lancement si FREE et Ambiances actif — monté une fois ici, cf.
+  // usePaletteGating.
+  usePaletteGating();
   const {
     mode: { current: currentMode },
     setMode,
@@ -559,6 +572,81 @@ function TimerScreenContent() {
     }
   }, []);
 
+  // Compteur global de séances (Lot 3b, mandat Eric) : callback de fin de
+  // séance existant (useTimer → TimeTimer.onTimerComplete), jamais câblé
+  // jusqu'ici. Ne se déclenche QUE sur la fin naturelle (remaining atteint
+  // 0) — jamais au stop/rembobinage manuel (tap pendant la séance), cf.
+  // useTimer.js:150 (onCompleteRef appelé uniquement dans la branche
+  // hasTriggeredCompletion, pas dans stopTimer).
+  const handleTimerComplete = useCallback(() => {
+    incrementSessionCount();
+  }, [incrementSessionCount]);
+
+  // Invitation « fais-le respirer » (Lot 3b, mandat Eric) : jamais un mur —
+  // une ligne discrète sous le message de fin, une seule fois dans la vie de
+  // l'app (persistée, tappée ou non). Le flag se pose au moment de
+  // l'AFFICHAGE, pas au tap (cf. shouldShowBreatheInvitation) ; un ref
+  // "déjà déclenchée" garde la ligne visible cette occurrence-ci même après
+  // que le flag persisté bascule à true (sinon elle disparaîtrait avant que
+  // l'user ait pu la lire).
+  const [hasSeenBreatheInvitation, setHasSeenBreatheInvitation, breatheInvitationLoading] =
+    usePersistedState('@ResetPulse:hasSeenBreatheInvitation', false);
+  const [breatheInvitationFired, setBreatheInvitationFired] = useState(false);
+  const breatheInvitationFiredRef = useRef(false);
+
+  useEffect(() => {
+    if (breatheInvitationFiredRef.current) {
+      return;
+    }
+    if (sessionCountLoading || breatheInvitationLoading) {
+      return;
+    }
+    if (
+      shouldShowBreatheInvitation({
+        isCompleted: snapshot.isCompleted,
+        isPremium,
+        completedSessions,
+        hasSeenInvitation: hasSeenBreatheInvitation,
+      })
+    ) {
+      breatheInvitationFiredRef.current = true;
+      setBreatheInvitationFired(true);
+      analytics.trackAmbiancesInvitationShown('post_session');
+      setHasSeenBreatheInvitation(true);
+    }
+  }, [
+    snapshot.isCompleted,
+    isPremium,
+    completedSessions,
+    hasSeenBreatheInvitation,
+    sessionCountLoading,
+    breatheInvitationLoading,
+    analytics,
+    setHasSeenBreatheInvitation,
+  ]);
+
+  // Visible seulement pendant que le message de fin l'est (elle en dépend
+  // visuellement) — le flag "fired" reste vrai (mémoire de l'occurrence),
+  // mais la ligne se tait avec le message dès qu'on quitte l'état complété.
+  const showBreatheInvitation = breatheInvitationFired && snapshot.isCompleted;
+
+  // Le ref + le flag persisté empêchent un nouveau DÉCLENCHEMENT — mais sans
+  // ce reset, `breatheInvitationFired` reste vrai à vie une fois posé, et
+  // `showBreatheInvitation` (ci-dessus) redeviendrait vrai à CHAQUE fin de
+  // séance suivante (isCompleted recycle true→false→true). On relâche le
+  // latch d'affichage à la sortie de l'état complété : « une fois, jamais
+  // une campagne » porte sur ce qui se voit, pas seulement sur le tracking.
+  useEffect(() => {
+    if (!snapshot.isCompleted && breatheInvitationFired) {
+      setBreatheInvitationFired(false);
+    }
+  }, [snapshot.isCompleted, breatheInvitationFired]);
+
+  const handleBreatheInvitationTap = useCallback(() => {
+    analytics.trackAmbiancesInvitationTapped('post_session');
+    modalStack.push('premium', { highlightedFeature: 'breathe_invitation' });
+  }, [analytics, modalStack]);
+
   // Immersion (cadrage 3c) : RUNNING + IMMERSION_DELAY sans toucher → le
   // chrome s'efface, le disque devient décor. Machine d'état extraite
   // (useSessionImmersion) — ce composant ne fait qu'observer running/
@@ -621,10 +709,23 @@ function TimerScreenContent() {
     completionMessageHidden: {
       opacity: 0,
     },
+    // Lot 3b : la hauteur réserve EN PERMANENCE la ligne d'invitation
+    // Ambiances (opacity togglée comme completionMessage, jamais montée/
+    // démontée) — sinon son apparition ferait grandir ce bloc, recentrerait
+    // `content` (justifyContent: center) et ferait bouger le disque, ce que
+    // ce fichier évite partout ailleurs (cf. TopTime, FocusHint). Coût :
+    // quelques px d'espace toujours réservés sous le message de fin, même
+    // pour qui ne verra jamais l'invitation.
     completionMessageWrap: {
       justifyContent: 'center',
       marginBottom: theme.spacing.sm,
-      minHeight: rs(24, 'min'),
+      minHeight: rs(24, 'min') + rs(18, 'min'),
+    },
+    breatheInvitationText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+      marginTop: rs(2, 'min'),
+      textAlign: 'center',
     },
     container: {
       flex: 1,
@@ -688,6 +789,7 @@ function TimerScreenContent() {
                 onDialTap={handleDialTap}
                 onTimerRef={handleTimerRef}
                 onDialRef={handleDialRef}
+                onTimerComplete={handleTimerComplete}
                 distraction={distraction}
               />
             </Animated.View>
@@ -703,6 +805,16 @@ function TimerScreenContent() {
                     numberOfLines={1}
                   >
                     {snapshot.displayMessage || ' '}
+                  </Text>
+                  <Text
+                    style={[styles.breatheInvitationText, !showBreatheInvitation && styles.completionMessageHidden]}
+                    numberOfLines={1}
+                    onPress={showBreatheInvitation ? handleBreatheInvitationTap : undefined}
+                    accessible={showBreatheInvitation}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('ambiances.breatheInvitation')}
+                  >
+                    {t('ambiances.breatheInvitation')}
                   </Text>
                 </View>
                 <View ref={barRef} onLayout={handleBarLayout}>
