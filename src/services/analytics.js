@@ -104,13 +104,33 @@ const analyticsAdapter = {
   },
 
   // Funnel Ambiances (Lot 3b, frontière gratuit/payant) : invitation
-  // discrète vue/tapée, avant la modale premium (paywall_viewed existant).
+  // discrète vue/tapée, avant la surface d'achat.
   trackAmbiancesInvitationShown(source) {
     this.track('ambiances_invitation_shown', { source });
   },
 
   trackAmbiancesInvitationTapped(source) {
     this.track('ambiances_invitation_tapped', { source });
+  },
+
+  // Bout du funnel — l'argent. Ces quatre méthodes étaient APPELÉES
+  // (PurchaseContext, PremiumModalContent) mais jamais définies : le Proxy
+  // ci-dessous les absorbait en silence, aucun événement d'achat ne
+  // partait. Trouvé le 30/07 en répondant à Eric, définies depuis.
+  trackPaywallViewed(source) {
+    this.track('paywall_viewed', { source });
+  },
+
+  trackTrialStarted(productId) {
+    this.track('trial_started', { product_id: productId });
+  },
+
+  trackPurchaseCompleted(productId, price, transactionId) {
+    this.track('purchase_completed', { product_id: productId, price, transaction_id: transactionId });
+  },
+
+  trackPurchaseFailed(errorCode, errorMessage, productId) {
+    this.track('purchase_failed', { error_code: errorCode, error_message: errorMessage, product_id: productId });
   },
 
   trackColorSelected(color) {
