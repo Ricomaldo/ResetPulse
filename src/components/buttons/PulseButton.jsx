@@ -36,17 +36,16 @@ const PulseButton = React.memo(function PulseButton({
 }) {
   const theme = useTheme();
 
-  // === MOUVEMENT (MOT-a→e, Lot 3a) ===
-  // REST + shouldPulse : le pouls-invitation « Respire » — signature de
-  // l'app, gratuit. RUNNING : mouvement propre de l'Activité, à son tempo.
-  // COMPLETE : aucun mouvement (le bloom du dial porte la fin). La
-  // Distraction (MOT-f, dé — `{ movement, variant }`) override le mouvement
-  // courant quand active, quel que soit l'état, avec sa variante d'intensité
-  // tirée au dé — `useEmojiMovement` coupe tout si reduce motion.
-  // porte-2 (retour Eric) : la respiration de REPOS est unifiée au tempo
-  // calme de l'app (HALO_TEMPO) — le pouls-invitation est la signature, même
-  // souffle partout. L'identité par activité ne s'exprime qu'EN SÉANCE, par
-  // le mouvement (tempo = pulseDuration).
+  // === MOUVEMENT ===
+  // porte-3 V1 (verdict Eric) : l'ambiance = UNE SEULE respiration calme,
+  // repos ET séance — breathe au tempo HALO_TEMPO, même souffle partout.
+  // La table mouvement-par-activité ne pilote plus l'ambiance ; les 5
+  // mouvements MOT-a→e ne vivent plus que dans le dé (Distraction), où la
+  // variété est une joie. Le champ `movement` des activités reste en
+  // données (choix libre par rituel, parqué Ambiances). COMPLETE : aucun
+  // mouvement (le bloom du dial porte la fin). La Distraction
+  // (`{ movement, variant }`) override quand active, au tempo de
+  // l'Activité — `useEmojiMovement` coupe tout si reduce motion.
   const activityTempo = activity?.pulseDuration || DEFAULT_TEMPO;
   let movement = null;
   let movementActive = false;
@@ -54,13 +53,10 @@ const PulseButton = React.memo(function PulseButton({
   if (distraction?.movement) {
     movement = distraction.movement;
     movementActive = true;
-  } else if (state === 'rest' && shouldPulse) {
+  } else if ((state === 'rest' && shouldPulse) || state === 'running') {
     movement = 'breathe';
     movementActive = true;
     tempo = HALO_TEMPO;
-  } else if (state === 'running' && activity?.movement) {
-    movement = activity.movement;
-    movementActive = true;
   }
   const emojiAnimatedStyle = useEmojiMovement({
     movement,
