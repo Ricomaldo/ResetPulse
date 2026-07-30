@@ -11,7 +11,7 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { useTranslation } from '../../hooks/useTranslation';
 import { getActivityById } from '../../config/activities';
-import { deriveRitualName, resolveRitualActivity, suggestedColorFor } from '../../config/rituals';
+import { deriveRitualName, resolveRitualActivity, shouldDeriveNameFromActivity, suggestedColorFor } from '../../config/rituals';
 import { DEFAULT_SOUND_ID } from '../../config/sounds';
 import DurationSlider from '../pickers/DurationSlider';
 import SoundPicker from '../pickers/SoundPicker';
@@ -72,7 +72,9 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
     let activityId = selectedActivityId;
     let name;
 
-    if (activityId) {
+    if (shouldDeriveNameFromActivity(activityId, initialRitual)) {
+      // C1b : ne re-dérive le nom que si l'activité a réellement changé vs
+      // initialRitual — sinon un nom custom survit à un save qui n'y touche pas.
       name = deriveRitualName(getActivityById(activityId));
     } else if (pendingCustomEmoji && pendingCustomEmoji !== initialActivity?.emoji) {
       const created = createActivity(
