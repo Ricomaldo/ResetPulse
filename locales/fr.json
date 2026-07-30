@@ -477,7 +477,10 @@
       "deleteButton": "Supprimer",
       "deleteConfirmTitle": "Supprimer ce rituel ?",
       "deleteConfirmMessage": "Cette action est irréversible.",
-      "customActivityName": "Mon rituel"
+      "customActivityName": "Mon rituel",
+      "customEmojiOther": "autre…",
+      "customEmojiPlaceholder": "ton emoji",
+      "customEmojiHint": "bascule ton clavier emoji avec le globe 🌐"
     },
     "restoreBase": "restaurer les rituels de base"
   },

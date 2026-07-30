@@ -477,7 +477,10 @@
       "deleteButton": "Delete",
       "deleteConfirmTitle": "Delete this ritual?",
       "deleteConfirmMessage": "This action is irreversible.",
-      "customActivityName": "My ritual"
+      "customActivityName": "My ritual",
+      "customEmojiOther": "other…",
+      "customEmojiPlaceholder": "your emoji",
+      "customEmojiHint": "switch to your emoji keyboard with the globe 🌐"
     },
     "restoreBase": "restore base rituals"
   },
