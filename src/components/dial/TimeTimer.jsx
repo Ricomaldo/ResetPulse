@@ -27,6 +27,13 @@ import {
 } from '../../utils/scaleHelpers';
 import { useDevDragScale, DRAG_SCALE_MECHANICS } from '../../dev/DevDragScaleContext';
 
+// PROTO drag-échelle — mécanique B : durée de maintien continu à la butée
+// avant escalade en plein geste (~400 ms au mandat).
+const HOLD_AT_EDGE_MS = 400;
+// Tolérance de butée (minutes) : la valeur clampée atteint exactement le max
+// quand le doigt pousse au-delà — l'epsilon n'absorbe que le bruit flottant.
+const EDGE_EPSILON_MINUTES = 0.001;
+
 export default function TimeTimer({
   onRunningChange,
   onTimerRef,
@@ -74,6 +81,18 @@ export default function TimeTimer({
   // tire vers le bas) n'agit qu'au relâcher. Ref et non state : sa valeur au
   // gel == l'échelle déjà affichée, aucun re-rendu n'est nécessaire.
   const gestureScaleRef = useRef(null);
+
+  // Mécanique B : timer de maintien à la butée (null = pas armé). Armé quand
+  // la valeur clampée atteint le max de l'échelle du geste, désarmé dès que
+  // la durée quitte la butée ou que le geste se termine.
+  const holdTimerRef = useRef(null);
+  const clearHoldTimer = useCallback(() => {
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+  }, []);
+  useEffect(() => clearHoldTimer, [clearHoldTimer]); // cleanup au démontage
 
   // Animation « le cadran respire » : pulse ponctuel (jamais continu) quand
   // l'échelle se recompose au relâcher — contrainte sensorielle TDAH/TSA.
@@ -237,10 +256,34 @@ export default function TimeTimer({
     lastSyncedContextDurationRef.current = newDuration;
 
     if (!isRelease) {
+      // ---------- Mécanique B « Maintien au bord » ----------
+      // Le doigt tient la butée (valeur clampée == max du geste) pendant
+      // HOLD_AT_EDGE_MS continus → escalade EN PLEIN GESTE : haptic net,
+      // le cadran se recompose UNE fois (setScaleFloor → re-rendu), la durée
+      // ne bouge pas — c'est l'angle qui se recale (ré-ancrage tactile côté
+      // TimerDial, prop resyncTouchOnScaleChange). Le timer est désarmé dès
+      // que la durée quitte la butée.
+      if (dragScaleMechanic === DRAG_SCALE_MECHANICS.HOLD) {
+        const atEdge = clampedMinutes >= gestureScale - EDGE_EPSILON_MINUTES;
+        const next = getNextScaleUp(gestureScale);
+        if (atEdge && next) {
+          if (!holdTimerRef.current) {
+            holdTimerRef.current = setTimeout(() => {
+              holdTimerRef.current = null;
+              gestureScaleRef.current = next;
+              setScaleFloor(next);
+              haptics.impact('medium').catch(() => {});
+            }, HOLD_AT_EDGE_MS);
+          }
+        } else {
+          clearHoldTimer();
+        }
+      }
       return;
     }
 
     // ---------- Relâcher ----------
+    clearHoldTimer();
     const wasDrag = gestureScaleRef.current != null;
     let nextFloor = scaleFloor;
 
@@ -275,7 +318,7 @@ export default function TimeTimer({
       setScaleFloor(nextFloor);
     }
     gestureScaleRef.current = null;
-  }, [mechanicActive, dragScaleMechanic, scaleMode, scaleFloor, setCurrentDuration, runBreathe]);
+  }, [mechanicActive, dragScaleMechanic, scaleMode, scaleFloor, setCurrentDuration, runBreathe, clearHoldTimer]);
 
   return (
     <View style={styles.container}>
