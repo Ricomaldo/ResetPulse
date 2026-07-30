@@ -4,7 +4,8 @@
     "ok": "OK",
     "retry": "Réessayer",
     "continue": "Continuer",
-    "back": "Retour"
+    "back": "Retour",
+    "delete": "Supprimer"
   },
   "controls": {
     "digitalTimer": {
@@ -280,7 +281,6 @@
     "keepAwake": "Maintenir l'écran allumé",
     "rotationDirection": "Sens de rotation",
     "showTime": "Afficher le temps",
-    "dailyReminder": "Rappel quotidien",
     "activity": "Activité %{name}",
     "activityLocked": "Activité premium verrouillée",
     "moreActivities": "Plus d'activités",
@@ -321,7 +321,9 @@
     "createRitual": "Créer un rituel",
     "closeRitualForm": "Fermer le formulaire de rituel",
     "chooseCustomEmoji": "Choisir un autre emoji via le clavier",
-    "ritualNamePreset": "Rituel préconfiguré %{name}"
+    "ritualNamePreset": "Rituel préconfiguré %{name}",
+    "deleteRitual": "Supprimer le rituel %{name}",
+    "favoriteRitual": "Rituel favori %{name}"
   },
   "discovery": {
     "defaultCta": "Essayer 7 jours gratuits",
@@ -449,16 +451,6 @@
     "custom": {
       "startMessage": "C'est parti",
       "endMessage": "Accompli ✨"
-    }
-  },
-  "reminder": {
-    "morning": "matin",
-    "midday": "midi",
-    "evening": "soir",
-    "notification": {
-      "morning": "ton rituel du matin t'attend",
-      "midday": "ton rituel de midi t'attend",
-      "evening": "ton rituel du soir t'attend"
     }
   },
   "rituals": {

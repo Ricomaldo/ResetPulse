@@ -436,4 +436,69 @@ describe('useRituals', () => {
       expect(created.duration).toBe(MIN_DURATION);
     });
   });
+
+  describe('Favoris (porte-2) — max 3, migration douce', () => {
+    beforeEach(() => {
+      mockSetRituals.mockImplementation((updater) =>
+        typeof updater === 'function' ? updater([]) : updater
+      );
+    });
+    const seed = (ritualsArray) => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        ritualsArray,
+        mockSetRituals,
+        false,
+      ]);
+    };
+    const mk = (id, favorite) => ({
+      id, name: id, activityId: 'work', color: DEFAULT_RITUAL_COLOR,
+      duration: 600, soundId: 'timer_complete', steps: [],
+      ...(favorite === undefined ? {} : { favorite }),
+    });
+
+    it('sans favori explicite, les 3 premiers font office (rangée d\'accueil)', () => {
+      seed([mk('a'), mk('b'), mk('c'), mk('d')]);
+      const { result } = renderHook(() => useRituals());
+      expect(result.current.favoriteRituals.map((r) => r.id)).toEqual(['a', 'b', 'c']);
+    });
+
+    it('toggleFavorite refuse une 4e étoile (max 3) et retourne false', () => {
+      seed([mk('a', true), mk('b', true), mk('c', true), mk('d', false)]);
+      const { result } = renderHook(() => useRituals());
+      let accepted;
+      act(() => {
+        accepted = result.current.toggleFavorite('d');
+      });
+      expect(accepted).toBe(false);
+      expect(mockSetRituals).not.toHaveBeenCalled();
+    });
+
+    it('le retrait d\'une étoile est toujours permis et matérialise la migration', () => {
+      seed([mk('a'), mk('b'), mk('c'), mk('d')]); // aucun favori explicite
+      const { result } = renderHook(() => useRituals());
+      let accepted;
+      act(() => {
+        accepted = result.current.toggleFavorite('a'); // retrait d'un implicite
+      });
+      expect(accepted).toBe(true);
+      const written = mockSetRituals.mock.calls[0][0]([mk('a'), mk('b'), mk('c'), mk('d')]);
+      const byId = Object.fromEntries(written.map((r) => [r.id, r.favorite]));
+      // a retiré, b/c matérialisés favoris, d resté hors favoris
+      expect(byId).toEqual({ a: false, b: true, c: true, d: false });
+    });
+
+    it('élire un favori quand une place est libre retourne true', () => {
+      seed([mk('a', true), mk('b', true), mk('c', false), mk('d', false)]);
+      const { result } = renderHook(() => useRituals());
+      let accepted;
+      act(() => {
+        accepted = result.current.toggleFavorite('d');
+      });
+      expect(accepted).toBe(true);
+      const written = mockSetRituals.mock.calls[0][0](
+        [mk('a', true), mk('b', true), mk('c', false), mk('d', false)]
+      );
+      expect(written.find((r) => r.id === 'd').favorite).toBe(true);
+    });
+  });
 });

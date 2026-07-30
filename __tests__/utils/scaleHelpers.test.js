@@ -10,9 +10,6 @@ import {
   isSupportedScale,
   SCALE_STEPS,
   getNextScaleUp,
-  getPreviousScaleDown,
-  shouldEscalateOnRelease,
-  resolveScaleFloor,
 } from '../../src/utils/scaleHelpers';
 import { DIAL_MODES } from '../../src/components/dial/timerConstants';
 
@@ -67,7 +64,9 @@ describe('scaleHelpers — helpers existants (non testés jusqu\'ici)', () => {
     expect(getOptimalScale(25)).toBe(30);
     expect(getOptimalScale(42)).toBe(45);
     expect(getOptimalScale(58)).toBe(60);
-    expect(getOptimalScale(90)).toBe(60);
+    expect(getOptimalScale(60)).toBe(60);   // borne exacte 60
+    expect(getOptimalScale(90)).toBe(120);  // porte-2 : échelle 2h
+    expect(getOptimalScale(120)).toBe(120); // borne exacte 120
   });
 
   test('scaleToMode / modeToScale sont symétriques sur les 5 échelles actives', () => {
@@ -82,8 +81,8 @@ describe('scaleHelpers — helpers existants (non testés jusqu\'ici)', () => {
 // ============================================================
 
 describe('proto drag-échelle — SCALE_STEPS et voisinage', () => {
-  test('SCALE_STEPS est le miroir ordonné des 5 échelles de DIAL_MODES', () => {
-    expect(SCALE_STEPS).toEqual([5, 15, 30, 45, 60]);
+  test('SCALE_STEPS est le miroir ordonné des 6 échelles de DIAL_MODES', () => {
+    expect(SCALE_STEPS).toEqual([5, 15, 30, 45, 60, 120]);
     SCALE_STEPS.forEach((scale) => {
       expect(DIAL_MODES[scaleToMode(scale)]).toBeDefined();
     });
@@ -94,61 +93,11 @@ describe('proto drag-échelle — SCALE_STEPS et voisinage', () => {
     expect(getNextScaleUp(15)).toBe(30);
     expect(getNextScaleUp(30)).toBe(45);
     expect(getNextScaleUp(45)).toBe(60);
-    expect(getNextScaleUp(60)).toBeNull();
+    expect(getNextScaleUp(60)).toBe(120);
+    expect(getNextScaleUp(120)).toBeNull();
     expect(getNextScaleUp(25)).toBeNull(); // échelle dépréciée : jamais un cran
   });
 
-  test('getPreviousScaleDown : cran inférieur, null au plancher ou pour une échelle inconnue', () => {
-    expect(getPreviousScaleDown(60)).toBe(45);
-    expect(getPreviousScaleDown(45)).toBe(30);
-    expect(getPreviousScaleDown(30)).toBe(15);
-    expect(getPreviousScaleDown(15)).toBe(5);
-    expect(getPreviousScaleDown(5)).toBeNull();
-    expect(getPreviousScaleDown(25)).toBeNull();
-  });
 });
 
-describe('proto drag-échelle — shouldEscalateOnRelease (mécanique A)', () => {
-  test('escalade au max exact de l’échelle du geste', () => {
-    expect(shouldEscalateOnRelease(30 * 60, 30)).toBe(true);
-    expect(shouldEscalateOnRelease(5 * 60, 5)).toBe(true);
-    expect(shouldEscalateOnRelease(45 * 60, 45)).toBe(true);
-  });
 
-  test('pas d’escalade sous le max', () => {
-    expect(shouldEscalateOnRelease(30 * 60 - 1, 30)).toBe(false);
-    expect(shouldEscalateOnRelease(0, 5)).toBe(false);
-  });
-
-  test('pas d’escalade à 60 : pas de cran au-dessus', () => {
-    expect(shouldEscalateOnRelease(60 * 60, 60)).toBe(false);
-  });
-});
-
-describe('proto drag-échelle — resolveScaleFloor (reset du plancher)', () => {
-  test('plancher null ou à la plus petite échelle : toujours null', () => {
-    expect(resolveScaleFloor(null, 20 * 60)).toBeNull();
-    expect(resolveScaleFloor(undefined, 20 * 60)).toBeNull();
-    expect(resolveScaleFloor(5, 3 * 60)).toBeNull();
-  });
-
-  test('hystérésis à la borne : durée AU max de l’échelle précédente garde le plancher', () => {
-    // plancher 45 (escaladé depuis 30) : à 30 pile, on reste sur 45
-    expect(resolveScaleFloor(45, 30 * 60)).toBe(45);
-    // plancher 60 : à 45 pile, on reste sur 60
-    expect(resolveScaleFloor(60, 45 * 60)).toBe(60);
-  });
-
-  test('reset quand la durée descend SOUS le max de l’échelle précédente', () => {
-    expect(resolveScaleFloor(45, 29 * 60)).toBeNull();
-    expect(resolveScaleFloor(60, 44 * 60)).toBeNull();
-    expect(resolveScaleFloor(15, 4 * 60)).toBeNull();
-    expect(resolveScaleFloor(30, 0)).toBeNull();
-  });
-
-  test('plancher conservé tant que la durée reste dans la zone haute', () => {
-    expect(resolveScaleFloor(45, 40 * 60)).toBe(45);
-    expect(resolveScaleFloor(60, 50 * 60)).toBe(60);
-    expect(resolveScaleFloor(15, 12 * 60)).toBe(15);
-  });
-});

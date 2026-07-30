@@ -28,7 +28,7 @@ export const DEFAULT_DURATION = 1800; // 30 minutes
  * Duration range limits
  */
 export const MIN_DURATION = 60; // 1 minute (in seconds)
-export const MAX_DURATION = 3600; // 60 minutes (in seconds)
+export const MAX_DURATION = 7200; // 120 minutes (porte-2 : échelle 2h, révision Eric)
 
 /**
  * Step increment for custom duration input (in seconds)

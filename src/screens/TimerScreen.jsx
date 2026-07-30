@@ -16,7 +16,7 @@
  * par le dial (`DialCenter`), pas par ce fichier.
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, View, Text, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
+import { AppState, View, Text, TouchableOpacity, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -31,7 +31,9 @@ import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
-import { getFreeActivities } from '../config/activities';
+import { buildRitualApplyPayload } from '../config/rituals';
+import { useRituals } from '../hooks/useRituals';
+import { useCustomActivities } from '../hooks/useCustomActivities';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
 import haptics from '../utils/haptics';
@@ -41,7 +43,6 @@ import haptics from '../utils/haptics';
 const IMMERSION_FADE_MS = 600;
 const IMMERSION_DIAL_SCALE = 1.12;
 
-const FREE_ACTIVITIES = getFreeActivities();
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
@@ -53,8 +54,18 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
     timer: { currentActivity },
     palette: { currentColor, paletteColors },
     setCurrentActivity,
+    setCurrentDuration,
+    setSelectedSoundId,
+    setColorByValue,
     setColorIndex,
   } = useTimerConfig();
+  // porte-2 (retour Eric « activer un rituel demande 3 taps ») : la rangée
+  // d'accueil montre les 3 rituels FAVORIS — le lançable, pas l'atome. Un
+  // tap = activité + couleur + durée + son, tout est prêt (la signature
+  // remonte à la surface). Créer/étoiler un rituel met la rangée à jour
+  // (même store useRituals). Les couleurs restent à côté : réglage en direct.
+  const { favoriteRituals } = useRituals();
+  const { customActivities } = useCustomActivities();
 
   const styles = StyleSheet.create({
     activityButton: {
@@ -110,28 +121,32 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
 
   return (
     <View style={styles.row}>
-      {FREE_ACTIVITIES.map((activity) => {
-        const isActive = currentActivity?.id === activity.id;
+      {favoriteRituals.map((ritual) => {
+        const payload = buildRitualApplyPayload(ritual, customActivities);
+        const isActive = currentActivity?.id === payload.activity?.id;
         return (
           <TouchableOpacity
-            key={activity.id}
-            testID={`activity.item.${activity.id}`}
+            key={ritual.id}
+            testID={`ritual.item.${ritual.id}`}
             accessible
             accessibilityRole="button"
-            accessibilityLabel={t('accessibility.activity', {
-              name: activity.label,
+            accessibilityLabel={t('accessibility.applyRitual', {
+              name: ritual.name,
             })}
             accessibilityState={{ selected: isActive }}
             style={[styles.activityButton, isActive && styles.activityButtonActive]}
             onPress={() => {
-              haptics.selection().catch(() => {});
-              setCurrentActivity(activity);
-              analytics.trackActivitySelected(activity.id);
+              haptics.impact('light').catch(() => {});
+              setCurrentActivity(payload.activity);
+              setCurrentDuration(payload.duration);
+              setSelectedSoundId(payload.soundId);
+              setColorByValue(payload.color);
+              analytics.trackActivitySelected(payload.activity?.id);
               onActivityTouch?.();
             }}
             activeOpacity={0.7}
           >
-            <Text style={styles.activityEmoji}>{activity.emoji}</Text>
+            <Text style={styles.activityEmoji}>{payload.activity?.emoji}</Text>
           </TouchableOpacity>
         );
       })}
@@ -240,35 +255,50 @@ function TopTime({ seconds }) {
       // brand.neutral donnait 2.37:1 sur le fond crème (#F4EFE7) — bien sous
       // WCAG AA (4.5:1), quasi illisible à 13px (trouvé en retest Eric,
       // rapporté comme "timer invisible"). textSecondary : 5.41:1.
-      // Verdicts CD (25/07) : ui-monospace 700 26px, encre douce #5A5147
+      // Verdicts CD (25/07) : ui-monospace 700, encre douce #5A5147
       // (= textSecondary), interlettre 0.03em — se distingue du wall-clock.
       color: theme.colors.textSecondary,
-      fontSize: rs(26, 'min'),
+      fontSize: rs(22, 'min'),
       fontVariant: ['tabular-nums'],
       fontWeight: '700',
-      letterSpacing: rs(26, 'min') * 0.03,
+      letterSpacing: rs(22, 'min') * 0.03,
     },
     glyph: {
       color: theme.colors.textLight,
       fontSize: rs(12, 'min'),
       marginRight: 6,
     },
-    wrap: {
+    // porte-2 (retour Eric ×2 « trop haut, aucun design, le cadran bouge ») :
+    // 1) SLOT à hauteur CONSTANTE, toujours monté — montrer/masquer ne
+    //    déplace plus jamais le cadran (l'ancien `return null` retirait
+    //    l'espace réservé) ;
+    // 2) descendu du bord (paddingTop lg) ;
+    // 3) habillé famille : la pill blanche des contrôles (CompactRow, dé).
+    slot: {
       alignItems: 'center',
-      paddingTop: theme.spacing.xs,
+      height: rs(64, 'min'),
+      justifyContent: 'center',
+      paddingTop: theme.spacing.lg,
+    },
+    pill: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.round,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xxs,
+      ...theme.shadow('sm'),
     },
   });
 
-  if (!showTime) {
-    return null;
-  }
-
   return (
-    <View style={styles.wrap} testID="timer.digital">
-      <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-        <Text style={styles.glyph}>⏱</Text>
-        <Text style={styles.text}>{formatTime(seconds)}</Text>
-      </View>
+    <View style={styles.slot} testID="timer.digital">
+      {showTime && (
+        <View style={styles.pill}>
+          <Text style={styles.glyph}>⏱</Text>
+          <Text style={styles.text}>{formatTime(seconds)}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -317,6 +347,11 @@ function TimerScreenContent() {
     timer: { currentDuration, currentActivity },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
+  // porte-2 (retour Eric « le mode horizontal est complètement raté ») :
+  // en paysage l'écran devient une RANGÉE — disque à gauche, chrome en
+  // colonne à droite. La colonne empilée débordait et clippait le disque.
+  const { width: winW, height: winH } = useWindowDimensions();
+  const isLandscape = winW > winH;
 
   // Double-tap fond → bascule Focus (verdicts CD 25/07). Ignoré 1,5s après
   // un retour AppState 'active' (anti-poche/réveil). Non destructif : ne
@@ -551,7 +586,11 @@ function TimerScreenContent() {
   // intouchés). Se remesure naturellement à la rotation (onLayout).
   const [aboveChromeHeight, setAboveChromeHeight] = useState(0);
   const [belowChromeHeight, setBelowChromeHeight] = useState(0);
-  const dialOffsetY = (aboveChromeHeight - belowChromeHeight) / 2;
+  // Paysage : chromeBelow est À CÔTÉ du disque (rangée), pas dessous — seul
+  // TopTime compte dans le recentrage d'immersion.
+  const dialOffsetY = isLandscape
+    ? aboveChromeHeight / 2
+    : (aboveChromeHeight - belowChromeHeight) / 2;
 
   const dialAnimatedStyle = useAnimatedStyle(() => {
     const t = immersionValue.value;
@@ -589,6 +628,8 @@ function TimerScreenContent() {
     content: {
       alignItems: 'center',
       flex: 1,
+      flexDirection: isLandscape ? 'row' : 'column',
+      gap: isLandscape ? theme.spacing.lg : 0,
       justifyContent: 'center',
     },
     // Wrappers du chrome fondu en immersion : `alignItems: center` préserve

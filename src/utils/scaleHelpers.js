@@ -26,7 +26,8 @@ export const getOptimalScale = (durationMinutes) => {
   if (durationMinutes <= 15) return 15;
   if (durationMinutes <= 30) return 30;
   if (durationMinutes <= 45) return 45;
-  return 60;
+  if (durationMinutes <= 60) return 60;
+  return 120; // porte-2 : échelle 2h (révision Eric du « 60 max » 3b-4)
 };
 
 /**
@@ -65,7 +66,7 @@ export const modeToScale = (scaleMode) => {
  * isSupportedScale('25min') // => false
  */
 export const isSupportedScale = (scaleMode) => {
-  const supportedScales = ['5min', '15min', '30min', '45min', '60min'];
+  const supportedScales = ['5min', '15min', '30min', '45min', '60min', '120min'];
   return supportedScales.includes(scaleMode);
 };
 
@@ -92,16 +93,13 @@ export const deriveScaleMode = (durationSeconds) => {
 };
 
 // ============================================================
-// PROTO drag-échelle (branche proto-drag-echelle)
-// Helpers purs pour l'escalade d'échelle par drag : le drag sature
-// aujourd'hui au max de l'échelle dérivée (deriveScaleMode) — ces fonctions
-// portent la logique « scaleFloor » (plancher d'échelle) partagée par les
-// deux mécaniques testées (Relâche / Maintien). Si une mécanique est retenue,
-// consolider ; sinon, supprimer ce bloc avec la branche.
+// Drag-échelle « Maintien au bord » (consolidé porte-2, verdict Eric 30/07)
+// Le plancher d'échelle monte par escalade au maintien, ne descend JAMAIS
+// par le drag — reset uniquement au changement de contexte (TimeTimer).
 // ============================================================
 
-/** Les 5 échelles actives, en minutes, ordonnées (miroir de DIAL_MODES). */
-export const SCALE_STEPS = [5, 15, 30, 45, 60];
+/** Les 6 échelles actives, en minutes, ordonnées (miroir de DIAL_MODES). */
+export const SCALE_STEPS = [5, 15, 30, 45, 60, 120];
 
 /**
  * Échelle au cran SUPÉRIEUR d'une échelle donnée.
@@ -114,42 +112,4 @@ export const getNextScaleUp = (scaleMinutes) => {
   return SCALE_STEPS[idx + 1];
 };
 
-/**
- * Échelle au cran INFÉRIEUR d'une échelle donnée.
- * @param {number} scaleMinutes - Échelle courante en minutes
- * @returns {number|null} - Échelle précédente, ou null si déjà au min (5) ou inconnue
- */
-export const getPreviousScaleDown = (scaleMinutes) => {
-  const idx = SCALE_STEPS.indexOf(scaleMinutes);
-  if (idx <= 0) {return null;}
-  return SCALE_STEPS[idx - 1];
-};
 
-/**
- * Mécanique A (« Relâche et ça respire ») : faut-il escalader au relâcher ?
- * Vrai si la durée relâchée (snappée) est AU max de l'échelle du geste et
- * qu'il existe un cran au-dessus.
- * @param {number} durationSeconds - Durée relâchée, en secondes (post-snap)
- * @param {number} scaleMinutes - Échelle du geste, en minutes
- * @returns {boolean}
- */
-export const shouldEscalateOnRelease = (durationSeconds, scaleMinutes) =>
-  durationSeconds >= scaleMinutes * 60 && getNextScaleUp(scaleMinutes) !== null;
-
-/**
- * Résout le scaleFloor après un changement de durée (relâcher, ou durée posée
- * par le contexte — ex. Rituel). Règle de reset choisie (mandat) : le plancher
- * se réinitialise quand la durée descend SOUS le max de l'échelle précédente
- * — hystérésis : relâcher pile à 30 sur un plancher 45 GARDE le plancher
- * (30 n'est pas < 30), il faut descendre à 29 pour redescendre l'échelle.
- * @param {number|null} floorMinutes - Plancher courant en minutes (ou null)
- * @param {number} durationSeconds - Durée courante en secondes
- * @returns {number|null} - Plancher conservé, ou null (reset)
- */
-export const resolveScaleFloor = (floorMinutes, durationSeconds) => {
-  if (!floorMinutes) {return null;}
-  const prev = getPreviousScaleDown(floorMinutes);
-  if (prev === null) {return null;} // plancher à la plus petite échelle : sans objet
-  const durationMinutes = (durationSeconds || 0) / 60;
-  return durationMinutes < prev ? null : floorMinutes;
-};

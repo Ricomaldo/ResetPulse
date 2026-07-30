@@ -36,7 +36,7 @@
  * discret si absents du dev client courant.
  */
 import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -59,7 +59,6 @@ import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
 import WallpaperComposition from '../export/WallpaperComposition';
-import { REMINDER_SLOT_IDS } from '../../config/reminderSlots';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -93,9 +92,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
     setClockwise,
     system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
-    reminder: { enabled: reminderEnabled, slot: reminderSlot },
-    setReminderEnabled,
-    setReminderSlot,
     display: { showTime },
     setShowTime,
     mode: { current: currentMode },
@@ -106,29 +102,7 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   // Rappel doux (Lot 3e, opt-in strict) — la permission n'est demandée qu'au
   // geste d'opt-in (toggle ON), jamais au boot ni à chaque changement de
   // créneau (pattern permission contextuelle existant, cf. useTimer.startTimer).
-  const { requestNotificationPermission, scheduleReminderNotification, cancelReminderNotification } = useNotificationTimer();
 
-  const handleReminderToggle = useCallback((value) => {
-    setReminderEnabled(value);
-    if (value) {
-      // Permission demandée seulement ici, au geste d'opt-in — idempotent
-      // côté OS (cf. requestNotificationPermission), jamais reproposée si
-      // déjà tranchée. Analytics : hors scope volontairement (recentrage.md
-      // §Analytics — funnel figé, « rien d'autre au départ »).
-      requestNotificationPermission();
-      scheduleReminderNotification(reminderSlot);
-    } else {
-      cancelReminderNotification();
-    }
-  }, [reminderSlot, setReminderEnabled, requestNotificationPermission, scheduleReminderNotification, cancelReminderNotification]);
-
-  const handleReminderSlotChange = useCallback((slotId) => {
-    setReminderSlot(slotId);
-    // Changement de créneau = replanification immédiate (1/jour max, pas
-    // d'accumulation : scheduleReminderNotification annule l'ancienne
-    // planification avant la nouvelle, même identifier).
-    scheduleReminderNotification(slotId);
-  }, [setReminderSlot, scheduleReminderNotification]);
 
   const isFocus = currentMode === 'focus';
 
@@ -168,10 +142,12 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   const [containerH, setContainerH] = useState(windowHeight);
   const snapClosed = containerH - CLOSED_VISIBLE;
 
-  const openY = Math.max(
-    containerH * (1 - MAX_OPEN_COVERAGE),
-    containerH - HANDLE_HEIGHT - contentHeight - BOTTOM_SAFETY
-  );
+  // porte-2 (retour Eric « ça donne le tournis ») : hauteur d'ouverture
+  // FIXE — le drawer s'ouvre TOUJOURS à 65 % du conteneur, quel que soit le
+  // contenu (toggles, liste, formulaire). Le contenu vit DEDANS (scroll si
+  // débordement) : plus aucun yo-yo entre sous-écrans. L'ancienne hauteur-
+  // de-contenu (C5) meurt ici.
+  const openY = containerH * (1 - MAX_OPEN_COVERAGE);
 
   // A2 (hotfix-porte-1) : hauteur utile pour un sous-écran à scroll propre
   // (RitualForm, PalettesPanel) — le plafond des 65%, moins la poignée et la
@@ -340,6 +316,10 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
   }, [t]);
 
   const styles = StyleSheet.create({
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0,0,0,0.08)',
+    },
     asideContainer: {
       bottom: 0,
       left: 0,
@@ -381,14 +361,15 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       right: 0,
       top: HANDLE_HEIGHT,
     },
+    // porte-2 (retour Eric « pas sérieux ») : registre DS — capitale
+    // discrète, interlettre large, encre légère. Un seul élément, pas de
+    // caret orphelin : la barre-poignée porte déjà le geste.
     closedLabelText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(12, 'min'),
-    },
-    closedLabelChevron: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(13, 'min'),
-      marginTop: rs(2),
+      color: theme.colors.textLight,
+      fontSize: rs(11, 'min'),
+      fontWeight: '600',
+      letterSpacing: rs(11, 'min') * 0.14,
+      textTransform: 'uppercase',
     },
     inertChevron: {
       color: theme.colors.textSecondary,
@@ -449,31 +430,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
     togglesCard: {
       marginTop: rs(16),
     },
-    reminderSlots: {
-      flexDirection: 'row',
-      gap: theme.spacing.sm,
-      paddingBottom: rs(12),
-      paddingTop: rs(4),
-    },
-    reminderPill: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.segmentInactive,
-      borderRadius: theme.borderRadius.round,
-      flex: 1,
-      paddingVertical: rs(6),
-    },
-    reminderPillActive: {
-      backgroundColor: theme.colors.text,
-    },
-    reminderPillText: {
-      color: theme.colors.text,
-      fontSize: rs(12, 'min'),
-      fontWeight: fontWeights.medium,
-      textAlign: 'center',
-    },
-    reminderPillTextActive: {
-      color: theme.colors.fixed.white,
-    },
     doubleTapHint: {
       color: theme.colors.textSecondary,
       fontSize: rs(11, 'min'),
@@ -514,12 +470,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       value: showTime,
       onChange: setShowTime,
     },
-    {
-      key: 'dailyReminder',
-      label: t('accessibility.dailyReminder'),
-      value: reminderEnabled,
-      onChange: handleReminderToggle,
-    },
   ];
 
   return (
@@ -528,6 +478,20 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
       onLayout={(e) => setContainerH(e.nativeEvent.layout.height)}
       pointerEvents={hidden ? 'none' : 'box-none'}
     >
+      {/* porte-2 (retour Eric) : tap à l'extérieur = fermer — la base de
+          l'affordance d'un bottom sheet. Voile très léger pour la profondeur,
+          monté seulement ouvert. */}
+      {isOpen && (
+        <Pressable
+          testID="aside.backdrop"
+          style={styles.backdrop}
+          accessible={false}
+          onPress={() => {
+            haptics.selection().catch(() => {});
+            snapTo(false);
+          }}
+        />
+      )}
       <GestureDetector gesture={panGesture}>
         <Animated.View testID="aside.sheet" style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
           {/* Handle — affordance du sheet : swipe up OU tap (porte Eric 25/07,
@@ -554,14 +518,14 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
               visible fermé, s'efface à l'ouverture. */}
           <Animated.View style={[styles.closedLabel, closedLabelAnimatedStyle]} pointerEvents="none">
             <Text style={styles.closedLabelText}>{t('aside.closedLabel')}</Text>
-            <Text style={styles.closedLabelChevron}>˄</Text>
           </Animated.View>
 
           {/* SCR-10 : 4 blocs */}
           <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
             <ScrollView
               contentContainerStyle={styles.scrollContent}
-              scrollEnabled={isOpen && !boundedSubScreen}
+              scrollEnabled={isOpen && !boundedSubScreen && contentHeight > subScreenHeight}
+              bounces={false}
               showsVerticalScrollIndicator={false}
               nestedScrollEnabled={true}
             >
@@ -659,11 +623,10 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                         <View style={styles.togglesCard}>
                           {toggles.map((toggle, index) => {
                             const isLast = index === toggles.length - 1;
-                            const showReminderSlots = toggle.key === 'dailyReminder' && reminderEnabled;
                             return (
                               <React.Fragment key={toggle.key}>
                                 <View
-                                  style={[styles.optionRow, isLast && !showReminderSlots && styles.optionRowLast]}
+                                  style={[styles.optionRow, isLast && styles.optionRowLast]}
                                 >
                                   <Text style={styles.optionLabel}>{toggle.label}</Text>
                                   <Switch
@@ -679,33 +642,6 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                                     {...theme.styles.switch(toggle.value)}
                                   />
                                 </View>
-                                {showReminderSlots && (
-                                  <View style={styles.reminderSlots} accessibilityRole="radiogroup">
-                                    {REMINDER_SLOT_IDS.map((slotId) => {
-                                      const isActive = reminderSlot === slotId;
-                                      return (
-                                        <TouchableOpacity
-                                          key={slotId}
-                                          testID={`aside.reminder-slot.${slotId}`}
-                                          accessible
-                                          accessibilityRole="radio"
-                                          accessibilityState={{ selected: isActive }}
-                                          accessibilityLabel={t(`reminder.${slotId}`)}
-                                          style={[styles.reminderPill, isActive && styles.reminderPillActive]}
-                                          onPress={() => {
-                                            haptics.selection().catch(() => {});
-                                            handleReminderSlotChange(slotId);
-                                          }}
-                                          activeOpacity={0.7}
-                                        >
-                                          <Text style={[styles.reminderPillText, isActive && styles.reminderPillTextActive]}>
-                                            {t(`reminder.${slotId}`)}
-                                          </Text>
-                                        </TouchableOpacity>
-                                      );
-                                    })}
-                                  </View>
-                                )}
                               </React.Fragment>
                             );
                           })}
