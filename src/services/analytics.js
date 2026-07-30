@@ -103,6 +103,16 @@ const analyticsAdapter = {
     this.track('palette_selected', { palette });
   },
 
+  // Funnel Ambiances (Lot 3b, frontière gratuit/payant) : invitation
+  // discrète vue/tapée, avant la modale premium (paywall_viewed existant).
+  trackAmbiancesInvitationShown(source) {
+    this.track('ambiances_invitation_shown', { source });
+  },
+
+  trackAmbiancesInvitationTapped(source) {
+    this.track('ambiances_invitation_tapped', { source });
+  },
+
   trackColorSelected(color) {
     this.track('color_selected', { color });
   },
