@@ -69,6 +69,10 @@ function TimerDial({
   showCenterDisk = false,
   centerImage = null,
   distraction = null,
+  // PROTO drag-échelle (branche proto-drag-echelle) : quand l'échelle change
+  // EN PLEIN GESTE (escalade mécanique B), ré-ancre le suivi tactile sur la
+  // nouvelle échelle sans saut de durée. false = comportement actuel intact.
+  resyncTouchOnScaleChange = false,
 }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -107,6 +111,9 @@ function TimerDial({
   const lastMoveTimeRef = useRef(null);
   // Track if drag is valid (started outside dead zone)
   const isDragValid = useSharedValue(false);
+  // PROTO drag-échelle : échelle (maxMinutes) vue au dernier événement du
+  // geste — détecte un changement d'échelle en plein geste pour ré-ancrer.
+  const lastScaleMaxRef = useRef(null);
 
   // Get graduation marks and numbers from centralized logic
   const graduationMarks = useMemo(() => {
@@ -154,6 +161,7 @@ function TimerDial({
     lastMinutesRef.current = currentMinutesValue;
     lastTouchMinutesRef.current = touchMinutes;
     lastMoveTimeRef.current = Date.now();
+    lastScaleMaxRef.current = dial.maxMinutes; // PROTO drag-échelle
 
     return true;
   }, [dial, duration, centerX, centerY]);
@@ -163,6 +171,20 @@ function TimerDial({
     // Calculate where the user is touching now
     const touchMinutes = dial.coordinatesToMinutes(touchX, touchY, centerX, centerY);
     const maxMinutes = dial.maxMinutes;
+
+    // PROTO drag-échelle : l'échelle a changé en plein geste (escalade
+    // mécanique B). Ré-ancrage : la position du doigt est recalculée sur la
+    // NOUVELLE échelle et devient la référence — touchDelta vaut 0 sur cette
+    // frame, la durée (lastMinutesRef) ne bouge pas : c'est l'angle qui se
+    // recale, pas la valeur. Le geste continue ensuite normalement.
+    if (
+      resyncTouchOnScaleChange &&
+      lastScaleMaxRef.current !== null &&
+      lastScaleMaxRef.current !== maxMinutes
+    ) {
+      lastTouchMinutesRef.current = touchMinutes;
+    }
+    lastScaleMaxRef.current = maxMinutes;
 
     // Check if touch position wrapped around
     let touchDelta = 0;
@@ -206,7 +228,7 @@ function TimerDial({
     lastMinutesRef.current = newMinutes;
     lastTouchMinutesRef.current = touchMinutes;
     dragOffsetRef.current = newMinutes - touchMinutes;
-  }, [dial, centerX, centerY, onGraduationTap]);
+  }, [dial, centerX, centerY, onGraduationTap, resyncTouchOnScaleChange]);
 
   // Handler for pan gesture end
   const handlePanEnd = useCallback(() => {
@@ -219,6 +241,7 @@ function TimerDial({
     lastTouchMinutesRef.current = null;
     lastMoveTimeRef.current = null;
     dragOffsetRef.current = 0;
+    lastScaleMaxRef.current = null; // PROTO drag-échelle
   }, [onGraduationTap]);
 
   // Handler for tap on graduations OR center (C6.2 : le tap reste sur tout
@@ -663,6 +686,7 @@ TimerDial.propTypes = {
   showCenterDisk: PropTypes.bool,
   centerImage: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   distraction: PropTypes.shape({ movement: PropTypes.string, variant: PropTypes.object }),
+  resyncTouchOnScaleChange: PropTypes.bool,
 };
 
 // Export memoized version
@@ -688,6 +712,7 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.showPlayButton === nextProps.showPlayButton &&
     prevProps.showCenterDisk === nextProps.showCenterDisk &&
     prevProps.centerImage === nextProps.centerImage &&
-    prevProps.distraction === nextProps.distraction
+    prevProps.distraction === nextProps.distraction &&
+    prevProps.resyncTouchOnScaleChange === nextProps.resyncTouchOnScaleChange
   );
 });
