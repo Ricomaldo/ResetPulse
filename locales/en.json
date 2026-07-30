@@ -324,20 +324,6 @@
     "deleteRitual": "Delete ritual %{name}",
     "favoriteRitual": "Favorite ritual %{name}"
   },
-  "discovery": {
-    "defaultCta": "Try 7 days free",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    },
-    "activities": "Premium activities"
-  },
   "twoTimers": {
     "title": "You've created 2 moments!",
     "message": "Want to explore more colors and activities?",

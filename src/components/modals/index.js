@@ -17,7 +17,6 @@
  *
  * Examples:
  * - modalStack.push('premium', { highlightedFeature: 'activity' })
- * - modalStack.push('discovery', { title: 'More Activities', children: <Grid /> })
  * - modalStack.push('createActivity', { onActivityCreated: handleCreate })
  * - modalStack.push('editActivity', { activity, onActivityUpdated, onActivityDeleted })
  * - modalStack.push('twoTimers', { onExplore: handleExplore })
@@ -34,9 +33,8 @@
 export { default as BottomSheetModal } from './BottomSheetModal';
 
 // === Modal Content Components (All use ModalStack pattern) ===
-// Premium & Discovery
+// Premium
 export { default as PremiumModalContent } from './PremiumModalContent';
-export { default as DiscoveryModalContent } from './DiscoveryModalContent';
 
 // Custom Activities
 export { default as CreateActivityModalContent } from './CreateActivityModalContent';
