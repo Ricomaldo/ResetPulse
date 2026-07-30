@@ -3,7 +3,9 @@
     "cancel": "Cancelar",
     "ok": "OK",
     "retry": "Reintentar",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "back": "Atrás",
+    "delete": "Eliminar"
   },
   "welcome": {
     "title": "Bienvenido a ResetPulse"
@@ -21,83 +23,83 @@
       "ctaTrial": "Prueba 7 días gratis"
     },
     "intentions": {
-      "title": "What's it for?",
+      "title": "¿Para qué es?",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "Relajarme",
+        "defaultName": "Meditación"
       },
       "work": {
-        "label": "Work",
+        "label": "Trabajar",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "Crear",
+        "defaultName": "Creación"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "Aprender",
+        "defaultName": "Estudio"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "Moverse",
+        "defaultName": "Entrenamiento"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "Otro",
+        "defaultName": "Mi momento"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Tu temporizador sería para...",
+        "focus": "Concentrarme mejor",
+        "launch": "Ayudarme a empezar",
+        "breathe": "Tomar tiempo para mí",
+        "children": "Enmarcar un momento con mis hijos",
+        "other": "Otra cosa...",
+        "otherPlaceholder": "¿Como qué?"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Una pequeña ayuda con...",
+        "starting": "Empezar",
+        "finishing": "Llegar hasta el final",
+        "staying": "Mantenerme concentrado",
+        "managing": "Gestionar mejor mi tiempo",
+        "other": "Otra cosa...",
+        "otherPlaceholder": "¿Como qué?"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "Tu primer momento",
+      "cta": "Crear mi momento",
+      "durationLabel": "¿Cuánto tiempo?",
+      "namePlaceholder": "Nombra tu momento..."
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "¡Vamos!",
+      "subtitle": "Tu primer momento está listo. Toca para empezar.",
+      "cta": "Iniciar mi temporizador",
+      "ctaHint": "Inicia tu primer temporizador",
+      "defaultActivity": "Mi momento"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "Tu tiempo te pertenece",
+        "tapToContinue": "Cuando estés listo"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "Un temporizador que se adapta a ti",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "No te pierdas el final de tus momentos",
+        "body": "Tu temporizador te avisará aunque uses otra app o tu pantalla esté bloqueada.",
+        "ctaPrimary": "Sí, avísame",
+        "ctaSecondary": "Quizás más tarde"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "Tu tono",
+        "skip": "Saltar →"
       }
     }
   },
@@ -114,14 +116,14 @@
       "soundDescription": "Elige el sonido que se reproducirá al finalizar el temporizador",
       "keepAwakeDescriptionOn": "La pantalla permanece activa durante el temporizador",
       "keepAwakeDescriptionOff": "La pantalla puede bloquearse durante el temporizador",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "Activar pulsación larga para iniciar",
+      "longPressStartDescriptionOn": "Mantén pulsado para iniciar el temporizador",
+      "longPressStartDescriptionOff": "Pulsación simple para iniciar",
+      "longPressStop": "Activar pulsación larga para detener",
+      "longPressStopDescriptionOn": "Mantén pulsado para detener el temporizador",
+      "longPressStopDescriptionOff": "Pulsación simple para detener",
+      "dialScale": "Rango de la esfera",
+      "dialScaleDescription": "Duración máxima mostrada en la esfera"
     },
     "appearance": {
       "themeLight": "☀️ Claro",
@@ -138,47 +140,47 @@
       "version": "Versión"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "Modo de visualización mínima",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "Creativo",
+        "description": "Carrusel de colores"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "Multitarea",
+        "description": "Carrusel de actividades"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "Precisión",
+        "description": "Temporizador digital con controles +/-"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "CONFIGURACIÓN",
+      "timerOptions": "Opciones del temporizador",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "Sonido de notificación",
+      "theme": "Tema",
+      "favorites": "TUS FAVORITOS",
       "ambiance": "AMBIANCE",
       "info": "INFO"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "Paletas favoritas",
+        "description": "Selecciona hasta 4 paletas favoritas (%{count}/4)",
+        "morePalettes": "Más paletas"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "Actividades favoritas",
+        "description": "Selecciona hasta 4 actividades favoritas (%{count}/4)",
+        "more": "Más"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "Emoji de actividad en el centro",
+      "activityEmojiDescriptionOn": "El emoji se muestra en el centro de la esfera",
+      "activityEmojiDescriptionOff": "El emoji está oculto",
+      "pulseAnimation": "Animación de pulso"
     }
   },
   "premium": {
@@ -188,8 +190,8 @@
     "price": "Luego %{price} una vez.\nTuyo para siempre.",
     "startTrial": "Probar 7 días gratis",
     "restore": "Restaurar mis compras",
-    "welcomeTitle": "¡Bienvenido Premium! 🎉",
-    "welcomeMessage": "Todas las paletas y actividades están ahora desbloqueadas.",
+    "welcomeTitle": "¡Bienvenido a Ambiances! 🎉",
+    "welcomeMessage": "Todas las paletas, los rituales ilimitados y los sonidos de Ambiances están ahora desbloqueados.",
     "welcomeButton": "¡Genial!",
     "noConnection": "Sin conexión",
     "noConnectionMessage": "No se pueden cargar las ofertas. Verifica tu conexión a internet.",
@@ -198,18 +200,30 @@
     "errorPurchase": "Ocurrió un error durante la compra.",
     "paymentPending": "Pago en proceso",
     "restoreSuccess": "Restauración exitosa",
-    "restoreSuccessMessage": "Tus compras han sido restauradas. Todas las funciones premium están desbloqueadas.",
+    "restoreSuccessMessage": "Tus compras han sido restauradas. Todas las funciones de Ambiances están desbloqueadas.",
     "restoreNone": "No se encontró ninguna compra",
     "restoreNoneMessage": "No se encontró ninguna compra previa para esta cuenta.",
     "restoreError": "No se pudieron restaurar tus compras.",
     "unexpectedError": "Ocurrió un error inesperado.",
     "contactSupport": "Contactar soporte",
     "tooManyAttempts": "Por favor, contacta al soporte si el problema persiste.",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "Sin conexión a internet. Comprueba tu red e inténtalo de nuevo.",
+    "errorStore": "Problema con la tienda. Inténtalo de nuevo más tarde.",
+    "errorPaymentPending": "Pago pendiente. Comprueba tus compras en unos minutos.",
+    "errorRestoreGeneric": "Error de restauración",
+    "errorGeneric": "Se produjo un error"
+  },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Paletas completas, rituales ilimitados, sonidos suaves para vestir tus sesiones — todo para hacer respirar tu disco, a tu ritmo.",
+    "features": {
+      "palettes": "10 paletas de colores más",
+      "rituals": "rituales ilimitados",
+      "sounds": "sonidos Ambiances"
+    },
+    "price": "%{price}, una vez. Para siempre.",
+    "startTrial": "prueba 7 días gratis",
+    "breatheInvitation": "¿quieres hacerlo respirar? descubre Ambiances"
   },
   "activities": {
     "none": "Básico",
@@ -227,8 +241,8 @@
     "homework": "Tareas",
     "music": "Música",
     "cleaning": "Limpieza",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "Siesta",
+    "writing": "Escritura"
   },
   "palettes": {
     "earth": "Tierra",
@@ -241,44 +255,36 @@
     "dawn": "Aurora",
     "dusk": "Crepúsculo",
     "soft": "Suave",
-    "autumn": "Otoño",
     "lavender": "Lavanda",
     "teal": "Turquesa",
-    "darkLaser": "Dark Laser",
-    "serenity": "Serenity"
+    "serenity": "Serenidad"
   },
   "sounds": {
-    "bell_classic": "Campana Clásica",
-    "bell_melodic": "Campana Melódica",
-    "microwave_vintage": "Microondas Vintage",
-    "microwave_ping": "Ping de Microondas",
-    "kitchen_timer": "Temporizador de Cocina",
-    "kitchen_timer_2": "Temporizador Mecánico",
-    "egg_timer": "Temporizador de Huevos",
-    "toaster_bell": "Tostadora",
-    "ding_effect": "Ding Simple",
-    "timer_complete": "Temporizador Completo"
+    "jingle_achievement": "Logro",
+    "singing_bowl": "Cuenco tibetano",
+    "contrabass_pluck": "Cuerda grave",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibráfono",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Marimba ascendente",
+    "up_chime": "Campanilla",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Mantener pantalla activa",
     "rotationDirection": "Dirección de rotación",
-    "activity": "Actividad %{name}",
-    "activityLocked": "Actividad premium bloqueada",
-    "customActivityHint": "Mantén presionado para editar esta actividad personalizada",
-    "moreActivities": "Más actividades",
-    "discoverPremium": "Descubrir actividades premium",
     "colorNumber": "Color %{number}",
     "discoverMorePalettes": "Toca para descubrir más paletas",
     "celebrationEmoji": "Celebración",
     "closeCreateActivity": "Cerrar creación de actividad",
     "closeEditActivity": "Cerrar edición de actividad",
     "closeModalHint": "Cierra este diálogo y vuelve a la aplicación",
-    "closePremiumModal": "Cerrar oferta premium",
+    "closePremiumModal": "Cerrar oferta de Ambiances",
     "createActivityHint": "Crea la actividad personalizada y la añade a tu lista",
     "deleteActivityHint": "Elimina permanentemente esta actividad personalizada",
     "exploreSettingsHint": "Abre los ajustes para descubrir las funciones premium",
     "restorePurchases": "Restaurar compras anteriores",
-    "restorePurchasesHint": "Restaurar acceso premium si ya compraste",
+    "restorePurchasesHint": "Restaurar acceso a Ambiances si ya compraste",
     "saveActivityHint": "Guarda los cambios de esta actividad",
     "unlockPremiumHint": "Comenzar prueba gratuita de 7 días, luego pago único",
     "timer": {
@@ -289,27 +295,23 @@
       "timerStopped": "Temporizador detenido",
       "activityStarted": "%{activity} iniciado",
       "activityCompleted": "%{activity} completado",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "startTimer": "Iniciar temporizador",
+      "stopTimer": "Detener temporizador",
+      "resetTimer": "Reiniciar temporizador",
+      "dial": "Esfera del temporizador, %{minutes} minutos establecidos, %{activity}"
     },
-    "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Prueba 7 días gratis",
-    "activities": "Actividades premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "unlockPremium": "Desbloquear Ambiances por %{price}",
+    "paletteItem": "Paleta de colores: %{name}",
+    "showTime": "Mostrar el tiempo",
+    "distraction": "Distracción",
+    "applyRitual": "Aplicar el ritual %{name}",
+    "editRitual": "Modificar el ritual %{name}",
+    "createRitual": "Crear un ritual",
+    "closeRitualForm": "Cerrar el formulario de ritual",
+    "chooseCustomEmoji": "Elegir otro emoji desde el teclado",
+    "ritualNamePreset": "Ritual preconfigurado %{name}",
+    "deleteRitual": "Eliminar el ritual %{name}",
+    "favoriteRitual": "Ritual favorito %{name}"
   },
   "customActivities": {
     "toast": {
@@ -318,71 +320,60 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "Crear actividad",
+      "namePlaceholder": "Ej: Guitarra, Cocina...",
+      "nameLabel": "Nombre de la actividad",
+      "emojiLabel": "Elegir emoji",
+      "emojiPlaceholder": "Toca para elegir",
+      "durationLabel": "Duración predeterminada",
+      "preview": "Vista previa",
+      "previewPlaceholder": "Mi actividad",
+      "buttonCreate": "Crear",
+      "errorTitle": "Información incompleta",
+      "errorEmoji": "Por favor, elige un emoji para tu actividad.",
+      "errorName": "Por favor, introduce un nombre para tu actividad."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "Editar actividad",
+      "buttonSave": "Guardar",
+      "buttonDelete": "Eliminar",
+      "deleteConfirmTitle": "¿Eliminar?",
+      "deleteConfirmMessage": "Esta acción es irreversible.",
+      "usageStats": "Usada %{count} veces"
     },
     "duration": {
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "¿Un momento para ti?",
-        "bodyPersonalized": "Tu {{name}} te espera {{emoji}} — ¿{{duration}} min para ti?",
-        "bodyGeneric": "Tu temporizador te espera — tómate un momento para ti"
-      },
-      "day7": {
-        "title": "Última oportunidad",
-        "body": "Prueba gratuita de 7 días — aprovéchala antes de que expire"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "Disminuir duración",
+      "increaseDuration": "Aumentar duración",
+      "timeLabel": "Tiempo: %{time}",
+      "durationLabel": "Duración: %{time}",
+      "showTime": "Mostrar tiempo",
+      "tapToHide": "Toca para ocultar",
+      "tapToShow": "Toca para mostrar"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "En sentido horario",
+      "counterClockwise": "En sentido antihorario"
+    },
+    "distraction": {
+      "tryMe": "sorpréndeme"
     }
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "¡Has creado 2 momentos!",
+    "message": "¿Quieres explorar más colores y actividades?",
     "explore": "Descubrir",
-    "dismiss": "Maybe later"
+    "dismiss": "Quizás más tarde"
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "Listo",
+      "endMessage": "Bien hecho 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -401,52 +392,116 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "Sumérgete",
+      "endMessage": "Enriquecido 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "Aprende",
+      "endMessage": "Avanzado 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "Respira",
+      "endMessage": "En paz 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "Muévete",
+      "endMessage": "Con energía ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "Camina",
+      "endMessage": "Revitalizado 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "Prepara",
+      "endMessage": "Satisfecho 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "Juega",
+      "endMessage": "Relajado 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "Concéntrate",
+      "endMessage": "Completado ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "Toca",
+      "endMessage": "Armonizado 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "Ordena",
+      "endMessage": "Sereno ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "Descansa",
+      "endMessage": "Renovado 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "Escribe",
+      "endMessage": "Liberado ✍️"
+    },
+    "custom": {
+      "startMessage": "Vamos",
+      "endMessage": "Hecho ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Mis rituales",
+    "base": {
+      "meditation": "Respiración",
+      "break": "Pausa café",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Mis rituales",
+      "createRow": "Crear un ritual",
+      "empty": "Aún no hay rituales",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Crear un ritual",
+      "editTitle": "Modificar el ritual",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Otro emoji",
+      "colorLabel": "Color",
+      "durationLabel": "Duración",
+      "soundLabel": "Sonido final",
+      "saveButton": "Guardar",
+      "deleteButton": "Eliminar",
+      "deleteConfirmTitle": "¿Eliminar este ritual?",
+      "deleteConfirmMessage": "Esta acción es irreversible.",
+      "customActivityName": "Mi ritual",
+      "customEmojiOther": "otro…",
+      "customEmojiPlaceholder": "tu emoji",
+      "customEmojiHint": "cambia a tu teclado de emojis con el globo 🌐"
+    },
+    "restoreBase": "restaurar los rituales base"
+  },
+  "palettesPanel": {
+    "sheetRow": "Paletas",
+    "title": "Paletas",
+    "included": "Incluidas",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "paleta Ambiances — pruébala libremente",
+    "ambiancesDiscover": "descubrir Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Focus"
+  },
+  "focus": {
+    "hint": "desliza hacia arriba"
+  },
+  "firstRun": {
+    "skip": "saltar",
+    "welcome": "empecemos eligiendo una actividad 👇",
+    "companion": "este emoji te hace compañía. desliza el disco para ajustar la duración.",
+    "dialColor": "¿un color? cambia al instante.",
+    "ready": "todo listo. toca el disco para empezar."
+  },
+  "aside": {
+    "exitFocus": "salir del focus",
+    "doubleTapHint": "consejo: doble toque en el fondo para cambiar",
+    "handle": "abrir ajustes",
+    "closedLabel": "rituales y ajustes"
   }
 }

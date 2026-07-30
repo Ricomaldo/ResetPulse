@@ -3,7 +3,9 @@
     "cancel": "Annuleren",
     "ok": "OK",
     "retry": "Opnieuw proberen",
-    "continue": "Doorgaan"
+    "continue": "Doorgaan",
+    "back": "Terug",
+    "delete": "Verwijderen"
   },
   "welcome": {
     "title": "Welkom bij ResetPulse"
@@ -21,83 +23,83 @@
       "ctaTrial": "7 dagen gratis proberen"
     },
     "intentions": {
-      "title": "What's it for?",
+      "title": "Waarvoor is het?",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "Ontspannen",
+        "defaultName": "Meditatie"
       },
       "work": {
-        "label": "Work",
+        "label": "Werken",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "Creëren",
+        "defaultName": "Creatie"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "Leren",
+        "defaultName": "Studeren"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "Bewegen",
+        "defaultName": "Work-out"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "Anders",
+        "defaultName": "Mijn moment"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Jouw timer zou zijn voor...",
+        "focus": "Beter focussen",
+        "launch": "Mij helpen op gang te komen",
+        "breathe": "Tijd voor mezelf nemen",
+        "children": "Een moment met mijn kinderen afbakenen",
+        "other": "Iets anders...",
+        "otherPlaceholder": "Zoals wat?"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Een beetje hulp bij...",
+        "starting": "Op gang komen",
+        "finishing": "Het afmaken",
+        "staying": "Gefocust blijven",
+        "managing": "Mijn tijd beter beheren",
+        "other": "Iets anders...",
+        "otherPlaceholder": "Zoals wat?"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "Jouw eerste moment",
+      "cta": "Mijn moment maken",
+      "durationLabel": "Hoe lang?",
+      "namePlaceholder": "Geef je moment een naam..."
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "Daar gaan we!",
+      "subtitle": "Jouw eerste moment is klaar. Tik om te beginnen.",
+      "cta": "Mijn timer starten",
+      "ctaHint": "Start je eerste timer",
+      "defaultActivity": "Mijn moment"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "Jouw tijd is van jou",
+        "tapToContinue": "Wanneer je klaar bent"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "Een timer die zich aan jou aanpast",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "Mis het einde van je momenten niet",
+        "body": "Je timer waarschuwt je, ook als je een andere app gebruikt of je scherm vergrendeld is.",
+        "ctaPrimary": "Ja, waarschuw me",
+        "ctaSecondary": "Misschien later"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "Jouw geluid",
+        "skip": "Overslaan →"
       }
     }
   },
@@ -114,14 +116,14 @@
       "soundDescription": "Kies het geluid dat aan het einde van de timer wordt afgespeeld",
       "keepAwakeDescriptionOn": "Scherm blijft wakker tijdens timer",
       "keepAwakeDescriptionOff": "Scherm kan vergrendelen tijdens timer",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial"
+      "longPressStart": "Lang indrukken om te starten inschakelen",
+      "longPressStartDescriptionOn": "Ingedrukt houden om de timer te starten",
+      "longPressStartDescriptionOff": "Eenvoudige tik om te starten",
+      "longPressStop": "Lang indrukken om te stoppen inschakelen",
+      "longPressStopDescriptionOn": "Ingedrukt houden om de timer te stoppen",
+      "longPressStopDescriptionOff": "Eenvoudige tik om te stoppen",
+      "dialScale": "Wijzerplaatbereik",
+      "dialScaleDescription": "Maximale duur die op de wijzerplaat wordt weergegeven"
     },
     "appearance": {
       "themeLight": "☀️ Licht",
@@ -138,47 +140,47 @@
       "version": "Versie"
     },
     "tool": {
-      "sectionTitle": "Minimal display mode",
+      "sectionTitle": "Minimale weergavemodus",
       "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
+        "label": "Creatief",
+        "description": "Kleurcarrousel"
       },
       "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
+        "label": "Multitasken",
+        "description": "Activiteitencarrousel"
       },
       "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
+        "label": "Precisie",
+        "description": "Digitale timer met +/- bediening"
       }
     },
     "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
+      "configuration": "CONFIGURATIE",
+      "timerOptions": "Timeropties",
       "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
+      "notificationSound": "Meldingsgeluid",
+      "theme": "Thema",
+      "favorites": "JOUW FAVORIETEN",
       "ambiance": "AMBIANCE",
       "info": "INFO"
     },
     "favorites": {
       "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
+        "title": "Favoriete paletten",
+        "description": "Selecteer tot 4 favoriete paletten (%{count}/4)",
+        "morePalettes": "Meer paletten"
       },
       "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
+        "title": "Favoriete activiteiten",
+        "description": "Selecteer tot 4 favoriete activiteiten (%{count}/4)",
+        "more": "Meer"
       }
     },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "activityEmoji": "Activiteitsemoji in het midden",
+      "activityEmojiDescriptionOn": "Emoji wordt in het midden van de wijzerplaat getoond",
+      "activityEmojiDescriptionOff": "Emoji is verborgen",
+      "pulseAnimation": "Pulsanimatie"
     }
   },
   "premium": {
@@ -188,8 +190,8 @@
     "price": "Daarna %{price} eenmalig.\nVan jou voor altijd.",
     "startTrial": "7 dagen gratis proberen",
     "restore": "Mijn aankopen herstellen",
-    "welcomeTitle": "Welkom Premium! 🎉",
-    "welcomeMessage": "Alle paletten en activiteiten zijn nu ontgrendeld.",
+    "welcomeTitle": "Welkom bij Ambiances! 🎉",
+    "welcomeMessage": "Alle paletten, onbeperkte rituelen en Ambiances-geluiden zijn nu ontgrendeld.",
     "welcomeButton": "Geweldig!",
     "noConnection": "Geen verbinding",
     "noConnectionMessage": "Kan aanbiedingen niet laden. Controleer je internetverbinding.",
@@ -198,18 +200,30 @@
     "errorPurchase": "Er is een fout opgetreden tijdens de aankoop.",
     "paymentPending": "Betaling in behandeling",
     "restoreSuccess": "Herstel succesvol",
-    "restoreSuccessMessage": "Je aankopen zijn hersteld. Alle premium functies zijn ontgrendeld.",
+    "restoreSuccessMessage": "Je aankopen zijn hersteld. Alle Ambiances-functies zijn ontgrendeld.",
     "restoreNone": "Geen aankoop gevonden",
     "restoreNoneMessage": "Er is geen eerdere aankoop gevonden voor dit account.",
     "restoreError": "Kan je aankopen niet herstellen.",
     "unexpectedError": "Er is een onverwachte fout opgetreden.",
     "contactSupport": "Neem contact op met ondersteuning",
     "tooManyAttempts": "Neem contact op met de ondersteuning als het probleem aanhoudt.",
-    "errorNetwork": "No internet connection. Check your network and try again.",
-    "errorStore": "Problem with the store. Try again later.",
-    "errorPaymentPending": "Payment pending. Check your purchases in a few minutes.",
-    "errorRestoreGeneric": "Restore error",
-    "errorGeneric": "An error occurred"
+    "errorNetwork": "Geen internetverbinding. Controleer je netwerk en probeer het opnieuw.",
+    "errorStore": "Probleem met de store. Probeer het later opnieuw.",
+    "errorPaymentPending": "Betaling in behandeling. Controleer je aankopen over een paar minuten.",
+    "errorRestoreGeneric": "Herstelfout",
+    "errorGeneric": "Er is een fout opgetreden"
+  },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Volledige paletten, onbeperkte rituelen, zachte geluiden om je sessies aan te kleden — alles om je wijzerplaat te laten ademen, op jouw tempo.",
+    "features": {
+      "palettes": "10 extra kleurenpaletten",
+      "rituals": "onbeperkte rituelen",
+      "sounds": "Ambiances-geluiden"
+    },
+    "price": "%{price}, eenmalig. Voor altijd van jou.",
+    "startTrial": "7 dagen gratis proberen",
+    "breatheInvitation": "Wil je het laten ademen? Ontdek Ambiances"
   },
   "activities": {
     "none": "Basis",
@@ -227,8 +241,8 @@
     "homework": "Huiswerk",
     "music": "Muziek",
     "cleaning": "Schoonmaken",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "Dutje",
+    "writing": "Schrijven"
   },
   "palettes": {
     "earth": "Aarde",
@@ -238,78 +252,66 @@
     "zen": "Zen",
     "forest": "Bos",
     "ocean": "Oceaan",
-    "dawn": "Aurora",
+    "dawn": "Dageraad",
     "dusk": "Schemering",
     "soft": "Zacht",
-    "autumn": "Herfst",
     "lavender": "Lavendel",
     "teal": "Blauwgroen",
-    "darkLaser": "Dark Laser",
-    "serenity": "Serenity"
+    "serenity": "Sereniteit"
   },
   "sounds": {
-    "bell_classic": "Klassieke bel",
-    "bell_melodic": "Melodieuze bel",
-    "microwave_vintage": "Vintage magnetron",
-    "microwave_ping": "Magnetron ping",
-    "kitchen_timer": "Kookwekker",
-    "kitchen_timer_2": "Mechanische timer",
-    "egg_timer": "Eierklok",
-    "toaster_bell": "Broodrooster",
-    "ding_effect": "Simpele ding",
-    "timer_complete": "Timer voltooid"
+    "jingle_achievement": "Prestatie",
+    "singing_bowl": "Klankschaal",
+    "contrabass_pluck": "Lage snaar",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibrafoon",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Oplopende marimba",
+    "up_chime": "Klokkenspel",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Scherm wakker houden",
     "rotationDirection": "Draairichting",
-    "activity": "Activité: %{name}",
-    "activityLocked": "Activité premium - Déverouiller pour accéder",
-    "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
-    "moreActivities": "Découvrir plus d'activités",
-    "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
-    "closePremiumModal": "Close premium offer",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
-    "restorePurchasesHint": "Restore premium access if you already purchased",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "colorNumber": "Kleur %{number}",
+    "discoverMorePalettes": "Tik om meer paletten te ontdekken",
+    "celebrationEmoji": "Viering",
+    "closeCreateActivity": "Activiteit maken sluiten",
+    "closeEditActivity": "Activiteit bewerken sluiten",
+    "closeModalHint": "Sluit dit dialoogvenster en keert terug naar de app",
+    "closePremiumModal": "Ambiances-aanbieding sluiten",
+    "createActivityHint": "Maakt de aangepaste activiteit en voegt deze toe aan je lijst",
+    "deleteActivityHint": "Verwijdert deze aangepaste activiteit permanent",
+    "exploreSettingsHint": "Opent instellingen om premium functies te ontdekken",
+    "restorePurchases": "Eerdere aankopen herstellen",
+    "restorePurchasesHint": "Ambiances-toegang herstellen als je al hebt gekocht",
+    "saveActivityHint": "Slaat wijzigingen aan deze activiteit op",
+    "unlockPremiumHint": "Start een gratis proefperiode van 7 dagen, daarna eenmalige betaling",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "dialAdjustable": "Aanpasbaar. Veeg omhoog of omlaag om de duur te wijzigen.",
+      "dialTapToToggle": "Tik om de timer te starten of te pauzeren",
+      "timerCompleted": "Timer voltooid!",
+      "timerRunning": "Timer loopt",
+      "timerStopped": "Timer gestopt",
+      "activityStarted": "%{activity} gestart",
+      "activityCompleted": "%{activity} voltooid",
+      "startTimer": "Timer starten",
+      "stopTimer": "Timer stoppen",
+      "resetTimer": "Timer resetten",
+      "dial": "Timerwijzerplaat, %{minutes} minuten ingesteld, %{activity}"
     },
-    "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Probeer 7 dagen gratis",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "unlockPremium": "Ambiances ontgrendelen voor %{price}",
+    "paletteItem": "Kleurenpalet: %{name}",
+    "showTime": "Tijd tonen",
+    "applyRitual": "Het ritueel %{name} toepassen",
+    "editRitual": "Het ritueel %{name} bewerken",
+    "createRitual": "Een ritueel maken",
+    "closeRitualForm": "Het ritueelformulier sluiten",
+    "chooseCustomEmoji": "Een ander emoji via het toetsenbord kiezen",
+    "ritualNamePreset": "Vooraf ingesteld ritueel %{name}",
+    "deleteRitual": "Ritueel %{name} verwijderen",
+    "favoriteRitual": "Favoriet ritueel %{name}",
+    "distraction": "Afleiding"
   },
   "customActivities": {
     "toast": {
@@ -318,71 +320,60 @@
       "deleted": "Moment supprimé"
     },
     "addButton": "Ajouter un moment",
-    "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "Activiteit aanmaken",
+      "namePlaceholder": "Bijv: Gitaar, Koken...",
+      "nameLabel": "Naam van de activiteit",
+      "emojiLabel": "Emoji kiezen",
+      "emojiPlaceholder": "Tik om te kiezen",
+      "durationLabel": "Standaardduur",
+      "preview": "Voorbeeld",
+      "previewPlaceholder": "Mijn activiteit",
+      "buttonCreate": "Aanmaken",
+      "errorTitle": "Ontbrekende informatie",
+      "errorEmoji": "Kies een emoji voor je activiteit.",
+      "errorName": "Voer een naam in voor je activiteit."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "Activiteit bewerken",
+      "buttonSave": "Opslaan",
+      "buttonDelete": "Verwijderen",
+      "deleteConfirmTitle": "Verwijderen?",
+      "deleteConfirmMessage": "Deze actie is onomkeerbaar.",
+      "usageStats": "%{count} keer gebruikt"
     },
     "duration": {
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "Een moment voor jezelf?",
-        "bodyPersonalized": "Je {{name}} wacht op je {{emoji}} — {{duration}} min voor jezelf?",
-        "bodyGeneric": "Je timer wacht op je — neem een moment voor jezelf"
-      },
-      "day7": {
-        "title": "Laatste kans",
-        "body": "7 dagen gratis proefperiode — grijp het voordat het verloopt"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "Duur verlagen",
+      "increaseDuration": "Duur verhogen",
+      "timeLabel": "Tijd: %{time}",
+      "durationLabel": "Duur: %{time}",
+      "showTime": "Tijd tonen",
+      "tapToHide": "Tik om te verbergen",
+      "tapToShow": "Tik om te tonen"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "Met de klok mee",
+      "counterClockwise": "Tegen de klok in"
+    },
+    "distraction": {
+      "tryMe": "Verras me"
     }
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
+    "title": "Je hebt 2 momenten gemaakt!",
+    "message": "Wil je meer kleuren en activiteiten ontdekken?",
     "explore": "Ontdekken",
-    "dismiss": "Maybe later"
+    "dismiss": "Misschien later"
   },
   "timerMessages": {
     "none": {
-      "startMessage": "Ready",
-      "endMessage": "Well done 🎉"
+      "startMessage": "Klaar",
+      "endMessage": "Goed gedaan 🎉"
     },
     "work": {
       "startMessage": "Focus",
@@ -401,52 +392,116 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "Duik erin",
+      "endMessage": "Verrijkt 📖"
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "Leer",
+      "endMessage": "Gevorderd 📈"
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "Adem",
+      "endMessage": "Vredig 🪷"
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "Bewegen",
+      "endMessage": "Energiek ⚡"
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "Wandel",
+      "endMessage": "Verkwikt 🌿"
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "Bereiden",
+      "endMessage": "Voldaan 🍽️"
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "Spelen",
+      "endMessage": "Ontspannen 🎮"
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "Concentreer",
+      "endMessage": "Voltooid ✅"
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "Speel",
+      "endMessage": "Harmonieus 🎵"
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "Opruimen",
+      "endMessage": "Sereen ✨"
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "Rusten",
+      "endMessage": "Verfrist 💤"
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "Schrijf",
+      "endMessage": "Bevrijd ✍️"
+    },
+    "custom": {
+      "startMessage": "Daar gaan we",
+      "endMessage": "Klaar ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Mijn rituelen",
+    "base": {
+      "meditation": "Ademhaling",
+      "break": "Koffiepauze",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Mijn rituelen",
+      "createRow": "Een ritueel maken",
+      "empty": "Nog geen rituelen",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Een ritueel maken",
+      "editTitle": "Ritueel bewerken",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Ander emoji",
+      "colorLabel": "Kleur",
+      "durationLabel": "Duur",
+      "soundLabel": "Eindgeluid",
+      "saveButton": "Opslaan",
+      "deleteButton": "Verwijderen",
+      "deleteConfirmTitle": "Dit ritueel verwijderen?",
+      "deleteConfirmMessage": "Deze actie is onomkeerbaar.",
+      "customActivityName": "Mijn ritueel",
+      "customEmojiOther": "anders…",
+      "customEmojiPlaceholder": "Jouw emoji",
+      "customEmojiHint": "Schakel met de globe 🌐 naar je emoji-toetsenbord"
+    },
+    "restoreBase": "Basisrituelen herstellen"
+  },
+  "palettesPanel": {
+    "sheetRow": "Paletten",
+    "title": "Paletten",
+    "included": "Inbegrepen",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-palet — probeer het vrij uit",
+    "ambiancesDiscover": "Ambiances ontdekken"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Focus"
+  },
+  "focus": {
+    "hint": "Veeg omhoog"
+  },
+  "firstRun": {
+    "skip": "Overslaan",
+    "welcome": "Laten we beginnen met het kiezen van een activiteit 👇",
+    "companion": "Deze emoji houdt je gezelschap. Schuif de schijf om je tijd in te stellen.",
+    "dialColor": "Een kleur? Die verandert meteen.",
+    "ready": "Helemaal klaar. Raak de schijf aan om te starten."
+  },
+  "aside": {
+    "exitFocus": "Focus verlaten",
+    "doubleTapHint": "Tip: dubbeltik op de achtergrond om te wisselen",
+    "handle": "Instellingen openen",
+    "closedLabel": "Rituelen & instellingen"
   }
 }
