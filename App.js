@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DEV_MODE, SHOW_DEV_FAB, DEV_DEFAULT_TIMER_CONFIG } from './src/config/test-mode';
 import DevFab from './src/dev/components/DevFab';
 import { DevPremiumProvider } from './src/dev/DevPremiumContext';
+import { DevDragScaleProvider } from './src/dev/DevDragScaleContext';
 import { getActivityById } from './src/config/activities';
 // ==============================
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
@@ -203,22 +204,25 @@ export default function App() {
       <TimerConfigProvider>
         <TimerRemainingProvider>
           <DevPremiumProvider>
-            <GestureHandlerRootView style={styles.container}>
-              {renderContent()}
-              <DevFab
-                onResetOnboarding={handleResetOnboarding}
-                onResetTimerConfig={handleResetTimerConfig}
-                onResetTooltip={handleResetTooltip}
-                onResetToVanilla={handleResetToVanilla}
-              />
-            </GestureHandlerRootView>
+            <DevDragScaleProvider>
+              <GestureHandlerRootView style={styles.container}>
+                {renderContent()}
+                <DevFab
+                  onResetOnboarding={handleResetOnboarding}
+                  onResetTimerConfig={handleResetTimerConfig}
+                  onResetTooltip={handleResetTooltip}
+                  onResetToVanilla={handleResetToVanilla}
+                />
+              </GestureHandlerRootView>
+            </DevDragScaleProvider>
           </DevPremiumProvider>
         </TimerRemainingProvider>
       </TimerConfigProvider>
     );
   }
 
-  // Production ou dev sans FAB: app normale
+  // Production ou dev sans FAB: app normale (pas de DevDragScaleProvider —
+  // useDevDragScale retombe sur OFF, comportement actuel)
   return (
     <TimerConfigProvider>
       <TimerRemainingProvider>
