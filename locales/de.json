@@ -3,7 +3,9 @@
     "cancel": "Abbrechen",
     "ok": "OK",
     "retry": "Erneut versuchen",
-    "continue": "Weiter"
+    "continue": "Weiter",
+    "back": "Zurück",
+    "delete": "Löschen"
   },
   "welcome": {
     "title": "Willkommen bei ResetPulse"
@@ -211,6 +213,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Vollständige Paletten, unbegrenzte Rituale, sanfte Klänge für deine Sitzungen — alles, damit dein Zifferblatt atmet, in deinem Tempo.",
+    "features": {
+      "palettes": "10 weitere Farbpaletten",
+      "rituals": "unbegrenzte Rituale",
+      "sounds": "Ambiances-Klänge"
+    },
+    "price": "%{price}, einmalig. Für immer deins.",
+    "startTrial": "7 Tage kostenlos testen",
+    "breatheInvitation": "Willst du es zum Atmen bringen? Entdecke Ambiances"
+  },
   "activities": {
     "none": "Basis",
     "work": "Arbeit",
@@ -241,23 +255,20 @@
     "dawn": "Aurora",
     "dusk": "Dämmerung",
     "soft": "Sanft",
-    "autumn": "Herbst",
     "lavender": "Lavendel",
     "teal": "Türkis",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "Klassische Glocke",
-    "bell_melodic": "Melodische Glocke",
-    "microwave_vintage": "Vintage Mikrowelle",
-    "microwave_ping": "Mikrowellen-Ping",
-    "kitchen_timer": "Küchentimer",
-    "kitchen_timer_2": "Mechanischer Timer",
-    "egg_timer": "Eieruhr",
-    "toaster_bell": "Toaster-Glocke",
-    "ding_effect": "Einfaches Ding",
-    "timer_complete": "Timer komplett"
+    "jingle_achievement": "Erfolg",
+    "singing_bowl": "Klangschale",
+    "contrabass_pluck": "Tiefe Saite",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibraphon",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Aufsteigende Marimba",
+    "up_chime": "Glockenspiel",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Bildschirm wach halten",
@@ -295,21 +306,17 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "7 Tage kostenlos testen",
-    "activities": "Premium-Aktivitäten",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "showTime": "Zeit anzeigen",
+    "applyRitual": "Das Ritual %{name} anwenden",
+    "editRitual": "Das Ritual %{name} bearbeiten",
+    "createRitual": "Ein Ritual erstellen",
+    "closeRitualForm": "Das Ritualformular schließen",
+    "chooseCustomEmoji": "Ein anderes Emoji über die Tastatur wählen",
+    "ritualNamePreset": "Voreingestelltes Ritual %{name}",
+    "deleteRitual": "Ritual %{name} löschen",
+    "favoriteRitual": "Favoritritual %{name}",
+    "distraction": "Ablenkung"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +352,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "Ein Moment für dich?",
-        "bodyPersonalized": "Deine {{name}} wartet {{emoji}} — {{duration}} Min für dich?",
-        "bodyGeneric": "Dein Timer wartet — nimm dir einen Moment für dich"
-      },
-      "day7": {
-        "title": "Letzte Chance",
-        "body": "7 Tage kostenlos testen — nutze es bevor es abläuft"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +365,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "Überrasche mich"
     }
   },
   "twoTimers": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Los geht's",
+      "endMessage": "Fertig ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Meine Rituale",
+    "base": {
+      "meditation": "Atmung",
+      "break": "Kaffeepause",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Meine Rituale",
+      "createRow": "Ein Ritual erstellen",
+      "empty": "Noch keine Rituale",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Ein Ritual erstellen",
+      "editTitle": "Ritual bearbeiten",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Anderes Emoji",
+      "colorLabel": "Farbe",
+      "durationLabel": "Dauer",
+      "soundLabel": "Ton am Ende",
+      "saveButton": "Speichern",
+      "deleteButton": "Löschen",
+      "deleteConfirmTitle": "Dieses Ritual löschen?",
+      "deleteConfirmMessage": "Diese Aktion ist unwiderruflich.",
+      "customActivityName": "Mein Ritual",
+      "customEmojiOther": "andere…",
+      "customEmojiPlaceholder": "Dein Emoji",
+      "customEmojiHint": "Wechsle mit dem Globus 🌐 zu deiner Emoji-Tastatur"
+    },
+    "restoreBase": "Basisrituale wiederherstellen"
+  },
+  "palettesPanel": {
+    "sheetRow": "Paletten",
+    "title": "Paletten",
+    "included": "Enthalten",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-Palette — probier sie frei aus",
+    "ambiancesDiscover": "Ambiances entdecken"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Fokus"
+  },
+  "focus": {
+    "hint": "Nach oben wischen"
+  },
+  "firstRun": {
+    "skip": "Überspringen",
+    "welcome": "Beginnen wir mit der Wahl einer Aktivität 👇",
+    "companion": "Dieses Emoji leistet dir Gesellschaft. Schiebe die Scheibe, um deine Zeit einzustellen.",
+    "dialColor": "Eine Farbe? Sie ändert sich sofort.",
+    "ready": "Alles bereit. Tippe auf die Scheibe, um zu starten."
+  },
+  "aside": {
+    "exitFocus": "Fokus verlassen",
+    "doubleTapHint": "Tipp: Doppeltippen auf den Hintergrund zum Wechseln",
+    "handle": "Einstellungen öffnen",
+    "closedLabel": "Rituale & Einstellungen"
   }
 }

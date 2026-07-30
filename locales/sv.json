@@ -3,7 +3,9 @@
     "cancel": "Avbryt",
     "ok": "OK",
     "retry": "Försök igen",
-    "continue": "Fortsätt"
+    "continue": "Fortsätt",
+    "back": "Tillbaka",
+    "delete": "Ta bort"
   },
   "welcome": {
     "title": "Välkommen till ResetPulse"
@@ -211,6 +213,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Fullständiga paletter, obegränsade ritualer, mjuka ljud som klär din session — allt för att få din urtavla att andas, i din takt.",
+    "features": {
+      "palettes": "10 fler färgpaletter",
+      "rituals": "obegränsade ritualer",
+      "sounds": "Ambiances-ljud"
+    },
+    "price": "%{price}, en gång. Din för alltid.",
+    "startTrial": "Prova 7 dagar gratis",
+    "breatheInvitation": "Vill du få den att andas? Upptäck Ambiances"
+  },
   "activities": {
     "none": "Grundläggande",
     "work": "Arbete",
@@ -241,23 +255,20 @@
     "dawn": "Aurora",
     "dusk": "Skymning",
     "soft": "Mild",
-    "autumn": "Höst",
     "lavender": "Lavendel",
     "teal": "Blågrön",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "Klassisk klocka",
-    "bell_melodic": "Melodisk klocka",
-    "microwave_vintage": "Vintage mikrovågsugn",
-    "microwave_ping": "Mikrovågsugn ping",
-    "kitchen_timer": "Kökstimer",
-    "kitchen_timer_2": "Mekanisk timer",
-    "egg_timer": "Äggtimer",
-    "toaster_bell": "Brödrost",
-    "ding_effect": "Enkel ding",
-    "timer_complete": "Timer slutförd"
+    "jingle_achievement": "Prestation",
+    "singing_bowl": "Klangskål",
+    "contrabass_pluck": "Låg sträng",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibrafon",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Stigande marimba",
+    "up_chime": "Klockspel",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Håll skärmen vaken",
@@ -295,21 +306,17 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Prova 7 dagar gratis",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "showTime": "Visa tid",
+    "applyRitual": "Tillämpa ritualen %{name}",
+    "editRitual": "Redigera ritualen %{name}",
+    "createRitual": "Skapa en ritual",
+    "closeRitualForm": "Stäng ritualformuläret",
+    "chooseCustomEmoji": "Välj en annan emoji via tangentbordet",
+    "ritualNamePreset": "Förinställd ritual %{name}",
+    "deleteRitual": "Ta bort ritualen %{name}",
+    "favoriteRitual": "Favoritritual %{name}",
+    "distraction": "Distraktion"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +352,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "En stund för dig själv?",
-        "bodyPersonalized": "Din {{name}} väntar på dig {{emoji}} — {{duration}} min för dig?",
-        "bodyGeneric": "Din timer väntar — ta en stund för dig själv"
-      },
-      "day7": {
-        "title": "Sista chansen",
-        "body": "7 dagars gratis provperiod — ta den innan den går ut"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +365,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "Överraska mig"
     }
   },
   "twoTimers": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Nu kör vi",
+      "endMessage": "Klart ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Mina ritualer",
+    "base": {
+      "meditation": "Andning",
+      "break": "Kaffepaus",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Mina ritualer",
+      "createRow": "Skapa en ritual",
+      "empty": "Inga ritualer än",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Skapa en ritual",
+      "editTitle": "Redigera ritual",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Annan emoji",
+      "colorLabel": "Färg",
+      "durationLabel": "Varaktighet",
+      "soundLabel": "Slutljud",
+      "saveButton": "Spara",
+      "deleteButton": "Ta bort",
+      "deleteConfirmTitle": "Ta bort denna ritual?",
+      "deleteConfirmMessage": "Denna åtgärd kan inte ångras.",
+      "customActivityName": "Min ritual",
+      "customEmojiOther": "annat…",
+      "customEmojiPlaceholder": "Din emoji",
+      "customEmojiHint": "Växla till ditt emoji-tangentbord med jordgloben 🌐"
+    },
+    "restoreBase": "Återställ grundritualer"
+  },
+  "palettesPanel": {
+    "sheetRow": "Paletter",
+    "title": "Paletter",
+    "included": "Inkluderade",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-palett — prova den fritt",
+    "ambiancesDiscover": "Upptäck Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Fokus"
+  },
+  "focus": {
+    "hint": "Svep uppåt"
+  },
+  "firstRun": {
+    "skip": "Hoppa över",
+    "welcome": "Vi börjar med att välja en aktivitet 👇",
+    "companion": "Den här emojin håller dig sällskap. Dra i skivan för att ställa in din tid.",
+    "dialColor": "En färg? Den ändras direkt.",
+    "ready": "Allt klart. Tryck på skivan för att starta."
+  },
+  "aside": {
+    "exitFocus": "Lämna fokus",
+    "doubleTapHint": "Tips: dubbeltryck på bakgrunden för att växla",
+    "handle": "Öppna inställningar",
+    "closedLabel": "Ritualer & inställningar"
   }
 }

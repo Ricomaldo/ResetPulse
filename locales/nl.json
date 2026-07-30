@@ -3,7 +3,9 @@
     "cancel": "Annuleren",
     "ok": "OK",
     "retry": "Opnieuw proberen",
-    "continue": "Doorgaan"
+    "continue": "Doorgaan",
+    "back": "Terug",
+    "delete": "Verwijderen"
   },
   "welcome": {
     "title": "Welkom bij ResetPulse"
@@ -211,6 +213,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Volledige paletten, onbeperkte rituelen, zachte geluiden om je sessies aan te kleden — alles om je wijzerplaat te laten ademen, op jouw tempo.",
+    "features": {
+      "palettes": "10 extra kleurenpaletten",
+      "rituals": "onbeperkte rituelen",
+      "sounds": "Ambiances-geluiden"
+    },
+    "price": "%{price}, eenmalig. Voor altijd van jou.",
+    "startTrial": "7 dagen gratis proberen",
+    "breatheInvitation": "Wil je het laten ademen? Ontdek Ambiances"
+  },
   "activities": {
     "none": "Basis",
     "work": "Werk",
@@ -241,23 +255,20 @@
     "dawn": "Aurora",
     "dusk": "Schemering",
     "soft": "Zacht",
-    "autumn": "Herfst",
     "lavender": "Lavendel",
     "teal": "Blauwgroen",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "Klassieke bel",
-    "bell_melodic": "Melodieuze bel",
-    "microwave_vintage": "Vintage magnetron",
-    "microwave_ping": "Magnetron ping",
-    "kitchen_timer": "Kookwekker",
-    "kitchen_timer_2": "Mechanische timer",
-    "egg_timer": "Eierklok",
-    "toaster_bell": "Broodrooster",
-    "ding_effect": "Simpele ding",
-    "timer_complete": "Timer voltooid"
+    "jingle_achievement": "Prestatie",
+    "singing_bowl": "Klankschaal",
+    "contrabass_pluck": "Lage snaar",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibrafoon",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Oplopende marimba",
+    "up_chime": "Klokkenspel",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Scherm wakker houden",
@@ -295,21 +306,17 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Probeer 7 dagen gratis",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "showTime": "Tijd tonen",
+    "applyRitual": "Het ritueel %{name} toepassen",
+    "editRitual": "Het ritueel %{name} bewerken",
+    "createRitual": "Een ritueel maken",
+    "closeRitualForm": "Het ritueelformulier sluiten",
+    "chooseCustomEmoji": "Een ander emoji via het toetsenbord kiezen",
+    "ritualNamePreset": "Vooraf ingesteld ritueel %{name}",
+    "deleteRitual": "Ritueel %{name} verwijderen",
+    "favoriteRitual": "Favoriet ritueel %{name}",
+    "distraction": "Afleiding"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +352,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "Een moment voor jezelf?",
-        "bodyPersonalized": "Je {{name}} wacht op je {{emoji}} — {{duration}} min voor jezelf?",
-        "bodyGeneric": "Je timer wacht op je — neem een moment voor jezelf"
-      },
-      "day7": {
-        "title": "Laatste kans",
-        "body": "7 dagen gratis proefperiode — grijp het voordat het verloopt"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +365,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "Verras me"
     }
   },
   "twoTimers": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Daar gaan we",
+      "endMessage": "Klaar ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Mijn rituelen",
+    "base": {
+      "meditation": "Ademhaling",
+      "break": "Koffiepauze",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Mijn rituelen",
+      "createRow": "Een ritueel maken",
+      "empty": "Nog geen rituelen",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Een ritueel maken",
+      "editTitle": "Ritueel bewerken",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Ander emoji",
+      "colorLabel": "Kleur",
+      "durationLabel": "Duur",
+      "soundLabel": "Eindgeluid",
+      "saveButton": "Opslaan",
+      "deleteButton": "Verwijderen",
+      "deleteConfirmTitle": "Dit ritueel verwijderen?",
+      "deleteConfirmMessage": "Deze actie is onomkeerbaar.",
+      "customActivityName": "Mijn ritueel",
+      "customEmojiOther": "anders…",
+      "customEmojiPlaceholder": "Jouw emoji",
+      "customEmojiHint": "Schakel met de globe 🌐 naar je emoji-toetsenbord"
+    },
+    "restoreBase": "Basisrituelen herstellen"
+  },
+  "palettesPanel": {
+    "sheetRow": "Paletten",
+    "title": "Paletten",
+    "included": "Inbegrepen",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-palet — probeer het vrij uit",
+    "ambiancesDiscover": "Ambiances ontdekken"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Focus"
+  },
+  "focus": {
+    "hint": "Veeg omhoog"
+  },
+  "firstRun": {
+    "skip": "Overslaan",
+    "welcome": "Laten we beginnen met het kiezen van een activiteit 👇",
+    "companion": "Deze emoji houdt je gezelschap. Schuif de schijf om je tijd in te stellen.",
+    "dialColor": "Een kleur? Die verandert meteen.",
+    "ready": "Helemaal klaar. Raak de schijf aan om te starten."
+  },
+  "aside": {
+    "exitFocus": "Focus verlaten",
+    "doubleTapHint": "Tip: dubbeltik op de achtergrond om te wisselen",
+    "handle": "Instellingen openen",
+    "closedLabel": "Rituelen & instellingen"
   }
 }
