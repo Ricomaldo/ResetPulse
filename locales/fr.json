@@ -278,9 +278,12 @@
     "teal": "Canard"
   },
   "sounds": {
-    "jingle_achievement": "Accompli",
+    "timer_complete": "Accompli",
+    "microwave_ping": "Ping",
     "singing_bowl": "Bol chantant",
     "contrabass_pluck": "Corde grave",
+    "toaster_bell": "Pop",
+    "jingle_achievement": "Fanfare",
     "kalimba": "Kalimba",
     "vibraphone_chord": "Vibraphone",
     "marimba_dry": "Marimba",

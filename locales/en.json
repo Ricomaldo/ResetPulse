@@ -278,9 +278,12 @@
     "teal": "Teal"
   },
   "sounds": {
-    "jingle_achievement": "Achievement",
+    "timer_complete": "Done",
+    "microwave_ping": "Ping",
     "singing_bowl": "Singing bowl",
     "contrabass_pluck": "Low string",
+    "toaster_bell": "Pop",
+    "jingle_achievement": "Fanfare",
     "kalimba": "Kalimba",
     "vibraphone_chord": "Vibraphone",
     "marimba_dry": "Marimba",
