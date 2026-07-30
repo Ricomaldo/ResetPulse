@@ -4,15 +4,16 @@
  * Durée → Son de fin. Emoji custom (SCR-17) : clavier système, crée une
  * Activité anonyme à la volée (ADR-015) — invisible pour l'user.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useTranslation } from '../../hooks/useTranslation';
 import { getActivityById } from '../../config/activities';
 import { deriveRitualName, resolveRitualActivity, shouldDeriveNameFromActivity, suggestedColorFor } from '../../config/rituals';
 import { DEFAULT_SOUND_ID } from '../../config/sounds';
+import { getAllPalettes, TIMER_PALETTES } from '../../config/timer-palettes';
 import DurationSlider from '../pickers/DurationSlider';
 import SoundPicker from '../pickers/SoundPicker';
 import { fontWeights } from '../../theme/tokens';
@@ -21,12 +22,105 @@ import haptics from '../../utils/haptics';
 
 const FORM_ACTIVITY_IDS = ['meditation', 'break', 'work'];
 
+/**
+ * Carrousel de couleurs paginé LOCAL au formulaire (C2/D7, hotfix-porte-1) —
+ * remplace les 4 pastilles tirées de la palette globale courante (résidu de
+ * portage : la couleur d'un rituel est stockée EN VALEUR hex, ADR-015, elle
+ * n'a pas à suivre la palette active de l'écran). Une page = une palette
+ * possédée (`getAllPalettes(isPremium)`) ; la sélection reste locale au
+ * formulaire (prop `color`/`onSelectColor`, pas le contexte global). N'est
+ * PAS le PaletteCarousel legacy (mort en C3, couplé au contexte global).
+ */
+function RitualColorCarousel({ color, onSelectColor }) {
+  const theme = useTheme();
+  const t = useTranslation();
+  const { isPremium } = usePremiumStatus();
+  const paletteKeys = getAllPalettes(isPremium);
+  const initialPage = Math.max(0, paletteKeys.findIndex((key) => TIMER_PALETTES[key].colors.includes(color)));
+  const [containerWidth, setContainerWidth] = useState(0);
+  const scrollRef = useRef(null);
+  const hasScrolledToInitial = useRef(false);
+
+  useEffect(() => {
+    if (containerWidth > 0 && !hasScrolledToInitial.current) {
+      hasScrolledToInitial.current = true;
+      if (initialPage > 0) {
+        scrollRef.current?.scrollTo({ x: initialPage * containerWidth, animated: false });
+      }
+    }
+  }, [containerWidth, initialPage]);
+
+  const styles = StyleSheet.create({
+    colorDot: {
+      borderColor: theme.colors.shadow,
+      borderRadius: theme.borderRadius.round,
+      borderWidth: 1.5,
+      height: rs(32, 'min'),
+      padding: 3,
+      width: rs(32, 'min'),
+    },
+    colorDotActive: {
+      borderColor: theme.colors.text,
+      borderWidth: 2,
+    },
+    colorDotInner: {
+      borderRadius: theme.borderRadius.round,
+      flex: 1,
+    },
+    colorRow: {
+      flexDirection: 'row',
+      gap: theme.spacing.md,
+    },
+    page: {
+      alignItems: 'center',
+    },
+    pageName: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+      fontWeight: fontWeights.medium,
+      marginBottom: theme.spacing.xs,
+      textAlign: 'center',
+    },
+  });
+
+  return (
+    <View onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
+      <ScrollView ref={scrollRef} horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
+        {paletteKeys.map((key) => {
+          const { colors, name } = TIMER_PALETTES[key];
+          return (
+            <View key={key} style={[styles.page, { width: containerWidth }]}>
+              <Text style={styles.pageName}>{name}</Text>
+              <View style={styles.colorRow}>
+                {colors.map((paletteColor, index) => (
+                  <TouchableOpacity
+                    key={paletteColor}
+                    style={[styles.colorDot, color === paletteColor && styles.colorDotActive]}
+                    onPress={() => {
+                      haptics.selection().catch(() => {});
+                      onSelectColor(paletteColor);
+                    }}
+                    activeOpacity={0.7}
+                    accessible
+                    accessibilityRole="button"
+                    accessibilityLabel={t('accessibility.colorNumber', { number: index + 1 })}
+                    accessibilityState={{ selected: color === paletteColor }}
+                  >
+                    <View style={[styles.colorDotInner, { backgroundColor: paletteColor }]} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
 export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
-  const {
-    palette: { paletteColors },
-  } = useTimerConfig();
   const { customActivities, createActivity } = useCustomActivities();
   const nativeEmojiInputRef = useRef(null);
 
@@ -143,26 +237,6 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
       color: theme.colors.textSecondary,
       fontSize: rs(18, 'min'),
     },
-    colorDot: {
-      borderColor: theme.colors.shadow,
-      borderRadius: theme.borderRadius.round,
-      borderWidth: 1.5,
-      height: rs(32, 'min'),
-      padding: 3,
-      width: rs(32, 'min'),
-    },
-    colorDotActive: {
-      borderColor: theme.colors.text,
-      borderWidth: 2,
-    },
-    colorDotInner: {
-      borderRadius: theme.borderRadius.round,
-      flex: 1,
-    },
-    colorRow: {
-      flexDirection: 'row',
-      gap: theme.spacing.md,
-    },
     deleteButton: {
       alignItems: 'center',
       marginTop: theme.spacing.md,
@@ -210,11 +284,13 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
       justifyContent: 'space-between',
       marginBottom: theme.spacing.sm,
     },
+    // C3 (hotfix-porte-1) : 0×0 refusait le focus iOS (pas de clavier emoji
+    // au tap) — 1×1 reste visuellement invisible (opacity 0) mais focusable.
     hiddenEmojiInput: {
-      height: 0,
+      height: 1,
       opacity: 0,
       position: 'absolute',
-      width: 0,
+      width: 1,
     },
     saveButton: {
       alignItems: 'center',
@@ -310,31 +386,12 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
           </View>
         </View>
 
-        {/* 2. Couleur */}
+        {/* 2. Couleur — carrousel paginé LOCAL au formulaire (C2/D7) : la
+            couleur d'un rituel est une valeur hex (ADR-015), elle ne suit
+            plus la palette globale de l'écran. */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t('rituals.form.colorLabel')}</Text>
-          <View style={styles.colorRow}>
-            {paletteColors.map((paletteColor, index) => (
-              <TouchableOpacity
-                key={paletteColor}
-                style={[
-                  styles.colorDot,
-                  color === paletteColor && styles.colorDotActive,
-                ]}
-                onPress={() => {
-                  haptics.selection().catch(() => {});
-                  setColor(paletteColor);
-                }}
-                activeOpacity={0.7}
-                accessible
-                accessibilityRole="button"
-                accessibilityLabel={t('accessibility.colorNumber', { number: index + 1 })}
-                accessibilityState={{ selected: color === paletteColor }}
-              >
-                <View style={[styles.colorDotInner, { backgroundColor: paletteColor }]} />
-              </TouchableOpacity>
-            ))}
-          </View>
+          <RitualColorCarousel color={color} onSelectColor={setColor} />
         </View>
 
         {/* 3. Durée */}
