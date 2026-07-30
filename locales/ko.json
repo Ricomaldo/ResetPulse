@@ -3,7 +3,9 @@
     "cancel": "취소",
     "ok": "확인",
     "retry": "다시 시도",
-    "continue": "계속"
+    "continue": "계속",
+    "back": "뒤로",
+    "delete": "삭제"
   },
   "welcome": {
     "title": "ResetPulse에 오신 것을 환영합니다"
@@ -211,6 +213,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "풀 팔레트, 무제한 루틴, 세션을 꾸며주는 부드러운 사운드 — 당신의 속도로 다이얼에 생기를 불어넣는 모든 것.",
+    "features": {
+      "palettes": "컬러 팔레트 10개 추가",
+      "rituals": "무제한 루틴",
+      "sounds": "Ambiances 사운드"
+    },
+    "price": "%{price}, 한 번만. 평생 당신의 것.",
+    "startTrial": "7일 무료 체험",
+    "breatheInvitation": "더 생동감 있게 만들고 싶어요? Ambiances 둘러보기"
+  },
   "activities": {
     "none": "기본",
     "work": "작업",
@@ -241,27 +255,25 @@
     "dawn": "오로라",
     "dusk": "황혼",
     "soft": "부드러운",
-    "autumn": "가을",
     "lavender": "라벤더",
     "teal": "청록",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "클래식 벨",
-    "bell_melodic": "멜로딕 벨",
-    "microwave_vintage": "빈티지 전자레인지",
-    "microwave_ping": "전자레인지 핑",
-    "kitchen_timer": "주방 타이머",
-    "kitchen_timer_2": "기계식 타이머",
-    "egg_timer": "에그 타이머",
-    "toaster_bell": "토스터",
-    "ding_effect": "심플 딩",
-    "timer_complete": "타이머 완료"
+    "jingle_achievement": "달성",
+    "singing_bowl": "싱잉볼",
+    "contrabass_pluck": "저음 현",
+    "kalimba": "칼림바",
+    "vibraphone_chord": "비브라폰",
+    "marimba_dry": "마림바",
+    "marimba_ascending": "상승하는 마림바",
+    "up_chime": "차임",
+    "success_glissando": "글리산도"
   },
   "accessibility": {
     "keepAwake": "화면 켜짐 유지",
     "rotationDirection": "회전 방향",
+    "showTime": "시간 표시",
     "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
@@ -295,21 +307,16 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "7일 무료 체험",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "distraction": "기분전환",
+    "applyRitual": "%{name} 루틴 적용",
+    "editRitual": "%{name} 루틴 편집",
+    "createRitual": "루틴 만들기",
+    "closeRitualForm": "루틴 양식 닫기",
+    "chooseCustomEmoji": "키보드로 다른 이모지 선택",
+    "ritualNamePreset": "프리셋 루틴 %{name}",
+    "deleteRitual": "%{name} 루틴 삭제",
+    "favoriteRitual": "즐겨찾기 루틴 %{name}"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +352,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "자신을 위한 시간?",
-        "bodyPersonalized": "당신의 {{name}}이 기다리고 있어요 {{emoji}} — {{duration}}분 어때요?",
-        "bodyGeneric": "당신의 타이머가 기다리고 있습니다 — 자신을 위한 시간을 가져보세요"
-      },
-      "day7": {
-        "title": "마지막 기회",
-        "body": "7일 무료 체험 — 만료되기 전에 지금 받으세요"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +365,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "놀라게 해줘"
     }
   },
   "twoTimers": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "시작해요",
+      "endMessage": "완료 ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "내 루틴",
+    "base": {
+      "meditation": "호흡",
+      "break": "커피 브레이크",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "내 루틴",
+      "createRow": "루틴 만들기",
+      "empty": "아직 루틴이 없어요",
+      "durationBadge": "%{minutes}분"
+    },
+    "form": {
+      "createTitle": "루틴 만들기",
+      "editTitle": "루틴 편집",
+      "emojiLabel": "이모지",
+      "emojiCustomButton": "다른 이모지",
+      "colorLabel": "색상",
+      "durationLabel": "시간",
+      "soundLabel": "종료음",
+      "saveButton": "저장",
+      "deleteButton": "삭제",
+      "deleteConfirmTitle": "이 루틴을 삭제할까요?",
+      "deleteConfirmMessage": "이 작업은 되돌릴 수 없어요.",
+      "customActivityName": "내 루틴",
+      "customEmojiOther": "기타…",
+      "customEmojiPlaceholder": "이모지 입력",
+      "customEmojiHint": "지구본 🌐으로 이모지 키보드로 전환하세요"
+    },
+    "restoreBase": "기본 루틴으로 복원"
+  },
+  "palettesPanel": {
+    "sheetRow": "팔레트",
+    "title": "팔레트",
+    "included": "포함됨",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances 팔레트 — 자유롭게 체험해보세요",
+    "ambiancesDiscover": "Ambiances 둘러보기"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "포커스"
+  },
+  "focus": {
+    "hint": "위로 스와이프"
+  },
+  "firstRun": {
+    "skip": "건너뛰기",
+    "welcome": "먼저 활동을 선택해볼까요 👇",
+    "companion": "이 이모지가 곁에 있어줄 거예요. 디스크를 밀어서 시간을 맞춰보세요.",
+    "dialColor": "색상요? 바로 바뀌어요.",
+    "ready": "준비 완료. 디스크를 눌러 시작하세요."
+  },
+  "aside": {
+    "exitFocus": "포커스 종료",
+    "doubleTapHint": "팁: 배경을 더블탭하면 전환돼요",
+    "handle": "설정 열기",
+    "closedLabel": "루틴 및 설정"
   }
 }

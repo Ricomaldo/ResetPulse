@@ -3,7 +3,9 @@
     "cancel": "キャンセル",
     "ok": "OK",
     "retry": "再試行",
-    "continue": "続ける"
+    "continue": "続ける",
+    "back": "戻る",
+    "delete": "削除"
   },
   "welcome": {
     "title": "ResetPulseへようこそ"
@@ -211,6 +213,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "フルパレット、無制限のルーティン、セッションを彩るやさしいサウンド——あなたのペースで、ダイヤルを息づかせるすべてがここに。",
+    "features": {
+      "palettes": "カラーパレットが10種類追加",
+      "rituals": "ルーティン無制限",
+      "sounds": "Ambiancesサウンド"
+    },
+    "price": "%{price}、一度だけ。ずっとあなたのもの。",
+    "startTrial": "7日間無料で試す",
+    "breatheInvitation": "もっと息づかせたい? Ambiancesを見てみる"
+  },
   "activities": {
     "none": "基本",
     "work": "仕事",
@@ -241,27 +255,25 @@
     "dawn": "オーロラ",
     "dusk": "夕暮れ",
     "soft": "やさしい",
-    "autumn": "秋",
     "lavender": "ラベンダー",
     "teal": "青緑",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "クラシックベル",
-    "bell_melodic": "メロディックベル",
-    "microwave_vintage": "ビンテージ電子レンジ",
-    "microwave_ping": "電子レンジピン",
-    "kitchen_timer": "キッチンタイマー",
-    "kitchen_timer_2": "メカニカルタイマー",
-    "egg_timer": "エッグタイマー",
-    "toaster_bell": "トースター",
-    "ding_effect": "シンプルディン",
-    "timer_complete": "タイマー完了"
+    "jingle_achievement": "達成",
+    "singing_bowl": "シンギングボウル",
+    "contrabass_pluck": "低音弦",
+    "kalimba": "カリンバ",
+    "vibraphone_chord": "ヴィブラフォン",
+    "marimba_dry": "マリンバ",
+    "marimba_ascending": "上昇するマリンバ",
+    "up_chime": "チャイム",
+    "success_glissando": "グリッサンド"
   },
   "accessibility": {
     "keepAwake": "画面をスリープさせない",
     "rotationDirection": "回転方向",
+    "showTime": "時間を表示",
     "activity": "Activité: %{name}",
     "activityLocked": "Activité premium - Déverouiller pour accéder",
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
@@ -295,21 +307,16 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "7日間無料で試す",
-    "activities": "Activités premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "distraction": "気晴らし",
+    "applyRitual": "%{name}のルーティンを適用",
+    "editRitual": "%{name}のルーティンを編集",
+    "createRitual": "ルーティンを作成",
+    "closeRitualForm": "ルーティンフォームを閉じる",
+    "chooseCustomEmoji": "キーボードで別の絵文字を選択",
+    "ritualNamePreset": "プリセットルーティン%{name}",
+    "deleteRitual": "ルーティン%{name}を削除",
+    "favoriteRitual": "お気に入りルーティン%{name}"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +352,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "自分のための時間?",
-        "bodyPersonalized": "あなたの{{name}}があなたを待っています{{emoji}} — {{duration}}分いかがですか?",
-        "bodyGeneric": "あなたのタイマーが待っています — 自分のための時間を取ってください"
-      },
-      "day7": {
-        "title": "最後のチャンス",
-        "body": "7日間の無料トライアル — 期限切れになる前に今しましょう"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +365,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "驚かせて"
     }
   },
   "twoTimers": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "はじめよう",
+      "endMessage": "完了 ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "マイルーティン",
+    "base": {
+      "meditation": "呼吸",
+      "break": "コーヒーブレイク",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "マイルーティン",
+      "createRow": "ルーティンを作成",
+      "empty": "まだルーティンがありません",
+      "durationBadge": "%{minutes}分"
+    },
+    "form": {
+      "createTitle": "ルーティンを作成",
+      "editTitle": "ルーティンを編集",
+      "emojiLabel": "絵文字",
+      "emojiCustomButton": "他の絵文字",
+      "colorLabel": "カラー",
+      "durationLabel": "時間",
+      "soundLabel": "終了音",
+      "saveButton": "保存",
+      "deleteButton": "削除",
+      "deleteConfirmTitle": "このルーティンを削除しますか?",
+      "deleteConfirmMessage": "この操作は取り消せません。",
+      "customActivityName": "マイルーティン",
+      "customEmojiOther": "その他…",
+      "customEmojiPlaceholder": "絵文字を入力",
+      "customEmojiHint": "🌐で絵文字キーボードに切り替え"
+    },
+    "restoreBase": "基本のルーティンに戻す"
+  },
+  "palettesPanel": {
+    "sheetRow": "パレット",
+    "title": "パレット",
+    "included": "収録済み",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiancesパレット——自由に試してみて",
+    "ambiancesDiscover": "Ambiancesを見てみる"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "フォーカス"
+  },
+  "focus": {
+    "hint": "上にスワイプ"
+  },
+  "firstRun": {
+    "skip": "スキップ",
+    "welcome": "まずはアクティビティを選ぼう 👇",
+    "companion": "この絵文字が一緒にいるよ。ディスクをスライドして時間を設定してね。",
+    "dialColor": "色を変える? すぐに反映されるよ。",
+    "ready": "準備完了。ディスクをタップしてスタート。"
+  },
+  "aside": {
+    "exitFocus": "フォーカスを終了",
+    "doubleTapHint": "ヒント: 背景をダブルタップで切り替え",
+    "handle": "設定を開く",
+    "closedLabel": "ルーティンと設定"
   }
 }
