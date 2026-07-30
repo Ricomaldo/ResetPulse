@@ -1,8 +1,12 @@
 /**
- * @fileoverview PremiumModalContent - Premium paywall content (BottomSheet)
+ * @fileoverview PremiumModalContent - surface d'achat Ambiances (BottomSheet)
  * Extracted from PremiumModal.jsx - Pure content component (no Modal wrapper)
+ * Lot 3b (frontière gratuit/payant, mandat Eric) : registre passé de
+ * « premium » générique à « Ambiances » — mécanique achat/restore/prix
+ * RevenueCat inchangée (trial 7 jours + gestion d'erreurs), seul le CONTENU
+ * visible change. Le mot « premium » ne s'affiche plus côté utilisateur.
  * @created 2025-12-21
- * @updated 2025-12-21
+ * @updated 2026-07-30
  */
 import React, { useState, useEffect } from 'react';
 import {
@@ -322,11 +326,12 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
       padding: theme.spacing.lg,
     },
 
-    featuresText: {
+    // Lot 3b : 3 lignes fixes, contenus réels du pack à la 3.0 — pas de
+    // mapping (mission : « simplifie, 3 lignes fixes suffisent »).
+    featureLine: {
       color: theme.colors.text,
-      fontSize: rs(18, 'min'),
-      fontWeight: fontWeights.semibold,
-      marginBottom: theme.spacing.sm,
+      fontSize: rs(15, 'min'),
+      marginBottom: theme.spacing.xs,
       textAlign: 'center',
     },
 
@@ -414,23 +419,23 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
           style={styles.title}
           accessibilityRole="header"
         >
-          {t('premium.title')}
+          {t('ambiances.title')}
         </Text>
       </View>
 
       {/* Body */}
       <View style={styles.body}>
         <Text style={styles.bodyText}>
-          {t('premium.description')}
+          {t('ambiances.pitch')}
         </Text>
 
-        {/* Features Box */}
+        {/* Contenus réels du pack (3.0) — 3 lignes fixes */}
         <View style={styles.features}>
-          <Text style={styles.featuresText}>
-            {t('premium.features')}
-          </Text>
+          <Text style={styles.featureLine}>· {t('ambiances.features.palettes')}</Text>
+          <Text style={styles.featureLine}>· {t('ambiances.features.rituals')}</Text>
+          <Text style={styles.featureLine}>· {t('ambiances.features.sounds')}</Text>
           <Text style={styles.priceText}>
-            {t('premium.price', { price: dynamicPrice || '4,99€' })}
+            {t('ambiances.price', { price: dynamicPrice || '4,99€' })}
           </Text>
         </View>
       </View>
@@ -454,7 +459,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
             <ActivityIndicator color={theme.colors.fixed.white} size="small" />
           ) : (
             <Text style={styles.primaryButtonText}>
-              {t('premium.startTrial')}
+              {t('ambiances.startTrial')}
             </Text>
           )}
         </TouchableOpacity>
