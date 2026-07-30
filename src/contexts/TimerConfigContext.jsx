@@ -11,6 +11,8 @@
  *   persisté ni settable, cf. deriveScaleMode/utils/scaleHelpers.js)
  * - display: shouldPulse, showDigitalTimer, showTime
  * - system: keepAwakeEnabled
+ * - reminder: enabled (opt-in strict, jamais activé par défaut, Lot 3e),
+ *   slot (créneau préréglé : morning/midday/evening, cf. config/reminderSlots.js)
  * - mode: current (Mixte/Focus — Complet mort C6.2 ; ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
  * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
@@ -34,6 +36,7 @@ import { DEV_MODE, DEV_DEFAULT_TIMER_CONFIG } from '../config/test-mode';
 import { TIMER_PALETTES, getTimerColors } from '../config/timer-palettes';
 import { DEFAULT_SOUND_ID } from '../config/sounds';
 import { deriveScaleMode } from '../utils/scaleHelpers';
+import { DEFAULT_REMINDER_SLOT } from '../config/reminderSlots';
 
 const TimerConfigContext = createContext(null);
 
@@ -84,6 +87,10 @@ export const TimerConfigProvider = ({ children }) => {
         system: {
           keepAwakeEnabled: true,
         },
+        reminder: {
+          enabled: false, // opt-in strict — jamais activé d'office (Lot 3e)
+          slot: DEFAULT_REMINDER_SLOT,
+        },
         mode: {
           current: 'mixte',
         },
@@ -129,6 +136,10 @@ export const TimerConfigProvider = ({ children }) => {
       },
       system: {
         keepAwakeEnabled: true,
+      },
+      reminder: {
+        enabled: false, // opt-in strict — jamais activé d'office (Lot 3e)
+        slot: DEFAULT_REMINDER_SLOT,
       },
       mode: {
         current: 'mixte',
@@ -356,6 +367,10 @@ export const TimerConfigProvider = ({ children }) => {
     system: {
       keepAwakeEnabled: values.system.keepAwakeEnabled,
     },
+    reminder: {
+      enabled: values.reminder.enabled,
+      slot: values.reminder.slot,
+    },
     mode: {
       current: values.mode.current,
     },
@@ -443,6 +458,23 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         system: { ...prev.system, keepAwakeEnabled: enabled }
+      }));
+    },
+
+    // Reminder (rappel doux, opt-in strict — Lot 3e). setReminderEnabled ne
+    // planifie/annule rien elle-même : c'est l'appelant (AsideZone) qui
+    // orchestre la notification via useNotificationTimer, cette action ne
+    // fait que persister la préférence.
+    setReminderEnabled: (enabled) => {
+      setValues(prev => ({
+        ...prev,
+        reminder: { ...prev.reminder, enabled }
+      }));
+    },
+    setReminderSlot: (slot) => {
+      setValues(prev => ({
+        ...prev,
+        reminder: { ...prev.reminder, slot }
       }));
     },
 

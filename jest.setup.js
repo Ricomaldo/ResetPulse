@@ -31,9 +31,11 @@ jest.mock('expo-notifications', () => ({
   // Constants for notification triggers (SDK 54)
   SchedulableTriggerInputTypes: {
     TIME_INTERVAL: 'timeInterval',
+    DAILY: 'daily',
   },
   AndroidImportance: {
     HIGH: 'high',
+    DEFAULT: 'default',
   },
 }));
 
