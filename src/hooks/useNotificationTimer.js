@@ -3,6 +3,9 @@ import { useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
 import { AppState, Platform } from 'react-native';
 import logger from '../utils/logger';
+import { useTimerConfig } from '../contexts/TimerConfigContext';
+import { useTranslation } from './useTranslation';
+import { getNotificationSoundFile } from '../config/sounds';
 
 // Configuration pour les notifications (SDK 54+)
 // Protection contre les modules natifs manquants (iOS Simulator notamment)
@@ -22,17 +25,23 @@ try {
   logger.log('ℹ️ Notifications not available (iOS Simulator or missing module)');
 }
 
-// Créer le channel Android pour les notifications du timer
-// REQUIS pour Android 8.0+ (API 26+)
+// Créer le channel Android pour les notifications du timer — REQUIS pour
+// Android 8.0+ (API 26+). Limitation Android connue et documentée (pas un
+// raccourci pris ici) : le son d'un channel est figé à sa création et ne
+// peut plus être changé — ce channel garde donc TOUJOURS le son par défaut,
+// quel que soit selectedSoundId. Seul iOS (content.sound, par notification)
+// respecte le son choisi par l'user. Résoudre côté Android nécessiterait un
+// channel par son (clutter des réglages système) — hors scope de ce lot,
+// signalé au rapport.
 const setupAndroidChannel = async () => {
   if (Platform.OS !== 'android') {return;}
 
   try {
     await Notifications.setNotificationChannelAsync('timer', {
-      name: 'Timer Notifications',
-      description: 'Notifications when timer completes',
+      name: 'Fin de séance',
+      description: 'Notification à la fin d\'un rituel',
       importance: Notifications.AndroidImportance.HIGH, // Bannière + son
-      sound: '634089__aj_heels__timercomplete01.wav', // Son par défaut (bell_classic)
+      sound: '634089__aj_heels__timercomplete01.wav', // Son fixe (limitation channel Android, cf. commentaire ci-dessus)
       vibrationPattern: [0, 250, 250, 250], // Vibration courte
       enableLights: true,
       lightColor: '#4A5568', // Couleur thème app
@@ -50,6 +59,10 @@ const setupAndroidChannel = async () => {
 setupAndroidChannel();
 
 export default function useNotificationTimer() {
+  const t = useTranslation();
+  const {
+    timer: { selectedSoundId },
+  } = useTimerConfig();
   const notificationIdRef = useRef(null);
   const appStateRef = useRef(AppState.currentState);
   const schedulingInProgressRef = useRef(false); // Prevent race conditions
@@ -112,20 +125,24 @@ export default function useNotificationTimer() {
           notificationIdRef.current = null;
         }
 
-        // Format 2: emoji + endMessage (sans durée)
+        // Voix de l'Activité (recentrage, ADR-014) : emoji + endMessage i18n
+        // de l'Activité — jamais un libellé générique ("Temps écoulé !" etc).
+        // Repli sur le endMessage neutre ('none', "Bravo 🎉"/"Well done 🎉")
+        // si l'appelant n'en fournit pas — jamais un mot brut en dur.
         const activityEmoji = activity?.emoji || '⏰';
-        const title = `${activityEmoji} ${endMessage || 'Terminé'}`;
+        const title = `${activityEmoji} ${endMessage || t('timerMessages.none.endMessage')}`;
 
         // Programmer nouvelle notification
         const id = await Notifications.scheduleNotificationAsync({
           content: {
             title,
             body: '', // Corps vide - tout est dans le titre
-            // Son fixe (timer_complete/DEFAULT_SOUND_ID, cf. sounds-mapping.js)
-            // — ignore le son choisi par l'user sur le rituel/l'activité,
-            // constaté en C7, non corrigé ici (hors scope : nécessite de
-            // faire remonter selectedSoundId jusqu'à scheduleTimerNotification).
-            sound: '634089__aj_heels__timercomplete01.wav',
+            // Son du rituel courant (selectedSoundId) — respecté sur iOS,
+            // où `sound` est lu par notification. Sur Android, le son est
+            // celui du channel 'timer' (fixe, cf. commentaire à la création
+            // du channel plus haut) : limitation plateforme, pas un
+            // raccourci pris ici (channel-sound immuable après création).
+            sound: getNotificationSoundFile(selectedSoundId),
             // Pour Android 8+ le son du channel est utilisé
           },
           trigger: {
@@ -196,6 +213,6 @@ export default function useNotificationTimer() {
     scheduleTimerNotification,
     cancelTimerNotification,
     isAppInBackground,
-    requestNotificationPermission
+    requestNotificationPermission,
   };
 }
