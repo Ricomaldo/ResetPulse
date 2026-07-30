@@ -3,7 +3,9 @@
     "cancel": "Annulla",
     "ok": "OK",
     "retry": "Riprova",
-    "continue": "Continua"
+    "continue": "Continua",
+    "back": "Indietro",
+    "delete": "Elimina"
   },
   "welcome": {
     "title": "Benvenuto in ResetPulse"
@@ -211,6 +213,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Palette complete, rituali illimitati, suoni delicati per vestire le tue sessioni — tutto per far respirare il tuo disco, al tuo ritmo.",
+    "features": {
+      "palettes": "10 palette di colori in più",
+      "rituals": "rituali illimitati",
+      "sounds": "suoni Ambiances"
+    },
+    "price": "%{price}, una volta. Tuo per sempre.",
+    "startTrial": "prova 7 giorni gratis",
+    "breatheInvitation": "vuoi farlo respirare? scopri Ambiances"
+  },
   "activities": {
     "none": "Base",
     "work": "Lavoro",
@@ -241,23 +255,20 @@
     "dawn": "Aurora",
     "dusk": "Crepuscolo",
     "soft": "Delicato",
-    "autumn": "Autunno",
     "lavender": "Lavanda",
     "teal": "Turchese",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "Campana classica",
-    "bell_melodic": "Campana melodica",
-    "microwave_vintage": "Microonde vintage",
-    "microwave_ping": "Ping microonde",
-    "kitchen_timer": "Timer cucina",
-    "kitchen_timer_2": "Timer meccanico",
-    "egg_timer": "Timer uovo",
-    "toaster_bell": "Campanello tostapane",
-    "ding_effect": "Ding semplice",
-    "timer_complete": "Timer completo"
+    "jingle_achievement": "Successo",
+    "singing_bowl": "Campana tibetana",
+    "contrabass_pluck": "Corda grave",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibrafono",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Marimba ascendente",
+    "up_chime": "Carillon",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Mantieni schermo attivo",
@@ -295,21 +306,17 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Prova 7 giorni gratis",
-    "activities": "Attività premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "showTime": "Mostra il tempo",
+    "distraction": "Distrazione",
+    "applyRitual": "Applica il rituale %{name}",
+    "editRitual": "Modifica il rituale %{name}",
+    "createRitual": "Crea un rituale",
+    "closeRitualForm": "Chiudi il modulo del rituale",
+    "chooseCustomEmoji": "Scegli un'altra emoji dalla tastiera",
+    "ritualNamePreset": "Rituale preimpostato %{name}",
+    "deleteRitual": "Elimina il rituale %{name}",
+    "favoriteRitual": "Rituale preferito %{name}"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +352,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "Un momento per te?",
-        "bodyPersonalized": "La tua {{name}} ti aspetta {{emoji}} — {{duration}} min per te?",
-        "bodyGeneric": "Il tuo timer ti aspetta — prenditi un momento per te"
-      },
-      "day7": {
-        "title": "Ultima occasione",
-        "body": "Prova gratuita di 7 giorni — approfittane prima che scada"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +365,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "sorprendimi"
     }
   },
   "twoTimers": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Si parte",
+      "endMessage": "Fatto ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "I miei rituali",
+    "base": {
+      "meditation": "Respirazione",
+      "break": "Pausa caffè",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "I miei rituali",
+      "createRow": "Crea un rituale",
+      "empty": "Ancora nessun rituale",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Crea un rituale",
+      "editTitle": "Modifica rituale",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Altra emoji",
+      "colorLabel": "Colore",
+      "durationLabel": "Durata",
+      "soundLabel": "Suono finale",
+      "saveButton": "Salva",
+      "deleteButton": "Elimina",
+      "deleteConfirmTitle": "Eliminare questo rituale?",
+      "deleteConfirmMessage": "Questa azione è irreversibile.",
+      "customActivityName": "Il mio rituale",
+      "customEmojiOther": "altra…",
+      "customEmojiPlaceholder": "la tua emoji",
+      "customEmojiHint": "passa alla tastiera emoji con il globo 🌐"
+    },
+    "restoreBase": "ripristina i rituali base"
+  },
+  "palettesPanel": {
+    "sheetRow": "Palette",
+    "title": "Palette",
+    "included": "Incluse",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "palette Ambiances — provala liberamente",
+    "ambiancesDiscover": "scopri Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Focus"
+  },
+  "focus": {
+    "hint": "scorri verso l'alto"
+  },
+  "firstRun": {
+    "skip": "salta",
+    "welcome": "iniziamo scegliendo un'attività 👇",
+    "companion": "questa emoji ti fa compagnia. scorri il disco per impostare la durata.",
+    "dialColor": "un colore? cambia subito.",
+    "ready": "tutto pronto. tocca il disco per iniziare."
+  },
+  "aside": {
+    "exitFocus": "uscire dal focus",
+    "doubleTapHint": "consiglio: doppio tocco sullo sfondo per cambiare",
+    "handle": "apri impostazioni",
+    "closedLabel": "rituali e impostazioni"
   }
 }

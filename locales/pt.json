@@ -3,7 +3,9 @@
     "cancel": "Cancelar",
     "ok": "OK",
     "retry": "Tentar novamente",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "back": "Voltar",
+    "delete": "Eliminar"
   },
   "welcome": {
     "title": "Bem-vindo ao ResetPulse"
@@ -211,6 +213,18 @@
     "errorRestoreGeneric": "Restore error",
     "errorGeneric": "An error occurred"
   },
+  "ambiances": {
+    "title": "Ambiances",
+    "pitch": "Paletas completas, rituais ilimitados, sons suaves para vestir as tuas sessões — tudo para fazer respirar o teu disco, ao teu ritmo.",
+    "features": {
+      "palettes": "mais 10 paletas de cores",
+      "rituals": "rituais ilimitados",
+      "sounds": "sons Ambiances"
+    },
+    "price": "%{price}, uma vez. Teu para sempre.",
+    "startTrial": "testa 7 dias grátis",
+    "breatheInvitation": "queres fazê-lo respirar? descobre Ambiances"
+  },
   "activities": {
     "none": "Básico",
     "work": "Trabalho",
@@ -241,23 +255,20 @@
     "dawn": "Aurora",
     "dusk": "Crepúsculo",
     "soft": "Suave",
-    "autumn": "Outono",
     "lavender": "Lavanda",
     "teal": "Turquesa",
-    "darkLaser": "Dark Laser",
     "serenity": "Serenity"
   },
   "sounds": {
-    "bell_classic": "Sino clássico",
-    "bell_melodic": "Sino melódico",
-    "microwave_vintage": "Micro-ondas vintage",
-    "microwave_ping": "Ping micro-ondas",
-    "kitchen_timer": "Temporizador cozinha",
-    "kitchen_timer_2": "Temporizador mecânico",
-    "egg_timer": "Temporizador ovo",
-    "toaster_bell": "Campainha torradeira",
-    "ding_effect": "Ding simples",
-    "timer_complete": "Temporizador completo"
+    "jingle_achievement": "Conquista",
+    "singing_bowl": "Taça tibetana",
+    "contrabass_pluck": "Corda grave",
+    "kalimba": "Kalimba",
+    "vibraphone_chord": "Vibrafone",
+    "marimba_dry": "Marimba",
+    "marimba_ascending": "Marimba ascendente",
+    "up_chime": "Carrilhão",
+    "success_glissando": "Glissando"
   },
   "accessibility": {
     "keepAwake": "Manter ecrã ativo",
@@ -295,21 +306,17 @@
       "dial": "Timer dial, %{minutes} minutes set, %{activity}"
     },
     "unlockPremium": "Unlock premium for %{price}",
-    "paletteItem": "Color palette: %{name}"
-  },
-  "discovery": {
-    "defaultCta": "Experimente 7 dias grátis",
-    "activities": "Atividades premium",
-    "moreColors": {
-      "title": "Even more colors",
-      "subtitle": "Ocean, forest, lavender, duck...",
-      "tagline": "Every mood, its atmosphere."
-    },
-    "moreActivities": {
-      "title": "Even more moments",
-      "subtitle": "16 activities + unlimited custom",
-      "tagline": "Your focus, your rules."
-    }
+    "paletteItem": "Color palette: %{name}",
+    "showTime": "Mostrar o tempo",
+    "distraction": "Distração",
+    "applyRitual": "Aplicar o ritual %{name}",
+    "editRitual": "Editar o ritual %{name}",
+    "createRitual": "Criar um ritual",
+    "closeRitualForm": "Fechar o formulário de ritual",
+    "chooseCustomEmoji": "Escolher outro emoji a partir do teclado",
+    "ritualNamePreset": "Ritual predefinido %{name}",
+    "deleteRitual": "Eliminar o ritual %{name}",
+    "favoriteRitual": "Ritual favorito %{name}"
   },
   "customActivities": {
     "toast": {
@@ -345,19 +352,6 @@
       "minutes": "min"
     }
   },
-  "notifications": {
-    "reminder": {
-      "day3": {
-        "title": "Um momento para ti?",
-        "bodyPersonalized": "A tua {{name}} espera por ti {{emoji}} — {{duration}} min para ti?",
-        "bodyGeneric": "O teu temporizador espera por ti — tira um momento para ti"
-      },
-      "day7": {
-        "title": "Última oportunidade",
-        "body": "Teste gratuito de 7 dias — aproveita antes de expirar"
-      }
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
@@ -371,6 +365,9 @@
     "rotation": {
       "clockwise": "Clockwise",
       "counterClockwise": "Counter-clockwise"
+    },
+    "distraction": {
+      "tryMe": "surpreende-me"
     }
   },
   "twoTimers": {
@@ -447,6 +444,70 @@
     "writing": {
       "startMessage": "Write",
       "endMessage": "Liberated ✍️"
+    },
+    "custom": {
+      "startMessage": "Vamos",
+      "endMessage": "Feito ✨"
     }
+  },
+  "rituals": {
+    "sheetRow": "Os meus rituais",
+    "base": {
+      "meditation": "Respiração",
+      "break": "Pausa para café",
+      "work": "Deep Work"
+    },
+    "list": {
+      "title": "Os meus rituais",
+      "createRow": "Criar um ritual",
+      "empty": "Ainda não há rituais",
+      "durationBadge": "%{minutes} min"
+    },
+    "form": {
+      "createTitle": "Criar um ritual",
+      "editTitle": "Editar ritual",
+      "emojiLabel": "Emoji",
+      "emojiCustomButton": "Outro emoji",
+      "colorLabel": "Cor",
+      "durationLabel": "Duração",
+      "soundLabel": "Som final",
+      "saveButton": "Guardar",
+      "deleteButton": "Eliminar",
+      "deleteConfirmTitle": "Eliminar este ritual?",
+      "deleteConfirmMessage": "Esta ação é irreversível.",
+      "customActivityName": "O meu ritual",
+      "customEmojiOther": "outro…",
+      "customEmojiPlaceholder": "o teu emoji",
+      "customEmojiHint": "muda para o teu teclado de emojis com o globo 🌐"
+    },
+    "restoreBase": "restaurar os rituais base"
+  },
+  "palettesPanel": {
+    "sheetRow": "Paletas",
+    "title": "Paletas",
+    "included": "Incluídas",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "paleta Ambiances — experimenta-a livremente",
+    "ambiancesDiscover": "descobrir Ambiances"
+  },
+  "mode": {
+    "standard": "ResetPulse",
+    "focus": "Focus"
+  },
+  "focus": {
+    "hint": "desliza para cima"
+  },
+  "firstRun": {
+    "skip": "saltar",
+    "welcome": "vamos começar por escolher uma atividade 👇",
+    "companion": "este emoji faz-te companhia. desliza o disco para ajustar a duração.",
+    "dialColor": "uma cor? muda logo.",
+    "ready": "tudo pronto. toca no disco para começar."
+  },
+  "aside": {
+    "exitFocus": "sair do focus",
+    "doubleTapHint": "dica: toque duplo no fundo para alternar",
+    "handle": "abrir definições",
+    "closedLabel": "rituais e definições"
   }
 }
