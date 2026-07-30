@@ -16,7 +16,7 @@
  * par le dial (`DialCenter`), pas par ce fichier.
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, View, Text, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
+import { AppState, View, Text, TouchableOpacity, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -347,6 +347,11 @@ function TimerScreenContent() {
     timer: { currentDuration, currentActivity },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
+  // porte-2 (retour Eric « le mode horizontal est complètement raté ») :
+  // en paysage l'écran devient une RANGÉE — disque à gauche, chrome en
+  // colonne à droite. La colonne empilée débordait et clippait le disque.
+  const { width: winW, height: winH } = useWindowDimensions();
+  const isLandscape = winW > winH;
 
   // Double-tap fond → bascule Focus (verdicts CD 25/07). Ignoré 1,5s après
   // un retour AppState 'active' (anti-poche/réveil). Non destructif : ne
@@ -581,7 +586,11 @@ function TimerScreenContent() {
   // intouchés). Se remesure naturellement à la rotation (onLayout).
   const [aboveChromeHeight, setAboveChromeHeight] = useState(0);
   const [belowChromeHeight, setBelowChromeHeight] = useState(0);
-  const dialOffsetY = (aboveChromeHeight - belowChromeHeight) / 2;
+  // Paysage : chromeBelow est À CÔTÉ du disque (rangée), pas dessous — seul
+  // TopTime compte dans le recentrage d'immersion.
+  const dialOffsetY = isLandscape
+    ? aboveChromeHeight / 2
+    : (aboveChromeHeight - belowChromeHeight) / 2;
 
   const dialAnimatedStyle = useAnimatedStyle(() => {
     const t = immersionValue.value;
@@ -619,6 +628,8 @@ function TimerScreenContent() {
     content: {
       alignItems: 'center',
       flex: 1,
+      flexDirection: isLandscape ? 'row' : 'column',
+      gap: isLandscape ? theme.spacing.lg : 0,
       justifyContent: 'center',
     },
     // Wrappers du chrome fondu en immersion : `alignItems: center` préserve

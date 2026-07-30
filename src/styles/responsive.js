@@ -146,7 +146,9 @@ export const getComponentSizes = (mode = 'mixte') => {
   // Timer circle size - Adapté aux différentes tailles d'écran
   let timerCircle;
   if (isLandscape) {
-    timerCircle = Math.min(width * 0.6, height * 0.9);
+    // porte-2 : le disque doit tenir dans la hauteur RESTANTE (TopTime +
+    // paddings mangent ~110pt) — 0.9×height débordait et clippait le haut.
+    timerCircle = Math.min(width * 0.45, height * 0.68);
   } else if (isTablet) {
     // iPad portrait: ratio de largeur OU plafond px (bon équilibre)
     timerCircle = Math.min(width * portraitRatio, mode === 'focus' ? 690 : 650);
