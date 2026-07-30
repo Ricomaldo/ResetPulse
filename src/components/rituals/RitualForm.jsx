@@ -5,7 +5,7 @@
  * Activité anonyme à la volée (ADR-015) — invisible pour l'user.
  */
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
@@ -118,11 +118,23 @@ function RitualColorCarousel({ color, onSelectColor }) {
   );
 }
 
+// porte-2 (retour Eric ×2 « le + n'ouvre pas le clavier emoji ») : cause
+// racine réelle — iOS n'offre AUCUN moyen d'ouvrir programmatiquement le
+// clavier emoji (focus = clavier standard de l'utilisateur, le design C6
+// reposait sur une capacité qui n'existe pas). Fix robuste : une grille
+// intégrée, zéro clavier. Sélection curée, ton chaleureux de l'app.
+const CUSTOM_EMOJI_CHOICES = [
+  '🎨', '📖', '📚', '✍️', '🧠', '🎯',
+  '💪', '🚶', '🚴', '🧘‍♀️', '🛁', '😴',
+  '👨‍🍳', '🍵', '🌱', '🐕', '🎵', '🎸',
+  '🧹', '📝', '🎮', '🌙', '🔧', '🧺',
+];
+
 export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
   const { customActivities, createActivity } = useCustomActivities();
-  const nativeEmojiInputRef = useRef(null);
+  const [showEmojiGrid, setShowEmojiGrid] = useState(false);
 
   const initialActivity = initialRitual
     ? resolveRitualActivity(initialRitual, customActivities)
@@ -148,18 +160,15 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
   };
 
   const handleOpenCustomEmoji = () => {
-    nativeEmojiInputRef.current?.focus();
+    haptics.selection().catch(() => {});
+    setShowEmojiGrid((visible) => !visible);
   };
 
-  const handleNativeEmojiChange = (text) => {
-    const emojiRegex = /[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu;
-    const emojis = text.match(emojiRegex);
-    if (emojis && emojis.length > 0) {
-      haptics.selection().catch(() => {});
-      setPendingCustomEmoji(emojis[emojis.length - 1]);
-      setSelectedActivityId(null);
-      nativeEmojiInputRef.current?.blur();
-    }
+  const handlePickCustomEmoji = (emoji) => {
+    haptics.selection().catch(() => {});
+    setPendingCustomEmoji(emoji);
+    setSelectedActivityId(null);
+    setShowEmojiGrid(false);
   };
 
   const handleSave = () => {
@@ -286,11 +295,11 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
     },
     // C3 (hotfix-porte-1) : 0×0 refusait le focus iOS (pas de clavier emoji
     // au tap) — 1×1 reste visuellement invisible (opacity 0) mais focusable.
-    hiddenEmojiInput: {
-      height: 1,
-      opacity: 0,
-      position: 'absolute',
-      width: 1,
+    emojiGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: theme.spacing.xs,
+      marginTop: theme.spacing.sm,
     },
     saveButton: {
       alignItems: 'center',
@@ -376,14 +385,24 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
                 <Text style={styles.emojiCustomButtonText}>+</Text>
               )}
             </TouchableOpacity>
-            <TextInput
-              ref={nativeEmojiInputRef}
-              style={styles.hiddenEmojiInput}
-              value=""
-              onChangeText={handleNativeEmojiChange}
-              maxLength={8}
-            />
           </View>
+          {showEmojiGrid && (
+            <View style={styles.emojiGrid}>
+              {CUSTOM_EMOJI_CHOICES.map((emoji) => (
+                <TouchableOpacity
+                  key={emoji}
+                  style={[styles.emojiButton, pendingCustomEmoji === emoji && styles.emojiButtonActive]}
+                  onPress={() => handlePickCustomEmoji(emoji)}
+                  activeOpacity={0.7}
+                  accessible
+                  accessibilityRole="button"
+                  accessibilityLabel={emoji}
+                >
+                  <Text style={styles.emojiButtonText}>{emoji}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* 2. Couleur — carrousel paginé LOCAL au formulaire (C2/D7) : la
