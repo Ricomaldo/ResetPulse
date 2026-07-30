@@ -35,6 +35,7 @@ import { buildRitualApplyPayload } from '../config/rituals';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
 import { useSessionCount } from '../hooks/useSessionCount';
+import { usePaletteGating } from '../hooks/usePaletteGating';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
 import haptics from '../utils/haptics';
@@ -343,6 +344,10 @@ function TimerScreenContent() {
   const theme = useTheme();
   const analytics = useAnalytics();
   const { incrementSessionCount } = useSessionCount();
+  // Soft-gating palettes (Lot 3b) : mémoire du dernier inclus + retour au
+  // lancement si FREE et Ambiances actif — monté une fois ici, cf.
+  // usePaletteGating.
+  usePaletteGating();
   const {
     mode: { current: currentMode },
     setMode,

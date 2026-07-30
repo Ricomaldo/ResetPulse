@@ -7,6 +7,7 @@ import {
   getPaletteInfo,
   getPaletteColors,
   getTimerColors,
+  resolvePaletteOnLaunch,
 } from '../../src/config/timer-palettes';
 
 describe('timerPalettes Configuration', () => {
@@ -248,6 +249,30 @@ describe('timerPalettes Configuration', () => {
         expect(getPaletteColors(key)).toBeDefined();
         expect(typeof isPalettePremium(key)).toBe('boolean');
       });
+    });
+  });
+
+  // Lot 3b (soft-gating palettes, mandat Eric) : fonction pure de décision
+  // du retour au dernier inclus au lancement — cf. usePaletteGating pour le
+  // déclenchement (une fois par montage, TimerScreen).
+  describe('resolvePaletteOnLaunch', () => {
+    test('premium user: never forces a revert, keeps current palette', () => {
+      expect(resolvePaletteOnLaunch(true, 'earth', 'serenity')).toBe('earth');
+      expect(resolvePaletteOnLaunch(true, 'earth', null)).toBe('earth');
+    });
+
+    test('free user with a free current palette: nothing to do', () => {
+      expect(resolvePaletteOnLaunch(false, 'ocean', 'dusk')).toBe('ocean');
+      expect(resolvePaletteOnLaunch(false, 'serenity', null)).toBe('serenity');
+    });
+
+    test('free user with a premium current palette: reverts to last included', () => {
+      expect(resolvePaletteOnLaunch(false, 'earth', 'dusk')).toBe('dusk');
+    });
+
+    test('free user with a premium current palette and no known last included: defaults to serenity', () => {
+      expect(resolvePaletteOnLaunch(false, 'earth', null)).toBe('serenity');
+      expect(resolvePaletteOnLaunch(false, 'earth', undefined)).toBe('serenity');
     });
   });
 });
