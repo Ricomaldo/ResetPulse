@@ -540,6 +540,13 @@ export default function AsideZone({ isTimerRunning, hidden = false }) {
                                   haptics.selection().catch(() => {});
                                   if (key === 'focus' && !isActive) {
                                     analytics.trackFocusEntered('sheet');
+                                    // porte-3 (5e point Eric, fix immédiat) :
+                                    // l'épure ne laisse pas traîner une nappe
+                                    // blanche — basculer sur Focus referme le
+                                    // sheet. (La grammaire complète des
+                                    // transitions vers l'épure reste OUVERTE,
+                                    // à griller avec Eric.)
+                                    snapTo(false);
                                   }
                                   setMode(key);
                                 }}
