@@ -9,17 +9,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "تقليل المدة",
+      "increaseDuration": "زيادة المدة",
+      "timeLabel": "الوقت: %{time}",
+      "durationLabel": "المدة: %{time}",
+      "showTime": "إظهار الوقت",
+      "tapToHide": "اضغط للإخفاء",
+      "tapToShow": "اضغط للإظهار"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "باتجاه عقارب الساعة",
+      "counterClockwise": "عكس عقارب الساعة"
     },
     "distraction": {
       "tryMe": "فاجئني"
@@ -33,55 +33,55 @@
     "restartGuide": "إعادة تشغيل الدليل",
     "restartGuideDescription": "عرض شاشة الترحيب والنصائح مرة أخرى",
     "intentions": {
-      "title": "What's it for?",
+      "title": "لأي غرض؟",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "استرخِ",
+        "defaultName": "تأمل"
       },
       "work": {
-        "label": "Work",
+        "label": "عمل",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "إبداع",
+        "defaultName": "إبداع"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "تعلّم",
+        "defaultName": "دراسة"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "تحرّك",
+        "defaultName": "رياضة"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "آخر",
+        "defaultName": "لحظتي"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "مؤقتك سيكون من أجل...",
+        "focus": "التركيز بشكل أفضل",
+        "launch": "مساعدتي على البدء",
+        "breathe": "أخذ وقت لنفسي",
+        "children": "تخصيص لحظة مع أطفالي",
+        "other": "شيء آخر...",
+        "otherPlaceholder": "مثل ماذا؟"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "مساعدة صغيرة في...",
+        "starting": "البدء",
+        "finishing": "الاستمرار حتى النهاية",
+        "staying": "البقاء مركزاً",
+        "managing": "إدارة وقتي بشكل أفضل",
+        "other": "شيء آخر...",
+        "otherPlaceholder": "مثل ماذا؟"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "لحظتك الأولى",
+      "cta": "أنشئ لحظتي",
+      "durationLabel": "كم من الوقت؟",
+      "namePlaceholder": "سمِّ لحظتك..."
     },
     "paywall": {
       "title": "لقد أنشأت لحظتك الأولى",
@@ -92,32 +92,32 @@
       "ctaTrial": "جرب 7 أيام مجاناً"
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "لننطلق!",
+      "subtitle": "لحظتك الأولى جاهزة. اضغط للبدء.",
+      "cta": "ابدأ مؤقتي",
+      "ctaHint": "ابدأ مؤقتك الأول",
+      "defaultActivity": "لحظتي"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "وقتك ملك لك",
+        "tapToContinue": "عندما تكون مستعداً"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "مؤقت يتكيف معك",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "لا تفوّت نهاية لحظاتك",
+        "body": "سينبهك مؤقتك حتى لو كنت تستخدم تطبيقاً آخر أو كانت شاشتك مقفلة.",
+        "ctaPrimary": "نعم، نبّهني",
+        "ctaSecondary": "ربما لاحقاً"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "نغمتك",
+        "skip": "تخطي →"
       }
     }
   },
@@ -259,8 +259,8 @@
     "homework": "واجب منزلي",
     "music": "موسيقى",
     "cleaning": "تنظيف",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "قيلولة",
+    "writing": "كتابة"
   },
   "palettes": {
     "earth": "الأرض",
@@ -297,36 +297,36 @@
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
+    "colorNumber": "اللون %{number}",
+    "discoverMorePalettes": "اضغط لاكتشاف المزيد من اللوحات",
+    "celebrationEmoji": "احتفال",
+    "closeCreateActivity": "إغلاق إنشاء نشاط",
+    "closeEditActivity": "إغلاق تعديل النشاط",
+    "closeModalHint": "يغلق مربع الحوار هذا ويعود إلى التطبيق",
     "closePremiumModal": "إغلاق عرض Ambiances",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
+    "createActivityHint": "ينشئ النشاط المخصص ويضيفه إلى قائمتك",
+    "deleteActivityHint": "يحذف هذا النشاط المخصص نهائياً",
+    "exploreSettingsHint": "يفتح الإعدادات لاكتشاف الميزات المميزة",
+    "restorePurchases": "استعادة المشتريات السابقة",
     "restorePurchasesHint": "استعادة الوصول إلى Ambiances إذا كنت قد اشتريت بالفعل",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "saveActivityHint": "يحفظ التغييرات على هذا النشاط",
+    "unlockPremiumHint": "ابدأ تجربة مجانية لمدة 7 أيام، ثم دفعة واحدة",
     "distraction": "إلهاء",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "dialAdjustable": "قابل للتعديل. اسحب لأعلى أو لأسفل لتغيير المدة.",
+      "dialTapToToggle": "اضغط لبدء المؤقت أو إيقافه مؤقتاً",
+      "timerCompleted": "اكتمل المؤقت!",
+      "timerRunning": "المؤقت يعمل",
+      "timerStopped": "توقف المؤقت",
+      "activityStarted": "%{activity} بدأ",
+      "activityCompleted": "%{activity} اكتمل",
+      "startTimer": "بدء المؤقت",
+      "stopTimer": "إيقاف المؤقت",
+      "resetTimer": "إعادة تعيين المؤقت",
+      "dial": "قرص المؤقت، %{minutes} دقيقة محددة، %{activity}"
     },
     "unlockPremium": "فتح Ambiances مقابل %{price}",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "لوحة الألوان: %{name}",
     "applyRitual": "تطبيق طقس %{name}",
     "editRitual": "تعديل الطقس %{name}",
     "createRitual": "إنشاء طقس",
@@ -351,26 +351,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "إنشاء نشاط",
+      "namePlaceholder": "مثال: غيتار، طبخ...",
+      "nameLabel": "اسم النشاط",
+      "emojiLabel": "اختر رمزاً تعبيرياً",
+      "emojiPlaceholder": "اضغط للاختيار",
+      "durationLabel": "المدة الافتراضية",
+      "preview": "معاينة",
+      "previewPlaceholder": "نشاطي",
+      "buttonCreate": "إنشاء",
+      "errorTitle": "معلومات ناقصة",
+      "errorEmoji": "يرجى اختيار رمز تعبيري لنشاطك.",
+      "errorName": "يرجى إدخال اسم لنشاطك."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "تعديل النشاط",
+      "buttonSave": "حفظ",
+      "buttonDelete": "حذف",
+      "deleteConfirmTitle": "حذف؟",
+      "deleteConfirmMessage": "هذا الإجراء لا رجعة فيه.",
+      "usageStats": "استُخدم %{count} مرة"
     },
     "duration": {
       "minutes": "min"

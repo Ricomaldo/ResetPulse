@@ -9,17 +9,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "Reduser varighet",
+      "increaseDuration": "Øk varighet",
+      "timeLabel": "Tid: %{time}",
+      "durationLabel": "Varighet: %{time}",
+      "showTime": "Vis tid",
+      "tapToHide": "Trykk for å skjule",
+      "tapToShow": "Trykk for å vise"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "Med klokken",
+      "counterClockwise": "Mot klokken"
     },
     "distraction": {
       "tryMe": "Overrask meg"
@@ -33,55 +33,55 @@
     "restartGuide": "Start guiden på nytt",
     "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen",
     "intentions": {
-      "title": "What's it for?",
+      "title": "Hva er det til?",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "Slappe av",
+        "defaultName": "Meditasjon"
       },
       "work": {
-        "label": "Work",
+        "label": "Jobbe",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "Skape",
+        "defaultName": "Skaping"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "Lære",
+        "defaultName": "Studier"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "Beveg deg",
+        "defaultName": "Trening"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "Annet",
+        "defaultName": "Mitt øyeblikk"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Timeren din ville vært for...",
+        "focus": "Fokusere bedre",
+        "launch": "Hjelpe meg i gang",
+        "breathe": "Ta tid til meg selv",
+        "children": "Ramme inn et øyeblikk med barna mine",
+        "other": "Noe annet...",
+        "otherPlaceholder": "Som hva da?"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Litt hjelp med...",
+        "starting": "Komme i gang",
+        "finishing": "Fullføre",
+        "staying": "Holde fokus",
+        "managing": "Bedre tidsstyring",
+        "other": "Noe annet...",
+        "otherPlaceholder": "Som hva da?"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "Ditt første øyeblikk",
+      "cta": "Opprett mitt øyeblikk",
+      "durationLabel": "Hvor lenge?",
+      "namePlaceholder": "Gi øyeblikket et navn..."
     },
     "paywall": {
       "title": "Du opprettet ditt første moment",
@@ -92,32 +92,32 @@
       "ctaTrial": "Prøv 7 dager gratis"
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "Sett i gang!",
+      "subtitle": "Ditt første øyeblikk er klart. Trykk for å begynne.",
+      "cta": "Start timeren min",
+      "ctaHint": "Start din første timer",
+      "defaultActivity": "Mitt øyeblikk"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "Tiden din tilhører deg",
+        "tapToContinue": "Når du er klar"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "En timer som tilpasser seg deg",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "Ikke gå glipp av når øyeblikkene dine slutter",
+        "body": "Timeren din varsler deg selv om du bruker en annen app eller skjermen er låst.",
+        "ctaPrimary": "Ja, varsle meg",
+        "ctaSecondary": "Kanskje senere"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "Ringetonen din",
+        "skip": "Hopp over →"
       }
     }
   },
@@ -259,8 +259,8 @@
     "homework": "Lekser",
     "music": "Musikk",
     "cleaning": "Rengjøring",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "Lur",
+    "writing": "Skriving"
   },
   "palettes": {
     "earth": "Jord",
@@ -297,36 +297,36 @@
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
+    "colorNumber": "Farge %{number}",
+    "discoverMorePalettes": "Trykk for å oppdage flere paletter",
+    "celebrationEmoji": "Feiring",
+    "closeCreateActivity": "Lukk opprett aktivitet",
+    "closeEditActivity": "Lukk rediger aktivitet",
+    "closeModalHint": "Lukker denne dialogen og går tilbake til appen",
     "closePremiumModal": "Lukk Ambiances-tilbud",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
+    "createActivityHint": "Oppretter den egendefinerte aktiviteten og legger den til i listen din",
+    "deleteActivityHint": "Sletter denne egendefinerte aktiviteten permanent",
+    "exploreSettingsHint": "Åpner innstillinger for å oppdage premiumfunksjoner",
+    "restorePurchases": "Gjenopprett tidligere kjøp",
     "restorePurchasesHint": "Gjenopprett Ambiances-tilgang hvis du allerede har kjøpt",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "saveActivityHint": "Lagrer endringene i denne aktiviteten",
+    "unlockPremiumHint": "Start 7-dagers gratis prøveperiode, deretter engangsbetaling",
     "distraction": "Distraksjon",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
+      "dialAdjustable": "Justerbar. Sveip opp eller ned for å endre varigheten.",
+      "dialTapToToggle": "Trykk for å starte eller pause timeren",
+      "timerCompleted": "Timer fullført!",
+      "timerRunning": "Timer kjører",
+      "timerStopped": "Timer stoppet",
+      "activityStarted": "%{activity} startet",
+      "activityCompleted": "%{activity} fullført",
       "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "stopTimer": "Stopp timer",
+      "resetTimer": "Nullstill timer",
+      "dial": "Timerskive, %{minutes} minutter innstilt, %{activity}"
     },
     "unlockPremium": "Lås opp Ambiances for %{price}",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "Fargepalett: %{name}",
     "applyRitual": "Bruk ritualet %{name}",
     "editRitual": "Rediger ritualet %{name}",
     "createRitual": "Opprett et ritual",
@@ -351,26 +351,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "Opprett aktivitet",
+      "namePlaceholder": "F.eks: Gitar, Matlaging...",
+      "nameLabel": "Navn på aktiviteten",
+      "emojiLabel": "Velg emoji",
+      "emojiPlaceholder": "Trykk for å velge",
+      "durationLabel": "Standardvarighet",
+      "preview": "Forhåndsvisning",
+      "previewPlaceholder": "Min aktivitet",
+      "buttonCreate": "Opprett",
+      "errorTitle": "Manglende informasjon",
+      "errorEmoji": "Velg en emoji for aktiviteten din.",
+      "errorName": "Skriv inn et navn for aktiviteten din."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "Rediger aktivitet",
+      "buttonSave": "Lagre",
+      "buttonDelete": "Slett",
+      "deleteConfirmTitle": "Slette?",
+      "deleteConfirmMessage": "Denne handlingen kan ikke angres.",
+      "usageStats": "Brukt %{count} ganger"
     },
     "duration": {
       "minutes": "min"

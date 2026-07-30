@@ -23,83 +23,83 @@
       "ctaTrial": "7日間無料で試す"
     },
     "intentions": {
-      "title": "What's it for?",
+      "title": "何のため？",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "くつろぐ",
+        "defaultName": "瞑想"
       },
       "work": {
-        "label": "Work",
+        "label": "働く",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "創作する",
+        "defaultName": "創作"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "学ぶ",
+        "defaultName": "勉強"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "動く",
+        "defaultName": "運動"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "その他",
+        "defaultName": "自分の瞬間"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "タイマーの目的は...",
+        "focus": "もっと集中する",
+        "launch": "始めるのを助けてもらう",
+        "breathe": "自分の時間を持つ",
+        "children": "子どもとの時間を区切る",
+        "other": "その他...",
+        "otherPlaceholder": "たとえば？"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "ちょっとした助けが欲しいのは...",
+        "starting": "始めること",
+        "finishing": "最後までやり遂げる",
+        "staying": "集中し続けること",
+        "managing": "時間をもっと上手に使う",
+        "other": "その他...",
+        "otherPlaceholder": "たとえば？"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "はじめての瞬間",
+      "cta": "自分の瞬間を作る",
+      "durationLabel": "どのくらいの時間？",
+      "namePlaceholder": "瞬間に名前をつける..."
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "さあ、始めよう！",
+      "subtitle": "最初の瞬間の準備ができました。タップして始めましょう。",
+      "cta": "自分のタイマーを開始",
+      "ctaHint": "最初のタイマーを開始しよう",
+      "defaultActivity": "自分の瞬間"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "あなたの時間はあなたのもの",
+        "tapToContinue": "準備ができたら"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "あなたに合わせるタイマー",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "瞬間の終わりを見逃さないで",
+        "body": "他のアプリを使用中でも、画面がロックされていても、タイマーがお知らせします。",
+        "ctaPrimary": "はい、通知してください",
+        "ctaSecondary": "あとで"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "あなたの着信音",
+        "skip": "スキップ →"
       }
     }
   },
@@ -241,8 +241,8 @@
     "homework": "宿題",
     "music": "音楽",
     "cleaning": "掃除",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "昼寝",
+    "writing": "執筆"
   },
   "palettes": {
     "earth": "大地",
@@ -279,35 +279,35 @@
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
+    "colorNumber": "カラー %{number}",
+    "discoverMorePalettes": "タップしてさらにパレットを見る",
+    "celebrationEmoji": "お祝い",
+    "closeCreateActivity": "アクティビティ作成を閉じる",
+    "closeEditActivity": "アクティビティ編集を閉じる",
+    "closeModalHint": "このダイアログを閉じてアプリに戻ります",
     "closePremiumModal": "Ambiancesのオファーを閉じる",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
+    "createActivityHint": "カスタムアクティビティを作成してリストに追加します",
+    "deleteActivityHint": "このカスタムアクティビティを完全に削除します",
+    "exploreSettingsHint": "設定を開いてプレミアム機能を見る",
+    "restorePurchases": "以前の購入を復元",
     "restorePurchasesHint": "すでに購入済みの場合はAmbiancesへのアクセスを復元",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "saveActivityHint": "このアクティビティへの変更を保存します",
+    "unlockPremiumHint": "7日間の無料トライアルを開始、その後は一回限りの支払い",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "dialAdjustable": "調整可能。上下にスワイプして時間を変更します。",
+      "dialTapToToggle": "タップしてタイマーを開始または一時停止",
+      "timerCompleted": "タイマー完了！",
+      "timerRunning": "タイマー作動中",
+      "timerStopped": "タイマー停止",
+      "activityStarted": "%{activity} を開始しました",
+      "activityCompleted": "%{activity} が完了しました",
+      "startTimer": "タイマーを開始",
+      "stopTimer": "タイマーを停止",
+      "resetTimer": "タイマーをリセット",
+      "dial": "タイマーダイヤル、%{minutes}分設定、%{activity}"
     },
     "unlockPremium": "%{price}でAmbiancesをアンロック",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "カラーパレット: %{name}",
     "distraction": "気晴らし",
     "applyRitual": "%{name}のルーティンを適用",
     "editRitual": "%{name}のルーティンを編集",
@@ -327,26 +327,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "アクティビティを作成",
+      "namePlaceholder": "例：ギター、料理...",
+      "nameLabel": "アクティビティ名",
+      "emojiLabel": "絵文字を選ぶ",
+      "emojiPlaceholder": "タップして選択",
+      "durationLabel": "デフォルトの時間",
+      "preview": "プレビュー",
+      "previewPlaceholder": "自分のアクティビティ",
+      "buttonCreate": "作成",
+      "errorTitle": "情報が不足しています",
+      "errorEmoji": "アクティビティの絵文字を選んでください。",
+      "errorName": "アクティビティの名前を入力してください。"
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "アクティビティを編集",
+      "buttonSave": "保存",
+      "buttonDelete": "削除",
+      "deleteConfirmTitle": "削除しますか？",
+      "deleteConfirmMessage": "この操作は元に戻せません。",
+      "usageStats": "%{count}回使用"
     },
     "duration": {
       "minutes": "min"
@@ -354,17 +354,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "時間を減らす",
+      "increaseDuration": "時間を増やす",
+      "timeLabel": "時間: %{time}",
+      "durationLabel": "時間: %{time}",
+      "showTime": "時間を表示",
+      "tapToHide": "タップして隠す",
+      "tapToShow": "タップして表示"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "時計回り",
+      "counterClockwise": "反時計回り"
     },
     "distraction": {
       "tryMe": "驚かせて"

@@ -9,17 +9,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "Уменьшить длительность",
+      "increaseDuration": "Увеличить длительность",
+      "timeLabel": "Время: %{time}",
+      "durationLabel": "Длительность: %{time}",
+      "showTime": "Показать время",
+      "tapToHide": "Нажмите, чтобы скрыть",
+      "tapToShow": "Нажмите, чтобы показать"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "По часовой стрелке",
+      "counterClockwise": "Против часовой стрелки"
     },
     "distraction": {
       "tryMe": "Удиви меня"
@@ -33,55 +33,55 @@
     "restartGuide": "Перезапустить руководство",
     "restartGuideDescription": "Показать приветственный экран и подсказки снова",
     "intentions": {
-      "title": "What's it for?",
+      "title": "Для чего это?",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "Расслабиться",
+        "defaultName": "Медитация"
       },
       "work": {
-        "label": "Work",
+        "label": "Работать",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "Творить",
+        "defaultName": "Творчество"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "Учиться",
+        "defaultName": "Учёба"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "Двигаться",
+        "defaultName": "Тренировка"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "Другое",
+        "defaultName": "Мой момент"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Ваш таймер был бы для...",
+        "focus": "Лучше концентрироваться",
+        "launch": "Помочь мне начать",
+        "breathe": "Уделить время себе",
+        "children": "Выделить момент с детьми",
+        "other": "Что-то ещё...",
+        "otherPlaceholder": "Например?"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Небольшая помощь с...",
+        "starting": "Начать",
+        "finishing": "Довести до конца",
+        "staying": "Оставаться сосредоточенным",
+        "managing": "Лучше распоряжаться временем",
+        "other": "Что-то ещё...",
+        "otherPlaceholder": "Например?"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "Ваш первый момент",
+      "cta": "Создать мой момент",
+      "durationLabel": "Сколько времени?",
+      "namePlaceholder": "Назовите свой момент..."
     },
     "paywall": {
       "title": "Ты создал свой первый момент",
@@ -92,32 +92,32 @@
       "ctaTrial": "7 дней бесплатно"
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "Начинаем!",
+      "subtitle": "Ваш первый момент готов. Нажмите, чтобы начать.",
+      "cta": "Запустить мой таймер",
+      "ctaHint": "Запустите свой первый таймер",
+      "defaultActivity": "Мой момент"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "Ваше время принадлежит вам",
+        "tapToContinue": "Когда будете готовы"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "Таймер, который подстраивается под вас",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "Не пропустите окончание своих моментов",
+        "body": "Таймер уведомит вас, даже если вы используете другое приложение или экран заблокирован.",
+        "ctaPrimary": "Да, уведомить меня",
+        "ctaSecondary": "Может быть, позже"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "Ваш звук уведомления",
+        "skip": "Пропустить →"
       }
     }
   },
@@ -259,8 +259,8 @@
     "homework": "Домашняя работа",
     "music": "Музыка",
     "cleaning": "Уборка",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "Сон",
+    "writing": "Письмо"
   },
   "palettes": {
     "earth": "Земля",
@@ -297,36 +297,36 @@
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
+    "colorNumber": "Цвет %{number}",
+    "discoverMorePalettes": "Нажмите, чтобы увидеть больше палитр",
+    "celebrationEmoji": "Празднование",
+    "closeCreateActivity": "Закрыть создание активности",
+    "closeEditActivity": "Закрыть редактирование активности",
+    "closeModalHint": "Закрывает это диалоговое окно и возвращает в приложение",
     "closePremiumModal": "Закрыть предложение Ambiances",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
+    "createActivityHint": "Создаёт пользовательскую активность и добавляет её в ваш список",
+    "deleteActivityHint": "Безвозвратно удаляет эту пользовательскую активность",
+    "exploreSettingsHint": "Открывает настройки для знакомства с premium-функциями",
+    "restorePurchases": "Восстановить предыдущие покупки",
     "restorePurchasesHint": "Восстановить доступ к Ambiances, если вы уже приобрели",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "saveActivityHint": "Сохраняет изменения в этой активности",
+    "unlockPremiumHint": "Начните 7-дневный бесплатный пробный период, затем единоразовый платёж",
     "distraction": "Отвлечение",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "dialAdjustable": "Регулируется. Проведите вверх или вниз, чтобы изменить длительность.",
+      "dialTapToToggle": "Нажмите, чтобы запустить или приостановить таймер",
+      "timerCompleted": "Таймер завершён!",
+      "timerRunning": "Таймер работает",
+      "timerStopped": "Таймер остановлен",
+      "activityStarted": "%{activity} начато",
+      "activityCompleted": "%{activity} завершено",
+      "startTimer": "Запустить таймер",
+      "stopTimer": "Остановить таймер",
+      "resetTimer": "Сбросить таймер",
+      "dial": "Циферблат таймера, установлено %{minutes} минут, %{activity}"
     },
     "unlockPremium": "Разблокировать Ambiances за %{price}",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "Цветовая палитра: %{name}",
     "applyRitual": "Применить ритуал %{name}",
     "editRitual": "Изменить ритуал %{name}",
     "createRitual": "Создать ритуал",
@@ -351,26 +351,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "Создать активность",
+      "namePlaceholder": "Например: гитара, готовка...",
+      "nameLabel": "Название активности",
+      "emojiLabel": "Выбрать эмодзи",
+      "emojiPlaceholder": "Нажмите, чтобы выбрать",
+      "durationLabel": "Длительность по умолчанию",
+      "preview": "Предпросмотр",
+      "previewPlaceholder": "Моя активность",
+      "buttonCreate": "Создать",
+      "errorTitle": "Недостаточно данных",
+      "errorEmoji": "Пожалуйста, выберите эмодзи для вашей активности.",
+      "errorName": "Пожалуйста, введите название для вашей активности."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "Изменить активность",
+      "buttonSave": "Сохранить",
+      "buttonDelete": "Удалить",
+      "deleteConfirmTitle": "Удалить?",
+      "deleteConfirmMessage": "Это действие необратимо.",
+      "usageStats": "Использовано %{count} раз"
     },
     "duration": {
       "minutes": "min"

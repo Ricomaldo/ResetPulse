@@ -23,83 +23,83 @@
       "ctaTrial": "免費試用 7 天"
     },
     "intentions": {
-      "title": "What's it for?",
+      "title": "這是為了什麼？",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "放鬆",
+        "defaultName": "冥想"
       },
       "work": {
-        "label": "Work",
+        "label": "工作",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "創作",
+        "defaultName": "創作"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "學習",
+        "defaultName": "學習"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "運動",
+        "defaultName": "鍛鍊"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "其他",
+        "defaultName": "我的時刻"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "你的計時器是為了...",
+        "focus": "更好地專注",
+        "launch": "幫我開始行動",
+        "breathe": "留些時間給自己",
+        "children": "與孩子共度一段專屬時光",
+        "other": "其他...",
+        "otherPlaceholder": "比如說？"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "需要一點幫助...",
+        "starting": "開始行動",
+        "finishing": "堅持到底",
+        "staying": "保持專注",
+        "managing": "更好地管理時間",
+        "other": "其他...",
+        "otherPlaceholder": "比如說？"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "你的第一個時刻",
+      "cta": "建立我的時刻",
+      "durationLabel": "多長時間？",
+      "namePlaceholder": "為你的時刻命名..."
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "出發！",
+      "subtitle": "你的第一個時刻已準備好，點按開始。",
+      "cta": "啟動我的計時器",
+      "ctaHint": "啟動你的第一個計時器",
+      "defaultActivity": "我的時刻"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "你的時間屬於你",
+        "tapToContinue": "準備好的時候"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "一個適應你的計時器",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "別錯過你的時刻結束的瞬間",
+        "body": "即使你在使用其他應用程式或螢幕已鎖定，計時器也會提醒你。",
+        "ctaPrimary": "好，提醒我",
+        "ctaSecondary": "以後再說"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "你的提示音",
+        "skip": "跳過 →"
       }
     }
   },
@@ -229,8 +229,8 @@
     "homework": "作業",
     "music": "音樂",
     "cleaning": "清潔",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "小睡",
+    "writing": "寫作"
   },
   "palettes": {
     "earth": "大地",
@@ -266,35 +266,35 @@
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
+    "colorNumber": "顏色 %{number}",
+    "discoverMorePalettes": "點按以探索更多調色盤",
+    "celebrationEmoji": "慶祝",
+    "closeCreateActivity": "關閉建立活動",
+    "closeEditActivity": "關閉編輯活動",
+    "closeModalHint": "關閉此對話框並返回應用程式",
     "closePremiumModal": "關閉 Ambiances 優惠",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
+    "createActivityHint": "建立自訂活動並加入您的清單",
+    "deleteActivityHint": "永久刪除此自訂活動",
+    "exploreSettingsHint": "開啟設定以探索進階功能",
+    "restorePurchases": "恢復先前的購買",
     "restorePurchasesHint": "如果您已購買，恢復 Ambiances 存取權限",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "saveActivityHint": "儲存此活動的變更",
+    "unlockPremiumHint": "開始7天免費試用，之後一次性付款",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "dialAdjustable": "可調整。向上或向下滑動以變更時長。",
+      "dialTapToToggle": "點按以啟動或暫停計時器",
+      "timerCompleted": "計時器已完成！",
+      "timerRunning": "計時器執行中",
+      "timerStopped": "計時器已停止",
+      "activityStarted": "%{activity} 已開始",
+      "activityCompleted": "%{activity} 已完成",
+      "startTimer": "啟動計時器",
+      "stopTimer": "停止計時器",
+      "resetTimer": "重設計時器",
+      "dial": "計時器錶盤，已設定 %{minutes} 分鐘，%{activity}"
     },
     "unlockPremium": "以 %{price} 解鎖 Ambiances",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "調色盤：%{name}",
     "showTime": "顯示時間",
     "distraction": "分心",
     "applyRitual": "套用「%{name}」儀式",
@@ -315,26 +315,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "建立活動",
+      "namePlaceholder": "例如：吉他、烹飪...",
+      "nameLabel": "活動名稱",
+      "emojiLabel": "選擇表情符號",
+      "emojiPlaceholder": "點按以選擇",
+      "durationLabel": "預設時長",
+      "preview": "預覽",
+      "previewPlaceholder": "我的活動",
+      "buttonCreate": "建立",
+      "errorTitle": "資訊缺失",
+      "errorEmoji": "請為您的活動選擇一個表情符號。",
+      "errorName": "請為您的活動輸入名稱。"
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "編輯活動",
+      "buttonSave": "儲存",
+      "buttonDelete": "刪除",
+      "deleteConfirmTitle": "刪除？",
+      "deleteConfirmMessage": "此操作無法復原。",
+      "usageStats": "已使用 %{count} 次"
     },
     "duration": {
       "minutes": "min"
@@ -342,17 +342,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "減少時長",
+      "increaseDuration": "增加時長",
+      "timeLabel": "時間：%{time}",
+      "durationLabel": "時長：%{time}",
+      "showTime": "顯示時間",
+      "tapToHide": "點按以隱藏",
+      "tapToShow": "點按以顯示"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "順時針",
+      "counterClockwise": "逆時針"
     },
     "distraction": {
       "tryMe": "給我一個驚喜"

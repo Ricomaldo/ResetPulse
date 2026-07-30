@@ -23,83 +23,83 @@
       "ctaTrial": "Testa 7 dias grátis"
     },
     "intentions": {
-      "title": "What's it for?",
+      "title": "Para que é?",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "Relaxar",
+        "defaultName": "Meditação"
       },
       "work": {
-        "label": "Work",
+        "label": "Trabalhar",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "Criar",
+        "defaultName": "Criação"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "Aprender",
+        "defaultName": "Estudo"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "Mexer-me",
+        "defaultName": "Treino"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "Outro",
+        "defaultName": "O meu momento"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "O teu temporizador seria para...",
+        "focus": "Concentrar-me melhor",
+        "launch": "Ajudar-me a começar",
+        "breathe": "Ter tempo para mim",
+        "children": "Enquadrar um momento com os meus filhos",
+        "other": "Outra coisa...",
+        "otherPlaceholder": "Como o quê?"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Uma pequena ajuda com...",
+        "starting": "Começar",
+        "finishing": "Ir até ao fim",
+        "staying": "Manter-me concentrado",
+        "managing": "Gerir melhor o meu tempo",
+        "other": "Outra coisa...",
+        "otherPlaceholder": "Como o quê?"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "O teu primeiro momento",
+      "cta": "Criar o meu momento",
+      "durationLabel": "Quanto tempo?",
+      "namePlaceholder": "Dá um nome ao teu momento..."
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "Vamos lá!",
+      "subtitle": "O teu primeiro momento está pronto. Toca para começar.",
+      "cta": "Iniciar o meu temporizador",
+      "ctaHint": "Inicia o teu primeiro temporizador",
+      "defaultActivity": "O meu momento"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "O teu tempo pertence-te",
+        "tapToContinue": "Quando estiveres pronto"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "Um temporizador que se adapta a ti",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "Não percas o fim dos teus momentos",
+        "body": "O teu temporizador vai avisar-te mesmo que uses outra app ou o ecrã esteja bloqueado.",
+        "ctaPrimary": "Sim, avisa-me",
+        "ctaSecondary": "Talvez mais tarde"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "O teu toque",
+        "skip": "Saltar →"
       }
     }
   },
@@ -237,12 +237,12 @@
     "walking": "Caminhar",
     "creativity": "Criatividade",
     "cooking": "Cozinhar",
-    "gaming": "Gaming",
+    "gaming": "Jogos",
     "homework": "Trabalhos de casa",
     "music": "Música",
     "cleaning": "Limpeza",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "Sesta",
+    "writing": "Escrita"
   },
   "palettes": {
     "earth": "Terra",
@@ -300,13 +300,13 @@
       "timerStopped": "Temporizador parado",
       "activityStarted": "%{activity} iniciado",
       "activityCompleted": "%{activity} concluído",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "startTimer": "Iniciar temporizador",
+      "stopTimer": "Parar temporizador",
+      "resetTimer": "Reiniciar temporizador",
+      "dial": "Mostrador do temporizador, %{minutes} minutos definidos, %{activity}"
     },
     "unlockPremium": "Desbloquear Ambiances por %{price}",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "Paleta de cores: %{name}",
     "showTime": "Mostrar o tempo",
     "distraction": "Distração",
     "applyRitual": "Aplicar o ritual %{name}",
@@ -327,26 +327,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "Criar atividade",
+      "namePlaceholder": "Ex: Guitarra, Cozinha...",
+      "nameLabel": "Nome da atividade",
+      "emojiLabel": "Escolher emoji",
+      "emojiPlaceholder": "Toca para escolher",
+      "durationLabel": "Duração padrão",
+      "preview": "Pré-visualização",
+      "previewPlaceholder": "A minha atividade",
+      "buttonCreate": "Criar",
+      "errorTitle": "Informação em falta",
+      "errorEmoji": "Por favor, escolhe um emoji para a tua atividade.",
+      "errorName": "Por favor, insere um nome para a tua atividade."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "Editar atividade",
+      "buttonSave": "Guardar",
+      "buttonDelete": "Eliminar",
+      "deleteConfirmTitle": "Eliminar?",
+      "deleteConfirmMessage": "Esta ação é irreversível.",
+      "usageStats": "Usada %{count} vezes"
     },
     "duration": {
       "minutes": "min"
@@ -354,17 +354,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "Diminuir duração",
+      "increaseDuration": "Aumentar duração",
+      "timeLabel": "Tempo: %{time}",
+      "durationLabel": "Duração: %{time}",
+      "showTime": "Mostrar tempo",
+      "tapToHide": "Toca para ocultar",
+      "tapToShow": "Toca para mostrar"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "Sentido horário",
+      "counterClockwise": "Sentido anti-horário"
     },
     "distraction": {
       "tryMe": "surpreende-me"

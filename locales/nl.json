@@ -23,83 +23,83 @@
       "ctaTrial": "7 dagen gratis proberen"
     },
     "intentions": {
-      "title": "What's it for?",
+      "title": "Waarvoor is het?",
       "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
+        "label": "Ontspannen",
+        "defaultName": "Meditatie"
       },
       "work": {
-        "label": "Work",
+        "label": "Werken",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "Creëren",
+        "defaultName": "Creatie"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "Leren",
+        "defaultName": "Studeren"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "Bewegen",
+        "defaultName": "Work-out"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "Anders",
+        "defaultName": "Mijn moment"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Jouw timer zou zijn voor...",
+        "focus": "Beter focussen",
+        "launch": "Mij helpen op gang te komen",
+        "breathe": "Tijd voor mezelf nemen",
+        "children": "Een moment met mijn kinderen afbakenen",
+        "other": "Iets anders...",
+        "otherPlaceholder": "Zoals wat?"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Een beetje hulp bij...",
+        "starting": "Op gang komen",
+        "finishing": "Het afmaken",
+        "staying": "Gefocust blijven",
+        "managing": "Mijn tijd beter beheren",
+        "other": "Iets anders...",
+        "otherPlaceholder": "Zoals wat?"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "Jouw eerste moment",
+      "cta": "Mijn moment maken",
+      "durationLabel": "Hoe lang?",
+      "namePlaceholder": "Geef je moment een naam..."
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "Daar gaan we!",
+      "subtitle": "Jouw eerste moment is klaar. Tik om te beginnen.",
+      "cta": "Mijn timer starten",
+      "ctaHint": "Start je eerste timer",
+      "defaultActivity": "Mijn moment"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "Jouw tijd is van jou",
+        "tapToContinue": "Wanneer je klaar bent"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "Een timer die zich aan jou aanpast",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "Mis het einde van je momenten niet",
+        "body": "Je timer waarschuwt je, ook als je een andere app gebruikt of je scherm vergrendeld is.",
+        "ctaPrimary": "Ja, waarschuw me",
+        "ctaSecondary": "Misschien later"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "Jouw geluid",
+        "skip": "Overslaan →"
       }
     }
   },
@@ -241,8 +241,8 @@
     "homework": "Huiswerk",
     "music": "Muziek",
     "cleaning": "Schoonmaken",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "Dutje",
+    "writing": "Schrijven"
   },
   "palettes": {
     "earth": "Aarde",
@@ -278,35 +278,35 @@
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
+    "colorNumber": "Kleur %{number}",
+    "discoverMorePalettes": "Tik om meer paletten te ontdekken",
+    "celebrationEmoji": "Viering",
+    "closeCreateActivity": "Activiteit maken sluiten",
+    "closeEditActivity": "Activiteit bewerken sluiten",
+    "closeModalHint": "Sluit dit dialoogvenster en keert terug naar de app",
     "closePremiumModal": "Ambiances-aanbieding sluiten",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
+    "createActivityHint": "Maakt de aangepaste activiteit en voegt deze toe aan je lijst",
+    "deleteActivityHint": "Verwijdert deze aangepaste activiteit permanent",
+    "exploreSettingsHint": "Opent instellingen om premium functies te ontdekken",
+    "restorePurchases": "Eerdere aankopen herstellen",
     "restorePurchasesHint": "Ambiances-toegang herstellen als je al hebt gekocht",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "saveActivityHint": "Slaat wijzigingen aan deze activiteit op",
+    "unlockPremiumHint": "Start een gratis proefperiode van 7 dagen, daarna eenmalige betaling",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "dialAdjustable": "Aanpasbaar. Veeg omhoog of omlaag om de duur te wijzigen.",
+      "dialTapToToggle": "Tik om de timer te starten of te pauzeren",
+      "timerCompleted": "Timer voltooid!",
+      "timerRunning": "Timer loopt",
+      "timerStopped": "Timer gestopt",
+      "activityStarted": "%{activity} gestart",
+      "activityCompleted": "%{activity} voltooid",
+      "startTimer": "Timer starten",
+      "stopTimer": "Timer stoppen",
+      "resetTimer": "Timer resetten",
+      "dial": "Timerwijzerplaat, %{minutes} minuten ingesteld, %{activity}"
     },
     "unlockPremium": "Ambiances ontgrendelen voor %{price}",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "Kleurenpalet: %{name}",
     "showTime": "Tijd tonen",
     "applyRitual": "Het ritueel %{name} toepassen",
     "editRitual": "Het ritueel %{name} bewerken",
@@ -327,26 +327,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "Activiteit aanmaken",
+      "namePlaceholder": "Bijv: Gitaar, Koken...",
+      "nameLabel": "Naam van de activiteit",
+      "emojiLabel": "Emoji kiezen",
+      "emojiPlaceholder": "Tik om te kiezen",
+      "durationLabel": "Standaardduur",
+      "preview": "Voorbeeld",
+      "previewPlaceholder": "Mijn activiteit",
+      "buttonCreate": "Aanmaken",
+      "errorTitle": "Ontbrekende informatie",
+      "errorEmoji": "Kies een emoji voor je activiteit.",
+      "errorName": "Voer een naam in voor je activiteit."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "Activiteit bewerken",
+      "buttonSave": "Opslaan",
+      "buttonDelete": "Verwijderen",
+      "deleteConfirmTitle": "Verwijderen?",
+      "deleteConfirmMessage": "Deze actie is onomkeerbaar.",
+      "usageStats": "%{count} keer gebruikt"
     },
     "duration": {
       "minutes": "min"
@@ -354,17 +354,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "Duur verlagen",
+      "increaseDuration": "Duur verhogen",
+      "timeLabel": "Tijd: %{time}",
+      "durationLabel": "Duur: %{time}",
+      "showTime": "Tijd tonen",
+      "tapToHide": "Tik om te verbergen",
+      "tapToShow": "Tik om te tonen"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "Met de klok mee",
+      "counterClockwise": "Tegen de klok in"
     },
     "distraction": {
       "tryMe": "Verras me"

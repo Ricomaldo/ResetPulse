@@ -23,83 +23,83 @@
       "ctaTrial": "Prova 7 dagar gratis"
     },
     "intentions": {
-      "title": "What's it for?",
+      "title": "Vad är det till för?",
       "relax": {
-        "label": "Relax",
+        "label": "Koppla av",
         "defaultName": "Meditation"
       },
       "work": {
-        "label": "Work",
+        "label": "Arbeta",
         "defaultName": "Focus"
       },
       "create": {
-        "label": "Create",
-        "defaultName": "Create"
+        "label": "Skapa",
+        "defaultName": "Skapande"
       },
       "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
+        "label": "Lära",
+        "defaultName": "Studier"
       },
       "move": {
-        "label": "Move",
-        "defaultName": "Workout"
+        "label": "Röra på sig",
+        "defaultName": "Träning"
       },
       "other": {
-        "label": "Other",
-        "defaultName": "My moment"
+        "label": "Annat",
+        "defaultName": "Mitt ögonblick"
       },
       "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Din timer skulle vara för...",
+        "focus": "Fokusera bättre",
+        "launch": "Hjälpa mig komma igång",
+        "breathe": "Ta tid för mig själv",
+        "children": "Rama in en stund med mina barn",
+        "other": "Något annat...",
+        "otherPlaceholder": "Som vad?"
       },
       "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
+        "title": "Lite hjälp med...",
+        "starting": "Komma igång",
+        "finishing": "Fullfölja",
+        "staying": "Hålla fokus",
+        "managing": "Hantera min tid bättre",
+        "other": "Något annat...",
+        "otherPlaceholder": "Som vad?"
       }
     },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
+      "sectionTitle": "Ditt första ögonblick",
+      "cta": "Skapa mitt ögonblick",
+      "durationLabel": "Hur länge?",
+      "namePlaceholder": "Namnge ditt ögonblick..."
     },
     "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "title": "Nu kör vi!",
+      "subtitle": "Ditt första ögonblick är klart. Tryck för att börja.",
+      "cta": "Starta min timer",
+      "ctaHint": "Starta din första timer",
+      "defaultActivity": "Mitt ögonblick"
     },
     "v2": {
       "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
+        "breathe": "Din tid tillhör dig",
+        "tapToContinue": "När du är redo"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "En timer som anpassar sig efter dig",
         "subtitle": ""
       }
     },
     "v3": {
       "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
+        "title": "Missa inte när dina ögonblick tar slut",
+        "body": "Din timer meddelar dig även om du använder en annan app eller din skärm är låst.",
+        "ctaPrimary": "Ja, meddela mig",
+        "ctaSecondary": "Kanske senare"
       },
       "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "Din ringsignal",
+        "skip": "Hoppa över →"
       }
     }
   },
@@ -241,8 +241,8 @@
     "homework": "Läxor",
     "music": "Musik",
     "cleaning": "Städning",
-    "nap": "Nap",
-    "writing": "Writing"
+    "nap": "Tupplur",
+    "writing": "Skrivande"
   },
   "palettes": {
     "earth": "Jord",
@@ -278,35 +278,35 @@
     "customActivityHint": "Appuyez pour sélectionner, maintenez pour modifier",
     "moreActivities": "Découvrir plus d'activités",
     "discoverPremium": "Appuyez pour découvrir les activités premium",
-    "colorNumber": "Couleur %{number}",
-    "discoverMorePalettes": "Appuyez pour découvrir plus de palettes",
-    "celebrationEmoji": "Celebration",
-    "closeCreateActivity": "Close create activity",
-    "closeEditActivity": "Close edit activity",
-    "closeModalHint": "Closes this dialog and returns to the app",
+    "colorNumber": "Färg %{number}",
+    "discoverMorePalettes": "Tryck för att upptäcka fler paletter",
+    "celebrationEmoji": "Firande",
+    "closeCreateActivity": "Stäng skapa aktivitet",
+    "closeEditActivity": "Stäng redigera aktivitet",
+    "closeModalHint": "Stänger den här dialogrutan och återgår till appen",
     "closePremiumModal": "Stäng Ambiances-erbjudande",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "deleteActivityHint": "Permanently deletes this custom activity",
-    "exploreSettingsHint": "Opens settings to discover premium features",
-    "restorePurchases": "Restore previous purchases",
+    "createActivityHint": "Skapar den anpassade aktiviteten och lägger till den i din lista",
+    "deleteActivityHint": "Tar bort den här anpassade aktiviteten permanent",
+    "exploreSettingsHint": "Öppnar inställningar för att upptäcka premiumfunktioner",
+    "restorePurchases": "Återställ tidigare köp",
     "restorePurchasesHint": "Återställ Ambiances-åtkomst om du redan har köpt",
-    "saveActivityHint": "Saves changes to this activity",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
+    "saveActivityHint": "Sparar ändringar för den här aktiviteten",
+    "unlockPremiumHint": "Starta 7 dagars gratis provperiod, sedan en engångsbetalning",
     "timer": {
-      "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
-      "dialTapToToggle": "Tap to start or pause timer",
-      "timerCompleted": "Timer completed!",
-      "timerRunning": "Timer running",
-      "timerStopped": "Timer stopped",
-      "activityStarted": "%{activity} started",
-      "activityCompleted": "%{activity} completed",
-      "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer",
-      "dial": "Timer dial, %{minutes} minutes set, %{activity}"
+      "dialAdjustable": "Justerbar. Svep upp eller ner för att ändra längden.",
+      "dialTapToToggle": "Tryck för att starta eller pausa timern",
+      "timerCompleted": "Timer klar!",
+      "timerRunning": "Timer igång",
+      "timerStopped": "Timer stoppad",
+      "activityStarted": "%{activity} startad",
+      "activityCompleted": "%{activity} avslutad",
+      "startTimer": "Starta timer",
+      "stopTimer": "Stoppa timer",
+      "resetTimer": "Återställ timer",
+      "dial": "Timerskiva, %{minutes} minuter inställda, %{activity}"
     },
     "unlockPremium": "Lås upp Ambiances för %{price}",
-    "paletteItem": "Color palette: %{name}",
+    "paletteItem": "Färgpalett: %{name}",
     "showTime": "Visa tid",
     "applyRitual": "Tillämpa ritualen %{name}",
     "editRitual": "Redigera ritualen %{name}",
@@ -327,26 +327,26 @@
     "addButton": "Ajouter un moment",
     "addButtonHint": "Appuyez pour créer un nouveau moment personnalisé",
     "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
+      "title": "Skapa aktivitet",
+      "namePlaceholder": "T.ex: Gitarr, Matlagning...",
+      "nameLabel": "Aktivitetens namn",
+      "emojiLabel": "Välj emoji",
+      "emojiPlaceholder": "Tryck för att välja",
+      "durationLabel": "Standardlängd",
+      "preview": "Förhandsgranskning",
+      "previewPlaceholder": "Min aktivitet",
+      "buttonCreate": "Skapa",
+      "errorTitle": "Information saknas",
+      "errorEmoji": "Välj en emoji för din aktivitet.",
+      "errorName": "Ange ett namn för din aktivitet."
     },
     "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
+      "title": "Redigera aktivitet",
+      "buttonSave": "Spara",
+      "buttonDelete": "Ta bort",
+      "deleteConfirmTitle": "Ta bort?",
+      "deleteConfirmMessage": "Den här åtgärden kan inte ångras.",
+      "usageStats": "Använd %{count} gånger"
     },
     "duration": {
       "minutes": "min"
@@ -354,17 +354,17 @@
   },
   "controls": {
     "digitalTimer": {
-      "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "decreaseDuration": "Minska längd",
+      "increaseDuration": "Öka längd",
+      "timeLabel": "Tid: %{time}",
+      "durationLabel": "Längd: %{time}",
+      "showTime": "Visa tid",
+      "tapToHide": "Tryck för att dölja",
+      "tapToShow": "Tryck för att visa"
     },
     "rotation": {
-      "clockwise": "Clockwise",
-      "counterClockwise": "Counter-clockwise"
+      "clockwise": "Medurs",
+      "counterClockwise": "Moturs"
     },
     "distraction": {
       "tryMe": "Överraska mig"
