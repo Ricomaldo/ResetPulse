@@ -222,10 +222,12 @@ function formatTime(totalSecondsRaw) {
 // hors du bloc centré — le start ne déplace plus rien sous le disque
 // (remplace l'ancien DigitalTimer conditionnel sur `running`, seule source
 // du saut de layout repos→séance).
+// hotfix-porte-1 B3/D3 : pur affichage, plus de tap ici — montrer/masquer
+// vit dans le sheet (toggle `showTime` existant, AsideZone). Masqué : ni le
+// temps ni le glyphe ⏱ ne montent (plus de `••:••` fantôme).
 function TopTime({ seconds }) {
   const theme = useTheme();
-  const t = useTranslation();
-  const { display: { showTime }, setShowTime } = useTimerConfig();
+  const { display: { showTime } } = useTimerConfig();
 
   const styles = StyleSheet.create({
     text: {
@@ -251,27 +253,16 @@ function TopTime({ seconds }) {
     },
   });
 
+  if (!showTime) {
+    return null;
+  }
+
   return (
-    <View style={styles.wrap}>
-      <TouchableOpacity
-        testID="timer.digital"
-        onPress={() => {
-          haptics.selection().catch(() => {});
-          setShowTime(!showTime);
-        }}
-        activeOpacity={0.7}
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel={showTime
-          ? t('controls.digitalTimer.timeLabel', { time: formatTime(seconds) })
-          : t('controls.digitalTimer.showTime')}
-        accessibilityHint={showTime ? t('controls.digitalTimer.tapToHide') : t('controls.digitalTimer.tapToShow')}
-      >
-        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-          <Text style={styles.glyph}>⏱</Text>
-          <Text style={styles.text}>{showTime ? formatTime(seconds) : '••:••'}</Text>
-        </View>
-      </TouchableOpacity>
+    <View style={styles.wrap} testID="timer.digital">
+      <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+        <Text style={styles.glyph}>⏱</Text>
+        <Text style={styles.text}>{formatTime(seconds)}</Text>
+      </View>
     </View>
   );
 }
