@@ -101,12 +101,22 @@ export default function TimeTimer({
   // Refs for onboarding
   const dialWrapperRef = useRef(null);
 
-  // Pass timer ref to parent if needed
+  // Pass timer ref to parent if needed.
+  // Fix crash « Maximum update depth exceeded » (drag rapide, lot-fix-drag) :
+  // dépendre de `timer` (objet neuf à CHAQUE render de useTimer) refirait cet
+  // effet à chaque render — au repos, chaque tick de drag redéclenche
+  // setCurrentDuration → resync remaining → nouvel objet timer → effet →
+  // parent → setState, empilé plus vite que React ne digère en drag rapide.
+  // On dépend des PRIMITIFS réellement consommés en aval (le parent ne lit
+  // que running/remaining/isCompleted/displayMessage) : l'effet ne fire que
+  // sur changement RÉEL. On notifie avec timerRef.current (déjà resynchronisé
+  // chaque render, ligne 99) pour que le parent reçoive l'objet frais malgré
+  // la dépendance restreinte.
   useEffect(() => {
     if (onTimerRef) {
-      onTimerRef(timer);
+      onTimerRef(timerRef.current);
     }
-  }, [onTimerRef, timer]); // Include timer to avoid stale references
+  }, [onTimerRef, timer.running, timer.remaining, timer.isCompleted, timer.displayMessage]);
 
   // Pass dial ref to parent (pass .current directly)
   useEffect(() => {

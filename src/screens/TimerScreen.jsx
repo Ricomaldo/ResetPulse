@@ -562,12 +562,24 @@ function TimerScreenContent() {
   // que la machine ADR-007 les produit déjà, pour piloter l'affichage sous le
   // disque et le tap (start / stop-rembobinage / reset).
   const timerRef = useRef(null);
+  // Différé du raccord snapshot (fix « Maximum update depth exceeded »,
+  // lot-fix-drag) : voir handleTimerRef ci-dessous pour le mécanisme.
+  const pendingSnapshotTimeoutRef = useRef(null);
   const [snapshot, setSnapshot] = useState({
     running: false,
     remaining: 0,
     isCompleted: false,
     displayMessage: '',
   });
+
+  // Purge le différé en vol au démontage — pas de setState après unmount.
+  useEffect(() => {
+    return () => {
+      if (pendingSnapshotTimeoutRef.current != null) {
+        clearTimeout(pendingSnapshotTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // ADR-014 : ne bloque jamais rien — démarrer le timer complète la
   // Première fois à N'IMPORTE QUEL moment (pas seulement au moment 4).
@@ -582,8 +594,17 @@ function TimerScreenContent() {
     }
   }, [snapshot.running]);
 
-  const handleTimerRef = useCallback((timer) => {
-    timerRef.current = timer;
+  // Applique le snapshot depuis timerRef.current — jamais depuis l'argument
+  // reçu au moment de la programmation : au moment où ce différé s'exécute,
+  // timerRef.current porte toujours la valeur la PLUS FRAÎCHE (une
+  // notification plus récente a pu arriver et annuler ce différé pour le
+  // remplacer par le sien, cf. handleTimerRef).
+  const applySnapshotFromRef = useCallback(() => {
+    pendingSnapshotTimeoutRef.current = null;
+    const timer = timerRef.current;
+    if (!timer) {
+      return;
+    }
     setSnapshot((prev) => {
       if (
         prev.running === timer.running &&
@@ -601,6 +622,33 @@ function TimerScreenContent() {
       };
     });
   }, []);
+
+  const handleTimerRef = useCallback(
+    (timer) => {
+      // Synchrone et immédiat : handleDialTap (tap start/stop/reset) lit
+      // timerRef.current directement, sans attendre le différé ci-dessous.
+      timerRef.current = timer;
+
+      // Casse la chaîne imbriquée (mandat lot-fix-drag) : TimeTimer notifie
+      // depuis un effet passif ; en drag rapide au repos, `remaining` change
+      // RÉELLEMENT à chaque frame (pas de bail possible), donc chaque
+      // notification programmait un setSnapshot synchrone dans la même
+      // chaîne de rendus imbriqués — React finissait par dépasser son
+      // compteur de 50 mises à jour imbriquées (crash « Maximum update depth
+      // exceeded »). setTimeout(0) — plutôt qu'une microtâche — sort
+      // GARANTI de la tâche JS en cours (donc du décompte de React) : au tick
+      // suivant de la boucle d'événements, il ne reste plus de chaîne
+      // synchrone à casser.
+      // Une seule mise à jour en vol : une notification plus fraîche annule
+      // le différé précédent (jamais deux setSnapshot empilés pour un même
+      // geste).
+      if (pendingSnapshotTimeoutRef.current != null) {
+        clearTimeout(pendingSnapshotTimeoutRef.current);
+      }
+      pendingSnapshotTimeoutRef.current = setTimeout(applySnapshotFromRef, 0);
+    },
+    [applySnapshotFromRef],
+  );
 
   const handleDialTap = useCallback(() => {
     const timer = timerRef.current;
