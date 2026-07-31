@@ -10,7 +10,8 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useTranslation } from '../../hooks/useTranslation';
-import { getActivityById } from '../../config/activities';
+import { useModalStack } from '../../contexts/ModalStackContext';
+import { FREE_ACTIVITY_IDS, getActivityById, getAllActivities, isCustomActivity } from '../../config/activities';
 import { deriveRitualName, resolveRitualActivity, shouldDeriveNameFromActivity, suggestedColorFor } from '../../config/rituals';
 import { DEFAULT_SOUND_ID } from '../../config/sounds';
 import { getAllPalettes, TIMER_PALETTES } from '../../config/timer-palettes';
@@ -20,7 +21,27 @@ import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
-const FORM_ACTIVITY_IDS = ['meditation', 'break', 'work'];
+// ADR-017 §4 — la vitrine : les activités built-in librement sélectionnables
+// dans « Mes rituels », en pleine couleur pour tout le monde. FREE_ACTIVITY_IDS
+// vit dans activities.js (curation provisoire, partagée avec isActivityFree).
+const FORM_ACTIVITY_IDS = FREE_ACTIVITY_IDS;
+
+// Défaut historique (Lot 2, C6) d'une création SANS rituel initial — préservé
+// tel quel malgré l'élargissement de FORM_ACTIVITY_IDS (l'ordre de la vitrine
+// suit la curation ADR-017, pas cette présélection).
+const DEFAULT_NEW_RITUAL_ACTIVITY_ID = 'meditation';
+
+// Reste du catalogue built-in (hors vitrine) : visible mais grisé pour un
+// user free — chaque bouton grisé est une porte Ambiances (ADR-017 §4).
+// Le grid derrière le « + » les affiche à côté de la grille d'emoji custom.
+const OTHER_BUILTIN_ACTIVITIES = getAllActivities().filter(
+  (activity) => !FREE_ACTIVITY_IDS.includes(activity.id)
+);
+
+// Union des ids built-in (vitrine + reste) — sert à distinguer, à
+// l'ouverture du formulaire en édition, une activité built-in HORS vitrine
+// (ex. `gaming`, cas piège ADR-017) d'une véritable activité custom.
+const ALL_BUILTIN_IDS = getAllActivities().map((activity) => activity.id);
 
 /**
  * Carrousel de couleurs paginé LOCAL au formulaire (C2/D7, hotfix-porte-1) —
@@ -133,7 +154,9 @@ const CUSTOM_EMOJI_CHOICES = [
 export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, maxHeight }) {
   const theme = useTheme();
   const t = useTranslation();
-  const { customActivities, createActivity } = useCustomActivities();
+  const { customActivities, createActivity, canCreateActivity } = useCustomActivities();
+  const { isPremium } = usePremiumStatus();
+  const modalStack = useModalStack();
   const [showEmojiGrid, setShowEmojiGrid] = useState(false);
   // porte-3 (demande Eric) : « autre… » — en complément de la grille curée,
   // un TextInput VISIBLE (le clavier emoji ne s'ouvre pas programmatiquement
@@ -143,8 +166,11 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
 
   const initialActivity = initialRitual
     ? resolveRitualActivity(initialRitual, customActivities)
-    : getActivityById(FORM_ACTIVITY_IDS[0]);
-  const initialBuiltInId = FORM_ACTIVITY_IDS.includes(initialActivity?.id) ? initialActivity.id : null;
+    : getActivityById(DEFAULT_NEW_RITUAL_ACTIVITY_ID);
+  // ALL_BUILTIN_IDS (vitrine + reste), pas seulement FORM_ACTIVITY_IDS — sinon
+  // un rituel qui référence un built-in hors vitrine (ex. `gaming`, cas piège
+  // ADR-017 §4) tombait à tort dans la branche « emoji custom en attente ».
+  const initialBuiltInId = ALL_BUILTIN_IDS.includes(initialActivity?.id) ? initialActivity.id : null;
 
   const [selectedActivityId, setSelectedActivityId] = useState(initialBuiltInId);
   const [pendingCustomEmoji, setPendingCustomEmoji] = useState(
@@ -158,10 +184,34 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
   );
   const [soundId, setSoundId] = useState(initialRitual?.soundId || DEFAULT_SOUND_ID);
 
+  // ADR-017 §5 — grand-père : ce rituel référence déjà une activité CUSTOM
+  // (créée avant le passage à FREE_CUSTOM_LIMIT=0, ou par un user Ambiances).
+  // L'éditer (y compris reskiner son emoji) reste entièrement libre — seule
+  // la création d'une activité custom NOUVELLE est fermée en free.
+  const editingExistingCustom = Boolean(initialRitual) && isCustomActivity(initialActivity);
+  const customEmojiUnlocked = canCreateActivity(isPremium) || editingExistingCustom;
+
   const handleSelectBuiltIn = (activityId) => {
     haptics.selection().catch(() => {});
     setSelectedActivityId(activityId);
     setPendingCustomEmoji(null);
+    setShowEmojiGrid(false);
+  };
+
+  // ADR-017 §4 : tap sur une activité built-in HORS vitrine (grisée) — la
+  // sélection reste ce qu'elle était (jamais de mur), la porte Ambiances
+  // s'ouvre par-dessus le sheet, comme RitualsPanel/PalettesPanel le font déjà.
+  const handleActivityVitrineGate = () => {
+    haptics.selection().catch(() => {});
+    modalStack.push('premium', { highlightedFeature: 'activities_vitrine' });
+  };
+
+  // ADR-017 §5 : tap sur un emoji custom (grille curée ou « autre… ») alors
+  // que la création est fermée — même grammaire de porte, feature key
+  // partagée avec l'ancien CreateActivityModalContent (`customActivities`).
+  const handleCustomEmojiGate = () => {
+    haptics.selection().catch(() => {});
+    modalStack.push('premium', { highlightedFeature: 'customActivities' });
   };
 
   const handleOpenCustomEmoji = () => {
@@ -170,6 +220,10 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
   };
 
   const handlePickCustomEmoji = (emoji) => {
+    if (!customEmojiUnlocked) {
+      handleCustomEmojiGate();
+      return;
+    }
     haptics.selection().catch(() => {});
     setPendingCustomEmoji(emoji);
     setSelectedActivityId(null);
@@ -285,6 +339,11 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
     emojiButtonActive: {
       borderColor: theme.colors.brand.primary,
     },
+    // ADR-017 §4/§5 : porte étiquetée Ambiances — jamais un mur. Opacité
+    // réduite, toujours tappable (ouvre la porte au lieu de sélectionner).
+    emojiButtonLocked: {
+      opacity: 0.35,
+    },
     emojiButtonText: {
       fontSize: rs(22, 'min'),
     },
@@ -294,7 +353,10 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
       fontWeight: fontWeights.medium,
     },
     emojiRow: {
+      // ADR-017 §4 : la vitrine passe de 3 à 6 activités (FREE_ACTIVITY_IDS)
+      // — wrap plutôt que déborder sur les écrans étroits.
       flexDirection: 'row',
+      flexWrap: 'wrap',
       gap: theme.spacing.md,
     },
     footer: {
@@ -425,30 +487,79 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
           </View>
           {showEmojiGrid && (
             <View style={styles.emojiGrid}>
+              {/* ADR-017 §4 : le reste du catalogue built-in — grisé, porte
+                  Ambiances au tap. Sauf l'activité DÉJÀ appliquée à ce
+                  rituel (cas piège : un rituel qui référence une activité
+                  hors vitrine, ex. `gaming`, reste réutilisable). */}
+              {OTHER_BUILTIN_ACTIVITIES.map((activity) => {
+                const isActive = selectedActivityId === activity.id;
+                const unlocked = isPremium || isActive;
+                return (
+                  <TouchableOpacity
+                    key={activity.id}
+                    style={[
+                      styles.emojiButton,
+                      isActive && styles.emojiButtonActive,
+                      !unlocked && styles.emojiButtonLocked,
+                    ]}
+                    onPress={unlocked ? () => handleSelectBuiltIn(activity.id) : handleActivityVitrineGate}
+                    activeOpacity={0.7}
+                    accessible
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      unlocked ? activity.label : t('accessibility.activityLocked', { name: activity.label })
+                    }
+                    accessibilityState={{ selected: isActive }}
+                  >
+                    <Text style={styles.emojiButtonText}>{activity.emoji}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+              {/* ADR-017 §5 : grille curée d'emoji custom — création d'une
+                  activité personnalisée neuve, entièrement Ambiances en
+                  free (grand-père : l'édition d'un custom déjà existant
+                  reste libre, cf. `customEmojiUnlocked`). */}
               {CUSTOM_EMOJI_CHOICES.map((emoji) => (
                 <TouchableOpacity
                   key={emoji}
-                  style={[styles.emojiButton, pendingCustomEmoji === emoji && styles.emojiButtonActive]}
+                  style={[
+                    styles.emojiButton,
+                    pendingCustomEmoji === emoji && styles.emojiButtonActive,
+                    !customEmojiUnlocked && styles.emojiButtonLocked,
+                  ]}
                   onPress={() => handlePickCustomEmoji(emoji)}
                   activeOpacity={0.7}
                   accessible
                   accessibilityRole="button"
-                  accessibilityLabel={emoji}
+                  accessibilityLabel={customEmojiUnlocked ? emoji : t('accessibility.customEmojiLocked')}
                 >
                   <Text style={styles.emojiButtonText}>{emoji}</Text>
                 </TouchableOpacity>
               ))}
-              {/* « autre… » : ouvre le TextInput libre ci-dessous */}
+              {/* « autre… » : ouvre le TextInput libre ci-dessous (Ambiances
+                  en free, même porte que la grille — §5) */}
               <TouchableOpacity
-                style={[styles.emojiButton, showFreeEmojiInput && styles.emojiButtonActive]}
+                style={[
+                  styles.emojiButton,
+                  showFreeEmojiInput && styles.emojiButtonActive,
+                  !customEmojiUnlocked && styles.emojiButtonLocked,
+                ]}
                 onPress={() => {
+                  if (!customEmojiUnlocked) {
+                    handleCustomEmojiGate();
+                    return;
+                  }
                   haptics.selection().catch(() => {});
                   setShowFreeEmojiInput((visible) => !visible);
                 }}
                 activeOpacity={0.7}
                 accessible
                 accessibilityRole="button"
-                accessibilityLabel={t('rituals.form.customEmojiOther')}
+                accessibilityLabel={
+                  customEmojiUnlocked
+                    ? t('rituals.form.customEmojiOther')
+                    : t('accessibility.customEmojiLocked')
+                }
               >
                 <Text style={styles.emojiCustomButtonText}>…</Text>
               </TouchableOpacity>

@@ -330,6 +330,8 @@
     "createRitual": "Create a ritual",
     "closeRitualForm": "Close the ritual form",
     "chooseCustomEmoji": "Choose another emoji via the keyboard",
+    "activityLocked": "%{name}, locked — discover Ambiances",
+    "customEmojiLocked": "Custom emoji locked — discover Ambiances",
     "ritualNamePreset": "Preset ritual %{name}",
     "deleteRitual": "Delete ritual %{name}",
     "favoriteRitual": "Favorite ritual %{name}",
