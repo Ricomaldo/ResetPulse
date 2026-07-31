@@ -496,6 +496,7 @@
   },
   "firstRun": {
     "skip": "skip",
+    "thresholdHint": "tap to continue",
     "welcome": "let's start by picking an activity 👇",
     "companion": "this emoji keeps you company. slide the disc to set your time.",
     "dialColor": "a color? it changes right away.",
