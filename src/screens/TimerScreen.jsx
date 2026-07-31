@@ -752,21 +752,23 @@ function TimerScreenContent() {
     // finir (timerRef.current.duration, exposé par useTimer) — PAS
     // `snapshot.remaining`, qui vaut 0 à la fin.
     const duration = timerRef.current?.duration ?? currentDuration;
-    const existingRitual = findRitualToKeep(rituals, currentActivity?.id);
+    // ADR-017 §2 : « garder » ne touche plus jamais un template — crée ou
+    // met à jour LE rituel personnel (slot 4) avec ce qui vient d'être vécu
+    // (activité incluse : le rituel personnel existant peut être d'une
+    // autre activité que celle-ci, findRitualToKeep ne matche plus par
+    // activityId).
+    const fields = {
+      name: deriveRitualName(currentActivity),
+      activityId: currentActivity?.id,
+      color: currentColor,
+      duration,
+      soundId: selectedSoundId,
+    };
+    const existingRitual = findRitualToKeep(rituals);
     if (existingRitual) {
-      updateRitual(existingRitual.id, {
-        duration,
-        color: currentColor,
-        soundId: selectedSoundId,
-      });
+      updateRitual(existingRitual.id, fields);
     } else {
-      createRitual({
-        name: deriveRitualName(currentActivity),
-        activityId: currentActivity?.id,
-        color: currentColor,
-        duration,
-        soundId: selectedSoundId,
-      });
+      createRitual(fields);
     }
     analytics.trackRitualKept();
     setMomentKept(true);
