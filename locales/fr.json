@@ -496,6 +496,7 @@
   },
   "firstRun": {
     "skip": "passer",
+    "thresholdHint": "touche l'écran pour continuer",
     "welcome": "on commence par choisir une activité 👇",
     "companion": "cet emoji te tient compagnie. glisse le disque pour régler la durée.",
     "dialColor": "une couleur ? elle change tout de suite.",
