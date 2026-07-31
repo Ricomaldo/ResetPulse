@@ -330,9 +330,13 @@
     "createRitual": "Créer un rituel",
     "closeRitualForm": "Fermer le formulaire de rituel",
     "chooseCustomEmoji": "Choisir un autre emoji via le clavier",
+    "activityLocked": "%{name}, verrouillé — découvrir Ambiances",
+    "customEmojiLocked": "Emoji personnalisé verrouillé — découvrir Ambiances",
     "ritualNamePreset": "Rituel préconfiguré %{name}",
     "deleteRitual": "Supprimer le rituel %{name}",
-    "favoriteRitual": "Rituel favori %{name}"
+    "favoriteRitual": "Rituel favori %{name}",
+    "renameRitual": "Renommer le rituel %{name}",
+    "renameRitualHint": "Appui long pour renommer"
   },
   "twoTimers": {
     "title": "Tu as créé 2 moments !",

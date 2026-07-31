@@ -704,7 +704,7 @@ function TimerScreenContent() {
   // celle-ci exige completedSessions >= 2 (shouldShowBreatheInvitation),
   // celle-là exige completedSessions === 1 (le tout premier) : les deux
   // conditions ne peuvent jamais être vraies ensemble, même flag ou pas.
-  const { rituals, updateRitual, createRitual } = useRituals();
+  const { rituals, updateRitual, createRitual, ensureRitualFavorite } = useRituals();
   const [hasSeenKeepMoment, setHasSeenKeepMoment, keepMomentLoading] =
     usePersistedState('@ResetPulse:hasSeenKeepMoment', false);
   const [keepMomentFired, setKeepMomentFired] = useState(false);
@@ -752,21 +752,30 @@ function TimerScreenContent() {
     // finir (timerRef.current.duration, exposé par useTimer) — PAS
     // `snapshot.remaining`, qui vaut 0 à la fin.
     const duration = timerRef.current?.duration ?? currentDuration;
-    const existingRitual = findRitualToKeep(rituals, currentActivity?.id);
+    // ADR-017 §2 : « garder » ne touche plus jamais un template — crée ou
+    // met à jour LE rituel personnel (slot 4) avec ce qui vient d'être vécu
+    // (activité incluse : le rituel personnel existant peut être d'une
+    // autre activité que celle-ci, findRitualToKeep ne matche plus par
+    // activityId).
+    const fields = {
+      name: deriveRitualName(currentActivity),
+      activityId: currentActivity?.id,
+      color: currentColor,
+      duration,
+      soundId: selectedSoundId,
+    };
+    // ADR-017 §2 (décision pilote) : le rituel gardé doit apparaître SUR LA
+    // RANGÉE D'ACCUEIL immédiatement — sinon le sommet émotionnel reste
+    // invisible (constat Eric). Un rituel personnel naît en fin de tableau,
+    // hors du repli implicite des 3 favoris (cf. ensureRitualFavorite) : il
+    // faut l'élire explicitement, création ET mise à jour.
+    const existingRitual = findRitualToKeep(rituals);
     if (existingRitual) {
-      updateRitual(existingRitual.id, {
-        duration,
-        color: currentColor,
-        soundId: selectedSoundId,
-      });
+      updateRitual(existingRitual.id, fields);
+      ensureRitualFavorite(existingRitual.id);
     } else {
-      createRitual({
-        name: deriveRitualName(currentActivity),
-        activityId: currentActivity?.id,
-        color: currentColor,
-        duration,
-        soundId: selectedSoundId,
-      });
+      const created = createRitual(fields);
+      ensureRitualFavorite(created.id);
     }
     analytics.trackRitualKept();
     setMomentKept(true);
@@ -779,6 +788,7 @@ function TimerScreenContent() {
     currentDuration,
     updateRitual,
     createRitual,
+    ensureRitualFavorite,
     analytics,
   ]);
 

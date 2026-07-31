@@ -17,7 +17,12 @@ import { usePersistedState } from '../hooks/usePersistedState';
 
 const STORAGE_KEY = '@ResetPulse:customActivities';
 const DEFAULT_PULSE_DURATION = 800; // Normal pulse speed
-const FREE_CUSTOM_LIMIT = 1; // Free users can create 1 custom activity (during onboarding)
+// ADR-017 §5 : la création d'activité personnalisée passe entièrement en
+// Ambiances (0 → canCreateActivity devient premium-only). Grand-père : les
+// activités custom déjà créées (avant ce lambda, ou par un user Ambiances)
+// restent entièrement utilisables — ce cap ne gate QUE createActivity, jamais
+// updateActivity/deleteActivity/getActivityById sur l'existant.
+const FREE_CUSTOM_LIMIT = 0;
 
 const CustomActivitiesContext = createContext(null);
 

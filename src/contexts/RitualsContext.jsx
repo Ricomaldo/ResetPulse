@@ -155,6 +155,58 @@ export function RitualsProvider({ children }) {
     return true;
   }, [rituals, hasAnyFavorite, setRituals]);
 
+  /**
+   * Garantit qu'un rituel est VISIBLE sur la rangée d'accueil (favori) —
+   * ADR-017 §2 : le rituel gardé (« garde ce moment ? ») doit apparaître
+   * immédiatement, sinon le sommet émotionnel devient invisible. Un rituel
+   * personnel naît TOUJOURS en fin de tableau (createRitual l'ajoute après
+   * les 3 templates) : il ne tombe donc jamais dans le repli implicite
+   * `rituals.slice(0, MAX_FAVORITES)` (mécanique de `favoriteRituals`
+   * ci-dessus), qui n'élit que les 3 premiers du tableau — sans ce geste,
+   * un rituel gardé resterait invisible tant qu'aucun favori explicite
+   * n'a jamais été posé.
+   *
+   * Contrairement à `toggleFavorite` (geste utilisateur explicite, qui
+   * REFUSE une 4e étoile tant qu'une place n'a pas été libérée), celui-ci
+   * fait de la place lui-même : évince le DERNIER favori du tableau
+   * (ordre `rituals` — les 3 templates sont en tête à l'état initial, donc
+   * en pratique c'est le 3e template qui cède sa place ; le rituel gardé
+   * se retrouve à côté de 2 templates, jamais seul, jamais un mur). Même
+   * migration douce que `toggleFavorite` : sans aucun favori explicite,
+   * les 3 premiers sont matérialisés avant l'éviction. No-op si le rituel
+   * est déjà favori (ou introuvable).
+   * @param {string} id
+   */
+  const ensureRitualFavorite = useCallback((id) => {
+    setRituals((prev) => {
+      const target = prev.find((ritual) => ritual.id === id);
+      if (!target) {
+        return prev;
+      }
+      const prevHasAny = prev.some((ritual) => ritual.favorite);
+      const materialized = prevHasAny
+        ? prev
+        : prev.map((ritual, index) => ({ ...ritual, favorite: index < MAX_FAVORITES }));
+      const current = materialized.find((ritual) => ritual.id === id);
+      if (current.favorite) {
+        return materialized === prev ? prev : materialized;
+      }
+      const favorites = materialized.filter((ritual) => ritual.favorite);
+      const evictId = favorites.length >= MAX_FAVORITES
+        ? favorites[favorites.length - 1].id
+        : null;
+      return materialized.map((ritual) => {
+        if (ritual.id === id) {
+          return { ...ritual, favorite: true };
+        }
+        if (evictId && ritual.id === evictId) {
+          return { ...ritual, favorite: false };
+        }
+        return ritual;
+      });
+    });
+  }, [setRituals]);
+
   // DevFab (Lambda C, 3.0 minimaliste) : « Reset rituels & activités » et
   // « Vanilla » — le contexte ne remonte pas avec AppContent (il vit
   // au-dessus, dans App.js) donc effacer la clé AsyncStorage seule ne
@@ -174,6 +226,7 @@ export function RitualsProvider({ children }) {
     hasMissingBaseRituals,
     favoriteRituals,
     toggleFavorite,
+    ensureRitualFavorite,
     resetRituals,
     isLoading,
   }), [
@@ -186,6 +239,7 @@ export function RitualsProvider({ children }) {
     hasMissingBaseRituals,
     favoriteRituals,
     toggleFavorite,
+    ensureRitualFavorite,
     resetRituals,
     isLoading,
   ]);
