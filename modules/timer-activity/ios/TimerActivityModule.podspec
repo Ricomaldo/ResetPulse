@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name           = 'TimerActivity'
+  s.name           = 'TimerActivityModule'
   s.version        = '1.0.0'
   s.summary        = 'Pont Live Activity ResetPulse (mission 3d)'
   s.description    = 'Pont natif ActivityKit — start/end/isSupported pour l anneau de seance.'

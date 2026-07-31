@@ -9,6 +9,9 @@ import ExpoModulesCore
 // (pas de partage de code simple entre l'extension et le module — piège
 // documenté). Les deux définitions DOIVENT rester identiques : ActivityKit
 // apparie l'activité par la forme encodée des attributs.
+// @available : le pod se compile à la cible de l'app (15.1) — tout
+// l'ActivityKit (16.1+) vit derrière des gardes, cette struct comprise.
+@available(iOS 16.2, *)
 struct TimerAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         var status: String
