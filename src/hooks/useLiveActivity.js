@@ -26,6 +26,13 @@
 //   mouvement, pas seulement au relâchement) ; redémarrer l'Activity à
 //   cette cadence spammerait ActivityKit pour rien. Seule la valeur
 //   stabilisée déclenche le redémarrage.
+//   ⚠️ Ce redémarrage repart du temps RESTANT (`remainingRef.current`), pas
+//   de `duration` (bug constaté sur device par Eric, mission 3d) : sinon
+//   l'anneau natif revient à la durée pleine alors que la séance app est
+//   déjà entamée, et l'écran verrouillé se désynchronise de l'app. Si le
+//   restant est absent/0/négatif à l'instant du redémarrage, on ne
+//   redémarre pas — end(false) seul (un anneau absent vaut mieux qu'un
+//   anneau faux).
 // - Démontage du composant / app tuée : rien de spécial — les dates fixes
 //   sont le principe même de la mission, la Live Activity vit sa vie sans
 //   JS. Seul un redémarrage en attente est annulé par le cleanup d'effet
@@ -44,15 +51,28 @@ export const DRAG_DEBOUNCE_MS = 500;
  * @param {Object} params
  * @param {boolean} params.running - snapshot.running (useTimer, via TimerScreen)
  * @param {boolean} params.isCompleted - snapshot.isCompleted (useTimer, via TimerScreen)
- * @param {number} params.duration - currentDuration en secondes (durée pleine de la séance)
+ * @param {number} params.duration - currentDuration en secondes (durée pleine de la séance) —
+ *   utilisée UNIQUEMENT au démarrage initial (repos → running), où restant == durée.
+ * @param {number} params.remaining - snapshot.remaining (useTimer, via TimerScreen) — secondes
+ *   restantes, vivantes (tick chaque seconde en running). Lue via `remainingRef` au moment du
+ *   redémarrage débouncé, JAMAIS mise en dep d'effet (voir remainingRef ci-dessous).
  * @param {string} params.colorHex - currentColor (hex) — couleur de la séance
  * @param {string} params.emoji - currentActivity?.emoji — emoji compagnon
  * @param {boolean} params.clockwise - timer.clockwise (TimerConfigContext) —
  *   sens de rotation du disque app, à répercuter sur l'anneau natif
  */
-export function useLiveActivity({ running, isCompleted, duration, colorHex, emoji, clockwise }) {
+export function useLiveActivity({ running, isCompleted, duration, remaining, colorHex, emoji, clockwise }) {
   const prevRunningRef = useRef(false);
   const activeRef = useRef(false); // une Activité est-elle censée vivre côté natif ?
+
+  // `remaining` tique chaque seconde pendant running : s'il entrait dans les
+  // deps de l'effet ci-dessous, le debounce du redémarrage serait réarmé à
+  // chaque tick et ne se déclencherait jamais (setTimeout annulé en boucle
+  // par le cleanup). Le ref se met à jour à CHAQUE render sans faire partie
+  // des deps — l'effet le lit seulement au moment où il redémarre
+  // effectivement l'Activity, sans jamais se relancer pour lui.
+  const remainingRef = useRef(remaining);
+  remainingRef.current = remaining;
 
   useEffect(() => {
     const wasRunning = prevRunningRef.current;
@@ -94,7 +114,16 @@ export function useLiveActivity({ running, isCompleted, duration, colorHex, emoj
             logger.warn('useLiveActivity: end() (redémarrage) a échoué', error);
           })
           .finally(() => {
-            startLiveActivity(colorHex, emoji, duration, clockwise).catch((error) => {
+            // Repart du restant vivant au moment du redémarrage (pas de
+            // `duration`, cf. entête) — lu via le ref pour ne pas dépendre
+            // de `remaining` dans les deps de l'effet.
+            const remainingNow = remainingRef.current;
+            if (!(remainingNow > 0)) {
+              // Restant absent/0/négatif : pas de redémarrage, l'anneau
+              // reste retiré plutôt que de mentir sur le temps restant.
+              return;
+            }
+            startLiveActivity(colorHex, emoji, remainingNow, clockwise).catch((error) => {
               logger.warn('useLiveActivity: start() (redémarrage) a échoué', error);
             });
           });

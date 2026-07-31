@@ -815,6 +815,7 @@ function TimerScreenContent() {
     running: snapshot.running,
     isCompleted: snapshot.isCompleted,
     duration: currentDuration,
+    remaining: snapshot.remaining,
     colorHex: currentColor,
     emoji: currentActivity?.emoji,
     clockwise,

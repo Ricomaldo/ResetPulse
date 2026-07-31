@@ -1,6 +1,7 @@
 // Tests for useLiveActivity — mission 3d (Live Activity écran verrouillé +
 // Dynamic Island). Module natif mocké : ce hook est un pur observateur de
-// running/isCompleted/duration/colorHex/emoji (jamais useTimer lui-même).
+// running/isCompleted/duration/remaining/colorHex/emoji (jamais useTimer
+// lui-même).
 import { act } from 'react-test-renderer';
 import { renderHook } from '../test-utils';
 import { useLiveActivity, DRAG_DEBOUNCE_MS } from '../../src/hooks/useLiveActivity';
@@ -31,6 +32,9 @@ const baseProps = () => ({
   running: false,
   isCompleted: false,
   duration: 600,
+  // Au repos/démarrage, restant == durée pleine (voir mandat : le
+  // démarrage initial repart de `duration`, jamais de `remaining`).
+  remaining: 600,
   colorHex: '#E89665',
   emoji: '🎯',
   clockwise: false,
@@ -48,7 +52,7 @@ describe('useLiveActivity', () => {
     expect(endLiveActivity).not.toHaveBeenCalled();
   });
 
-  it('démarre l\'Activity au passage à running avec les bons paramètres', () => {
+  it('démarre l\'Activity au passage à running avec la durée PLEINE (restant == durée au départ)', () => {
     const props = baseProps();
     const { rerender } = renderHook(() => useLiveActivity(props));
 
@@ -119,7 +123,7 @@ describe('useLiveActivity', () => {
       jest.useRealTimers();
     });
 
-    it('redémarre (end(false) puis start) après le délai de debounce, avec les nouvelles valeurs', async () => {
+    it('redémarre (end(false) puis start) après le délai de debounce, en repartant du RESTANT — pas de la durée pleine', async () => {
       const props = baseProps();
       const { rerender } = renderHook(() => useLiveActivity(props));
 
@@ -128,9 +132,12 @@ describe('useLiveActivity', () => {
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
       startLiveActivity.mockClear();
 
-      // Drag : la durée bouge en direct (TimerDial appelle setCurrentDuration
-      // à chaque mouvement, pas seulement au relâchement).
+      // Séance déjà entamée : le restant a diminué (120s écoulées), tandis
+      // qu'un drag fait bouger la durée pleine affichée à 900 — le bug
+      // constaté par Eric était de redémarrer l'anneau sur cette durée
+      // pleine (900) au lieu du restant réel.
       props.duration = 900;
+      props.remaining = 480;
       act(() => rerender());
 
       // Rien avant le délai — c'est le point du debounce.
@@ -145,10 +152,11 @@ describe('useLiveActivity', () => {
       expect(endLiveActivity).toHaveBeenCalledTimes(1);
       expect(endLiveActivity).toHaveBeenCalledWith(false);
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
-      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 900, false);
+      // Le restant (480), jamais la durée pleine (900).
+      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 480, false);
     });
 
-    it('annule le redémarrage précédent si une nouvelle valeur arrive avant la fin du debounce', async () => {
+    it('annule le redémarrage précédent si une nouvelle valeur arrive avant la fin du debounce, avec le restant le plus récent', async () => {
       const props = baseProps();
       const { rerender } = renderHook(() => useLiveActivity(props));
 
@@ -157,6 +165,7 @@ describe('useLiveActivity', () => {
       startLiveActivity.mockClear();
 
       props.duration = 700;
+      props.remaining = 550;
       act(() => rerender());
       act(() => {
         jest.advanceTimersByTime(DRAG_DEBOUNCE_MS - 100);
@@ -164,6 +173,7 @@ describe('useLiveActivity', () => {
 
       // Deuxième mouvement avant l'expiration du premier debounce.
       props.duration = 900;
+      props.remaining = 540;
       act(() => rerender());
 
       await act(async () => {
@@ -171,13 +181,13 @@ describe('useLiveActivity', () => {
         await flushMicrotasks();
       });
 
-      // Un seul cycle end/start, avec la valeur FINALE — pas 700.
+      // Un seul cycle end/start, avec le restant FINAL — pas 550, pas 900.
       expect(endLiveActivity).toHaveBeenCalledTimes(1);
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
-      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 900, false);
+      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 540, false);
     });
 
-    it('redémarre avec la nouvelle valeur de clockwise (toggle du sens pendant la séance)', async () => {
+    it('redémarre avec la nouvelle valeur de clockwise, en repartant du restant (pas de la durée pleine)', async () => {
       const props = baseProps();
       const { rerender } = renderHook(() => useLiveActivity(props));
 
@@ -189,8 +199,11 @@ describe('useLiveActivity', () => {
 
       // Toggle clockwise du sheet PENDANT la séance : mêmes durée/couleur/
       // emoji, seul le sens change — doit déclencher le même redémarrage
-      // débouncé que durée/couleur/emoji (cf. mandat).
+      // débouncé que durée/couleur/emoji (cf. mandat). Le restant a bougé
+      // depuis le départ (555, distinct de la durée pleine 600) : la
+      // preuve que c'est bien lui qui est utilisé au redémarrage.
       props.clockwise = true;
+      props.remaining = 555;
       act(() => rerender());
 
       expect(endLiveActivity).not.toHaveBeenCalled();
@@ -204,7 +217,109 @@ describe('useLiveActivity', () => {
       expect(endLiveActivity).toHaveBeenCalledTimes(1);
       expect(endLiveActivity).toHaveBeenCalledWith(false);
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
-      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 600, true);
+      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 555, true);
+    });
+
+    it('un changement de `remaining` SEUL (tick chaque seconde) ne déclenche AUCUN redémarrage ni réarmement du debounce', async () => {
+      const props = baseProps();
+      const { rerender } = renderHook(() => useLiveActivity(props));
+
+      props.running = true;
+      act(() => rerender());
+      startLiveActivity.mockClear();
+
+      // Le compte à rebours tique pendant plusieurs secondes : remaining
+      // seul bouge, rien d'autre. `remaining` n'est PAS dans les deps de
+      // l'effet (piège du tick) : aucun effet ne se relance, donc aucun
+      // debounce n'est jamais armé.
+      for (let i = 0; i < 5; i += 1) {
+        props.remaining -= 1;
+        // eslint-disable-next-line no-loop-func
+        act(() => rerender());
+      }
+
+      await act(async () => {
+        jest.advanceTimersByTime(DRAG_DEBOUNCE_MS * 2);
+        await flushMicrotasks();
+      });
+
+      expect(endLiveActivity).not.toHaveBeenCalled();
+      expect(startLiveActivity).not.toHaveBeenCalled();
+    });
+
+    it('un tick de `remaining` pendant un debounce déjà armé ne le réarme pas — le redémarrage utilise le restant le plus frais au moment où il se déclenche', async () => {
+      const props = baseProps();
+      const { rerender } = renderHook(() => useLiveActivity(props));
+
+      props.running = true;
+      act(() => rerender());
+      startLiveActivity.mockClear();
+
+      // Un vrai changement (couleur) arme le debounce.
+      props.colorHex = '#123456';
+      act(() => rerender());
+
+      // Juste avant l'échéance, remaining tique — ne doit ni réarmer le
+      // debounce (pas de dep), ni empêcher son déclenchement.
+      act(() => {
+        jest.advanceTimersByTime(DRAG_DEBOUNCE_MS - 50);
+      });
+      props.remaining = 599;
+      act(() => rerender());
+
+      await act(async () => {
+        jest.advanceTimersByTime(100);
+        await flushMicrotasks();
+      });
+
+      expect(endLiveActivity).toHaveBeenCalledTimes(1);
+      expect(startLiveActivity).toHaveBeenCalledTimes(1);
+      // La valeur de remaining la plus fraîche au moment du déclenchement.
+      expect(startLiveActivity).toHaveBeenCalledWith('#123456', '🎯', 599, false);
+    });
+
+    it('restant à 0 au moment du redémarrage → end(false) SANS start (cas de bord)', async () => {
+      const props = baseProps();
+      const { rerender } = renderHook(() => useLiveActivity(props));
+
+      props.running = true;
+      act(() => rerender());
+      startLiveActivity.mockClear();
+
+      props.colorHex = '#123456';
+      props.remaining = 0;
+      act(() => rerender());
+
+      await act(async () => {
+        jest.advanceTimersByTime(DRAG_DEBOUNCE_MS);
+        await flushMicrotasks();
+      });
+
+      expect(endLiveActivity).toHaveBeenCalledTimes(1);
+      expect(endLiveActivity).toHaveBeenCalledWith(false);
+      expect(startLiveActivity).not.toHaveBeenCalled();
+    });
+
+    it('restant négatif au moment du redémarrage → end(false) SANS start (cas de bord)', async () => {
+      const props = baseProps();
+      const { rerender } = renderHook(() => useLiveActivity(props));
+
+      props.running = true;
+      act(() => rerender());
+      startLiveActivity.mockClear();
+
+      props.colorHex = '#123456';
+      props.remaining = -1;
+      act(() => rerender());
+
+      await act(async () => {
+        jest.advanceTimersByTime(DRAG_DEBOUNCE_MS);
+        await flushMicrotasks();
+      });
+
+      expect(endLiveActivity).toHaveBeenCalledTimes(1);
+      expect(endLiveActivity).toHaveBeenCalledWith(false);
+      expect(startLiveActivity).not.toHaveBeenCalled();
     });
   });
 });
