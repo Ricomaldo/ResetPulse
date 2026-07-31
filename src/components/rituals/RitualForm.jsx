@@ -191,6 +191,18 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
   const editingExistingCustom = Boolean(initialRitual) && isCustomActivity(initialActivity);
   const customEmojiUnlocked = canCreateActivity(isPremium) || editingExistingCustom;
 
+  // ADR-017 §4 — la rangée compacte (FORM_ACTIVITY_IDS, 6) ne peut représenter
+  // qu'une activité de la vitrine active OU un emoji custom en attente dans le
+  // slot « + ». Sans ceci, une activité built-in HORS vitrine sélectionnée
+  // (via la grille en premium, ou déjà appliquée au rituel édité — cas piège
+  // `gaming`) redevenait invisible dès la grille refermée : aucune confirmation
+  // visuelle du choix. Le slot « + » l'affiche, comme il affiche déjà
+  // `pendingCustomEmoji`.
+  const selectedHiddenBuiltIn =
+    selectedActivityId && !FREE_ACTIVITY_IDS.includes(selectedActivityId)
+      ? getActivityById(selectedActivityId)
+      : null;
+
   const handleSelectBuiltIn = (activityId) => {
     haptics.selection().catch(() => {});
     setSelectedActivityId(activityId);
@@ -471,14 +483,23 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
               );
             })}
             <TouchableOpacity
-              style={[styles.emojiButton, !selectedActivityId && pendingCustomEmoji && styles.emojiButtonActive]}
+              style={[
+                styles.emojiButton,
+                (selectedHiddenBuiltIn || (!selectedActivityId && pendingCustomEmoji)) &&
+                  styles.emojiButtonActive,
+              ]}
               onPress={handleOpenCustomEmoji}
               activeOpacity={0.7}
               accessible
               accessibilityRole="button"
-              accessibilityLabel={t('accessibility.chooseCustomEmoji')}
+              accessibilityLabel={
+                selectedHiddenBuiltIn ? selectedHiddenBuiltIn.label : t('accessibility.chooseCustomEmoji')
+              }
+              accessibilityState={{ selected: Boolean(selectedHiddenBuiltIn) }}
             >
-              {!selectedActivityId && pendingCustomEmoji ? (
+              {selectedHiddenBuiltIn ? (
+                <Text style={styles.emojiButtonText}>{selectedHiddenBuiltIn.emoji}</Text>
+              ) : !selectedActivityId && pendingCustomEmoji ? (
                 <Text style={styles.emojiButtonText}>{pendingCustomEmoji}</Text>
               ) : (
                 <Text style={styles.emojiCustomButtonText}>+</Text>
