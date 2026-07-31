@@ -129,6 +129,14 @@ export function CustomActivitiesProvider({ children }) {
     return customActivities.length < FREE_CUSTOM_LIMIT;
   }, [customActivities]);
 
+  // DevFab (Lambda C, 3.0 minimaliste) : « Reset rituels & activités » et
+  // « Vanilla » — le contexte ne remonte pas avec AppContent (il vit
+  // au-dessus, dans App.js) donc effacer la clé AsyncStorage seule ne
+  // suffit pas ; ce setter donne l'effet immédiat (zéro activité perso).
+  const resetActivities = useCallback(() => {
+    setCustomActivities([]);
+  }, [setCustomActivities]);
+
   const value = useMemo(() => ({
     customActivities,
     createActivity,
@@ -138,6 +146,7 @@ export function CustomActivitiesProvider({ children }) {
     getActivityById,
     getCustomActivitiesCount,
     canCreateActivity,
+    resetActivities,
     FREE_CUSTOM_LIMIT,
     isLoading,
   }), [
@@ -149,6 +158,7 @@ export function CustomActivitiesProvider({ children }) {
     getActivityById,
     getCustomActivitiesCount,
     canCreateActivity,
+    resetActivities,
     isLoading,
   ]);
 
