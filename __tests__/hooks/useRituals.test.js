@@ -46,6 +46,8 @@ describe('useRituals', () => {
       expect(typeof result.current.updateRitual).toBe('function');
       expect(typeof result.current.deleteRitual).toBe('function');
       expect(typeof result.current.getRitualById).toBe('function');
+      expect(typeof result.current.toggleFavorite).toBe('function');
+      expect(typeof result.current.ensureRitualFavorite).toBe('function');
       expect(result.current.isLoading).toBe(false);
     });
   });
@@ -508,6 +510,99 @@ describe('useRituals', () => {
         [mk('a', true), mk('b', true), mk('c', false), mk('d', false)]
       );
       expect(written.find((r) => r.id === 'd').favorite).toBe(true);
+    });
+  });
+
+  describe('ensureRitualFavorite (ADR-017 §2 — auto-favori du rituel gardé)', () => {
+    beforeEach(() => {
+      mockSetRituals.mockImplementation((updater) =>
+        typeof updater === 'function' ? updater([]) : updater
+      );
+    });
+    const seed = (ritualsArray) => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        ritualsArray,
+        mockSetRituals,
+        false,
+      ]);
+    };
+    const mk = (id, favorite) => ({
+      id, name: id, activityId: 'work', color: DEFAULT_RITUAL_COLOR,
+      duration: 600, soundId: 'timer_complete', steps: [],
+      ...(favorite === undefined ? {} : { favorite }),
+    });
+
+    it('sans favori explicite (repli implicite déjà à 3) : élit le rituel gardé, évince le DERNIER implicite (le 3e template) — perso + 2 templates reste visible', () => {
+      seed([mk('ritual_meditation'), mk('ritual_break'), mk('ritual_work'), mk('perso')]);
+      const { result } = renderHook(() => useRituals(), { wrapper });
+
+      act(() => {
+        result.current.ensureRitualFavorite('perso');
+      });
+
+      const written = mockSetRituals.mock.calls[0][0](
+        [mk('ritual_meditation'), mk('ritual_break'), mk('ritual_work'), mk('perso')]
+      );
+      const byId = Object.fromEntries(written.map((r) => [r.id, r.favorite]));
+      expect(byId).toEqual({
+        ritual_meditation: true,
+        ritual_break: true,
+        ritual_work: false, // évincé
+        perso: true, // le rituel gardé, désormais visible sur la rangée
+      });
+    });
+
+    it('avec 3 favoris explicites déjà posés : évince le dernier favori du tableau pour faire de la place au rituel gardé', () => {
+      seed([mk('a', true), mk('b', true), mk('c', true), mk('perso', false)]);
+      const { result } = renderHook(() => useRituals(), { wrapper });
+
+      act(() => {
+        result.current.ensureRitualFavorite('perso');
+      });
+
+      const written = mockSetRituals.mock.calls[0][0](
+        [mk('a', true), mk('b', true), mk('c', true), mk('perso', false)]
+      );
+      const byId = Object.fromEntries(written.map((r) => [r.id, r.favorite]));
+      expect(byId).toEqual({ a: true, b: true, c: false, perso: true });
+    });
+
+    it('rituel déjà favori : no-op, la visibilité était déjà acquise', () => {
+      seed([mk('a', true), mk('b', false)]);
+      const { result } = renderHook(() => useRituals(), { wrapper });
+
+      act(() => {
+        result.current.ensureRitualFavorite('a');
+      });
+
+      const written = mockSetRituals.mock.calls[0][0]([mk('a', true), mk('b', false)]);
+      expect(written.find((r) => r.id === 'a').favorite).toBe(true);
+      expect(written.find((r) => r.id === 'b').favorite).toBe(false);
+    });
+
+    it('sous le cap (moins de 3 rituels au total) : devient favori sans rien évincer', () => {
+      seed([mk('a'), mk('perso')]);
+      const { result } = renderHook(() => useRituals(), { wrapper });
+
+      act(() => {
+        result.current.ensureRitualFavorite('perso');
+      });
+
+      const written = mockSetRituals.mock.calls[0][0]([mk('a'), mk('perso')]);
+      const byId = Object.fromEntries(written.map((r) => [r.id, r.favorite]));
+      expect(byId).toEqual({ a: true, perso: true });
+    });
+
+    it('rituel introuvable : no-op silencieux, ne plante pas', () => {
+      seed([mk('a', true)]);
+      const { result } = renderHook(() => useRituals(), { wrapper });
+
+      act(() => {
+        result.current.ensureRitualFavorite('inconnu');
+      });
+
+      const written = mockSetRituals.mock.calls[0][0]([mk('a', true)]);
+      expect(written).toEqual([mk('a', true)]);
     });
   });
 });
