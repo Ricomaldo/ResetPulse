@@ -1,5 +1,16 @@
 // src/dev/components/DevFab.jsx
-// FAB wrench avec mini-menu pour switcher le mode premium (dev only)
+// FAB wrench avec mini-menu — dev only. 3.0 minimaliste (Lambda C, mandat
+// Eric 31/07) : 5 commandes, plus de legacy (Favorite Tool, Tooltip, → App,
+// Reset Timer — ère carrousels/onboarding 9 écrans, morts).
+//
+// Piège central (mandat) : les contextes partagés (RitualsContext,
+// SessionCountContext, CustomActivitiesContext, TimerConfigContext) sont
+// montés AU-DESSUS d'AppContent dans App.js — le remount par clé
+// (resetTrigger) ne les atteint pas, effacer AsyncStorage seul ne suffit
+// pas pour un effet visible immédiat. DevFab est rendu SOUS ces providers
+// (cf. App.js) : il peut donc consommer leurs hooks directement et appeler
+// leurs setters pour un effet live, en complément des callbacks App.js
+// (AsyncStorage + remount) pour l'état qui vit sous AppContent.
 
 import React, { useState } from 'react';
 import {
@@ -14,43 +25,27 @@ import { SHOW_DEV_FAB } from '../../config/test-mode';
 import { fontWeights } from '../../theme/tokens';
 import { devColors } from '../../theme/colors';
 import { useDevPremium } from '../DevPremiumContext';
-import { useTimerConfig } from '../../contexts/TimerConfigContext';
+import { useRituals } from '../../hooks/useRituals';
+import { useCustomActivities } from '../../hooks/useCustomActivities';
+import { useSessionCount } from '../../hooks/useSessionCount';
 
 /**
  * Dev FAB component for dev tools during testing
- * @param {boolean} isPremiumMode - Current premium mode state
- * @param {Function} onPremiumChange - Callback to change premium mode
- * @param {Function} onResetOnboarding - Callback to reset onboarding
- * @param {Function} onGoToApp - Callback to skip to app
- * @param {Function} onResetTimerConfig - Callback to reset timer config
- * @param {Function} onResetTooltip - Callback to reset drawer tooltip
- * @param {Function} onResetToVanilla - Callback to reset ALL app data to vanilla state
+ * @param {Function} onReplayFirstRun - Callback: efface le seuil + la Première fois
+ * @param {Function} onReplayDiscovery - Callback: efface les one-shots de découverte (hors compteur séances)
+ * @param {Function} onResetToVanilla - Callback: reset ALL app data to vanilla state
  */
-const FAVORITE_TOOL_OPTIONS = [
-  { value: 'commands', label: '⚡ Commandes' },
-  { value: 'activities', label: '💻 Activités' },
-  { value: 'colors', label: '🎨 Couleurs' },
-  { value: 'none', label: '∅ Rien' },
-];
-
-// PROTO drag-échelle : les 3 positions du sélecteur (branche proto-drag-echelle)
-
 export default function DevFab({
-  onResetOnboarding,
-  onGoToApp,
-  onResetTimerConfig,
-  onResetTooltip,
+  onReplayFirstRun,
+  onReplayDiscovery,
   onResetToVanilla,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [menuAnim] = useState(new Animated.Value(0));
-  const { devPremiumOverride, setDevPremiumOverride: setDevPremiumOverrideOriginal } = useDevPremium();
-  const { layout: { favoriteToolMode }, setFavoriteToolMode } = useTimerConfig();
-
-  // Wrapper for setting premium override
-  const setDevPremiumOverride = (value) => {
-    setDevPremiumOverrideOriginal(value);
-  };
+  const { devPremiumOverride, setDevPremiumOverride } = useDevPremium();
+  const { resetRituals } = useRituals();
+  const { resetActivities } = useCustomActivities();
+  const { resetSessionCount } = useSessionCount();
 
   if (!SHOW_DEV_FAB) {return null;}
 
@@ -68,6 +63,37 @@ export default function DevFab({
   const handleOptionPress = (action) => {
     action();
     toggleMenu();
+  };
+
+  const handleReplayFirstRun = () => {
+    onReplayFirstRun?.();
+  };
+
+  // completedSessions vit dans SessionCountContext (Provider au-dessus
+  // d'AppContent) : onReplayDiscovery (App.js) vide l'AsyncStorage des
+  // one-shots sous AppContent + remonte, resetSessionCount() ici donne
+  // l'effet immédiat sur le compteur.
+  const handleReplayDiscovery = () => {
+    onReplayDiscovery?.();
+    resetSessionCount();
+  };
+
+  // Rituels & activités custom vivent tous les deux dans des contextes
+  // au-dessus d'AppContent : purement local, pas de callback App.js requis.
+  const handleResetRitualsAndActivities = () => {
+    resetRituals();
+    resetActivities();
+  };
+
+  // Vanilla reste « gardé tel quel » côté App.js (AsyncStorage + remount) —
+  // on y ajoute les mêmes resets de contexte que ci-dessus pour que la clé
+  // ajoutée à sa liste (rituels/activités/séances) ait un effet visible
+  // immédiat, pas seulement au prochain redémarrage.
+  const handleResetToVanilla = () => {
+    onResetToVanilla?.();
+    resetRituals();
+    resetActivities();
+    resetSessionCount();
   };
 
   const menuTranslateY = menuAnim.interpolate({
@@ -148,96 +174,42 @@ export default function DevFab({
           </Text>
         </View>
 
-        {/* Dev Tools - All resets & shortcuts */}
-        {(onResetOnboarding || onResetTimerConfig || onResetTooltip || onGoToApp || onResetToVanilla) && (
-          <View style={styles.menuSection}>
-            <Text style={styles.menuLabel}>Dev Tools</Text>
-
-            {/* Row 1: Onboarding + Timer */}
-            {(onResetOnboarding || onResetTimerConfig) && (
-              <View style={styles.buttonRow}>
-                {onResetOnboarding && (
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.resetOnboardingButton]}
-                    onPress={() => handleOptionPress(onResetOnboarding)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.actionText}>🔄 Onboarding</Text>
-                  </TouchableOpacity>
-                )}
-                {onResetTimerConfig && (
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.timerResetButton]}
-                    onPress={() => handleOptionPress(onResetTimerConfig)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.actionText}>⏱️ Timer</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            )}
-
-            {/* Row 2: Tooltip + Go to App */}
-            {(onResetTooltip || onGoToApp) && (
-              <View style={[styles.buttonRow, styles.buttonRowMargin]}>
-                {onResetTooltip && (
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.tooltipResetButton]}
-                    onPress={() => handleOptionPress(onResetTooltip)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.actionText}>💬 Tooltip</Text>
-                  </TouchableOpacity>
-                )}
-                {onGoToApp && (
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.goToAppButton]}
-                    onPress={() => handleOptionPress(onGoToApp)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.actionText}>→ App</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            )}
-
-            {/* Row 3: Reset to Vanilla (Full Reset) */}
-            {onResetToVanilla && (
-              <View style={[styles.buttonRow, styles.buttonRowMargin]}>
-                <TouchableOpacity
-                  style={[styles.actionButton, styles.resetVanillaButton]}
-                  onPress={() => handleOptionPress(onResetToVanilla)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.actionText}>🔄 Reset to Vanilla</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        )}
-
-        {/* Favorite Tool Selector */}
+        {/* Dev Tools - 4 commandes de reset */}
         <View style={styles.menuSection}>
-          <Text style={styles.menuLabel}>Favorite Tool</Text>
-          <View style={styles.selectRow}>
-            {FAVORITE_TOOL_OPTIONS.map(option => (
-              <TouchableOpacity
-                key={option.value}
-                style={[
-                  styles.selectOption,
-                  favoriteToolMode === option.value && styles.selectOptionActive
-                ]}
-                onPress={() => handleOptionPress(() => setFavoriteToolMode(option.value))}
-                activeOpacity={0.7}
-              >
-                <Text style={[
-                  styles.selectText,
-                  favoriteToolMode === option.value && styles.selectTextActive
-                ]}>
-                  {option.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+          <Text style={styles.menuLabel}>Dev Tools</Text>
+
+          <View style={styles.buttonColumn}>
+            <TouchableOpacity
+              style={[styles.actionButton, styles.firstRunButton]}
+              onPress={() => handleOptionPress(handleReplayFirstRun)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.actionText}>🚪 Rejouer la Première fois</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.actionButton, styles.discoveryButton]}
+              onPress={() => handleOptionPress(handleReplayDiscovery)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.actionText}>✨ Rejouer la découverte</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.actionButton, styles.ritualsButton]}
+              onPress={() => handleOptionPress(handleResetRitualsAndActivities)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.actionText}>🗑 Reset rituels & activités</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.actionButton, styles.resetVanillaButton]}
+              onPress={() => handleOptionPress(handleResetToVanilla)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.actionText}>🧨 Vanilla</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Animated.View>
@@ -249,7 +221,6 @@ const styles = StyleSheet.create({
   actionButton: {
     alignItems: 'center',
     borderRadius: 8,
-    flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
@@ -260,13 +231,8 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.semibold,
   },
 
-  buttonRow: {
-    flexDirection: 'row',
+  buttonColumn: {
     gap: 8,
-  },
-
-  buttonRowMargin: {
-    marginTop: 8,
   },
 
   container: {
@@ -275,6 +241,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 60,
     zIndex: 9999,
+  },
+
+  discoveryButton: {
+    backgroundColor: '#1E90FF', // Bleu
   },
 
   fab: {
@@ -302,8 +272,8 @@ const styles = StyleSheet.create({
     borderColor: devColors.devBorderDark,
   },
 
-  goToAppButton: {
-    backgroundColor: devColors.success,
+  firstRunButton: {
+    backgroundColor: devColors.danger, // Rouge
   },
 
   menu: {
@@ -313,7 +283,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     elevation: 10,
     marginTop: 12,
-    minWidth: 180,
+    minWidth: 220,
     padding: 16,
     shadowColor: devColors.black,
     shadowOffset: { width: 0, height: 4 },
@@ -334,38 +304,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
-  resetOnboardingButton: {
-    backgroundColor: devColors.danger, // Rouge
-  },
-
   resetVanillaButton: {
     backgroundColor: '#9932CC', // Violet foncé - action destructive majeure
   },
 
-  selectOption: {
-    backgroundColor: devColors.devBgSecondary,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-
-  selectOptionActive: {
-    backgroundColor: devColors.primary,
-  },
-
-  selectRow: {
-    flexDirection: 'column',
-    gap: 6,
-  },
-
-  selectText: {
-    color: devColors.textSecondary,
-    fontSize: 13,
-  },
-
-  selectTextActive: {
-    color: devColors.white,
-    fontWeight: fontWeights.semibold,
+  ritualsButton: {
+    backgroundColor: '#FF8C00', // Orange
   },
 
   statusRow: {
@@ -379,10 +323,6 @@ const styles = StyleSheet.create({
   statusText: {
     color: devColors.textTertiary,
     fontSize: 14,
-  },
-
-  timerResetButton: {
-    backgroundColor: '#FF8C00', // Orange
   },
 
   toggleButton: {
@@ -412,16 +352,10 @@ const styles = StyleSheet.create({
   toggleTextActive: {
     color: devColors.white,
   },
-
-  tooltipResetButton: {
-    backgroundColor: '#1E90FF', // Bleu
-  },
 });
 
 DevFab.propTypes = {
-  onResetOnboarding: PropTypes.func,
-  onGoToApp: PropTypes.func,
-  onResetTimerConfig: PropTypes.func,
-  onResetTooltip: PropTypes.func,
+  onReplayFirstRun: PropTypes.func,
+  onReplayDiscovery: PropTypes.func,
   onResetToVanilla: PropTypes.func,
 };
