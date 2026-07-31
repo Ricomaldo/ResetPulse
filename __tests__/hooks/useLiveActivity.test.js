@@ -33,6 +33,7 @@ const baseProps = () => ({
   duration: 600,
   colorHex: '#E89665',
   emoji: '🎯',
+  clockwise: false,
 });
 
 describe('useLiveActivity', () => {
@@ -57,7 +58,7 @@ describe('useLiveActivity', () => {
     });
 
     expect(startLiveActivity).toHaveBeenCalledTimes(1);
-    expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 600);
+    expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 600, false);
   });
 
   it('termine avec done=true à la complétion naturelle (running→false ET isCompleted→true)', () => {
@@ -144,7 +145,7 @@ describe('useLiveActivity', () => {
       expect(endLiveActivity).toHaveBeenCalledTimes(1);
       expect(endLiveActivity).toHaveBeenCalledWith(false);
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
-      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 900);
+      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 900, false);
     });
 
     it('annule le redémarrage précédent si une nouvelle valeur arrive avant la fin du debounce', async () => {
@@ -173,7 +174,37 @@ describe('useLiveActivity', () => {
       // Un seul cycle end/start, avec la valeur FINALE — pas 700.
       expect(endLiveActivity).toHaveBeenCalledTimes(1);
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
-      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 900);
+      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 900, false);
+    });
+
+    it('redémarre avec la nouvelle valeur de clockwise (toggle du sens pendant la séance)', async () => {
+      const props = baseProps();
+      const { rerender } = renderHook(() => useLiveActivity(props));
+
+      props.running = true;
+      act(() => rerender());
+      expect(startLiveActivity).toHaveBeenCalledTimes(1);
+      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 600, false);
+      startLiveActivity.mockClear();
+
+      // Toggle clockwise du sheet PENDANT la séance : mêmes durée/couleur/
+      // emoji, seul le sens change — doit déclencher le même redémarrage
+      // débouncé que durée/couleur/emoji (cf. mandat).
+      props.clockwise = true;
+      act(() => rerender());
+
+      expect(endLiveActivity).not.toHaveBeenCalled();
+      expect(startLiveActivity).not.toHaveBeenCalled();
+
+      await act(async () => {
+        jest.advanceTimersByTime(DRAG_DEBOUNCE_MS);
+        await flushMicrotasks();
+      });
+
+      expect(endLiveActivity).toHaveBeenCalledTimes(1);
+      expect(endLiveActivity).toHaveBeenCalledWith(false);
+      expect(startLiveActivity).toHaveBeenCalledTimes(1);
+      expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 600, true);
     });
   });
 });
