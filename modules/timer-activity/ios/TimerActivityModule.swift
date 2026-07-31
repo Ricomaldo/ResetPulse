@@ -21,6 +21,9 @@ struct TimerAttributes: ActivityAttributes {
     var emoji: String
     var startDate: Date
     var endDate: Date
+    /// Sens de rotation du disque app (réglage timer.clockwise) — l'anneau
+    /// natif doit le respecter (mission 3d, retour Eric).
+    var clockwise: Bool
 }
 
 public class TimerActivityModule: Module {
@@ -38,7 +41,7 @@ public class TimerActivityModule: Module {
         /// Démarre la Live Activity de séance. Termine d'abord toute
         /// activité orpheline (une seule séance à la fois — miroir de
         /// l'app). Retourne l'id, ou nil si indisponible.
-        AsyncFunction("start") { (colorHex: String, emoji: String, durationSeconds: Double) -> String? in
+        AsyncFunction("start") { (colorHex: String, emoji: String, durationSeconds: Double, clockwise: Bool) -> String? in
             guard #available(iOS 16.2, *) else { return nil }
             guard ActivityAuthorizationInfo().areActivitiesEnabled else { return nil }
 
@@ -51,7 +54,8 @@ public class TimerActivityModule: Module {
                 colorHex: colorHex,
                 emoji: emoji,
                 startDate: now,
-                endDate: now.addingTimeInterval(durationSeconds)
+                endDate: now.addingTimeInterval(durationSeconds),
+                clockwise: clockwise
             )
             let content = ActivityContent(
                 state: TimerAttributes.ContentState(status: "running"),

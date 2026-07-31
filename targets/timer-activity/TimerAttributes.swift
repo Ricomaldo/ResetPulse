@@ -23,4 +23,7 @@ struct TimerAttributes: ActivityAttributes {
     /// Bornes fixes de la séance — le système anime le décompte tout seul.
     var startDate: Date
     var endDate: Date
+    /// Sens de rotation du disque app (réglage timer.clockwise) — l'anneau
+    /// natif doit le respecter (mission 3d, retour Eric).
+    var clockwise: Bool
 }

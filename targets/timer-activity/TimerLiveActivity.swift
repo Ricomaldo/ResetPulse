@@ -42,6 +42,28 @@ struct TimerRing: View {
     var emojiSize: CGFloat = 18
 
     var body: some View {
+        // Le ProgressView circulaire système tourne dans un sens fixe (à
+        // priori horaire — non vérifié sur device par l'auteur de ce
+        // changement, faute de build). Miroir horizontal quand l'app est
+        // réglée anti-horaire (timer.clockwise == false, défaut de l'app,
+        // convention Time Timer), pour que l'anneau natif suive le disque
+        // app. Le Text de l'emoji est contre-miroité pour ne pas apparaître
+        // inversé.
+        //
+        // SI LE SENS OBSERVÉ SUR DEVICE EST L'INVERSE de ce qui précède :
+        // un seul `!` à ajouter/retirer ici, sur la ligne juste en dessous
+        // (`context.attributes.clockwise == false` → `== true`).
+        //
+        // ⚠️ À VÉRIFIER SUR DEVICE PAR LE PILOTE (non buildable par l'auteur
+        // de ce changement) : que l'anneau ANIME toujours sous ce miroir, pas
+        // seulement qu'il pointe dans le bon sens. Ce fichier a un précédent
+        // documenté plus haut — un ProgressViewStyle custom fige sur device
+        // réel (faux positif en simulateur). .scaleEffect est un mécanisme
+        // différent (transform de géométrie posé après .progressViewStyle,
+        // pas un style de substitution) donc a priori un risque moindre,
+        // mais reste non vérifié. Si l'anneau est figé plutôt qu'inversé, ce
+        // .scaleEffect est le premier suspect.
+        let shouldMirror = context.attributes.clockwise == false
         ProgressView(
             timerInterval: context.attributes.startDate...context.attributes.endDate,
             countsDown: true
@@ -50,9 +72,11 @@ struct TimerRing: View {
         } currentValueLabel: {
             Text(context.attributes.emoji)
                 .font(.system(size: emojiSize))
+                .scaleEffect(x: shouldMirror ? -1 : 1, y: 1)
         }
         .progressViewStyle(.circular)
         .tint(Color(hex: context.attributes.colorHex))
+        .scaleEffect(x: shouldMirror ? -1 : 1, y: 1)
     }
 }
 
