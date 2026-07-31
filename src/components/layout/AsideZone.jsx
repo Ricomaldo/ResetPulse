@@ -93,8 +93,9 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
     setClockwise,
     system: { keepAwakeEnabled },
     setKeepAwakeEnabled,
-    display: { showTime },
+    display: { showTime, shouldPulse },
     setShowTime,
+    setShouldPulse,
     mode: { current: currentMode },
     setMode,
   } = useTimerConfig();
@@ -421,6 +422,12 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       label: t('accessibility.showTime'),
       value: showTime,
       onChange: setShowTime,
+    },
+    {
+      key: 'shouldPulse',
+      label: t('settings.options.pulseAnimation'),
+      value: shouldPulse,
+      onChange: setShouldPulse,
     },
   ];
 

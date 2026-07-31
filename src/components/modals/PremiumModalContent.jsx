@@ -53,6 +53,11 @@ const FEATURE_ORDER_BY_SOURCE = {
   rituals_cap: ['rituals', 'palettes', 'sounds'],
   palettes: ['palettes', 'rituals', 'sounds'],
   breathe_invitation: ['sounds', 'palettes', 'rituals'],
+  // ADR-017 §4/§5 — les deux nouvelles portes du formulaire de rituel
+  // (vitrine emojis built-in grisée, création d'activité custom fermée) :
+  // même contexte que rituals_cap, rituels en tête.
+  activities_vitrine: ['rituals', 'palettes', 'sounds'],
+  customActivities: ['rituals', 'palettes', 'sounds'],
 };
 
 export default function PremiumModalContent({ onClose, highlightedFeature, modalId }) {

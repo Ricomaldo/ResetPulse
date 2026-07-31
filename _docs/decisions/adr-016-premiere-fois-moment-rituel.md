@@ -16,6 +16,11 @@ supersedes: 'adr-010-onboarding-v2-vision-finale.md'
 rédigé après validation de chaque décision. Remplace l'onboarding v2.1
 (ADR-010, superseded).
 
+**AMENDÉ par ADR-017 (31/07/2026)** sur le §3 : « garde ce moment » ne
+met plus à jour un rituel de base — il CRÉE le rituel personnel dans le
+4ᵉ slot gratuit (frontière Ambiances : 3 templates figés + un slot
+perso). Les §1, 2, 4, 5, 6 tiennent inchangés.
+
 ## Contexte
 
 L'onboarding 2.0 déployé (9 écrans linéaires, ~2-4 min) n'était pas un

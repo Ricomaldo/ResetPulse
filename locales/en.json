@@ -330,9 +330,13 @@
     "createRitual": "Create a ritual",
     "closeRitualForm": "Close the ritual form",
     "chooseCustomEmoji": "Choose another emoji via the keyboard",
+    "activityLocked": "%{name}, locked — discover Ambiances",
+    "customEmojiLocked": "Custom emoji locked — discover Ambiances",
     "ritualNamePreset": "Preset ritual %{name}",
     "deleteRitual": "Delete ritual %{name}",
-    "favoriteRitual": "Favorite ritual %{name}"
+    "favoriteRitual": "Favorite ritual %{name}",
+    "renameRitual": "Rename the %{name} ritual",
+    "renameRitualHint": "Long press to rename"
   },
   "twoTimers": {
     "title": "You've created 2 moments!",
@@ -496,6 +500,7 @@
   },
   "firstRun": {
     "skip": "skip",
+    "thresholdHint": "tap to continue",
     "welcome": "let's start by picking an activity 👇",
     "companion": "this emoji keeps you company. slide the disc to set your time.",
     "dialColor": "a color? it changes right away.",

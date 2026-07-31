@@ -10,6 +10,8 @@ import {
   suggestedColorFor,
   shouldDeriveNameFromActivity,
   findRitualToKeep,
+  isTemplateRitual,
+  BASE_RITUAL_IDS,
 } from '../../src/config/rituals';
 import { getActivityById, getDefaultActivity } from '../../src/config/activities';
 import { MIN_DURATION, MAX_DURATION } from '../../src/config/durations';
@@ -204,41 +206,84 @@ describe('rituals Configuration', () => {
     });
   });
 
-  describe('findRitualToKeep (ADR-016 §3)', () => {
-    test('returns the ritual matching activityId', () => {
-      const meditation = { id: 'ritual_meditation', activityId: 'meditation' };
-      const rituals = [meditation, { id: 'ritual_break', activityId: 'break' }];
-
-      expect(findRitualToKeep(rituals, 'meditation')).toBe(meditation);
+  describe('isTemplateRitual (ADR-017 §1)', () => {
+    test('a base ritual (id from getDefaultRituals) is a template', () => {
+      getDefaultRituals().forEach((ritual) => {
+        expect(isTemplateRitual(ritual)).toBe(true);
+      });
     });
 
-    test('returns null when no ritual matches the activityId', () => {
-      const rituals = [{ id: 'ritual_break', activityId: 'break' }];
-
-      expect(findRitualToKeep(rituals, 'meditation')).toBeNull();
+    test('a personal ritual (timestamp id) is not a template', () => {
+      expect(isTemplateRitual({ id: 'ritual_1690000000000', activityId: 'work' })).toBe(false);
     });
 
-    test('returns null for an empty ritual list', () => {
-      expect(findRitualToKeep([], 'meditation')).toBeNull();
+    test('null/undefined ritual is not a template', () => {
+      expect(isTemplateRitual(null)).toBe(false);
+      expect(isTemplateRitual(undefined)).toBe(false);
     });
 
-    test('prefers the base ritual (non-custom) among several matches', () => {
-      const custom = { id: 'ritual_1690000000000', activityId: 'work' };
-      const base = { id: 'ritual_work', activityId: 'work' };
-      // Le custom apparaît AVANT le base dans le tableau : sans préférence
-      // explicite, "le premier" renverrait le custom — ce n'est pas ce qu'on
-      // veut (cf. décision ADR-016 §3, met à jour le rituel de base).
-      const rituals = [custom, base];
-
-      expect(findRitualToKeep(rituals, 'work')).toBe(base);
+    test('migration: a base ritual EDITED by a tester (emoji/color/duration changed) is still a template — id-based, content ignored, no value reset', () => {
+      const editedMeditation = {
+        id: 'ritual_meditation', // id de base inchangé — c'est ce qui compte
+        activityId: 'meditation',
+        name: 'Nom édité par Eric hier',
+        color: '#123456', // couleur modifiée
+        duration: 777, // durée modifiée
+      };
+      expect(isTemplateRitual(editedMeditation)).toBe(true);
+      // aucune donnée n'est touchée par la classification — le rituel garde
+      // ses valeurs modifiées, seul son statut (figé) change.
+      expect(editedMeditation.color).toBe('#123456');
+      expect(editedMeditation.duration).toBe(777);
     });
 
-    test('without a base ritual among several matches, returns the first one', () => {
-      const first = { id: 'ritual_1690000000000', activityId: 'work' };
-      const second = { id: 'ritual_1690000000001', activityId: 'work' };
-      const rituals = [first, second];
+    test('BASE_RITUAL_IDS contains exactly the 3 base ids', () => {
+      expect(BASE_RITUAL_IDS).toEqual(['ritual_meditation', 'ritual_break', 'ritual_work']);
+    });
 
-      expect(findRitualToKeep(rituals, 'work')).toBe(first);
+    // ADR-017 §1 : le cap free (RitualsPanel.handleCreatePress) compte les
+    // rituels PERSONNELS — ce test fige le filtre exact que le composant
+    // applique (`rituals.filter((r) => !isTemplateRitual(r)).length`), pur
+    // et testable ici puisque RitualsPanel n'a pas de harnais RTL.
+    test('cap personnel free: 3 templates seuls → 0 personnel, la création reste ouverte', () => {
+      const personalCount = getDefaultRituals().filter((r) => !isTemplateRitual(r)).length;
+      expect(personalCount).toBe(0);
+    });
+
+    test('cap personnel free: templates + 1 rituel personnel → cap atteint (>= 1)', () => {
+      const rituals = [...getDefaultRituals(), { id: 'ritual_1690000000000', activityId: 'work' }];
+      const personalCount = rituals.filter((r) => !isTemplateRitual(r)).length;
+      expect(personalCount).toBe(1);
+    });
+  });
+
+  describe('findRitualToKeep (ADR-017 §2, amende ADR-016 §3)', () => {
+    test('creation path: no personal ritual yet (only templates) → returns null', () => {
+      const rituals = getDefaultRituals(); // les 3 templates, aucun personnel
+      expect(findRitualToKeep(rituals)).toBeNull();
+    });
+
+    test('creation path: empty ritual list → returns null', () => {
+      expect(findRitualToKeep([])).toBeNull();
+    });
+
+    test('never returns a template even when it is the only/first ritual', () => {
+      const rituals = [{ id: 'ritual_meditation', activityId: 'meditation' }];
+      expect(findRitualToKeep(rituals)).toBeNull();
+    });
+
+    test('update path: an existing personal ritual is returned regardless of its activity', () => {
+      const personal = { id: 'ritual_1690000000000', activityId: 'reading' };
+      const rituals = [{ id: 'ritual_meditation', activityId: 'meditation' }, personal];
+
+      expect(findRitualToKeep(rituals)).toBe(personal);
+    });
+
+    test('update path: with templates AND a personal ritual mixed, still finds the personal one first', () => {
+      const personal = { id: 'ritual_1690000000000', activityId: 'work' };
+      const rituals = [...getDefaultRituals(), personal];
+
+      expect(findRitualToKeep(rituals)).toBe(personal);
     });
   });
 });

@@ -317,6 +317,47 @@ describe('useCustomActivities', () => {
     });
   });
 
+  describe('canCreateActivity (ADR-017 §5 — FREE_CUSTOM_LIMIT 1→0, création 100% Ambiances)', () => {
+    it('exposes FREE_CUSTOM_LIMIT = 0', () => {
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
+
+      expect(result.current.FREE_CUSTOM_LIMIT).toBe(0);
+    });
+
+    it('refuses creation for a free user with zero existing custom activities', () => {
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
+
+      expect(result.current.canCreateActivity(false)).toBe(false);
+    });
+
+    it('refuses creation for a free user even with existing custom activities (grand-père : usage libre, création fermée)', () => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [{ id: 'custom_grandfathered', name: 'Legacy', emoji: '🎯', isCustom: true }],
+        mockSetCustomActivities,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
+
+      expect(result.current.canCreateActivity(false)).toBe(false);
+      // Grand-père : l'activité existante reste lisible/utilisable — seule
+      // la création nouvelle est fermée par canCreateActivity.
+      expect(result.current.getActivityById('custom_grandfathered')).toBeDefined();
+    });
+
+    it('always allows creation for a premium user, regardless of existing count', () => {
+      require('../../src/hooks/usePersistedState').usePersistedState.mockImplementation(() => [
+        [{ id: 'custom_a' }, { id: 'custom_b' }],
+        mockSetCustomActivities,
+        false,
+      ]);
+
+      const { result } = renderHook(() => useCustomActivities(), { wrapper });
+
+      expect(result.current.canCreateActivity(true)).toBe(true);
+    });
+  });
+
   describe('Edge cases', () => {
     it('handles emoji with multi-codepoint characters', () => {
       const { result } = renderHook(() => useCustomActivities(), { wrapper });

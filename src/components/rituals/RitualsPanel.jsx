@@ -6,7 +6,7 @@
  * le même formulaire, vide (ADR-015).
  */
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
@@ -16,17 +16,19 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useModalStack } from '../../contexts/ModalStackContext';
-import { buildRitualApplyPayload, resolveRitualActivity } from '../../config/rituals';
+import { buildRitualApplyPayload, resolveRitualActivity, isTemplateRitual } from '../../config/rituals';
 import { formatDuration } from '../../config/durations';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import RitualForm from './RitualForm';
 
-// Lot 3b (verdict Eric) : SEUL cap dur du modèle Ambiances — 3 rituels en
-// gratuit, illimité en Ambiances. Le bouton + reste visible/actif : au-delà
-// du cap, il ouvre l'invitation Ambiances plutôt que le formulaire.
-const RITUALS_FREE_CAP = 3;
+// ADR-017 §1 : la frontière ne porte plus sur le TOTAL (3 templates figés +
+// 1 slot personnel = 4 rituels visibles en free) mais sur le nombre de
+// rituels PERSONNELS — 1 seul en gratuit, illimités en Ambiances. Le bouton +
+// reste visible/actif : au-delà du cap personnel, il ouvre l'invitation
+// Ambiances plutôt que le formulaire.
+const FREE_PERSONAL_RITUALS_CAP = 1;
 
 export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeight }) {
   const theme = useTheme();
@@ -40,6 +42,10 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
 
   const [view, setView] = useState('list'); // 'list' | 'form'
   const [editingId, setEditingId] = useState(null);
+  // Renommage inline (ADR-017 §3) : appui long sur la ligne (quand
+  // `editable`) bascule le nom en TextInput natif. Un seul rituel
+  // renommable à la fois — id du rituel en cours d'édition inline, ou null.
+  const [renamingId, setRenamingId] = useState(null);
 
   // A3/D5 (hotfix-porte-1) : remonte liste/form à AsideZone — elle arbitre
   // scroll extérieur + pan de fermeture selon le sous-écran actif.
@@ -60,7 +66,8 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
 
   const handleCreatePress = () => {
     haptics.selection().catch(() => {});
-    if (!isPremium && rituals.length >= RITUALS_FREE_CAP) {
+    const personalRitualsCount = rituals.filter((ritual) => !isTemplateRitual(ritual)).length;
+    if (!isPremium && personalRitualsCount >= FREE_PERSONAL_RITUALS_CAP) {
       modalStack.push('premium', { highlightedFeature: 'rituals_cap' });
       return;
     }
@@ -80,6 +87,34 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
     haptics.selection().catch(() => {});
     setEditingId(id);
     setView('form');
+  };
+
+  // ADR-017 §3 : appui long sur la ligne (nom compris) — seul geste qui ne
+  // dispute pas le tap-pour-appliquer (le geste dominant, inchangé partout
+  // ailleurs sur la ligne). Choix retenu plutôt que (a) détourner le tap du
+  // nom — casserait le tap-pour-appliquer sur la zone la plus large de la
+  // ligne — ou (b) une icône crayon dédiée — le ✎ existant ouvre déjà le
+  // formulaire complet, une 2e icône aurait surchargé une ligne déjà dense.
+  // Réservé aux rituels `editable` (posé par le lambda D, ADR-017 §1).
+  const handleStartRename = (ritual) => {
+    haptics.selection().catch(() => {});
+    setRenamingId(ritual.id);
+  };
+
+  // Validation au submit (returnKeyType="done") ET au blur (tap ailleurs) —
+  // les deux appellent ce même handler ; idempotent par construction (le
+  // 2e appel ne change plus rien puisque le nom est déjà à jour). Nom vide
+  // ou espaces → on garde l'ancien nom, silencieusement (pas d'erreur).
+  const handleRenameSubmit = (id, rawValue) => {
+    setRenamingId((current) => (current === id ? null : current));
+    const trimmed = (rawValue ?? '').trim();
+    if (!trimmed) {
+      return;
+    }
+    const ritual = getRitualById(id);
+    if (ritual && trimmed !== ritual.name) {
+      updateRitual(id, { name: trimmed });
+    }
   };
 
   // Hygiène (fuite tracée au handoff porte-2, corrigeable depuis le contexte
@@ -198,6 +233,14 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
       flex: 1,
       fontSize: rs(14, 'min'),
     },
+    ritualNameInput: {
+      borderBottomColor: theme.colors.brand.primary,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(14, 'min'),
+      paddingVertical: 0,
+    },
     deleteAction: {
       alignItems: 'center',
       backgroundColor: '#A85B42', // terracotta du DS — destructif sans crier
@@ -278,6 +321,11 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
       {rituals.map((ritual) => {
         const activity = resolveRitualActivity(ritual, customActivities);
         const isFavorite = favoriteRituals.some((fav) => fav.id === ritual.id);
+        // ADR-017 §1 : les 3 templates figés (free) n'ont AUCUNE UX
+        // d'édition — masquée, pas grisée. Un template devient un rituel
+        // normal (édition + suppression) dès isPremium.
+        const editable = isPremium || !isTemplateRitual(ritual);
+        const isRenaming = editable && renamingId === ritual.id;
         return (
           // porte-2 (retour Eric) : swipe gauche = supprimer (Swipeable RNGH),
           // étoile = élire aux 3 favoris de la rangée d'accueil.
@@ -286,7 +334,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
             friction={2}
             rightThreshold={40}
             overshootRight={false}
-            renderRightActions={() => (
+            renderRightActions={editable ? () => (
               <TouchableOpacity
                 style={styles.deleteAction}
                 onPress={() => {
@@ -299,7 +347,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
               >
                 <Text style={styles.deleteActionText}>{t('common.delete')}</Text>
               </TouchableOpacity>
-            )}
+            ) : undefined}
           >
             <View style={styles.ritualRow}>
               <TouchableOpacity
@@ -321,28 +369,57 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
                   {isFavorite ? '★' : '☆'}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.ritualTouchable}
-                onPress={() => handleApply(ritual)}
-                activeOpacity={0.7}
-                accessible
-                accessibilityRole="button"
-                accessibilityLabel={t('accessibility.applyRitual', { name: ritual.name })}
-              >
-                <Text style={styles.emoji}>{activity?.emoji}</Text>
-                <Text style={styles.ritualName}>{ritual.name}</Text>
-                <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.editAffordance}
-                onPress={() => handleEditPress(ritual.id)}
-                activeOpacity={0.7}
-                accessible
-                accessibilityRole="button"
-                accessibilityLabel={t('accessibility.editRitual', { name: ritual.name })}
-              >
-                <Text style={styles.editAffordanceText}>✎</Text>
-              </TouchableOpacity>
+              {isRenaming ? (
+                // Ligne en mode renommage : un simple View (pas un
+                // TouchableOpacity) — le TextInput doit rester seul
+                // récepteur du toucher pour le focus/curseur natif, un
+                // touchable englobant le lui disputerait. Le
+                // tap-pour-appliquer est donc naturellement suspendu tant
+                // que le renommage est actif (état explicite, temporaire).
+                <View style={styles.ritualTouchable}>
+                  <Text style={styles.emoji}>{activity?.emoji}</Text>
+                  <TextInput
+                    style={styles.ritualNameInput}
+                    defaultValue={ritual.name}
+                    autoFocus
+                    selectTextOnFocus
+                    returnKeyType="done"
+                    onSubmitEditing={(e) => handleRenameSubmit(ritual.id, e.nativeEvent.text)}
+                    onBlur={(e) => handleRenameSubmit(ritual.id, e.nativeEvent.text)}
+                    accessible
+                    accessibilityLabel={t('accessibility.renameRitual', { name: ritual.name })}
+                  />
+                  <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  style={styles.ritualTouchable}
+                  onPress={() => handleApply(ritual)}
+                  onLongPress={editable ? () => handleStartRename(ritual) : undefined}
+                  delayLongPress={450}
+                  activeOpacity={0.7}
+                  accessible
+                  accessibilityRole="button"
+                  accessibilityLabel={t('accessibility.applyRitual', { name: ritual.name })}
+                  accessibilityHint={editable ? t('accessibility.renameRitualHint') : undefined}
+                >
+                  <Text style={styles.emoji}>{activity?.emoji}</Text>
+                  <Text style={styles.ritualName}>{ritual.name}</Text>
+                  <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
+                </TouchableOpacity>
+              )}
+              {editable && (
+                <TouchableOpacity
+                  style={styles.editAffordance}
+                  onPress={() => handleEditPress(ritual.id)}
+                  activeOpacity={0.7}
+                  accessible
+                  accessibilityRole="button"
+                  accessibilityLabel={t('accessibility.editRitual', { name: ritual.name })}
+                >
+                  <Text style={styles.editAffordanceText}>✎</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </Swipeable>
         );

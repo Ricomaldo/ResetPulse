@@ -17,7 +17,12 @@ import { usePersistedState } from '../hooks/usePersistedState';
 
 const STORAGE_KEY = '@ResetPulse:customActivities';
 const DEFAULT_PULSE_DURATION = 800; // Normal pulse speed
-const FREE_CUSTOM_LIMIT = 1; // Free users can create 1 custom activity (during onboarding)
+// ADR-017 §5 : la création d'activité personnalisée passe entièrement en
+// Ambiances (0 → canCreateActivity devient premium-only). Grand-père : les
+// activités custom déjà créées (avant ce lambda, ou par un user Ambiances)
+// restent entièrement utilisables — ce cap ne gate QUE createActivity, jamais
+// updateActivity/deleteActivity/getActivityById sur l'existant.
+const FREE_CUSTOM_LIMIT = 0;
 
 const CustomActivitiesContext = createContext(null);
 
@@ -129,6 +134,14 @@ export function CustomActivitiesProvider({ children }) {
     return customActivities.length < FREE_CUSTOM_LIMIT;
   }, [customActivities]);
 
+  // DevFab (Lambda C, 3.0 minimaliste) : « Reset rituels & activités » et
+  // « Vanilla » — le contexte ne remonte pas avec AppContent (il vit
+  // au-dessus, dans App.js) donc effacer la clé AsyncStorage seule ne
+  // suffit pas ; ce setter donne l'effet immédiat (zéro activité perso).
+  const resetActivities = useCallback(() => {
+    setCustomActivities([]);
+  }, [setCustomActivities]);
+
   const value = useMemo(() => ({
     customActivities,
     createActivity,
@@ -138,6 +151,7 @@ export function CustomActivitiesProvider({ children }) {
     getActivityById,
     getCustomActivitiesCount,
     canCreateActivity,
+    resetActivities,
     FREE_CUSTOM_LIMIT,
     isLoading,
   }), [
@@ -149,6 +163,7 @@ export function CustomActivitiesProvider({ children }) {
     getActivityById,
     getCustomActivitiesCount,
     canCreateActivity,
+    resetActivities,
     isLoading,
   ]);
 

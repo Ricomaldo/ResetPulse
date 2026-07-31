@@ -77,7 +77,7 @@ export const TimerConfigProvider = ({ children }) => {
           // currentDuration via deriveScaleMode, plus jamais stocké/choisi.
         },
         display: {
-          shouldPulse: false,
+          shouldPulse: true,
           showDigitalTimer: false,
           showTime: true,
         },
@@ -123,7 +123,7 @@ export const TimerConfigProvider = ({ children }) => {
         // désormais, cf. deriveScaleMode plus bas.
       },
       display: {
-        shouldPulse: false,
+        shouldPulse: true,
         showDigitalTimer: false,
         showTime: true,
       },
