@@ -16,17 +16,19 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useModalStack } from '../../contexts/ModalStackContext';
-import { buildRitualApplyPayload, resolveRitualActivity } from '../../config/rituals';
+import { buildRitualApplyPayload, resolveRitualActivity, isTemplateRitual } from '../../config/rituals';
 import { formatDuration } from '../../config/durations';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import RitualForm from './RitualForm';
 
-// Lot 3b (verdict Eric) : SEUL cap dur du modèle Ambiances — 3 rituels en
-// gratuit, illimité en Ambiances. Le bouton + reste visible/actif : au-delà
-// du cap, il ouvre l'invitation Ambiances plutôt que le formulaire.
-const RITUALS_FREE_CAP = 3;
+// ADR-017 §1 : la frontière ne porte plus sur le TOTAL (3 templates figés +
+// 1 slot personnel = 4 rituels visibles en free) mais sur le nombre de
+// rituels PERSONNELS — 1 seul en gratuit, illimités en Ambiances. Le bouton +
+// reste visible/actif : au-delà du cap personnel, il ouvre l'invitation
+// Ambiances plutôt que le formulaire.
+const FREE_PERSONAL_RITUALS_CAP = 1;
 
 export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeight }) {
   const theme = useTheme();
@@ -60,7 +62,8 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
 
   const handleCreatePress = () => {
     haptics.selection().catch(() => {});
-    if (!isPremium && rituals.length >= RITUALS_FREE_CAP) {
+    const personalRitualsCount = rituals.filter((ritual) => !isTemplateRitual(ritual)).length;
+    if (!isPremium && personalRitualsCount >= FREE_PERSONAL_RITUALS_CAP) {
       modalStack.push('premium', { highlightedFeature: 'rituals_cap' });
       return;
     }
@@ -278,6 +281,10 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
       {rituals.map((ritual) => {
         const activity = resolveRitualActivity(ritual, customActivities);
         const isFavorite = favoriteRituals.some((fav) => fav.id === ritual.id);
+        // ADR-017 §1 : les 3 templates figés (free) n'ont AUCUNE UX
+        // d'édition — masquée, pas grisée. Un template devient un rituel
+        // normal (édition + suppression) dès isPremium.
+        const editable = isPremium || !isTemplateRitual(ritual);
         return (
           // porte-2 (retour Eric) : swipe gauche = supprimer (Swipeable RNGH),
           // étoile = élire aux 3 favoris de la rangée d'accueil.
@@ -286,7 +293,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
             friction={2}
             rightThreshold={40}
             overshootRight={false}
-            renderRightActions={() => (
+            renderRightActions={editable ? () => (
               <TouchableOpacity
                 style={styles.deleteAction}
                 onPress={() => {
@@ -299,7 +306,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
               >
                 <Text style={styles.deleteActionText}>{t('common.delete')}</Text>
               </TouchableOpacity>
-            )}
+            ) : undefined}
           >
             <View style={styles.ritualRow}>
               <TouchableOpacity
@@ -333,16 +340,18 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
                 <Text style={styles.ritualName}>{ritual.name}</Text>
                 <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.editAffordance}
-                onPress={() => handleEditPress(ritual.id)}
-                activeOpacity={0.7}
-                accessible
-                accessibilityRole="button"
-                accessibilityLabel={t('accessibility.editRitual', { name: ritual.name })}
-              >
-                <Text style={styles.editAffordanceText}>✎</Text>
-              </TouchableOpacity>
+              {editable && (
+                <TouchableOpacity
+                  style={styles.editAffordance}
+                  onPress={() => handleEditPress(ritual.id)}
+                  activeOpacity={0.7}
+                  accessible
+                  accessibilityRole="button"
+                  accessibilityLabel={t('accessibility.editRitual', { name: ritual.name })}
+                >
+                  <Text style={styles.editAffordanceText}>✎</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </Swipeable>
         );
