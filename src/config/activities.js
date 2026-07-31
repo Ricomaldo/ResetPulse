@@ -259,3 +259,39 @@ export const isCustomActivity = (activity) => activity?.isCustom === true;
 // Get activity by ID (checks built-in activities only)
 // For custom activities, use useCustomActivities hook
 export const isBuiltInActivity = (activity) => !activity?.isCustom;
+
+// ===== ADR-017 §4 — la vitrine ===============================================
+// Curation PROVISOIRE (à juger devant l'écran, porte Eric — cf. ADR-017
+// « reste à trancher »). Critère : couvrir les trois cerveaux plutôt que
+// maximiser le nombre — Claire/Mehdi (work+break), Sofia/Louis (homework),
+// la signature (meditation), deux pour respirer (sport+creativity).
+// CONTRAINTE DURE : work/break/meditation doivent y rester — ce sont les 3
+// rituels de base (BASE_RITUALS_SEED, src/config/rituals.js) et si on les
+// retire d'ici les templates n'ont plus d'activité librement sélectionnable.
+export const FREE_ACTIVITY_IDS = [
+  'work',
+  'break',
+  'meditation',
+  'homework',
+  'sport',
+  'creativity',
+];
+
+/**
+ * Une activité est « libre » (sélectionnable sans porte Ambiances) si :
+ * - c'est une activité CUSTOM déjà créée par l'utilisateur (grand-père,
+ *   ADR-017 §5 — seule la création NOUVELLE est fermée, jamais l'usage de
+ *   l'existant) ;
+ * - ou c'est une activité built-in listée dans FREE_ACTIVITY_IDS (la vitrine).
+ * Pur — accepte un objet Activité ou un id (string).
+ * @param {Object|string|null|undefined} activityOrId
+ * @returns {boolean}
+ */
+export const isActivityFree = (activityOrId) => {
+  if (!activityOrId) {return false;}
+  const activity =
+    typeof activityOrId === 'string' ? getActivityById(activityOrId) : activityOrId;
+  if (!activity) {return false;}
+  if (isCustomActivity(activity)) {return true;}
+  return FREE_ACTIVITY_IDS.includes(activity.id);
+};
