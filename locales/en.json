@@ -332,7 +332,9 @@
     "chooseCustomEmoji": "Choose another emoji via the keyboard",
     "ritualNamePreset": "Preset ritual %{name}",
     "deleteRitual": "Delete ritual %{name}",
-    "favoriteRitual": "Favorite ritual %{name}"
+    "favoriteRitual": "Favorite ritual %{name}",
+    "renameRitual": "Rename the %{name} ritual",
+    "renameRitualHint": "Long press to rename"
   },
   "twoTimers": {
     "title": "You've created 2 moments!",
