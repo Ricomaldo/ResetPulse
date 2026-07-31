@@ -89,7 +89,9 @@ Claire/Mehdi (travail, pause), Sofia/Louis (devoirs), la signature
 
 La création d'activité personnalisée (emoji librement choisi, rythme
 propre) passe entièrement en Ambiances — sinon le + contourne la
-vitrine et la frontière redevient illisible.
+vitrine et la frontière redevient illisible. **Grand-père** (validé Eric
+31/07) : les activités personnalisées déjà créées par les utilisateurs
+v2 free restent utilisables — seule la création NOUVELLE est Ambiances.
 
 ### 6. Palettes — l'essai libre (mécanique 3b conservée)
 
@@ -140,8 +142,5 @@ déplace la frontière — elle est réversible par construction.
 
 - Curation des ~6 emojis gratuits et des 3 palettes gratuites — devant
   l'écran, à la porte Eric.
-- Sort des activités personnalisées créées par les utilisateurs v2 free
-  (migration) — reco : elles restent utilisables (grand-père), la
-  création nouvelle est Ambiances. À valider avec Eric avant le lot.
 - UX exacte du grisé (tap sur un emoji grisé → quelle porte, quel texte)
   — boucle Claude design (Temps 4), textes flaggés.
