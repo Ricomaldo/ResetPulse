@@ -240,6 +240,21 @@ describe('rituals Configuration', () => {
     test('BASE_RITUAL_IDS contains exactly the 3 base ids', () => {
       expect(BASE_RITUAL_IDS).toEqual(['ritual_meditation', 'ritual_break', 'ritual_work']);
     });
+
+    // ADR-017 §1 : le cap free (RitualsPanel.handleCreatePress) compte les
+    // rituels PERSONNELS — ce test fige le filtre exact que le composant
+    // applique (`rituals.filter((r) => !isTemplateRitual(r)).length`), pur
+    // et testable ici puisque RitualsPanel n'a pas de harnais RTL.
+    test('cap personnel free: 3 templates seuls → 0 personnel, la création reste ouverte', () => {
+      const personalCount = getDefaultRituals().filter((r) => !isTemplateRitual(r)).length;
+      expect(personalCount).toBe(0);
+    });
+
+    test('cap personnel free: templates + 1 rituel personnel → cap atteint (>= 1)', () => {
+      const rituals = [...getDefaultRituals(), { id: 'ritual_1690000000000', activityId: 'work' }];
+      const personalCount = rituals.filter((r) => !isTemplateRitual(r)).length;
+      expect(personalCount).toBe(1);
+    });
   });
 
   describe('findRitualToKeep (ADR-017 §2, amende ADR-016 §3)', () => {
