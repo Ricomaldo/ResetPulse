@@ -28,6 +28,7 @@ import { useDormantTips } from '../hooks/useDormantTips';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useSessionImmersion } from '../hooks/useSessionImmersion';
+import { useLiveActivity } from '../hooks/useLiveActivity';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
 import AsideZone from '../components/layout/AsideZone';
@@ -803,6 +804,19 @@ function TimerScreenContent() {
   const { immersed, registerActivity } = useSessionImmersion({
     running: snapshot.running && isFocus,
     isCompleted: snapshot.isCompleted,
+  });
+
+  // Live Activity (mission 3d) : écho de séance sur écran verrouillé +
+  // Dynamic Island. Pur observateur de l'état déjà exposé ici (snapshot,
+  // currentColor, currentActivity) — aucune logique neuve, aucun état
+  // ajouté (cf. src/hooks/useLiveActivity.js). No-op silencieux hors iOS
+  // 16.2+ (Android, Expo Go, device non éligible).
+  useLiveActivity({
+    running: snapshot.running,
+    isCompleted: snapshot.isCompleted,
+    duration: currentDuration,
+    colorHex: currentColor,
+    emoji: currentActivity?.emoji,
   });
 
   const immersionValue = useSharedValue(0);
