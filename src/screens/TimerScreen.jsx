@@ -397,7 +397,7 @@ function TimerScreenContent() {
   const {
     mode: { current: currentMode },
     setMode,
-    timer: { currentDuration, currentActivity, selectedSoundId },
+    timer: { currentDuration, currentActivity, selectedSoundId, clockwise },
     palette: { currentColor },
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
@@ -817,6 +817,7 @@ function TimerScreenContent() {
     duration: currentDuration,
     colorHex: currentColor,
     emoji: currentActivity?.emoji,
+    clockwise,
   });
 
   const immersionValue = useSharedValue(0);

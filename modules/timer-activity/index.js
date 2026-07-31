@@ -30,11 +30,19 @@ export const isLiveActivitySupported = () => {
  * @param {string} colorHex - couleur du rituel (ex. '#E89665')
  * @param {string} emoji - emoji compagnon
  * @param {number} durationSeconds - durée totale de la séance
+ * @param {boolean} [clockwise] - sens de rotation du disque app
+ *   (timer.clockwise) ; défaut false (anti-horaire, convention Time Timer)
+ *   si undefined.
  */
-export const startLiveActivity = async (colorHex, emoji, durationSeconds) => {
+export const startLiveActivity = async (colorHex, emoji, durationSeconds, clockwise) => {
   if (!nativeModule) {return null;}
   try {
-    return await nativeModule.start(colorHex || '#E89665', emoji || '⏳', durationSeconds);
+    return await nativeModule.start(
+      colorHex || '#E89665',
+      emoji || '⏳',
+      durationSeconds,
+      clockwise === undefined ? false : Boolean(clockwise)
+    );
   } catch (error) {
     return null;
   }

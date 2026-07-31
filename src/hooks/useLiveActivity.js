@@ -16,10 +16,11 @@
 //   propre disparition (dismissalPolicy .after côté Swift).
 // - Rembobinage (running: true→false, isCompleted resté false — tap pendant
 //   la séance, cf. useTimer.js:stopTimer) : end(false), retrait immédiat.
-// - Changement durée/couleur/emoji PENDANT running (drag du disque, tap sur
-//   un rituel ou une couleur) : le module n'expose pas d'API "update" (on
-//   ne l'invente pas, cf. mandat) → end(false) + start(nouveaux
-//   paramètres). Débouncé (DRAG_DEBOUNCE_MS), via le cleanup naturel de
+// - Changement durée/couleur/emoji/sens PENDANT running (drag du disque, tap
+//   sur un rituel ou une couleur, toggle clockwise du sheet) : le module
+//   n'expose pas d'API "update" (on ne l'invente pas, cf. mandat) →
+//   end(false) + start(nouveaux paramètres). Débouncé (DRAG_DEBOUNCE_MS),
+//   via le cleanup naturel de
 //   l'effet : le drag fait changer `currentDuration` en continu, à la
 //   cadence du geste (TimerDial.jsx — `onGraduationTap` appelé à chaque
 //   mouvement, pas seulement au relâchement) ; redémarrer l'Activity à
@@ -46,8 +47,10 @@ export const DRAG_DEBOUNCE_MS = 500;
  * @param {number} params.duration - currentDuration en secondes (durée pleine de la séance)
  * @param {string} params.colorHex - currentColor (hex) — couleur de la séance
  * @param {string} params.emoji - currentActivity?.emoji — emoji compagnon
+ * @param {boolean} params.clockwise - timer.clockwise (TimerConfigContext) —
+ *   sens de rotation du disque app, à répercuter sur l'anneau natif
  */
-export function useLiveActivity({ running, isCompleted, duration, colorHex, emoji }) {
+export function useLiveActivity({ running, isCompleted, duration, colorHex, emoji, clockwise }) {
   const prevRunningRef = useRef(false);
   const activeRef = useRef(false); // une Activité est-elle censée vivre côté natif ?
 
@@ -61,7 +64,7 @@ export function useLiveActivity({ running, isCompleted, duration, colorHex, emoj
         return undefined;
       }
       activeRef.current = true;
-      startLiveActivity(colorHex, emoji, duration).catch((error) => {
+      startLiveActivity(colorHex, emoji, duration, clockwise).catch((error) => {
         logger.warn('useLiveActivity: start() a échoué', error);
       });
       return undefined;
@@ -91,7 +94,7 @@ export function useLiveActivity({ running, isCompleted, duration, colorHex, emoj
             logger.warn('useLiveActivity: end() (redémarrage) a échoué', error);
           })
           .finally(() => {
-            startLiveActivity(colorHex, emoji, duration).catch((error) => {
+            startLiveActivity(colorHex, emoji, duration, clockwise).catch((error) => {
               logger.warn('useLiveActivity: start() (redémarrage) a échoué', error);
             });
           });
@@ -100,7 +103,7 @@ export function useLiveActivity({ running, isCompleted, duration, colorHex, emoj
     }
 
     return undefined;
-  }, [running, isCompleted, duration, colorHex, emoji]);
+  }, [running, isCompleted, duration, colorHex, emoji, clockwise]);
 }
 
 export default useLiveActivity;
