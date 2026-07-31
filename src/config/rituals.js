@@ -61,6 +61,23 @@ export const getDefaultRituals = () =>
     };
   });
 
+// Ids stables des 3 rituels de base (cf. BASE_RITUALS_SEED) — la frontière
+// template/personnel (ADR-017 §1) se lit sur L'ID, pas sur le contenu.
+// Migration (validé Eric 31/07) : un rituel de base MODIFIÉ par un user du
+// build de test (emoji/durée/couleur changés) garde son id `ritual_${activityId}`
+// donc reste un template — figé dans l'état actuel, jamais reseté. On ne
+// détruit aucune donnée, on referme juste l'édition dessus.
+export const BASE_RITUAL_IDS = BASE_RITUALS_SEED.map(({ activityId }) => `${RITUAL_ID_PREFIX}${activityId}`);
+
+/**
+ * Un rituel est un TEMPLATE s'il porte l'id d'un des 3 rituels de base
+ * (ADR-017 §1) — sinon c'est un rituel PERSONNEL. Pur, par id uniquement :
+ * ne regarde jamais le contenu (cf. note migration ci-dessus sur BASE_RITUAL_IDS).
+ * @param {Object} ritual
+ * @returns {boolean}
+ */
+export const isTemplateRitual = (ritual) => Boolean(ritual) && BASE_RITUAL_IDS.includes(ritual.id);
+
 /**
  * Plafonne une durée de rituel aux bornes existantes (durations.js).
  * @param {number} duration - Durée en secondes
@@ -138,24 +155,21 @@ export const buildRitualApplyPayload = (ritual, customActivities = []) => ({
 });
 
 /**
- * Trouve le Rituel à mettre à jour quand un Moment est gardé (ADR-016 §3).
- * Comme le Moment part toujours d'un rituel existant (rangée d'accueil, dé,
- * sheet…), « garder » met à jour CE rituel plutôt que d'en créer un nouveau —
- * le cap gratuit (3) reste intact, zéro mur jour 1. Préfère le rituel de
- * BASE (id `ritual_${activityId}`, cf. getDefaultRituals) si présent parmi
- * les matchs — sinon le premier qui matche, dans l'ordre du tableau. Pur.
+ * Trouve le rituel PERSONNEL à mettre à jour quand un Moment est gardé
+ * (ADR-017 §2, amende ADR-016 §3). « Garder » ne touche plus jamais un
+ * template (les 3 rituels de base) : il crée ou met à jour LE rituel
+ * personnel (slot 4 en free). Retourne le premier rituel non-template
+ * trouvé, ou null si aucun n'existe encore (→ l'appelant crée).
+ *
+ * Ne matche plus par activityId — ce n'est plus « le rituel de cette
+ * activité » mais « le rituel qui est à toi », quelle que soit l'activité
+ * vécue. En Ambiances, plusieurs rituels personnels peuvent exister ; ce
+ * mécanisme ne se déclenche qu'une fois dans la vie de l'app (hasSeenKeepMoment,
+ * cf. TimerScreen) donc « le premier trouvé » reste un choix volontairement
+ * simple — ne pas le complexifier en réintroduisant un matching par activité,
+ * ça romprait le cap personnel free (1 seul slot).
  * @param {Array<Object>} rituals
- * @param {string} activityId
  * @returns {Object|null}
  */
-export const findRitualToKeep = (rituals = [], activityId) => {
-  if (!activityId) {
-    return null;
-  }
-  const matches = rituals.filter((ritual) => ritual.activityId === activityId);
-  if (matches.length === 0) {
-    return null;
-  }
-  const baseRitualId = `${RITUAL_ID_PREFIX}${activityId}`;
-  return matches.find((ritual) => ritual.id === baseRitualId) || matches[0];
-};
+export const findRitualToKeep = (rituals = []) =>
+  rituals.find((ritual) => !isTemplateRitual(ritual)) || null;
