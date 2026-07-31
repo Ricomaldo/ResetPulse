@@ -155,6 +155,15 @@ export function RitualsProvider({ children }) {
     return true;
   }, [rituals, hasAnyFavorite, setRituals]);
 
+  // DevFab (Lambda C, 3.0 minimaliste) : « Reset rituels & activités » et
+  // « Vanilla » — le contexte ne remonte pas avec AppContent (il vit
+  // au-dessus, dans App.js) donc effacer la clé AsyncStorage seule ne
+  // suffit pas ; ce setter donne l'effet immédiat (retour aux 3 rituels de
+  // base, aucun custom).
+  const resetRituals = useCallback(() => {
+    setRituals(getDefaultRituals());
+  }, [setRituals]);
+
   const value = useMemo(() => ({
     rituals,
     createRitual,
@@ -165,6 +174,7 @@ export function RitualsProvider({ children }) {
     hasMissingBaseRituals,
     favoriteRituals,
     toggleFavorite,
+    resetRituals,
     isLoading,
   }), [
     rituals,
@@ -176,6 +186,7 @@ export function RitualsProvider({ children }) {
     hasMissingBaseRituals,
     favoriteRituals,
     toggleFavorite,
+    resetRituals,
     isLoading,
   ]);
 

@@ -25,11 +25,20 @@ export function SessionCountProvider({ children }) {
     setCompletedSessions((prev) => prev + 1);
   }, [setCompletedSessions]);
 
+  // DevFab (Lambda C, 3.0 minimaliste) : remet le compteur à zéro — utilisé
+  // par « Rejouer la découverte » et « Vanilla ». Le contexte ne remonte pas
+  // avec AppContent (il vit au-dessus, dans App.js) donc effacer la clé
+  // AsyncStorage seule ne suffit pas ; ce setter donne l'effet immédiat.
+  const resetSessionCount = useCallback(() => {
+    setCompletedSessions(0);
+  }, [setCompletedSessions]);
+
   const value = useMemo(() => ({
     completedSessions,
     incrementSessionCount,
+    resetSessionCount,
     isLoading,
-  }), [completedSessions, incrementSessionCount, isLoading]);
+  }), [completedSessions, incrementSessionCount, resetSessionCount, isLoading]);
 
   return (
     <SessionCountContext.Provider value={value}>
