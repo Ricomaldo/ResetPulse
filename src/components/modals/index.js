@@ -17,8 +17,6 @@
  *
  * Examples:
  * - modalStack.push('premium', { highlightedFeature: 'activity' })
- * - modalStack.push('createActivity', { onActivityCreated: handleCreate })
- * - modalStack.push('editActivity', { activity, onActivityUpdated, onActivityDeleted })
  * - modalStack.push('twoTimers', { onExplore: handleExplore })
  *
  * References:
@@ -35,10 +33,6 @@ export { default as BottomSheetModal } from './BottomSheetModal';
 // === Modal Content Components (All use ModalStack pattern) ===
 // Premium
 export { default as PremiumModalContent } from './PremiumModalContent';
-
-// Custom Activities
-export { default as CreateActivityModalContent } from './CreateActivityModalContent';
-export { default as EditActivityModalContent } from './EditActivityModalContent';
 
 // System
 export { default as TwoTimersModalContent } from './TwoTimersModalContent';

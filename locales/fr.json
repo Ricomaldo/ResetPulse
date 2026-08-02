@@ -325,6 +325,7 @@
     },
     "unlockPremium": "Débloquer Ambiances pour %{price}",
     "paletteItem": "Palette de couleurs : %{name}",
+    "soundItem": "Son : %{name}",
     "applyRitual": "Appliquer le rituel %{name}",
     "editRitual": "Modifier le rituel %{name}",
     "createRitual": "Créer un rituel",
@@ -489,6 +490,14 @@
     "included": "Incluses",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "palette Ambiances — essaie-la librement",
+    "ambiancesDiscover": "découvrir Ambiances"
+  },
+  "soundsPanel": {
+    "sheetRow": "Sons",
+    "title": "Sons",
+    "included": "Inclus",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "son Ambiances — essaie-le librement",
     "ambiancesDiscover": "découvrir Ambiances"
   },
   "mode": {

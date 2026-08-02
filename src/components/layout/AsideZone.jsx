@@ -60,6 +60,7 @@ import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
+import SoundsPanel from '../sounds/SoundsPanel';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -117,6 +118,8 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   const [ritualsOpen, setRitualsOpen] = useState(false);
   // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.
   const [paletteOpen, setPaletteOpen] = useState(false);
+  // Sous-écran Sons (bloc 5, Lambda L) — même mécanisme, sous Palettes.
+  const [soundsOpen, setSoundsOpen] = useState(false);
   // Miroir de l'état interne liste/formulaire de RitualsPanel (hotfix-porte-1
   // A3/D5) — remonté via onViewChange, pour arbitrer scroll extérieur et pan
   // de fermeture sans qu'AsideZone connaisse le détail du sous-écran.
@@ -158,9 +161,9 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   const subScreenHeight = Math.max(0, containerH * MAX_OPEN_COVERAGE - HANDLE_HEIGHT - BOTTOM_SAFETY);
 
   // A3/D5 : le pan de fermeture ET le scroll extérieur cèdent la main à un
-  // sous-écran qui gère son propre scroll — Palettes, ou le formulaire de
-  // Rituels (pas sa liste : elle reste sur le scroll extérieur, plus courte).
-  const boundedSubScreen = paletteOpen || (ritualsOpen && ritualsView === 'form');
+  // sous-écran qui gère son propre scroll — Palettes, Sons, ou le formulaire
+  // de Rituels (pas sa liste : elle reste sur le scroll extérieur, plus courte).
+  const boundedSubScreen = paletteOpen || soundsOpen || (ritualsOpen && ritualsView === 'form');
 
   const handleContentLayout = (e) => {
     setContentHeight(e.nativeEvent.layout.height);
@@ -208,6 +211,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
     if (!isOpen) {
       setRitualsOpen(false);
       setPaletteOpen(false);
+      setSoundsOpen(false);
       setRitualsView('list');
     }
   }, [isOpen]);
@@ -506,6 +510,10 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                      maxHeight borne son propre scroll (A2 — même dette que le
                      formulaire de rituel, elle explosera avec la liste). */
                   <PalettesPanel onBack={() => setPaletteOpen(false)} maxHeight={subScreenHeight} />
+                ) : soundsOpen ? (
+                  /* Sous-écran Sons (bloc 5, Lambda L) — même mécanisme que
+                     Palettes : liste ouverte, écoute + apply au tap. */
+                  <SoundsPanel onBack={() => setSoundsOpen(false)} maxHeight={subScreenHeight} />
                 ) : (
                   <>
                     {/* Bloc 1 : segmenté Mode — écrit le réglage global. En Focus,
@@ -629,10 +637,9 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
 
-                        {/* Bloc 4 : Palettes — sous-écran réel (C6.1),
-                            dernière rangée depuis la mort de l'export (V4) */}
+                        {/* Bloc 4 : Palettes — sous-écran réel (C6.1) */}
                         <TouchableOpacity
-                          style={[styles.optionRow, styles.optionRowLast]}
+                          style={styles.optionRow}
                           accessible
                           accessibilityRole="button"
                           accessibilityLabel={t('palettesPanel.sheetRow')}
@@ -644,6 +651,23 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                           activeOpacity={0.7}
                         >
                           <Text style={styles.inertRowLabel}>{t('palettesPanel.sheetRow')}</Text>
+                          <Text style={styles.inertChevron}>›</Text>
+                        </TouchableOpacity>
+
+                        {/* Bloc 5 : Sons — sous-écran réel (Lambda L),
+                            dernière rangée */}
+                        <TouchableOpacity
+                          style={[styles.optionRow, styles.optionRowLast]}
+                          accessible
+                          accessibilityRole="button"
+                          accessibilityLabel={t('soundsPanel.sheetRow')}
+                          onPress={() => {
+                            haptics.selection().catch(() => {});
+                            setSoundsOpen(true);
+                          }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.inertRowLabel}>{t('soundsPanel.sheetRow')}</Text>
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
                       </>

@@ -111,6 +111,10 @@ const analyticsAdapter = {
     this.track('palette_selected', { palette });
   },
 
+  trackSoundSelected(soundId) {
+    this.track('sound_selected', { sound_id: soundId });
+  },
+
   // Funnel Ambiances (Lot 3b, frontière gratuit/payant) : invitation
   // discrète vue/tapée, avant la surface d'achat.
   trackAmbiancesInvitationShown(source) {

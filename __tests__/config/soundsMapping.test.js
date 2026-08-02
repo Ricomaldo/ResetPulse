@@ -13,6 +13,8 @@ import {
   NOTIFICATION_SOUND_FILES,
   DEFAULT_SOUND_ID,
   getNotificationSoundFile,
+  isSoundPremium,
+  resolveSoundOnLaunch,
 } from '../../src/config/sounds-mapping';
 
 const appJson = require('../../app.json');
@@ -52,5 +54,45 @@ describe('sounds-mapping — notification packaging (Lot 3e, finding C2)', () =>
     expect(getNotificationSoundFile('bogus')).toBe(NOTIFICATION_SOUND_FILES[DEFAULT_SOUND_ID]);
     expect(getNotificationSoundFile(undefined)).toBe(NOTIFICATION_SOUND_FILES[DEFAULT_SOUND_ID]);
     expect(getNotificationSoundFile(null)).toBe(NOTIFICATION_SOUND_FILES[DEFAULT_SOUND_ID]);
+  });
+});
+
+// Lambda L (mandat Eric) : miroir des tests resolvePaletteOnLaunch
+// (__tests__/config/timerPalettes.test.js) — même grammaire « essai libre »
+// (ADR-017 §6) appliquée aux sons.
+describe('sounds-mapping — gating (Lambda L, miroir palettes)', () => {
+  test('isSoundPremium correctly identifies premium (Ambiances) sounds', () => {
+    expect(isSoundPremium('timer_complete')).toBe(false);
+    expect(isSoundPremium('microwave_ping')).toBe(false);
+    expect(isSoundPremium('singing_bowl')).toBe(false);
+    expect(isSoundPremium('contrabass_pluck')).toBe(false);
+    expect(isSoundPremium('toaster_bell')).toBe(true);
+    expect(isSoundPremium('kalimba')).toBe(true);
+  });
+
+  test('isSoundPremium returns false for a non-existent sound (never throws)', () => {
+    expect(isSoundPremium('nonExistent')).toBe(false);
+    expect(isSoundPremium(undefined)).toBe(false);
+  });
+
+  describe('resolveSoundOnLaunch', () => {
+    test('premium user: never forces a revert, keeps current sound', () => {
+      expect(resolveSoundOnLaunch(true, 'kalimba', 'timer_complete')).toBe('kalimba');
+      expect(resolveSoundOnLaunch(true, 'kalimba', null)).toBe('kalimba');
+    });
+
+    test('free user with an included current sound: nothing to do', () => {
+      expect(resolveSoundOnLaunch(false, 'microwave_ping', 'singing_bowl')).toBe('microwave_ping');
+      expect(resolveSoundOnLaunch(false, 'timer_complete', null)).toBe('timer_complete');
+    });
+
+    test('free user with a premium current sound: reverts to last included', () => {
+      expect(resolveSoundOnLaunch(false, 'kalimba', 'singing_bowl')).toBe('singing_bowl');
+    });
+
+    test('free user with a premium current sound and no known last included: defaults to DEFAULT_SOUND_ID', () => {
+      expect(resolveSoundOnLaunch(false, 'kalimba', null)).toBe(DEFAULT_SOUND_ID);
+      expect(resolveSoundOnLaunch(false, 'kalimba', undefined)).toBe(DEFAULT_SOUND_ID);
+    });
   });
 });

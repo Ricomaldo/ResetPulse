@@ -148,6 +148,10 @@ jest.mock('../../src/hooks/usePaletteGating', () => ({
   usePaletteGating: () => undefined,
 }));
 
+jest.mock('../../src/hooks/useSoundGating', () => ({
+  useSoundGating: () => undefined,
+}));
+
 jest.mock('../../src/hooks/usePremiumStatus', () => ({
   usePremiumStatus: () => ({ isPremium: false, isLoading: false }),
 }));
