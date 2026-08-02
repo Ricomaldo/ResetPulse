@@ -50,16 +50,21 @@ public class TimerActivityModule: Module {
             }
 
             let now = Date()
+            let endDate = now.addingTimeInterval(durationSeconds)
             let attributes = TimerAttributes(
                 colorHex: colorHex,
                 emoji: emoji,
                 startDate: now,
-                endDate: now.addingTimeInterval(durationSeconds),
+                endDate: endDate,
                 clockwise: clockwise
             )
+            // staleDate = endDate : à cette date le SYSTÈME re-rend le widget
+            // avec `isStale`, SANS réveiller l'app (ADR-018 §③) — c'est ce
+            // qui fait basculer l'anneau sur « accompli ✨ » à 0:00 même app
+            // suspendue/tuée (l'app ne peut pas appeler end() depuis le fond).
             let content = ActivityContent(
                 state: TimerAttributes.ContentState(status: "running"),
-                staleDate: nil
+                staleDate: endDate
             )
             do {
                 let activity = try Activity.request(attributes: attributes, content: content)
