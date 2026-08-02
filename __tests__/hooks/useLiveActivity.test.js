@@ -3,6 +3,7 @@
 // running/isCompleted/duration/remaining/colorHex/emoji (jamais useTimer
 // lui-même).
 import { act } from 'react-test-renderer';
+import { AppState } from 'react-native';
 import { renderHook } from '../test-utils';
 import { useLiveActivity, DRAG_DEBOUNCE_MS } from '../../src/hooks/useLiveActivity';
 import { isLiveActivitySupported, startLiveActivity, endLiveActivity } from '../../modules/timer-activity';
@@ -46,10 +47,13 @@ describe('useLiveActivity', () => {
     isLiveActivitySupported.mockReturnValue(true);
   });
 
-  it('ne fait rien au montage au repos (running: false)', () => {
+  it('ne démarre rien au montage au repos (running: false) — seule la réconciliation passe (end(false), cf. describe dédié)', () => {
     renderHook(() => useLiveActivity(baseProps()));
     expect(startLiveActivity).not.toHaveBeenCalled();
-    expect(endLiveActivity).not.toHaveBeenCalled();
+    // La passe de réconciliation au mount (ADR-018 §③) retire une éventuelle
+    // orpheline — end sans activité vivante est un no-op sûr côté module.
+    expect(endLiveActivity).toHaveBeenCalledTimes(1);
+    expect(endLiveActivity).toHaveBeenCalledWith(false);
   });
 
   it('démarre l\'Activity au passage à running avec la durée PLEINE (restant == durée au départ)', () => {
@@ -68,6 +72,7 @@ describe('useLiveActivity', () => {
   it('termine avec done=true à la complétion naturelle (running→false ET isCompleted→true)', () => {
     const props = baseProps();
     const { rerender } = renderHook(() => useLiveActivity(props));
+    endLiveActivity.mockClear(); // passe de réconciliation au mount
 
     props.running = true;
     act(() => rerender());
@@ -86,6 +91,7 @@ describe('useLiveActivity', () => {
   it('termine avec done=false au rembobinage (running→false, isCompleted resté false)', () => {
     const props = baseProps();
     const { rerender } = renderHook(() => useLiveActivity(props));
+    endLiveActivity.mockClear(); // passe de réconciliation au mount
 
     props.running = true;
     act(() => rerender());
@@ -131,6 +137,7 @@ describe('useLiveActivity', () => {
       act(() => rerender());
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
       startLiveActivity.mockClear();
+      endLiveActivity.mockClear(); // passe de réconciliation au mount
 
       // Séance déjà entamée : le restant a diminué (120s écoulées), tandis
       // qu'un drag fait bouger la durée pleine affichée à 900 — le bug
@@ -163,6 +170,7 @@ describe('useLiveActivity', () => {
       props.running = true;
       act(() => rerender());
       startLiveActivity.mockClear();
+      endLiveActivity.mockClear(); // passe de réconciliation au mount
 
       props.duration = 700;
       props.remaining = 550;
@@ -196,6 +204,7 @@ describe('useLiveActivity', () => {
       expect(startLiveActivity).toHaveBeenCalledTimes(1);
       expect(startLiveActivity).toHaveBeenCalledWith('#E89665', '🎯', 600, false);
       startLiveActivity.mockClear();
+      endLiveActivity.mockClear(); // passe de réconciliation au mount
 
       // Toggle clockwise du sheet PENDANT la séance : mêmes durée/couleur/
       // emoji, seul le sens change — doit déclencher le même redémarrage
@@ -227,6 +236,7 @@ describe('useLiveActivity', () => {
       props.running = true;
       act(() => rerender());
       startLiveActivity.mockClear();
+      endLiveActivity.mockClear(); // passe de réconciliation au mount
 
       // Le compte à rebours tique pendant plusieurs secondes : remaining
       // seul bouge, rien d'autre. `remaining` n'est PAS dans les deps de
@@ -254,6 +264,7 @@ describe('useLiveActivity', () => {
       props.running = true;
       act(() => rerender());
       startLiveActivity.mockClear();
+      endLiveActivity.mockClear(); // passe de réconciliation au mount
 
       // Un vrai changement (couleur) arme le debounce.
       props.colorHex = '#123456';
@@ -285,6 +296,7 @@ describe('useLiveActivity', () => {
       props.running = true;
       act(() => rerender());
       startLiveActivity.mockClear();
+      endLiveActivity.mockClear(); // passe de réconciliation au mount
 
       props.colorHex = '#123456';
       props.remaining = 0;
@@ -307,6 +319,7 @@ describe('useLiveActivity', () => {
       props.running = true;
       act(() => rerender());
       startLiveActivity.mockClear();
+      endLiveActivity.mockClear(); // passe de réconciliation au mount
 
       props.colorHex = '#123456';
       props.remaining = -1;
@@ -320,6 +333,85 @@ describe('useLiveActivity', () => {
       expect(endLiveActivity).toHaveBeenCalledTimes(1);
       expect(endLiveActivity).toHaveBeenCalledWith(false);
       expect(startLiveActivity).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('réconciliation au premier plan (ADR-018 §③)', () => {
+    let appStateHandler;
+    let removeSubscription;
+
+    beforeEach(() => {
+      appStateHandler = undefined;
+      removeSubscription = jest.fn();
+      jest.spyOn(AppState, 'addEventListener').mockImplementation((event, handler) => {
+        appStateHandler = handler;
+        return { remove: removeSubscription };
+      });
+    });
+
+    afterEach(() => {
+      AppState.addEventListener.mockRestore();
+    });
+
+    it('au mount avec timer à l\'arrêt → end(false) appelé une fois (orpheline d\'un démarrage à froid)', () => {
+      renderHook(() => useLiveActivity(baseProps()));
+
+      expect(endLiveActivity).toHaveBeenCalledTimes(1);
+      expect(endLiveActivity).toHaveBeenCalledWith(false);
+      expect(startLiveActivity).not.toHaveBeenCalled();
+    });
+
+    it('au mount avec timer en marche → aucun end (une séance vivante n\'est jamais touchée)', () => {
+      const props = baseProps();
+      props.running = true;
+      renderHook(() => useLiveActivity(props));
+
+      // Le start de la transition repos→séance a lieu, mais la
+      // réconciliation, elle, ne tue rien : les dates fixes restent justes.
+      expect(endLiveActivity).not.toHaveBeenCalled();
+    });
+
+    it('passage background→active avec timer à l\'arrêt → end(false) (séance finie app suspendue)', () => {
+      renderHook(() => useLiveActivity(baseProps()));
+      endLiveActivity.mockClear(); // passe du mount
+
+      // Un passage en fond ne réconcilie pas — seul le retour actif compte.
+      act(() => appStateHandler('background'));
+      expect(endLiveActivity).not.toHaveBeenCalled();
+
+      act(() => appStateHandler('active'));
+      expect(endLiveActivity).toHaveBeenCalledTimes(1);
+      expect(endLiveActivity).toHaveBeenCalledWith(false);
+    });
+
+    it('passage background→active avec timer en marche → aucun end (la réconciliation épargne la séance vivante)', () => {
+      const props = baseProps();
+      const { rerender } = renderHook(() => useLiveActivity(props));
+
+      props.running = true;
+      act(() => rerender());
+      endLiveActivity.mockClear(); // passe du mount
+
+      act(() => appStateHandler('background'));
+      act(() => appStateHandler('active'));
+
+      expect(endLiveActivity).not.toHaveBeenCalled();
+    });
+
+    it('non supporté (isSupported false) → aucun appel, ni au mount ni au retour actif', () => {
+      isLiveActivitySupported.mockReturnValue(false);
+      renderHook(() => useLiveActivity(baseProps()));
+
+      act(() => appStateHandler('active'));
+
+      expect(endLiveActivity).not.toHaveBeenCalled();
+      expect(startLiveActivity).not.toHaveBeenCalled();
+    });
+
+    it('démontage → le listener AppState est retiré', () => {
+      const { unmount } = renderHook(() => useLiveActivity(baseProps()));
+      unmount();
+      expect(removeSubscription).toHaveBeenCalledTimes(1);
     });
   });
 });
