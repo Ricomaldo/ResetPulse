@@ -8,8 +8,6 @@
  * Standard duration presets (aligned with 5 timer scales)
  * Used across:
  * - DurationSlider (full mode)
- * - CustomizeStep (onboarding mode)
- * - CreateActivityForm
  */
 export const DURATION_PRESETS = [
   { minutes: 5, seconds: 300 },

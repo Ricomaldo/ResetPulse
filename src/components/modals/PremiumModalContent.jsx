@@ -52,6 +52,9 @@ const DEFAULT_FEATURE_ORDER = ['palettes', 'rituals', 'sounds'];
 const FEATURE_ORDER_BY_SOURCE = {
   rituals_cap: ['rituals', 'palettes', 'sounds'],
   palettes: ['palettes', 'rituals', 'sounds'],
+  // Lambda L : miroir de la porte `palettes` — la ligne du pack Sons passe
+  // en tête depuis SoundsPanel (même invitation « essai libre », ADR-017 §6).
+  sounds: ['sounds', 'palettes', 'rituals'],
   breathe_invitation: ['sounds', 'palettes', 'rituals'],
   // ADR-017 §4/§5 — les deux nouvelles portes du formulaire de rituel
   // (vitrine emojis built-in grisée, création d'activité custom fermée) :

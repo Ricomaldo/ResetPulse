@@ -139,6 +139,7 @@ export default function App() {
         '@ResetPulse:customActivities',
         '@ResetPulse:completedSessions',
         '@ResetPulse:lastIncludedPalette',
+        '@ResetPulse:lastIncludedSound',
 
         // Découverte (Lambda C, one-shots) — cf. handleReplayDiscovery
         '@ResetPulse:hasSeenKeepMoment',
