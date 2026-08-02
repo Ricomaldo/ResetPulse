@@ -318,6 +318,7 @@
     "restorePurchases": "Restore previous purchases",
     "restorePurchasesHint": "Restore Ambiances access if you already purchased",
     "paletteItem": "Color palette: %{name}",
+    "soundItem": "Sound: %{name}",
     "closeCreateActivity": "Close create activity",
     "createActivityHint": "Creates the custom activity and adds it to your list",
     "closeEditActivity": "Close edit activity",
@@ -489,6 +490,14 @@
     "included": "Included",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances palette — try it freely",
+    "ambiancesDiscover": "discover Ambiances"
+  },
+  "soundsPanel": {
+    "sheetRow": "Sounds",
+    "title": "Sounds",
+    "included": "Included",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances sound — try it freely",
     "ambiancesDiscover": "discover Ambiances"
   },
   "mode": {
