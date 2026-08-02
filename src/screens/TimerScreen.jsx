@@ -38,6 +38,7 @@ import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
 import { useSessionCount } from '../hooks/useSessionCount';
 import { usePaletteGating } from '../hooks/usePaletteGating';
+import { useSoundGating } from '../hooks/useSoundGating';
 import { usePremiumStatus } from '../hooks/usePremiumStatus';
 import { useModalStack } from '../contexts/ModalStackContext';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
@@ -393,6 +394,9 @@ function TimerScreenContent() {
   // lancement si FREE et Ambiances actif — monté une fois ici, cf.
   // usePaletteGating.
   usePaletteGating();
+  // Soft-gating sons (Lambda L, miroir palettes) — hook séparé, même
+  // mécanique, domaine indépendant. Cf. useSoundGating.
+  useSoundGating();
   const {
     mode: { current: currentMode },
     setMode,
