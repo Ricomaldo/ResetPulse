@@ -33,6 +33,19 @@ extension Color {
     }
 }
 
+// MARK: - Accomplissement
+
+extension ActivityViewContext where Attributes == TimerAttributes {
+    /// « Accompli » vu du widget — deux chemins (ADR-018 §③) :
+    /// - l'app a parlé : end(done) → status "done" ;
+    /// - l'app est suspendue : le système a dépassé staleDate (= endDate,
+    ///   posée au start côté module) et re-rend avec `isStale` — l'anneau
+    ///   momifié à 0:00 bascule TOUT SEUL, sans réveiller l'app.
+    var isDone: Bool {
+        state.status == "done" || isStale
+    }
+}
+
 // MARK: - Vues partagées
 
 /// L'anneau qui se vide, animé PAR LE SYSTÈME (timerInterval) — emoji au
@@ -116,7 +129,7 @@ struct TimerLiveActivity: Widget {
         ActivityConfiguration(for: TimerAttributes.self) { context in
             // ---- Écran verrouillé ----
             HStack(spacing: 16) {
-                if context.state.status == "done" {
+                if context.isDone {
                     DoneView(context: context)
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
@@ -137,7 +150,7 @@ struct TimerLiveActivity: Widget {
                         .frame(width: 44, height: 44)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    if context.state.status == "done" {
+                    if context.isDone {
                         Text("✨").font(.system(size: 24))
                     } else {
                         TimerCountdown(context: context, size: 26)
@@ -148,16 +161,28 @@ struct TimerLiveActivity: Widget {
                     EmptyView()
                 }
             } compactLeading: {
-                TimerRing(context: context, emojiSize: 10)
+                // Accompli : l'anneau (0:00 momifié) cède la place. Leading +
+                // trailing s'affichent ENSEMBLE en compact → emoji compagnon
+                // ici, ✨ en trailing — l'écho mini de DoneView (emoji + ✨),
+                // jamais « ✨ ✨ ».
+                if context.isDone {
+                    Text(context.attributes.emoji).font(.system(size: 12))
+                } else {
+                    TimerRing(context: context, emojiSize: 10)
+                }
             } compactTrailing: {
-                if context.state.status == "done" {
+                if context.isDone {
                     Text("✨")
                 } else {
                     TimerCountdown(context: context, size: 14)
                         .frame(maxWidth: 52)
                 }
             } minimal: {
-                TimerRing(context: context, emojiSize: 9)
+                if context.isDone {
+                    Text("✨").font(.system(size: 11))
+                } else {
+                    TimerRing(context: context, emojiSize: 9)
+                }
             }
             .keylineTint(Color(hex: context.attributes.colorHex))
         }
