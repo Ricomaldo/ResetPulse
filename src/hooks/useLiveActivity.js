@@ -37,8 +37,16 @@
 //   sont le principe même de la mission, la Live Activity vit sa vie sans
 //   JS. Seul un redémarrage en attente est annulé par le cleanup d'effet
 //   (n'a pas à survivre au démontage de l'écran qui le porte).
+// - RÉCONCILIATION (ADR-018 §③, « rien ne survit dehors sans raison ») :
+//   au mount (démarrage à froid — une activité orpheline peut survivre à un
+//   kill de l'app) et à chaque retour au premier plan (AppState 'active'),
+//   si le timer ne tourne PAS → end(false), retrait immédiat (le
+//   « accompli ✨ » a déjà été montré par le staleDate côté système). Si le
+//   timer TOURNE → ne rien faire, jamais : les dates fixes de l'activité en
+//   cours restent justes, la réconciliation ne tue pas une séance vivante.
 
 import { useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 import { isLiveActivitySupported, startLiveActivity, endLiveActivity } from '../../modules/timer-activity';
 import logger from '../utils/logger';
 
@@ -73,6 +81,46 @@ export function useLiveActivity({ running, isCompleted, duration, remaining, col
   // effectivement l'Activity, sans jamais se relancer pour lui.
   const remainingRef = useRef(remaining);
   remainingRef.current = remaining;
+
+  // L'état running lu par la réconciliation ci-dessous : l'effet est monté
+  // UNE fois (deps []), il ne peut pas dépendre de `running` — le ref est
+  // réassigné à chaque render, la réconciliation lit toujours l'instant vrai.
+  const runningRef = useRef(running);
+  runningRef.current = running;
+
+  // Réconciliation (ADR-018 §③) : mount (démarrage à froid) + chaque retour
+  // au premier plan. Un end() sans activité vivante est un no-op sûr — le
+  // module natif itère `Activity.activities` (vide → rien) et index.js avale
+  // tout (module absent → return, erreurs → catch).
+  useEffect(() => {
+    const reconcile = () => {
+      if (!isLiveActivitySupported()) {
+        return; // no-op hors iOS 16.2+ (Android, Expo Go, device non éligible)
+      }
+      if (runningRef.current) {
+        // Séance vivante : ses dates fixes restent justes — on ne touche à
+        // RIEN (ni l'activité qu'on a lancée, ni une éventuelle orpheline :
+        // le start natif a déjà purgé les orphelines au démarrage).
+        return;
+      }
+      // Timer à l'arrêt : toute activité encore dehors est orpheline
+      // (séance finie app suspendue, ou app tuée puis relancée) → retrait
+      // immédiat, le « accompli ✨ » a déjà été montré par le staleDate.
+      activeRef.current = false;
+      endLiveActivity(false).catch((error) => {
+        logger.warn('useLiveActivity: end() (réconciliation) a échoué', error);
+      });
+    };
+
+    reconcile(); // démarrage à froid — l'orpheline survit à un kill de l'app
+
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        reconcile();
+      }
+    });
+    return () => subscription.remove();
+  }, []);
 
   useEffect(() => {
     const wasRunning = prevRunningRef.current;
