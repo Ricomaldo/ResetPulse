@@ -6,7 +6,7 @@
 import React from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import BrandLogo from './BrandLogo';
+import PulseLogo from '../first-run/PulseLogo';
 
 /**
  * SplashScreen - Branded loading screen
@@ -36,7 +36,7 @@ export default function SplashScreen() {
     ]}>
       {/* Brand Logo */}
       <View style={styles.logoContainer}>
-        <BrandLogo size={100} />
+        <PulseLogo size={100} />
       </View>
 
       {/* Loading indicator */}
