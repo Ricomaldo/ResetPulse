@@ -184,3 +184,30 @@ export const getSoundsByTier = () => {
 
   return tiers;
 };
+
+// Miroir de isPalettePremium (timer-palettes.js) — id inconnu = jamais premium
+// (repli silencieux, jamais de throw sur une valeur persistée corrompue).
+export const isSoundPremium = (soundId) =>
+  SOUND_METADATA[soundId]?.isPremium || false;
+
+/**
+ * Résout le son qui doit être actif au lancement (Lambda L, mandat Eric —
+ * miroir de resolvePaletteOnLaunch/usePaletteGating pour les sons). Fonction
+ * pure : pas d'état, pas de hook, testable isolément — cf. useSoundGating
+ * pour le déclenchement (une fois par montage).
+ *
+ * - Premium : jamais de retour forcé, le son actif reste tel quel.
+ * - FREE + son actif inclus : rien à faire.
+ * - FREE + son actif Ambiances (essai libre en cours) : retour au dernier
+ *   inclus connu, ou DEFAULT_SOUND_ID par défaut si aucun connu.
+ *
+ * @param {boolean} isPremium
+ * @param {string} currentSoundId
+ * @param {string|null} lastIncludedSoundId
+ * @returns {string} L'id de son qui doit être actif
+ */
+export const resolveSoundOnLaunch = (isPremium, currentSoundId, lastIncludedSoundId) => {
+  if (isPremium) return currentSoundId;
+  if (!isSoundPremium(currentSoundId)) return currentSoundId;
+  return lastIncludedSoundId || DEFAULT_SOUND_ID;
+};
