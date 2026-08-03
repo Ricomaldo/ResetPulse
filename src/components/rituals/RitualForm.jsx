@@ -213,17 +213,27 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
   // ADR-017 §4 : tap sur une activité built-in HORS vitrine (grisée) — la
   // sélection reste ce qu'elle était (jamais de mur), la porte Ambiances
   // s'ouvre par-dessus le sheet, comme RitualsPanel/PalettesPanel le font déjà.
-  const handleActivityVitrineGate = () => {
+  // Lambda U (2a) : hero = l'emoji EXACT touché — l'appelant transmet
+  // l'emoji du bouton grisé, pas un placeholder.
+  const handleActivityVitrineGate = (emoji) => {
     haptics.selection().catch(() => {});
-    modalStack.push('premium', { highlightedFeature: 'activities_vitrine' });
+    modalStack.push('premium', {
+      highlightedFeature: 'activities_vitrine',
+      hero: { type: 'emoji', emoji },
+    });
   };
 
   // ADR-017 §5 : tap sur un emoji custom (grille curée ou « autre… ») alors
   // que la création est fermée — même grammaire de porte, feature key
   // partagée avec l'ancien CreateActivityModalContent (`customActivities`).
+  // Lambda U : hero = cercle pointillé « + » (pas d'emoji précis, la
+  // création elle-même est fermée — même modèle que 2a, mandat §2).
   const handleCustomEmojiGate = () => {
     haptics.selection().catch(() => {});
-    modalStack.push('premium', { highlightedFeature: 'customActivities' });
+    modalStack.push('premium', {
+      highlightedFeature: 'customActivities',
+      hero: { type: 'plus' },
+    });
   };
 
   const handleOpenCustomEmoji = () => {
@@ -538,7 +548,7 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
                       isActive && styles.emojiButtonActive,
                       !unlocked && styles.emojiButtonLocked,
                     ]}
-                    onPress={unlocked ? () => handleSelectBuiltIn(activity.id) : handleActivityVitrineGate}
+                    onPress={unlocked ? () => handleSelectBuiltIn(activity.id) : () => handleActivityVitrineGate(activity.emoji)}
                     activeOpacity={0.7}
                     accessible
                     accessibilityRole="button"
