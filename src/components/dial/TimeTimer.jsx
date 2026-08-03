@@ -8,7 +8,6 @@ import { View, StyleSheet, Animated } from 'react-native';
 import PropTypes from 'prop-types';
 // theme provider not used in this component
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
-import { useTimerRemaining } from '../../contexts/TimerRemainingContext';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { useScreenOrientation } from '../../hooks/useScreenOrientation';
 import { rs, getComponentSizes } from '../../styles/responsive';
@@ -24,6 +23,16 @@ import {
   shouldEscalateOnRelease,
 } from '../../utils/scaleHelpers';
 
+// Mandat P1 (2e tentative, crash « Maximum update depth exceeded » au drag) :
+// chaque MOVE appelait setCurrentDuration → TimerConfigContext reconstruit
+// tout son `value` (useMemo géant, ~15 consommateurs re-rendus) + un write
+// AsyncStorage (usePersistedObject) — en drag rapide ces passes s'empilent
+// plus vite que React ne les digère. Le commit vers le contexte est throttlé
+// pendant le geste (cf. handleGraduationTap) ; l'arc, lui, reste fluide via
+// l'état LOCAL de useTimer (timerRef.setDuration), appelé à chaque frame,
+// jamais throttlé.
+const CONTEXT_PUSH_THROTTLE_MS = 130;
+
 export default function TimeTimer({
   onRunningChange,
   onTimerRef,
@@ -38,10 +47,6 @@ export default function TimeTimer({
     palette: { currentColor },
     mode: { current: currentMode },
   } = useTimerConfig();
-  // C4 (hotfix-porte-1) : timerRemaining vit à part — écrit à 60 Hz, il ne
-  // doit plus faire re-rendre tout consommateur de useTimerConfig().
-  const { setTimerRemaining } = useTimerRemaining();
-
   // Get custom activities for incrementing usage
   const { incrementUsage } = useCustomActivities();
 
@@ -50,6 +55,8 @@ export default function TimeTimer({
 
   // Track last synced context duration to prevent drag reset
   const lastSyncedContextDurationRef = useRef(currentDuration);
+  // Horodatage du dernier commit vers le contexte (throttle MOVE, mandat P1)
+  const lastContextPushTsRef = useRef(0);
 
   // ========== Drag-échelle « Relâcher » (porte-3 V3) ==========
   // Verdict Eric 30/07 soir, inversé en main : le Maintien (hold 400 ms à la
@@ -150,15 +157,6 @@ export default function TimeTimer({
     }
   }, [timer.running, onRunningChange]);
 
-  // Publie timerRemaining (TimerRemainingContext, hotfix-porte-1 C4) — audit
-  // 30/07 : aucun consommateur actuel ne LIT cette valeur (TopTime est
-  // alimenté par le pont local timerRef/snapshot de TimerScreen depuis B3/D3,
-  // pas par ce contexte). Gardé en écriture pour un futur consommateur ; le
-  // point important du fix est qu'elle n'était plus dans le useMemo géant.
-  useEffect(() => {
-    setTimerRemaining(timer.remaining);
-  }, [timer.remaining, setTimerRemaining]);
-
   // Increment custom activity usage when timer starts
   useEffect(() => {
     if (timer.running && currentActivity?.isCustom && !hasIncrementedUsage.current) {
@@ -236,11 +234,37 @@ export default function TimeTimer({
       ? snapToInterval(newDuration, gestureScaleMode)
       : Math.round(newDuration);
 
+    // L'arc anime à CHAQUE frame via l'état LOCAL de useTimer — jamais
+    // throttlé, c'est le geste que le doigt voit (mandat P1).
     timerRef.current.setDuration(newDuration);
-    setCurrentDuration(newDuration);
-    lastSyncedContextDurationRef.current = newDuration;
 
-    if (!isRelease) {
+    if (isRelease) {
+      // Commit FINAL systématique vers le contexte — jamais avalé par le
+      // throttle ci-dessous, sinon la dernière position du doigt ne
+      // rejoindrait jamais TimerConfigContext. `lastSyncedContextDurationRef`
+      // est mis à jour dans la MÊME passe (avant que le re-render du contexte
+      // n'arrive) pour que l'effet de resync contexte→timer (l.~129, garde
+      // `currentDuration !== lastSyncedContextDurationRef.current`) reconnaisse
+      // ce changement comme le sien et ne le rejoue pas à contretemps.
+      setCurrentDuration(newDuration);
+      lastSyncedContextDurationRef.current = newDuration;
+      lastContextPushTsRef.current = Date.now();
+    } else {
+      // MOVE : commit vers le contexte throttlé (~130 ms) — c'est
+      // l'amplificateur (TimerConfigContext reconstruit tout son `value` +
+      // write AsyncStorage à chaque appel). Le chiffre du haut (TopTime, lu
+      // au repos) suit par crans plutôt que par frame ; le geste lui-même
+      // reste fluide (ligne ci-dessus, jamais throttlée). Même règle que le
+      // relâcher : `lastSyncedContextDurationRef` bouge SEULEMENT quand
+      // setCurrentDuration est réellement appelé, jamais avant — sinon le
+      // garde de resync (l.~129) désynchronise sa référence d'un contexte
+      // qui n'a pas encore changé.
+      const now = Date.now();
+      if (now - lastContextPushTsRef.current >= CONTEXT_PUSH_THROTTLE_MS) {
+        setCurrentDuration(newDuration);
+        lastSyncedContextDurationRef.current = newDuration;
+        lastContextPushTsRef.current = now;
+      }
       // En plein geste : rien d'autre — le cadran ne se recompose JAMAIS
       // sous le doigt (le Maintien 400 ms est mort, porte-3 V3).
       return;
