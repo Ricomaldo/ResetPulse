@@ -66,9 +66,16 @@ export default function SoundsPanel({ onBack, maxHeight }) {
     }
   }, [showAmbiancesHint, analytics]);
 
+  // Lambda U (2c) : hero = pictogramme note sobre (pas de swatches, mandat
+  // §4) — même critère de distinction que PalettesPanel : seule cette ligne
+  // d'invitation « essai libre » transmet un hero, pas le pied de section
+  // guichet du lambda T ci-dessous.
   const handleDiscoverAmbiances = () => {
     analytics.trackAmbiancesInvitationTapped('sounds');
-    modalStack.push('premium', { highlightedFeature: 'sounds' });
+    modalStack.push('premium', {
+      highlightedFeature: 'sounds',
+      hero: { type: 'sound', soundId: selectedSoundId },
+    });
   };
 
   // Pied de section guichet (Lambda T, 1b) — entrée volontaire distincte de

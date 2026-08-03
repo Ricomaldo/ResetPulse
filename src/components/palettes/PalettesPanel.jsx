@@ -70,9 +70,16 @@ export default function PalettesPanel({ onBack, maxHeight }) {
     }
   }, [showAmbiancesHint, analytics]);
 
+  // Lambda U (2c) : hero = les 4 swatches de la palette ACTIVE empruntée —
+  // seule cette ligne d'invitation « essai libre » transmet un hero (le pied
+  // de section guichet du lambda T, ci-dessous, reste sans hero : critère de
+  // distinction posé au mandat).
   const handleDiscoverAmbiances = () => {
     analytics.trackAmbiancesInvitationTapped('palettes');
-    modalStack.push('premium', { highlightedFeature: 'palettes' });
+    modalStack.push('premium', {
+      highlightedFeature: 'palettes',
+      hero: { type: 'palette', paletteKey: currentPalette },
+    });
   };
 
   // Pied de section guichet (Lambda T, 1b) — entrée volontaire distincte de
