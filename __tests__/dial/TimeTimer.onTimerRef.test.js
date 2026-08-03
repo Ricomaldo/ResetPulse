@@ -32,10 +32,6 @@ jest.mock('../../src/contexts/TimerConfigContext', () => ({
   }),
 }));
 
-jest.mock('../../src/contexts/TimerRemainingContext', () => ({
-  useTimerRemaining: () => ({ setTimerRemaining: jest.fn() }),
-}));
-
 jest.mock('../../src/hooks/useCustomActivities', () => ({
   useCustomActivities: () => ({ incrementUsage: jest.fn() }),
 }));
