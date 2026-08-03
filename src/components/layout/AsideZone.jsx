@@ -414,6 +414,19 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
     togglesCard: {
       marginTop: rs(16),
     },
+    // Sens de rotation (P1-6) : rangée verticale (label puis segmenté pleine
+    // largeur) — un segmenté 2 valeurs est plus large qu'un Switch, il ne
+    // tient pas sur la même ligne que son label comme les autres options.
+    rotationRow: {
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      paddingVertical: rs(12),
+    },
+    rotationLabel: {
+      color: theme.colors.text,
+      fontSize: rs(14, 'min'),
+      marginBottom: rs(8),
+    },
     doubleTapHint: {
       color: theme.colors.textSecondary,
       fontSize: rs(11, 'min'),
@@ -422,18 +435,27 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
     },
   });
 
+  // Sens de rotation (P1-6, review design) : Switch binaire remplacé par un
+  // segmenté 2 valeurs — même pattern visuel que le segmenté Mode ci-dessus
+  // (styles.segmentedControl/segmentButton/segmentButtonActive/segmentText/
+  // segmentTextActive). Un Switch ON/OFF ne dit pas CE VERS QUOI on bascule
+  // (« sens de rotation : activé » ne veut rien dire) — le segmenté nomme
+  // les deux états. Anti-horaire en premier : défaut de l'app ET convention
+  // Time Timer physique. Libellés fr/en FLAGGÉS review CD (clés neuves,
+  // texte provisoire — même statut que les libellés Standard/Focus du
+  // segmenté Mode, cf. commentaire plus haut) ; 13 locales gelées retombent
+  // sur l'anglais (i18n `enableFallback`).
+  const ROTATION_OPTIONS = [
+    { key: 'counterclockwise', value: false, label: t('aside.rotation.counterclockwise') },
+    { key: 'clockwise', value: true, label: t('aside.rotation.clockwise') },
+  ];
+
   const toggles = [
     {
       key: 'keepAwake',
       label: t('accessibility.keepAwake'),
       value: keepAwakeEnabled,
       onChange: setKeepAwakeEnabled,
-    },
-    {
-      key: 'clockwise',
-      label: t('accessibility.rotationDirection'),
-      value: clockwise,
-      onChange: setClockwise,
     },
     {
       key: 'showTime',
@@ -616,6 +638,38 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                             opt-in strict, OFF par défaut ; pills de créneau
                             affichées sous le toggle uniquement quand actif) */}
                         <View style={styles.togglesCard}>
+                          {/* Sens de rotation (P1-6) : segmenté, même pattern
+                              visuel que le segmenté Mode ci-dessus — un
+                              Switch ON/OFF ne nomme pas les deux états. */}
+                          <View style={styles.rotationRow}>
+                            <Text style={styles.rotationLabel}>
+                              {t('accessibility.rotationDirection')}
+                            </Text>
+                            <View style={styles.segmentedControl}>
+                              {ROTATION_OPTIONS.map(({ key, value, label }) => {
+                                const isActive = clockwise === value;
+                                return (
+                                  <TouchableOpacity
+                                    key={key}
+                                    accessible
+                                    accessibilityRole="button"
+                                    accessibilityLabel={label}
+                                    accessibilityState={{ selected: isActive }}
+                                    style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
+                                    onPress={() => {
+                                      haptics.selection().catch(() => {});
+                                      setClockwise(value);
+                                    }}
+                                    activeOpacity={0.7}
+                                  >
+                                    <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
+                                      {label}
+                                    </Text>
+                                  </TouchableOpacity>
+                                );
+                              })}
+                            </View>
+                          </View>
                           {toggles.map((toggle, index) => {
                             const isLast = index === toggles.length - 1;
                             return (
