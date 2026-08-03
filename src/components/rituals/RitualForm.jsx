@@ -302,6 +302,16 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
     scrollBody: {
       flex: 1,
     },
+    // P0-3 (review Claude design) : le footer Annuler/Enregistrer est un
+    // sibling FIXE du ScrollView (jamais dans le flux scrollable, jamais en
+    // position absolue par-dessus le sheet — cf. A2/hotfix-porte-1 plus haut).
+    // Ce padding est la moitié manquante : sans lui, le dernier élément
+    // scrollable (presets Durée quand Emoji + Couleur sont dépliés, ou Son/
+    // Supprimer en dessous) peut venir affleurer le bord bas du ScrollView,
+    // juste au-dessus du footer — marge de respiration garantie.
+    scrollContent: {
+      paddingBottom: theme.spacing.xxl,
+    },
     cancelButton: {
       alignItems: 'center',
       backgroundColor: theme.colors.surface,
@@ -459,7 +469,12 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollBody} nestedScrollEnabled showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollBody}
+        contentContainerStyle={styles.scrollContent}
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+      >
         {/* 1. Emoji */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t('rituals.form.emojiLabel')}</Text>
