@@ -1,8 +1,11 @@
 #!/bin/bash
-# Generate all required icon sizes from splash-icon.png
+# Generate all required icon sizes from icon.png
 # Created: 2025-12-20
+# Modifié 2026-08-04 : source = icon.png (fond plein, état « en séance »)
+#   — splash-icon.png est désormais transparent (motif repos seul), impropre
+#   à un icon set App Store/iOS qui exige un fond opaque.
 
-SOURCE="assets/splash-icon.png"
+SOURCE="assets/icon.png"
 DEST_DIR="assets/app-icons"
 
 # Create destination directory
