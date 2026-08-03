@@ -12,7 +12,7 @@
  * en plein flow, il recouvre naturellement le tip (cas de bord annoncé au
  * rapport, pas de plomberie dédiée).
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -56,7 +56,19 @@ function bottomOffsetFromAnchor(anchor, fallbackRatio) {
 // mesuré entre les deux ancres est trop court (petit écran), retombe sur
 // `null` — l'appelant bascule alors sur le même calcul « au-dessus du
 // cadran » que les moments 2-4.
-function topOffsetForFirstMoment(barAnchor, dialAnchor) {
+// `overlayTopY` (mesuré via measureInWindow, cf. composant) corrige le
+// décalage d'espace de coordonnées : barAnchor/dialAnchor sont en
+// coordonnées FENÊTRE (measureInWindow, TimerScreen), mais ce composant
+// pose son `top` en coordonnées LOCALES à son parent — un View lui-même
+// inséré dans la SafeAreaView de TimerScreen, décalée du haut réel de
+// l'écran (~50-60pt sur devices à encoche ; même piège documenté dans
+// AsideZone.jsx pour CLOSED_VISIBLE). Sans cette correction, la bulle
+// atterrit ~50-60pt plus bas que prévu — vers la rangée, jamais vers le
+// cadran (le sens dangereux), mais assez pour la faire toucher la rangée
+// sur ces devices. Repli à 0 avant la première mesure (avant montage,
+// hypothèse overlay = haut d'écran — cas le plus fréquent en pratique,
+// TimerScreen n'a pas de chrome persistant au-dessus de son container).
+function topOffsetForFirstMoment(barAnchor, dialAnchor, overlayTopY) {
   if (!dialAnchor) {
     return null;
   }
@@ -65,7 +77,7 @@ function topOffsetForFirstMoment(barAnchor, dialAnchor) {
   if (gapAvailable < MIN_BETWEEN_GAP) {
     return null;
   }
-  return dialBottom + TIP_GAP;
+  return dialBottom + TIP_GAP - overlayTopY;
 }
 
 export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) {
@@ -78,6 +90,19 @@ export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) 
     logger.log('[FirstRunTips] render', { moment, hasBarAnchor: !!barAnchor, hasDialAnchor: !!dialAnchor });
   }, [moment, barAnchor, dialAnchor]);
 
+  // P1-7 : position FENÊTRE réelle du haut de cet overlay — corrige le
+  // décalage entre les ancres (measureInWindow, TimerScreen) et le repère
+  // local de ce composant (cf. commentaire de topOffsetForFirstMoment).
+  // Repli 0 avant la première mesure : aucun chrome persistant connu
+  // au-dessus du container de TimerScreen à ce stade du flow (seuil).
+  const overlayRef = useRef(null);
+  const [overlayTopY, setOverlayTopY] = useState(0);
+  const handleOverlayLayout = () => {
+    overlayRef.current?.measureInWindow((x, y) => {
+      setOverlayTopY(y);
+    });
+  };
+
   if (!moment) {
     return null;
   }
@@ -87,7 +112,7 @@ export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) 
   // aux moments 2-4 : au-dessus du cadran (dialAnchor + DIAL_FALLBACK_RATIO)
   // — jamais l'ancien calcul qui ancrait au haut de la rangée sans jamais
   // vérifier la présence du cadran.
-  const topBetween = moment === 1 ? topOffsetForFirstMoment(barAnchor, dialAnchor) : null;
+  const topBetween = moment === 1 ? topOffsetForFirstMoment(barAnchor, dialAnchor, overlayTopY) : null;
   const tipPositionStyle = topBetween !== null
     ? { top: topBetween }
     : { bottom: bottomOffsetFromAnchor(dialAnchor, DIAL_FALLBACK_RATIO) };
@@ -146,7 +171,7 @@ export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) 
   });
 
   return (
-    <View style={styles.overlay} pointerEvents="box-none">
+    <View ref={overlayRef} style={styles.overlay} pointerEvents="box-none" onLayout={handleOverlayLayout}>
       <View style={[styles.tip, tipPositionStyle]} pointerEvents="none">
         <Text style={styles.tipText} accessible accessibilityRole="text">
           {t(MOMENT_KEYS[moment])}
