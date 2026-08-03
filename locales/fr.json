@@ -239,6 +239,17 @@
       "rituals": "rituels illimités",
       "sounds": "sons Ambiances"
     },
+    "hook": {
+      "emoji": "fais-le tien",
+      "custom": "tes propres emojis",
+      "rituals": "un rituel par moment",
+      "palette": "elle te va bien"
+    },
+    "hookSub": {
+      "emoji": "cet emoji vit dans Ambiances — comme tout ce qui se garde.",
+      "rituals": "ton 2ᵉ rituel n'attend que la place.",
+      "palette": "garde %{name} — et les 9 autres avec."
+    },
     "price": "%{price}, une fois. Pour toujours.",
     "startTrial": "essayer 7 jours gratuits",
     "unlock": "débloquer — %{price}, une fois",
