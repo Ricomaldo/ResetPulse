@@ -223,6 +223,7 @@
     },
     "price": "%{price}, 한 번만. 평생 당신의 것.",
     "startTrial": "7일 무료 체험",
+    "unlock": "잠금 해제 — %{price}, 한 번만",
     "breatheInvitation": "더 생동감 있게 만들고 싶어요? Ambiances 둘러보기"
   },
   "activities": {

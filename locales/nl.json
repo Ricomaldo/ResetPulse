@@ -223,6 +223,7 @@
     },
     "price": "%{price}, eenmalig. Voor altijd van jou.",
     "startTrial": "7 dagen gratis proberen",
+    "unlock": "ontgrendelen — %{price}, eenmalig",
     "breatheInvitation": "Wil je het laten ademen? Ontdek Ambiances"
   },
   "activities": {

@@ -223,6 +223,7 @@
     },
     "price": "%{price}、一度だけ。ずっとあなたのもの。",
     "startTrial": "7日間無料で試す",
+    "unlock": "アンロック — %{price}、一度だけ",
     "breatheInvitation": "もっと息づかせたい? Ambiancesを見てみる"
   },
   "activities": {

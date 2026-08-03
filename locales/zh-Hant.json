@@ -442,6 +442,7 @@
     },
     "price": "%{price}，一次性，永久擁有。",
     "startTrial": "免費試用 7 天",
+    "unlock": "解鎖 — %{price}，一次性",
     "breatheInvitation": "想讓它呼吸嗎?來發現 Ambiances"
   },
   "rituals": {

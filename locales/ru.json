@@ -241,6 +241,7 @@
     },
     "price": "%{price}, один раз. Твоё навсегда.",
     "startTrial": "Попробовать 7 дней бесплатно",
+    "unlock": "разблокировать — %{price}, один раз",
     "breatheInvitation": "Хочешь заставить его дышать? Открой Ambiances"
   },
   "activities": {
