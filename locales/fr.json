@@ -242,7 +242,8 @@
     "price": "%{price}, une fois. Pour toujours.",
     "startTrial": "essayer 7 jours gratuits",
     "unlock": "débloquer — %{price}, une fois",
-    "breatheInvitation": "envie de le faire respirer ? découvre Ambiances"
+    "breatheInvitation": "envie de le faire respirer ? découvre Ambiances",
+    "counterSubtitle": "tout garder, pour toujours"
   },
   "activities": {
     "none": "Basique",
@@ -491,7 +492,8 @@
     "included": "Incluses",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "palette Ambiances — essaie-la librement",
-    "ambiancesDiscover": "découvrir Ambiances"
+    "ambiancesDiscover": "découvrir Ambiances",
+    "counterFooter": "les 10 palettes, à toi pour toujours — %{price}, une fois ›"
   },
   "soundsPanel": {
     "sheetRow": "Sons",
@@ -499,7 +501,8 @@
     "included": "Inclus",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "son Ambiances — essaie-le librement",
-    "ambiancesDiscover": "découvrir Ambiances"
+    "ambiancesDiscover": "découvrir Ambiances",
+    "counterFooter": "les 8 sons, à toi pour toujours — %{price}, une fois ›"
   },
   "mode": {
     "standard": "ResetPulse",

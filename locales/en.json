@@ -242,7 +242,8 @@
     "price": "%{price}, once. Yours forever.",
     "startTrial": "try 7 days free",
     "unlock": "unlock — %{price}, once",
-    "breatheInvitation": "want to make it breathe? discover Ambiances"
+    "breatheInvitation": "want to make it breathe? discover Ambiances",
+    "counterSubtitle": "keep it all, forever"
   },
   "activities": {
     "none": "Basic",
@@ -491,7 +492,8 @@
     "included": "Included",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances palette — try it freely",
-    "ambiancesDiscover": "discover Ambiances"
+    "ambiancesDiscover": "discover Ambiances",
+    "counterFooter": "all 10 palettes, yours forever — %{price}, once ›"
   },
   "soundsPanel": {
     "sheetRow": "Sounds",
@@ -499,7 +501,8 @@
     "included": "Included",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances sound — try it freely",
-    "ambiancesDiscover": "discover Ambiances"
+    "ambiancesDiscover": "discover Ambiances",
+    "counterFooter": "all 8 sounds, yours forever — %{price}, once ›"
   },
   "mode": {
     "standard": "ResetPulse",
