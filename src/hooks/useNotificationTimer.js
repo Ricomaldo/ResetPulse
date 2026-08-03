@@ -7,17 +7,29 @@ import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from './useTranslation';
 import { getNotificationSoundFile } from '../config/sounds';
 
+// Règle ADR-018 §① — un instant = un canal. App au PREMIER PLAN : la fin de
+// séance est déjà portée par l'app elle-même (son expo-audio + bloom +
+// haptique) — la notification système ne double plus (ni bannière, ni
+// liste, ni son). App en fond/inactive : la notification est le canal, elle
+// porte tout (comportement d'origine intact).
+// Fonction pure exportée pour le test — le handler ci-dessous la lit à
+// CHAQUE présentation avec l'AppState de l'instant.
+export const buildNotificationBehavior = (appState) => {
+  const isForeground = appState === 'active';
+  return {
+    shouldShowBanner: !isForeground, // Bannière en haut
+    shouldShowList: !isForeground,   // Dans le centre de notifications
+    shouldPlaySound: !isForeground,  // Son (choisi par l'user sur iOS)
+    shouldSetBadge: false,
+  };
+};
+
 // Configuration pour les notifications (SDK 54+)
 // Protection contre les modules natifs manquants (iOS Simulator notamment)
 let notificationsAvailable = false;
 try {
   Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowBanner: true,  // Bannière en haut
-      shouldShowList: true,    // Dans le centre de notifications
-      shouldPlaySound: true,   // Son système par défaut
-      shouldSetBadge: false,
-    }),
+    handleNotification: async () => buildNotificationBehavior(AppState.currentState),
   });
   notificationsAvailable = true;
 } catch (error) {
