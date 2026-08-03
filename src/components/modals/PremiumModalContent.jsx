@@ -35,6 +35,7 @@ import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 import { fontWeights } from '../../theme/tokens';
 import logger from '../../utils/logger';
+import PaywallHero, { resolveHeroCopyKeys, resolveHeroName } from './PaywallHero';
 
 /**
  * PremiumModalContent - Premium paywall UI
@@ -68,9 +69,20 @@ const FEATURE_ORDER_BY_SOURCE = {
   customActivities: ['rituals', 'palettes', 'sounds'],
 };
 
-export default function PremiumModalContent({ onClose, highlightedFeature, source, modalId }) {
+export default function PremiumModalContent({ onClose, highlightedFeature, source, hero, modalId }) {
   const modalStack = useModalStack();
   const theme = useTheme();
+  // Lambda U (2a/2b/2c) : zone héros optionnelle au-dessus du titre, propre
+  // à la porte d'entrée (`hero`, transmis via modalStack.push). Absente
+  // (guichet, pieds de section 1b du lambda T) → header générique inchangé
+  // (décision CD, cf. PaywallHero.jsx en tête).
+  // `ambiances.hook.*`/`ambiances.hookSub.*` : clés neuves FLAGGÉES — textes
+  // des maquettes CD 2a/2b/2c recopiés tels quels, fr/en seulement (13
+  // locales gelées retombent sur l'anglais, i18n `enableFallback`, même
+  // statut que les libellés Standard/Focus d'AsideZone). La passe copies CD
+  // les repassera avec le reste (brief `2026-08-04_brief-cd-frontiere-paywall.md`).
+  const heroCopyKeys = resolveHeroCopyKeys(hero);
+  const heroName = resolveHeroName(hero);
   const analytics = useAnalytics();
   const t = useTranslation();
   const {
@@ -363,7 +375,34 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
     },
 
     header: {
+      alignItems: 'center',
       marginBottom: theme.spacing.lg,
+    },
+
+    // Hiérarchie hero (mandat Lambda U) : sur-titre 11px espacé, accroche
+    // 23px gras, sous-titre 14px — même registre que closedLabelText
+    // (AsideZone) pour le sur-titre.
+    eyebrow: {
+      color: theme.colors.textLight,
+      fontSize: rs(11, 'min'),
+      fontWeight: '600',
+      letterSpacing: rs(11, 'min') * 0.14,
+      marginBottom: theme.spacing.xs,
+      textTransform: 'uppercase',
+    },
+
+    headline: {
+      color: theme.colors.text,
+      fontSize: rs(23, 'min'),
+      fontWeight: fontWeights.bold,
+      marginBottom: theme.spacing.xs,
+      textAlign: 'center',
+    },
+
+    subheadline: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(14, 'min'),
+      textAlign: 'center',
     },
 
     loader: {
@@ -440,14 +479,29 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Header */}
+      {/* Header — générique (t('ambiances.title') en titre) SANS hero, ou
+          hiérarchie sur-titre/accroche/sous-titre au-dessus d'une zone
+          visuelle QUAND une porte transmet un hero (2a/2b/2c). */}
       <View style={styles.header}>
-        <Text
-          style={styles.title}
-          accessibilityRole="header"
-        >
-          {t('ambiances.title')}
-        </Text>
+        {hero && heroCopyKeys ? (
+          <>
+            <PaywallHero hero={hero} />
+            <Text style={styles.eyebrow}>{t('ambiances.title')}</Text>
+            <Text style={styles.headline} accessibilityRole="header">
+              {t(heroCopyKeys.headlineKey)}
+            </Text>
+            <Text style={styles.subheadline}>
+              {t(heroCopyKeys.subtitleKey, { name: heroName || '' })}
+            </Text>
+          </>
+        ) : (
+          <Text
+            style={styles.title}
+            accessibilityRole="header"
+          >
+            {t('ambiances.title')}
+          </Text>
+        )}
       </View>
 
       {/* Body */}
@@ -549,5 +603,12 @@ PremiumModalContent.propTypes = {
   onClose: PropTypes.func.isRequired,
   highlightedFeature: PropTypes.string,
   source: PropTypes.string,
+  hero: PropTypes.shape({
+    type: PropTypes.oneOf(['emoji', 'plus', 'ritualSlots', 'palette', 'sound']).isRequired,
+    emoji: PropTypes.string,
+    emojis: PropTypes.arrayOf(PropTypes.string),
+    paletteKey: PropTypes.string,
+    soundId: PropTypes.string,
+  }),
   modalId: PropTypes.string,
 };
