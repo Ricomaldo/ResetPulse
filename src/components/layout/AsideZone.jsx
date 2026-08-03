@@ -230,8 +230,16 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
     }
   }, [openY]);
 
-  const panGesture = useMemo(() => Gesture.Pan()
-    .enabled(!boundedSubScreen)
+  // Fabrique du pan drag/snap — deux instances du MÊME geste (un builder
+  // Gesture ne peut pas vivre dans deux GestureDetector) :
+  //   - `panGesture` (drawer entier) : coupé sur sous-écran à scroll propre
+  //     (A3/D5), sinon il volerait le scroll interne de Palettes/Sons/Form ;
+  //   - `handlePanGesture` (poignée seule) : TOUJOURS actif — retour Eric
+  //     03/08, la poignée ne fermait plus le sheet sous-écran ouvert, car
+  //     `.enabled(!boundedSubScreen)` tuait le pan partout, poignée comprise.
+  //     La poignée n'a pas de scroll à protéger : elle garde le geste.
+  const makePanGesture = (enabled) => Gesture.Pan()
+    .enabled(enabled)
     .activeOffsetY([-20, 20])
     .failOffsetX([-15, 15])
     .onBegin(() => {
@@ -254,8 +262,12 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
         restSpeedThreshold: 0.01,
       });
       runOnJS(setIsOpen)(open);
-    }),
-  [translateY, startY, openY, boundedSubScreen]);
+    });
+
+  const panGesture = useMemo(() => makePanGesture(!boundedSubScreen),
+    [translateY, startY, openY, snapClosed, boundedSubScreen]);
+  const handlePanGesture = useMemo(() => makePanGesture(true),
+    [translateY, startY, openY, snapClosed]);
 
   const drawerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: 1 - hiddenValue.value,
@@ -460,24 +472,29 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       <GestureDetector gesture={panGesture}>
         <Animated.View testID="aside.sheet" style={[styles.drawer, drawerAnimatedStyle, theme.shadow('xl')]}>
           {/* Handle — affordance du sheet : swipe up OU tap (porte Eric 25/07,
-              la bande fermée doit s'ouvrir au doigt, pas seulement au geste) */}
-          <TouchableOpacity
-            testID="aside.handle"
-            style={styles.handleContainer}
-            activeOpacity={0.8}
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel={t('aside.handle')}
-            onPress={() => {
-              haptics.selection().catch(() => {});
-              if (!isOpen) {
-                analytics.trackSheetOpened();
-              }
-              snapTo(!isOpen);
-            }}
-          >
-            <View style={[styles.handleIndicator, { backgroundColor: theme.colors.textSecondary }]} />
-          </TouchableOpacity>
+              la bande fermée doit s'ouvrir au doigt, pas seulement au geste).
+              GestureDetector dédié (`handlePanGesture`, jamais désactivé) :
+              la poignée ferme TOUJOURS le sheet, sous-écran ouvert compris —
+              le pan du drawer, lui, reste coupé sur sous-écran (A3/D5). */}
+          <GestureDetector gesture={handlePanGesture}>
+            <TouchableOpacity
+              testID="aside.handle"
+              style={styles.handleContainer}
+              activeOpacity={0.8}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={t('aside.handle')}
+              onPress={() => {
+                haptics.selection().catch(() => {});
+                if (!isOpen) {
+                  analytics.trackSheetOpened();
+                }
+                snapTo(!isOpen);
+              }}
+            >
+              <View style={[styles.handleIndicator, { backgroundColor: theme.colors.textSecondary }]} />
+            </TouchableOpacity>
+          </GestureDetector>
 
           {/* Bande fermée (A1/D4) : sœur de `content`, opacité inverse —
               visible fermé, s'efface à l'ouverture. */}
