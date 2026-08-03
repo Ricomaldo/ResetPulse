@@ -8,6 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TimerDial from '../dial/TimerDial';
+import { useTheme } from '../../theme/ThemeProvider';
 
 export default function TimerDialPreview({
   progress = 0.42,
@@ -17,6 +18,17 @@ export default function TimerDialPreview({
   size,
   centerEmoji = null,
 }) {
+  const theme = useTheme();
+  // Repli couleur de marque (P1-4, review design) : sans `color` explicite,
+  // TimerDial retombait sur `theme.colors.energy` — token JAMAIS défini
+  // (aucune occurrence dans theme/colors.js) — l'arc rendait donc en noir
+  // SVG par défaut : quasi invisible en dark (noir sur fond quasi-noir), à
+  // peine visible en light. Le seuil est la première rencontre avec le
+  // produit : secteur ORANGE SIGNATURE imposé dans les deux thèmes, jamais
+  // un défaut fantôme. Le bug plus profond (`theme.colors.energy`
+  // manquant dans TimerDial.jsx/DialProgress.jsx) reste hors scope ici —
+  // signalé au rapport, pas touché (pas le noyau du disque).
+  const arcColor = color || theme.colors.brand.primary;
   // Fausse activité pour afficher l'emoji au centre
   const fakeActivity = centerEmoji ? { emoji: centerEmoji } : null;
 
@@ -25,7 +37,7 @@ export default function TimerDialPreview({
       progress={progress}
       duration={duration}
       remaining={duration * progress}
-      color={color}
+      color={arcColor}
       size={size}
       scaleMode={scaleMode}
       showNumbers={true}

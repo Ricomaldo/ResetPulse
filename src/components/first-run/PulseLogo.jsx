@@ -52,10 +52,19 @@ const RING_BORDER_MIN = 1.5;
 // Opacités : anneau intérieur plus présent que l'extérieur (fidèle au
 // dégradé de l'icône), aussi bien au repos (reduce motion, statique) qu'au
 // pic de l'animation.
+// Variantes DARK (P1-4, review design) : les mêmes opacités calées sur le
+// fond crème (light) manquent de présence sur le fond quasi-noir du thème
+// sombre — un anneau fin en `borderWidth` à 0.25/0.3 de pic s'y perd. Un
+// cran de plus par anneau, seulement en dark (le point plein n'a pas ce
+// problème : `backgroundColor` opaque, contraste déjà garanti).
 const RING_1_STATIC_OPACITY = 0.5;
 const RING_1_PEAK_OPACITY = 0.55;
 const RING_2_STATIC_OPACITY = 0.25;
 const RING_2_PEAK_OPACITY = 0.3;
+const RING_1_STATIC_OPACITY_DARK = 0.65;
+const RING_1_PEAK_OPACITY_DARK = 0.7;
+const RING_2_STATIC_OPACITY_DARK = 0.4;
+const RING_2_PEAK_OPACITY_DARK = 0.45;
 
 /**
  * Un anneau qui émet : boucle scale (RING_BORN_SCALE → RING_FULL_SCALE) +
@@ -127,14 +136,14 @@ export default function PulseLogo({ size = 120, style }) {
   const ringBorderWidth = Math.max(RING_BORDER_MIN, size * RING_BORDER_RATIO);
 
   const ring1Style = useEmittingRing({
-    peakOpacity: RING_1_PEAK_OPACITY,
-    staticOpacity: RING_1_STATIC_OPACITY,
+    peakOpacity: theme.isDark ? RING_1_PEAK_OPACITY_DARK : RING_1_PEAK_OPACITY,
+    staticOpacity: theme.isDark ? RING_1_STATIC_OPACITY_DARK : RING_1_STATIC_OPACITY,
     delayMs: 0,
     reduceMotionEnabled,
   });
   const ring2Style = useEmittingRing({
-    peakOpacity: RING_2_PEAK_OPACITY,
-    staticOpacity: RING_2_STATIC_OPACITY,
+    peakOpacity: theme.isDark ? RING_2_PEAK_OPACITY_DARK : RING_2_PEAK_OPACITY,
+    staticOpacity: theme.isDark ? RING_2_STATIC_OPACITY_DARK : RING_2_STATIC_OPACITY,
     delayMs: RING_STAGGER,
     reduceMotionEnabled,
   });
