@@ -386,7 +386,9 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       textAlign: 'center',
     },
     segmentTextActive: {
-      color: theme.colors.fixed.white,
+      // Couple inversé `text`/`background` (retour Eric 03/08) : `fixed.white`
+      // sur fond `text` devenait blanc sur blanc en dark (`text` y est clair).
+      color: theme.colors.background,
     },
     segmentedControl: {
       backgroundColor: theme.colors.segmentInactive,
@@ -539,7 +541,9 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                         }}
                         activeOpacity={0.7}
                       >
-                        <Text style={{ color: theme.colors.fixed.white, fontSize: rs(13, 'min'), fontWeight: '600' }}>
+                        {/* `background` sur fond `text` : lisible dans les deux
+                            thèmes (fixed.white = blanc sur blanc en dark). */}
+                        <Text style={{ color: theme.colors.background, fontSize: rs(13, 'min'), fontWeight: '600' }}>
                           {t('aside.exitFocus')}
                         </Text>
                       </TouchableOpacity>

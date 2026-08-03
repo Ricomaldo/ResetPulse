@@ -82,6 +82,10 @@ export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) 
     // Bulle CD (SCR-11) : brun chaud, coins arrondis avec une QUEUE vers
     // l'élément désigné (coin bas-gauche quasi net), largeur contenue —
     // jamais une barre pleine largeur (porte Eric 25/07).
+    // Couple inversé `text`/`background` (retour Eric 03/08) : en light la
+    // bulle reste brun chaud (texte crème) ; en dark `text` est CLAIR → la
+    // bulle devient surface claire, texte sombre. L'ancien `fixed.white`
+    // donnait blanc sur blanc en dark. Contraste AA dans les deux thèmes.
     tip: {
       alignSelf: 'center',
       backgroundColor: theme.colors.text,
@@ -97,7 +101,7 @@ export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) 
       ...theme.shadow('md'),
     },
     tipText: {
-      color: theme.colors.fixed.white,
+      color: theme.colors.background,
       fontSize: rs(13, 'min'),
       lineHeight: rs(18, 'min'),
       textAlign: 'left',
