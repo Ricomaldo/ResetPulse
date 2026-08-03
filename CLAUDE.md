@@ -214,6 +214,22 @@ Tous les ratios de contraste respectent **WCAG AA** :
 
 → `src/theme/colors.js` (documentation complète inline)
 
+### Le motif pulse — deux états
+
+Le motif de marque (anneau extérieur, anneau intérieur, disque central) existe en
+deux états, jamais mélangés :
+
+- **au repos** : les deux anneaux **pleins**, peut émettre — usages in-app
+  (`PulseLogo`), splash.
+- **en séance** : l'anneau **extérieur** entamé d'~60°, brèche débutant à 0
+  (12h) et s'ouvrant dans le sens horaire — icône app, adaptive-icon Android,
+  favicon, store, et tout support qui promet le produit depuis l'extérieur.
+
+L'anneau intérieur et le disque central restent toujours pleins ; seul
+l'anneau extérieur porte la brèche.
+
+Génération : `assets/generate-brand-assets.sh` (masters SVG + rasterisation).
+
 ---
 
 ## 📚 Documentation Framework
