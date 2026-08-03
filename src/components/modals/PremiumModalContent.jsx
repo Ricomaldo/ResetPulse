@@ -68,7 +68,7 @@ const FEATURE_ORDER_BY_SOURCE = {
   customActivities: ['rituals', 'palettes', 'sounds'],
 };
 
-export default function PremiumModalContent({ onClose, highlightedFeature, modalId }) {
+export default function PremiumModalContent({ onClose, highlightedFeature, source, modalId }) {
   const modalStack = useModalStack();
   const theme = useTheme();
   const analytics = useAnalytics();
@@ -88,13 +88,17 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
   const [purchaseAttempts, setPurchaseAttempts] = useState(0);
 
   // Track paywall viewed once per session (M7.5)
+  // Lambda T : `source` explicite prioritaire sur `highlightedFeature` —
+  // le guichet (AsideZone) pousse sans feature (pas de héros, décision CD)
+  // mais reste distinguable de 'unknown' dans l'analytics ('counter').
+  // N'affecte pas FEATURE_ORDER_BY_SOURCE (toujours clé sur highlightedFeature).
   useEffect(() => {
     if (!hasTrackedPaywall) {
-      const source = highlightedFeature || 'unknown';
-      analytics.trackPaywallViewed(source);
+      const paywallSource = source || highlightedFeature || 'unknown';
+      analytics.trackPaywallViewed(paywallSource);
       setHasTrackedPaywall(true);
     }
-  }, [hasTrackedPaywall, highlightedFeature, analytics]);
+  }, [hasTrackedPaywall, source, highlightedFeature, analytics]);
 
   // Fetch dynamic price from RevenueCat when component mounts
   useEffect(() => {
@@ -544,5 +548,6 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
 PremiumModalContent.propTypes = {
   onClose: PropTypes.func.isRequired,
   highlightedFeature: PropTypes.string,
+  source: PropTypes.string,
   modalId: PropTypes.string,
 };
