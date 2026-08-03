@@ -64,11 +64,19 @@ export default function useEmojiMovement({ movement, tempo, active, variant = nu
     cancelAnimation(rotate);
     cancelAnimation(opacity);
 
+    // Retour neutre des QUATRE valeurs à chaque relance (fix ré-entrée du dé,
+    // retour Eric 03/08) : cancelAnimation fige une valeur EN PLEIN VOL, et
+    // chaque mouvement n'écrase ensuite que les valeurs qu'il pilote — un
+    // enchaînement float → beat laissait translateY/opacity/rotate gelés
+    // (emoji décalé, translucide, penché, qui « ne se réinitialise pas »).
+    // Même résidu au retour à l'ambiant (breathe ne pilote que scale). Les
+    // cases ci-dessous réassignent leurs valeurs par-dessus ce reset doux.
+    scale.value = withTiming(1, { duration: NEUTRAL_RESET_DURATION });
+    translateY.value = withTiming(0, { duration: NEUTRAL_RESET_DURATION });
+    rotate.value = withTiming(0, { duration: NEUTRAL_RESET_DURATION });
+    opacity.value = withTiming(1, { duration: NEUTRAL_RESET_DURATION });
+
     if (!isActive) {
-      scale.value = withTiming(1, { duration: NEUTRAL_RESET_DURATION });
-      translateY.value = withTiming(0, { duration: NEUTRAL_RESET_DURATION });
-      rotate.value = withTiming(0, { duration: NEUTRAL_RESET_DURATION });
-      opacity.value = withTiming(1, { duration: NEUTRAL_RESET_DURATION });
       return undefined;
     }
 
@@ -194,11 +202,8 @@ export default function useEmojiMovement({ movement, tempo, active, variant = nu
       break;
     }
     default: {
-      // Movement inconnu : neutre, pas d'erreur silencieuse cachée.
-      scale.value = withTiming(1, { duration: NEUTRAL_RESET_DURATION });
-      translateY.value = withTiming(0, { duration: NEUTRAL_RESET_DURATION });
-      rotate.value = withTiming(0, { duration: NEUTRAL_RESET_DURATION });
-      opacity.value = withTiming(1, { duration: NEUTRAL_RESET_DURATION });
+      // Movement inconnu : neutre — le reset ci-dessus a déjà tout ramené.
+      break;
     }
     }
 

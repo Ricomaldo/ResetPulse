@@ -12,7 +12,6 @@ import { DevPremiumProvider } from './src/dev/DevPremiumContext';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { PurchaseProvider } from './src/contexts/PurchaseContext';
 import { TimerConfigProvider } from './src/contexts/TimerConfigContext';
-import { TimerRemainingProvider } from './src/contexts/TimerRemainingContext';
 import { CustomActivitiesProvider } from './src/contexts/CustomActivitiesContext';
 import { SessionCountProvider } from './src/contexts/SessionCountContext';
 import { RitualsProvider } from './src/contexts/RitualsContext';
@@ -197,24 +196,22 @@ export default function App() {
   if (DEV_MODE && SHOW_DEV_FAB) {
     return (
       <TimerConfigProvider>
-        <TimerRemainingProvider>
-          <CustomActivitiesProvider>
-            <SessionCountProvider>
-              <RitualsProvider>
-                <DevPremiumProvider>
-                  <GestureHandlerRootView style={styles.container}>
-                    {renderContent()}
-                    <DevFab
-                      onReplayFirstRun={handleReplayFirstRun}
-                      onReplayDiscovery={handleReplayDiscovery}
-                      onResetToVanilla={handleResetToVanilla}
-                    />
-                  </GestureHandlerRootView>
-                </DevPremiumProvider>
-              </RitualsProvider>
-            </SessionCountProvider>
-          </CustomActivitiesProvider>
-        </TimerRemainingProvider>
+        <CustomActivitiesProvider>
+          <SessionCountProvider>
+            <RitualsProvider>
+              <DevPremiumProvider>
+                <GestureHandlerRootView style={styles.container}>
+                  {renderContent()}
+                  <DevFab
+                    onReplayFirstRun={handleReplayFirstRun}
+                    onReplayDiscovery={handleReplayDiscovery}
+                    onResetToVanilla={handleResetToVanilla}
+                  />
+                </GestureHandlerRootView>
+              </DevPremiumProvider>
+            </RitualsProvider>
+          </SessionCountProvider>
+        </CustomActivitiesProvider>
       </TimerConfigProvider>
     );
   }
@@ -223,19 +220,17 @@ export default function App() {
   // useDevDragScale retombe sur OFF, comportement actuel)
   return (
     <TimerConfigProvider>
-      <TimerRemainingProvider>
-        <CustomActivitiesProvider>
-          <SessionCountProvider>
-            <RitualsProvider>
-              <DevPremiumProvider>
-                <GestureHandlerRootView style={styles.container}>
-                  {renderContent()}
-                </GestureHandlerRootView>
-              </DevPremiumProvider>
-            </RitualsProvider>
-          </SessionCountProvider>
-        </CustomActivitiesProvider>
-      </TimerRemainingProvider>
+      <CustomActivitiesProvider>
+        <SessionCountProvider>
+          <RitualsProvider>
+            <DevPremiumProvider>
+              <GestureHandlerRootView style={styles.container}>
+                {renderContent()}
+              </GestureHandlerRootView>
+            </DevPremiumProvider>
+          </RitualsProvider>
+        </SessionCountProvider>
+      </CustomActivitiesProvider>
     </TimerConfigProvider>
   );
 }

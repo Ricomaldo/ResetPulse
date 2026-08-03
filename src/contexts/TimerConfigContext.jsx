@@ -19,9 +19,11 @@
  *   selectedColorIndex (dérivé, -1 si currentColor n'est pas dans la palette
  *   active — ex. couleur de Rituel propre), paletteInfo, paletteColors, timerColors
  * - transient: flashActivity, isLoading
- *   (timerRemaining sorti vers TimerRemainingContext, hotfix-porte-1 C4 —
- *   écrit à 60 Hz par TimeTimer.jsx, il faisait re-rendre TOUT consommateur
- *   de ce contexte à chaque tick tant qu'il vivait dans ce useMemo)
+ *   (timerRemaining : sorti vers TimerRemainingContext au hotfix-porte-1 C4
+ *   — écrit à 60 Hz par TimeTimer.jsx, il faisait re-rendre TOUT consommateur
+ *   de ce contexte à chaque tick tant qu'il vivait dans ce useMemo. Audit du
+ *   mandat P1 (crash drag, 2e tentative) : aucun lecteur n'a jamais existé —
+ *   TimerRemainingContext lui-même supprimé, écriture morte avec lui)
  */
 
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
@@ -56,8 +58,9 @@ export const TimerConfigProvider = ({ children }) => {
   const hasLoggedBoot = useRef(false);
 
   // Transient state (not persisted)
-  // timerRemaining vit dans TimerRemainingContext (hotfix-porte-1 C4) — plus
-  // ici, pour ne plus faire re-rendre tout consommateur à 60 Hz.
+  // timerRemaining n'est plus ici (hotfix-porte-1 C4, plus de re-render à
+  // 60 Hz de tout consommateur) — et TimerRemainingContext où il avait été
+  // déplacé a été supprimé au mandat P1 : jamais lu, write-only.
   const [flashActivity, setFlashActivity] = useState(null);
   const flashTimeoutRef = useRef(null);
 
