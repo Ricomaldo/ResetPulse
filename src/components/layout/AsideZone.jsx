@@ -55,12 +55,16 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { usePersistedState } from '../../hooks/usePersistedState';
 import { useAnalytics } from '../../hooks/useAnalytics';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useAmbiancesPrice } from '../../hooks/useAmbiancesPrice';
+import { useModalStack } from '../../contexts/ModalStackContext';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
 import SoundsPanel from '../sounds/SoundsPanel';
+import { TIMER_PALETTES } from '../../config/timer-palettes';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -83,6 +87,13 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
+  const modalStack = useModalStack();
+  // Guichet Ambiances (Lambda T, 1a) — masqué pour un premium, rien à
+  // vendre. Prix dynamique même source RevenueCat que PremiumModalContent
+  // (cf. useAmbiancesPrice) ; repli '4,99 €' tant que l'offre ne répond pas.
+  const { isPremium } = usePremiumStatus();
+  const ambiancesPrice = useAmbiancesPrice();
+  const counterSwatchColors = TIMER_PALETTES.serenity.colors;
   // Continuité paysage (3c) : useWindowDimensions (pas Dimensions.get figé
   // au chargement du module) — la hauteur totale du drawer (style `drawer`)
   // doit suivre la rotation, sinon son contenu se retrouve borné par la
@@ -433,6 +444,49 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       marginTop: rs(8),
       textAlign: 'center',
     },
+    // Guichet Ambiances (Lambda T, 1a) — rangée DISTINCTE des rangées
+    // d'usage ci-dessus : fond `background` (crème chaud #F4EFE7, proche du
+    // #FAF3E9 esprit CD) sur le drawer `surface` (blanc), même écart que
+    // TimerScreen/Drawer (cf. CLAUDE.md § Color System Architecture). Pas de
+    // couleur brand ici — « un guichet, pas une pub ».
+    counterRow: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.lg,
+      flexDirection: 'row',
+      marginTop: rs(16),
+      padding: rs(12),
+    },
+    counterSwatch: {
+      borderRadius: rs(6),
+      flexDirection: 'row',
+      height: rs(26, 'min'),
+      overflow: 'hidden',
+      width: rs(26, 'min'),
+    },
+    counterSwatchColor: {
+      flex: 1,
+    },
+    counterTextBlock: {
+      flex: 1,
+      marginLeft: rs(10),
+    },
+    counterTitle: {
+      color: theme.colors.text,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+    counterSubtitle: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(11, 'min'),
+      marginTop: rs(2),
+    },
+    counterPrice: {
+      color: theme.colors.text,
+      fontSize: rs(13, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginLeft: rs(8),
+    },
   });
 
   // Sens de rotation (P1-6, review design) : Switch binaire remplacé par un
@@ -745,6 +799,40 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                           <Text style={styles.inertRowLabel}>{t('soundsPanel.sheetRow')}</Text>
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
+
+                        {/* Guichet Ambiances (Lambda T, 1a) — l'unique entrée
+                            VOLONTAIRE vers Ambiances (constat Eric : toutes
+                            les autres sont réactives). Tap → paywall
+                            générique, SANS highlightedFeature (décision CD :
+                            le guichet n'a pas de héros). Masqué en premium. */}
+                        {!isPremium && (
+                          <TouchableOpacity
+                            testID="aside.ambiancesCounter"
+                            style={styles.counterRow}
+                            accessible
+                            accessibilityRole="button"
+                            accessibilityLabel={`${t('ambiances.title')} — ${t('ambiances.counterSubtitle')}`}
+                            onPress={() => {
+                              haptics.selection().catch(() => {});
+                              modalStack.push('premium', { source: 'counter' });
+                            }}
+                            activeOpacity={0.7}
+                          >
+                            <View style={styles.counterSwatch}>
+                              {counterSwatchColors.map((color, index) => (
+                                <View
+                                  key={index}
+                                  style={[styles.counterSwatchColor, { backgroundColor: color }]}
+                                />
+                              ))}
+                            </View>
+                            <View style={styles.counterTextBlock}>
+                              <Text style={styles.counterTitle}>{t('ambiances.title')}</Text>
+                              <Text style={styles.counterSubtitle}>{t('ambiances.counterSubtitle')}</Text>
+                            </View>
+                            <Text style={styles.counterPrice}>{ambiancesPrice || '4,99 €'}</Text>
+                          </TouchableOpacity>
+                        )}
                       </>
                     )}
                   </>
