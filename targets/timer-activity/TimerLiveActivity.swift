@@ -17,11 +17,26 @@ import WidgetKit
 // MARK: - Couleur hex → SwiftUI Color
 
 extension Color {
+    // P1-9 (review design) : la couleur de séance rendait pâle/taupe sur la
+    // carte crème du lock screen. Vérifié : l'extension n'a pas de bug
+    // d'alpha — `colorHex` transmis côté JS (useLiveActivity.js) est
+    // toujours `#RRGGBB` (6 hex, jamais d'alpha), le repli `cleaned.count
+    // != 6` ne se déclenche donc pas en usage normal. La paleness vient du
+    // rendu système : le ProgressView circulaire + les matériaux vibrants
+    // du Live Activity désaturent visuellement les tons de la palette de
+    // marque. Fix : saturation POUSSÉE ici (une seule fois, à la source),
+    // profite aux 3 usages (.tint de l'anneau, activitySystemActionForegroundColor,
+    // keylineTint) sans toucher au ProgressViewStyle (fige sur device, cf.
+    // tête de fichier). Écart autour de la moyenne des 3 canaux plutôt
+    // qu'un aller-retour HSB (UIColor.getHue) : même effet de saturation,
+    // moins de surface à erreur de conversion, et la luminosité perçue
+    // reste stable (la moyenne ne bouge pas), contrairement à un plancher
+    // de luminosité qui aurait poussé vers PLUS de pâleur, pas moins.
     init(hex: String) {
         let cleaned = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var value: UInt64 = 0
         Scanner(string: cleaned).scanHexInt64(&value)
-        let r, g, b: Double
+        var r, g, b: Double
         if cleaned.count == 6 {
             r = Double((value >> 16) & 0xFF) / 255
             g = Double((value >> 8) & 0xFF) / 255
@@ -29,6 +44,11 @@ extension Color {
         } else {
             (r, g, b) = (0.91, 0.59, 0.40) // corail de marque en repli
         }
+        let saturationBoost = 1.35
+        let luminance = (r + g + b) / 3
+        r = min(1, max(0, luminance + (r - luminance) * saturationBoost))
+        g = min(1, max(0, luminance + (g - luminance) * saturationBoost))
+        b = min(1, max(0, luminance + (b - luminance) * saturationBoost))
         self.init(red: r, green: g, blue: b)
     }
 }
@@ -89,6 +109,13 @@ struct TimerRing: View {
         }
         .progressViewStyle(.circular)
         .tint(Color(hex: context.attributes.colorHex))
+        // Levier supplémentaire si le tint boosté (cf. extension Color plus
+        // haut) reste pâle sur device : `.saturation(1.x)` ici, modifier
+        // SwiftUI standard (pas un ProgressViewStyle custom, aucun risque
+        // de gel). Non ajouté par prudence — empiler deux transforms de
+        // couleur non vérifiées sur device en même temps rendrait un
+        // éventuel sur-dosage impossible à diagnostiquer. Au pilote de
+        // juger le boost seul avant d'ajouter celui-ci.
         .scaleEffect(x: shouldMirror ? -1 : 1, y: 1)
     }
 }
@@ -133,7 +160,8 @@ struct TimerLiveActivity: Widget {
                     DoneView(context: context)
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
-                    TimerRing(context: context, emojiSize: 20)
+                    // Emoji monté d'un cran (P1-9, review design) : 20→26.
+                    TimerRing(context: context, emojiSize: 26)
                         .frame(width: 52, height: 52)
                     Spacer()
                     TimerCountdown(context: context, size: 34)
@@ -146,7 +174,8 @@ struct TimerLiveActivity: Widget {
             DynamicIsland {
                 // ---- Île étendue (appui long) ----
                 DynamicIslandExpandedRegion(.leading) {
-                    TimerRing(context: context, emojiSize: 16)
+                    // Emoji monté d'un cran (P1-9, review design) : 16→20.
+                    TimerRing(context: context, emojiSize: 20)
                         .frame(width: 44, height: 44)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
@@ -168,7 +197,11 @@ struct TimerLiveActivity: Widget {
                 if context.isDone {
                     Text(context.attributes.emoji).font(.system(size: 12))
                 } else {
-                    TimerRing(context: context, emojiSize: 10)
+                    // Emoji monté d'un cran, proportionnel aux surfaces
+                    // écran verrouillé/île étendue ci-dessus (P1-9) : 10→13.
+                    // Slot compact TRÈS contraint (Dynamic Island) — à
+                    // confirmer sur device qu'il ne clippe pas.
+                    TimerRing(context: context, emojiSize: 13)
                 }
             } compactTrailing: {
                 if context.isDone {
@@ -181,7 +214,11 @@ struct TimerLiveActivity: Widget {
                 if context.isDone {
                     Text("✨").font(.system(size: 11))
                 } else {
-                    TimerRing(context: context, emojiSize: 9)
+                    // Emoji monté d'un cran, proportionnel (P1-9) : 9→11.
+                    // Slot minimal = le plus petit de tous (cercle unique
+                    // ~26pt) — priorité device : vérifier le clipping avant
+                    // toute couleur.
+                    TimerRing(context: context, emojiSize: 11)
                 }
             }
             .keylineTint(Color(hex: context.attributes.colorHex))

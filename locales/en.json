@@ -522,7 +522,11 @@
     "exitFocus": "leave focus",
     "doubleTapHint": "tip: double-tap the background to switch",
     "handle": "open settings",
-    "closedLabel": "rituals & settings"
+    "closedLabel": "rituals & settings",
+    "rotation": {
+      "counterclockwise": "Counterclockwise",
+      "clockwise": "Clockwise"
+    }
   },
   "dormantTips": {
     "palettes": "psst — your colors come in full palettes, in settings",
