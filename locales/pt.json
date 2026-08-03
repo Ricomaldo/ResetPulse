@@ -223,6 +223,7 @@
     },
     "price": "%{price}, uma vez. Teu para sempre.",
     "startTrial": "testa 7 dias grátis",
+    "unlock": "desbloquear — %{price}, uma vez",
     "breatheInvitation": "queres fazê-lo respirar? descobre Ambiances"
   },
   "activities": {

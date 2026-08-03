@@ -241,6 +241,7 @@
     },
     "price": "%{price}، مرة واحدة. ملكك للأبد.",
     "startTrial": "جرب 7 أيام مجاناً",
+    "unlock": "فتح — %{price}، مرة واحدة",
     "breatheInvitation": "هل تريد أن تجعله يتنفس؟ اكتشف Ambiances"
   },
   "activities": {

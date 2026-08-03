@@ -223,6 +223,7 @@
     },
     "price": "%{price}, einmalig. Für immer deins.",
     "startTrial": "7 Tage kostenlos testen",
+    "unlock": "freischalten — %{price}, einmalig",
     "breatheInvitation": "Willst du es zum Atmen bringen? Entdecke Ambiances"
   },
   "activities": {

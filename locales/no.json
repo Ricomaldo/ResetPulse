@@ -241,6 +241,7 @@
     },
     "price": "%{price}, én gang. Din for alltid.",
     "startTrial": "Prøv 7 dager gratis",
+    "unlock": "låse opp — %{price}, én gang",
     "breatheInvitation": "Vil du få den til å puste? Utforsk Ambiances"
   },
   "activities": {

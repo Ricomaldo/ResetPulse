@@ -3,10 +3,15 @@
  * Extracted from PremiumModal.jsx - Pure content component (no Modal wrapper)
  * Lot 3b (frontière gratuit/payant, mandat Eric) : registre passé de
  * « premium » générique à « Ambiances » — mécanique achat/restore/prix
- * RevenueCat inchangée (trial 7 jours + gestion d'erreurs), seul le CONTENU
- * visible change. Le mot « premium » ne s'affiche plus côté utilisateur.
+ * RevenueCat inchangée (gestion d'erreurs), seul le CONTENU visible change.
+ * Le mot « premium » ne s'affiche plus côté utilisateur.
+ * P0-2 (review Claude design) : le CTA n'annonce plus d'essai gratuit — le
+ * bouton déclenche un achat unique immédiat (`ambiances.unlock`), le texte
+ * le dit désormais explicitement ; son accessibilityHint (même mensonge,
+ * porté par VoiceOver/TalkBack) a été retiré plutôt que réécrit — locale
+ * gelée, `accessibility.unlockPremiumHint` devient orpheline.
  * @created 2025-12-21
- * @updated 2026-07-30
+ * @updated 2026-08-04
  */
 import React, { useState, useEffect } from 'react';
 import {
@@ -465,6 +470,14 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
 
       {/* Buttons */}
       <View style={styles.buttons}>
+        {/* P0-2 (review Claude design) : accessibilityHint retiré — il valait
+            `accessibility.unlockPremiumHint` = « Start 7-day free trial,
+            then one-time payment » (×15 locales), le même mensonge que
+            l'ancien CTA visible, porté cette fois par VoiceOver/TalkBack sur
+            CE bouton. Locale gelée (seule ambiances.unlock est autorisée en
+            écriture) → pas de réécriture possible, la clé devient orpheline
+            (comme ambiances.startTrial). Le accessibilityLabel juste en
+            dessous reste annoncé et dit déjà le prix + « une fois ». */}
         <TouchableOpacity
           style={[
             styles.primaryButton,
@@ -475,14 +488,13 @@ export default function PremiumModalContent({ onClose, highlightedFeature, modal
           activeOpacity={0.8}
           accessibilityLabel={t('accessibility.unlockPremium', { price: dynamicPrice || '4,99€' })}
           accessibilityRole="button"
-          accessibilityHint={t('accessibility.unlockPremiumHint')}
           accessibilityState={{ disabled: isAnyOperationInProgress }}
         >
           {isPurchasing ? (
             <ActivityIndicator color={theme.colors.fixed.white} size="small" />
           ) : (
             <Text style={styles.primaryButtonText}>
-              {t('ambiances.startTrial')}
+              {t('ambiances.unlock', { price: dynamicPrice || '4,99€' })}
             </Text>
           )}
         </TouchableOpacity>

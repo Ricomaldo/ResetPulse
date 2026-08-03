@@ -442,6 +442,7 @@
     },
     "price": "%{price}，一次性付费，永久拥有。",
     "startTrial": "免费试用 7 天",
+    "unlock": "解锁 — %{price}，一次性",
     "breatheInvitation": "想让它呼吸起来?去发现 Ambiances"
   },
   "rituals": {

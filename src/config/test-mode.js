@@ -5,15 +5,15 @@
  */
 
 // Active le mode développement général
-// true = mode dev, false = production
-export const DEV_MODE = true;
+// Dérivé de __DEV__ (globale React Native : true en dev, false en build
+// release) — plus de bascule manuelle, donc plus d'oubli possible avant
+// publication (P0-1, review Claude design).
+export const DEV_MODE = __DEV__;
 
 // Affiche le FAB wrench pour contrôle dev (premium, onboarding reset, etc.)
-// true = FAB visible, false = FAB caché
-// Note: Nécessite DEV_MODE = true pour fonctionner
-// DEPLOY: Set to false before production build, true for local dev
-// (true sur la branche proto-drag-echelle : sélecteur « Drag échelle »)
-export const SHOW_DEV_FAB = true;
+// Note: Nécessite DEV_MODE = true pour fonctionner (ici toujours vrai en
+// même temps que DEV_MODE puisque dérivé de la même globale __DEV__).
+export const SHOW_DEV_FAB = __DEV__;
 
 // État premium par défaut au lancement
 // true = premium (tout débloqué), false = freemium (4 activités + bouton +)
