@@ -16,7 +16,8 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useModalStack } from '../../contexts/ModalStackContext';
-import { buildRitualApplyPayload, resolveRitualActivity, isTemplateRitual } from '../../config/rituals';
+import { buildRitualApplyPayload, resolveRitualActivity, isTemplateRitual, getDefaultRituals } from '../../config/rituals';
+import { getActivityById } from '../../config/activities';
 import { formatDuration } from '../../config/durations';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
@@ -29,6 +30,15 @@ import RitualForm from './RitualForm';
 // reste visible/actif : au-delà du cap personnel, il ouvre l'invitation
 // Ambiances plutôt que le formulaire.
 const FREE_PERSONAL_RITUALS_CAP = 1;
+
+// Lambda U (2b, hero de la porte rituals_cap) : les emojis des 3 rituels de
+// BASE (jamais les rituels vivants de l'user, potentiellement édités) —
+// mandat explicite « lis-les depuis les rituels de base via config/rituals +
+// activities, pas codés en dur ». Calculé une fois au chargement du module
+// (getDefaultRituals est pur/déterministe).
+const TEMPLATE_RITUAL_EMOJIS = getDefaultRituals()
+  .map((ritual) => getActivityById(ritual.activityId)?.emoji)
+  .filter(Boolean);
 
 export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeight }) {
   const theme = useTheme();
@@ -68,7 +78,12 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
     haptics.selection().catch(() => {});
     const personalRitualsCount = rituals.filter((ritual) => !isTemplateRitual(ritual)).length;
     if (!isPremium && personalRitualsCount >= FREE_PERSONAL_RITUALS_CAP) {
-      modalStack.push('premium', { highlightedFeature: 'rituals_cap' });
+      // Lambda U (2b) : hero = la rangée des 3 slots-templates + le 4ᵉ
+      // pointillé — le cap qui vient d'être touché, rendu visible.
+      modalStack.push('premium', {
+        highlightedFeature: 'rituals_cap',
+        hero: { type: 'ritualSlots', emojis: TEMPLATE_RITUAL_EMOJIS },
+      });
       return;
     }
     setEditingId(null);
