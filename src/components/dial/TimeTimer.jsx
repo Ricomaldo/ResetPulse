@@ -39,6 +39,7 @@ export default function TimeTimer({
   onDialRef,
   onDialTap,
   onTimerComplete,
+  onDurationCommit,
   distraction = null,
 }) {
   const {
@@ -249,6 +250,16 @@ export default function TimeTimer({
       setCurrentDuration(newDuration);
       lastSyncedContextDurationRef.current = newDuration;
       lastContextPushTsRef.current = Date.now();
+      // Chip intelligent (Lambda R2, Q3b — cf. src/config/moment.js) : un
+      // commit de durée à la main, AU REPOS, salit le Moment. `timerRef`
+      // (pas la variable `timer` fermée par ce useCallback, potentiellement
+      // périmée — même raison que `timerRef.current.setDuration` ci-dessus)
+      // porte l'état running le plus frais. En séance, ajuster la durée
+      // reste un « cheat » (comment existant), pas un réglage du Moment —
+      // aucun événement.
+      if (!timerRef.current.running) {
+        onDurationCommit?.();
+      }
     } else {
       // MOVE : commit vers le contexte throttlé (~130 ms) — c'est
       // l'amplificateur (TimerConfigContext reconstruit tout son `value` +
@@ -285,7 +296,7 @@ export default function TimeTimer({
       runBreathe();
     }
     gestureScaleRef.current = null;
-  }, [scaleMode, scaleFloor, setCurrentDuration, runBreathe]);
+  }, [scaleMode, scaleFloor, setCurrentDuration, runBreathe, onDurationCommit]);
 
   return (
     <View style={styles.container}>
@@ -327,5 +338,6 @@ TimeTimer.propTypes = {
   onDialRef: PropTypes.func,
   onDialTap: PropTypes.func,
   onTimerComplete: PropTypes.func,
+  onDurationCommit: PropTypes.func,
   distraction: PropTypes.shape({ movement: PropTypes.string, variant: PropTypes.object }),
 };

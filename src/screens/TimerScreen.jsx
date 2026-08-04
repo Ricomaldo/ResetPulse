@@ -35,6 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
+import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState, isMomentDirty } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
 import { useSessionCount } from '../hooks/useSessionCount';
@@ -63,7 +64,7 @@ const LONG_SESSION_THRESHOLD_SECONDS = 1800; // 30 minutes
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
-function CompactRow({ onActivityTouch, onColorTouch }) {
+function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomentEvent }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -81,6 +82,12 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
   // tap = activité + couleur + durée + son, tout est prêt (la signature
   // remonte à la surface). Créer/étoiler un rituel met la rangée à jour
   // (même store useRituals). Les couleurs restent à côté : réglage en direct.
+  // Chip intelligent (Lambda R2, Q3b — « à essayer ») : ce tap tout-prêt ne
+  // s'applique en ENTIER que sur un Moment VIERGE (cf. src/config/moment.js).
+  // Sur un Moment déjà réglé à la main (SALE), le tap ne change QUE
+  // l'activité — durée/couleur/son en cours restent (`checkMomentDirty`,
+  // relu au tap, jamais au render). Le panneau « Mes rituels »
+  // (RitualsPanel) reste hors de ce mécanisme — toujours complet.
   const { favoriteRituals } = useRituals();
   const { customActivities } = useCustomActivities();
 
@@ -154,10 +161,17 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
             style={[styles.activityButton, isActive && styles.activityButtonActive]}
             onPress={() => {
               haptics.impact('light').catch(() => {});
-              setCurrentActivity(payload.activity);
-              setCurrentDuration(payload.duration);
-              setSelectedSoundId(payload.soundId);
-              setColorByValue(payload.color);
+              if (checkMomentDirty?.()) {
+                // Moment déjà réglé à la main (Q3b) : le chip ne touche
+                // QUE l'activité — durée/couleur/son en cours restent.
+                setCurrentActivity(payload.activity);
+              } else {
+                setCurrentActivity(payload.activity);
+                setCurrentDuration(payload.duration);
+                setSelectedSoundId(payload.soundId);
+                setColorByValue(payload.color);
+                markMomentEvent?.(MOMENT_EVENTS.RITUAL_APPLIED);
+              }
               analytics.trackActivitySelected(payload.activity?.id);
               analytics.trackRitualApplied('home_row');
               onActivityTouch?.();
@@ -186,6 +200,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
           onPress={() => {
             haptics.selection().catch(() => {});
             setColorIndex(index);
+            markMomentEvent?.(MOMENT_EVENTS.COLOR_SELECT);
             analytics.trackColorSelected(color);
             onColorTouch?.();
           }}
@@ -667,6 +682,16 @@ function TimerScreenContent() {
     [applySnapshotFromRef],
   );
 
+  // Chip intelligent (Lambda R2, Q3b — cf. src/config/moment.js) : ref pure,
+  // pas de state — aucun rendu n'en dépend, seul le tap du chip (CompactRow)
+  // relit sa valeur fraîche via `checkMomentDirty`. Alimentée par les
+  // événements EXISTANTS de l'écran ci-dessous (jamais dans useTimer, sacré).
+  const momentStateRef = useRef(MOMENT_VIERGE);
+  const markMomentEvent = useCallback((event) => {
+    momentStateRef.current = nextMomentState(momentStateRef.current, event);
+  }, []);
+  const checkMomentDirty = useCallback(() => isMomentDirty(momentStateRef.current), []);
+
   const handleDialTap = useCallback(() => {
     const timer = timerRef.current;
     if (!timer) {
@@ -674,12 +699,14 @@ function TimerScreenContent() {
     }
     if (timer.isCompleted) {
       timer.resetTimer();
+      markMomentEvent(MOMENT_EVENTS.RESET);
     } else if (timer.running) {
       timer.stopTimer(); // ADR-007 : tap pendant la séance = rembobinage
+      markMomentEvent(MOMENT_EVENTS.STOP_REMBOBINAGE);
     } else {
       timer.startTimer();
     }
-  }, []);
+  }, [markMomentEvent]);
 
   // Seuil composé Focus (P2-Focus) : « 1re séance accomplie >= 30 min » —
   // posé une fois pour toutes (one-shot, jamais désarmé), lu par
@@ -701,6 +728,7 @@ function TimerScreenContent() {
       analytics.trackFirstMomentCompleted();
     }
     incrementSessionCount();
+    markMomentEvent(MOMENT_EVENTS.COMPLETION);
     // Même lecture que handleKeepMomentTap : la durée PLEINE de la séance
     // qui vient de finir (timerRef.current.duration, pas snapshot.remaining
     // qui vaut 0 à la fin).
@@ -708,7 +736,7 @@ function TimerScreenContent() {
     if (duration >= LONG_SESSION_THRESHOLD_SECONDS && !hadLongSession) {
       setHadLongSession(true);
     }
-  }, [completedSessions, incrementSessionCount, analytics, currentDuration, hadLongSession, setHadLongSession]);
+  }, [completedSessions, incrementSessionCount, analytics, currentDuration, hadLongSession, setHadLongSession, markMomentEvent]);
 
   // Invitation « fais-le respirer » (Lot 3b, mandat Eric) : jamais un mur —
   // une ligne discrète sous le message de fin, une seule fois dans la vie de
@@ -1154,6 +1182,7 @@ function TimerScreenContent() {
               onTimerRef={handleTimerRef}
               onDialRef={handleDialRef}
               onTimerComplete={handleTimerComplete}
+              onDurationCommit={() => markMomentEvent(MOMENT_EVENTS.DURATION_COMMIT_REST)}
               distraction={distraction}
             />
           </Animated.View>
@@ -1208,6 +1237,8 @@ function TimerScreenContent() {
                 <CompactRow
                   onActivityTouch={firstRun.markActivityTouched}
                   onColorTouch={firstRun.markColorTouched}
+                  checkMomentDirty={checkMomentDirty}
+                  markMomentEvent={markMomentEvent}
                 />
               </View>
               <DistractionButton
