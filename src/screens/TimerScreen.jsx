@@ -25,6 +25,7 @@ import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useFirstRun } from '../hooks/useFirstRun';
 import { useDormantTips } from '../hooks/useDormantTips';
+import { useBorrowCoach, resolveCoachChannel } from '../hooks/useBorrowCoach';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useSessionImmersion } from '../hooks/useSessionImmersion';
@@ -42,6 +43,8 @@ import { usePaletteGating } from '../hooks/usePaletteGating';
 import { useSoundGating } from '../hooks/useSoundGating';
 import { usePremiumStatus } from '../hooks/usePremiumStatus';
 import { useModalStack } from '../contexts/ModalStackContext';
+import { getPaletteInfo } from '../config/timer-palettes';
+import { getSoundById } from '../config/sounds';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
 import { shouldShowBreatheInvitation } from '../utils/breatheInvitation';
@@ -242,13 +245,14 @@ function DistractionButton({ showLabel, onDistraction }) {
   );
 }
 
-// Astuce dormante v1 (ADR-016 §4, Lambda C) : même famille visuelle que le
-// dé (pill blanche, ombre légère) — une ligne discrète, jamais un mur.
-// Textes i18n FLAGGÉS pour review Claude design (formulation provisoire,
-// cf. dormantTips.palettes/focus dans locales/).
-function DormantTipPill({ tip }) {
+// Canal du coach (Lambda C, généralisé Lambda V) : même famille visuelle
+// que le dé (pill blanche, ombre légère) — une ligne discrète, jamais un
+// mur. Base partagée entre les astuces dormantes et les lignes du prêt.
+// Tappable seulement quand onPress est fourni (ligne de retour d'emprunt :
+// la LIGNE ENTIÈRE ouvre la modale Ambiances) — sinon View muette, comme
+// l'astuce d'origine.
+function CoachPill({ text, onPress, testID }) {
   const theme = useTheme();
-  const t = useTranslation();
 
   const styles = StyleSheet.create({
     pill: {
@@ -267,15 +271,44 @@ function DormantTipPill({ tip }) {
     },
   });
 
+  if (!text) {
+    return null;
+  }
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={styles.pill}
+        testID={testID}
+        onPress={onPress}
+        activeOpacity={0.7}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={text}
+      >
+        <Text style={styles.text}>{text}</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View style={styles.pill} testID={testID}>
+      <Text style={styles.text}>{text}</Text>
+    </View>
+  );
+}
+
+// Astuce dormante v1 (ADR-016 §4, Lambda C) — habillage inchangé, rendue
+// via la base CoachPill. Textes i18n FLAGGÉS pour review Claude design
+// (formulation provisoire, cf. dormantTips.palettes/focus dans locales/).
+function DormantTipPill({ tip }) {
+  const t = useTranslation();
+
   if (!tip) {
     return null;
   }
 
-  return (
-    <View style={styles.pill} testID={`dormantTip.${tip}`}>
-      <Text style={styles.text}>{t(`dormantTips.${tip}`)}</Text>
-    </View>
-  );
+  return <CoachPill text={t(`dormantTips.${tip}`)} testID={`dormantTip.${tip}`} />;
 }
 
 function formatTime(totalSecondsRaw) {
@@ -393,11 +426,12 @@ function TimerScreenContent() {
   const modalStack = useModalStack();
   // Soft-gating palettes (Lot 3b) : mémoire du dernier inclus + retour au
   // lancement si FREE et Ambiances actif — monté une fois ici, cf.
-  // usePaletteGating.
-  usePaletteGating();
+  // usePaletteGating. Lambda V : la retombée exposée nourrit le coach
+  // (« %{name} est rentrée »), cf. useBorrowCoach plus bas.
+  const { returnedPalette } = usePaletteGating();
   // Soft-gating sons (Lambda L, miroir palettes) — hook séparé, même
   // mécanique, domaine indépendant. Cf. useSoundGating.
-  useSoundGating();
+  const { returnedSoundId } = useSoundGating();
   const {
     mode: { current: currentMode },
     setMode,
@@ -884,8 +918,65 @@ function TimerScreenContent() {
   // (`enabled`), côté écran, comme prescrit par le brief.
   const canShowDormantTips =
     !snapshot.running && firstRun.hasSeenFirstRun && !immersed && !isFocus;
-  const dormantTips = useDormantTips({ enabled: canShowDormantTips });
-  const showDormantTip = Boolean(dormantTips.activeTip) && canShowDormantTips;
+  // La pédagogie du prêt (Lambda V) : mêmes gardes que les astuces
+  // dormantes. Le prêt PRIME (il est contextuel à un geste) : tant qu'une
+  // ligne coach parle, les astuces dormantes sont désarmées via `enabled`
+  // — leur one-shot ne brûle pas dans le vide pendant que le prêt occupe
+  // le canal (useDormantTips marque « montrée » dès la résolution).
+  const borrowCoach = useBorrowCoach({
+    enabled: canShowDormantTips,
+    returnedPalette,
+    returnedSoundId,
+  });
+  const dormantTips = useDormantTips({
+    enabled: canShowDormantTips && !borrowCoach.activeMessage,
+  });
+  const coachChannel = canShowDormantTips
+    ? resolveCoachChannel({
+      coachMessage: borrowCoach.activeMessage,
+      dormantTip: dormantTips.activeTip,
+    })
+    : null;
+
+  // Texte de la ligne coach — nom localisé pour les retours (get name()
+  // des palettes, metadata des sons ; repli sur la clé brute, jamais vide).
+  const coachMessage = borrowCoach.activeMessage;
+  let coachMessageText = null;
+  if (coachMessage?.type === 'paletteReturned') {
+    coachMessageText = t('coach.paletteReturned', {
+      name: getPaletteInfo(coachMessage.itemKey)?.name ?? coachMessage.itemKey,
+    });
+  } else if (coachMessage?.type === 'soundReturned') {
+    coachMessageText = t('coach.soundReturned', {
+      name: getSoundById(coachMessage.itemKey)?.name ?? coachMessage.itemKey,
+    });
+  } else if (coachMessage) {
+    coachMessageText = t(`coach.${coachMessage.type}`);
+  }
+
+  // « la garder » / « le garder » : la ligne entière de retour ouvre la
+  // modale Ambiances avec le héros 2c de l'item rentré (plomberie Lambda U).
+  // L'emprunt (moment 1) reste une ligne muette au tap.
+  const isCoachReturnMessage =
+    coachMessage?.type === 'paletteReturned' || coachMessage?.type === 'soundReturned';
+  const handleCoachPress = useCallback(() => {
+    const message = borrowCoach.activeMessage;
+    if (!message) {
+      return;
+    }
+    if (message.type === 'paletteReturned') {
+      modalStack.push('premium', {
+        highlightedFeature: 'palettes',
+        hero: { type: 'palette', paletteKey: message.itemKey },
+      });
+    } else if (message.type === 'soundReturned') {
+      modalStack.push('premium', {
+        highlightedFeature: 'sounds',
+        hero: { type: 'sound', soundId: message.itemKey },
+      });
+    }
+    borrowCoach.dismissActiveMessage();
+  }, [borrowCoach.activeMessage, borrowCoach.dismissActiveMessage, modalStack]);
 
   // hasTriedFocus (Lambda C) : marqué au premier passage en Focus, quel que
   // soit le chemin (segmenté du sheet OU double-tap fond) — les deux
@@ -929,8 +1020,11 @@ function TimerScreenContent() {
   const handleRootTouchStart = useCallback(() => {
     dismissDistractionLabel();
     dormantTips.dismissActiveTip();
+    // Ne dismisse que l'emprunt — la ligne de retour est tappable, un
+    // dismiss au touchStart annulerait son propre press (cf. useBorrowCoach).
+    borrowCoach.handleScreenTouch();
     registerActivity();
-  }, [dismissDistractionLabel, dormantTips, registerActivity]);
+  }, [dismissDistractionLabel, dormantTips, borrowCoach, registerActivity]);
 
   const styles = StyleSheet.create({
     completionMessage: {
@@ -1090,7 +1184,16 @@ function TimerScreenContent() {
                   showLabel={showDistractionLabel}
                   onDistraction={handleDistraction}
                 />
-                {showDormantTip && <DormantTipPill tip={dormantTips.activeTip} />}
+                {/* Une seule voix coach à la fois (Lambda V) : le prêt
+                    gagne le canal, l'astuce dormante sinon. */}
+                {coachChannel?.kind === 'coach' && (
+                  <CoachPill
+                    text={coachMessageText}
+                    onPress={isCoachReturnMessage ? handleCoachPress : undefined}
+                    testID={`coach.${coachChannel.message.type}`}
+                  />
+                )}
+                {coachChannel?.kind === 'dormant' && <DormantTipPill tip={coachChannel.tip} />}
               </Animated.View>
             )}
           </View>
@@ -1099,6 +1202,7 @@ function TimerScreenContent() {
             isTimerRunning={snapshot.running}
             hidden={immersed}
             onPaletteOpened={dormantTips.markPalettesOpened}
+            onAmbianceBorrowed={borrowCoach.notifyBorrowed}
           />
           {!isFocus && (
             <FirstRunTips
