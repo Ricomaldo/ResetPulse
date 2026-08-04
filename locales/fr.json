@@ -516,7 +516,7 @@
     "counterFooter": "les 8 sons, à toi pour toujours — %{price}, une fois ›"
   },
   "mode": {
-    "standard": "ResetPulse",
+    "standard": "Standard",
     "focus": "Focus"
   },
   "focus": {

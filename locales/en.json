@@ -516,7 +516,7 @@
     "counterFooter": "all 8 sounds, yours forever — %{price}, once ›"
   },
   "mode": {
-    "standard": "ResetPulse",
+    "standard": "Standard",
     "focus": "Focus"
   },
   "focus": {
