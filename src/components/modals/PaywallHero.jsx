@@ -60,14 +60,16 @@ export const resolveHeroCopyKeys = (hero) => {
     case 'emoji':
       return { headlineKey: 'ambiances.hook.emoji', subtitleKey: 'ambiances.hookSub.emoji' };
     case 'plus':
-      // Sous-titre générique réutilisé de la porte emoji (mandat §2 « même
-      // modèle ») — pas de clé dédiée.
-      return { headlineKey: 'ambiances.hook.custom', subtitleKey: 'ambiances.hookSub.emoji' };
+      // Passe copies CD (04/08) : sous-titre dédié.
+      return { headlineKey: 'ambiances.hook.custom', subtitleKey: 'ambiances.hookSub.custom' };
     case 'ritualSlots':
       return { headlineKey: 'ambiances.hook.rituals', subtitleKey: 'ambiances.hookSub.rituals' };
     case 'palette':
-    case 'sound':
       return { headlineKey: 'ambiances.hook.palette', subtitleKey: 'ambiances.hookSub.palette' };
+    case 'sound':
+      // Passe copies CD (04/08) : porte son dédiée — « les 7 autres »
+      // (8 sons Ambiances − celui nommé), pas les 9 de la porte palette.
+      return { headlineKey: 'ambiances.hook.sound', subtitleKey: 'ambiances.hookSub.sound' };
     default:
       return null;
   }

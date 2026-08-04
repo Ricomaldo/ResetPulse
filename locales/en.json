@@ -27,7 +27,7 @@
   },
   "invitation": "ready?",
   "welcome": {
-    "title": "Welcome to ResetPulse"
+    "title": "welcome."
   },
   "onboarding": {
     "restartGuide": "Restart the guide",
@@ -104,7 +104,7 @@
         "tapToContinue": "When you're ready"
       },
       "filter1": {
-        "title": "A timer that adapts to you",
+        "title": "a timer that adapts to you.",
         "subtitle": ""
       }
     },
@@ -198,7 +198,7 @@
       "activityEmoji": "Activity emoji at center",
       "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
       "activityEmojiDescriptionOff": "Emoji is hidden",
-      "pulseAnimation": "Pulse animation"
+      "pulseAnimation": "Breathing halo"
     }
   },
   "premium": {
@@ -243,12 +243,15 @@
       "emoji": "make it yours",
       "custom": "your own emojis",
       "rituals": "a ritual for every moment",
-      "palette": "it looks good on you"
+      "palette": "it looks good on you",
+      "sound": "it suits you"
     },
     "hookSub": {
       "emoji": "this emoji lives in Ambiances — like everything you keep.",
       "rituals": "your 2nd ritual is just waiting for room.",
-      "palette": "keep %{name} — and the 9 others too."
+      "palette": "keep %{name} — and the 9 others too.",
+      "sound": "keep %{name} — and the 7 others too.",
+      "custom": "compose your own — it will live in Ambiances."
     },
     "price": "%{price}, once. Yours forever.",
     "startTrial": "try 7 days free",
@@ -413,52 +416,52 @@
       "endMessage": "lovely moment."
     },
     "reading": {
-      "startMessage": "Dive in",
-      "endMessage": "Enriched 📖"
+      "startMessage": "dive in.",
+      "endMessage": "nourished."
     },
     "study": {
-      "startMessage": "Learn",
-      "endMessage": "Advanced 📈"
+      "startMessage": "focus up.",
+      "endMessage": "a little further."
     },
     "yoga": {
-      "startMessage": "Breathe",
-      "endMessage": "Peaceful 🪷"
+      "startMessage": "stretch.",
+      "endMessage": "unknotted."
     },
     "sport": {
-      "startMessage": "Move",
-      "endMessage": "Energized ⚡"
+      "startMessage": "move.",
+      "endMessage": "warmed up."
     },
     "walking": {
-      "startMessage": "Walk",
-      "endMessage": "Revitalized 🌿"
+      "startMessage": "keep going.",
+      "endMessage": "the air did you good."
     },
     "cooking": {
-      "startMessage": "Prepare",
-      "endMessage": "Satisfied 🍽️"
+      "startMessage": "to the stove.",
+      "endMessage": "dinner's ready."
     },
     "gaming": {
-      "startMessage": "Play",
-      "endMessage": "Relaxed 🎮"
+      "startMessage": "your move.",
+      "endMessage": "well played."
     },
     "homework": {
-      "startMessage": "Focus",
-      "endMessage": "Completed ✅"
+      "startMessage": "to work.",
+      "endMessage": "it's done."
     },
     "music": {
-      "startMessage": "Play",
-      "endMessage": "Harmonized 🎵"
+      "startMessage": "in music.",
+      "endMessage": "still ringing."
     },
     "cleaning": {
-      "startMessage": "Organize",
-      "endMessage": "Serene ✨"
+      "startMessage": "let's tidy.",
+      "endMessage": "clean."
     },
     "nap": {
-      "startMessage": "Rest",
-      "endMessage": "Refreshed 💤"
+      "startMessage": "close your eyes.",
+      "endMessage": "rested."
     },
     "writing": {
-      "startMessage": "Write",
-      "endMessage": "Liberated ✍️"
+      "startMessage": "set the words down.",
+      "endMessage": "settled."
     },
     "custom": {
       "startMessage": "Let's go",
@@ -547,12 +550,12 @@
     "scaleLockHint": "the dial keeps its current scale, even for a short duration"
   },
   "dormantTips": {
-    "palettes": "psst — your colors come in full palettes, in settings",
-    "focus": "want a bare screen? focus mode awaits in settings"
+    "palettes": "see that? your colors have whole palettes — slide the bottom tray.",
+    "focus": "craving a bare screen? focus mode awaits in the bottom tray."
   },
   "coach": {
-    "borrowedPalette": "borrowed palette — next launch, it goes back home.",
-    "borrowedSound": "borrowed sound — next launch, it goes back home.",
+    "borrowedPalette": "%{name} borrowed — next launch, it goes back home.",
+    "borrowedSound": "%{name} borrowed — next launch, it goes back home.",
     "paletteReturned": "%{name} went home. take it again — or keep it.",
     "soundReturned": "%{name} went home. take it again — or keep it.",
     "ritualsRow": "your rituals, right there — one tap each."

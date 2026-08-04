@@ -993,7 +993,13 @@ function TimerScreenContent() {
       name: getSoundById(coachMessage.itemKey)?.name ?? coachMessage.itemKey,
     });
   } else if (coachMessage) {
-    coachMessageText = t(`coach.${coachMessage.type}`);
+    // Passe copies CD (04/08) : l'emprunt NOMME l'objet (« %{name}
+    // empruntée… ») — même résolution de nom que les lignes de retour.
+    coachMessageText = t(`coach.${coachMessage.type}`, {
+      name: coachMessage.type === 'borrowedPalette'
+        ? (getPaletteInfo(coachMessage.itemKey)?.name ?? coachMessage.itemKey)
+        : (getSoundById(coachMessage.itemKey)?.name ?? coachMessage.itemKey),
+    });
   }
 
   // « la garder » / « le garder » : la ligne entière de retour ouvre la
