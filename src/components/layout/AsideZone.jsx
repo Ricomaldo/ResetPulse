@@ -253,9 +253,24 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   //     03/08, la poignée ne fermait plus le sheet sous-écran ouvert, car
   //     `.enabled(!boundedSubScreen)` tuait le pan partout, poignée comprise.
   //     La poignée n'a pas de scroll à protéger : elle garde le geste.
-  const makePanGesture = (enabled) => Gesture.Pan()
+  // offsetY paramétrable (QA visuelle #1, bug 2) : `panGesture` recouvre le
+  // ScrollView (l.552/587) — bidirectionnel [-20,20], il gagnait la course
+  // au geste AVANT que le ScrollView natif n'ait la moindre chance de
+  // scroller (le guichet Ambiances, sous Sons, restait hors d'atteinte,
+  // aucun swipe ne faisait défiler le contenu). `activeOffsetY(20)` (borne
+  // positive seule) ne configure QUE le seuil de fermeture (drag vers le
+  // bas) ; le seuil négatif reste au sentinel RNGH « ignoré » (confirmé
+  // source native PanGestureHandler.kt shouldActivate — un critère non
+  // configuré ne vote jamais l'activation, minDist par défaut est aussi
+  // désactivé dès qu'un offset custom est posé), donc un drag vers le HAUT
+  // ne déclenche plus jamais ce pan : le ScrollView reste seul maître de
+  // cette direction. Le drag de fermeture (vers le bas, depuis le contenu)
+  // est inchangé. `handlePanGesture` (poignée seule, pas de ScrollView
+  // dessous) garde le bidirectionnel par défaut — ouverture ET fermeture
+  // depuis cette petite zone.
+  const makePanGesture = (enabled, offsetY = [-20, 20]) => Gesture.Pan()
     .enabled(enabled)
-    .activeOffsetY([-20, 20])
+    .activeOffsetY(offsetY)
     .failOffsetX([-15, 15])
     .onBegin(() => {
       startY.value = translateY.value;
@@ -279,7 +294,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       runOnJS(setIsOpen)(open);
     });
 
-  const panGesture = useMemo(() => makePanGesture(!boundedSubScreen),
+  const panGesture = useMemo(() => makePanGesture(!boundedSubScreen, 20),
     [translateY, startY, openY, snapClosed, boundedSubScreen]);
   const handlePanGesture = useMemo(() => makePanGesture(true),
     [translateY, startY, openY, snapClosed]);
