@@ -540,7 +540,11 @@
     "rotation": {
       "counterclockwise": "Anti-horaire",
       "clockwise": "Horaire"
-    }
+    },
+    "settingsRow": "Réglages",
+    "settingsNew": "nouveau",
+    "scaleLock": "Verrouiller l'échelle",
+    "scaleLockHint": "le cadran garde son échelle actuelle, même pour une petite durée"
   },
   "dormantTips": {
     "palettes": "t'as vu ? tes couleurs ont des palettes entières — dans les réglages",

@@ -22,6 +22,7 @@ import { formatDuration } from '../../config/durations';
 import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
+import { usePersistedState } from '../../hooks/usePersistedState';
 import RitualForm from './RitualForm';
 
 // ADR-017 §1 : la frontière ne porte plus sur le TOTAL (3 templates figés +
@@ -56,6 +57,11 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
   // `editable`) bascule le nom en TextInput natif. Un seul rituel
   // renommable à la fois — id du rituel en cours d'édition inline, ou null.
   const [renamingId, setRenamingId] = useState(null);
+  // Indice crayon (décision E, CD 04/08) : mini ✎ en overlay du nom des
+  // rituels PERSONNELS tant qu'aucun renommage n'a jamais eu lieu — le
+  // long-press est indécouvrable sans indice visuel. Disparaît pour
+  // toujours au premier renommage réussi.
+  const [hasRenamedRitual, setHasRenamedRitual] = usePersistedState('@ResetPulse:hasRenamedRitual', false);
 
   // A3/D5 (hotfix-porte-1) : remonte liste/form à AsideZone — elle arbitre
   // scroll extérieur + pan de fermeture selon le sous-écran actif.
@@ -129,6 +135,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
     const ritual = getRitualById(id);
     if (ritual && trimmed !== ritual.name) {
       updateRitual(id, { name: trimmed });
+      setHasRenamedRitual(true);
     }
   };
 
@@ -242,6 +249,11 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
       alignItems: 'center',
       flexDirection: 'row',
       marginBottom: theme.spacing.sm,
+    },
+    renameHintPencil: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(10, 'min'),
+      marginLeft: rs(4, 'min'),
     },
     ritualName: {
       color: theme.colors.text,
@@ -420,6 +432,9 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
                 >
                   <Text style={styles.emoji}>{activity?.emoji}</Text>
                   <Text style={styles.ritualName}>{ritual.name}</Text>
+                  {editable && !isTemplateRitual(ritual) && !hasRenamedRitual && (
+                    <Text style={styles.renameHintPencil}>✎</Text>
+                  )}
                   <Text style={styles.durationBadge}>{formatDuration(ritual.duration)}</Text>
                 </TouchableOpacity>
               )}

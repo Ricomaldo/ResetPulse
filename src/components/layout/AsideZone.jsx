@@ -39,7 +39,7 @@
  * l'app, item Ambiances) est tracée au backlog.
  */
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -64,6 +64,7 @@ import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
 import SoundsPanel from '../sounds/SoundsPanel';
+import SheetSettingsPanel from './SheetSettingsPanel';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
@@ -116,13 +117,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   // ScrollView si on démarre en paysage puis pivote en portrait).
   const { height: windowHeight } = useWindowDimensions();
   const {
-    timer: { clockwise },
-    setClockwise,
-    system: { keepAwakeEnabled },
-    setKeepAwakeEnabled,
-    display: { showTime, shouldPulse },
-    setShowTime,
-    setShouldPulse,
     mode: { current: currentMode },
     setMode,
   } = useTimerConfig();
@@ -152,6 +146,8 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   const [paletteOpen, setPaletteOpen] = useState(false);
   // Sous-écran Sons (bloc 5, Lambda L) — même mécanisme, sous Palettes.
   const [soundsOpen, setSoundsOpen] = useState(false);
+  // Sous-écran Réglages (sheet-racine, maquette CD 04/08).
+  const [settingsOpen, setSettingsOpen] = useState(false);
   // Miroir de l'état interne liste/formulaire de RitualsPanel (hotfix-porte-1
   // A3/D5) — remonté via onViewChange, pour arbitrer scroll extérieur et pan
   // de fermeture sans qu'AsideZone connaisse le détail du sous-écran.
@@ -244,6 +240,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       setRitualsOpen(false);
       setPaletteOpen(false);
       setSoundsOpen(false);
+      setSettingsOpen(false);
       setRitualsView('list');
     }
   }, [isOpen]);
@@ -423,11 +420,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       fontSize: rs(14, 'min'),
       fontWeight: fontWeights.medium,
     },
-    optionLabel: {
-      color: theme.colors.text,
-      flex: 1,
-      fontSize: rs(14, 'min'),
-    },
     optionRow: {
       alignItems: 'center',
       borderBottomColor: theme.colors.border,
@@ -479,22 +471,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       marginTop: rs(4),
       padding: rs(2),
     },
-    togglesCard: {
-      marginTop: rs(16),
-    },
-    // Sens de rotation (P1-6) : rangée verticale (label puis segmenté pleine
-    // largeur) — un segmenté 2 valeurs est plus large qu'un Switch, il ne
-    // tient pas sur la même ligne que son label comme les autres options.
-    rotationRow: {
-      borderBottomColor: theme.colors.border,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      paddingVertical: rs(12),
-    },
-    rotationLabel: {
-      color: theme.colors.text,
-      fontSize: rs(14, 'min'),
-      marginBottom: rs(8),
-    },
     doubleTapHint: {
       color: theme.colors.textSecondary,
       fontSize: rs(11, 'min'),
@@ -538,6 +514,24 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       fontSize: rs(11, 'min'),
       marginTop: rs(2),
     },
+    settingsRowLabelWrap: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+    },
+    settingsNewBadge: {
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border + '30',
+      borderRadius: 999,
+      borderWidth: 1,
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: rs(2, 'min'),
+    },
+    settingsNewBadgeText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(11, 'min'),
+      fontWeight: fontWeights.medium,
+    },
     counterPrice: {
       color: theme.colors.text,
       fontSize: rs(13, 'min'),
@@ -556,31 +550,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   // texte provisoire — même statut que les libellés Standard/Focus du
   // segmenté Mode, cf. commentaire plus haut) ; 13 locales gelées retombent
   // sur l'anglais (i18n `enableFallback`).
-  const ROTATION_OPTIONS = [
-    { key: 'counterclockwise', value: false, label: t('aside.rotation.counterclockwise') },
-    { key: 'clockwise', value: true, label: t('aside.rotation.clockwise') },
-  ];
 
-  const toggles = [
-    {
-      key: 'keepAwake',
-      label: t('accessibility.keepAwake'),
-      value: keepAwakeEnabled,
-      onChange: setKeepAwakeEnabled,
-    },
-    {
-      key: 'showTime',
-      label: t('accessibility.showTime'),
-      value: showTime,
-      onChange: setShowTime,
-    },
-    {
-      key: 'shouldPulse',
-      label: t('settings.options.pulseAnimation'),
-      value: shouldPulse,
-      onChange: setShouldPulse,
-    },
-  ];
 
   return (
     <View
@@ -675,6 +645,11 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                     maxHeight={subScreenHeight}
                     onBorrowed={(soundId) => onAmbianceBorrowed?.('sound', soundId)}
                   />
+                ) : settingsOpen ? (
+                  /* Sous-écran Réglages (sheet-racine) : rotation + verrou
+                     d'échelle + toggles — la racine respire, le guichet
+                     remonte au-dessus du pli. */
+                  <SheetSettingsPanel onBack={() => setSettingsOpen(false)} />
                 ) : (
                   <>
                     {/* Bloc 1 : segmenté Mode — écrit le réglage global. En Focus,
@@ -754,68 +729,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                         qu'en sortir (cf. header). */}
                     {!isFocus && (
                       <>
-                        {/* Bloc 2 : toggles (dont « rappel quotidien », Lot 3e —
-                            opt-in strict, OFF par défaut ; pills de créneau
-                            affichées sous le toggle uniquement quand actif) */}
-                        <View style={styles.togglesCard}>
-                          {/* Sens de rotation (P1-6) : segmenté, même pattern
-                              visuel que le segmenté Mode ci-dessus — un
-                              Switch ON/OFF ne nomme pas les deux états. */}
-                          <View style={styles.rotationRow}>
-                            <Text style={styles.rotationLabel}>
-                              {t('accessibility.rotationDirection')}
-                            </Text>
-                            <View style={styles.segmentedControl}>
-                              {ROTATION_OPTIONS.map(({ key, value, label }) => {
-                                const isActive = clockwise === value;
-                                return (
-                                  <TouchableOpacity
-                                    key={key}
-                                    accessible
-                                    accessibilityRole="button"
-                                    accessibilityLabel={label}
-                                    accessibilityState={{ selected: isActive }}
-                                    style={[styles.segmentButton, isActive && styles.segmentButtonActive]}
-                                    onPress={() => {
-                                      haptics.selection().catch(() => {});
-                                      setClockwise(value);
-                                    }}
-                                    activeOpacity={0.7}
-                                  >
-                                    <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
-                                      {label}
-                                    </Text>
-                                  </TouchableOpacity>
-                                );
-                              })}
-                            </View>
-                          </View>
-                          {toggles.map((toggle, index) => {
-                            const isLast = index === toggles.length - 1;
-                            return (
-                              <React.Fragment key={toggle.key}>
-                                <View
-                                  style={[styles.optionRow, isLast && styles.optionRowLast]}
-                                >
-                                  <Text style={styles.optionLabel}>{toggle.label}</Text>
-                                  <Switch
-                                    accessible={true}
-                                    accessibilityLabel={toggle.label}
-                                    accessibilityRole="switch"
-                                    accessibilityState={{ checked: toggle.value }}
-                                    value={toggle.value}
-                                    onValueChange={(value) => {
-                                      haptics.switchToggle().catch(() => {});
-                                      toggle.onChange(value);
-                                    }}
-                                    {...theme.styles.switch(toggle.value)}
-                                  />
-                                </View>
-                              </React.Fragment>
-                            );
-                          })}
-                        </View>
-
                         {/* Bloc 3 : Mes rituels — sous-écran réel (C6) */}
                         <TouchableOpacity
                           style={styles.optionRow}
@@ -852,7 +765,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                         {/* Bloc 5 : Sons — sous-écran réel (Lambda L),
                             dernière rangée */}
                         <TouchableOpacity
-                          style={[styles.optionRow, styles.optionRowLast]}
+                          style={styles.optionRow}
                           accessible
                           accessibilityRole="button"
                           accessibilityLabel={t('soundsPanel.sheetRow')}
@@ -863,6 +776,29 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                           activeOpacity={0.7}
                         >
                           <Text style={styles.inertRowLabel}>{t('soundsPanel.sheetRow')}</Text>
+                          <Text style={styles.inertChevron}>›</Text>
+                        </TouchableOpacity>
+
+                        {/* Bloc 6 : Réglages — sous-écran (sheet-racine,
+                            maquette CD) : absorbe rotation + verrou + toggles.
+                            Badge « nouveau » le temps d'un cycle. */}
+                        <TouchableOpacity
+                          style={[styles.optionRow, styles.optionRowLast]}
+                          accessible
+                          accessibilityRole="button"
+                          accessibilityLabel={t('aside.settingsRow')}
+                          onPress={() => {
+                            haptics.selection().catch(() => {});
+                            setSettingsOpen(true);
+                          }}
+                          activeOpacity={0.7}
+                        >
+                          <View style={styles.settingsRowLabelWrap}>
+                            <Text style={styles.inertRowLabel}>{t('aside.settingsRow')}</Text>
+                            <View style={styles.settingsNewBadge}>
+                              <Text style={styles.settingsNewBadgeText}>{t('aside.settingsNew')}</Text>
+                            </View>
+                          </View>
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
 

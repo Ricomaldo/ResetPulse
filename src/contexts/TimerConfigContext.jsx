@@ -81,6 +81,7 @@ export const TimerConfigProvider = ({ children }) => {
         },
         display: {
           shouldPulse: true,
+          lockedScale: null,
           showDigitalTimer: false,
           showTime: true,
         },
@@ -127,6 +128,7 @@ export const TimerConfigProvider = ({ children }) => {
       },
       display: {
         shouldPulse: true,
+        lockedScale: null,
         showDigitalTimer: false,
         showTime: true,
       },
@@ -360,7 +362,11 @@ export const TimerConfigProvider = ({ children }) => {
   // Placé ici (pas dans un effet + setScaleMode) : dérivation directe au
   // rendu, aucun état supplémentaire à synchroniser, zéro risque de valeur
   // en retard d'un tick sur currentDuration.
-  const derivedScaleMode = deriveScaleMode(values.timer.currentDuration);
+  // VERROU D'ÉCHELLE (sheet-racine, retour Eric item 6 + maquette CD) :
+  // `display.lockedScale` (null = auto) fige l'échelle choisie au moment du
+  // toggle — « le cadran garde son échelle actuelle, même pour une petite
+  // durée ». La dérivation auto reste le repli, et reprend à OFF.
+  const derivedScaleMode = values.display.lockedScale || deriveScaleMode(values.timer.currentDuration);
 
   // Context value with grouped namespaces - MUST BE IN useMemo to trigger updates
   const value = useMemo(() => ({
@@ -374,6 +380,7 @@ export const TimerConfigProvider = ({ children }) => {
     },
     display: {
       shouldPulse: values.display.shouldPulse,
+      lockedScale: values.display.lockedScale ?? null,
       showDigitalTimer: values.display.showDigitalTimer,
       showTime: values.display.showTime,
     },
@@ -447,6 +454,15 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         display: { ...prev.display, shouldPulse }
+      }));
+    },
+    // Verrou d'échelle (sheet-racine) : null = dérivation auto ; une valeur
+    // de DIAL_MODES = échelle figée. Posé par le toggle du sous-écran
+    // Réglages avec l'échelle dérivée COURANTE au moment du ON.
+    setLockedScale: (lockedScale) => {
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, lockedScale }
       }));
     },
     setShowDigitalTimer: (showDigitalTimer) => {

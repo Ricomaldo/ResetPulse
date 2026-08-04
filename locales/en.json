@@ -540,7 +540,11 @@
     "rotation": {
       "counterclockwise": "Counterclockwise",
       "clockwise": "Clockwise"
-    }
+    },
+    "settingsRow": "Settings",
+    "settingsNew": "new",
+    "scaleLock": "Lock the dial scale",
+    "scaleLockHint": "the dial keeps its current scale, even for a short duration"
   },
   "dormantTips": {
     "palettes": "psst — your colors come in full palettes, in settings",
