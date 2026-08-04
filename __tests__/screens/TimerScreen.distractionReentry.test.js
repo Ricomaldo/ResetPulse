@@ -142,12 +142,14 @@ jest.mock('../../src/hooks/useSessionCount', () => ({
   }),
 }));
 
+// Lambda V : les gating exposent désormais la retombée — les mocks suivent
+// le contrat réel (pas de retombée dans ces scénarios).
 jest.mock('../../src/hooks/usePaletteGating', () => ({
-  usePaletteGating: () => undefined,
+  usePaletteGating: () => ({ returnedPalette: null }),
 }));
 
 jest.mock('../../src/hooks/useSoundGating', () => ({
-  useSoundGating: () => undefined,
+  useSoundGating: () => ({ returnedSoundId: null }),
 }));
 
 jest.mock('../../src/hooks/usePremiumStatus', () => ({
