@@ -945,6 +945,11 @@ function TimerScreenContent() {
   // (`enabled`), côté écran, comme prescrit par le brief.
   const canShowDormantTips =
     !snapshot.running && firstRun.hasSeenFirstRun && !immersed && !isFocus;
+  // Sheet ouvert/fermé (QA visuelle #5, bug 2) : remonté par AsideZone
+  // (`onOpenChange`) — l'emprunt Ambiances se fait TOUJOURS dedans, ouvert ;
+  // useBorrowCoach en a besoin pour différer sa ligne à la fermeture (sinon
+  // elle se consume derrière le sheet, invisible).
+  const [sheetOpen, setSheetOpen] = useState(false);
   // La pédagogie du prêt (Lambda V) : mêmes gardes que les astuces
   // dormantes. Le prêt PRIME (il est contextuel à un geste) : tant qu'une
   // ligne coach parle, les astuces dormantes sont désarmées via `enabled`
@@ -952,6 +957,7 @@ function TimerScreenContent() {
   // le canal (useDormantTips marque « montrée » dès la résolution).
   const borrowCoach = useBorrowCoach({
     enabled: canShowDormantTips,
+    sheetOpen,
     returnedPalette,
     returnedSoundId,
   });
@@ -1265,6 +1271,7 @@ function TimerScreenContent() {
             hidden={immersed}
             onPaletteOpened={dormantTips.markPalettesOpened}
             onAmbianceBorrowed={borrowCoach.notifyBorrowed}
+            onOpenChange={setSheetOpen}
           />
           {!isFocus && (
             <FirstRunTips

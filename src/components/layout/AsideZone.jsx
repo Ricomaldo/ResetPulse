@@ -93,7 +93,12 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 // aux panels Palettes/Sons, appelé quand un FREE applique un item
 // Ambiances. L'affichage de la ligne coach vit côté TimerScreen
 // (useBorrowCoach) — même pattern callback-prop que onPaletteOpened.
-export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed }) {
+// `onOpenChange(isOpen)` (QA visuelle #5, bug 2) : remonte l'état
+// ouvert/fermé du sheet à TimerScreen — l'emprunt (moment 1) s'y fait
+// TOUJOURS sheet ouvert, useBorrowCoach a besoin de savoir quand il se
+// ferme pour différer sa ligne. Même pattern callback-prop, pas une
+// deuxième source de vérité sur `isOpen`.
+export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed, onOpenChange }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -135,6 +140,12 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   ];
 
   const [isOpen, setIsOpen] = useState(false);
+  // Remonte CHAQUE transition d'isOpen (snapTo, pan gesture, auto-collapse
+  // au démarrage du timer) — un seul point de sortie, pas un rappel par
+  // site d'appel de setIsOpen.
+  useEffect(() => {
+    onOpenChange?.(isOpen);
+  }, [isOpen, onOpenChange]);
   // Sous-écran Rituels (bloc 3, C6) — remplace les blocs 1-4 quand ouvert.
   const [ritualsOpen, setRitualsOpen] = useState(false);
   // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.

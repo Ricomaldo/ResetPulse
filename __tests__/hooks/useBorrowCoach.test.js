@@ -7,6 +7,8 @@ import {
   resolveBorrowOnce,
   resolveReturnMessage,
   resolveCoachChannel,
+  resolveNotifyBorrowedAction,
+  resolveSheetClosedBorrow,
 } from '../../src/hooks/useBorrowCoach';
 
 describe('resolveBorrowOnce (moment 1 — une fois par item)', () => {
@@ -98,6 +100,83 @@ describe('resolveReturnMessage (moment 2 — la retombée du lancement)', () => 
       type: 'paletteReturned',
       itemKey: 'zen',
     });
+  });
+});
+
+describe('resolveNotifyBorrowedAction (bug QA visuelle #5, bug 2 — sheet ouvert diffère le moment 1)', () => {
+  const base = {
+    enabled: true,
+    shownLoading: false,
+    sheetOpen: false,
+    isPremium: false,
+    kind: 'palette',
+    itemKey: 'terre',
+    shownItems: [],
+  };
+
+  test('sheet ouvert, emprunt jamais vu → armé (\'pending\'), rien affiché', () => {
+    expect(resolveNotifyBorrowedAction({ ...base, sheetOpen: true })).toBe('pending');
+  });
+
+  test('sheet fermé, emprunt jamais vu → montré tout de suite (\'show\')', () => {
+    expect(resolveNotifyBorrowedAction({ ...base, sheetOpen: false })).toBe('show');
+  });
+
+  test('sheet ouvert mais item déjà montré → ignoré, pas armé', () => {
+    expect(
+      resolveNotifyBorrowedAction({ ...base, sheetOpen: true, shownItems: ['palette.terre'] })
+    ).toBe('ignore');
+  });
+
+  test('sheet ouvert mais premium → ignoré', () => {
+    expect(resolveNotifyBorrowedAction({ ...base, sheetOpen: true, isPremium: true })).toBe('ignore');
+  });
+
+  test('sheet ouvert mais enabled faux (séance en cours, etc.) → ignoré', () => {
+    expect(resolveNotifyBorrowedAction({ ...base, sheetOpen: true, enabled: false })).toBe('ignore');
+  });
+
+  test('sheet ouvert mais persistance pas prête → ignoré', () => {
+    expect(resolveNotifyBorrowedAction({ ...base, sheetOpen: true, shownLoading: true })).toBe('ignore');
+  });
+});
+
+describe('resolveSheetClosedBorrow (bug QA visuelle #5, bug 2 — la fermeture rejoue l\'emprunt en attente)', () => {
+  const pending = { kind: 'palette', itemKey: 'terre' };
+  const base = {
+    wasOpen: true,
+    sheetOpen: false,
+    pending,
+    enabled: true,
+    shownLoading: false,
+    isPremium: false,
+    shownItems: [],
+  };
+
+  test('transition ouvert→fermé avec un emprunt en attente → committe (pill + flag côté hook)', () => {
+    expect(resolveSheetClosedBorrow(base)).toEqual(pending);
+  });
+
+  test('pas de transition (sheet reste ouvert) → rien, même avec un emprunt en attente', () => {
+    expect(resolveSheetClosedBorrow({ ...base, wasOpen: true, sheetOpen: true })).toBeNull();
+  });
+
+  test('montage à sheetOpen: false (jamais ouvert) → rien, ce n\'est pas une fermeture', () => {
+    expect(resolveSheetClosedBorrow({ ...base, wasOpen: false, sheetOpen: false })).toBeNull();
+  });
+
+  test('fermeture sans emprunt en attente → rien', () => {
+    expect(resolveSheetClosedBorrow({ ...base, pending: null })).toBeNull();
+  });
+
+  test('fermeture, mais enabled devenu faux entre-temps → rien de perdu structurellement : pas de flag posé, l\'item reste éligible', () => {
+    expect(resolveSheetClosedBorrow({ ...base, enabled: false })).toBeNull();
+  });
+
+  test('fermeture, mais l\'item a été montré entre-temps par un autre chemin → rien (re-validation)', () => {
+    expect(
+      resolveSheetClosedBorrow({ ...base, shownItems: ['palette.terre'] })
+    ).toBeNull();
   });
 });
 
