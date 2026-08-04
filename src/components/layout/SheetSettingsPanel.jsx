@@ -45,9 +45,16 @@ export default function SheetSettingsPanel({ onBack }) {
   ];
 
   const styles = StyleSheet.create({
+    // Zone de tap alignée sur le reste du repo (PalettesPanel/SoundsPanel/
+    // RitualsPanel…) : minHeight/minWidth 44 (HIG) — le seul absent ici
+    // causait un chevron quasi-inratable en visuel mais ~22×32pt réel
+    // (retour device Eric 05/08 : le ‹ ne répondait pas au tap).
     backButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 44,
+      minWidth: 44,
       paddingHorizontal: theme.spacing.sm,
-      paddingVertical: theme.spacing.xs,
     },
     backChevron: {
       color: theme.colors.text,

@@ -53,6 +53,10 @@ jest.mock('./src/utils/haptics', () => ({
     selection: jest.fn(() => Promise.resolve()),
     success: jest.fn(() => Promise.resolve()),
     switchToggle: jest.fn(() => Promise.resolve()),
+    // `impact` manquait — jamais exercé avant TimerScreen.momentChip.test.js
+    // (premier test à monter le tap chip réel de CompactRow, qui l'appelle
+    // depuis avant Lambda R2 déjà).
+    impact: jest.fn(() => Promise.resolve()),
   },
 }));
 

@@ -1,0 +1,54 @@
+# QA visuelle pilote — chantier conversion (guichet, modale héros, coach)
+# Couru par le pilote sur simulateur Release (JS embarqué), captures simctl
+# en parallèle. Ne fait PAS partie de la CI — outil de la règle « aucun lot
+# design fini sans captures vues » (04/08).
+appId: com.irimwebforge.resetpulse
+---
+- launchApp
+- waitForAnimationToEnd
+# Traverser le seuil si présent (install fraîche)
+- tapOn:
+    point: "50%,50%"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: qa-01a-seuil-page2
+- tapOn:
+    text: "Créer mon moment"
+    optional: true
+- waitForAnimationToEnd
+# Écran d'accueil réel (rangée favoris ? tips ?)
+- takeScreenshot: qa-01-home
+# Ouvrir le sheet (tap sur la bande fermée)
+- tapOn:
+    text: "RITUELS & RÉGLAGES"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: qa-02-sheet-guichet
+# Le guichet Ambiances (rangée 1a)
+- tapOn:
+    text: "Ambiances"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: qa-03-modale-guichet-generique
+# Fermer la modale
+- tapOn:
+    text: "peut-être plus tard"
+    optional: true
+- waitForAnimationToEnd
+# Sous-écran Palettes → goûter une palette Ambiances (essai libre)
+- tapOn:
+    text: "Palettes"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: qa-04-palettes-panel
+- tapOn:
+    text: "Crépuscule"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: qa-05-palette-empruntee-coach
+# La ligne découvrir Ambiances → modale héros 2c
+- tapOn:
+    text: "découvrir Ambiances"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: qa-06-modale-hero-palette

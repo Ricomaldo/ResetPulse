@@ -38,7 +38,7 @@
  * ère-CD mal interprétée) — l'idée d'origine d'Eric (image perso en FOND de
  * l'app, item Ambiances) est tracée au backlog.
  */
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -53,7 +53,6 @@ import Animated, {
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
-import { usePersistedState } from '../../hooks/usePersistedState';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
 import { useAmbiancesPrice } from '../../hooks/useAmbiancesPrice';
@@ -99,7 +98,12 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 // TOUJOURS sheet ouvert, useBorrowCoach a besoin de savoir quand il se
 // ferme pour différer sa ligne. Même pattern callback-prop, pas une
 // deuxième source de vérité sur `isOpen`.
-export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed, onOpenChange }) {
+// `onRitualApplied()` (Lambda R2, Q3b — chip intelligent) : relayé depuis
+// RitualsPanel.onApplied, qui se déclenche sur CHAQUE apply du panneau «
+// Mes rituels » — TOUJOURS un apply complet (cf. RitualsPanel.handleApply,
+// non touché). TimerScreen nettoie son tracker Moment sur ce signal, même
+// pattern callback-prop que les autres remontées ci-dessus.
+export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed, onOpenChange, onRitualApplied }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -153,19 +157,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   // de fermeture sans qu'AsideZone connaisse le détail du sous-écran.
   const [ritualsView, setRitualsView] = useState('list');
 
-  // Apprentissage double-tap (verdicts CD 25/07) : légende visible les 2
-  // PREMIÈRES ouvertures du sheet, puis plus jamais — compteur persisté,
-  // incrémenté sur la seule transition fermé→ouvert (pas à chaque render).
-  const [asideOpenCount, setAsideOpenCount, asideOpenCountLoading] =
-    usePersistedState('@ResetPulse:asideOpenCount', 0);
-  const wasOpenRef = useRef(false);
-  useEffect(() => {
-    if (isOpen && !wasOpenRef.current && !asideOpenCountLoading) {
-      setAsideOpenCount((count) => count + 1);
-    }
-    wasOpenRef.current = isOpen;
-  }, [isOpen, asideOpenCountLoading, setAsideOpenCount]);
-  const showDoubleTapHint = !asideOpenCountLoading && asideOpenCount <= 2;
   // Hauteur mesurée des blocs réels (varie avec le mode : Focus n'affiche que
   // le segmenté). Fallback avant le premier onLayout : proche de l'ancien 80%.
   const [contentHeight, setContentHeight] = useState(windowHeight * 0.6);
@@ -471,12 +462,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       marginTop: rs(4),
       padding: rs(2),
     },
-    doubleTapHint: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(11, 'min'),
-      marginTop: rs(8),
-      textAlign: 'center',
-    },
     // Guichet Ambiances (Lambda T, 1a) — rangée DISTINCTE des rangées
     // d'usage ci-dessus : fond `background` (crème chaud #F4EFE7, proche du
     // #FAF3E9 esprit CD) sur le drawer `surface` (blanc), même écart que
@@ -513,24 +498,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       color: theme.colors.textSecondary,
       fontSize: rs(11, 'min'),
       marginTop: rs(2),
-    },
-    settingsRowLabelWrap: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: theme.spacing.sm,
-    },
-    settingsNewBadge: {
-      backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border + '30',
-      borderRadius: 999,
-      borderWidth: 1,
-      paddingHorizontal: theme.spacing.sm,
-      paddingVertical: rs(2, 'min'),
-    },
-    settingsNewBadgeText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(11, 'min'),
-      fontWeight: fontWeights.medium,
     },
     counterPrice: {
       color: theme.colors.text,
@@ -623,7 +590,10 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                      liste/form à AsideZone (A3/D5). */
                   <RitualsPanel
                     onBack={() => setRitualsOpen(false)}
-                    onApplied={() => snapTo(false)}
+                    onApplied={() => {
+                      snapTo(false);
+                      onRitualApplied?.();
+                    }}
                     onViewChange={setRitualsView}
                     maxHeight={subScreenHeight}
                   />
@@ -717,11 +687,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                             );
                           })}
                         </View>
-                        {/* Apprentissage double-tap (verdicts CD 25/07) — les 2
-                            premières ouvertures du sheet seulement. */}
-                        {showDoubleTapHint && (
-                          <Text style={styles.doubleTapHint}>{t('aside.doubleTapHint')}</Text>
-                        )}
                       </>
                     )}
 
@@ -781,7 +746,8 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
 
                         {/* Bloc 6 : Réglages — sous-écran (sheet-racine,
                             maquette CD) : absorbe rotation + verrou + toggles.
-                            Badge « nouveau » le temps d'un cycle. */}
+                            Badge « nouveau » retiré (veto Eric 05/08) —
+                            rangée identique aux autres. */}
                         <TouchableOpacity
                           style={[styles.optionRow, styles.optionRowLast]}
                           accessible
@@ -793,12 +759,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                           }}
                           activeOpacity={0.7}
                         >
-                          <View style={styles.settingsRowLabelWrap}>
-                            <Text style={styles.inertRowLabel}>{t('aside.settingsRow')}</Text>
-                            <View style={styles.settingsNewBadge}>
-                              <Text style={styles.settingsNewBadgeText}>{t('aside.settingsNew')}</Text>
-                            </View>
-                          </View>
+                          <Text style={styles.inertRowLabel}>{t('aside.settingsRow')}</Text>
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
 

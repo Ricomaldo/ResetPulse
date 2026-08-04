@@ -24,28 +24,9 @@ jest.mock('react-native-safe-area-context', () =>
   require('react-native-safe-area-context/jest/mock').default,
 );
 
-// Le mock global (jest.setup.js) de react-native-gesture-handler ne chaîne
-// pas le builder Gesture utilisé par TimerScreen — override local, chainable.
-jest.mock('react-native-gesture-handler', () => {
-  const RN = require('react-native');
-  const chainable = () => {
-    const obj = {};
-    ['numberOfTaps', 'maxDelay', 'onStart', 'onEnd', 'onUpdate', 'onBegin', 'onFinalize', 'minDistance', 'activateAfterLongPress', 'onChange', 'shouldCancelWhenOutside', 'enabled', 'activeOffsetY', 'failOffsetX'].forEach((m) => {
-      obj[m] = () => obj;
-    });
-    return obj;
-  };
-  return {
-    Gesture: { Tap: chainable, LongPress: chainable, Pan: chainable },
-    GestureDetector: ({ children }) => children,
-    GestureHandlerRootView: RN.View,
-    ScrollView: RN.View,
-    Swipeable: RN.View,
-    DrawerLayout: RN.View,
-    State: {},
-    Directions: {},
-  };
-});
+// Le double-tap fond → Focus est mort (Lambda R2 Q2, arbitrage Eric) — plus
+// aucun builder Gesture chaîné dans TimerScreen. Le mock global
+// (jest.setup.js) suffit désormais, plus d'override local.
 
 // Stub TimeTimer : capture la prop `distraction` que TimerScreen fait
 // descendre vers PulseButton — c'est le contrat observé par ce test.

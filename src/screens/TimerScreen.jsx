@@ -15,11 +15,10 @@
  * n'ajoute qu'un hint discret au repos ; la fin ✨ plein-vert est déjà portée
  * par le dial (`DialCenter`), pas par ce fichier.
  */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, View, Text, TouchableOpacity, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
@@ -36,6 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
+import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState, isMomentDirty } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
 import { useSessionCount } from '../hooks/useSessionCount';
@@ -64,7 +64,7 @@ const LONG_SESSION_THRESHOLD_SECONDS = 1800; // 30 minutes
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
-function CompactRow({ onActivityTouch, onColorTouch }) {
+function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomentEvent }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -82,6 +82,16 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
   // tap = activité + couleur + durée + son, tout est prêt (la signature
   // remonte à la surface). Créer/étoiler un rituel met la rangée à jour
   // (même store useRituals). Les couleurs restent à côté : réglage en direct.
+  // Chip intelligent (Lambda R2, Q3b — « à essayer ») : ce tap tout-prêt ne
+  // s'applique en ENTIER que sur un Moment VIERGE (cf. src/config/moment.js).
+  // Sur un Moment déjà réglé à la main (SALE), le tap ne change QUE
+  // l'activité — durée/couleur/son en cours restent (`checkMomentDirty`,
+  // relu au tap, jamais au render). Le panneau « Mes rituels »
+  // (RitualsPanel) n'est jamais partiel — toujours complet, non touché par
+  // `checkMomentDirty` — mais SON apply nettoie quand même le tracker (cf.
+  // AsideZone.onRitualApplied plus bas) : un rituel posé depuis le panneau
+  // remplit le cadran au même titre qu'un chip d'accueil, le chip suivant
+  // doit donc redevenir complet lui aussi.
   const { favoriteRituals } = useRituals();
   const { customActivities } = useCustomActivities();
 
@@ -155,10 +165,17 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
             style={[styles.activityButton, isActive && styles.activityButtonActive]}
             onPress={() => {
               haptics.impact('light').catch(() => {});
-              setCurrentActivity(payload.activity);
-              setCurrentDuration(payload.duration);
-              setSelectedSoundId(payload.soundId);
-              setColorByValue(payload.color);
+              if (checkMomentDirty?.()) {
+                // Moment déjà réglé à la main (Q3b) : le chip ne touche
+                // QUE l'activité — durée/couleur/son en cours restent.
+                setCurrentActivity(payload.activity);
+              } else {
+                setCurrentActivity(payload.activity);
+                setCurrentDuration(payload.duration);
+                setSelectedSoundId(payload.soundId);
+                setColorByValue(payload.color);
+                markMomentEvent?.(MOMENT_EVENTS.RITUAL_APPLIED);
+              }
               analytics.trackActivitySelected(payload.activity?.id);
               analytics.trackRitualApplied('home_row');
               onActivityTouch?.();
@@ -187,6 +204,7 @@ function CompactRow({ onActivityTouch, onColorTouch }) {
           onPress={() => {
             haptics.selection().catch(() => {});
             setColorIndex(index);
+            markMomentEvent?.(MOMENT_EVENTS.COLOR_SELECT);
             analytics.trackColorSelected(color);
             onColorTouch?.();
           }}
@@ -448,7 +466,6 @@ function TimerScreenContent() {
   const { returnedSoundId } = useSoundGating();
   const {
     mode: { current: currentMode },
-    setMode,
     timer: { currentDuration, currentActivity, selectedSoundId, clockwise },
     palette: { currentColor },
   } = useTimerConfig();
@@ -459,48 +476,14 @@ function TimerScreenContent() {
   const { width: winW, height: winH } = useWindowDimensions();
   const isLandscape = winW > winH;
 
-  // Double-tap fond → bascule Focus (verdicts CD 25/07). Ignoré 1,5s après
-  // un retour AppState 'active' (anti-poche/réveil). Non destructif : ne
-  // touche jamais au timer (bascule uniquement le réglage global `mode`).
-  const lastActiveAtRef = useRef(Date.now());
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextState) => {
-      if (nextState === 'active') {
-        lastActiveAtRef.current = Date.now();
-      }
-    });
-    return () => subscription.remove();
-  }, []);
-
-  const handleBackgroundDoubleTap = useCallback(() => {
-    if (Date.now() - lastActiveAtRef.current < 1500) {
-      return;
-    }
-    haptics.selection().catch(() => {});
-    if (!isFocus) {
-      analytics.trackFocusEntered('double_tap');
-    }
-    setMode(isFocus ? 'mixte' : 'focus');
-  }, [isFocus, setMode, analytics]);
-
-  // GestureDetector posé en ancêtre du contenu (cf. return) : les vues
-  // interactives descendantes (TimeTimer, CompactRow, dé, AsideZone — chacune
-  // avec son propre geste/Touchable) captent le toucher dans leurs propres
-  // bornes en premier ; seul le fond nu (hors disque, rangée, dé, sheet)
-  // laisse remonter ce Tap. Un drag (sheet ou cadran) dépasse le seuil de
-  // déplacement du Tap et le fait échouer naturellement — pas de conflit.
-  const backgroundDoubleTap = useMemo(() =>
-    Gesture.Tap()
-      .numberOfTaps(2)
-      .maxDelay(300)
-      .onEnd((_event, success) => {
-        'worklet';
-        if (success) {
-          runOnJS(handleBackgroundDoubleTap)();
-        }
-      }),
-  [handleBackgroundDoubleTap]
-  );
+  // Lambda R2 Q2 (verdict Eric 05/08) : le double-tap fond → Focus MEURT —
+  // redondant avec l'immersion auto + le segmenté Mode du sheet, et source
+  // du bug « double-tap près du cadran modifie la durée ». Focus ne garde
+  // plus qu'UN chemin : le segmenté (AsideZone). L'ancien geste
+  // (Gesture.Tap().numberOfTaps(2)), son handler, le garde anti-poche
+  // (AppState) et l'analytics `trackFocusEntered('double_tap')` sont
+  // retirés entièrement — plus de GestureDetector ancêtre du contenu (cf.
+  // return, le fond nu ne capte plus rien).
 
   // Première fois (Lot 2, C7) — flag persisté + moment dérivé de la
   // progression réelle du rituel en construction (cf. useFirstRun).
@@ -703,6 +686,16 @@ function TimerScreenContent() {
     [applySnapshotFromRef],
   );
 
+  // Chip intelligent (Lambda R2, Q3b — cf. src/config/moment.js) : ref pure,
+  // pas de state — aucun rendu n'en dépend, seul le tap du chip (CompactRow)
+  // relit sa valeur fraîche via `checkMomentDirty`. Alimentée par les
+  // événements EXISTANTS de l'écran ci-dessous (jamais dans useTimer, sacré).
+  const momentStateRef = useRef(MOMENT_VIERGE);
+  const markMomentEvent = useCallback((event) => {
+    momentStateRef.current = nextMomentState(momentStateRef.current, event);
+  }, []);
+  const checkMomentDirty = useCallback(() => isMomentDirty(momentStateRef.current), []);
+
   const handleDialTap = useCallback(() => {
     const timer = timerRef.current;
     if (!timer) {
@@ -710,12 +703,14 @@ function TimerScreenContent() {
     }
     if (timer.isCompleted) {
       timer.resetTimer();
+      markMomentEvent(MOMENT_EVENTS.RESET);
     } else if (timer.running) {
       timer.stopTimer(); // ADR-007 : tap pendant la séance = rembobinage
+      markMomentEvent(MOMENT_EVENTS.STOP_REMBOBINAGE);
     } else {
       timer.startTimer();
     }
-  }, []);
+  }, [markMomentEvent]);
 
   // Seuil composé Focus (P2-Focus) : « 1re séance accomplie >= 30 min » —
   // posé une fois pour toutes (one-shot, jamais désarmé), lu par
@@ -737,6 +732,7 @@ function TimerScreenContent() {
       analytics.trackFirstMomentCompleted();
     }
     incrementSessionCount();
+    markMomentEvent(MOMENT_EVENTS.COMPLETION);
     // Même lecture que handleKeepMomentTap : la durée PLEINE de la séance
     // qui vient de finir (timerRef.current.duration, pas snapshot.remaining
     // qui vaut 0 à la fin).
@@ -744,7 +740,7 @@ function TimerScreenContent() {
     if (duration >= LONG_SESSION_THRESHOLD_SECONDS && !hadLongSession) {
       setHadLongSession(true);
     }
-  }, [completedSessions, incrementSessionCount, analytics, currentDuration, hadLongSession, setHadLongSession]);
+  }, [completedSessions, incrementSessionCount, analytics, currentDuration, hadLongSession, setHadLongSession, markMomentEvent]);
 
   // Invitation « fais-le respirer » (Lot 3b, mandat Eric) : jamais un mur —
   // une ligne discrète sous le message de fin, une seule fois dans la vie de
@@ -1171,150 +1167,150 @@ function TimerScreenContent() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       onTouchStart={handleRootTouchStart}
     >
-      {/* Fond nu = zone du double-tap (hors disque/rangée/dé/sheet, chacun
-          capte son propre toucher avant qu'il ne remonte ici). */}
-      <GestureDetector gesture={backgroundDoubleTap}>
-        <View style={styles.container}>
+      <View style={styles.container}>
+        {!isFocus && (
+          <Animated.View
+            style={[styles.chromeAbove, chromeAnimatedStyle]}
+            onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
+            pointerEvents={immersed ? 'none' : 'auto'}
+          >
+            <TopTime seconds={topTimeSeconds} />
+          </Animated.View>
+        )}
+        <View style={styles.content}>
+          {/* Le disque devient décor en immersion : transform pur
+              (scale + recentrage vertical), zéro redraw du dial. */}
+          <Animated.View style={dialAnimatedStyle}>
+            <TimeTimer
+              onDialTap={handleDialTap}
+              onTimerRef={handleTimerRef}
+              onDialRef={handleDialRef}
+              onTimerComplete={handleTimerComplete}
+              onDurationCommit={() => markMomentEvent(MOMENT_EVENTS.DURATION_COMMIT_REST)}
+              distraction={distraction}
+            />
+          </Animated.View>
           {!isFocus && (
             <Animated.View
-              style={[styles.chromeAbove, chromeAnimatedStyle]}
-              onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
+              style={[styles.chromeBelow, chromeAnimatedStyle]}
+              onLayout={(e) => setBelowChromeHeight(e.nativeEvent.layout.height)}
               pointerEvents={immersed ? 'none' : 'auto'}
             >
-              <TopTime seconds={topTimeSeconds} />
-            </Animated.View>
-          )}
-          <View style={styles.content}>
-            {/* Le disque devient décor en immersion : transform pur
-                (scale + recentrage vertical), zéro redraw du dial. */}
-            <Animated.View style={dialAnimatedStyle}>
-              <TimeTimer
-                onDialTap={handleDialTap}
-                onTimerRef={handleTimerRef}
-                onDialRef={handleDialRef}
-                onTimerComplete={handleTimerComplete}
-                distraction={distraction}
+              <View style={styles.completionMessageWrap}>
+                <Text
+                  style={[styles.completionMessage, !snapshot.isCompleted && styles.completionMessageHidden]}
+                  numberOfLines={1}
+                >
+                  {snapshot.displayMessage || ' '}
+                </Text>
+                {/* Ligne partagée : « fais-le respirer » (>= 2 séances) et
+                    « garde ce moment ? » (1re séance) ne coexistent jamais
+                    (cf. showKeepMoment ci-dessus) — même slot réservé,
+                    jamais les deux montées en même temps. */}
+                <Text
+                  style={[
+                    styles.breatheInvitationText,
+                    !(showBreatheInvitation || showKeepMoment) && styles.completionMessageHidden,
+                  ]}
+                  numberOfLines={1}
+                  onPress={
+                    showBreatheInvitation
+                      ? handleBreatheInvitationTap
+                      : showKeepMoment && !momentKept
+                        ? handleKeepMomentTap
+                        : undefined
+                  }
+                  accessible={showBreatheInvitation || (showKeepMoment && !momentKept)}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    showBreatheInvitation
+                      ? t('ambiances.breatheInvitation')
+                      : momentKept
+                        ? t('firstRun.momentKept')
+                        : t('firstRun.keepMoment')
+                  }
+                >
+                  {showBreatheInvitation
+                    ? t('ambiances.breatheInvitation')
+                    : showKeepMoment
+                      ? (momentKept ? t('firstRun.momentKept') : t('firstRun.keepMoment'))
+                      : ' '}
+                </Text>
+              </View>
+              <View ref={barRef} onLayout={handleBarLayout}>
+                <CompactRow
+                  onActivityTouch={firstRun.markActivityTouched}
+                  onColorTouch={firstRun.markColorTouched}
+                  checkMomentDirty={checkMomentDirty}
+                  markMomentEvent={markMomentEvent}
+                />
+              </View>
+              <DistractionButton
+                showLabel={showDistractionLabel}
+                onDistraction={handleDistraction}
               />
             </Animated.View>
-            {!isFocus && (
-              <Animated.View
-                style={[styles.chromeBelow, chromeAnimatedStyle]}
-                onLayout={(e) => setBelowChromeHeight(e.nativeEvent.layout.height)}
-                pointerEvents={immersed ? 'none' : 'auto'}
-              >
-                <View style={styles.completionMessageWrap}>
-                  <Text
-                    style={[styles.completionMessage, !snapshot.isCompleted && styles.completionMessageHidden]}
-                    numberOfLines={1}
-                  >
-                    {snapshot.displayMessage || ' '}
-                  </Text>
-                  {/* Ligne partagée : « fais-le respirer » (>= 2 séances) et
-                      « garde ce moment ? » (1re séance) ne coexistent jamais
-                      (cf. showKeepMoment ci-dessus) — même slot réservé,
-                      jamais les deux montées en même temps. */}
-                  <Text
-                    style={[
-                      styles.breatheInvitationText,
-                      !(showBreatheInvitation || showKeepMoment) && styles.completionMessageHidden,
-                    ]}
-                    numberOfLines={1}
-                    onPress={
-                      showBreatheInvitation
-                        ? handleBreatheInvitationTap
-                        : showKeepMoment && !momentKept
-                          ? handleKeepMomentTap
-                          : undefined
-                    }
-                    accessible={showBreatheInvitation || (showKeepMoment && !momentKept)}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      showBreatheInvitation
-                        ? t('ambiances.breatheInvitation')
-                        : momentKept
-                          ? t('firstRun.momentKept')
-                          : t('firstRun.keepMoment')
-                    }
-                  >
-                    {showBreatheInvitation
-                      ? t('ambiances.breatheInvitation')
-                      : showKeepMoment
-                        ? (momentKept ? t('firstRun.momentKept') : t('firstRun.keepMoment'))
-                        : ' '}
-                  </Text>
-                </View>
-                <View ref={barRef} onLayout={handleBarLayout}>
-                  <CompactRow
-                    onActivityTouch={firstRun.markActivityTouched}
-                    onColorTouch={firstRun.markColorTouched}
-                  />
-                </View>
-                <DistractionButton
-                  showLabel={showDistractionLabel}
-                  onDistraction={handleDistraction}
-                />
-              </Animated.View>
-            )}
-          </View>
-          {/* QA visuelle passe 5, bug 1 : la ligne coach (prêt ou astuce
-              dormante) vivait dans le flux de `chromeBelow`, centré par
-              `content` — sur les stacks hautes (dé + message + rangée + dé
-              à jouer), sa pill finissait sous la bande fermée du sheet
-              (AsideZone, CLOSED_VISIBLE = 92pt), recouverte, illisible.
-              Ancrée ici en absolu, comme FocusHint : garantie de vivre
-              entre le dé et la bande, jamais dessous, quelle que soit la
-              hauteur du contenu au-dessus. Une seule voix coach à la fois
-              (Lambda V) : le prêt gagne le canal, l'astuce dormante sinon. */}
-          {coachChannel && (
-            <View style={styles.coachAnchor} pointerEvents="box-none">
-              {coachChannel.kind === 'coach' && (
-                <CoachPill
-                  text={coachMessageText}
-                  onPress={isCoachReturnMessage ? handleCoachPress : undefined}
-                  testID={`coach.${coachChannel.message.type}`}
-                />
-              )}
-              {coachChannel.kind === 'dormant' && <DormantTipPill tip={coachChannel.tip} />}
-            </View>
-          )}
-          {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
-          <AsideZone
-            isTimerRunning={snapshot.running}
-            hidden={immersed}
-            onPaletteOpened={dormantTips.markPalettesOpened}
-            onAmbianceBorrowed={borrowCoach.notifyBorrowed}
-            onOpenChange={setSheetOpen}
-          />
-          {!isFocus && (
-            <FirstRunTips
-              moment={firstRun.moment}
-              barAnchor={barAnchor}
-              dialAnchor={dialAnchor}
-              onSkip={firstRun.skipFirstRun}
-            />
-          )}
-          {/* Sortie d'immersion (cadrage 3c Q1) : premier toucher CONSOMMÉ
-              ici, jamais transmis au disque. */}
-          {immersed && (
-            <Pressable
-              testID="immersion.overlay"
-              accessible={false}
-              style={styles.immersionOverlay}
-              onPressIn={registerActivity}
-            />
-          )}
-          {/* Le seuil (ADR-016 §1) : ne se rejoue JAMAIS (flag distinct
-              hasSeenThreshold, Monde B) — par défaut false, donc les users
-              existants (déjà passés par la 2.0 ou pas) REVOIENT le seuil une
-              fois au premier lancement de la 3.0. Accepté (reborn assumé),
-              pas de migration de flag prévue. */}
-          {!firstRun.isLoading && !firstRun.hasSeenThreshold && (
-            <View style={styles.firstRunThresholdOverlay} testID="firstRun.threshold.overlay">
-              <FirstRunThreshold onComplete={firstRun.completeThreshold} />
-            </View>
           )}
         </View>
-      </GestureDetector>
+        {/* QA visuelle passe 5, bug 1 : la ligne coach (prêt ou astuce
+            dormante) vivait dans le flux de `chromeBelow`, centré par
+            `content` — sur les stacks hautes (dé + message + rangée + dé
+            à jouer), sa pill finissait sous la bande fermée du sheet
+            (AsideZone, CLOSED_VISIBLE = 92pt), recouverte, illisible.
+            Ancrée ici en absolu, comme FocusHint : garantie de vivre
+            entre le dé et la bande, jamais dessous, quelle que soit la
+            hauteur du contenu au-dessus. Une seule voix coach à la fois
+            (Lambda V) : le prêt gagne le canal, l'astuce dormante sinon. */}
+        {coachChannel && (
+          <View style={styles.coachAnchor} pointerEvents="box-none">
+            {coachChannel.kind === 'coach' && (
+              <CoachPill
+                text={coachMessageText}
+                onPress={isCoachReturnMessage ? handleCoachPress : undefined}
+                testID={`coach.${coachChannel.message.type}`}
+              />
+            )}
+            {coachChannel.kind === 'dormant' && <DormantTipPill tip={coachChannel.tip} />}
+          </View>
+        )}
+        {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
+        <AsideZone
+          isTimerRunning={snapshot.running}
+          hidden={immersed}
+          onPaletteOpened={dormantTips.markPalettesOpened}
+          onAmbianceBorrowed={borrowCoach.notifyBorrowed}
+          onOpenChange={setSheetOpen}
+          onRitualApplied={() => markMomentEvent(MOMENT_EVENTS.RITUAL_APPLIED)}
+        />
+        {!isFocus && (
+          <FirstRunTips
+            moment={firstRun.moment}
+            barAnchor={barAnchor}
+            dialAnchor={dialAnchor}
+            onSkip={firstRun.skipFirstRun}
+          />
+        )}
+        {/* Sortie d'immersion (cadrage 3c Q1) : premier toucher CONSOMMÉ
+            ici, jamais transmis au disque. */}
+        {immersed && (
+          <Pressable
+            testID="immersion.overlay"
+            accessible={false}
+            style={styles.immersionOverlay}
+            onPressIn={registerActivity}
+          />
+        )}
+        {/* Le seuil (ADR-016 §1) : ne se rejoue JAMAIS (flag distinct
+            hasSeenThreshold, Monde B) — par défaut false, donc les users
+            existants (déjà passés par la 2.0 ou pas) REVOIENT le seuil une
+            fois au premier lancement de la 3.0. Accepté (reborn assumé),
+            pas de migration de flag prévue. */}
+        {!firstRun.isLoading && !firstRun.hasSeenThreshold && (
+          <View style={styles.firstRunThresholdOverlay} testID="firstRun.threshold.overlay">
+            <FirstRunThreshold onComplete={firstRun.completeThreshold} />
+          </View>
+        )}
+      </View>
     </SafeAreaView>
   );
 }
