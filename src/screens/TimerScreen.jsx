@@ -1105,6 +1105,12 @@ function TimerScreenContent() {
       flexDirection: isLandscape ? 'row' : 'column',
       gap: isLandscape ? theme.spacing.lg : 0,
       justifyContent: 'center',
+      // Centrage OPTIQUE (retour Eric + CD option 2, 04/08) : la bande
+      // fermée du sheet (CLOSED_VISIBLE) mange le bas de l'écran — sans ce
+      // padding, le groupe cadran+rangée se centre sur une hauteur qui
+      // inclut la zone cachée et paraît tassé vers le tray. On centre dans
+      // l'espace LIBRE, le cadran respire symétriquement.
+      paddingBottom: CLOSED_VISIBLE,
     },
     // Wrappers du chrome fondu en immersion : `alignItems: center` préserve
     // le comportement d'avant (chaque bloc centré, taille intrinsèque) —

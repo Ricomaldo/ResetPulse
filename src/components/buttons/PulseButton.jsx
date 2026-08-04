@@ -87,7 +87,11 @@ const PulseButton = React.memo(function PulseButton({
   // === COLOR ===
   // Hub = CLAIRIÈRE DU CADRAN (verdicts CD Q1) : fond crème #F4EFE7 — pas un
   // sticker blanc. Plat, liseré interne discret, zéro ombre portée.
-  const bgColor = theme.colors.background;
+  // Dark (retour Eric 04/08) : `background` (#1A1A1A) creusait un trou
+  // noir pur au centre du disque — `surface` (anthracite plus chaud) garde
+  // la clairière lisible sans dureté. Light : clairière crème inchangée
+  // (verdicts CD Q1).
+  const bgColor = theme.isDark ? theme.colors.surface : theme.colors.background;
 
   // === STYLES ===
   const styles = StyleSheet.create({
