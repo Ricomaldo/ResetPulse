@@ -239,10 +239,22 @@
       "rituals": "unlimited rituals",
       "sounds": "Ambiances sounds"
     },
+    "hook": {
+      "emoji": "make it yours",
+      "custom": "your own emojis",
+      "rituals": "a ritual for every moment",
+      "palette": "it looks good on you"
+    },
+    "hookSub": {
+      "emoji": "this emoji lives in Ambiances — like everything you keep.",
+      "rituals": "your 2nd ritual is just waiting for room.",
+      "palette": "keep %{name} — and the 9 others too."
+    },
     "price": "%{price}, once. Yours forever.",
     "startTrial": "try 7 days free",
     "unlock": "unlock — %{price}, once",
-    "breatheInvitation": "want to make it breathe? discover Ambiances"
+    "breatheInvitation": "want to make it breathe? discover Ambiances",
+    "counterSubtitle": "keep it all, forever"
   },
   "activities": {
     "none": "Basic",
@@ -491,7 +503,8 @@
     "included": "Included",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances palette — try it freely",
-    "ambiancesDiscover": "discover Ambiances"
+    "ambiancesDiscover": "discover Ambiances",
+    "counterFooter": "all 10 palettes, yours forever — %{price}, once ›"
   },
   "soundsPanel": {
     "sheetRow": "Sounds",
@@ -499,10 +512,11 @@
     "included": "Included",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances sound — try it freely",
-    "ambiancesDiscover": "discover Ambiances"
+    "ambiancesDiscover": "discover Ambiances",
+    "counterFooter": "all 8 sounds, yours forever — %{price}, once ›"
   },
   "mode": {
-    "standard": "ResetPulse",
+    "standard": "Standard",
     "focus": "Focus"
   },
   "focus": {
@@ -531,5 +545,12 @@
   "dormantTips": {
     "palettes": "psst — your colors come in full palettes, in settings",
     "focus": "want a bare screen? focus mode awaits in settings"
+  },
+  "coach": {
+    "borrowedPalette": "borrowed palette — next launch, it goes back home.",
+    "borrowedSound": "borrowed sound — next launch, it goes back home.",
+    "paletteReturned": "%{name} went home. take it again — or keep it.",
+    "soundReturned": "%{name} went home. take it again — or keep it.",
+    "ritualsRow": "your rituals, right there — one tap each."
   }
 }

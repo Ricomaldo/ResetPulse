@@ -307,6 +307,27 @@ export const TimerConfigProvider = ({ children }) => {
     }
   }, [isLoading, values.palette, updateValue]);
 
+  // Lambda X (04/08, correctifs QA visuelle #1, bug 1) : les blobs
+  // @ResetPulse:config écrits par un build antérieur à ec76ff2 (halo ON par
+  // défaut, 31/07) portent encore shouldPulse:false ET le champ mort
+  // showActivityEmoji (purgé du code par 7c2984e, plus jamais écrit depuis)
+  // — usePersistedObject ne fait qu'un merge SHALLOW au niveau des clés de
+  // premier niveau (usePersistedState.js), donc ce blob écrase entièrement
+  // le nouveau défaut display.shouldPulse=true, y compris au chemin
+  // d'upgrade v2.1.6 → reborn (la clé @ResetPulse:config existe déjà depuis
+  // la consolidation ADR-009, décembre 2025 — la migration OLD_KEYS
+  // (ci-dessus) ne se déclenche donc jamais pour ces installs, elle n'est
+  // pas l'autrice de ce blob). showActivityEmoji n'existe dans AUCUN build
+  // courant : sa seule présence signe un blob fossile, jamais un choix
+  // utilisateur délibéré — même patron one-shot que les gardes ci-dessus,
+  // ne se redéclenche jamais une fois le fossile purgé.
+  useEffect(() => {
+    if (!isLoading && values.display.showActivityEmoji !== undefined) {
+      const { showActivityEmoji, ...cleanDisplay } = values.display;
+      updateValue('display', { ...cleanDisplay, shouldPulse: true });
+    }
+  }, [isLoading, values.display, updateValue]);
+
   // Handle activity selection with flash feedback (ADR-007 messaging)
   const handleActivitySelect = useCallback((activity) => {
     if (flashTimeoutRef.current) {

@@ -13,7 +13,13 @@
 //    si FREE et que la palette active est Ambiances, on repasse au dernier
 //    inclus (ou 'serenity'). Un ref verrouille la décision, jamais de
 //    boucle ni de re-déclenchement au fil des re-renders.
-import { useEffect, useRef } from 'react';
+//
+// Lambda V (pédagogie du prêt) : le hook EXPOSE la retombée quand elle a
+// lieu — `returnedPalette` = la clé de la palette Ambiances qui vient de
+// rentrer chez elle au lancement (null sinon). Posé au même instant que le
+// retour (le ref de verrouillage garantit déjà l'unicité par montage) ;
+// resolvePaletteOnLaunch reste pure, aucune logique de décision ajoutée.
+import { useEffect, useRef, useState } from 'react';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { usePremiumStatus } from './usePremiumStatus';
 import { usePersistedState } from './usePersistedState';
@@ -46,6 +52,9 @@ export function usePaletteGating() {
     }
   }, [isReady, currentPalette, lastIncludedPalette, setLastIncludedPalette]);
 
+  // Retombée exposée (Lambda V) : la palette empruntée qui vient de rentrer.
+  const [returnedPalette, setReturnedPalette] = useState(null);
+
   const hasResolvedLaunchRef = useRef(false);
   useEffect(() => {
     if (hasResolvedLaunchRef.current) return;
@@ -55,8 +64,11 @@ export function usePaletteGating() {
     const target = resolvePaletteOnLaunch(isPremium, currentPalette, lastIncludedPalette);
     if (target !== currentPalette) {
       setPalette(target);
+      setReturnedPalette(currentPalette);
     }
   }, [isPremium, isPremiumLoading, isReady, currentPalette, lastIncludedPalette, setPalette]);
+
+  return { returnedPalette };
 }
 
 export default usePaletteGating;

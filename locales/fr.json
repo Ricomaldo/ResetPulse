@@ -239,10 +239,22 @@
       "rituals": "rituels illimités",
       "sounds": "sons Ambiances"
     },
+    "hook": {
+      "emoji": "fais-le tien",
+      "custom": "tes propres emojis",
+      "rituals": "un rituel par moment",
+      "palette": "elle te va bien"
+    },
+    "hookSub": {
+      "emoji": "cet emoji vit dans Ambiances — comme tout ce qui se garde.",
+      "rituals": "ton 2ᵉ rituel n'attend que la place.",
+      "palette": "garde %{name} — et les 9 autres avec."
+    },
     "price": "%{price}, une fois. Pour toujours.",
     "startTrial": "essayer 7 jours gratuits",
     "unlock": "débloquer — %{price}, une fois",
-    "breatheInvitation": "envie de le faire respirer ? découvre Ambiances"
+    "breatheInvitation": "envie de le faire respirer ? découvre Ambiances",
+    "counterSubtitle": "tout garder, pour toujours"
   },
   "activities": {
     "none": "Basique",
@@ -491,7 +503,8 @@
     "included": "Incluses",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "palette Ambiances — essaie-la librement",
-    "ambiancesDiscover": "découvrir Ambiances"
+    "ambiancesDiscover": "découvrir Ambiances",
+    "counterFooter": "les 10 palettes, à toi pour toujours — %{price}, une fois ›"
   },
   "soundsPanel": {
     "sheetRow": "Sons",
@@ -499,10 +512,11 @@
     "included": "Inclus",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "son Ambiances — essaie-le librement",
-    "ambiancesDiscover": "découvrir Ambiances"
+    "ambiancesDiscover": "découvrir Ambiances",
+    "counterFooter": "les 8 sons, à toi pour toujours — %{price}, une fois ›"
   },
   "mode": {
-    "standard": "ResetPulse",
+    "standard": "Standard",
     "focus": "Focus"
   },
   "focus": {
@@ -531,5 +545,12 @@
   "dormantTips": {
     "palettes": "t'as vu ? tes couleurs ont des palettes entières — dans les réglages",
     "focus": "envie d'un écran nu ? le mode focus t'attend dans les réglages"
+  },
+  "coach": {
+    "borrowedPalette": "palette empruntée — au prochain lancement, elle rentre chez elle.",
+    "borrowedSound": "son emprunté — au prochain lancement, il rentre chez lui.",
+    "paletteReturned": "%{name} est rentrée. tu peux la reprendre — ou la garder.",
+    "soundReturned": "%{name} est rentré. tu peux le reprendre — ou le garder.",
+    "ritualsRow": "tes rituels, là — un tap chacun."
   }
 }

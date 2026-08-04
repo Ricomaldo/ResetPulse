@@ -25,6 +25,7 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useAmbiancesPrice } from '../../hooks/useAmbiancesPrice';
 import { useModalStack } from '../../contexts/ModalStackContext';
 import { TIMER_PALETTES, isPalettePremium } from '../../config/timer-palettes';
 import { fontWeights } from '../../theme/tokens';
@@ -35,12 +36,15 @@ const PALETTE_KEYS = Object.keys(TIMER_PALETTES);
 const INCLUDED_KEYS = PALETTE_KEYS.filter((key) => !TIMER_PALETTES[key].isPremium);
 const AMBIANCE_KEYS = PALETTE_KEYS.filter((key) => TIMER_PALETTES[key].isPremium);
 
-export default function PalettesPanel({ onBack, maxHeight }) {
+export default function PalettesPanel({ onBack, maxHeight, onBorrowed }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
   const { isPremium } = usePremiumStatus();
   const modalStack = useModalStack();
+  // Pied de section guichet (Lambda T, 1b) — prix dynamique même source
+  // RevenueCat que PremiumModalContent (cf. useAmbiancesPrice).
+  const ambiancesPrice = useAmbiancesPrice();
   const {
     palette: { currentPalette },
     setPalette,
@@ -50,6 +54,12 @@ export default function PalettesPanel({ onBack, maxHeight }) {
     haptics.impact('light').catch(() => {});
     setPalette(key);
     analytics.trackPaletteSelected(key);
+    // Lambda V (pédagogie du prêt) : un FREE applique une palette
+    // Ambiances → signal au coach (ligne « palette empruntée », une fois
+    // par item — le verrou vit dans useBorrowCoach, côté TimerScreen).
+    if (!isPremium && isPalettePremium(key)) {
+      onBorrowed?.(key);
+    }
   };
 
   // Ligne d'invitation : jamais pour un premium, seulement quand la palette
@@ -66,8 +76,24 @@ export default function PalettesPanel({ onBack, maxHeight }) {
     }
   }, [showAmbiancesHint, analytics]);
 
+  // Lambda U (2c) : hero = les 4 swatches de la palette ACTIVE empruntée —
+  // seule cette ligne d'invitation « essai libre » transmet un hero (le pied
+  // de section guichet du lambda T, ci-dessous, reste sans hero : critère de
+  // distinction posé au mandat).
   const handleDiscoverAmbiances = () => {
     analytics.trackAmbiancesInvitationTapped('palettes');
+    modalStack.push('premium', {
+      highlightedFeature: 'palettes',
+      hero: { type: 'palette', paletteKey: currentPalette },
+    });
+  };
+
+  // Pied de section guichet (Lambda T, 1b) — entrée volontaire distincte de
+  // la ligne d'invitation ci-dessus (emprunt actif seulement) : toujours
+  // visible pour un FREE, même paywall highlighted 'palettes'. Les deux
+  // coexistent (décision CD).
+  const handleOpenCounter = () => {
+    haptics.selection().catch(() => {});
     modalStack.push('premium', { highlightedFeature: 'palettes' });
   };
 
@@ -152,6 +178,22 @@ export default function PalettesPanel({ onBack, maxHeight }) {
       fontWeight: fontWeights.semibold,
       textDecorationLine: 'underline',
     },
+    // Pied de section guichet (Lambda T, 1b) — même esprit crème que le
+    // guichet AsideZone (`background` sur `surface`), ligne compacte.
+    counterFooter: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.md,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.sm,
+      padding: rs(10),
+    },
+    counterFooterText: {
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(12, 'min'),
+    },
   });
 
   const renderPaletteRow = (key) => {
@@ -200,6 +242,25 @@ export default function PalettesPanel({ onBack, maxHeight }) {
 
         <Text style={styles.sectionTitle}>{t('palettesPanel.ambiances')}</Text>
         {AMBIANCE_KEYS.map(renderPaletteRow)}
+
+        {/* Pied de section guichet (Lambda T, 1b) — entrée volontaire,
+            toujours visible pour un FREE (coexiste avec la ligne d'emprunt
+            actif ci-dessous, décision CD). Masqué en premium. */}
+        {!isPremium && (
+          <TouchableOpacity
+            testID="palettesPanel.counterFooter"
+            style={styles.counterFooter}
+            onPress={handleOpenCounter}
+            activeOpacity={0.7}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={t('palettesPanel.counterFooter', { price: ambiancesPrice || '4,99 €' })}
+          >
+            <Text style={styles.counterFooterText}>
+              {t('palettesPanel.counterFooter', { price: ambiancesPrice || '4,99 €' })}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {showAmbiancesHint && (
           <View style={styles.ambiancesHint}>

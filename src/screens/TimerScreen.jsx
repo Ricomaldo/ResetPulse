@@ -25,13 +25,14 @@ import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useFirstRun } from '../hooks/useFirstRun';
 import { useDormantTips } from '../hooks/useDormantTips';
+import { useBorrowCoach, resolveCoachChannel } from '../hooks/useBorrowCoach';
 import { usePersistedState } from '../hooks/usePersistedState';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useSessionImmersion } from '../hooks/useSessionImmersion';
 import { useLiveActivity } from '../hooks/useLiveActivity';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
-import AsideZone from '../components/layout/AsideZone';
+import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
@@ -42,6 +43,8 @@ import { usePaletteGating } from '../hooks/usePaletteGating';
 import { useSoundGating } from '../hooks/useSoundGating';
 import { usePremiumStatus } from '../hooks/usePremiumStatus';
 import { useModalStack } from '../contexts/ModalStackContext';
+import { getPaletteInfo } from '../config/timer-palettes';
+import { getSoundById } from '../config/sounds';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
 import { shouldShowBreatheInvitation } from '../utils/breatheInvitation';
@@ -51,6 +54,12 @@ import haptics from '../utils/haptics';
 // prend le disque quand il devient décor plein cadre.
 const IMMERSION_FADE_MS = 600;
 const IMMERSION_DIAL_SCALE = 1.12;
+
+// Seuil composé Focus (P2-Focus, réponses §4 CD validées) : une séance
+// pleine >= cette durée compte comme « longue » pour resolveDormantTip
+// (cf. useDormantTips) — posé ICI (pas dans useTimer, sacré) car ce fichier
+// connaît déjà la durée pleine du Moment accompli (cf. handleKeepMomentTap).
+const LONG_SESSION_THRESHOLD_SECONDS = 1800; // 30 minutes
 
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
@@ -242,13 +251,14 @@ function DistractionButton({ showLabel, onDistraction }) {
   );
 }
 
-// Astuce dormante v1 (ADR-016 §4, Lambda C) : même famille visuelle que le
-// dé (pill blanche, ombre légère) — une ligne discrète, jamais un mur.
-// Textes i18n FLAGGÉS pour review Claude design (formulation provisoire,
-// cf. dormantTips.palettes/focus dans locales/).
-function DormantTipPill({ tip }) {
+// Canal du coach (Lambda C, généralisé Lambda V) : même famille visuelle
+// que le dé (pill blanche, ombre légère) — une ligne discrète, jamais un
+// mur. Base partagée entre les astuces dormantes et les lignes du prêt.
+// Tappable seulement quand onPress est fourni (ligne de retour d'emprunt :
+// la LIGNE ENTIÈRE ouvre la modale Ambiances) — sinon View muette, comme
+// l'astuce d'origine.
+function CoachPill({ text, onPress, testID }) {
   const theme = useTheme();
-  const t = useTranslation();
 
   const styles = StyleSheet.create({
     pill: {
@@ -267,15 +277,52 @@ function DormantTipPill({ tip }) {
     },
   });
 
+  if (!text) {
+    return null;
+  }
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={styles.pill}
+        testID={testID}
+        onPress={onPress}
+        activeOpacity={0.7}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={text}
+      >
+        <Text style={styles.text}>{text}</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View style={styles.pill} testID={testID}>
+      <Text style={styles.text}>{text}</Text>
+    </View>
+  );
+}
+
+// Astuce dormante v1 (ADR-016 §4, Lambda C) — habillage inchangé, rendue
+// via la base CoachPill. Textes i18n FLAGGÉS pour review Claude design
+// (formulation provisoire, cf. dormantTips.palettes/focus dans locales/).
+// Cas spécial `ritualsRow` (mandat W, P1-8) : troisième tip résolu par
+// useDormantTips, mais sa clé i18n vit sous `coach.*` (demandé tel quel par
+// le mandat — cohérence avec les autres lignes du canal coach) plutôt que
+// `dormantTips.*` — seule cette bascule de namespace justifie le if.
+function DormantTipPill({ tip }) {
+  const t = useTranslation();
+
   if (!tip) {
     return null;
   }
 
-  return (
-    <View style={styles.pill} testID={`dormantTip.${tip}`}>
-      <Text style={styles.text}>{t(`dormantTips.${tip}`)}</Text>
-    </View>
-  );
+  if (tip === 'ritualsRow') {
+    return <CoachPill text={t('coach.ritualsRow')} testID="coach.ritualsRow" />;
+  }
+
+  return <CoachPill text={t(`dormantTips.${tip}`)} testID={`dormantTip.${tip}`} />;
 }
 
 function formatTime(totalSecondsRaw) {
@@ -393,11 +440,12 @@ function TimerScreenContent() {
   const modalStack = useModalStack();
   // Soft-gating palettes (Lot 3b) : mémoire du dernier inclus + retour au
   // lancement si FREE et Ambiances actif — monté une fois ici, cf.
-  // usePaletteGating.
-  usePaletteGating();
+  // usePaletteGating. Lambda V : la retombée exposée nourrit le coach
+  // (« %{name} est rentrée »), cf. useBorrowCoach plus bas.
+  const { returnedPalette } = usePaletteGating();
   // Soft-gating sons (Lambda L, miroir palettes) — hook séparé, même
   // mécanique, domaine indépendant. Cf. useSoundGating.
-  useSoundGating();
+  const { returnedSoundId } = useSoundGating();
   const {
     mode: { current: currentMode },
     setMode,
@@ -669,6 +717,12 @@ function TimerScreenContent() {
     }
   }, []);
 
+  // Seuil composé Focus (P2-Focus) : « 1re séance accomplie >= 30 min » —
+  // posé une fois pour toutes (one-shot, jamais désarmé), lu par
+  // resolveDormantTip via useDormantTips plus bas. Ajouté au Vanilla/
+  // Découverte d'App.js.
+  const [hadLongSession, setHadLongSession] = usePersistedState('@ResetPulse:hadLongSession', false);
+
   // Compteur global de séances (Lot 3b, mandat Eric) : callback de fin de
   // séance existant (useTimer → TimeTimer.onTimerComplete), jamais câblé
   // jusqu'ici. Ne se déclenche QUE sur la fin naturelle (remaining atteint
@@ -683,7 +737,14 @@ function TimerScreenContent() {
       analytics.trackFirstMomentCompleted();
     }
     incrementSessionCount();
-  }, [completedSessions, incrementSessionCount, analytics]);
+    // Même lecture que handleKeepMomentTap : la durée PLEINE de la séance
+    // qui vient de finir (timerRef.current.duration, pas snapshot.remaining
+    // qui vaut 0 à la fin).
+    const duration = timerRef.current?.duration ?? currentDuration;
+    if (duration >= LONG_SESSION_THRESHOLD_SECONDS && !hadLongSession) {
+      setHadLongSession(true);
+    }
+  }, [completedSessions, incrementSessionCount, analytics, currentDuration, hadLongSession, setHadLongSession]);
 
   // Invitation « fais-le respirer » (Lot 3b, mandat Eric) : jamais un mur —
   // une ligne discrète sous le message de fin, une seule fois dans la vie de
@@ -884,8 +945,80 @@ function TimerScreenContent() {
   // (`enabled`), côté écran, comme prescrit par le brief.
   const canShowDormantTips =
     !snapshot.running && firstRun.hasSeenFirstRun && !immersed && !isFocus;
-  const dormantTips = useDormantTips({ enabled: canShowDormantTips });
-  const showDormantTip = Boolean(dormantTips.activeTip) && canShowDormantTips;
+  // Sheet ouvert/fermé (QA visuelle #5, bug 2) : remonté par AsideZone
+  // (`onOpenChange`) — l'emprunt Ambiances se fait TOUJOURS dedans, ouvert ;
+  // useBorrowCoach en a besoin pour différer sa ligne à la fermeture (sinon
+  // elle se consume derrière le sheet, invisible).
+  const [sheetOpen, setSheetOpen] = useState(false);
+  // La pédagogie du prêt (Lambda V) : mêmes gardes que les astuces
+  // dormantes. Le prêt PRIME (il est contextuel à un geste) : tant qu'une
+  // ligne coach parle, les astuces dormantes sont désarmées via `enabled`
+  // — leur one-shot ne brûle pas dans le vide pendant que le prêt occupe
+  // le canal (useDormantTips marque « montrée » dès la résolution).
+  const borrowCoach = useBorrowCoach({
+    enabled: canShowDormantTips,
+    sheetOpen,
+    returnedPalette,
+    returnedSoundId,
+  });
+  // !snapshot.isCompleted dans `enabled` — ceinture ET bretelles avec le
+  // garde déjà posé en tête de resolveDormantTip (cf. useDormantTips) :
+  // depuis le seuil Focus composé, `focus` peut se résoudre dès la 1re
+  // séance (hadLongSession) — exactement le moment où « garde ce moment ? »
+  // occupe déjà la ligne de fin (completedSessions === 1). Sans ce garde,
+  // une séance longue dès le 1er Moment ferait apparaître DEUX voix à la
+  // fois (constat avisé en review, mandat W).
+  const dormantTips = useDormantTips({
+    enabled: canShowDormantTips && !borrowCoach.activeMessage && !snapshot.isCompleted,
+    hadLongSession,
+    isCompleted: snapshot.isCompleted,
+  });
+  const coachChannel = canShowDormantTips
+    ? resolveCoachChannel({
+      coachMessage: borrowCoach.activeMessage,
+      dormantTip: dormantTips.activeTip,
+    })
+    : null;
+
+  // Texte de la ligne coach — nom localisé pour les retours (get name()
+  // des palettes, metadata des sons ; repli sur la clé brute, jamais vide).
+  const coachMessage = borrowCoach.activeMessage;
+  let coachMessageText = null;
+  if (coachMessage?.type === 'paletteReturned') {
+    coachMessageText = t('coach.paletteReturned', {
+      name: getPaletteInfo(coachMessage.itemKey)?.name ?? coachMessage.itemKey,
+    });
+  } else if (coachMessage?.type === 'soundReturned') {
+    coachMessageText = t('coach.soundReturned', {
+      name: getSoundById(coachMessage.itemKey)?.name ?? coachMessage.itemKey,
+    });
+  } else if (coachMessage) {
+    coachMessageText = t(`coach.${coachMessage.type}`);
+  }
+
+  // « la garder » / « le garder » : la ligne entière de retour ouvre la
+  // modale Ambiances avec le héros 2c de l'item rentré (plomberie Lambda U).
+  // L'emprunt (moment 1) reste une ligne muette au tap.
+  const isCoachReturnMessage =
+    coachMessage?.type === 'paletteReturned' || coachMessage?.type === 'soundReturned';
+  const handleCoachPress = useCallback(() => {
+    const message = borrowCoach.activeMessage;
+    if (!message) {
+      return;
+    }
+    if (message.type === 'paletteReturned') {
+      modalStack.push('premium', {
+        highlightedFeature: 'palettes',
+        hero: { type: 'palette', paletteKey: message.itemKey },
+      });
+    } else if (message.type === 'soundReturned') {
+      modalStack.push('premium', {
+        highlightedFeature: 'sounds',
+        hero: { type: 'sound', soundId: message.itemKey },
+      });
+    }
+    borrowCoach.dismissActiveMessage();
+  }, [borrowCoach.activeMessage, borrowCoach.dismissActiveMessage, modalStack]);
 
   // hasTriedFocus (Lambda C) : marqué au premier passage en Focus, quel que
   // soit le chemin (segmenté du sheet OU double-tap fond) — les deux
@@ -929,8 +1062,11 @@ function TimerScreenContent() {
   const handleRootTouchStart = useCallback(() => {
     dismissDistractionLabel();
     dormantTips.dismissActiveTip();
+    // Ne dismisse que l'emprunt — la ligne de retour est tappable, un
+    // dismiss au touchStart annulerait son propre press (cf. useBorrowCoach).
+    borrowCoach.handleScreenTouch();
     registerActivity();
-  }, [dismissDistractionLabel, dormantTips, registerActivity]);
+  }, [dismissDistractionLabel, dormantTips, borrowCoach, registerActivity]);
 
   const styles = StyleSheet.create({
     completionMessage: {
@@ -979,6 +1115,21 @@ function TimerScreenContent() {
     },
     chromeBelow: {
       alignItems: 'center',
+    },
+    // Ancre de la ligne coach (bug 1, QA visuelle passe 5) : au-dessus de
+    // la bande fermée du sheet (AsideZone, CLOSED_VISIBLE, FIXE = 92pt) +
+    // une marge scalée — CLOSED_VISIBLE reste une constante fixe (importée,
+    // pas ré-approximée) pour garantir la clairance sur tout device, y
+    // compris petit écran où `rs('min')` seul aurait pu retomber sous 92pt
+    // (cf. commentaire CLOSED_VISIBLE dans AsideZone). Sortie du flux
+    // centré de `content` : sa position ne dépend plus de la hauteur du
+    // contenu au-dessus (dial + message + rangée + dé).
+    coachAnchor: {
+      alignItems: 'center',
+      bottom: CLOSED_VISIBLE + rs(12, 'min'),
+      left: 0,
+      position: 'absolute',
+      right: 0,
     },
     // Overlay de sortie d'immersion (cadrage 3c) : monté SEULEMENT quand
     // immersed — au-dessus de tout (AsideZone = zIndex 50), il capte le
@@ -1090,15 +1241,37 @@ function TimerScreenContent() {
                   showLabel={showDistractionLabel}
                   onDistraction={handleDistraction}
                 />
-                {showDormantTip && <DormantTipPill tip={dormantTips.activeTip} />}
               </Animated.View>
             )}
           </View>
+          {/* QA visuelle passe 5, bug 1 : la ligne coach (prêt ou astuce
+              dormante) vivait dans le flux de `chromeBelow`, centré par
+              `content` — sur les stacks hautes (dé + message + rangée + dé
+              à jouer), sa pill finissait sous la bande fermée du sheet
+              (AsideZone, CLOSED_VISIBLE = 92pt), recouverte, illisible.
+              Ancrée ici en absolu, comme FocusHint : garantie de vivre
+              entre le dé et la bande, jamais dessous, quelle que soit la
+              hauteur du contenu au-dessus. Une seule voix coach à la fois
+              (Lambda V) : le prêt gagne le canal, l'astuce dormante sinon. */}
+          {coachChannel && (
+            <View style={styles.coachAnchor} pointerEvents="box-none">
+              {coachChannel.kind === 'coach' && (
+                <CoachPill
+                  text={coachMessageText}
+                  onPress={isCoachReturnMessage ? handleCoachPress : undefined}
+                  testID={`coach.${coachChannel.message.type}`}
+                />
+              )}
+              {coachChannel.kind === 'dormant' && <DormantTipPill tip={coachChannel.tip} />}
+            </View>
+          )}
           {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
           <AsideZone
             isTimerRunning={snapshot.running}
             hidden={immersed}
             onPaletteOpened={dormantTips.markPalettesOpened}
+            onAmbianceBorrowed={borrowCoach.notifyBorrowed}
+            onOpenChange={setSheetOpen}
           />
           {!isFocus && (
             <FirstRunTips

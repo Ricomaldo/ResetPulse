@@ -55,12 +55,16 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { usePersistedState } from '../../hooks/usePersistedState';
 import { useAnalytics } from '../../hooks/useAnalytics';
+import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useAmbiancesPrice } from '../../hooks/useAmbiancesPrice';
+import { useModalStack } from '../../contexts/ModalStackContext';
 import { rs } from '../../styles/responsive';
 import { fontWeights } from '../../theme/tokens';
 import haptics from '../../utils/haptics';
 import RitualsPanel from '../rituals/RitualsPanel';
 import PalettesPanel from '../palettes/PalettesPanel';
 import SoundsPanel from '../sounds/SoundsPanel';
+import { TIMER_PALETTES } from '../../config/timer-palettes';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -70,7 +74,13 @@ import SoundsPanel from '../sounds/SoundsPanel';
 // haut) — tout était décalé vers le bas depuis le début. Désormais : repère =
 // hauteur MESURÉE du conteneur (onLayout), bande fermée FIXE de 92 pt — la
 // barre du handle reste ~65 pt au-dessus de la zone système, sur tout device.
-const CLOSED_VISIBLE = 92;
+// Exportée (QA visuelle #5, bug 1) : TimerScreen ancre la pill coach
+// au-dessus de cette même bande — une valeur scalée (`rs`) approcherait
+// cette constante FIXE sans jamais la garantir sur tout device (sous 390pt
+// de large ou 844 de haut, `rs('min')` réduit sous 92 — la pill repasserait
+// sous la bande sur petit écran). La FIXITÉ est le point : on la partage,
+// pas on la ré-approxime.
+export const CLOSED_VISIBLE = 92;
 // Plafond : le sheet ne couvre jamais plus de 65% de l'écran — le dial reste visible
 const MAX_OPEN_COVERAGE = 0.65;
 const HANDLE_HEIGHT = 28; // handleContainer paddingTop(14)+paddingBottom(8) + handleIndicator height(6)
@@ -79,10 +89,26 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 // Complet meurt (C6.2, acté Eric 25/07 ×2) — segmenté à 2 entrées. Clé
 // interne `mixte` conservée (naming définitif à la passe CD, piste : le
 // défaut ne se nomme pas) ; libellé affiché "Standard" (i18n, provisoire).
-export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened }) {
+// Lambda V (pédagogie du prêt) : `onAmbianceBorrowed(kind, key)` — relayé
+// aux panels Palettes/Sons, appelé quand un FREE applique un item
+// Ambiances. L'affichage de la ligne coach vit côté TimerScreen
+// (useBorrowCoach) — même pattern callback-prop que onPaletteOpened.
+// `onOpenChange(isOpen)` (QA visuelle #5, bug 2) : remonte l'état
+// ouvert/fermé du sheet à TimerScreen — l'emprunt (moment 1) s'y fait
+// TOUJOURS sheet ouvert, useBorrowCoach a besoin de savoir quand il se
+// ferme pour différer sa ligne. Même pattern callback-prop, pas une
+// deuxième source de vérité sur `isOpen`.
+export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed, onOpenChange }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
+  const modalStack = useModalStack();
+  // Guichet Ambiances (Lambda T, 1a) — masqué pour un premium, rien à
+  // vendre. Prix dynamique même source RevenueCat que PremiumModalContent
+  // (cf. useAmbiancesPrice) ; repli '4,99 €' tant que l'offre ne répond pas.
+  const { isPremium } = usePremiumStatus();
+  const ambiancesPrice = useAmbiancesPrice();
+  const counterSwatchColors = TIMER_PALETTES.serenity.colors;
   // Continuité paysage (3c) : useWindowDimensions (pas Dimensions.get figé
   // au chargement du module) — la hauteur totale du drawer (style `drawer`)
   // doit suivre la rotation, sinon son contenu se retrouve borné par la
@@ -114,6 +140,12 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   ];
 
   const [isOpen, setIsOpen] = useState(false);
+  // Remonte CHAQUE transition d'isOpen (snapTo, pan gesture, auto-collapse
+  // au démarrage du timer) — un seul point de sortie, pas un rappel par
+  // site d'appel de setIsOpen.
+  useEffect(() => {
+    onOpenChange?.(isOpen);
+  }, [isOpen, onOpenChange]);
   // Sous-écran Rituels (bloc 3, C6) — remplace les blocs 1-4 quand ouvert.
   const [ritualsOpen, setRitualsOpen] = useState(false);
   // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.
@@ -238,9 +270,24 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   //     03/08, la poignée ne fermait plus le sheet sous-écran ouvert, car
   //     `.enabled(!boundedSubScreen)` tuait le pan partout, poignée comprise.
   //     La poignée n'a pas de scroll à protéger : elle garde le geste.
-  const makePanGesture = (enabled) => Gesture.Pan()
+  // offsetY paramétrable (QA visuelle #1, bug 2) : `panGesture` recouvre le
+  // ScrollView (l.552/587) — bidirectionnel [-20,20], il gagnait la course
+  // au geste AVANT que le ScrollView natif n'ait la moindre chance de
+  // scroller (le guichet Ambiances, sous Sons, restait hors d'atteinte,
+  // aucun swipe ne faisait défiler le contenu). `activeOffsetY(20)` (borne
+  // positive seule) ne configure QUE le seuil de fermeture (drag vers le
+  // bas) ; le seuil négatif reste au sentinel RNGH « ignoré » (confirmé
+  // source native PanGestureHandler.kt shouldActivate — un critère non
+  // configuré ne vote jamais l'activation, minDist par défaut est aussi
+  // désactivé dès qu'un offset custom est posé), donc un drag vers le HAUT
+  // ne déclenche plus jamais ce pan : le ScrollView reste seul maître de
+  // cette direction. Le drag de fermeture (vers le bas, depuis le contenu)
+  // est inchangé. `handlePanGesture` (poignée seule, pas de ScrollView
+  // dessous) garde le bidirectionnel par défaut — ouverture ET fermeture
+  // depuis cette petite zone.
+  const makePanGesture = (enabled, offsetY = [-20, 20]) => Gesture.Pan()
     .enabled(enabled)
-    .activeOffsetY([-20, 20])
+    .activeOffsetY(offsetY)
     .failOffsetX([-15, 15])
     .onBegin(() => {
       startY.value = translateY.value;
@@ -264,7 +311,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       runOnJS(setIsOpen)(open);
     });
 
-  const panGesture = useMemo(() => makePanGesture(!boundedSubScreen),
+  const panGesture = useMemo(() => makePanGesture(!boundedSubScreen, 20),
     [translateY, startY, openY, snapClosed, boundedSubScreen]);
   const handlePanGesture = useMemo(() => makePanGesture(true),
     [translateY, startY, openY, snapClosed]);
@@ -310,8 +357,22 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       top: 0,
       zIndex: 50,
     },
+    // Lambda Y (bug guichet intouchable, QA visuelle ×2) : hauteur bornée à
+    // la zone visible du snap ouvert — même repère que `subScreenHeight`
+    // (utilisé par les sous-écrans Rituels/Palettes/Sons). AVANT ce cycle,
+    // `content` était `flex: 1` dans un `drawer` haut de `windowHeight` : le
+    // ScrollView racine héritait d'un espace disponible bien plus grand que
+    // la zone réellement visible (clippée par le physique de l'écran via
+    // `translateY`, pas par un `overflow: hidden`). RN compare la hauteur
+    // mesurée du contenu à la hauteur de SON PROPRE composant ScrollView —
+    // pas à ce qui est visible à l'écran — donc tant que le contenu tenait
+    // dans cet espace surdimensionné, RN jugeait qu'il n'y avait rien à
+    // scroller : swipes inertes, et toute rangée au-delà de la zone visible
+    // (le guichet Ambiances) rendait hors-écran, ni vue ni tappable. Borner
+    // `content` à `subScreenHeight` rend au ScrollView une hauteur honnête,
+    // identique à celle qu'utilisent déjà les sous-écrans.
     content: {
-      flex: 1,
+      height: subScreenHeight,
     },
     drawer: {
       backgroundColor: theme.colors.surface,
@@ -382,6 +443,13 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       paddingBottom: rs(24),
       paddingHorizontal: rs(16),
     },
+    // Même pattern que PalettesPanel/SoundsPanel/RitualForm (A2, hotfix-
+    // porte-1) : `flex: 1` sur `style` (pas `contentContainerStyle`) pour
+    // que le ScrollView remplisse le conteneur borné (`content` ci-dessus)
+    // au lieu de ne mesurer que son propre contenu.
+    scrollBody: {
+      flex: 1,
+    },
     segmentButton: {
       alignItems: 'center',
       borderRadius: theme.borderRadius.md - 2,
@@ -432,6 +500,49 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       fontSize: rs(11, 'min'),
       marginTop: rs(8),
       textAlign: 'center',
+    },
+    // Guichet Ambiances (Lambda T, 1a) — rangée DISTINCTE des rangées
+    // d'usage ci-dessus : fond `background` (crème chaud #F4EFE7, proche du
+    // #FAF3E9 esprit CD) sur le drawer `surface` (blanc), même écart que
+    // TimerScreen/Drawer (cf. CLAUDE.md § Color System Architecture). Pas de
+    // couleur brand ici — « un guichet, pas une pub ».
+    counterRow: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.lg,
+      flexDirection: 'row',
+      marginTop: rs(16),
+      padding: rs(12),
+    },
+    counterSwatch: {
+      borderRadius: rs(6),
+      flexDirection: 'row',
+      height: rs(26, 'min'),
+      overflow: 'hidden',
+      width: rs(26, 'min'),
+    },
+    counterSwatchColor: {
+      flex: 1,
+    },
+    counterTextBlock: {
+      flex: 1,
+      marginLeft: rs(10),
+    },
+    counterTitle: {
+      color: theme.colors.text,
+      fontSize: rs(14, 'min'),
+      fontWeight: fontWeights.semibold,
+    },
+    counterSubtitle: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(11, 'min'),
+      marginTop: rs(2),
+    },
+    counterPrice: {
+      color: theme.colors.text,
+      fontSize: rs(13, 'min'),
+      fontWeight: fontWeights.semibold,
+      marginLeft: rs(8),
     },
   });
 
@@ -527,6 +638,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
           {/* SCR-10 : 4 blocs */}
           <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
             <ScrollView
+              style={styles.scrollBody}
               contentContainerStyle={styles.scrollContent}
               scrollEnabled={isOpen && !boundedSubScreen && contentHeight > subScreenHeight}
               bounces={false}
@@ -550,11 +662,19 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                      ouverte au tap (préviz live, porte C6.1) : pas d'onApplied.
                      maxHeight borne son propre scroll (A2 — même dette que le
                      formulaire de rituel, elle explosera avec la liste). */
-                  <PalettesPanel onBack={() => setPaletteOpen(false)} maxHeight={subScreenHeight} />
+                  <PalettesPanel
+                    onBack={() => setPaletteOpen(false)}
+                    maxHeight={subScreenHeight}
+                    onBorrowed={(key) => onAmbianceBorrowed?.('palette', key)}
+                  />
                 ) : soundsOpen ? (
                   /* Sous-écran Sons (bloc 5, Lambda L) — même mécanisme que
                      Palettes : liste ouverte, écoute + apply au tap. */
-                  <SoundsPanel onBack={() => setSoundsOpen(false)} maxHeight={subScreenHeight} />
+                  <SoundsPanel
+                    onBack={() => setSoundsOpen(false)}
+                    maxHeight={subScreenHeight}
+                    onBorrowed={(soundId) => onAmbianceBorrowed?.('sound', soundId)}
+                  />
                 ) : (
                   <>
                     {/* Bloc 1 : segmenté Mode — écrit le réglage global. En Focus,
@@ -745,6 +865,40 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                           <Text style={styles.inertRowLabel}>{t('soundsPanel.sheetRow')}</Text>
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
+
+                        {/* Guichet Ambiances (Lambda T, 1a) — l'unique entrée
+                            VOLONTAIRE vers Ambiances (constat Eric : toutes
+                            les autres sont réactives). Tap → paywall
+                            générique, SANS highlightedFeature (décision CD :
+                            le guichet n'a pas de héros). Masqué en premium. */}
+                        {!isPremium && (
+                          <TouchableOpacity
+                            testID="aside.ambiancesCounter"
+                            style={styles.counterRow}
+                            accessible
+                            accessibilityRole="button"
+                            accessibilityLabel={`${t('ambiances.title')} — ${t('ambiances.counterSubtitle')}`}
+                            onPress={() => {
+                              haptics.selection().catch(() => {});
+                              modalStack.push('premium', { source: 'counter' });
+                            }}
+                            activeOpacity={0.7}
+                          >
+                            <View style={styles.counterSwatch}>
+                              {counterSwatchColors.map((color, index) => (
+                                <View
+                                  key={index}
+                                  style={[styles.counterSwatchColor, { backgroundColor: color }]}
+                                />
+                              ))}
+                            </View>
+                            <View style={styles.counterTextBlock}>
+                              <Text style={styles.counterTitle}>{t('ambiances.title')}</Text>
+                              <Text style={styles.counterSubtitle}>{t('ambiances.counterSubtitle')}</Text>
+                            </View>
+                            <Text style={styles.counterPrice}>{ambiancesPrice || '4,99 €'}</Text>
+                          </TouchableOpacity>
+                        )}
                       </>
                     )}
                   </>

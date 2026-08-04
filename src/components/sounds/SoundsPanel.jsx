@@ -20,6 +20,7 @@ import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAnalytics } from '../../hooks/useAnalytics';
 import { usePremiumStatus } from '../../hooks/usePremiumStatus';
+import { useAmbiancesPrice } from '../../hooks/useAmbiancesPrice';
 import { useModalStack } from '../../contexts/ModalStackContext';
 import { TIMER_SOUNDS, isSoundPremium } from '../../config/sounds';
 import useSimpleAudio from '../../hooks/useSimpleAudio';
@@ -30,12 +31,15 @@ import haptics from '../../utils/haptics';
 const INCLUDED_SOUNDS = TIMER_SOUNDS.filter((sound) => !sound.isPremium);
 const AMBIANCE_SOUNDS = TIMER_SOUNDS.filter((sound) => sound.isPremium);
 
-export default function SoundsPanel({ onBack, maxHeight }) {
+export default function SoundsPanel({ onBack, maxHeight, onBorrowed }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
   const { isPremium } = usePremiumStatus();
   const modalStack = useModalStack();
+  // Pied de section guichet (Lambda T, 1b) — prix dynamique même source
+  // RevenueCat que PremiumModalContent (cf. useAmbiancesPrice).
+  const ambiancesPrice = useAmbiancesPrice();
   const {
     timer: { selectedSoundId },
     setSelectedSoundId,
@@ -47,6 +51,12 @@ export default function SoundsPanel({ onBack, maxHeight }) {
     setSelectedSoundId(soundId);
     playSound(soundId).catch(() => {});
     analytics.trackSoundSelected(soundId);
+    // Lambda V (pédagogie du prêt) : un FREE applique un son Ambiances →
+    // signal au coach (ligne « son emprunté », une fois par item — le
+    // verrou vit dans useBorrowCoach, côté TimerScreen).
+    if (!isPremium && isSoundPremium(soundId)) {
+      onBorrowed?.(soundId);
+    }
   };
 
   // Ligne d'invitation : jamais pour un premium, seulement quand le son
@@ -62,8 +72,24 @@ export default function SoundsPanel({ onBack, maxHeight }) {
     }
   }, [showAmbiancesHint, analytics]);
 
+  // Lambda U (2c) : hero = pictogramme note sobre (pas de swatches, mandat
+  // §4) — même critère de distinction que PalettesPanel : seule cette ligne
+  // d'invitation « essai libre » transmet un hero, pas le pied de section
+  // guichet du lambda T ci-dessous.
   const handleDiscoverAmbiances = () => {
     analytics.trackAmbiancesInvitationTapped('sounds');
+    modalStack.push('premium', {
+      highlightedFeature: 'sounds',
+      hero: { type: 'sound', soundId: selectedSoundId },
+    });
+  };
+
+  // Pied de section guichet (Lambda T, 1b) — entrée volontaire distincte de
+  // la ligne d'invitation ci-dessus (emprunt actif seulement) : toujours
+  // visible pour un FREE, même paywall highlighted 'sounds'. Les deux
+  // coexistent (décision CD).
+  const handleOpenCounter = () => {
+    haptics.selection().catch(() => {});
     modalStack.push('premium', { highlightedFeature: 'sounds' });
   };
 
@@ -140,6 +166,21 @@ export default function SoundsPanel({ onBack, maxHeight }) {
       fontWeight: fontWeights.semibold,
       textDecorationLine: 'underline',
     },
+    // Pied de section guichet (Lambda T, 1b) — même esprit crème que le
+    // guichet AsideZone (`background` sur `surface`), ligne compacte.
+    counterFooter: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.md,
+      flexDirection: 'row',
+      marginTop: theme.spacing.sm,
+      padding: rs(10),
+    },
+    counterFooterText: {
+      color: theme.colors.text,
+      flex: 1,
+      fontSize: rs(12, 'min'),
+    },
   });
 
   const renderSoundRow = (sound) => {
@@ -185,6 +226,25 @@ export default function SoundsPanel({ onBack, maxHeight }) {
 
         <Text style={styles.sectionTitle}>{t('soundsPanel.ambiances')}</Text>
         {AMBIANCE_SOUNDS.map(renderSoundRow)}
+
+        {/* Pied de section guichet (Lambda T, 1b) — entrée volontaire,
+            toujours visible pour un FREE (coexiste avec la ligne d'emprunt
+            actif ci-dessous, décision CD). Masqué en premium. */}
+        {!isPremium && (
+          <TouchableOpacity
+            testID="soundsPanel.counterFooter"
+            style={styles.counterFooter}
+            onPress={handleOpenCounter}
+            activeOpacity={0.7}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={t('soundsPanel.counterFooter', { price: ambiancesPrice || '4,99 €' })}
+          >
+            <Text style={styles.counterFooterText}>
+              {t('soundsPanel.counterFooter', { price: ambiancesPrice || '4,99 €' })}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {showAmbiancesHint && (
           <View style={styles.ambiancesHint}>
