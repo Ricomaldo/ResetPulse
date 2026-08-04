@@ -8,7 +8,7 @@
     "delete": "Eliminar"
   },
   "welcome": {
-    "title": "Bienvenido a ResetPulse"
+    "title": "bienvenido."
   },
   "invitation": "¿Listo?",
   "onboarding": {
@@ -86,7 +86,7 @@
         "tapToContinue": "Cuando estés listo"
       },
       "filter1": {
-        "title": "Un temporizador que se adapta a ti",
+        "title": "un timer que se adapta a ti.",
         "subtitle": ""
       }
     },
@@ -106,11 +106,11 @@
   "settings": {
     "title": "Ajustes",
     "interface": {
-      "pulseAnimationDescriptionOn": "Animación activada durante el temporizador",
-      "pulseAnimationDescriptionOff": "Animación desactivada",
       "pulseWarningTitle": "Animación de pulso",
       "pulseWarningMessage": "Esta opción activa una animación visual repetitiva.\n\nEvita activar esta función si eres sensible a efectos visuales o tienes historial de fotosensibilidad.",
-      "pulseWarningEnable": "Activar"
+      "pulseWarningEnable": "Activar",
+      "pulseAnimationDescriptionOn": "Animación activada durante el temporizador",
+      "pulseAnimationDescriptionOff": "Animación desactivada"
     },
     "timer": {
       "soundDescription": "Elige el sonido que se reproducirá al finalizar el temporizador",
@@ -180,7 +180,7 @@
       "activityEmoji": "Emoji de actividad en el centro",
       "activityEmojiDescriptionOn": "El emoji se muestra en el centro de la esfera",
       "activityEmojiDescriptionOff": "El emoji está oculto",
-      "pulseAnimation": "Animación de pulso"
+      "pulseAnimation": "halo que respira"
     }
   },
   "premium": {
@@ -188,7 +188,6 @@
     "description": "Todos los colores.\nTodas las actividades.\nTu máximo confort.",
     "features": "7 DÍAS GRATIS",
     "price": "Luego %{price} una vez.\nTuyo para siempre.",
-    "startTrial": "Probar 7 días gratis",
     "restore": "Restaurar mis compras",
     "welcomeTitle": "¡Bienvenido a Ambiances! 🎉",
     "welcomeMessage": "Todas las paletas, los rituales ilimitados y los sonidos de Ambiances están ahora desbloqueados.",
@@ -211,7 +210,8 @@
     "errorStore": "Problema con la tienda. Inténtalo de nuevo más tarde.",
     "errorPaymentPending": "Pago pendiente. Comprueba tus compras en unos minutos.",
     "errorRestoreGeneric": "Error de restauración",
-    "errorGeneric": "Se produjo un error"
+    "errorGeneric": "Se produjo un error",
+    "startTrial": "Probar 7 días gratis"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -222,9 +222,24 @@
       "sounds": "sonidos Ambiances"
     },
     "price": "%{price}, una vez. Para siempre.",
-    "startTrial": "prueba 7 días gratis",
     "unlock": "desbloquear — %{price}, una vez",
-    "breatheInvitation": "¿quieres hacerlo respirar? descubre Ambiances"
+    "breatheInvitation": "¿quieres hacerlo respirar? descubre Ambiances",
+    "counterSubtitle": "quédatelo todo, para siempre",
+    "hook": {
+      "emoji": "hazlo tuyo",
+      "custom": "tus propios emojis",
+      "rituals": "un ritual por momento",
+      "palette": "te sienta bien",
+      "sound": "te sienta bien"
+    },
+    "hookSub": {
+      "emoji": "este emoji vive en Ambiances — como todo lo que conservas.",
+      "rituals": "tu 2º ritual solo espera un hueco.",
+      "palette": "quédate %{name} — y las otras 9 con ella.",
+      "sound": "quédate %{name} — y los otros 7 con él.",
+      "custom": "compón el tuyo, vivirá en Ambiances."
+    },
+    "startTrial": "prueba 7 días gratis"
   },
   "activities": {
     "none": "Básico",
@@ -287,7 +302,6 @@
     "restorePurchases": "Restaurar compras anteriores",
     "restorePurchasesHint": "Restaurar acceso a Ambiances si ya compraste",
     "saveActivityHint": "Guarda los cambios de esta actividad",
-    "unlockPremiumHint": "Comenzar prueba gratuita de 7 días, luego pago único",
     "timer": {
       "dialAdjustable": "Ajustable. Desliza hacia arriba o abajo para cambiar la duración.",
       "dialTapToToggle": "Toca para iniciar o pausar el temporizador",
@@ -312,7 +326,8 @@
     "chooseCustomEmoji": "Elegir otro emoji desde el teclado",
     "ritualNamePreset": "Ritual preconfigurado %{name}",
     "deleteRitual": "Eliminar el ritual %{name}",
-    "favoriteRitual": "Ritual favorito %{name}"
+    "favoriteRitual": "Ritual favorito %{name}",
+    "unlockPremiumHint": "Comenzar prueba gratuita de 7 días, luego pago único"
   },
   "customActivities": {
     "toast": {
@@ -393,52 +408,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Sumérgete",
-      "endMessage": "Enriquecido 📖"
+      "startMessage": "sumérgete.",
+      "endMessage": "nutrido."
     },
     "study": {
-      "startMessage": "Aprende",
-      "endMessage": "Avanzado 📈"
+      "startMessage": "concéntrate.",
+      "endMessage": "un poco más lejos."
     },
     "yoga": {
-      "startMessage": "Respira",
-      "endMessage": "En paz 🪷"
+      "startMessage": "estírate.",
+      "endMessage": "distendido."
     },
     "sport": {
-      "startMessage": "Muévete",
-      "endMessage": "Con energía ⚡"
+      "startMessage": "muévete.",
+      "endMessage": "en marcha."
     },
     "walking": {
-      "startMessage": "Camina",
-      "endMessage": "Revitalizado 🌿"
+      "startMessage": "camina.",
+      "endMessage": "el aire sentó bien."
     },
     "cooking": {
-      "startMessage": "Prepara",
-      "endMessage": "Satisfecho 🍽️"
+      "startMessage": "a los fogones.",
+      "endMessage": "a la mesa."
     },
     "gaming": {
-      "startMessage": "Juega",
-      "endMessage": "Relajado 🎮"
+      "startMessage": "te toca.",
+      "endMessage": "bien jugado."
     },
     "homework": {
-      "startMessage": "Concéntrate",
-      "endMessage": "Completado ✅"
+      "startMessage": "manos a la obra.",
+      "endMessage": "hecho."
     },
     "music": {
-      "startMessage": "Toca",
-      "endMessage": "Armonizado 🎵"
+      "startMessage": "en música.",
+      "endMessage": "todavía resuena."
     },
     "cleaning": {
-      "startMessage": "Ordena",
-      "endMessage": "Sereno ✨"
+      "startMessage": "a ordenar.",
+      "endMessage": "impecable."
     },
     "nap": {
-      "startMessage": "Descansa",
-      "endMessage": "Renovado 💤"
+      "startMessage": "cierra los ojos.",
+      "endMessage": "descansado."
     },
     "writing": {
-      "startMessage": "Escribe",
-      "endMessage": "Liberado ✍️"
+      "startMessage": "pon las palabras.",
+      "endMessage": "en calma."
     },
     "custom": {
       "startMessage": "Vamos",
@@ -483,7 +498,8 @@
     "included": "Incluidas",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "paleta Ambiances — pruébala libremente",
-    "ambiancesDiscover": "descubrir Ambiances"
+    "ambiancesDiscover": "descubrir Ambiances",
+    "counterFooter": "las 10 paletas, tuyas para siempre — %{price}, una vez ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -503,6 +519,24 @@
     "exitFocus": "salir del focus",
     "doubleTapHint": "consejo: doble toque en el fondo para cambiar",
     "handle": "abrir ajustes",
-    "closedLabel": "rituales y ajustes"
+    "closedLabel": "rituales y ajustes",
+    "settingsRow": "Ajustes",
+    "settingsNew": "nuevo",
+    "scaleLock": "Bloquear la escala",
+    "scaleLockHint": "el disco conserva su escala actual, incluso para una duración corta"
+  },
+  "dormantTips": {
+    "palettes": "¿te fijaste? tus colores tienen paletas enteras — desliza el cajón de abajo.",
+    "focus": "¿quieres una pantalla desnuda? el modo focus te espera en el cajón de abajo."
+  },
+  "soundsPanel": {
+    "counterFooter": "los 8 sonidos, tuyos para siempre — %{price}, una vez ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name} está prestada — en el próximo inicio, vuelve a casa.",
+    "borrowedSound": "%{name} está prestado — en el próximo inicio, vuelve a casa.",
+    "paletteReturned": "%{name} ha vuelto a casa. puedes retomarla — o quedártela.",
+    "soundReturned": "%{name} ha vuelto a casa. puedes retomarlo — o quedártelo.",
+    "ritualsRow": "tus rituales, ahí — un toque cada uno."
   }
 }
