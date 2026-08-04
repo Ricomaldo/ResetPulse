@@ -40,6 +40,7 @@
     "expo": "~55.0.28",
     "expo-asset": "~55.0.18",
     "expo-audio": "~55.0.16",
+    "expo-build-properties": "^57.0.8",
     "expo-dev-client": "~55.0.37",
     "expo-haptics": "~55.0.16",
     "expo-keep-awake": "~55.0.8",

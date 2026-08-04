@@ -50,7 +50,16 @@
       "expo-localization",
       "expo-asset",
       "expo-audio",
-      "@bacons/apple-targets"
+      "@bacons/apple-targets",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "targetSdkVersion": 36,
+            "compileSdkVersion": 36
+          }
+        }
+      ]
     ],
     "notification": {
       "icon": "./assets/icon.png",
