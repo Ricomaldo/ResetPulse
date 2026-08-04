@@ -545,5 +545,11 @@
   "dormantTips": {
     "palettes": "psst — your colors come in full palettes, in settings",
     "focus": "want a bare screen? focus mode awaits in settings"
+  },
+  "coach": {
+    "borrowedPalette": "borrowed palette — next launch, it goes back home.",
+    "borrowedSound": "borrowed sound — next launch, it goes back home.",
+    "paletteReturned": "%{name} went home. take it again — or keep it.",
+    "soundReturned": "%{name} went home. take it again — or keep it."
   }
 }

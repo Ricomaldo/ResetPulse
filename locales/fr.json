@@ -545,5 +545,11 @@
   "dormantTips": {
     "palettes": "t'as vu ? tes couleurs ont des palettes entières — dans les réglages",
     "focus": "envie d'un écran nu ? le mode focus t'attend dans les réglages"
+  },
+  "coach": {
+    "borrowedPalette": "palette empruntée — au prochain lancement, elle rentre chez elle.",
+    "borrowedSound": "son emprunté — au prochain lancement, il rentre chez lui.",
+    "paletteReturned": "%{name} est rentrée. tu peux la reprendre — ou la garder.",
+    "soundReturned": "%{name} est rentré. tu peux le reprendre — ou le garder."
   }
 }
