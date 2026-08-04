@@ -8,7 +8,7 @@
     "delete": "Löschen"
   },
   "welcome": {
-    "title": "Willkommen bei ResetPulse"
+    "title": "willkommen."
   },
   "invitation": "Bereit?",
   "onboarding": {
@@ -86,7 +86,7 @@
         "tapToContinue": "Wenn du bereit bist"
       },
       "filter1": {
-        "title": "Ein Timer, der sich dir anpasst",
+        "title": "ein Timer, der sich dir anpasst.",
         "subtitle": ""
       }
     },
@@ -174,7 +174,7 @@
       "activityEmoji": "Aktivitäts-Emoji in der Mitte",
       "activityEmojiDescriptionOn": "Emoji wird in der Mitte des Zifferblatts angezeigt",
       "activityEmojiDescriptionOff": "Emoji ist ausgeblendet",
-      "pulseAnimation": "Pulsanimation"
+      "pulseAnimation": "atmender Schein"
     }
   },
   "premium": {
@@ -216,7 +216,22 @@
     },
     "price": "%{price}, einmalig. Für immer deins.",
     "unlock": "freischalten — %{price}, einmalig",
-    "breatheInvitation": "Willst du es zum Atmen bringen? Entdecke Ambiances"
+    "breatheInvitation": "Willst du es zum Atmen bringen? Entdecke Ambiances",
+    "counterSubtitle": "alles behalten, für immer",
+    "hook": {
+      "emoji": "mach es zu deinem",
+      "custom": "deine eigenen Emojis",
+      "rituals": "ein Ritual pro Moment",
+      "palette": "sie steht dir",
+      "sound": "er passt zu dir"
+    },
+    "hookSub": {
+      "emoji": "dieses Emoji lebt in Ambiances — wie alles, was du behältst.",
+      "rituals": "dein 2. Ritual wartet nur auf Platz.",
+      "palette": "behalte %{name} — und die anderen 9 gleich mit.",
+      "sound": "behalte %{name} — und die anderen 7 gleich mit.",
+      "custom": "stell dein eigenes zusammen, es lebt in Ambiances."
+    }
   },
   "activities": {
     "none": "Basis",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Eintauchen",
-      "endMessage": "Bereichert 📖"
+      "startMessage": "tauch ein.",
+      "endMessage": "genährt."
     },
     "study": {
-      "startMessage": "Lernen",
-      "endMessage": "Fortgeschritten 📈"
+      "startMessage": "konzentrier dich.",
+      "endMessage": "ein Stück weiter."
     },
     "yoga": {
-      "startMessage": "Atmen",
-      "endMessage": "Friedlich 🪷"
+      "startMessage": "dehn dich.",
+      "endMessage": "gelöst."
     },
     "sport": {
-      "startMessage": "Bewegen",
-      "endMessage": "Energiegeladen ⚡"
+      "startMessage": "beweg dich.",
+      "endMessage": "aufgewärmt."
     },
     "walking": {
-      "startMessage": "Gehen",
-      "endMessage": "Belebt 🌿"
+      "startMessage": "geh los.",
+      "endMessage": "die Luft hat gutgetan."
     },
     "cooking": {
-      "startMessage": "Zubereiten",
-      "endMessage": "Zufrieden 🍽️"
+      "startMessage": "an den Herd.",
+      "endMessage": "es ist angerichtet."
     },
     "gaming": {
-      "startMessage": "Spielen",
-      "endMessage": "Entspannt 🎮"
+      "startMessage": "du bist dran.",
+      "endMessage": "gut gespielt."
     },
     "homework": {
-      "startMessage": "Konzentriere dich",
-      "endMessage": "Erledigt ✅"
+      "startMessage": "an die Arbeit.",
+      "endMessage": "erledigt."
     },
     "music": {
-      "startMessage": "Spielen",
-      "endMessage": "Harmonisch 🎵"
+      "startMessage": "spiel weiter.",
+      "endMessage": "klingt noch nach."
     },
     "cleaning": {
-      "startMessage": "Aufräumen",
-      "endMessage": "Heiter ✨"
+      "startMessage": "aufräumen.",
+      "endMessage": "blitzsauber."
     },
     "nap": {
-      "startMessage": "Ausruhen",
-      "endMessage": "Erholt 💤"
+      "startMessage": "Augen zu.",
+      "endMessage": "ausgeruht."
     },
     "writing": {
-      "startMessage": "Schreiben",
-      "endMessage": "Befreit ✍️"
+      "startMessage": "bring es zu Papier.",
+      "endMessage": "abgelegt."
     },
     "custom": {
       "startMessage": "Los geht's",
@@ -474,7 +489,8 @@
     "included": "Enthalten",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances-Palette — probier sie frei aus",
-    "ambiancesDiscover": "Ambiances entdecken"
+    "ambiancesDiscover": "Ambiances entdecken",
+    "counterFooter": "alle 10 Paletten, dir für immer — %{price}, einmalig ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "Fokus verlassen",
     "doubleTapHint": "Tipp: Doppeltippen auf den Hintergrund zum Wechseln",
     "handle": "Einstellungen öffnen",
-    "closedLabel": "Rituale & Einstellungen"
+    "closedLabel": "Rituale & Einstellungen",
+    "settingsRow": "Einstellungen",
+    "settingsNew": "neu",
+    "scaleLock": "Skala sperren",
+    "scaleLockHint": "das Zifferblatt behält seine aktuelle Skala, auch bei kurzer Dauer"
+  },
+  "dormantTips": {
+    "palettes": "schon gesehen? deine Farben haben ganze Paletten — wisch die Schublade unten hoch.",
+    "focus": "Lust auf einen leeren Bildschirm? der Fokus-Modus wartet in der Schublade unten."
+  },
+  "soundsPanel": {
+    "counterFooter": "alle 8 Klänge, dir für immer — %{price}, einmalig ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name} ist geliehen — beim nächsten Start kehrt sie heim.",
+    "borrowedSound": "%{name} ist geliehen — beim nächsten Start kehrt er heim.",
+    "paletteReturned": "%{name} ist wieder da. du kannst sie weiter nutzen — oder behalten.",
+    "soundReturned": "%{name} ist wieder da. du kannst ihn weiter nutzen — oder behalten.",
+    "ritualsRow": "deine Rituale, direkt hier — ein Tap für jedes."
   }
 }

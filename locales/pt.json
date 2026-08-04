@@ -8,7 +8,7 @@
     "delete": "Eliminar"
   },
   "welcome": {
-    "title": "Bem-vindo ao ResetPulse"
+    "title": "bem-vindo."
   },
   "invitation": "Pronto?",
   "onboarding": {
@@ -86,7 +86,7 @@
         "tapToContinue": "Quando estiveres pronto"
       },
       "filter1": {
-        "title": "Um temporizador que se adapta a ti",
+        "title": "um timer que se adapta a ti.",
         "subtitle": ""
       }
     },
@@ -174,7 +174,7 @@
       "activityEmoji": "Emoji da atividade ao centro",
       "activityEmojiDescriptionOn": "O emoji aparece ao centro do mostrador",
       "activityEmojiDescriptionOff": "O emoji está oculto",
-      "pulseAnimation": "Animação de pulso"
+      "pulseAnimation": "halo que respira"
     }
   },
   "premium": {
@@ -216,7 +216,22 @@
     },
     "price": "%{price}, uma vez. Teu para sempre.",
     "unlock": "desbloquear — %{price}, uma vez",
-    "breatheInvitation": "queres fazê-lo respirar? descobre Ambiances"
+    "breatheInvitation": "queres fazê-lo respirar? descobre Ambiances",
+    "counterSubtitle": "guarda tudo, para sempre",
+    "hook": {
+      "emoji": "torna-o teu",
+      "custom": "os teus próprios emojis",
+      "rituals": "um ritual por momento",
+      "palette": "fica-te bem",
+      "sound": "fica-te bem"
+    },
+    "hookSub": {
+      "emoji": "este emoji vive em Ambiances — como tudo o que guardas.",
+      "rituals": "o teu 2º ritual só espera lugar.",
+      "palette": "guarda %{name} — e as outras 9 com ela.",
+      "sound": "guarda %{name} — e os outros 7 com ele.",
+      "custom": "compõe o teu, vai viver em Ambiances."
+    }
   },
   "activities": {
     "none": "Básico",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Mergulha",
-      "endMessage": "Enriquecido 📖"
+      "startMessage": "mergulha.",
+      "endMessage": "nutrido."
     },
     "study": {
-      "startMessage": "Aprende",
-      "endMessage": "Progrediste 📈"
+      "startMessage": "concentra-te.",
+      "endMessage": "um pouco mais longe."
     },
     "yoga": {
-      "startMessage": "Respira",
-      "endMessage": "Em paz 🪷"
+      "startMessage": "alonga-te.",
+      "endMessage": "descontraído."
     },
     "sport": {
-      "startMessage": "Mexe-te",
-      "endMessage": "Com energia ⚡"
+      "startMessage": "mexe-te.",
+      "endMessage": "aquecido."
     },
     "walking": {
-      "startMessage": "Caminha",
-      "endMessage": "Revitalizado 🌿"
+      "startMessage": "avança.",
+      "endMessage": "o ar fez bem."
     },
     "cooking": {
-      "startMessage": "Prepara",
-      "endMessage": "Satisfeito 🍽️"
+      "startMessage": "ao fogão.",
+      "endMessage": "à mesa."
     },
     "gaming": {
-      "startMessage": "Joga",
-      "endMessage": "Relaxado 🎮"
+      "startMessage": "é a tua vez.",
+      "endMessage": "bem jogado."
     },
     "homework": {
-      "startMessage": "Concentra-te",
-      "endMessage": "Concluído ✅"
+      "startMessage": "mãos à obra.",
+      "endMessage": "feito."
     },
     "music": {
-      "startMessage": "Toca",
-      "endMessage": "Harmonizado 🎵"
+      "startMessage": "em música.",
+      "endMessage": "ainda ressoa."
     },
     "cleaning": {
-      "startMessage": "Organiza",
-      "endMessage": "Sereno ✨"
+      "startMessage": "arruma-se.",
+      "endMessage": "impecável."
     },
     "nap": {
-      "startMessage": "Descansa",
-      "endMessage": "Renovado 💤"
+      "startMessage": "fecha os olhos.",
+      "endMessage": "descansado."
     },
     "writing": {
-      "startMessage": "Escreve",
-      "endMessage": "Libertado ✍️"
+      "startMessage": "põe as palavras no papel.",
+      "endMessage": "em paz."
     },
     "custom": {
       "startMessage": "Vamos",
@@ -474,7 +489,8 @@
     "included": "Incluídas",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "paleta Ambiances — experimenta-a livremente",
-    "ambiancesDiscover": "descobrir Ambiances"
+    "ambiancesDiscover": "descobrir Ambiances",
+    "counterFooter": "as 10 paletas, tuas para sempre — %{price}, uma vez ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "sair do focus",
     "doubleTapHint": "dica: toque duplo no fundo para alternar",
     "handle": "abrir definições",
-    "closedLabel": "rituais e definições"
+    "closedLabel": "rituais e definições",
+    "settingsRow": "Definições",
+    "settingsNew": "novo",
+    "scaleLock": "Bloquear a escala",
+    "scaleLockHint": "o mostrador mantém a escala atual, mesmo para uma duração curta"
+  },
+  "dormantTips": {
+    "palettes": "reparaste? as tuas cores têm paletas inteiras — desliza a gaveta de baixo.",
+    "focus": "queres um ecrã limpo? o modo focus espera na gaveta de baixo."
+  },
+  "soundsPanel": {
+    "counterFooter": "os 8 sons, teus para sempre — %{price}, uma vez ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name} está emprestada — no próximo arranque, volta para casa.",
+    "borrowedSound": "%{name} está emprestado — no próximo arranque, volta para casa.",
+    "paletteReturned": "%{name} voltou para casa. podes retomá-la — ou ficar com ela.",
+    "soundReturned": "%{name} voltou para casa. podes retomá-lo — ou ficar com ele.",
+    "ritualsRow": "os teus rituais, ali — um toque cada."
   }
 }

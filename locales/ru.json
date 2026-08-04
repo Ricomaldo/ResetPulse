@@ -27,7 +27,7 @@
   },
   "invitation": "Готов?",
   "welcome": {
-    "title": "Добро пожаловать в ResetPulse"
+    "title": "добро пожаловать."
   },
   "onboarding": {
     "restartGuide": "Перезапустить руководство",
@@ -104,7 +104,7 @@
         "tapToContinue": "Когда будете готовы"
       },
       "filter1": {
-        "title": "Таймер, который подстраивается под вас",
+        "title": "таймер, который подстраивается под тебя.",
         "subtitle": ""
       }
     },
@@ -192,7 +192,7 @@
       "activityEmoji": "Эмодзи активности в центре",
       "activityEmojiDescriptionOn": "Эмодзи отображается в центре циферблата",
       "activityEmojiDescriptionOff": "Эмодзи скрыт",
-      "pulseAnimation": "Анимация пульсации"
+      "pulseAnimation": "дышащий ореол"
     }
   },
   "premium": {
@@ -234,7 +234,22 @@
     },
     "price": "%{price}, один раз. Твоё навсегда.",
     "unlock": "разблокировать — %{price}, один раз",
-    "breatheInvitation": "Хочешь заставить его дышать? Открой Ambiances"
+    "breatheInvitation": "Хочешь заставить его дышать? Открой Ambiances",
+    "counterSubtitle": "оставь всё себе, навсегда",
+    "hook": {
+      "emoji": "сделай его своим",
+      "custom": "твои собственные эмодзи",
+      "rituals": "по ритуалу на каждый момент",
+      "palette": "она тебе идёт",
+      "sound": "он тебе подходит"
+    },
+    "hookSub": {
+      "emoji": "этот эмодзи живёт в Ambiances — как всё, что ты сохраняешь.",
+      "rituals": "твой 2-й ритуал ждёт только места.",
+      "palette": "оставь %{name} — и ещё 9 вместе с ней.",
+      "sound": "оставь %{name} — и ещё 7 вместе с ним.",
+      "custom": "собери свой, он будет жить в Ambiances."
+    }
   },
   "activities": {
     "none": "Базовая",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Погружайся",
-      "endMessage": "Стал богаче 📖"
+      "startMessage": "погрузись.",
+      "endMessage": "напитан."
     },
     "study": {
-      "startMessage": "Учись",
-      "endMessage": "Прогресс 📈"
+      "startMessage": "сосредоточься.",
+      "endMessage": "ещё чуть дальше."
     },
     "yoga": {
-      "startMessage": "Дыши",
-      "endMessage": "Умиротворение 🪷"
+      "startMessage": "потянись.",
+      "endMessage": "расслаблен."
     },
     "sport": {
-      "startMessage": "Двигайся",
-      "endMessage": "Заряд энергии ⚡"
+      "startMessage": "начни двигаться.",
+      "endMessage": "разогрет."
     },
     "walking": {
-      "startMessage": "Иди",
-      "endMessage": "Прилив сил 🌿"
+      "startMessage": "иди.",
+      "endMessage": "воздух пошёл на пользу."
     },
     "cooking": {
-      "startMessage": "Готовь",
-      "endMessage": "Сытость 🍽️"
+      "startMessage": "к плите.",
+      "endMessage": "к столу."
     },
     "gaming": {
-      "startMessage": "Играй",
-      "endMessage": "Расслабление 🎮"
+      "startMessage": "твой ход.",
+      "endMessage": "хорошая игра."
     },
     "homework": {
-      "startMessage": "Сосредоточься",
-      "endMessage": "Готово ✅"
+      "startMessage": "за дело.",
+      "endMessage": "готово."
     },
     "music": {
-      "startMessage": "Играй",
-      "endMessage": "Гармония 🎵"
+      "startMessage": "играй дальше.",
+      "endMessage": "всё ещё звучит."
     },
     "cleaning": {
-      "startMessage": "Наведи порядок",
-      "endMessage": "Спокойствие ✨"
+      "startMessage": "наводим порядок.",
+      "endMessage": "чисто."
     },
     "nap": {
-      "startMessage": "Отдыхай",
-      "endMessage": "Отдохнувший 💤"
+      "startMessage": "закрой глаза.",
+      "endMessage": "отдохнул."
     },
     "writing": {
-      "startMessage": "Пиши",
-      "endMessage": "Освобождение ✍️"
+      "startMessage": "запиши это.",
+      "endMessage": "изложено."
     },
     "custom": {
       "startMessage": "Начинаем",
@@ -474,7 +489,8 @@
     "included": "Включено",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Палитра Ambiances — попробуй бесплатно",
-    "ambiancesDiscover": "Открой Ambiances"
+    "ambiancesDiscover": "Открой Ambiances",
+    "counterFooter": "все 10 палитр — твои навсегда — %{price}, один раз ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "Выйти из фокуса",
     "doubleTapHint": "Совет: дважды нажми на фон, чтобы переключить",
     "handle": "Открыть настройки",
-    "closedLabel": "Ритуалы и настройки"
+    "closedLabel": "Ритуалы и настройки",
+    "settingsRow": "Настройки",
+    "settingsNew": "новое",
+    "scaleLock": "Зафиксировать шкалу",
+    "scaleLockHint": "циферблат сохраняет текущую шкалу, даже для короткой длительности"
+  },
+  "dormantTips": {
+    "palettes": "заметил? у твоих цветов есть целые палитры — потяни ящик снизу вверх.",
+    "focus": "хочется чистого экрана? режим фокуса ждёт в ящике снизу."
+  },
+  "soundsPanel": {
+    "counterFooter": "все 8 звуков — твои навсегда — %{price}, один раз ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name} одолжена — при следующем запуске она вернётся домой.",
+    "borrowedSound": "%{name} одолжен — при следующем запуске он вернётся домой.",
+    "paletteReturned": "%{name} вернулась домой. можешь снова взять её — или оставить себе.",
+    "soundReturned": "%{name} вернулся домой. можешь снова взять его — или оставить себе.",
+    "ritualsRow": "твои ритуалы — вот они, по одному касанию."
   }
 }

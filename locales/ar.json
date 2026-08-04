@@ -27,7 +27,7 @@
   },
   "invitation": "هل أنت مستعد?",
   "welcome": {
-    "title": "مرحباً بك في ResetPulse"
+    "title": "أهلًا بك."
   },
   "onboarding": {
     "restartGuide": "إعادة تشغيل الدليل",
@@ -104,7 +104,7 @@
         "tapToContinue": "عندما تكون مستعداً"
       },
       "filter1": {
-        "title": "مؤقت يتكيف معك",
+        "title": "مؤقّت يتكيّف معك.",
         "subtitle": ""
       }
     },
@@ -192,7 +192,7 @@
       "activityEmoji": "رمز النشاط التعبيري في المنتصف",
       "activityEmojiDescriptionOn": "يظهر الرمز التعبيري في منتصف القرص",
       "activityEmojiDescriptionOff": "الرمز التعبيري مخفي",
-      "pulseAnimation": "حركة النبض"
+      "pulseAnimation": "هالة تتنفّس"
     }
   },
   "premium": {
@@ -234,7 +234,22 @@
     },
     "price": "%{price}، مرة واحدة. ملكك للأبد.",
     "unlock": "فتح — %{price}، مرة واحدة",
-    "breatheInvitation": "هل تريد أن تجعله يتنفس؟ اكتشف Ambiances"
+    "breatheInvitation": "هل تريد أن تجعله يتنفس؟ اكتشف Ambiances",
+    "counterSubtitle": "احتفظ بكل شيء، إلى الأبد",
+    "hook": {
+      "emoji": "اجعله ملكك",
+      "custom": "الرموز التعبيرية الخاصة بك",
+      "rituals": "طقس لكل لحظة",
+      "palette": "تليق بك",
+      "sound": "يليق بك"
+    },
+    "hookSub": {
+      "emoji": "هذا الرمز يعيش في Ambiances — مثل كل ما تحتفظ به.",
+      "rituals": "طقسك الثاني ينتظر مكانًا فقط.",
+      "palette": "احتفظ بـ %{name} — والتسع الأخريات معها.",
+      "sound": "احتفظ بـ %{name} — والسبعة الأخرى معه.",
+      "custom": "كوّن رمزك الخاص، سيعيش في Ambiances."
+    }
   },
   "activities": {
     "none": "أساسي",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "انغمس",
-      "endMessage": "أثريت نفسك 📖"
+      "startMessage": "انغمس.",
+      "endMessage": "مُتغذٍّ."
     },
     "study": {
-      "startMessage": "تعلّم",
-      "endMessage": "تقدّمت 📈"
+      "startMessage": "ركّز.",
+      "endMessage": "خطوة أبعد."
     },
     "yoga": {
-      "startMessage": "تنفّس",
-      "endMessage": "هادئ 🪷"
+      "startMessage": "تمدّد.",
+      "endMessage": "مسترخٍ."
     },
     "sport": {
-      "startMessage": "تحرّك",
-      "endMessage": "مفعم بالطاقة ⚡"
+      "startMessage": "تحرّك.",
+      "endMessage": "دافئ."
     },
     "walking": {
-      "startMessage": "امشِ",
-      "endMessage": "منتعش الحيوية 🌿"
+      "startMessage": "انطلق.",
+      "endMessage": "الهواء أفادك."
     },
     "cooking": {
-      "startMessage": "حضّر",
-      "endMessage": "شبعان 🍽️"
+      "startMessage": "إلى الموقد.",
+      "endMessage": "المائدة جاهزة."
     },
     "gaming": {
-      "startMessage": "العب",
-      "endMessage": "مسترخٍ 🎮"
+      "startMessage": "دورك.",
+      "endMessage": "لعب جميل."
     },
     "homework": {
-      "startMessage": "ركّز",
-      "endMessage": "مكتمل ✅"
+      "startMessage": "إلى العمل.",
+      "endMessage": "تم."
     },
     "music": {
-      "startMessage": "اعزف",
-      "endMessage": "متناغم 🎵"
+      "startMessage": "واصل العزف.",
+      "endMessage": "لا يزال يتردّد صداه."
     },
     "cleaning": {
-      "startMessage": "رتّب",
-      "endMessage": "هادئ ✨"
+      "startMessage": "لنرتّب.",
+      "endMessage": "نظيف تمامًا."
     },
     "nap": {
-      "startMessage": "استرح",
-      "endMessage": "منتعش 💤"
+      "startMessage": "أغمض عينيك.",
+      "endMessage": "مرتاح."
     },
     "writing": {
-      "startMessage": "اكتب",
-      "endMessage": "متحرر ✍️"
+      "startMessage": "دوّن الكلمات.",
+      "endMessage": "مُدوَّن."
     },
     "custom": {
       "startMessage": "هيا بنا",
@@ -474,7 +489,8 @@
     "included": "مُضمّن",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "لوحة Ambiances — جرّبها بحرية",
-    "ambiancesDiscover": "اكتشف Ambiances"
+    "ambiancesDiscover": "اكتشف Ambiances",
+    "counterFooter": "اللوحات العشر كلها، ملكك إلى الأبد — %{price} مرة واحدة ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "الخروج من وضع التركيز",
     "doubleTapHint": "نصيحة: انقر مرتين على الخلفية للتبديل",
     "handle": "فتح الإعدادات",
-    "closedLabel": "الطقوس والإعدادات"
+    "closedLabel": "الطقوس والإعدادات",
+    "settingsRow": "الإعدادات",
+    "settingsNew": "جديد",
+    "scaleLock": "قفل المقياس",
+    "scaleLockHint": "يحتفظ القرص بمقياسه الحالي، حتى لمدة قصيرة"
+  },
+  "dormantTips": {
+    "palettes": "هل لاحظت؟ ألوانك لها لوحات كاملة — اسحب الدرج السفلي للأعلى.",
+    "focus": "تريد شاشة صافية؟ وضع التركيز في انتظارك في الدرج السفلي."
+  },
+  "soundsPanel": {
+    "counterFooter": "الأصوات الثمانية كلها، ملكك إلى الأبد — %{price} مرة واحدة ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name} مُستعارة — عند التشغيل التالي، تعود إلى بيتها.",
+    "borrowedSound": "%{name} مُستعار — عند التشغيل التالي، يعود إلى بيته.",
+    "paletteReturned": "%{name} عادت إلى بيتها. يمكنك استئنافها — أو الاحتفاظ بها.",
+    "soundReturned": "%{name} عاد إلى بيته. يمكنك استئنافه — أو الاحتفاظ به.",
+    "ritualsRow": "طقوسك، هنا — لمسة واحدة لكل منها."
   }
 }

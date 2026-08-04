@@ -8,7 +8,7 @@
     "delete": "Verwijderen"
   },
   "welcome": {
-    "title": "Welkom bij ResetPulse"
+    "title": "welkom."
   },
   "invitation": "Klaar?",
   "onboarding": {
@@ -86,7 +86,7 @@
         "tapToContinue": "Wanneer je klaar bent"
       },
       "filter1": {
-        "title": "Een timer die zich aan jou aanpast",
+        "title": "een timer die zich aan jou aanpast.",
         "subtitle": ""
       }
     },
@@ -174,7 +174,7 @@
       "activityEmoji": "Activiteitsemoji in het midden",
       "activityEmojiDescriptionOn": "Emoji wordt in het midden van de wijzerplaat getoond",
       "activityEmojiDescriptionOff": "Emoji is verborgen",
-      "pulseAnimation": "Pulsanimatie"
+      "pulseAnimation": "ademende gloed"
     }
   },
   "premium": {
@@ -216,7 +216,22 @@
     },
     "price": "%{price}, eenmalig. Voor altijd van jou.",
     "unlock": "ontgrendelen — %{price}, eenmalig",
-    "breatheInvitation": "Wil je het laten ademen? Ontdek Ambiances"
+    "breatheInvitation": "Wil je het laten ademen? Ontdek Ambiances",
+    "counterSubtitle": "hou alles, voor altijd",
+    "hook": {
+      "emoji": "maak het van jou",
+      "custom": "je eigen emoji's",
+      "rituals": "één ritueel per moment",
+      "palette": "het staat je goed",
+      "sound": "het past bij je"
+    },
+    "hookSub": {
+      "emoji": "deze emoji leeft in Ambiances — zoals alles wat je bewaart.",
+      "rituals": "je 2e ritueel wacht alleen nog op ruimte.",
+      "palette": "hou %{name} — en de andere 9 erbij.",
+      "sound": "hou %{name} — en de andere 7 erbij.",
+      "custom": "stel je eigen samen, het leeft in Ambiances."
+    }
   },
   "activities": {
     "none": "Basis",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Duik erin",
-      "endMessage": "Verrijkt 📖"
+      "startMessage": "duik erin.",
+      "endMessage": "gevoed."
     },
     "study": {
-      "startMessage": "Leer",
-      "endMessage": "Gevorderd 📈"
+      "startMessage": "focus.",
+      "endMessage": "weer een stukje verder."
     },
     "yoga": {
-      "startMessage": "Adem",
-      "endMessage": "Vredig 🪷"
+      "startMessage": "rek je uit.",
+      "endMessage": "ontspannen."
     },
     "sport": {
-      "startMessage": "Bewegen",
-      "endMessage": "Energiek ⚡"
+      "startMessage": "kom in beweging.",
+      "endMessage": "warm."
     },
     "walking": {
-      "startMessage": "Wandel",
-      "endMessage": "Verkwikt 🌿"
+      "startMessage": "erop uit.",
+      "endMessage": "de lucht deed goed."
     },
     "cooking": {
-      "startMessage": "Bereiden",
-      "endMessage": "Voldaan 🍽️"
+      "startMessage": "aan het fornuis.",
+      "endMessage": "aan tafel."
     },
     "gaming": {
-      "startMessage": "Spelen",
-      "endMessage": "Ontspannen 🎮"
+      "startMessage": "jouw beurt.",
+      "endMessage": "goed gespeeld."
     },
     "homework": {
-      "startMessage": "Concentreer",
-      "endMessage": "Voltooid ✅"
+      "startMessage": "aan de slag.",
+      "endMessage": "gedaan."
     },
     "music": {
-      "startMessage": "Speel",
-      "endMessage": "Harmonieus 🎵"
+      "startMessage": "speel verder.",
+      "endMessage": "het klinkt nog na."
     },
     "cleaning": {
-      "startMessage": "Opruimen",
-      "endMessage": "Sereen ✨"
+      "startMessage": "opruimen.",
+      "endMessage": "brandschoon."
     },
     "nap": {
-      "startMessage": "Rusten",
-      "endMessage": "Verfrist 💤"
+      "startMessage": "ogen dicht.",
+      "endMessage": "uitgerust."
     },
     "writing": {
-      "startMessage": "Schrijf",
-      "endMessage": "Bevrijd ✍️"
+      "startMessage": "zet het op papier.",
+      "endMessage": "neergelegd."
     },
     "custom": {
       "startMessage": "Daar gaan we",
@@ -474,7 +489,8 @@
     "included": "Inbegrepen",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances-palet — probeer het vrij uit",
-    "ambiancesDiscover": "Ambiances ontdekken"
+    "ambiancesDiscover": "Ambiances ontdekken",
+    "counterFooter": "alle 10 paletten, voorgoed van jou — %{price}, eenmalig ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "Focus verlaten",
     "doubleTapHint": "Tip: dubbeltik op de achtergrond om te wisselen",
     "handle": "Instellingen openen",
-    "closedLabel": "Rituelen & instellingen"
+    "closedLabel": "Rituelen & instellingen",
+    "settingsRow": "Instellingen",
+    "settingsNew": "nieuw",
+    "scaleLock": "Schaal vergrendelen",
+    "scaleLockHint": "de wijzerplaat houdt zijn huidige schaal, ook bij een korte duur"
+  },
+  "dormantTips": {
+    "palettes": "al gezien? je kleuren hebben hele paletten — schuif de lade onderin open.",
+    "focus": "zin in een kaal scherm? de focusmodus wacht in de lade onderin."
+  },
+  "soundsPanel": {
+    "counterFooter": "alle 8 geluiden, voorgoed van jou — %{price}, eenmalig ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name} is te leen — bij de volgende start gaat het weer naar huis.",
+    "borrowedSound": "%{name} is te leen — bij de volgende start gaat het weer naar huis.",
+    "paletteReturned": "%{name} is weer thuis. je kunt het oppakken — of houden.",
+    "soundReturned": "%{name} is weer thuis. je kunt het oppakken — of houden.",
+    "ritualsRow": "je rituelen, daar — één tik per stuk."
   }
 }

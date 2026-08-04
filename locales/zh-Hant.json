@@ -8,7 +8,7 @@
     "delete": "刪除"
   },
   "welcome": {
-    "title": "歡迎使用 ResetPulse"
+    "title": "歡迎。"
   },
   "invitation": "準備好了嗎?",
   "onboarding": {
@@ -86,7 +86,7 @@
         "tapToContinue": "準備好的時候"
       },
       "filter1": {
-        "title": "一個適應你的計時器",
+        "title": "一個懂你的計時器。",
         "subtitle": ""
       }
     },
@@ -174,7 +174,7 @@
       "activityEmoji": "中心顯示活動表情符號",
       "activityEmojiDescriptionOn": "表情符號顯示在錶盤中心",
       "activityEmojiDescriptionOff": "表情符號已隱藏",
-      "pulseAnimation": "脈衝動畫"
+      "pulseAnimation": "呼吸光暈"
     }
   },
   "premium": {
@@ -372,52 +372,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "沉浸其中",
-      "endMessage": "收穫滿滿 📖"
+      "startMessage": "沉浸進去。",
+      "endMessage": "滿足了。"
     },
     "study": {
-      "startMessage": "學習",
-      "endMessage": "取得進步 📈"
+      "startMessage": "專心。",
+      "endMessage": "又前進了一點。"
     },
     "yoga": {
-      "startMessage": "呼吸",
-      "endMessage": "平靜祥和 🪷"
+      "startMessage": "伸展。",
+      "endMessage": "舒展開了。"
     },
     "sport": {
-      "startMessage": "動起來",
-      "endMessage": "活力滿滿 ⚡"
+      "startMessage": "動起來。",
+      "endMessage": "熱身了。"
     },
     "walking": {
-      "startMessage": "散步",
-      "endMessage": "煥發活力 🌿"
+      "startMessage": "出發。",
+      "endMessage": "空氣讓人舒暢。"
     },
     "cooking": {
-      "startMessage": "準備",
-      "endMessage": "滿足 🍽️"
+      "startMessage": "下廚。",
+      "endMessage": "開飯了。"
     },
     "gaming": {
-      "startMessage": "遊戲",
-      "endMessage": "放鬆 🎮"
+      "startMessage": "輪到你了。",
+      "endMessage": "打得不錯。"
     },
     "homework": {
-      "startMessage": "專注",
-      "endMessage": "已完成 ✅"
+      "startMessage": "開始吧。",
+      "endMessage": "完成了。"
     },
     "music": {
-      "startMessage": "演奏",
-      "endMessage": "和諧 🎵"
+      "startMessage": "繼續演奏。",
+      "endMessage": "餘音未散。"
     },
     "cleaning": {
-      "startMessage": "整理",
-      "endMessage": "寧靜 ✨"
+      "startMessage": "整理一下。",
+      "endMessage": "乾淨整潔。"
     },
     "nap": {
-      "startMessage": "休息",
-      "endMessage": "煥然一新 💤"
+      "startMessage": "閉上眼睛。",
+      "endMessage": "休息好了。"
     },
     "writing": {
-      "startMessage": "寫作",
-      "endMessage": "釋放自我 ✍️"
+      "startMessage": "落筆成文。",
+      "endMessage": "寫下了。"
     },
     "custom": {
       "startMessage": "開始吧",
@@ -434,7 +434,22 @@
     },
     "price": "%{price}，一次性，永久擁有。",
     "unlock": "解鎖 — %{price}，一次性",
-    "breatheInvitation": "想讓它呼吸嗎?來發現 Ambiances"
+    "breatheInvitation": "想讓它呼吸嗎?來發現 Ambiances",
+    "counterSubtitle": "全部留下，永遠屬於你",
+    "hook": {
+      "emoji": "讓它成為你的",
+      "custom": "專屬你的表情",
+      "rituals": "每個時刻一個儀式",
+      "palette": "很適合你",
+      "sound": "很適合你"
+    },
+    "hookSub": {
+      "emoji": "這個表情住在Ambiances裡 — 就像你保留的一切。",
+      "rituals": "你的第2個儀式只差一個位置。",
+      "palette": "留下%{name} — 連同另外9種一起。",
+      "sound": "留下%{name} — 連同另外7種一起。",
+      "custom": "創作屬於你的，它會住在Ambiances裡。"
+    }
   },
   "rituals": {
     "sheetRow": "我的儀式",
@@ -474,7 +489,8 @@
     "included": "已包含",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances 調色盤 — 自由試用",
-    "ambiancesDiscover": "發現 Ambiances"
+    "ambiancesDiscover": "發現 Ambiances",
+    "counterFooter": "全部10套調色盤，永遠屬於你 — %{price}，一次性 ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "退出專注",
     "doubleTapHint": "提示:雙擊背景切換",
     "handle": "開啟設定",
-    "closedLabel": "儀式與設定"
+    "closedLabel": "儀式與設定",
+    "settingsRow": "設定",
+    "settingsNew": "新",
+    "scaleLock": "鎖定刻度",
+    "scaleLockHint": "即使時長很短，錶盤也會保持目前刻度"
+  },
+  "dormantTips": {
+    "palettes": "發現了嗎？你的顏色都配有完整的調色盤 — 向上滑開底部抽屜。",
+    "focus": "想要一個純淨的螢幕？專注模式就在底部抽屜裡等你。"
+  },
+  "soundsPanel": {
+    "counterFooter": "全部8種音效，永遠屬於你 — %{price}，一次性 ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name}是借來的 — 下次啟動時會回家。",
+    "borrowedSound": "%{name}是借來的 — 下次啟動時會回家。",
+    "paletteReturned": "%{name}回家了。你可以重新使用它 — 或者留下它。",
+    "soundReturned": "%{name}回家了。你可以重新使用它 — 或者留下它。",
+    "ritualsRow": "你的儀式，就在這裡 — 輕點一下即可。"
   }
 }

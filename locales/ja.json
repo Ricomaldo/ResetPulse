@@ -8,7 +8,7 @@
     "delete": "削除"
   },
   "welcome": {
-    "title": "ResetPulseへようこそ"
+    "title": "ようこそ。"
   },
   "invitation": "準備はいい?",
   "onboarding": {
@@ -86,7 +86,7 @@
         "tapToContinue": "準備ができたら"
       },
       "filter1": {
-        "title": "あなたに合わせるタイマー",
+        "title": "あなたに合わせるタイマー。",
         "subtitle": ""
       }
     },
@@ -174,7 +174,7 @@
       "activityEmoji": "中央にアクティビティの絵文字を表示",
       "activityEmojiDescriptionOn": "絵文字がダイヤルの中央に表示されます",
       "activityEmojiDescriptionOff": "絵文字は非表示です",
-      "pulseAnimation": "パルスアニメーション"
+      "pulseAnimation": "呼吸するハロー"
     }
   },
   "premium": {
@@ -216,7 +216,22 @@
     },
     "price": "%{price}、一度だけ。ずっとあなたのもの。",
     "unlock": "アンロック — %{price}、一度だけ",
-    "breatheInvitation": "もっと息づかせたい? Ambiancesを見てみる"
+    "breatheInvitation": "もっと息づかせたい? Ambiancesを見てみる",
+    "counterSubtitle": "すべてをずっと自分のものに",
+    "hook": {
+      "emoji": "自分のものにする",
+      "custom": "自分だけの絵文字",
+      "rituals": "その瞬間ごとの儀式を",
+      "palette": "よく似合ってる",
+      "sound": "よく合ってる"
+    },
+    "hookSub": {
+      "emoji": "この絵文字はAmbiancesの中で暮らす — ずっと残すものと同じように。",
+      "rituals": "2つ目の儀式は場所を待つだけ。",
+      "palette": "%{name}を残そう — 他の9つも一緒に。",
+      "sound": "%{name}を残そう — 他の7つも一緒に。",
+      "custom": "自分の絵文字を作ろう、Ambiancesの中で暮らすよ。"
+    }
   },
   "activities": {
     "none": "基本",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "没頭する",
-      "endMessage": "豊かになった 📖"
+      "startMessage": "没頭しよう。",
+      "endMessage": "満たされた。"
     },
     "study": {
-      "startMessage": "学ぶ",
-      "endMessage": "上達した 📈"
+      "startMessage": "集中して。",
+      "endMessage": "もう少し先へ。"
     },
     "yoga": {
-      "startMessage": "呼吸する",
-      "endMessage": "安らか 🪷"
+      "startMessage": "伸ばそう。",
+      "endMessage": "ほどけた。"
     },
     "sport": {
-      "startMessage": "動く",
-      "endMessage": "エネルギッシュ ⚡"
+      "startMessage": "体を動かそう。",
+      "endMessage": "温まった。"
     },
     "walking": {
-      "startMessage": "歩く",
-      "endMessage": "リフレッシュ 🌿"
+      "startMessage": "歩き出そう。",
+      "endMessage": "空気が気持ちよかった。"
     },
     "cooking": {
-      "startMessage": "準備する",
-      "endMessage": "満足 🍽️"
+      "startMessage": "コンロの前へ。",
+      "endMessage": "食卓へ。"
     },
     "gaming": {
-      "startMessage": "遊ぶ",
-      "endMessage": "リラックス 🎮"
+      "startMessage": "きみの番。",
+      "endMessage": "いい勝負だった。"
     },
     "homework": {
-      "startMessage": "集中する",
-      "endMessage": "完了 ✅"
+      "startMessage": "取りかかろう。",
+      "endMessage": "終わった。"
     },
     "music": {
-      "startMessage": "演奏する",
-      "endMessage": "調和 🎵"
+      "startMessage": "演奏を続けて。",
+      "endMessage": "まだ響いている。"
     },
     "cleaning": {
-      "startMessage": "片づける",
-      "endMessage": "すっきり ✨"
+      "startMessage": "片付けよう。",
+      "endMessage": "すっきりした。"
     },
     "nap": {
-      "startMessage": "休む",
-      "endMessage": "リフレッシュ 💤"
+      "startMessage": "目を閉じて。",
+      "endMessage": "休めた。"
     },
     "writing": {
-      "startMessage": "書く",
-      "endMessage": "解放された ✍️"
+      "startMessage": "言葉を綴ろう。",
+      "endMessage": "書き留めた。"
     },
     "custom": {
       "startMessage": "はじめよう",
@@ -474,7 +489,8 @@
     "included": "収録済み",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiancesパレット——自由に試してみて",
-    "ambiancesDiscover": "Ambiancesを見てみる"
+    "ambiancesDiscover": "Ambiancesを見てみる",
+    "counterFooter": "10種のパレット全部、ずっとあなたのものに — %{price}、一度きり ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "フォーカスを終了",
     "doubleTapHint": "ヒント: 背景をダブルタップで切り替え",
     "handle": "設定を開く",
-    "closedLabel": "ルーティンと設定"
+    "closedLabel": "ルーティンと設定",
+    "settingsRow": "設定",
+    "settingsNew": "新機能",
+    "scaleLock": "スケールを固定",
+    "scaleLockHint": "短い時間でも、文字盤は今のスケールを保つ"
+  },
+  "dormantTips": {
+    "palettes": "気づいた？色にはパレットがまるごとあるよ — 下の引き出しを引いてみて。",
+    "focus": "何もない画面がいい？フォーカスモードが下の引き出しで待ってるよ。"
+  },
+  "soundsPanel": {
+    "counterFooter": "8種のサウンド全部、ずっとあなたのものに — %{price}、一度きり ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name}は借り物 — 次に起動すると家に帰るよ。",
+    "borrowedSound": "%{name}は借り物 — 次に起動すると家に帰るよ。",
+    "paletteReturned": "%{name}が家に帰ってきたよ。また使ってもいいし、残してもいい。",
+    "soundReturned": "%{name}が家に帰ってきたよ。また使ってもいいし、残してもいい。",
+    "ritualsRow": "あなたの儀式、ここに — タップひとつで。"
   }
 }

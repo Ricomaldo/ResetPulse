@@ -27,7 +27,7 @@
   },
   "invitation": "Klar?",
   "welcome": {
-    "title": "Velkommen til ResetPulse"
+    "title": "velkommen."
   },
   "onboarding": {
     "restartGuide": "Start guiden på nytt",
@@ -104,7 +104,7 @@
         "tapToContinue": "Når du er klar"
       },
       "filter1": {
-        "title": "En timer som tilpasser seg deg",
+        "title": "en timer som tilpasser seg deg.",
         "subtitle": ""
       }
     },
@@ -192,7 +192,7 @@
       "activityEmoji": "Aktivitetsemoji i midten",
       "activityEmojiDescriptionOn": "Emoji vises i midten av skiven",
       "activityEmojiDescriptionOff": "Emoji er skjult",
-      "pulseAnimation": "Pulsanimasjon"
+      "pulseAnimation": "pustende glød"
     }
   },
   "premium": {
@@ -234,7 +234,22 @@
     },
     "price": "%{price}, én gang. Din for alltid.",
     "unlock": "låse opp — %{price}, én gang",
-    "breatheInvitation": "Vil du få den til å puste? Utforsk Ambiances"
+    "breatheInvitation": "Vil du få den til å puste? Utforsk Ambiances",
+    "counterSubtitle": "behold alt, for godt",
+    "hook": {
+      "emoji": "gjør den til din",
+      "custom": "dine egne emojier",
+      "rituals": "ett ritual per øyeblikk",
+      "palette": "den passer deg",
+      "sound": "den passer deg"
+    },
+    "hookSub": {
+      "emoji": "denne emojien bor i Ambiances — som alt du beholder.",
+      "rituals": "ditt 2. ritual venter bare på plass.",
+      "palette": "behold %{name} — og de 9 andre med.",
+      "sound": "behold %{name} — og de 7 andre med.",
+      "custom": "sett sammen din egen, den bor i Ambiances."
+    }
   },
   "activities": {
     "none": "Grunnleggende",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "Dykk ned",
-      "endMessage": "Beriket 📖"
+      "startMessage": "stup inn.",
+      "endMessage": "nært."
     },
     "study": {
-      "startMessage": "Lær",
-      "endMessage": "Fremgang 📈"
+      "startMessage": "fokuser.",
+      "endMessage": "litt lenger."
     },
     "yoga": {
-      "startMessage": "Pust",
-      "endMessage": "Fredfull 🪷"
+      "startMessage": "strekk deg.",
+      "endMessage": "avslappet."
     },
     "sport": {
-      "startMessage": "Beveg deg",
-      "endMessage": "Energisk ⚡"
+      "startMessage": "sett i gang.",
+      "endMessage": "oppvarmet."
     },
     "walking": {
-      "startMessage": "Gå",
-      "endMessage": "Revitalisert 🌿"
+      "startMessage": "gå i vei.",
+      "endMessage": "luften gjorde godt."
     },
     "cooking": {
-      "startMessage": "Forbered",
-      "endMessage": "Fornøyd 🍽️"
+      "startMessage": "til komfyren.",
+      "endMessage": "bordet er dekket."
     },
     "gaming": {
-      "startMessage": "Spill",
-      "endMessage": "Avslappet 🎮"
+      "startMessage": "din tur.",
+      "endMessage": "godt spilt."
     },
     "homework": {
-      "startMessage": "Fokuser",
-      "endMessage": "Fullført ✅"
+      "startMessage": "sett i gang.",
+      "endMessage": "ferdig."
     },
     "music": {
-      "startMessage": "Spill",
-      "endMessage": "Harmonisk 🎵"
+      "startMessage": "spill videre.",
+      "endMessage": "det klinger fortsatt."
     },
     "cleaning": {
-      "startMessage": "Rydd",
-      "endMessage": "Rolig ✨"
+      "startMessage": "rydd opp.",
+      "endMessage": "skinnende rent."
     },
     "nap": {
-      "startMessage": "Hvil",
-      "endMessage": "Uthvilt 💤"
+      "startMessage": "lukk øynene.",
+      "endMessage": "uthvilt."
     },
     "writing": {
-      "startMessage": "Skriv",
-      "endMessage": "Befridd ✍️"
+      "startMessage": "sett ordene på papir.",
+      "endMessage": "nedtegnet."
     },
     "custom": {
       "startMessage": "Sett i gang",
@@ -474,7 +489,8 @@
     "included": "Inkludert",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances-palett — prøv den fritt",
-    "ambiancesDiscover": "Utforsk Ambiances"
+    "ambiancesDiscover": "Utforsk Ambiances",
+    "counterFooter": "alle 10 palettene, dine for godt — %{price}, én gang ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "Forlat fokus",
     "doubleTapHint": "Tips: dobbelttrykk på bakgrunnen for å bytte",
     "handle": "Åpne innstillinger",
-    "closedLabel": "Ritualer og innstillinger"
+    "closedLabel": "Ritualer og innstillinger",
+    "settingsRow": "Innstillinger",
+    "settingsNew": "nytt",
+    "scaleLock": "Lås skalaen",
+    "scaleLockHint": "skiven beholder sin nåværende skala, selv for en kort varighet"
+  },
+  "dormantTips": {
+    "palettes": "har du sett? fargene dine har hele paletter — dra opp skuffen nederst.",
+    "focus": "vil du ha en ren skjerm? fokusmodus venter i skuffen nederst."
+  },
+  "soundsPanel": {
+    "counterFooter": "alle 8 lydene, dine for godt — %{price}, én gang ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name} er lånt — ved neste start går den hjem igjen.",
+    "borrowedSound": "%{name} er lånt — ved neste start går den hjem igjen.",
+    "paletteReturned": "%{name} er hjemme igjen. du kan ta den opp igjen — eller beholde den.",
+    "soundReturned": "%{name} er hjemme igjen. du kan ta den opp igjen — eller beholde den.",
+    "ritualsRow": "ritualene dine, rett der — ett trykk hver."
   }
 }

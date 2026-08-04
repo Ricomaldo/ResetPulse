@@ -8,7 +8,7 @@
     "delete": "삭제"
   },
   "welcome": {
-    "title": "ResetPulse에 오신 것을 환영합니다"
+    "title": "환영해요."
   },
   "invitation": "준비됐어?",
   "onboarding": {
@@ -86,7 +86,7 @@
         "tapToContinue": "준비가 되면"
       },
       "filter1": {
-        "title": "당신에게 맞춰지는 타이머",
+        "title": "당신에게 맞춰지는 타이머.",
         "subtitle": ""
       }
     },
@@ -174,7 +174,7 @@
       "activityEmoji": "중앙에 활동 이모지 표시",
       "activityEmojiDescriptionOn": "이모지가 다이얼 중앙에 표시됩니다",
       "activityEmojiDescriptionOff": "이모지가 숨겨져 있습니다",
-      "pulseAnimation": "펄스 애니메이션"
+      "pulseAnimation": "숨 쉬는 헤일로"
     }
   },
   "premium": {
@@ -216,7 +216,22 @@
     },
     "price": "%{price}, 한 번만. 평생 당신의 것.",
     "unlock": "잠금 해제 — %{price}, 한 번만",
-    "breatheInvitation": "더 생동감 있게 만들고 싶어요? Ambiances 둘러보기"
+    "breatheInvitation": "더 생동감 있게 만들고 싶어요? Ambiances 둘러보기",
+    "counterSubtitle": "전부 영원히 간직하세요",
+    "hook": {
+      "emoji": "나만의 것으로 만들기",
+      "custom": "나만의 이모지",
+      "rituals": "순간마다 하나의 리추얼",
+      "palette": "잘 어울려요",
+      "sound": "잘 어울려요"
+    },
+    "hookSub": {
+      "emoji": "이 이모지는 Ambiances 안에서 살아요 — 간직하는 모든 것처럼.",
+      "rituals": "두 번째 리추얼은 자리만 기다리고 있어요.",
+      "palette": "%{name}을(를) 간직하세요 — 나머지 9개와 함께.",
+      "sound": "%{name}을(를) 간직하세요 — 나머지 7개와 함께.",
+      "custom": "나만의 것을 만들어보세요, Ambiances 안에서 살아갈 거예요."
+    }
   },
   "activities": {
     "none": "기본",
@@ -384,52 +399,52 @@
       "endMessage": "Inspired ✨"
     },
     "reading": {
-      "startMessage": "몰입하기",
-      "endMessage": "풍요로워짐 📖"
+      "startMessage": "빠져들어요.",
+      "endMessage": "채워졌어요."
     },
     "study": {
-      "startMessage": "배우기",
-      "endMessage": "발전함 📈"
+      "startMessage": "집중해요.",
+      "endMessage": "조금 더 나아갔어요."
     },
     "yoga": {
-      "startMessage": "호흡하기",
-      "endMessage": "평온함 🪷"
+      "startMessage": "몸을 늘여요.",
+      "endMessage": "풀렸어요."
     },
     "sport": {
-      "startMessage": "움직이기",
-      "endMessage": "에너지 충전됨 ⚡"
+      "startMessage": "움직여요.",
+      "endMessage": "몸이 풀렸어요."
     },
     "walking": {
-      "startMessage": "걷기",
-      "endMessage": "활력 회복 🌿"
+      "startMessage": "나서요.",
+      "endMessage": "바람이 좋았어요."
     },
     "cooking": {
-      "startMessage": "준비하기",
-      "endMessage": "만족스러움 🍽️"
+      "startMessage": "요리를 시작해요.",
+      "endMessage": "식탁으로."
     },
     "gaming": {
-      "startMessage": "놀기",
-      "endMessage": "편안함 🎮"
+      "startMessage": "당신 차례예요.",
+      "endMessage": "잘했어요."
     },
     "homework": {
-      "startMessage": "집중하기",
-      "endMessage": "완료 ✅"
+      "startMessage": "시작해요.",
+      "endMessage": "끝났어요."
     },
     "music": {
-      "startMessage": "연주하기",
-      "endMessage": "조화로움 🎵"
+      "startMessage": "계속 연주해요.",
+      "endMessage": "여운이 남아요."
     },
     "cleaning": {
-      "startMessage": "정리하기",
-      "endMessage": "평온함 ✨"
+      "startMessage": "정리해요.",
+      "endMessage": "말끔해요."
     },
     "nap": {
-      "startMessage": "쉬기",
-      "endMessage": "재충전됨 💤"
+      "startMessage": "눈을 감아요.",
+      "endMessage": "쉬었어요."
     },
     "writing": {
-      "startMessage": "글쓰기",
-      "endMessage": "해방감 ✍️"
+      "startMessage": "글로 옮겨요.",
+      "endMessage": "적어두었어요."
     },
     "custom": {
       "startMessage": "시작해요",
@@ -474,7 +489,8 @@
     "included": "포함됨",
     "ambiances": "Ambiances",
     "ambiancesTrialHint": "Ambiances 팔레트 — 자유롭게 체험해보세요",
-    "ambiancesDiscover": "Ambiances 둘러보기"
+    "ambiancesDiscover": "Ambiances 둘러보기",
+    "counterFooter": "10가지 팔레트 전부, 영원히 당신 것 — %{price}, 한 번에 ›"
   },
   "mode": {
     "standard": "ResetPulse",
@@ -494,6 +510,24 @@
     "exitFocus": "포커스 종료",
     "doubleTapHint": "팁: 배경을 더블탭하면 전환돼요",
     "handle": "설정 열기",
-    "closedLabel": "루틴 및 설정"
+    "closedLabel": "루틴 및 설정",
+    "settingsRow": "설정",
+    "settingsNew": "신규",
+    "scaleLock": "눈금 고정",
+    "scaleLockHint": "짧은 시간이어도 다이얼은 현재 눈금을 유지해요"
+  },
+  "dormantTips": {
+    "palettes": "봤어요? 색상마다 팔레트 전체가 있어요 — 아래 서랍을 위로 밀어보세요.",
+    "focus": "깔끔한 화면이 좋다면? 포커스 모드가 아래 서랍에서 기다려요."
+  },
+  "soundsPanel": {
+    "counterFooter": "8가지 사운드 전부, 영원히 당신 것 — %{price}, 한 번에 ›"
+  },
+  "coach": {
+    "borrowedPalette": "%{name}은(는) 빌린 거예요 — 다음 실행 때 제자리로 돌아가요.",
+    "borrowedSound": "%{name}은(는) 빌린 거예요 — 다음 실행 때 제자리로 돌아가요.",
+    "paletteReturned": "%{name}이(가) 돌아왔어요. 다시 써도 되고, 간직해도 돼요.",
+    "soundReturned": "%{name}이(가) 돌아왔어요. 다시 써도 되고, 간직해도 돼요.",
+    "ritualsRow": "당신의 리추얼, 바로 여기 — 탭 한 번이면 돼요."
   }
 }
