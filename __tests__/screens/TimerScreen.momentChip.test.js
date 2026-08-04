@@ -22,7 +22,14 @@ jest.mock('../../src/components/dial/TimeTimer', () => (props) => {
   capturedTimeTimerProps = props;
   return null;
 });
-jest.mock('../../src/components/layout/AsideZone', () => () => null);
+// Stub qui capture ses props — sert à déclencher `onRitualApplied` comme le
+// ferait RitualsPanel (panneau « Mes rituels ») sans monter tout AsideZone
+// (Gesture.Pan chaîné, hors périmètre de ce test).
+let capturedAsideZoneProps = null;
+jest.mock('../../src/components/layout/AsideZone', () => (props) => {
+  capturedAsideZoneProps = props;
+  return null;
+});
 jest.mock('../../src/components/first-run/FirstRunTips', () => () => null);
 jest.mock('../../src/components/first-run/FirstRunThreshold', () => () => null);
 
@@ -159,6 +166,7 @@ describe('TimerScreen — chip intelligent (CompactRow, Q3b)', () => {
 
   beforeEach(() => {
     capturedTimeTimerProps = null;
+    capturedAsideZoneProps = null;
     mockSetCurrentActivity.mockClear();
     mockSetCurrentDuration.mockClear();
     mockSetSelectedSoundId.mockClear();
@@ -241,6 +249,31 @@ describe('TimerScreen — chip intelligent (CompactRow, Q3b)', () => {
     mockSetColorByValue.mockClear();
 
     pressChip(); // vierge à nouveau : apply complet
+
+    expect(mockSetCurrentDuration).toHaveBeenCalledWith(1500);
+    expect(mockSetSelectedSoundId).toHaveBeenCalledWith('chime');
+    expect(mockSetColorByValue).toHaveBeenCalledWith('#111111');
+  });
+
+  it('un apply complet depuis le panneau "Mes rituels" (AsideZone.onRitualApplied) remet aussi le Moment à vierge', async () => {
+    await act(async () => {
+      renderer = create(<TimerScreen />);
+    });
+
+    pressColorDot(1); // salit
+    expect(typeof capturedAsideZoneProps.onRitualApplied).toBe('function');
+
+    // Signal que RitualsPanel envoie à CHAQUE apply (toujours complet) —
+    // relayé par AsideZone, cf. AsideZone.jsx onApplied.
+    act(() => {
+      capturedAsideZoneProps.onRitualApplied();
+    });
+
+    mockSetCurrentDuration.mockClear();
+    mockSetSelectedSoundId.mockClear();
+    mockSetColorByValue.mockClear();
+
+    pressChip(); // vierge à nouveau : apply complet, pas seulement l'activité
 
     expect(mockSetCurrentDuration).toHaveBeenCalledWith(1500);
     expect(mockSetSelectedSoundId).toHaveBeenCalledWith('chime');
