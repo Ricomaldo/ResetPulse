@@ -340,8 +340,22 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       top: 0,
       zIndex: 50,
     },
+    // Lambda Y (bug guichet intouchable, QA visuelle ×2) : hauteur bornée à
+    // la zone visible du snap ouvert — même repère que `subScreenHeight`
+    // (utilisé par les sous-écrans Rituels/Palettes/Sons). AVANT ce cycle,
+    // `content` était `flex: 1` dans un `drawer` haut de `windowHeight` : le
+    // ScrollView racine héritait d'un espace disponible bien plus grand que
+    // la zone réellement visible (clippée par le physique de l'écran via
+    // `translateY`, pas par un `overflow: hidden`). RN compare la hauteur
+    // mesurée du contenu à la hauteur de SON PROPRE composant ScrollView —
+    // pas à ce qui est visible à l'écran — donc tant que le contenu tenait
+    // dans cet espace surdimensionné, RN jugeait qu'il n'y avait rien à
+    // scroller : swipes inertes, et toute rangée au-delà de la zone visible
+    // (le guichet Ambiances) rendait hors-écran, ni vue ni tappable. Borner
+    // `content` à `subScreenHeight` rend au ScrollView une hauteur honnête,
+    // identique à celle qu'utilisent déjà les sous-écrans.
     content: {
-      flex: 1,
+      height: subScreenHeight,
     },
     drawer: {
       backgroundColor: theme.colors.surface,
@@ -411,6 +425,13 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
     scrollContent: {
       paddingBottom: rs(24),
       paddingHorizontal: rs(16),
+    },
+    // Même pattern que PalettesPanel/SoundsPanel/RitualForm (A2, hotfix-
+    // porte-1) : `flex: 1` sur `style` (pas `contentContainerStyle`) pour
+    // que le ScrollView remplisse le conteneur borné (`content` ci-dessus)
+    // au lieu de ne mesurer que son propre contenu.
+    scrollBody: {
+      flex: 1,
     },
     segmentButton: {
       alignItems: 'center',
@@ -600,6 +621,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
           {/* SCR-10 : 4 blocs */}
           <Animated.View style={[styles.content, contentAnimatedStyle]} pointerEvents={isOpen ? 'auto' : 'none'}>
             <ScrollView
+              style={styles.scrollBody}
               contentContainerStyle={styles.scrollContent}
               scrollEnabled={isOpen && !boundedSubScreen && contentHeight > subScreenHeight}
               bounces={false}
