@@ -74,7 +74,13 @@ import { TIMER_PALETTES } from '../../config/timer-palettes';
 // haut) — tout était décalé vers le bas depuis le début. Désormais : repère =
 // hauteur MESURÉE du conteneur (onLayout), bande fermée FIXE de 92 pt — la
 // barre du handle reste ~65 pt au-dessus de la zone système, sur tout device.
-const CLOSED_VISIBLE = 92;
+// Exportée (QA visuelle #5, bug 1) : TimerScreen ancre la pill coach
+// au-dessus de cette même bande — une valeur scalée (`rs`) approcherait
+// cette constante FIXE sans jamais la garantir sur tout device (sous 390pt
+// de large ou 844 de haut, `rs('min')` réduit sous 92 — la pill repasserait
+// sous la bande sur petit écran). La FIXITÉ est le point : on la partage,
+// pas on la ré-approxime.
+export const CLOSED_VISIBLE = 92;
 // Plafond : le sheet ne couvre jamais plus de 65% de l'écran — le dial reste visible
 const MAX_OPEN_COVERAGE = 0.65;
 const HANDLE_HEIGHT = 28; // handleContainer paddingTop(14)+paddingBottom(8) + handleIndicator height(6)

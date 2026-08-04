@@ -32,7 +32,7 @@ import { useSessionImmersion } from '../hooks/useSessionImmersion';
 import { useLiveActivity } from '../hooks/useLiveActivity';
 import { rs } from '../styles/responsive';
 import TimeTimer from '../components/dial/TimeTimer';
-import AsideZone from '../components/layout/AsideZone';
+import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
@@ -1110,6 +1110,21 @@ function TimerScreenContent() {
     chromeBelow: {
       alignItems: 'center',
     },
+    // Ancre de la ligne coach (bug 1, QA visuelle passe 5) : au-dessus de
+    // la bande fermée du sheet (AsideZone, CLOSED_VISIBLE, FIXE = 92pt) +
+    // une marge scalée — CLOSED_VISIBLE reste une constante fixe (importée,
+    // pas ré-approximée) pour garantir la clairance sur tout device, y
+    // compris petit écran où `rs('min')` seul aurait pu retomber sous 92pt
+    // (cf. commentaire CLOSED_VISIBLE dans AsideZone). Sortie du flux
+    // centré de `content` : sa position ne dépend plus de la hauteur du
+    // contenu au-dessus (dial + message + rangée + dé).
+    coachAnchor: {
+      alignItems: 'center',
+      bottom: CLOSED_VISIBLE + rs(12, 'min'),
+      left: 0,
+      position: 'absolute',
+      right: 0,
+    },
     // Overlay de sortie d'immersion (cadrage 3c) : monté SEULEMENT quand
     // immersed — au-dessus de tout (AsideZone = zIndex 50), il capte le
     // PREMIER toucher pour qu'il n'atteigne jamais le disque (sinon
@@ -1220,19 +1235,30 @@ function TimerScreenContent() {
                   showLabel={showDistractionLabel}
                   onDistraction={handleDistraction}
                 />
-                {/* Une seule voix coach à la fois (Lambda V) : le prêt
-                    gagne le canal, l'astuce dormante sinon. */}
-                {coachChannel?.kind === 'coach' && (
-                  <CoachPill
-                    text={coachMessageText}
-                    onPress={isCoachReturnMessage ? handleCoachPress : undefined}
-                    testID={`coach.${coachChannel.message.type}`}
-                  />
-                )}
-                {coachChannel?.kind === 'dormant' && <DormantTipPill tip={coachChannel.tip} />}
               </Animated.View>
             )}
           </View>
+          {/* QA visuelle passe 5, bug 1 : la ligne coach (prêt ou astuce
+              dormante) vivait dans le flux de `chromeBelow`, centré par
+              `content` — sur les stacks hautes (dé + message + rangée + dé
+              à jouer), sa pill finissait sous la bande fermée du sheet
+              (AsideZone, CLOSED_VISIBLE = 92pt), recouverte, illisible.
+              Ancrée ici en absolu, comme FocusHint : garantie de vivre
+              entre le dé et la bande, jamais dessous, quelle que soit la
+              hauteur du contenu au-dessus. Une seule voix coach à la fois
+              (Lambda V) : le prêt gagne le canal, l'astuce dormante sinon. */}
+          {coachChannel && (
+            <View style={styles.coachAnchor} pointerEvents="box-none">
+              {coachChannel.kind === 'coach' && (
+                <CoachPill
+                  text={coachMessageText}
+                  onPress={isCoachReturnMessage ? handleCoachPress : undefined}
+                  testID={`coach.${coachChannel.message.type}`}
+                />
+              )}
+              {coachChannel.kind === 'dormant' && <DormantTipPill tip={coachChannel.tip} />}
+            </View>
+          )}
           {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
           <AsideZone
             isTimerRunning={snapshot.running}
