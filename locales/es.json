@@ -512,7 +512,6 @@
     "handle": "abrir ajustes",
     "closedLabel": "rituales y ajustes",
     "settingsRow": "Ajustes",
-    "settingsNew": "nuevo",
     "scaleLock": "Bloquear la escala",
     "scaleLockHint": "el disco conserva su escala actual, incluso para una duración corta"
   },

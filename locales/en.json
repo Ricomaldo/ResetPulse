@@ -536,7 +536,6 @@
       "clockwise": "Clockwise"
     },
     "settingsRow": "Settings",
-    "settingsNew": "new",
     "scaleLock": "Lock the dial scale",
     "scaleLockHint": "the dial keeps its current scale, even for a short duration"
   },

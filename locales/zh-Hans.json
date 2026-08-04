@@ -512,7 +512,6 @@
     "handle": "打开设置",
     "closedLabel": "仪式与设置",
     "settingsRow": "设置",
-    "settingsNew": "新",
     "scaleLock": "锁定刻度",
     "scaleLockHint": "即使时长很短，表盘也会保持当前刻度"
   },

@@ -514,24 +514,6 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
       fontSize: rs(11, 'min'),
       marginTop: rs(2),
     },
-    settingsRowLabelWrap: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: theme.spacing.sm,
-    },
-    settingsNewBadge: {
-      backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border + '30',
-      borderRadius: 999,
-      borderWidth: 1,
-      paddingHorizontal: theme.spacing.sm,
-      paddingVertical: rs(2, 'min'),
-    },
-    settingsNewBadgeText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(11, 'min'),
-      fontWeight: fontWeights.medium,
-    },
     counterPrice: {
       color: theme.colors.text,
       fontSize: rs(13, 'min'),
@@ -781,7 +763,8 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
 
                         {/* Bloc 6 : Réglages — sous-écran (sheet-racine,
                             maquette CD) : absorbe rotation + verrou + toggles.
-                            Badge « nouveau » le temps d'un cycle. */}
+                            Badge « nouveau » retiré (veto Eric 05/08) —
+                            rangée identique aux autres. */}
                         <TouchableOpacity
                           style={[styles.optionRow, styles.optionRowLast]}
                           accessible
@@ -793,12 +776,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                           }}
                           activeOpacity={0.7}
                         >
-                          <View style={styles.settingsRowLabelWrap}>
-                            <Text style={styles.inertRowLabel}>{t('aside.settingsRow')}</Text>
-                            <View style={styles.settingsNewBadge}>
-                              <Text style={styles.settingsNewBadgeText}>{t('aside.settingsNew')}</Text>
-                            </View>
-                          </View>
+                          <Text style={styles.inertRowLabel}>{t('aside.settingsRow')}</Text>
                           <Text style={styles.inertChevron}>›</Text>
                         </TouchableOpacity>
 
