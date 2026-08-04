@@ -105,13 +105,7 @@
   },
   "settings": {
     "title": "Ajustes",
-    "interface": {
-      "pulseWarningTitle": "Animación de pulso",
-      "pulseWarningMessage": "Esta opción activa una animación visual repetitiva.\n\nEvita activar esta función si eres sensible a efectos visuales o tienes historial de fotosensibilidad.",
-      "pulseWarningEnable": "Activar",
-      "pulseAnimationDescriptionOn": "Animación activada durante el temporizador",
-      "pulseAnimationDescriptionOff": "Animación desactivada"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Elige el sonido que se reproducirá al finalizar el temporizador",
       "keepAwakeDescriptionOn": "La pantalla permanece activa durante el temporizador",
@@ -210,8 +204,7 @@
     "errorStore": "Problema con la tienda. Inténtalo de nuevo más tarde.",
     "errorPaymentPending": "Pago pendiente. Comprueba tus compras en unos minutos.",
     "errorRestoreGeneric": "Error de restauración",
-    "errorGeneric": "Se produjo un error",
-    "startTrial": "Probar 7 días gratis"
+    "errorGeneric": "Se produjo un error"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -238,8 +231,7 @@
       "palette": "quédate %{name} — y las otras 9 con ella.",
       "sound": "quédate %{name} — y los otros 7 con él.",
       "custom": "compón el tuyo, vivirá en Ambiances."
-    },
-    "startTrial": "prueba 7 días gratis"
+    }
   },
   "activities": {
     "none": "Básico",
@@ -326,8 +318,7 @@
     "chooseCustomEmoji": "Elegir otro emoji desde el teclado",
     "ritualNamePreset": "Ritual preconfigurado %{name}",
     "deleteRitual": "Eliminar el ritual %{name}",
-    "favoriteRitual": "Ritual favorito %{name}",
-    "unlockPremiumHint": "Comenzar prueba gratuita de 7 días, luego pago único"
+    "favoriteRitual": "Ritual favorito %{name}"
   },
   "customActivities": {
     "toast": {

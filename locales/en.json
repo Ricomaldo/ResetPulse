@@ -123,13 +123,7 @@
   },
   "settings": {
     "title": "Settings",
-    "interface": {
-      "pulseAnimationDescriptionOn": "Animation enabled during timer",
-      "pulseAnimationDescriptionOff": "Animation disabled",
-      "pulseWarningTitle": "Pulse animation",
-      "pulseWarningMessage": "This option enables a repetitive visual animation.\n\nAvoid enabling this feature if you are sensitive to visual effects or have a history of photosensitivity.",
-      "pulseWarningEnable": "Enable"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Choose the sound that will play at the end of the timer",
       "keepAwakeDescriptionOn": "Screen stays awake during timer",
@@ -206,7 +200,6 @@
     "description": "All the colors.\nAll the activities.\nCreate your own activities.\nYour maximum comfort.",
     "features": "7 DAYS FREE",
     "price": "Then %{price} once.\nYours forever.",
-    "startTrial": "Try 7 days free",
     "restore": "Restore my purchases",
     "welcomeTitle": "Welcome to Ambiances! 🎉",
     "welcomeMessage": "All palettes, unlimited rituals and Ambiances sounds are now unlocked.",
@@ -254,7 +247,6 @@
       "custom": "compose your own — it will live in Ambiances."
     },
     "price": "%{price}, once. Yours forever.",
-    "startTrial": "try 7 days free",
     "unlock": "unlock — %{price}, once",
     "breatheInvitation": "want to make it breathe? discover Ambiances",
     "counterSubtitle": "keep it all, forever"
@@ -329,7 +321,6 @@
     "closePremiumModal": "Close Ambiances offer",
     "closeModalHint": "Closes this dialog and returns to the app",
     "unlockPremium": "Unlock Ambiances for %{price}",
-    "unlockPremiumHint": "Start 7-day free trial, then one-time payment",
     "distraction": "Distraction",
     "restorePurchases": "Restore previous purchases",
     "restorePurchasesHint": "Restore Ambiances access if you already purchased",

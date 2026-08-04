@@ -105,13 +105,7 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "interface": {
-      "pulseAnimationDescriptionOn": "Animation während Timer aktiviert",
-      "pulseAnimationDescriptionOff": "Animation deaktiviert",
-      "pulseWarningTitle": "Puls-Animation",
-      "pulseWarningMessage": "Diese Option aktiviert eine sich wiederholende visuelle Animation.\n\nVermeide diese Funktion, wenn du empfindlich auf visuelle Effekte reagierst oder eine Vorgeschichte mit Fotosensibilität hast.",
-      "pulseWarningEnable": "Aktivieren"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Wähle den Ton, der am Ende des Timers abgespielt wird",
       "keepAwakeDescriptionOn": "Bildschirm bleibt während Timer wach",
@@ -188,7 +182,6 @@
     "description": "Alle Farben.\nAlle Aktivitäten.\nDein maximaler Komfort.",
     "features": "7 TAGE KOSTENLOS",
     "price": "Dann %{price} einmalig.\nDeins für immer.",
-    "startTrial": "7 Tage kostenlos testen",
     "restore": "Käufe wiederherstellen",
     "welcomeTitle": "Willkommen bei Ambiances! 🎉",
     "welcomeMessage": "Alle Paletten, unbegrenzte Rituale und Ambiances-Sounds sind jetzt freigeschaltet.",
@@ -222,7 +215,6 @@
       "sounds": "Ambiances-Klänge"
     },
     "price": "%{price}, einmalig. Für immer deins.",
-    "startTrial": "7 Tage kostenlos testen",
     "unlock": "freischalten — %{price}, einmalig",
     "breatheInvitation": "Willst du es zum Atmen bringen? Entdecke Ambiances"
   },
@@ -287,7 +279,6 @@
     "restorePurchases": "Vorherige Käufe wiederherstellen",
     "restorePurchasesHint": "Ambiances-Zugang wiederherstellen, wenn du bereits gekauft hast",
     "saveActivityHint": "Speichert die Änderungen an dieser Aktivität",
-    "unlockPremiumHint": "7-tägige kostenlose Testversion starten, dann einmalige Zahlung",
     "timer": {
       "dialAdjustable": "Einstellbar. Nach oben oder unten wischen, um die Dauer zu ändern.",
       "dialTapToToggle": "Tippen, um den Timer zu starten oder zu pausieren",

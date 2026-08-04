@@ -123,13 +123,7 @@
   },
   "settings": {
     "title": "Innstillinger",
-    "interface": {
-      "pulseAnimationDescriptionOn": "Animering aktivert under timer",
-      "pulseAnimationDescriptionOff": "Animering deaktivert",
-      "pulseWarningTitle": "Pulsanimering",
-      "pulseWarningMessage": "Dette alternativet aktiverer en gjentakende visuell animering.\n\nUnngå å aktivere denne funksjonen hvis du er følsom for visuelle effekter eller har en historie med fotofølsomhet.",
-      "pulseWarningEnable": "Aktiver"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Velg lyden som skal spilles når timeren er ferdig",
       "keepAwakeDescriptionOn": "Skjermen forblir våken under timeren",
@@ -206,7 +200,6 @@
     "description": "Alle farger.\nAlle aktiviteter.\nDin maksimale komfort.",
     "features": "7 DAGER GRATIS",
     "price": "Deretter %{price} én gang.\nDin for alltid.",
-    "startTrial": "Prøv 7 dager gratis",
     "restore": "Gjenopprett kjøpene mine",
     "welcomeTitle": "Velkommen til Ambiances! 🎉",
     "welcomeMessage": "Alle paletter, ubegrensede ritualer og Ambiances-lyder er nå låst opp.",
@@ -240,7 +233,6 @@
       "sounds": "Ambiances-lyder"
     },
     "price": "%{price}, én gang. Din for alltid.",
-    "startTrial": "Prøv 7 dager gratis",
     "unlock": "låse opp — %{price}, én gang",
     "breatheInvitation": "Vil du få den til å puste? Utforsk Ambiances"
   },
@@ -306,7 +298,6 @@
     "restorePurchases": "Gjenopprett tidligere kjøp",
     "restorePurchasesHint": "Gjenopprett Ambiances-tilgang hvis du allerede har kjøpt",
     "saveActivityHint": "Lagrer endringene i denne aktiviteten",
-    "unlockPremiumHint": "Start 7-dagers gratis prøveperiode, deretter engangsbetaling",
     "distraction": "Distraksjon",
     "timer": {
       "dialAdjustable": "Justerbar. Sveip opp eller ned for å endre varigheten.",

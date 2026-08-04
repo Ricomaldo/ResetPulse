@@ -105,13 +105,7 @@
   },
   "settings": {
     "title": "Instellingen",
-    "interface": {
-      "pulseAnimationDescriptionOn": "Animatie ingeschakeld tijdens timer",
-      "pulseAnimationDescriptionOff": "Animatie uitgeschakeld",
-      "pulseWarningTitle": "Pulsanimatie",
-      "pulseWarningMessage": "Deze optie schakelt een repetitieve visuele animatie in.\n\nVermijd het inschakelen van deze functie als je gevoelig bent voor visuele effecten of een geschiedenis hebt van fotogevoeligheid.",
-      "pulseWarningEnable": "Inschakelen"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Kies het geluid dat aan het einde van de timer wordt afgespeeld",
       "keepAwakeDescriptionOn": "Scherm blijft wakker tijdens timer",
@@ -188,7 +182,6 @@
     "description": "Alle kleuren.\nAlle activiteiten.\nJouw maximale comfort.",
     "features": "7 DAGEN GRATIS",
     "price": "Daarna %{price} eenmalig.\nVan jou voor altijd.",
-    "startTrial": "7 dagen gratis proberen",
     "restore": "Mijn aankopen herstellen",
     "welcomeTitle": "Welkom bij Ambiances! 🎉",
     "welcomeMessage": "Alle paletten, onbeperkte rituelen en Ambiances-geluiden zijn nu ontgrendeld.",
@@ -222,7 +215,6 @@
       "sounds": "Ambiances-geluiden"
     },
     "price": "%{price}, eenmalig. Voor altijd van jou.",
-    "startTrial": "7 dagen gratis proberen",
     "unlock": "ontgrendelen — %{price}, eenmalig",
     "breatheInvitation": "Wil je het laten ademen? Ontdek Ambiances"
   },
@@ -287,7 +279,6 @@
     "restorePurchases": "Eerdere aankopen herstellen",
     "restorePurchasesHint": "Ambiances-toegang herstellen als je al hebt gekocht",
     "saveActivityHint": "Slaat wijzigingen aan deze activiteit op",
-    "unlockPremiumHint": "Start een gratis proefperiode van 7 dagen, daarna eenmalige betaling",
     "timer": {
       "dialAdjustable": "Aanpasbaar. Veeg omhoog of omlaag om de duur te wijzigen.",
       "dialTapToToggle": "Tik om de timer te starten of te pauzeren",

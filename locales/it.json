@@ -105,13 +105,7 @@
   },
   "settings": {
     "title": "Impostazioni",
-    "interface": {
-      "pulseAnimationDescriptionOn": "Animazione attivata durante il timer",
-      "pulseAnimationDescriptionOff": "Animazione disattivata",
-      "pulseWarningTitle": "Animazione pulsante",
-      "pulseWarningMessage": "Questa opzione attiva un'animazione visiva ripetitiva.\n\nEvita di abilitare questa funzione se sei sensibile agli effetti visivi o hai una storia di fotosensibilità.",
-      "pulseWarningEnable": "Attiva"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Scegli il suono che verrà riprodotto alla fine del timer",
       "keepAwakeDescriptionOn": "Lo schermo rimane attivo durante il timer",
@@ -188,7 +182,6 @@
     "description": "Tutti i colori.\nTutte le attività.\nIl tuo massimo comfort.",
     "features": "7 GIORNI GRATIS",
     "price": "Poi %{price} una volta.\nTuo per sempre.",
-    "startTrial": "Prova 7 giorni gratis",
     "restore": "Ripristina i miei acquisti",
     "welcomeTitle": "Benvenuto in Ambiances! 🎉",
     "welcomeMessage": "Tutte le palette, i rituali illimitati e i suoni Ambiances sono ora sbloccati.",
@@ -222,7 +215,6 @@
       "sounds": "suoni Ambiances"
     },
     "price": "%{price}, una volta. Tuo per sempre.",
-    "startTrial": "prova 7 giorni gratis",
     "unlock": "sbloccare — %{price}, una volta",
     "breatheInvitation": "vuoi farlo respirare? scopri Ambiances"
   },
@@ -287,7 +279,6 @@
     "restorePurchases": "Ripristina acquisti precedenti",
     "restorePurchasesHint": "Ripristina l'accesso ad Ambiances se hai già acquistato",
     "saveActivityHint": "Salva le modifiche a questa attività",
-    "unlockPremiumHint": "Inizia prova gratuita di 7 giorni, poi pagamento unico",
     "timer": {
       "dialAdjustable": "Regolabile. Scorri verso l'alto o il basso per cambiare la durata.",
       "dialTapToToggle": "Tocca per avviare o mettere in pausa il timer",

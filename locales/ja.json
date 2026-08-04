@@ -105,13 +105,7 @@
   },
   "settings": {
     "title": "設定",
-    "interface": {
-      "pulseAnimationDescriptionOn": "タイマー動作中のアニメーションオン",
-      "pulseAnimationDescriptionOff": "アニメーションオフ",
-      "pulseWarningTitle": "パルスアニメーション",
-      "pulseWarningMessage": "この機能は繰り返しの視覚効果を有効にします。\n\n視覚効果に敏感な方や光過敏症の既往がある方は、この機能を有効にしないでください。",
-      "pulseWarningEnable": "有効にする"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "タイマー終了時に再生するサウンドを選択",
       "keepAwakeDescriptionOn": "タイマー動作中は画面をスリープさせない",
@@ -188,7 +182,6 @@
     "description": "すべてのカラー。\nすべてのアクティビティ。\n最高の快適さ。",
     "features": "7日間無料",
     "price": "その後 %{price} で一度だけ。\nずっとあなたのもの。",
-    "startTrial": "7日間無料で試す",
     "restore": "購入を復元",
     "welcomeTitle": "Ambiancesへようこそ 🎉",
     "welcomeMessage": "すべてのパレット、無制限のルーティン、Ambiancesのサウンドがアンロックされました。",
@@ -222,7 +215,6 @@
       "sounds": "Ambiancesサウンド"
     },
     "price": "%{price}、一度だけ。ずっとあなたのもの。",
-    "startTrial": "7日間無料で試す",
     "unlock": "アンロック — %{price}、一度だけ",
     "breatheInvitation": "もっと息づかせたい? Ambiancesを見てみる"
   },
@@ -288,7 +280,6 @@
     "restorePurchases": "以前の購入を復元",
     "restorePurchasesHint": "すでに購入済みの場合はAmbiancesへのアクセスを復元",
     "saveActivityHint": "このアクティビティへの変更を保存します",
-    "unlockPremiumHint": "7日間の無料トライアルを開始、その後は一回限りの支払い",
     "timer": {
       "dialAdjustable": "調整可能。上下にスワイプして時間を変更します。",
       "dialTapToToggle": "タップしてタイマーを開始または一時停止",

@@ -123,13 +123,7 @@
   },
   "settings": {
     "title": "Paramètres",
-    "interface": {
-      "pulseAnimationDescriptionOn": "Animation activée pendant le timer",
-      "pulseAnimationDescriptionOff": "Animation désactivée",
-      "pulseWarningTitle": "Animation de pulsation",
-      "pulseWarningMessage": "Cette option active une animation visuelle répétitive.\n\nÉvitez d'activer cette fonctionnalité si vous êtes sensible aux effets visuels ou si vous avez des antécédents de photosensibilité.",
-      "pulseWarningEnable": "Activer"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Choisissez le son qui sera joué à la fin du timer",
       "keepAwakeDescriptionOn": "L'écran reste allumé pendant le timer",
@@ -206,7 +200,6 @@
     "description": "Toutes les couleurs.\nToutes les activités.\nCrée tes propres activités.\nTon confort maximum.",
     "features": "7 JOURS GRATUITS",
     "price": "Puis %{price} une fois.\nÀ toi pour toujours.",
-    "startTrial": "Essayer 7 jours gratuit",
     "restore": "Restaurer mes achats",
     "welcomeTitle": "Bienvenue dans Ambiances ! 🎉",
     "welcomeMessage": "Toutes les palettes, les rituels illimités et les sons Ambiances sont débloqués.",
@@ -254,7 +247,6 @@
       "custom": "compose le tien, il vivra dans Ambiances."
     },
     "price": "%{price}, une fois. Pour toujours.",
-    "startTrial": "essayer 7 jours gratuits",
     "unlock": "débloquer — %{price}, une fois",
     "breatheInvitation": "envie de le faire respirer ? découvre Ambiances",
     "counterSubtitle": "tout garder, pour toujours"
@@ -324,7 +316,6 @@
     "restorePurchases": "Restaurer les achats précédents",
     "restorePurchasesHint": "Restaurer l'accès Ambiances si vous avez déjà acheté",
     "saveActivityHint": "Enregistre les modifications de cette activité",
-    "unlockPremiumHint": "Commencer l'essai gratuit de 7 jours, puis paiement unique",
     "distraction": "Distraction",
     "timer": {
       "dialAdjustable": "Ajustable. Glissez vers le haut ou le bas pour changer la durée.",

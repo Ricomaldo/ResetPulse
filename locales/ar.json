@@ -123,13 +123,7 @@
   },
   "settings": {
     "title": "الإعدادات",
-    "interface": {
-      "pulseAnimationDescriptionOn": "الحركة مفعلة أثناء المؤقت",
-      "pulseAnimationDescriptionOff": "الحركة معطلة",
-      "pulseWarningTitle": "حركة النبض",
-      "pulseWarningMessage": "يفعّل هذا الخيار حركة بصرية متكررة.\n\nتجنب تفعيل هذه الميزة إذا كنت حساساً للتأثيرات البصرية أو لديك تاريخ مع الحساسية الضوئية.",
-      "pulseWarningEnable": "تفعيل"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "اختر الصوت الذي سيتم تشغيله عند انتهاء المؤقت",
       "keepAwakeDescriptionOn": "تبقى الشاشة مضاءة أثناء المؤقت",
@@ -206,7 +200,6 @@
     "description": "كل الألوان.\nكل الأنشطة.\nراحتك القصوى.",
     "features": "7 أيام مجاناً",
     "price": "ثم %{price} مرة واحدة.\nملكك للأبد.",
-    "startTrial": "جرب 7 أيام مجاناً",
     "restore": "استعادة مشترياتي",
     "welcomeTitle": "مرحباً بك في Ambiances! 🎉",
     "welcomeMessage": "جميع اللوحات، الطقوس غير المحدودة وأصوات Ambiances مفتوحة الآن.",
@@ -240,7 +233,6 @@
       "sounds": "أصوات Ambiances"
     },
     "price": "%{price}، مرة واحدة. ملكك للأبد.",
-    "startTrial": "جرب 7 أيام مجاناً",
     "unlock": "فتح — %{price}، مرة واحدة",
     "breatheInvitation": "هل تريد أن تجعله يتنفس؟ اكتشف Ambiances"
   },
@@ -306,7 +298,6 @@
     "restorePurchases": "استعادة المشتريات السابقة",
     "restorePurchasesHint": "استعادة الوصول إلى Ambiances إذا كنت قد اشتريت بالفعل",
     "saveActivityHint": "يحفظ التغييرات على هذا النشاط",
-    "unlockPremiumHint": "ابدأ تجربة مجانية لمدة 7 أيام، ثم دفعة واحدة",
     "distraction": "إلهاء",
     "timer": {
       "dialAdjustable": "قابل للتعديل. اسحب لأعلى أو لأسفل لتغيير المدة.",

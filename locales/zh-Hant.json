@@ -105,13 +105,7 @@
   },
   "settings": {
     "title": "設定",
-    "interface": {
-      "pulseAnimationDescriptionOn": "計時器運作時啟用動畫",
-      "pulseAnimationDescriptionOff": "動畫已停用",
-      "pulseWarningTitle": "脈衝動畫",
-      "pulseWarningMessage": "此選項會啟用重複的視覺動畫。\n\n如果您對視覺效果敏感或有光敏史，請避免啟用此功能。",
-      "pulseWarningEnable": "啟用"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "選擇計時器結束時播放的聲音",
       "keepAwakeDescriptionOn": "計時器運作時螢幕保持常亮",
@@ -188,7 +182,6 @@
     "description": "所有顏色。\n所有活動。\n你的最大舒適。",
     "features": "7天免費",
     "price": "之後 %{price} 一次性。\n永遠屬於你。",
-    "startTrial": "免費試用7天",
     "restore": "恢復我的購買",
     "welcomeTitle": "歡迎使用 Ambiances！🎉",
     "welcomeMessage": "所有調色盤、無限儀式和 Ambiances 音效現已解鎖。",
@@ -274,7 +267,6 @@
     "restorePurchases": "恢復先前的購買",
     "restorePurchasesHint": "如果您已購買，恢復 Ambiances 存取權限",
     "saveActivityHint": "儲存此活動的變更",
-    "unlockPremiumHint": "開始7天免費試用，之後一次性付款",
     "timer": {
       "dialAdjustable": "可調整。向上或向下滑動以變更時長。",
       "dialTapToToggle": "點按以啟動或暫停計時器",
@@ -441,7 +433,6 @@
       "sounds": "Ambiances 音效"
     },
     "price": "%{price}，一次性，永久擁有。",
-    "startTrial": "免費試用 7 天",
     "unlock": "解鎖 — %{price}，一次性",
     "breatheInvitation": "想讓它呼吸嗎?來發現 Ambiances"
   },

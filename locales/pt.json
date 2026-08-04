@@ -105,13 +105,7 @@
   },
   "settings": {
     "title": "Definições",
-    "interface": {
-      "pulseAnimationDescriptionOn": "Animação ativada durante o temporizador",
-      "pulseAnimationDescriptionOff": "Animação desativada",
-      "pulseWarningTitle": "Animação de pulso",
-      "pulseWarningMessage": "Esta opção ativa uma animação visual repetitiva.\n\nEvita ativar esta função se fores sensível a efeitos visuais ou tiveres histórico de fotossensibilidade.",
-      "pulseWarningEnable": "Ativar"
-    },
+    "interface": {},
     "timer": {
       "soundDescription": "Escolhe o som que será reproduzido no final do temporizador",
       "keepAwakeDescriptionOn": "O ecrã permanece ativo durante o temporizador",
@@ -188,7 +182,6 @@
     "description": "Todas as cores.\nTodas as atividades.\nO teu conforto máximo.",
     "features": "7 DIAS GRÁTIS",
     "price": "Depois %{price} uma vez.\nTeu para sempre.",
-    "startTrial": "Experimentar 7 dias grátis",
     "restore": "Restaurar as minhas compras",
     "welcomeTitle": "Bem-vindo ao Ambiances! 🎉",
     "welcomeMessage": "Todas as paletas, os rituais ilimitados e os sons Ambiances estão agora desbloqueados.",
@@ -222,7 +215,6 @@
       "sounds": "sons Ambiances"
     },
     "price": "%{price}, uma vez. Teu para sempre.",
-    "startTrial": "testa 7 dias grátis",
     "unlock": "desbloquear — %{price}, uma vez",
     "breatheInvitation": "queres fazê-lo respirar? descobre Ambiances"
   },
@@ -287,7 +279,6 @@
     "restorePurchases": "Restaurar compras anteriores",
     "restorePurchasesHint": "Restaurar acesso a Ambiances se já compraste",
     "saveActivityHint": "Guarda as alterações desta atividade",
-    "unlockPremiumHint": "Começar teste gratuito de 7 dias, depois pagamento único",
     "timer": {
       "dialAdjustable": "Ajustável. Desliza para cima ou para baixo para alterar a duração.",
       "dialTapToToggle": "Toca para iniciar ou pausar o temporizador",
