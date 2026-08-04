@@ -133,6 +133,24 @@ describe('resolveDormantTip (ADR-016 §4)', () => {
       ).toBe('focus');
     });
 
+    test('jamais l\'astuce focus (ni aucune) pendant l\'état complété, même séance longue à la 1re — évite la collision avec « garde ce moment ? »', () => {
+      // La collision réelle qui a motivé ce garde : 1re séance >= 30 min,
+      // complétion naturelle — `keepMoment` (completedSessions === 1) parle
+      // DÉJÀ sur la ligne de fin au même instant. Sans le garde `isCompleted`
+      // en tête de resolveDormantTip, `focus` se serait résolu ici (seuil
+      // composé atteint via hadLongSession) — deux voix à la fois.
+      expect(
+        resolveDormantTip({
+          ...base,
+          completedSessions: 1,
+          hasOpenedPalettes: true,
+          hadLongSession: true,
+          isCompleted: true,
+          shownFlags: { palettes: false, focus: false, ritualsRow: true },
+        })
+      ).toBeNull();
+    });
+
     test('pas d\'astuce focus avant le seuil composé — ni 3 séances, ni séance longue', () => {
       expect(
         resolveDormantTip({

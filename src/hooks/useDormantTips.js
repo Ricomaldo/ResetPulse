@@ -7,9 +7,12 @@
 // fois, jamais en immersion ni en Focus — ces gardes vivent CÔTÉ APPELANT
 // (`enabled`), ce hook ne connaît ni `snapshot`, ni `immersed`, ni
 // `isFocus`. Exception : `isCompleted` lui EST passé explicitement (pas
-// dans `enabled`) — seule la rangée favoris doit se taire pendant l'état
-// complété (mandat W, éviter deux voix à la première séance), palettes/
-// focus gardent leur comportement d'origine.
+// dans `enabled`, ceinture ET bretelles avec le garde côté appelant,
+// cf. TimerScreen) — AUCUNE astuce ne se montre pendant l'état complété
+// (mandat W) : la ligne de fin (« garde ce moment ? »/« fais-le respirer »)
+// occupe déjà le canal, et depuis le seuil Focus composé `focus` peut se
+// résoudre dès la 1re séance (hadLongSession) — exactement le moment où
+// keepMoment (completedSessions === 1) parle.
 //
 // Single-mount : ce hook n'est monté qu'UNE fois (TimerScreen). Les
 // marqueurs « fonction touchée » doivent pourtant pouvoir être posés depuis
@@ -63,15 +66,23 @@ export function resolveDormantTip({
   isCompleted,
   shownFlags,
 }) {
+  // Jamais pendant l'état complété, aucune astuce — « garde ce moment ? »/
+  // « fais-le respirer » occupent déjà la ligne de fin à ce moment précis ;
+  // deux voix à la fois ferait un mur (ADR-018 étendu en interne, mandat W).
+  // Avant le seuil Focus composé cette collision n'existait qu'en théorie
+  // (`focus` exigeait 5 séances, loin du 1er/2e completedSessions où vivent
+  // keepMoment/breatheInvitation) — `hadLongSession` la rend désormais
+  // ATTEIGNABLE dès la toute première séance, d'où ce garde explicite plutôt
+  // qu'un repli sur la coïncidence des seuils.
+  if (isCompleted) {
+    return null;
+  }
+
   const sessions = completedSessions ?? 0;
   const shown = shownFlags ?? {};
 
-  // Rangée favoris d'abord (pas de seuil) — mais jamais pendant l'état
-  // complété : « garde ce moment ? »/« fais-le respirer » occupent déjà la
-  // ligne de fin à ce moment précis, deux voix à la fois ferait un mur
-  // (constat avisé au mandat W, la coïncidence est garantie à la toute
-  // première séance sinon).
-  if (!shown.ritualsRow && !isCompleted) {
+  // Rangée favoris d'abord — pas de seuil de séances, juste jamais montrée.
+  if (!shown.ritualsRow) {
     return 'ritualsRow';
   }
   if (sessions >= 3 && !hasOpenedPalettes && !shown.palettes) {

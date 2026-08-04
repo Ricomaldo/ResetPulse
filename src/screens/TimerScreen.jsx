@@ -955,12 +955,16 @@ function TimerScreenContent() {
     returnedPalette,
     returnedSoundId,
   });
+  // !snapshot.isCompleted dans `enabled` — ceinture ET bretelles avec le
+  // garde déjà posé en tête de resolveDormantTip (cf. useDormantTips) :
+  // depuis le seuil Focus composé, `focus` peut se résoudre dès la 1re
+  // séance (hadLongSession) — exactement le moment où « garde ce moment ? »
+  // occupe déjà la ligne de fin (completedSessions === 1). Sans ce garde,
+  // une séance longue dès le 1er Moment ferait apparaître DEUX voix à la
+  // fois (constat avisé en review, mandat W).
   const dormantTips = useDormantTips({
-    enabled: canShowDormantTips && !borrowCoach.activeMessage,
+    enabled: canShowDormantTips && !borrowCoach.activeMessage && !snapshot.isCompleted,
     hadLongSession,
-    // Passé explicitement (pas fondu dans `enabled`) : seule la ligne
-    // rangée favoris doit se taire pendant l'état complété (mandat W) —
-    // palettes/focus gardent leur comportement d'origine, cf. useDormantTips.
     isCompleted: snapshot.isCompleted,
   });
   const coachChannel = canShowDormantTips
