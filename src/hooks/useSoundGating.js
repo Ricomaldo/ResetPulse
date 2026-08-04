@@ -15,7 +15,13 @@
 //    si FREE et que le son actif est Ambiances, on repasse au dernier
 //    inclus (ou DEFAULT_SOUND_ID). Un ref verrouille la décision, jamais de
 //    boucle ni de re-déclenchement au fil des re-renders.
-import { useEffect, useRef } from 'react';
+//
+// Lambda V (pédagogie du prêt) : le hook EXPOSE la retombée quand elle a
+// lieu — `returnedSoundId` = l'id du son Ambiances qui vient de rentrer
+// chez lui au lancement (null sinon). Posé au même instant que le retour
+// (le ref de verrouillage garantit déjà l'unicité par montage) ;
+// resolveSoundOnLaunch reste pure, aucune logique de décision ajoutée.
+import { useEffect, useRef, useState } from 'react';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { usePremiumStatus } from './usePremiumStatus';
 import { usePersistedState } from './usePersistedState';
@@ -48,6 +54,9 @@ export function useSoundGating() {
     }
   }, [isReady, selectedSoundId, lastIncludedSoundId, setLastIncludedSoundId]);
 
+  // Retombée exposée (Lambda V) : le son emprunté qui vient de rentrer.
+  const [returnedSoundId, setReturnedSoundId] = useState(null);
+
   const hasResolvedLaunchRef = useRef(false);
   useEffect(() => {
     if (hasResolvedLaunchRef.current) return;
@@ -57,8 +66,11 @@ export function useSoundGating() {
     const target = resolveSoundOnLaunch(isPremium, selectedSoundId, lastIncludedSoundId);
     if (target !== selectedSoundId) {
       setSelectedSoundId(target);
+      setReturnedSoundId(selectedSoundId);
     }
   }, [isPremium, isPremiumLoading, isReady, selectedSoundId, lastIncludedSoundId, setSelectedSoundId]);
+
+  return { returnedSoundId };
 }
 
 export default useSoundGating;
