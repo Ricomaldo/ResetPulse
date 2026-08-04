@@ -34,6 +34,12 @@ const DIAL_FALLBACK_RATIO = 0.32;
 // n'est pas encore montée au moment du calcul), volontairement large pour
 // rester du côté sûr.
 const MIN_BETWEEN_GAP = rs(64, 'min');
+// Resserrage QA visuelle #1 (04/08) : TIP_GAP (14) laissait la bulle du
+// moment 1 mordre les derniers pixels du cadran (repère 15) — clairance
+// dédiée à ce SEUL moment (+10, dans la fourchette 8-12 demandée), la
+// géométrie de topOffsetForFirstMoment ne change pas. Moments 2-4
+// (bottomOffsetFromAnchor) et MIN_BETWEEN_GAP restent sur TIP_GAP.
+const MOMENT1_DIAL_GAP = rs(24, 'min');
 
 const MOMENT_KEYS = {
   1: 'firstRun.welcome',
@@ -77,7 +83,7 @@ function topOffsetForFirstMoment(barAnchor, dialAnchor, overlayTopY) {
   if (gapAvailable < MIN_BETWEEN_GAP) {
     return null;
   }
-  return dialBottom + TIP_GAP - overlayTopY;
+  return dialBottom + MOMENT1_DIAL_GAP - overlayTopY;
 }
 
 export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) {
