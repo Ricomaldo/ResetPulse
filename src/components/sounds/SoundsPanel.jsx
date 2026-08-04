@@ -31,7 +31,7 @@ import haptics from '../../utils/haptics';
 const INCLUDED_SOUNDS = TIMER_SOUNDS.filter((sound) => !sound.isPremium);
 const AMBIANCE_SOUNDS = TIMER_SOUNDS.filter((sound) => sound.isPremium);
 
-export default function SoundsPanel({ onBack, maxHeight }) {
+export default function SoundsPanel({ onBack, maxHeight, onBorrowed }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -51,6 +51,12 @@ export default function SoundsPanel({ onBack, maxHeight }) {
     setSelectedSoundId(soundId);
     playSound(soundId).catch(() => {});
     analytics.trackSoundSelected(soundId);
+    // Lambda V (pédagogie du prêt) : un FREE applique un son Ambiances →
+    // signal au coach (ligne « son emprunté », une fois par item — le
+    // verrou vit dans useBorrowCoach, côté TimerScreen).
+    if (!isPremium && isSoundPremium(soundId)) {
+      onBorrowed?.(soundId);
+    }
   };
 
   // Ligne d'invitation : jamais pour un premium, seulement quand le son

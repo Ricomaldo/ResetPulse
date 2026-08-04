@@ -36,7 +36,7 @@ const PALETTE_KEYS = Object.keys(TIMER_PALETTES);
 const INCLUDED_KEYS = PALETTE_KEYS.filter((key) => !TIMER_PALETTES[key].isPremium);
 const AMBIANCE_KEYS = PALETTE_KEYS.filter((key) => TIMER_PALETTES[key].isPremium);
 
-export default function PalettesPanel({ onBack, maxHeight }) {
+export default function PalettesPanel({ onBack, maxHeight, onBorrowed }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -54,6 +54,12 @@ export default function PalettesPanel({ onBack, maxHeight }) {
     haptics.impact('light').catch(() => {});
     setPalette(key);
     analytics.trackPaletteSelected(key);
+    // Lambda V (pédagogie du prêt) : un FREE applique une palette
+    // Ambiances → signal au coach (ligne « palette empruntée », une fois
+    // par item — le verrou vit dans useBorrowCoach, côté TimerScreen).
+    if (!isPremium && isPalettePremium(key)) {
+      onBorrowed?.(key);
+    }
   };
 
   // Ligne d'invitation : jamais pour un premium, seulement quand la palette

@@ -83,7 +83,11 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 // Complet meurt (C6.2, acté Eric 25/07 ×2) — segmenté à 2 entrées. Clé
 // interne `mixte` conservée (naming définitif à la passe CD, piste : le
 // défaut ne se nomme pas) ; libellé affiché "Standard" (i18n, provisoire).
-export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened }) {
+// Lambda V (pédagogie du prêt) : `onAmbianceBorrowed(kind, key)` — relayé
+// aux panels Palettes/Sons, appelé quand un FREE applique un item
+// Ambiances. L'affichage de la ligne coach vit côté TimerScreen
+// (useBorrowCoach) — même pattern callback-prop que onPaletteOpened.
+export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -604,11 +608,19 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                      ouverte au tap (préviz live, porte C6.1) : pas d'onApplied.
                      maxHeight borne son propre scroll (A2 — même dette que le
                      formulaire de rituel, elle explosera avec la liste). */
-                  <PalettesPanel onBack={() => setPaletteOpen(false)} maxHeight={subScreenHeight} />
+                  <PalettesPanel
+                    onBack={() => setPaletteOpen(false)}
+                    maxHeight={subScreenHeight}
+                    onBorrowed={(key) => onAmbianceBorrowed?.('palette', key)}
+                  />
                 ) : soundsOpen ? (
                   /* Sous-écran Sons (bloc 5, Lambda L) — même mécanisme que
                      Palettes : liste ouverte, écoute + apply au tap. */
-                  <SoundsPanel onBack={() => setSoundsOpen(false)} maxHeight={subScreenHeight} />
+                  <SoundsPanel
+                    onBack={() => setSoundsOpen(false)}
+                    maxHeight={subScreenHeight}
+                    onBorrowed={(soundId) => onAmbianceBorrowed?.('sound', soundId)}
+                  />
                 ) : (
                   <>
                     {/* Bloc 1 : segmenté Mode — écrit le réglage global. En Focus,
