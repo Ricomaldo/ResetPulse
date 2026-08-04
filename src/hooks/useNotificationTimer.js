@@ -55,7 +55,7 @@ const setupAndroidChannels = async () => {
       name: 'Fin de séance',
       description: 'Notification à la fin d\'un rituel',
       importance: Notifications.AndroidImportance.HIGH, // Bannière + son
-      sound: '634089__aj_heels__timercomplete01.wav', // Son fixe (limitation channel Android, cf. commentaire ci-dessus)
+      sound: 'aj_heels__timercomplete01.wav', // Son fixe (limitation channel Android, cf. commentaire ci-dessus)
       vibrationPattern: [0, 250, 250, 250], // Vibration courte
       enableLights: true,
       lightColor: '#4A5568', // Couleur thème app

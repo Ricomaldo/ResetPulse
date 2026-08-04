@@ -22,23 +22,23 @@ Convention de nom : `{id-freesound}__{auteur}__{slug}.wav`
 
 | Fichier | Son | Auteur | Licence | Source |
 |---|---|---|---|---|
-| `634089__aj_heels__timercomplete01.wav` | Accompli / Done (défaut) | aj_heels | **CC-BY 4.0** | [freesound.org/s/634089](https://freesound.org/people/aj_heels/sounds/634089/) |
-| `609725__theplax__microwave-ping.wav` | Ping | theplax | **CC-BY 4.0** | [freesound.org/s/609725](https://freesound.org/people/theplax/sounds/609725/) |
-| `271370__inoshirodesign__singing-bowl-strike.wav` | Bol chantant / Singing bowl | inoshirodesign | CC0 | [freesound.org/s/271370](https://freesound.org/people/inoshirodesign/sounds/271370/) |
-| `373053__sgossner__contrabass-pizzicato-c2.wav` | Corde grave (contrebasse pizzicato C2, pack VSCO2 CE) | sgossner (interprète : Brittany Karlson) | CC0 | [freesound.org/s/373053](https://freesound.org/people/sgossner/sounds/373053/) |
+| `aj_heels__timercomplete01.wav` | Accompli / Done (défaut) | aj_heels | **CC-BY 4.0** | [freesound.org/s/634089](https://freesound.org/people/aj_heels/sounds/634089/) |
+| `theplax__microwave_ping.wav` | Ping | theplax | **CC-BY 4.0** | [freesound.org/s/609725](https://freesound.org/people/theplax/sounds/609725/) |
+| `inoshirodesign__singing_bowl_strike.wav` | Bol chantant / Singing bowl | inoshirodesign | CC0 | [freesound.org/s/271370](https://freesound.org/people/inoshirodesign/sounds/271370/) |
+| `sgossner__contrabass_pizzicato_c2.wav` | Corde grave (contrebasse pizzicato C2, pack VSCO2 CE) | sgossner (interprète : Brittany Karlson) | CC0 | [freesound.org/s/373053](https://freesound.org/people/sgossner/sounds/373053/) |
 
 ## Ambiances (isPremium: true — données seulement, gating au chantier 3b)
 
 | Fichier | Son | Auteur | Licence | Source |
 |---|---|---|---|---|
-| `564623__azumarill__toaster-oven-or-liftelevator-bell.wav` | Pop | azumarill | **CC-BY 3.0** | [freesound.org/s/564623](https://freesound.org/people/azumarill/sounds/564623/) |
-| `270404__littlerobotsoundfactory__jingle-achievement.wav` | Fanfare (Jingle Achievement) | LittleRobotSoundFactory | CC-BY 4.0 | [freesound.org/s/270404](https://freesound.org/people/LittleRobotSoundFactory/sounds/270404/) |
-| `331047__foochie_foochie__kalimba-c-note.wav` | Kalimba (C-note) | foochie_foochie | CC0 | [freesound.org/s/331047](https://freesound.org/people/foochie_foochie/sounds/331047/) |
-| `495674__jack_urbanski__vibraphone-chord.wav` | Vibraphone Chord | jack_urbanski | CC0 | [freesound.org/s/495674](https://freesound.org/people/jack_urbanski/sounds/495674/) |
-| `577692__joesh2__marimba-c3.wav` | Marimba C3 (sec) | joesh2 | CC0 | [freesound.org/s/577692](https://freesound.org/people/joesh2/sounds/577692/) |
-| `401722__pogmothoin__marimba-ascending.wav` | Marimba do-ré-mi-fa-sol | pogmothoin | CC-BY 4.0 | [freesound.org/s/401722](https://freesound.org/people/pogmothoin/sounds/401722/) |
-| `352666__foolboymedia__up-chime-2.wav` | Up Chime 2 | FoolBoyMedia | CC-BY 4.0 | [freesound.org/s/352666](https://freesound.org/people/FoolBoyMedia/sounds/352666/) |
-| `109662__grunz__success.wav` | Success (glissando) | grunz | CC-BY 3.0 | [freesound.org/s/109662](https://freesound.org/people/grunz/sounds/109662/) |
+| `azumarill__toaster_oven_or_liftelevator_bell.wav` | Pop | azumarill | **CC-BY 3.0** | [freesound.org/s/564623](https://freesound.org/people/azumarill/sounds/564623/) |
+| `littlerobotsoundfactory__jingle_achievement.wav` | Fanfare (Jingle Achievement) | LittleRobotSoundFactory | CC-BY 4.0 | [freesound.org/s/270404](https://freesound.org/people/LittleRobotSoundFactory/sounds/270404/) |
+| `foochie_foochie__kalimba_c_note.wav` | Kalimba (C-note) | foochie_foochie | CC0 | [freesound.org/s/331047](https://freesound.org/people/foochie_foochie/sounds/331047/) |
+| `jack_urbanski__vibraphone_chord.wav` | Vibraphone Chord | jack_urbanski | CC0 | [freesound.org/s/495674](https://freesound.org/people/jack_urbanski/sounds/495674/) |
+| `joesh2__marimba_c3.wav` | Marimba C3 (sec) | joesh2 | CC0 | [freesound.org/s/577692](https://freesound.org/people/joesh2/sounds/577692/) |
+| `pogmothoin__marimba_ascending.wav` | Marimba do-ré-mi-fa-sol | pogmothoin | CC-BY 4.0 | [freesound.org/s/401722](https://freesound.org/people/pogmothoin/sounds/401722/) |
+| `foolboymedia__up_chime_2.wav` | Up Chime 2 | FoolBoyMedia | CC-BY 4.0 | [freesound.org/s/352666](https://freesound.org/people/FoolBoyMedia/sounds/352666/) |
+| `grunz__success.wav` | Success (glissando) | grunz | CC-BY 3.0 | [freesound.org/s/109662](https://freesound.org/people/grunz/sounds/109662/) |
 
 ## Attribution requise (CC-BY)
 

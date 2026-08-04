@@ -14,20 +14,20 @@ import i18n from '../i18n';
 // crête à -1 dBFS pour un niveau perçu homogène à volume device constant.
 export const SOUND_FILES = {
   // Gratuits (4) — 2 legacy + 2 nouveaux, variété de textures
-  'timer_complete': require('../../assets/sounds/634089__aj_heels__timercomplete01.wav'),
-  'microwave_ping': require('../../assets/sounds/609725__theplax__microwave-ping.wav'),
-  'singing_bowl': require('../../assets/sounds/271370__inoshirodesign__singing-bowl-strike.wav'),
-  'contrabass_pluck': require('../../assets/sounds/373053__sgossner__contrabass-pizzicato-c2.wav'),
+  'timer_complete': require('../../assets/sounds/aj_heels__timercomplete01.wav'),
+  'microwave_ping': require('../../assets/sounds/theplax__microwave_ping.wav'),
+  'singing_bowl': require('../../assets/sounds/inoshirodesign__singing_bowl_strike.wav'),
+  'contrabass_pluck': require('../../assets/sounds/sgossner__contrabass_pizzicato_c2.wav'),
 
   // Ambiances (8, premium — données seulement)
-  'toaster_bell': require('../../assets/sounds/564623__azumarill__toaster-oven-or-liftelevator-bell.wav'),
-  'jingle_achievement': require('../../assets/sounds/270404__littlerobotsoundfactory__jingle-achievement.wav'),
-  'kalimba': require('../../assets/sounds/331047__foochie_foochie__kalimba-c-note.wav'),
-  'vibraphone_chord': require('../../assets/sounds/495674__jack_urbanski__vibraphone-chord.wav'),
-  'marimba_dry': require('../../assets/sounds/577692__joesh2__marimba-c3.wav'),
-  'marimba_ascending': require('../../assets/sounds/401722__pogmothoin__marimba-ascending.wav'),
-  'up_chime': require('../../assets/sounds/352666__foolboymedia__up-chime-2.wav'),
-  'success_glissando': require('../../assets/sounds/109662__grunz__success.wav'),
+  'toaster_bell': require('../../assets/sounds/azumarill__toaster_oven_or_liftelevator_bell.wav'),
+  'jingle_achievement': require('../../assets/sounds/littlerobotsoundfactory__jingle_achievement.wav'),
+  'kalimba': require('../../assets/sounds/foochie_foochie__kalimba_c_note.wav'),
+  'vibraphone_chord': require('../../assets/sounds/jack_urbanski__vibraphone_chord.wav'),
+  'marimba_dry': require('../../assets/sounds/joesh2__marimba_c3.wav'),
+  'marimba_ascending': require('../../assets/sounds/pogmothoin__marimba_ascending.wav'),
+  'up_chime': require('../../assets/sounds/foolboymedia__up_chime_2.wav'),
+  'success_glissando': require('../../assets/sounds/grunz__success.wav'),
 };
 
 // Métadonnées des sons (nom affiché, durée, emoji, gating)
@@ -118,18 +118,18 @@ export const DEFAULT_SOUND_ID = 'timer_complete';
 // app.json → plugins → expo-notifications → sounds ET avec assets/sounds/
 // (Lot 3e, fix packaging custom-sound, finding C2).
 export const NOTIFICATION_SOUND_FILES = {
-  timer_complete: '634089__aj_heels__timercomplete01.wav',
-  microwave_ping: '609725__theplax__microwave-ping.wav',
-  singing_bowl: '271370__inoshirodesign__singing-bowl-strike.wav',
-  contrabass_pluck: '373053__sgossner__contrabass-pizzicato-c2.wav',
-  toaster_bell: '564623__azumarill__toaster-oven-or-liftelevator-bell.wav',
-  jingle_achievement: '270404__littlerobotsoundfactory__jingle-achievement.wav',
-  kalimba: '331047__foochie_foochie__kalimba-c-note.wav',
-  vibraphone_chord: '495674__jack_urbanski__vibraphone-chord.wav',
-  marimba_dry: '577692__joesh2__marimba-c3.wav',
-  marimba_ascending: '401722__pogmothoin__marimba-ascending.wav',
-  up_chime: '352666__foolboymedia__up-chime-2.wav',
-  success_glissando: '109662__grunz__success.wav',
+  timer_complete: 'aj_heels__timercomplete01.wav',
+  microwave_ping: 'theplax__microwave_ping.wav',
+  singing_bowl: 'inoshirodesign__singing_bowl_strike.wav',
+  contrabass_pluck: 'sgossner__contrabass_pizzicato_c2.wav',
+  toaster_bell: 'azumarill__toaster_oven_or_liftelevator_bell.wav',
+  jingle_achievement: 'littlerobotsoundfactory__jingle_achievement.wav',
+  kalimba: 'foochie_foochie__kalimba_c_note.wav',
+  vibraphone_chord: 'jack_urbanski__vibraphone_chord.wav',
+  marimba_dry: 'joesh2__marimba_c3.wav',
+  marimba_ascending: 'pogmothoin__marimba_ascending.wav',
+  up_chime: 'foolboymedia__up_chime_2.wav',
+  success_glissando: 'grunz__success.wav',
 };
 
 /**

@@ -32,18 +32,18 @@
           "icon": "./assets/icon.png",
           "color": "#4A5568",
           "sounds": [
-            "./assets/sounds/634089__aj_heels__timercomplete01.wav",
-            "./assets/sounds/609725__theplax__microwave-ping.wav",
-            "./assets/sounds/271370__inoshirodesign__singing-bowl-strike.wav",
-            "./assets/sounds/373053__sgossner__contrabass-pizzicato-c2.wav",
-            "./assets/sounds/564623__azumarill__toaster-oven-or-liftelevator-bell.wav",
-            "./assets/sounds/270404__littlerobotsoundfactory__jingle-achievement.wav",
-            "./assets/sounds/331047__foochie_foochie__kalimba-c-note.wav",
-            "./assets/sounds/495674__jack_urbanski__vibraphone-chord.wav",
-            "./assets/sounds/577692__joesh2__marimba-c3.wav",
-            "./assets/sounds/401722__pogmothoin__marimba-ascending.wav",
-            "./assets/sounds/352666__foolboymedia__up-chime-2.wav",
-            "./assets/sounds/109662__grunz__success.wav"
+            "./assets/sounds/aj_heels__timercomplete01.wav",
+            "./assets/sounds/theplax__microwave_ping.wav",
+            "./assets/sounds/inoshirodesign__singing_bowl_strike.wav",
+            "./assets/sounds/sgossner__contrabass_pizzicato_c2.wav",
+            "./assets/sounds/azumarill__toaster_oven_or_liftelevator_bell.wav",
+            "./assets/sounds/littlerobotsoundfactory__jingle_achievement.wav",
+            "./assets/sounds/foochie_foochie__kalimba_c_note.wav",
+            "./assets/sounds/jack_urbanski__vibraphone_chord.wav",
+            "./assets/sounds/joesh2__marimba_c3.wav",
+            "./assets/sounds/pogmothoin__marimba_ascending.wav",
+            "./assets/sounds/foolboymedia__up_chime_2.wav",
+            "./assets/sounds/grunz__success.wav"
           ]
         }
       ],
