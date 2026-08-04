@@ -98,8 +98,10 @@ export default function App() {
         '@ResetPulse:hasSeenDistractionLabel',
         '@ResetPulse:tipShown.palettes',
         '@ResetPulse:tipShown.focus',
+        '@ResetPulse:tipShown.ritualsRow',
         '@ResetPulse:hasOpenedPalettes',
         '@ResetPulse:hasTriedFocus',
+        '@ResetPulse:hadLongSession',
         '@ResetPulse:asideOpenCount',
       ]);
       setResetTrigger(prev => prev + 1); // Force AppContent remount
@@ -146,8 +148,10 @@ export default function App() {
         '@ResetPulse:hasSeenDistractionLabel',
         '@ResetPulse:tipShown.palettes',
         '@ResetPulse:tipShown.focus',
+        '@ResetPulse:tipShown.ritualsRow',
         '@ResetPulse:hasOpenedPalettes',
         '@ResetPulse:hasTriedFocus',
+        '@ResetPulse:hadLongSession',
         '@ResetPulse:asideOpenCount',
 
         // === LEGACY KEYS (for cleanup after migration) ===

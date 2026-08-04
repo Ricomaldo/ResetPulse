@@ -55,6 +55,12 @@ import haptics from '../utils/haptics';
 const IMMERSION_FADE_MS = 600;
 const IMMERSION_DIAL_SCALE = 1.12;
 
+// Seuil composé Focus (P2-Focus, réponses §4 CD validées) : une séance
+// pleine >= cette durée compte comme « longue » pour resolveDormantTip
+// (cf. useDormantTips) — posé ICI (pas dans useTimer, sacré) car ce fichier
+// connaît déjà la durée pleine du Moment accompli (cf. handleKeepMomentTap).
+const LONG_SESSION_THRESHOLD_SECONDS = 1800; // 30 minutes
+
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
@@ -301,11 +307,19 @@ function CoachPill({ text, onPress, testID }) {
 // Astuce dormante v1 (ADR-016 §4, Lambda C) — habillage inchangé, rendue
 // via la base CoachPill. Textes i18n FLAGGÉS pour review Claude design
 // (formulation provisoire, cf. dormantTips.palettes/focus dans locales/).
+// Cas spécial `ritualsRow` (mandat W, P1-8) : troisième tip résolu par
+// useDormantTips, mais sa clé i18n vit sous `coach.*` (demandé tel quel par
+// le mandat — cohérence avec les autres lignes du canal coach) plutôt que
+// `dormantTips.*` — seule cette bascule de namespace justifie le if.
 function DormantTipPill({ tip }) {
   const t = useTranslation();
 
   if (!tip) {
     return null;
+  }
+
+  if (tip === 'ritualsRow') {
+    return <CoachPill text={t('coach.ritualsRow')} testID="coach.ritualsRow" />;
   }
 
   return <CoachPill text={t(`dormantTips.${tip}`)} testID={`dormantTip.${tip}`} />;
@@ -703,6 +717,12 @@ function TimerScreenContent() {
     }
   }, []);
 
+  // Seuil composé Focus (P2-Focus) : « 1re séance accomplie >= 30 min » —
+  // posé une fois pour toutes (one-shot, jamais désarmé), lu par
+  // resolveDormantTip via useDormantTips plus bas. Ajouté au Vanilla/
+  // Découverte d'App.js.
+  const [hadLongSession, setHadLongSession] = usePersistedState('@ResetPulse:hadLongSession', false);
+
   // Compteur global de séances (Lot 3b, mandat Eric) : callback de fin de
   // séance existant (useTimer → TimeTimer.onTimerComplete), jamais câblé
   // jusqu'ici. Ne se déclenche QUE sur la fin naturelle (remaining atteint
@@ -717,7 +737,14 @@ function TimerScreenContent() {
       analytics.trackFirstMomentCompleted();
     }
     incrementSessionCount();
-  }, [completedSessions, incrementSessionCount, analytics]);
+    // Même lecture que handleKeepMomentTap : la durée PLEINE de la séance
+    // qui vient de finir (timerRef.current.duration, pas snapshot.remaining
+    // qui vaut 0 à la fin).
+    const duration = timerRef.current?.duration ?? currentDuration;
+    if (duration >= LONG_SESSION_THRESHOLD_SECONDS && !hadLongSession) {
+      setHadLongSession(true);
+    }
+  }, [completedSessions, incrementSessionCount, analytics, currentDuration, hadLongSession, setHadLongSession]);
 
   // Invitation « fais-le respirer » (Lot 3b, mandat Eric) : jamais un mur —
   // une ligne discrète sous le message de fin, une seule fois dans la vie de
@@ -930,6 +957,11 @@ function TimerScreenContent() {
   });
   const dormantTips = useDormantTips({
     enabled: canShowDormantTips && !borrowCoach.activeMessage,
+    hadLongSession,
+    // Passé explicitement (pas fondu dans `enabled`) : seule la ligne
+    // rangée favoris doit se taire pendant l'état complété (mandat W) —
+    // palettes/focus gardent leur comportement d'origine, cf. useDormantTips.
+    isCompleted: snapshot.isCompleted,
   });
   const coachChannel = canShowDormantTips
     ? resolveCoachChannel({
