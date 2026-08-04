@@ -37,15 +37,19 @@ const PulseButton = React.memo(function PulseButton({
   const theme = useTheme();
 
   // === MOUVEMENT ===
-  // porte-3 V1 (verdict Eric) : l'ambiance = UNE SEULE respiration calme,
-  // repos ET séance — breathe au tempo HALO_TEMPO, même souffle partout.
-  // La table mouvement-par-activité ne pilote plus l'ambiance ; les 5
-  // mouvements MOT-a→e ne vivent plus que dans le dé (Distraction), où la
-  // variété est une joie. Le champ `movement` des activités reste en
-  // données (choix libre par rituel, parqué Ambiances). COMPLETE : aucun
-  // mouvement (le bloom du dial porte la fin). La Distraction
-  // (`{ movement, variant }`) override quand active, au tempo de
-  // l'Activité — `useEmojiMovement` coupe tout si reduce motion.
+  // Lambda R2 Q1 (verdict Eric 05/08) : « le mouvement au repos est
+  // trompeur, il dit que ça tourne » — le breathe ne vit plus QU'EN SÉANCE
+  // (running). L'ancien verdict porte-3 V1 (« repos ET séance, même souffle
+  // partout ») est caduc : au repos l'emoji reste immobile, jamais de
+  // breathe même quand `shouldPulse` est vrai (le paramètre reste porté par
+  // les appelants — cf. propTypes — mais ne pilote plus rien ici). La table
+  // mouvement-par-activité ne pilote plus l'ambiance ; les 5 mouvements
+  // MOT-a→e ne vivent plus que dans le dé (Distraction), où la variété est
+  // une joie. Le champ `movement` des activités reste en données (choix
+  // libre par rituel, parqué Ambiances). COMPLETE : aucun mouvement (le
+  // bloom du dial porte la fin). La Distraction (`{ movement, variant }`)
+  // override quand active, au tempo de l'Activité — `useEmojiMovement`
+  // coupe tout si reduce motion.
   const activityTempo = activity?.pulseDuration || DEFAULT_TEMPO;
   let movement = null;
   let movementActive = false;
@@ -53,7 +57,11 @@ const PulseButton = React.memo(function PulseButton({
   if (distraction?.movement) {
     movement = distraction.movement;
     movementActive = true;
-  } else if ((state === 'rest' && shouldPulse) || state === 'running') {
+  } else if (state === 'running') {
+    // Halo (ci-dessous) et breathe de l'emoji ne coexistent plus QU'EN
+    // running désormais (Q1 a tué le breathe au repos) — la synchro de
+    // phase par demi-période (cf. useBreathingHalo) reste valide telle
+    // quelle : les deux widgets partagent HALO_TEMPO dans ce seul état.
     movement = 'breathe';
     movementActive = true;
     tempo = HALO_TEMPO;
