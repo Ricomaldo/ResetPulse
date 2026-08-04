@@ -103,6 +103,7 @@ export default function App() {
         '@ResetPulse:hasTriedFocus',
         '@ResetPulse:hadLongSession',
         '@ResetPulse:asideOpenCount',
+        '@ResetPulse:hasRenamedRitual',
       ]);
       setResetTrigger(prev => prev + 1); // Force AppContent remount
       logger.log('DevFab: découverte rejouée');
@@ -153,6 +154,7 @@ export default function App() {
         '@ResetPulse:hasTriedFocus',
         '@ResetPulse:hadLongSession',
         '@ResetPulse:asideOpenCount',
+        '@ResetPulse:hasRenamedRitual',
 
         // === LEGACY KEYS (for cleanup after migration) ===
         // Old onboarding (pre-v2.1)

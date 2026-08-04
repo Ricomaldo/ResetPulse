@@ -144,12 +144,20 @@ function RitualColorCarousel({ color, onSelectColor }) {
 // clavier emoji (focus = clavier standard de l'utilisateur, le design C6
 // reposait sur une capacité qui n'existe pas). Fix robuste : une grille
 // intégrée, zéro clavier. Sélection curée, ton chaleureux de l'app.
-const CUSTOM_EMOJI_CHOICES = [
+const RAW_CUSTOM_EMOJI_CHOICES = [
   '🎨', '📖', '📚', '✍️', '🧠', '🎯',
   '💪', '🚶', '🚴', '🧘‍♀️', '🛁', '😴',
   '👨‍🍳', '🍵', '🌱', '🐕', '🎵', '🎸',
   '🧹', '📝', '🎮', '🌙', '🔧', '🧺',
 ];
+// Dédoublonnage (décision A, CD 04/08) : un emoji n'apparaît qu'UNE fois
+// dans la grille — les choix custom qui dupliquent un emoji d'activité
+// built-in (déjà affiché grisé/en couleur au-dessus) sont retirés. Vu en
+// QA visuelle : ~10 doublons côte à côte, dissonance réelle.
+const BUILTIN_EMOJIS = new Set(getAllActivities().map((a) => a.emoji));
+const CUSTOM_EMOJI_CHOICES = RAW_CUSTOM_EMOJI_CHOICES.filter(
+  (emoji) => !BUILTIN_EMOJIS.has(emoji)
+);
 
 export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, maxHeight }) {
   const theme = useTheme();
