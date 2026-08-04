@@ -15,10 +15,10 @@ describe('PaywallHero — resolveHeroCopyKeys', () => {
     });
   });
 
-  test('plus hero → accroche custom, sous-titre réutilisé de la porte emoji', () => {
+  test('plus hero → accroche custom, sous-titre dédié (passe copies CD)', () => {
     expect(resolveHeroCopyKeys({ type: 'plus' })).toEqual({
       headlineKey: 'ambiances.hook.custom',
-      subtitleKey: 'ambiances.hookSub.emoji',
+      subtitleKey: 'ambiances.hookSub.custom',
     });
   });
 
@@ -36,10 +36,10 @@ describe('PaywallHero — resolveHeroCopyKeys', () => {
     });
   });
 
-  test('sound hero → MÊMES clés que palette (mandat §4, un seul sous-titre générique)', () => {
+  test('sound hero → clés DÉDIÉES son (passe copies CD : « les 7 autres »)', () => {
     expect(resolveHeroCopyKeys({ type: 'sound', soundId: 'chime' })).toEqual({
-      headlineKey: 'ambiances.hook.palette',
-      subtitleKey: 'ambiances.hookSub.palette',
+      headlineKey: 'ambiances.hook.sound',
+      subtitleKey: 'ambiances.hookSub.sound',
     });
   });
 
