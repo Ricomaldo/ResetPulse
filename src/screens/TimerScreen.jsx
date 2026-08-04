@@ -87,7 +87,11 @@ function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomen
   // Sur un Moment déjà réglé à la main (SALE), le tap ne change QUE
   // l'activité — durée/couleur/son en cours restent (`checkMomentDirty`,
   // relu au tap, jamais au render). Le panneau « Mes rituels »
-  // (RitualsPanel) reste hors de ce mécanisme — toujours complet.
+  // (RitualsPanel) n'est jamais partiel — toujours complet, non touché par
+  // `checkMomentDirty` — mais SON apply nettoie quand même le tracker (cf.
+  // AsideZone.onRitualApplied plus bas) : un rituel posé depuis le panneau
+  // remplit le cadran au même titre qu'un chip d'accueil, le chip suivant
+  // doit donc redevenir complet lui aussi.
   const { favoriteRituals } = useRituals();
   const { customActivities } = useCustomActivities();
 
@@ -1276,6 +1280,7 @@ function TimerScreenContent() {
           onPaletteOpened={dormantTips.markPalettesOpened}
           onAmbianceBorrowed={borrowCoach.notifyBorrowed}
           onOpenChange={setSheetOpen}
+          onRitualApplied={() => markMomentEvent(MOMENT_EVENTS.RITUAL_APPLIED)}
         />
         {!isFocus && (
           <FirstRunTips

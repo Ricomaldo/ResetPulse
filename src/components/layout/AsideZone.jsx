@@ -98,7 +98,12 @@ const BOTTOM_SAFETY = rs(24); // == scrollContent.paddingBottom
 // TOUJOURS sheet ouvert, useBorrowCoach a besoin de savoir quand il se
 // ferme pour différer sa ligne. Même pattern callback-prop, pas une
 // deuxième source de vérité sur `isOpen`.
-export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed, onOpenChange }) {
+// `onRitualApplied()` (Lambda R2, Q3b — chip intelligent) : relayé depuis
+// RitualsPanel.onApplied, qui se déclenche sur CHAQUE apply du panneau «
+// Mes rituels » — TOUJOURS un apply complet (cf. RitualsPanel.handleApply,
+// non touché). TimerScreen nettoie son tracker Moment sur ce signal, même
+// pattern callback-prop que les autres remontées ci-dessus.
+export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpened, onAmbianceBorrowed, onOpenChange, onRitualApplied }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -585,7 +590,10 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                      liste/form à AsideZone (A3/D5). */
                   <RitualsPanel
                     onBack={() => setRitualsOpen(false)}
-                    onApplied={() => snapTo(false)}
+                    onApplied={() => {
+                      snapTo(false);
+                      onRitualApplied?.();
+                    }}
                     onViewChange={setRitualsView}
                     maxHeight={subScreenHeight}
                   />
