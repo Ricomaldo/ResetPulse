@@ -550,6 +550,7 @@
     "borrowedPalette": "borrowed palette — next launch, it goes back home.",
     "borrowedSound": "borrowed sound — next launch, it goes back home.",
     "paletteReturned": "%{name} went home. take it again — or keep it.",
-    "soundReturned": "%{name} went home. take it again — or keep it."
+    "soundReturned": "%{name} went home. take it again — or keep it.",
+    "ritualsRow": "your rituals, right there — one tap each."
   }
 }
