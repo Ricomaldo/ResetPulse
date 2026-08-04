@@ -2,7 +2,7 @@
   "expo": {
     "name": "ResetPulse",
     "slug": "resetPulse",
-    "version": "2.1.6",
+    "version": "3.0.0",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -18,11 +18,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.irimwebforge.resetpulse",
-      "buildNumber": "28",
+      "buildNumber": "29",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSSupportsLiveActivities": true
-      }
+      },
+      "appleTeamId": "X22C5XKG29"
     },
     "plugins": [
       [
