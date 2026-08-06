@@ -109,6 +109,45 @@ describe('services/analytics', () => {
     });
   });
 
+  describe('trackCtaBuyTapped(source, productId)', () => {
+    it('émet cta_buy_tapped avec source et product_id', async () => {
+      const analytics = loadAnalytics({ devMode: false });
+      await analytics.init();
+
+      analytics.trackCtaBuyTapped('rituals_cap', 'ambiances.unlock');
+
+      expect(mockCapture).toHaveBeenCalledWith('cta_buy_tapped', {
+        source: 'rituals_cap',
+        product_id: 'ambiances.unlock',
+      });
+    });
+
+    it('product_id absent (offerings non résolues au moment du tap) → null explicite', async () => {
+      const analytics = loadAnalytics({ devMode: false });
+      await analytics.init();
+
+      analytics.trackCtaBuyTapped('palettes');
+
+      expect(mockCapture).toHaveBeenCalledWith('cta_buy_tapped', {
+        source: 'palettes',
+        product_id: null,
+      });
+    });
+  });
+
+  describe('trackPurchaseCancelled(productId)', () => {
+    it('émet purchase_cancelled avec product_id', async () => {
+      const analytics = loadAnalytics({ devMode: false });
+      await analytics.init();
+
+      analytics.trackPurchaseCancelled('premium_lifetime');
+
+      expect(mockCapture).toHaveBeenCalledWith('purchase_cancelled', {
+        product_id: 'premium_lifetime',
+      });
+    });
+  });
+
   describe('gate DEV_MODE dans init()', () => {
     it('ne crée pas de client PostHog quand DEV_MODE=true, même clé présente', async () => {
       const analytics = loadAnalytics({ devMode: true, apiKey: 'phc_test_key' });

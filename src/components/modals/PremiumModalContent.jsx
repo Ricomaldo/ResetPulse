@@ -99,18 +99,22 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
   const [isLoadingPrice, setIsLoadingPrice] = useState(false);
   const [purchaseAttempts, setPurchaseAttempts] = useState(0);
 
-  // Track paywall viewed once per session (M7.5)
   // Lambda T : `source` explicite prioritaire sur `highlightedFeature` —
   // le guichet (AsideZone) pousse sans feature (pas de héros, décision CD)
   // mais reste distinguable de 'unknown' dans l'analytics ('counter').
   // N'affecte pas FEATURE_ORDER_BY_SOURCE (toujours clé sur highlightedFeature).
+  // Valeur PARTAGÉE avec trackCtaBuyTapped (handlePurchase, plus bas) —
+  // c'est la jointure du funnel paywall_viewed → cta_buy_tapped → achat
+  // (audit analytics 06/08, décision Eric 07/08).
+  const paywallSource = source || highlightedFeature || 'unknown';
+
+  // Track paywall viewed once per session (M7.5)
   useEffect(() => {
     if (!hasTrackedPaywall) {
-      const paywallSource = source || highlightedFeature || 'unknown';
       analytics.trackPaywallViewed(paywallSource);
       setHasTrackedPaywall(true);
     }
-  }, [hasTrackedPaywall, source, highlightedFeature, analytics]);
+  }, [hasTrackedPaywall, paywallSource, analytics]);
 
   // Fetch dynamic price from RevenueCat when component mounts
   useEffect(() => {
@@ -142,6 +146,14 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
       logger.log('🚀 IAP purchase flow started');
       setIsPurchasing(true);
       haptics.selection().catch(() => { /* Optional operation - failure is non-critical */ });
+
+      // Émis AU TAP, avant tout appel réseau (audit analytics 06/08, décision
+      // Eric 07/08) : même `source` que trackPaywallViewed — c'est la
+      // jointure du funnel qui permet de repérer l'annulation silencieuse
+      // sur la feuille de paiement native (aucun événement entre
+      // paywall_viewed et purchase_completed jusqu'ici). product_id encore
+      // inconnu à cet instant (offerings pas encore résolues) — null.
+      analytics.trackCtaBuyTapped(paywallSource);
 
       const offerings = await getOfferings();
 
@@ -187,6 +199,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
 
       // Log package details
       logger.log('💳 IAP package selected', { productId: premiumPackage.product.identifier, price: premiumPackage.product.priceString });
+
       const result = await purchaseProduct(premiumPackage.product.identifier);
 
       logger.log('✅ IAP purchase result', { success: result.success, cancelled: result.cancelled, error: result.error || 'none' });
@@ -542,6 +555,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
             (comme ambiances.startTrial). Le accessibilityLabel juste en
             dessous reste annoncé et dit déjà le prix + « une fois ». */}
         <TouchableOpacity
+          testID="premium.cta.buy"
           style={[
             styles.primaryButton,
             isAnyOperationInProgress && styles.primaryButtonDisabled,
