@@ -9,6 +9,7 @@ module.exports = {
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
-    '/archive-sdk51/'  // Ignore archived tests
+    '/archive-sdk51/',  // Ignore archived tests
+    '/.claude/worktrees/'  // Worktrees d'agents : leurs tests appartiennent à leur branche
   ],
 };
