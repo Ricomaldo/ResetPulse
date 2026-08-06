@@ -202,6 +202,11 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
         );
       } else if (result.cancelled) {
         // User cancelled, silent
+      } else if (result.reason === 'already_in_flight') {
+        // Un achat est déjà en vol (garde purchaseProduct, correctif audit
+        // fiabilité 06/08) — silencieux comme un cancel : afficher une
+        // Alert d'échec ici serait un FAUX négatif pendant que l'achat
+        // premier peut très bien réussir.
       } else if (result.isNetworkError) {
         // Network error - show retry button
         const newAttempts = purchaseAttempts + 1;
