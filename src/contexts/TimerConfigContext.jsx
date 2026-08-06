@@ -31,6 +31,7 @@ import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import { usePersistedObject } from '../hooks/usePersistedState';
 import { getDefaultActivity, getActivityById } from '../config/activities';
+import { CONFIG_SCHEMA_VERSION, migrateConfigSchema } from '../config/config-schema';
 import { DEV_MODE, DEV_DEFAULT_TIMER_CONFIG } from '../config/test-mode';
 import { TIMER_PALETTES, getTimerColors } from '../config/timer-palettes';
 import { DEFAULT_SOUND_ID } from '../config/sounds';
@@ -62,7 +63,7 @@ export const TimerConfigProvider = ({ children }) => {
       // Dev mode: force known config
       const devActivity = getActivityById(DEV_DEFAULT_TIMER_CONFIG.activity) || getDefaultActivity();
       return {
-        version: 2,
+        version: CONFIG_SCHEMA_VERSION,
         timer: {
           currentActivity: devActivity,
           currentDuration: DEV_DEFAULT_TIMER_CONFIG.duration,
@@ -106,7 +107,7 @@ export const TimerConfigProvider = ({ children }) => {
 
     // Production mode: standard values
     return {
-      version: 2,
+      version: CONFIG_SCHEMA_VERSION,
       timer: {
         currentActivity: getDefaultActivity(),
         currentDuration: 1500, // 25 minutes
@@ -153,7 +154,8 @@ export const TimerConfigProvider = ({ children }) => {
   // Persisted state using new single-key strategy
   const { values, updateValue, setValues, isLoading } = usePersistedObject(
     NEW_STORAGE_KEY,
-    getDefaultValues()
+    getDefaultValues(),
+    { migrate: migrateConfigSchema }
   );
 
   // C5 : « none » retiré de la barre d'activités (asymétrie 3 activités |
