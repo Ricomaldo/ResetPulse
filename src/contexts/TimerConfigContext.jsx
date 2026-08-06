@@ -13,7 +13,7 @@
  * - system: keepAwakeEnabled
  * - mode: current (Mixte/Focus — Complet mort C6.2 ; ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
- * - layout: commandBarConfig, carouselBarConfig, favoriteToolMode
+ * - layout: commandBarConfig, carouselBarConfig
  * - stats: activityDurations, completedTimersCount, hasSeenTwoTimersModal, hasSeenReviewRequest
  * - palette: currentPalette, currentColor (source de vérité, hex — C6.2),
  *   selectedColorIndex (dérivé, -1 si currentColor n'est pas dans la palette
@@ -98,7 +98,6 @@ export const TimerConfigProvider = ({ children }) => {
         layout: {
           commandBarConfig: [],
           carouselBarConfig: [],
-          favoriteToolMode: 'activities',
         },
         stats: {
           activityDurations: {},
@@ -145,7 +144,6 @@ export const TimerConfigProvider = ({ children }) => {
       layout: {
         commandBarConfig: [],
         carouselBarConfig: [],
-        favoriteToolMode: 'activities',
       },
       stats: {
         activityDurations: {},
@@ -397,7 +395,6 @@ export const TimerConfigProvider = ({ children }) => {
     layout: {
       commandBarConfig: values.layout.commandBarConfig,
       carouselBarConfig: values.layout.carouselBarConfig,
-      favoriteToolMode: values.layout.favoriteToolMode,
     },
     stats: {
       activityDurations: values.stats.activityDurations,
@@ -538,12 +535,6 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         layout: { ...prev.layout, carouselBarConfig: config }
-      }));
-    },
-    setFavoriteToolMode: (mode) => {
-      setValues(prev => ({
-        ...prev,
-        layout: { ...prev.layout, favoriteToolMode: mode }
       }));
     },
 

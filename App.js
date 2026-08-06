@@ -168,7 +168,6 @@ export default function App() {
         '@ResetPulse:timerOptions',
         '@ResetPulse:timerPalette',
         '@ResetPulse:selectedColor',
-        '@ResetPulse:favoriteToolMode',
 
         // Old UI state
         '@ResetPulse:themeMode',

@@ -41,7 +41,7 @@ function baseValues(display) {
     system: { keepAwakeEnabled: true },
     mode: { current: 'mixte' },
     favorites: { favoriteActivities: [], favoritePalettes: [] },
-    layout: { commandBarConfig: [], carouselBarConfig: [], favoriteToolMode: 'activities' },
+    layout: { commandBarConfig: [], carouselBarConfig: [] },
     stats: {
       activityDurations: {},
       completedTimersCount: 0,
