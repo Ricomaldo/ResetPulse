@@ -11,6 +11,7 @@ import { PostHog } from 'posthog-react-native';
 import { POSTHOG_API_KEY, POSTHOG_HOST } from '../config/posthog';
 import { DEV_MODE } from '../config/test-mode';
 import logger from '../utils/logger';
+import { detectEnvironment } from './analytics-environment';
 
 const noop = () => {};
 
@@ -46,6 +47,27 @@ const analyticsAdapter = {
       captureAppLifecycleEvents: false, // on trace nous-mêmes (trackAppOpened)
     });
     this.isInitialized = true;
+
+    // Super-property `environment` (décision Eric 07/08, audit 06/08) :
+    // distingue les builds device release (TestFlight, QA) d'un vrai
+    // événement prod store — cf. analytics-environment.js pour la détection
+    // (repli 'prod' inconditionnel assumé, TestFlight indiscernable sans
+    // nouvelle dépendance). Posée tout de suite pour ne jamais retarder
+    // l'init ; detectEnvironment() est async par construction — si elle
+    // résout un jour à autre chose que 'prod', un second register() corrige
+    // la valeur. Un throw est catché : la valeur initiale ('prod') reste,
+    // aucune exception ne remonte à l'appelant. _environmentReady n'est là
+    // que pour les tests (déterminisme de la correction async).
+    this.setSuperProperties({ environment: 'prod' });
+    this._environmentReady = detectEnvironment()
+      .then((environment) => {
+        if (environment !== 'prod') {
+          this.setSuperProperties({ environment });
+        }
+      })
+      .catch(() => {
+        // Repli déjà posé ('prod') — rien à corriger.
+      });
 
     logger.boot.step('analytics', 'PostHog initialisé (EU)');
   },

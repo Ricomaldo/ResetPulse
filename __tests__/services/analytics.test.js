@@ -8,6 +8,11 @@
 //    PostHog prod, et les appels track* post-gate ne doivent jamais
 //    crasher (isInitialized reste false → guards existants + Proxy).
 // 6. trackRitualApplied gagne `mode` en plus de `source` (additif).
+// 7. Super-property `environment` (décision Eric 07/08) : posée à l'init,
+//    corrigée si detectEnvironment() résout à autre chose que 'prod', jamais
+//    de throw qui remonte. detectEnvironment est mocké (le seam), pas
+//    l'API native sous-jacente — cf. analytics-environment.js pour le repli
+//    réel assumé (TestFlight indiscernable sans nouvelle dépendance).
 //
 // Chaque test mocke posthog-react-native et src/config/test-mode via
 // jest.doMock + resetModules pour obtenir une instance fraîche du service
@@ -33,11 +38,18 @@ describe('services/analytics', () => {
     }));
   };
 
-  const loadAnalytics = ({ devMode = false, apiKey = 'phc_test_key' } = {}) => {
+  const loadAnalytics = ({
+    devMode = false,
+    apiKey = 'phc_test_key',
+    detectEnvironmentImpl = () => Promise.resolve('prod'),
+  } = {}) => {
     jest.doMock('../../src/config/test-mode', () => ({ DEV_MODE: devMode }));
     jest.doMock('../../src/config/posthog', () => ({
       POSTHOG_API_KEY: apiKey,
       POSTHOG_HOST: 'https://eu.i.posthog.com',
+    }));
+    jest.doMock('../../src/services/analytics-environment', () => ({
+      detectEnvironment: jest.fn(detectEnvironmentImpl),
     }));
     mockPostHogModule();
     // eslint-disable-next-line global-require
@@ -143,6 +155,64 @@ describe('services/analytics', () => {
       }).not.toThrow();
 
       expect(mockCapture).not.toHaveBeenCalled();
+    });
+
+    it('ne pose jamais la super-property environment quand DEV_MODE=true (non-régression)', async () => {
+      const analytics = loadAnalytics({ devMode: true });
+
+      await analytics.init();
+      await analytics._environmentReady;
+
+      expect(mockRegister).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('super-property environment (décision Eric 07/08)', () => {
+    it("pose environment='prod' immédiatement à l'init (repli assumé, cf. analytics-environment.js)", async () => {
+      const analytics = loadAnalytics({ detectEnvironmentImpl: () => Promise.resolve('prod') });
+
+      await analytics.init();
+
+      expect(mockRegister).toHaveBeenCalledWith({ environment: 'prod' });
+    });
+
+    it("corrige avec un second register() si detectEnvironment() résout 'testflight'", async () => {
+      const analytics = loadAnalytics({ detectEnvironmentImpl: () => Promise.resolve('testflight') });
+
+      await analytics.init();
+      await analytics._environmentReady;
+
+      expect(mockRegister).toHaveBeenNthCalledWith(1, { environment: 'prod' });
+      expect(mockRegister).toHaveBeenNthCalledWith(2, { environment: 'testflight' });
+    });
+
+    it('reste sur le repli prod (aucun second appel) si detectEnvironment() throw', async () => {
+      const analytics = loadAnalytics({
+        detectEnvironmentImpl: () => Promise.reject(new Error('API indisponible')),
+      });
+
+      await analytics.init();
+      await expect(analytics._environmentReady).resolves.toBeUndefined();
+
+      expect(mockRegister).toHaveBeenCalledTimes(1);
+      expect(mockRegister).toHaveBeenCalledWith({ environment: 'prod' });
+    });
+
+    it("n'attend pas detectEnvironment() pour résoudre init() (ne retarde jamais l'init)", async () => {
+      let resolveDetection;
+      const analytics = loadAnalytics({
+        detectEnvironmentImpl: () => new Promise((resolve) => { resolveDetection = resolve; }),
+      });
+
+      await analytics.init();
+
+      // init() est résolue alors que detectEnvironment() est toujours en
+      // attente : la valeur immédiate ('prod') est déjà posée.
+      expect(mockRegister).toHaveBeenCalledWith({ environment: 'prod' });
+      expect(mockRegister).toHaveBeenCalledTimes(1);
+
+      resolveDetection('prod');
+      await analytics._environmentReady;
     });
   });
 });
