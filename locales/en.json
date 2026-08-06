@@ -3,19 +3,13 @@
     "cancel": "Cancel",
     "ok": "OK",
     "retry": "Retry",
-    "continue": "Continue",
     "back": "Back",
     "delete": "Delete"
   },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Decrease duration",
-      "increaseDuration": "Increase duration",
-      "timeLabel": "Time: %{time}",
-      "durationLabel": "Duration: %{time}",
-      "showTime": "Show time",
-      "tapToHide": "Tap to hide",
-      "tapToShow": "Tap to show"
+      "increaseDuration": "Increase duration"
     },
     "rotation": {
       "clockwise": "Clockwise",
@@ -30,176 +24,22 @@
     "title": "welcome."
   },
   "onboarding": {
-    "restartGuide": "Restart the guide",
-    "restartGuideDescription": "Show the welcome screen and tips again",
-    "intentions": {
-      "title": "What's it for?",
-      "relax": {
-        "label": "Relax",
-        "defaultName": "Meditation"
-      },
-      "work": {
-        "label": "Work",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "Create",
-        "defaultName": "Create"
-      },
-      "learn": {
-        "label": "Learn",
-        "defaultName": "Study"
-      },
-      "move": {
-        "label": "Move",
-        "defaultName": "Workout"
-      },
-      "other": {
-        "label": "Other",
-        "defaultName": "My moment"
-      },
-      "q1": {
-        "title": "Your timer would be for...",
-        "focus": "Focusing better",
-        "launch": "Helping me get started",
-        "breathe": "Taking time for myself",
-        "children": "Framing a moment with my kids",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
-      },
-      "q2": {
-        "title": "A little help with...",
-        "starting": "Getting started",
-        "finishing": "Following through",
-        "staying": "Staying focused",
-        "managing": "Managing my time better",
-        "other": "Something else...",
-        "otherPlaceholder": "Like what?"
-      }
-    },
     "creation": {
-      "sectionTitle": "Your first moment",
-      "cta": "Create my moment",
-      "durationLabel": "How long?",
-      "namePlaceholder": "Name your moment..."
-    },
-    "paywall": {
-      "title": "You created your first moment",
-      "profile": "Profile:",
-      "question": "Want to create more?",
-      "valueProposition": "15 palettes · 16 activities · Unlimited creations",
-      "price": "$4.99 — Once, forever",
-      "ctaTrial": "Try 7 days free"
-    },
-    "launch": {
-      "title": "Let's go!",
-      "subtitle": "Your first moment is ready. Tap to begin.",
-      "cta": "Start my timer",
-      "ctaHint": "Start your first timer",
-      "defaultActivity": "My moment"
+      "cta": "Create my moment"
     },
     "v2": {
-      "filter0": {
-        "breathe": "Your time is yours",
-        "tapToContinue": "When you're ready"
-      },
       "filter1": {
-        "title": "a timer that adapts to you.",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "Don't miss when your moments end",
-        "body": "Your timer will alert you even if you use another app or your screen is locked.",
-        "ctaPrimary": "Yes, notify me",
-        "ctaSecondary": "Maybe later"
-      },
-      "filter5b": {
-        "title": "Your ringtone",
-        "skip": "Skip →"
+        "title": "a timer that adapts to you."
       }
     }
   },
   "settings": {
     "title": "Settings",
-    "interface": {},
-    "timer": {
-      "soundDescription": "Choose the sound that will play at the end of the timer",
-      "keepAwakeDescriptionOn": "Screen stays awake during timer",
-      "keepAwakeDescriptionOff": "Screen can lock during timer",
-      "dialScale": "Dial range",
-      "dialScaleDescription": "Maximum duration displayed on the dial",
-      "longPressStart": "Enable long tap to start",
-      "longPressStartDescriptionOn": "Hold to start the timer",
-      "longPressStartDescriptionOff": "Simple tap to start",
-      "longPressStop": "Enable long tap to stop",
-      "longPressStopDescriptionOn": "Hold to stop the timer",
-      "longPressStopDescriptionOff": "Simple tap to stop"
-    },
-    "appearance": {
-      "themeLight": "☀️ Light",
-      "themeDark": "🌙 Dark",
-      "themeAuto": "📱 Auto",
-      "themeDescriptionAuto": "Automatic (system)",
-      "themeDescriptionDark": "Dark",
-      "themeDescriptionLight": "Light"
-    },
-    "about": {
-      "title": "About",
-      "appName": "ResetPulse",
-      "appDescription": "Customizable visual timer",
-      "version": "Version"
-    },
-    "tool": {
-      "sectionTitle": "Minimal display mode",
-      "creative": {
-        "label": "Creative",
-        "description": "Colors carousel"
-      },
-      "multitask": {
-        "label": "Multitask",
-        "description": "Activities carousel"
-      },
-      "precision": {
-        "label": "Precision",
-        "description": "Digital timer with +/- controls"
-      }
-    },
-    "sections": {
-      "configuration": "CONFIGURATION",
-      "timerOptions": "Timer options",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "Notification sound",
-      "theme": "Theme",
-      "favorites": "YOUR FAVORITES",
-      "ambiance": "AMBIANCE",
-      "info": "INFO"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "Favorite palettes",
-        "description": "Select up to 4 favorite palettes (%{count}/4)",
-        "morePalettes": "More palettes"
-      },
-      "activities": {
-        "title": "Favorite activities",
-        "description": "Select up to 4 favorite activities (%{count}/4)",
-        "more": "More"
-      }
-    },
     "options": {
-      "activityEmoji": "Activity emoji at center",
-      "activityEmojiDescriptionOn": "Emoji shows at the center of the dial",
-      "activityEmojiDescriptionOff": "Emoji is hidden",
       "pulseAnimation": "Breathing halo"
     }
   },
   "premium": {
-    "title": "Unlock everything",
-    "description": "All the colors.\nAll the activities.\nCreate your own activities.\nYour maximum comfort.",
-    "features": "7 DAYS FREE",
-    "price": "Then %{price} once.\nYours forever.",
     "restore": "Restore my purchases",
     "welcomeTitle": "Welcome to Ambiances! 🎉",
     "welcomeMessage": "All palettes, unlimited rituals and Ambiances sounds are now unlocked.",
@@ -304,7 +144,6 @@
     "rotationDirection": "Rotation direction",
     "showTime": "Show time",
     "colorNumber": "Color %{number}",
-    "discoverMorePalettes": "Tap to discover more palettes",
     "timer": {
       "dial": "Timer dial, %{minutes} minutes set, %{activity}",
       "dialAdjustable": "Adjustable. Swipe up or down to change duration.",
@@ -315,8 +154,7 @@
       "activityStarted": "%{activity} started",
       "activityCompleted": "%{activity} completed",
       "startTimer": "Start timer",
-      "stopTimer": "Stop timer",
-      "resetTimer": "Reset timer"
+      "stopTimer": "Stop timer"
     },
     "closePremiumModal": "Close Ambiances offer",
     "closeModalHint": "Closes this dialog and returns to the app",
@@ -326,11 +164,6 @@
     "restorePurchasesHint": "Restore Ambiances access if you already purchased",
     "paletteItem": "Color palette: %{name}",
     "soundItem": "Sound: %{name}",
-    "closeCreateActivity": "Close create activity",
-    "createActivityHint": "Creates the custom activity and adds it to your list",
-    "closeEditActivity": "Close edit activity",
-    "saveActivityHint": "Saves changes to this activity",
-    "deleteActivityHint": "Permanently deletes this custom activity",
     "celebrationEmoji": "Celebration",
     "exploreSettingsHint": "Opens settings to discover premium features",
     "applyRitual": "Apply the %{name} ritual",
@@ -340,7 +173,6 @@
     "chooseCustomEmoji": "Choose another emoji via the keyboard",
     "activityLocked": "%{name}, locked — discover Ambiances",
     "customEmojiLocked": "Custom emoji locked — discover Ambiances",
-    "ritualNamePreset": "Preset ritual %{name}",
     "deleteRitual": "Delete ritual %{name}",
     "favoriteRitual": "Favorite ritual %{name}",
     "renameRitual": "Rename the %{name} ritual",
@@ -351,39 +183,6 @@
     "message": "Want to explore more colors and activities?",
     "explore": "Discover",
     "dismiss": "Maybe later"
-  },
-  "customActivities": {
-    "create": {
-      "title": "Create activity",
-      "namePlaceholder": "Ex: Guitar, Cooking...",
-      "nameLabel": "Activity name",
-      "emojiLabel": "Choose emoji",
-      "emojiPlaceholder": "Tap to choose",
-      "durationLabel": "Default duration",
-      "preview": "Preview",
-      "previewPlaceholder": "My activity",
-      "buttonCreate": "Create",
-      "errorTitle": "Missing information",
-      "errorEmoji": "Please choose an emoji for your activity.",
-      "errorName": "Please enter a name for your activity."
-    },
-    "edit": {
-      "title": "Edit activity",
-      "buttonSave": "Save",
-      "buttonDelete": "Delete",
-      "deleteConfirmTitle": "Delete?",
-      "deleteConfirmMessage": "This action is irreversible.",
-      "usageStats": "Used %{count} times"
-    },
-    "duration": {
-      "minutes": "min"
-    },
-    "addButton": "Create activity",
-    "toast": {
-      "created": "Activity created!",
-      "updated": "Activity updated",
-      "deleted": "Activity deleted"
-    }
   },
   "timerMessages": {
     "none": {
@@ -469,14 +268,12 @@
     "list": {
       "title": "My rituals",
       "createRow": "Create a ritual",
-      "empty": "No rituals yet",
-      "durationBadge": "%{minutes} min"
+      "empty": "No rituals yet"
     },
     "form": {
       "createTitle": "Create a ritual",
       "editTitle": "Edit ritual",
       "emojiLabel": "Emoji",
-      "emojiCustomButton": "Other emoji",
       "colorLabel": "Color",
       "durationLabel": "Duration",
       "soundLabel": "End sound",
@@ -528,7 +325,6 @@
   },
   "aside": {
     "exitFocus": "leave focus",
-    "doubleTapHint": "tip: double-tap the background to switch",
     "handle": "open settings",
     "closedLabel": "rituals & settings",
     "rotation": {

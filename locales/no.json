@@ -3,19 +3,13 @@
     "cancel": "Avbryt",
     "ok": "OK",
     "retry": "Prøv igjen",
-    "continue": "Fortsett",
     "back": "Tilbake",
     "delete": "Slett"
   },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Reduser varighet",
-      "increaseDuration": "Øk varighet",
-      "timeLabel": "Tid: %{time}",
-      "durationLabel": "Varighet: %{time}",
-      "showTime": "Vis tid",
-      "tapToHide": "Trykk for å skjule",
-      "tapToShow": "Trykk for å vise"
+      "increaseDuration": "Øk varighet"
     },
     "rotation": {
       "clockwise": "Med klokken",
@@ -30,176 +24,22 @@
     "title": "velkommen."
   },
   "onboarding": {
-    "restartGuide": "Start guiden på nytt",
-    "restartGuideDescription": "Vis velkomstskjermen og tipsene igjen",
-    "intentions": {
-      "title": "Hva er det til?",
-      "relax": {
-        "label": "Slappe av",
-        "defaultName": "Meditasjon"
-      },
-      "work": {
-        "label": "Jobbe",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "Skape",
-        "defaultName": "Skaping"
-      },
-      "learn": {
-        "label": "Lære",
-        "defaultName": "Studier"
-      },
-      "move": {
-        "label": "Beveg deg",
-        "defaultName": "Trening"
-      },
-      "other": {
-        "label": "Annet",
-        "defaultName": "Mitt øyeblikk"
-      },
-      "q1": {
-        "title": "Timeren din ville vært for...",
-        "focus": "Fokusere bedre",
-        "launch": "Hjelpe meg i gang",
-        "breathe": "Ta tid til meg selv",
-        "children": "Ramme inn et øyeblikk med barna mine",
-        "other": "Noe annet...",
-        "otherPlaceholder": "Som hva da?"
-      },
-      "q2": {
-        "title": "Litt hjelp med...",
-        "starting": "Komme i gang",
-        "finishing": "Fullføre",
-        "staying": "Holde fokus",
-        "managing": "Bedre tidsstyring",
-        "other": "Noe annet...",
-        "otherPlaceholder": "Som hva da?"
-      }
-    },
     "creation": {
-      "sectionTitle": "Ditt første øyeblikk",
-      "cta": "Opprett mitt øyeblikk",
-      "durationLabel": "Hvor lenge?",
-      "namePlaceholder": "Gi øyeblikket et navn..."
-    },
-    "paywall": {
-      "title": "Du opprettet ditt første moment",
-      "profile": "Profil:",
-      "question": "Vil du opprett flere?",
-      "valueProposition": "15 paletter · 16 aktiviteter · Ubegrenset kreativitet",
-      "price": "4,99€ — En gang, for alltid",
-      "ctaTrial": "Prøv 7 dager gratis"
-    },
-    "launch": {
-      "title": "Sett i gang!",
-      "subtitle": "Ditt første øyeblikk er klart. Trykk for å begynne.",
-      "cta": "Start timeren min",
-      "ctaHint": "Start din første timer",
-      "defaultActivity": "Mitt øyeblikk"
+      "cta": "Opprett mitt øyeblikk"
     },
     "v2": {
-      "filter0": {
-        "breathe": "Tiden din tilhører deg",
-        "tapToContinue": "Når du er klar"
-      },
       "filter1": {
-        "title": "en timer som tilpasser seg deg.",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "Ikke gå glipp av når øyeblikkene dine slutter",
-        "body": "Timeren din varsler deg selv om du bruker en annen app eller skjermen er låst.",
-        "ctaPrimary": "Ja, varsle meg",
-        "ctaSecondary": "Kanskje senere"
-      },
-      "filter5b": {
-        "title": "Ringetonen din",
-        "skip": "Hopp over →"
+        "title": "en timer som tilpasser seg deg."
       }
     }
   },
   "settings": {
     "title": "Innstillinger",
-    "interface": {},
-    "timer": {
-      "soundDescription": "Velg lyden som skal spilles når timeren er ferdig",
-      "keepAwakeDescriptionOn": "Skjermen forblir våken under timeren",
-      "keepAwakeDescriptionOff": "Skjermen kan låses under timeren",
-      "dialScale": "Skiveområde",
-      "dialScaleDescription": "Maksimal varighet vist på skiven",
-      "longPressStart": "Aktiver langt trykk for å starte",
-      "longPressStartDescriptionOn": "Hold inne for å starte timeren",
-      "longPressStartDescriptionOff": "Enkelt trykk for å starte",
-      "longPressStop": "Aktiver langt trykk for å stoppe",
-      "longPressStopDescriptionOn": "Hold inne for å stoppe timeren",
-      "longPressStopDescriptionOff": "Enkelt trykk for å stoppe"
-    },
-    "appearance": {
-      "themeLight": "☀️ Lys",
-      "themeDark": "🌙 Mørk",
-      "themeAuto": "📱 Auto",
-      "themeDescriptionAuto": "Automatisk (system)",
-      "themeDescriptionDark": "Mørk",
-      "themeDescriptionLight": "Lys"
-    },
-    "about": {
-      "title": "Om",
-      "appName": "ResetPulse",
-      "appDescription": "Tilpassbar visuell timer",
-      "version": "Versjon"
-    },
-    "tool": {
-      "sectionTitle": "Minimal visningsmodus",
-      "creative": {
-        "label": "Kreativ",
-        "description": "Fargekarusell"
-      },
-      "multitask": {
-        "label": "Multitasking",
-        "description": "Aktivitetskarusell"
-      },
-      "precision": {
-        "label": "Presisjon",
-        "description": "Digital timer med +/- kontroller"
-      }
-    },
-    "sections": {
-      "configuration": "KONFIGURASJON",
-      "timerOptions": "Timervalg",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "Varsellyd",
-      "theme": "Tema",
-      "favorites": "DINE FAVORITTER",
-      "ambiance": "AMBIANCE",
-      "info": "INFO"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "Favorittpaletter",
-        "description": "Velg opptil 4 favorittpaletter (%{count}/4)",
-        "morePalettes": "Flere paletter"
-      },
-      "activities": {
-        "title": "Favorittaktiviteter",
-        "description": "Velg opptil 4 favorittaktiviteter (%{count}/4)",
-        "more": "Mer"
-      }
-    },
     "options": {
-      "activityEmoji": "Aktivitetsemoji i midten",
-      "activityEmojiDescriptionOn": "Emoji vises i midten av skiven",
-      "activityEmojiDescriptionOff": "Emoji er skjult",
       "pulseAnimation": "pustende glød"
     }
   },
   "premium": {
-    "title": "Lås opp alt",
-    "description": "Alle farger.\nAlle aktiviteter.\nDin maksimale komfort.",
-    "features": "7 DAGER GRATIS",
-    "price": "Deretter %{price} én gang.\nDin for alltid.",
     "restore": "Gjenopprett kjøpene mine",
     "welcomeTitle": "Velkommen til Ambiances! 🎉",
     "welcomeMessage": "Alle paletter, ubegrensede ritualer og Ambiances-lyder er nå låst opp.",
@@ -301,18 +141,12 @@
     "rotationDirection": "Rotasjonsretning",
     "showTime": "Vis tid",
     "colorNumber": "Farge %{number}",
-    "discoverMorePalettes": "Trykk for å oppdage flere paletter",
     "celebrationEmoji": "Feiring",
-    "closeCreateActivity": "Lukk opprett aktivitet",
-    "closeEditActivity": "Lukk rediger aktivitet",
     "closeModalHint": "Lukker denne dialogen og går tilbake til appen",
     "closePremiumModal": "Lukk Ambiances-tilbud",
-    "createActivityHint": "Oppretter den egendefinerte aktiviteten og legger den til i listen din",
-    "deleteActivityHint": "Sletter denne egendefinerte aktiviteten permanent",
     "exploreSettingsHint": "Åpner innstillinger for å oppdage premiumfunksjoner",
     "restorePurchases": "Gjenopprett tidligere kjøp",
     "restorePurchasesHint": "Gjenopprett Ambiances-tilgang hvis du allerede har kjøpt",
-    "saveActivityHint": "Lagrer endringene i denne aktiviteten",
     "distraction": "Distraksjon",
     "timer": {
       "dialAdjustable": "Justerbar. Sveip opp eller ned for å endre varigheten.",
@@ -324,7 +158,6 @@
       "activityCompleted": "%{activity} fullført",
       "startTimer": "Start timer",
       "stopTimer": "Stopp timer",
-      "resetTimer": "Nullstill timer",
       "dial": "Timerskive, %{minutes} minutter innstilt, %{activity}"
     },
     "unlockPremium": "Lås opp Ambiances for %{price}",
@@ -334,7 +167,6 @@
     "createRitual": "Opprett et ritual",
     "closeRitualForm": "Lukk ritualskjemaet",
     "chooseCustomEmoji": "Velg en annen emoji via tastaturet",
-    "ritualNamePreset": "Forhåndsdefinert ritual %{name}",
     "deleteRitual": "Slett ritualet %{name}",
     "favoriteRitual": "Favorittritual %{name}"
   },
@@ -343,39 +175,6 @@
     "message": "Vil du utforske flere farger og aktiviteter?",
     "explore": "Oppdag",
     "dismiss": "Kanskje senere"
-  },
-  "customActivities": {
-    "toast": {
-      "created": "Moment créé avec succès",
-      "updated": "Moment mis à jour",
-      "deleted": "Moment supprimé"
-    },
-    "addButton": "Ajouter un moment",
-    "create": {
-      "title": "Opprett aktivitet",
-      "namePlaceholder": "F.eks: Gitar, Matlaging...",
-      "nameLabel": "Navn på aktiviteten",
-      "emojiLabel": "Velg emoji",
-      "emojiPlaceholder": "Trykk for å velge",
-      "durationLabel": "Standardvarighet",
-      "preview": "Forhåndsvisning",
-      "previewPlaceholder": "Min aktivitet",
-      "buttonCreate": "Opprett",
-      "errorTitle": "Manglende informasjon",
-      "errorEmoji": "Velg en emoji for aktiviteten din.",
-      "errorName": "Skriv inn et navn for aktiviteten din."
-    },
-    "edit": {
-      "title": "Rediger aktivitet",
-      "buttonSave": "Lagre",
-      "buttonDelete": "Slett",
-      "deleteConfirmTitle": "Slette?",
-      "deleteConfirmMessage": "Denne handlingen kan ikke angres.",
-      "usageStats": "Brukt %{count} ganger"
-    },
-    "duration": {
-      "minutes": "min"
-    }
   },
   "timerMessages": {
     "none": {
@@ -461,14 +260,12 @@
     "list": {
       "title": "Mine ritualer",
       "createRow": "Opprett et ritual",
-      "empty": "Ingen ritualer ennå",
-      "durationBadge": "%{minutes} min"
+      "empty": "Ingen ritualer ennå"
     },
     "form": {
       "createTitle": "Opprett et ritual",
       "editTitle": "Rediger ritual",
       "emojiLabel": "Emoji",
-      "emojiCustomButton": "Annen emoji",
       "colorLabel": "Farge",
       "durationLabel": "Varighet",
       "soundLabel": "Sluttlyd",
@@ -508,7 +305,6 @@
   },
   "aside": {
     "exitFocus": "Forlat fokus",
-    "doubleTapHint": "Tips: dobbelttrykk på bakgrunnen for å bytte",
     "handle": "Åpne innstillinger",
     "closedLabel": "Ritualer og innstillinger",
     "settingsRow": "Innstillinger",

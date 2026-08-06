@@ -3,7 +3,6 @@
     "cancel": "Cancelar",
     "ok": "OK",
     "retry": "Reintentar",
-    "continue": "Continuar",
     "back": "Atrás",
     "delete": "Eliminar"
   },
@@ -12,176 +11,22 @@
   },
   "invitation": "¿Listo?",
   "onboarding": {
-    "restartGuide": "Reiniciar la guía",
-    "restartGuideDescription": "Mostrar la pantalla de bienvenida y consejos de nuevo",
-    "paywall": {
-      "title": "Has creado tu primer momento",
-      "profile": "Perfil:",
-      "question": "¿Quieres crear más?",
-      "valueProposition": "15 paletas · 16 actividades · Creaciones ilimitadas",
-      "price": "4,99€ — Una vez, para siempre",
-      "ctaTrial": "Prueba 7 días gratis"
-    },
-    "intentions": {
-      "title": "¿Para qué es?",
-      "relax": {
-        "label": "Relajarme",
-        "defaultName": "Meditación"
-      },
-      "work": {
-        "label": "Trabajar",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "Crear",
-        "defaultName": "Creación"
-      },
-      "learn": {
-        "label": "Aprender",
-        "defaultName": "Estudio"
-      },
-      "move": {
-        "label": "Moverse",
-        "defaultName": "Entrenamiento"
-      },
-      "other": {
-        "label": "Otro",
-        "defaultName": "Mi momento"
-      },
-      "q1": {
-        "title": "Tu temporizador sería para...",
-        "focus": "Concentrarme mejor",
-        "launch": "Ayudarme a empezar",
-        "breathe": "Tomar tiempo para mí",
-        "children": "Enmarcar un momento con mis hijos",
-        "other": "Otra cosa...",
-        "otherPlaceholder": "¿Como qué?"
-      },
-      "q2": {
-        "title": "Una pequeña ayuda con...",
-        "starting": "Empezar",
-        "finishing": "Llegar hasta el final",
-        "staying": "Mantenerme concentrado",
-        "managing": "Gestionar mejor mi tiempo",
-        "other": "Otra cosa...",
-        "otherPlaceholder": "¿Como qué?"
-      }
-    },
     "creation": {
-      "sectionTitle": "Tu primer momento",
-      "cta": "Crear mi momento",
-      "durationLabel": "¿Cuánto tiempo?",
-      "namePlaceholder": "Nombra tu momento..."
-    },
-    "launch": {
-      "title": "¡Vamos!",
-      "subtitle": "Tu primer momento está listo. Toca para empezar.",
-      "cta": "Iniciar mi temporizador",
-      "ctaHint": "Inicia tu primer temporizador",
-      "defaultActivity": "Mi momento"
+      "cta": "Crear mi momento"
     },
     "v2": {
-      "filter0": {
-        "breathe": "Tu tiempo te pertenece",
-        "tapToContinue": "Cuando estés listo"
-      },
       "filter1": {
-        "title": "un timer que se adapta a ti.",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "No te pierdas el final de tus momentos",
-        "body": "Tu temporizador te avisará aunque uses otra app o tu pantalla esté bloqueada.",
-        "ctaPrimary": "Sí, avísame",
-        "ctaSecondary": "Quizás más tarde"
-      },
-      "filter5b": {
-        "title": "Tu tono",
-        "skip": "Saltar →"
+        "title": "un timer que se adapta a ti."
       }
     }
   },
   "settings": {
     "title": "Ajustes",
-    "interface": {},
-    "timer": {
-      "soundDescription": "Elige el sonido que se reproducirá al finalizar el temporizador",
-      "keepAwakeDescriptionOn": "La pantalla permanece activa durante el temporizador",
-      "keepAwakeDescriptionOff": "La pantalla puede bloquearse durante el temporizador",
-      "longPressStart": "Activar pulsación larga para iniciar",
-      "longPressStartDescriptionOn": "Mantén pulsado para iniciar el temporizador",
-      "longPressStartDescriptionOff": "Pulsación simple para iniciar",
-      "longPressStop": "Activar pulsación larga para detener",
-      "longPressStopDescriptionOn": "Mantén pulsado para detener el temporizador",
-      "longPressStopDescriptionOff": "Pulsación simple para detener",
-      "dialScale": "Rango de la esfera",
-      "dialScaleDescription": "Duración máxima mostrada en la esfera"
-    },
-    "appearance": {
-      "themeLight": "☀️ Claro",
-      "themeDark": "🌙 Oscuro",
-      "themeAuto": "📱 Auto",
-      "themeDescriptionAuto": "Automático (sistema)",
-      "themeDescriptionDark": "Oscuro",
-      "themeDescriptionLight": "Claro"
-    },
-    "about": {
-      "title": "Acerca de",
-      "appName": "ResetPulse",
-      "appDescription": "Temporizador visual personalizable",
-      "version": "Versión"
-    },
-    "tool": {
-      "sectionTitle": "Modo de visualización mínima",
-      "creative": {
-        "label": "Creativo",
-        "description": "Carrusel de colores"
-      },
-      "multitask": {
-        "label": "Multitarea",
-        "description": "Carrusel de actividades"
-      },
-      "precision": {
-        "label": "Precisión",
-        "description": "Temporizador digital con controles +/-"
-      }
-    },
-    "sections": {
-      "configuration": "CONFIGURACIÓN",
-      "timerOptions": "Opciones del temporizador",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "Sonido de notificación",
-      "theme": "Tema",
-      "favorites": "TUS FAVORITOS",
-      "ambiance": "AMBIANCE",
-      "info": "INFO"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "Paletas favoritas",
-        "description": "Selecciona hasta 4 paletas favoritas (%{count}/4)",
-        "morePalettes": "Más paletas"
-      },
-      "activities": {
-        "title": "Actividades favoritas",
-        "description": "Selecciona hasta 4 actividades favoritas (%{count}/4)",
-        "more": "Más"
-      }
-    },
     "options": {
-      "activityEmoji": "Emoji de actividad en el centro",
-      "activityEmojiDescriptionOn": "El emoji se muestra en el centro de la esfera",
-      "activityEmojiDescriptionOff": "El emoji está oculto",
       "pulseAnimation": "halo que respira"
     }
   },
   "premium": {
-    "title": "Desbloquéalo todo",
-    "description": "Todos los colores.\nTodas las actividades.\nTu máximo confort.",
-    "features": "7 DÍAS GRATIS",
-    "price": "Luego %{price} una vez.\nTuyo para siempre.",
     "restore": "Restaurar mis compras",
     "welcomeTitle": "¡Bienvenido a Ambiances! 🎉",
     "welcomeMessage": "Todas las paletas, los rituales ilimitados y los sonidos de Ambiances están ahora desbloqueados.",
@@ -282,18 +127,12 @@
     "keepAwake": "Mantener pantalla activa",
     "rotationDirection": "Dirección de rotación",
     "colorNumber": "Color %{number}",
-    "discoverMorePalettes": "Toca para descubrir más paletas",
     "celebrationEmoji": "Celebración",
-    "closeCreateActivity": "Cerrar creación de actividad",
-    "closeEditActivity": "Cerrar edición de actividad",
     "closeModalHint": "Cierra este diálogo y vuelve a la aplicación",
     "closePremiumModal": "Cerrar oferta de Ambiances",
-    "createActivityHint": "Crea la actividad personalizada y la añade a tu lista",
-    "deleteActivityHint": "Elimina permanentemente esta actividad personalizada",
     "exploreSettingsHint": "Abre los ajustes para descubrir las funciones premium",
     "restorePurchases": "Restaurar compras anteriores",
     "restorePurchasesHint": "Restaurar acceso a Ambiances si ya compraste",
-    "saveActivityHint": "Guarda los cambios de esta actividad",
     "timer": {
       "dialAdjustable": "Ajustable. Desliza hacia arriba o abajo para cambiar la duración.",
       "dialTapToToggle": "Toca para iniciar o pausar el temporizador",
@@ -304,7 +143,6 @@
       "activityCompleted": "%{activity} completado",
       "startTimer": "Iniciar temporizador",
       "stopTimer": "Detener temporizador",
-      "resetTimer": "Reiniciar temporizador",
       "dial": "Esfera del temporizador, %{minutes} minutos establecidos, %{activity}"
     },
     "unlockPremium": "Desbloquear Ambiances por %{price}",
@@ -316,52 +154,13 @@
     "createRitual": "Crear un ritual",
     "closeRitualForm": "Cerrar el formulario de ritual",
     "chooseCustomEmoji": "Elegir otro emoji desde el teclado",
-    "ritualNamePreset": "Ritual preconfigurado %{name}",
     "deleteRitual": "Eliminar el ritual %{name}",
     "favoriteRitual": "Ritual favorito %{name}"
-  },
-  "customActivities": {
-    "toast": {
-      "created": "Moment créé avec succès",
-      "updated": "Moment mis à jour",
-      "deleted": "Moment supprimé"
-    },
-    "addButton": "Ajouter un moment",
-    "create": {
-      "title": "Crear actividad",
-      "namePlaceholder": "Ej: Guitarra, Cocina...",
-      "nameLabel": "Nombre de la actividad",
-      "emojiLabel": "Elegir emoji",
-      "emojiPlaceholder": "Toca para elegir",
-      "durationLabel": "Duración predeterminada",
-      "preview": "Vista previa",
-      "previewPlaceholder": "Mi actividad",
-      "buttonCreate": "Crear",
-      "errorTitle": "Información incompleta",
-      "errorEmoji": "Por favor, elige un emoji para tu actividad.",
-      "errorName": "Por favor, introduce un nombre para tu actividad."
-    },
-    "edit": {
-      "title": "Editar actividad",
-      "buttonSave": "Guardar",
-      "buttonDelete": "Eliminar",
-      "deleteConfirmTitle": "¿Eliminar?",
-      "deleteConfirmMessage": "Esta acción es irreversible.",
-      "usageStats": "Usada %{count} veces"
-    },
-    "duration": {
-      "minutes": "min"
-    }
   },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Disminuir duración",
-      "increaseDuration": "Aumentar duración",
-      "timeLabel": "Tiempo: %{time}",
-      "durationLabel": "Duración: %{time}",
-      "showTime": "Mostrar tiempo",
-      "tapToHide": "Toca para ocultar",
-      "tapToShow": "Toca para mostrar"
+      "increaseDuration": "Aumentar duración"
     },
     "rotation": {
       "clockwise": "En sentido horario",
@@ -461,14 +260,12 @@
     "list": {
       "title": "Mis rituales",
       "createRow": "Crear un ritual",
-      "empty": "Aún no hay rituales",
-      "durationBadge": "%{minutes} min"
+      "empty": "Aún no hay rituales"
     },
     "form": {
       "createTitle": "Crear un ritual",
       "editTitle": "Modificar el ritual",
       "emojiLabel": "Emoji",
-      "emojiCustomButton": "Otro emoji",
       "colorLabel": "Color",
       "durationLabel": "Duración",
       "soundLabel": "Sonido final",
@@ -508,7 +305,6 @@
   },
   "aside": {
     "exitFocus": "salir del focus",
-    "doubleTapHint": "consejo: doble toque en el fondo para cambiar",
     "handle": "abrir ajustes",
     "closedLabel": "rituales y ajustes",
     "settingsRow": "Ajustes",
