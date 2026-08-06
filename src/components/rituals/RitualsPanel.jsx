@@ -76,7 +76,7 @@ export default function RitualsPanel({ onBack, onApplied, onViewChange, maxHeigh
     setCurrentDuration(payload.duration);
     setSelectedSoundId(payload.soundId);
     setColorByValue(payload.color);
-    analytics.trackRitualApplied('list');
+    analytics.trackRitualApplied('list', 'full');
     onApplied();
   };
 

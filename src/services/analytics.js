@@ -9,6 +9,7 @@
  */
 import { PostHog } from 'posthog-react-native';
 import { POSTHOG_API_KEY, POSTHOG_HOST } from '../config/posthog';
+import { DEV_MODE } from '../config/test-mode';
 import logger from '../utils/logger';
 
 const noop = () => {};
@@ -22,6 +23,19 @@ const analyticsAdapter = {
   _client: null,
 
   async init() {
+    // Gate DEV_MODE (audit 06/08) : jamais d'événement dev vers le projet
+    // PostHog prod, même si la clé est présente. isInitialized reste false
+    // → track()/identify()/setSuperProperties() no-op (guard existant),
+    // et le Proxy en fin de fichier absorbe tout appel track* non défini
+    // ici — aucun throw possible côté appelant, initialisé ou non.
+    // Note pilote : un build device avec DEV_MODE=false (donc __DEV__
+    // false) n'est PAS distingué d'un build store — décision de marquage
+    // en attente.
+    if (DEV_MODE) {
+      logger.boot.step('analytics', 'no-op (DEV_MODE actif)');
+      return;
+    }
+
     if (!POSTHOG_API_KEY) {
       logger.boot.step('analytics', 'no-op (clé PostHog absente)');
       return;
@@ -51,8 +65,8 @@ const analyticsAdapter = {
     this._client.register(properties);
   },
 
-  trackAppOpened() {
-    this.track('app_opened');
+  trackAppOpened(isFirstLaunch) {
+    this.track('app_opened', { is_first_launch: !!isFirstLaunch });
   },
 
   trackTimerStarted(duration, activity, color, palette) {
@@ -99,12 +113,23 @@ const analyticsAdapter = {
     this.track('activity_selected', { activity_id: activityIdValue });
   },
 
+  // Appelée depuis useTimer.js (démarrage d'un timer sur une activité
+  // custom) mais jamais définie ici — avalée en silence par le Proxy
+  // (audit adversarial 06/08). timesUsed : compteur d'usages transmis par
+  // l'appelant (déjà incrémenté avant l'appel).
+  trackCustomActivityUsed(activityIdValue, timesUsed) {
+    this.track('custom_activity_used', { activity_id: activityIdValue, times_used: timesUsed });
+  },
+
   // LA mesure d'activation (vision gagner-de-largent) : « un tap sur un
   // rituel et ça tourne » — distingue qui vit par ses rituels de qui
   // configure à la main. source : 'home_row' (rangée d'accueil) | 'list'
   // (liste du sheet).
-  trackRitualApplied(source) {
-    this.track('ritual_applied', { source });
+  // mode : 'activity_only' (branche moment-sale, TimerScreen — le chip ne
+  // touche que l'activité) | 'full' (durée/couleur/son/activité posés
+  // ensemble). Additif (audit 06/08) — n'existait pas jusqu'ici.
+  trackRitualApplied(source, mode) {
+    this.track('ritual_applied', { source, mode });
   },
 
   trackPaletteSelected(palette) {
@@ -125,16 +150,14 @@ const analyticsAdapter = {
     this.track('ambiances_invitation_tapped', { source });
   },
 
-  // Bout du funnel — l'argent. Ces quatre méthodes étaient APPELÉES
+  // Bout du funnel — l'argent. Ces méthodes étaient APPELÉES
   // (PurchaseContext, PremiumModalContent) mais jamais définies : le Proxy
   // ci-dessous les absorbait en silence, aucun événement d'achat ne
   // partait. Trouvé le 30/07 en répondant à Eric, définies depuis.
+  // (une méthode d'essai gratuit en faisait partie — retirée le 06/08,
+  // devenue orpheline le même jour côté appelant.)
   trackPaywallViewed(source) {
     this.track('paywall_viewed', { source });
-  },
-
-  trackTrialStarted(productId) {
-    this.track('trial_started', { product_id: productId });
   },
 
   trackPurchaseCompleted(productId, price, transactionId, currency = null) {
