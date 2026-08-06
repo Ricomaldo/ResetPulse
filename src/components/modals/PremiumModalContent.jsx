@@ -423,10 +423,6 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
       textAlign: 'center',
     },
 
-    loader: {
-      marginLeft: theme.spacing.sm,
-    },
-
     priceText: {
       color: theme.colors.brand.primary,
       fontSize: rs(20, 'min'),
@@ -453,21 +449,6 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
       color: theme.colors.fixed.white,
       fontSize: rs(17, 'min'),
       fontWeight: fontWeights.semibold,
-    },
-
-    restoreButton: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: theme.spacing.md,
-      minHeight: 44,
-      minWidth: 44,
-      padding: theme.spacing.sm,
-    },
-
-    restoreButtonText: {
-      color: theme.colors.textSecondary,
-      fontSize: rs(13, 'min'),
-      textDecorationLine: 'underline',
     },
 
     secondaryButton: {
@@ -576,6 +557,33 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
           )}
         </TouchableOpacity>
 
+        {/* Restore Purchases — remonté sous le CTA d'achat, même poids
+            visuel que « peut-être plus tard » (audit fiabilité 06/08,
+            décision Eric 07/08 « impératif ») : sans compte ni logIn
+            RevenueCat, c'est l'UNIQUE chemin de récupération
+            cross-device/réinstallation. La personne qui vient de
+            réinstaller doit le voir sans le chercher — plus question qu'il
+            traîne en petit lien souligné tout en bas. */}
+        <TouchableOpacity
+          testID="premium.cta.restore"
+          style={styles.secondaryButton}
+          onPress={handleRestore}
+          disabled={isAnyOperationInProgress}
+          activeOpacity={0.7}
+          accessibilityLabel={t('accessibility.restorePurchases')}
+          accessibilityRole="button"
+          accessibilityHint={t('accessibility.restorePurchasesHint')}
+          accessibilityState={{ disabled: isAnyOperationInProgress }}
+        >
+          {isRestoring ? (
+            <ActivityIndicator color={theme.colors.textSecondary} size="small" />
+          ) : (
+            <Text style={styles.secondaryButtonText}>
+              {t('premium.restore')}
+            </Text>
+          )}
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.secondaryButton}
           onPress={handleClose}
@@ -588,30 +596,6 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
           <Text style={styles.secondaryButtonText}>
             {t('premium.dismiss')}
           </Text>
-        </TouchableOpacity>
-
-        {/* Restore Purchases */}
-        <TouchableOpacity
-          style={styles.restoreButton}
-          onPress={handleRestore}
-          disabled={isAnyOperationInProgress}
-          activeOpacity={0.7}
-          accessibilityLabel={t('accessibility.restorePurchases')}
-          accessibilityRole="button"
-          accessibilityHint={t('accessibility.restorePurchasesHint')}
-          accessibilityState={{ disabled: isAnyOperationInProgress }}
-        >
-          {isRestoring ? (
-            <ActivityIndicator
-              color={theme.colors.textSecondary}
-              size="small"
-              style={styles.loader}
-            />
-          ) : (
-            <Text style={styles.restoreButtonText}>
-              {t('premium.restore')}
-            </Text>
-          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
