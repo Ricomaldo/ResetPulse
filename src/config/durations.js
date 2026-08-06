@@ -29,24 +29,6 @@ export const MIN_DURATION = 60; // 1 minute (in seconds)
 export const MAX_DURATION = 7200; // 120 minutes (porte-2 : échelle 2h, révision Eric)
 
 /**
- * Step increment for custom duration input (in seconds)
- */
-export const DURATION_STEP = 300; // 5 minutes
-
-/**
- * Utility: Find closest preset to a given duration
- * @param {number} durationSeconds - Duration in seconds
- * @returns {Object} Closest preset { minutes, seconds }
- */
-export function findClosestPreset(durationSeconds) {
-  return DURATION_PRESETS.reduce((closest, preset) => {
-    const diff = Math.abs(preset.seconds - durationSeconds);
-    const closestDiff = Math.abs(closest.seconds - durationSeconds);
-    return diff < closestDiff ? preset : closest;
-  });
-}
-
-/**
  * Utility: Format duration in seconds to "Xm" or "Xh Ym" format
  * @param {number} seconds - Duration in seconds
  * @returns {string} Formatted duration

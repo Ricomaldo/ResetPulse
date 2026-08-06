@@ -169,22 +169,6 @@ export const getSoundById = (id) => {
   };
 };
 
-// Helper pour obtenir les sons gratuits / Ambiances (premium)
-export const getSoundsByTier = () => {
-  const tiers = { free: [], premium: [] };
-
-  Object.keys(SOUND_FILES).forEach(id => {
-    const sound = {
-      id,
-      file: SOUND_FILES[id],
-      ...SOUND_METADATA[id]
-    };
-    (SOUND_METADATA[id]?.isPremium ? tiers.premium : tiers.free).push(sound);
-  });
-
-  return tiers;
-};
-
 // Miroir de isPalettePremium (timer-palettes.js) — id inconnu = jamais premium
 // (repli silencieux, jamais de throw sur une valeur persistée corrompue).
 export const isSoundPremium = (soundId) =>
