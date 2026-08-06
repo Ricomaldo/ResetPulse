@@ -38,6 +38,7 @@ const mockSetCurrentDuration = jest.fn();
 const mockSetSelectedSoundId = jest.fn();
 const mockSetColorByValue = jest.fn();
 const mockSetColorIndex = jest.fn();
+const mockTrackRitualApplied = jest.fn();
 
 jest.mock('../../src/contexts/TimerConfigContext', () => ({
   useTimerConfig: () => ({
@@ -60,8 +61,7 @@ jest.mock('../../src/hooks/useTranslation', () => ({
 
 jest.mock('../../src/hooks/useAnalytics', () => ({
   useAnalytics: () => ({
-    trackActivitySelected: jest.fn(),
-    trackRitualApplied: jest.fn(),
+    trackRitualApplied: mockTrackRitualApplied,
     trackColorSelected: jest.fn(),
     trackDiceRolled: jest.fn(),
     trackFocusEntered: jest.fn(),
@@ -172,6 +172,7 @@ describe('TimerScreen — chip intelligent (CompactRow, Q3b)', () => {
     mockSetSelectedSoundId.mockClear();
     mockSetColorByValue.mockClear();
     mockSetColorIndex.mockClear();
+    mockTrackRitualApplied.mockClear();
   });
 
   afterEach(async () => {
@@ -194,6 +195,10 @@ describe('TimerScreen — chip intelligent (CompactRow, Q3b)', () => {
     expect(mockSetCurrentDuration).toHaveBeenCalledWith(1500);
     expect(mockSetSelectedSoundId).toHaveBeenCalledWith('chime');
     expect(mockSetColorByValue).toHaveBeenCalledWith('#111111');
+    // Non-régression (purge activity_selected, audit 06/08) : ritual_applied
+    // reste le seul événement du chemin home_row, mode 'full' porté.
+    expect(mockTrackRitualApplied).toHaveBeenCalledTimes(1);
+    expect(mockTrackRitualApplied).toHaveBeenCalledWith('home_row', 'full');
   });
 
   it('Moment sale (couleur réglée à la main) : le tap ne touche QUE l\'activité', async () => {
@@ -211,6 +216,10 @@ describe('TimerScreen — chip intelligent (CompactRow, Q3b)', () => {
     expect(mockSetCurrentDuration).not.toHaveBeenCalled();
     expect(mockSetSelectedSoundId).not.toHaveBeenCalled();
     expect(mockSetColorByValue).not.toHaveBeenCalled();
+    // mode 'activity_only' toujours porté par ritual_applied, même chemin
+    // partiel — ce n'est plus activity_selected qui distingue ce cas.
+    expect(mockTrackRitualApplied).toHaveBeenCalledTimes(1);
+    expect(mockTrackRitualApplied).toHaveBeenCalledWith('home_row', 'activity_only');
   });
 
   it('un rembobinage (stopTimer, tap pendant la séance) remet le Moment à vierge : le chip redevient complet', async () => {

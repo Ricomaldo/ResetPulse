@@ -179,7 +179,6 @@ function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomen
                 markMomentEvent?.(MOMENT_EVENTS.RITUAL_APPLIED);
                 ritualMode = 'full';
               }
-              analytics.trackActivitySelected(payload.activity?.id);
               analytics.trackRitualApplied('home_row', ritualMode);
               onActivityTouch?.();
             }}

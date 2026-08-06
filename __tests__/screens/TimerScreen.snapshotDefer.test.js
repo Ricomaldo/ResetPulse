@@ -65,7 +65,6 @@ jest.mock('../../src/hooks/useTranslation', () => ({
 
 jest.mock('../../src/hooks/useAnalytics', () => ({
   useAnalytics: () => ({
-    trackActivitySelected: jest.fn(),
     trackRitualApplied: jest.fn(),
     trackColorSelected: jest.fn(),
     trackDiceRolled: jest.fn(),
