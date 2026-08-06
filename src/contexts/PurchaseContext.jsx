@@ -158,9 +158,15 @@ export const PurchaseProvider = ({ children }) => {
 
   const purchaseProduct = async (productIdentifier) => {
     // Prevent double-purchase race condition
+    // Retour TYPÉ (correctif audit fiabilité 06/08) : avant, cette garde
+    // renvoyait { success: false, error: '...' } — un shape indiscernable
+    // d'une vraie erreur générique côté PremiumModalContent.handlePurchase,
+    // qui affichait une Alert d'échec pendant que le PREMIER achat (celui
+    // en vol) pouvait très bien réussir. `reason: 'already_in_flight'`
+    // permet à l'appelant de rester silencieux, comme pour un cancel.
     if (isPurchasing) {
       logger.warn('[RevenueCat] Purchase already in progress, ignoring');
-      return { success: false, error: 'Purchase already in progress' };
+      return { success: false, reason: 'already_in_flight' };
     }
 
     try {
