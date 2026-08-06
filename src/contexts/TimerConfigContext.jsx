@@ -29,7 +29,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import logger from '../utils/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePersistedObject } from '../hooks/usePersistedState';
 import { getDefaultActivity, getActivityById } from '../config/activities';
 import { DEV_MODE, DEV_DEFAULT_TIMER_CONFIG } from '../config/test-mode';
@@ -41,12 +40,6 @@ const TimerConfigContext = createContext(null);
 
 // Storage keys
 const NEW_STORAGE_KEY = '@ResetPulse:config';
-const OLD_KEYS = {
-  timerOptions: '@ResetPulse:timerOptions',
-  timerPalette: '@ResetPulse:timerPalette',
-  selectedColor: '@ResetPulse:selectedColor',
-  favoriteToolMode: '@ResetPulse:favoriteToolMode',
-};
 
 /**
  * Provider for consolidated timer configuration
@@ -54,7 +47,6 @@ const OLD_KEYS = {
  * @returns {React.ReactElement}
  */
 export const TimerConfigProvider = ({ children }) => {
-  const hasMigratedOldKeys = useRef(false);
   const hasLoggedBoot = useRef(false);
 
   // Transient state (not persisted)
@@ -164,119 +156,6 @@ export const TimerConfigProvider = ({ children }) => {
     getDefaultValues()
   );
 
-  // Migrate from old AsyncStorage keys on first load (once)
-  useEffect(() => {
-    if (isLoading || hasMigratedOldKeys.current) {
-      return;
-    }
-
-    const migrateOldKeys = async () => {
-      try {
-        // Check if new key already exists (skip migration if it does)
-        const newKeyExists = await AsyncStorage.getItem(NEW_STORAGE_KEY);
-        if (newKeyExists) {
-          hasMigratedOldKeys.current = true;
-          return;
-        }
-
-        // Load old keys — selectedColor (index legacy) n'est plus migré : le
-        // modèle palette est passé à currentColor en valeur (C6.2), un vieil
-        // index numérique n'a plus de sens à traduire.
-        const [oldTimerOptions, oldPalette, oldFavoriteToolMode] = await Promise.all([
-          AsyncStorage.getItem(OLD_KEYS.timerOptions),
-          AsyncStorage.getItem(OLD_KEYS.timerPalette),
-          AsyncStorage.getItem(OLD_KEYS.favoriteToolMode),
-        ]);
-
-        let needsMigration = false;
-        const migratedValues = { ...getDefaultValues() };
-
-        // Migrate TimerOptions
-        if (oldTimerOptions) {
-          try {
-            const parsed = JSON.parse(oldTimerOptions);
-            migratedValues.timer = {
-              currentActivity: parsed.currentActivity || migratedValues.timer.currentActivity,
-              currentDuration: parsed.currentDuration || migratedValues.timer.currentDuration,
-              selectedSoundId: parsed.selectedSoundId || migratedValues.timer.selectedSoundId,
-              clockwise: parsed.clockwise !== undefined ? parsed.clockwise : migratedValues.timer.clockwise,
-              // scaleMode non migré (hotfix-porte-1 B2) : toujours dérivé de
-              // currentDuration, un éventuel vieux scaleMode persisté (y
-              // compris '25min' déprécié) est simplement ignoré — migration
-              // douce sans crash.
-            };
-            migratedValues.display = {
-              shouldPulse: parsed.shouldPulse !== undefined ? parsed.shouldPulse : migratedValues.display.shouldPulse,
-              showDigitalTimer: parsed.showDigitalTimer !== undefined ? parsed.showDigitalTimer : migratedValues.display.showDigitalTimer,
-              showTime: parsed.showTime !== undefined ? parsed.showTime : migratedValues.display.showTime,
-            };
-            migratedValues.system = {
-              keepAwakeEnabled: parsed.keepAwakeEnabled !== undefined ? parsed.keepAwakeEnabled : migratedValues.system.keepAwakeEnabled,
-            };
-            migratedValues.favorites = {
-              favoriteActivities: parsed.favoriteActivities || migratedValues.favorites.favoriteActivities,
-              favoritePalettes: parsed.favoritePalettes || migratedValues.favorites.favoritePalettes,
-            };
-            migratedValues.layout = {
-              commandBarConfig: parsed.commandBarConfig || migratedValues.layout.commandBarConfig,
-              carouselBarConfig: parsed.carouselBarConfig || migratedValues.layout.carouselBarConfig,
-              favoriteToolMode: migratedValues.layout.favoriteToolMode, // Will be overwritten if old key exists
-            };
-            migratedValues.stats = {
-              activityDurations: parsed.activityDurations || migratedValues.stats.activityDurations,
-              completedTimersCount: parsed.completedTimersCount || migratedValues.stats.completedTimersCount,
-              hasSeenTwoTimersModal: parsed.hasSeenTwoTimersModal !== undefined ? parsed.hasSeenTwoTimersModal : migratedValues.stats.hasSeenTwoTimersModal,
-              hasSeenReviewRequest: parsed.hasSeenReviewRequest !== undefined ? parsed.hasSeenReviewRequest : migratedValues.stats.hasSeenReviewRequest,
-            };
-            needsMigration = true;
-          } catch (e) {
-            logger.warn('[TimerConfigContext] Failed to parse old timerOptions:', e.message);
-          }
-        }
-
-        // Migrate Palette
-        if (oldPalette) {
-          try {
-            const parsed = JSON.parse(oldPalette);
-            migratedValues.palette.currentPalette = parsed || migratedValues.palette.currentPalette;
-            needsMigration = true;
-          } catch (e) {
-            logger.warn('[TimerConfigContext] Failed to parse old palette:', e.message);
-          }
-        }
-
-        // Migrate FavoriteToolMode
-        if (oldFavoriteToolMode) {
-          migratedValues.layout.favoriteToolMode = oldFavoriteToolMode;
-          needsMigration = true;
-        }
-
-        // Save migrated values if any old keys were found
-        if (needsMigration) {
-          setValues(migratedValues);
-          if (__DEV__) {
-            logger.log('[TimerConfigContext] Migration completed from old keys');
-          }
-
-          // Optional: Delete old keys (commented out to keep them as backup)
-          // await Promise.all([
-          //   AsyncStorage.removeItem(OLD_KEYS.timerOptions),
-          //   AsyncStorage.removeItem(OLD_KEYS.timerPalette),
-          //   AsyncStorage.removeItem(OLD_KEYS.selectedColor),
-          //   AsyncStorage.removeItem(OLD_KEYS.favoriteToolMode),
-          // ]);
-        }
-
-        hasMigratedOldKeys.current = true;
-      } catch (error) {
-        logger.warn('[TimerConfigContext] Migration from old keys failed:', error);
-        hasMigratedOldKeys.current = true;
-      }
-    };
-
-    migrateOldKeys();
-  }, [isLoading, setValues]);
-
   // C5 : « none » retiré de la barre d'activités (asymétrie 3 activités |
   // 4 couleurs, ADR-014) — bascule tout état persisté qui le référence encore.
   useEffect(() => {
@@ -315,9 +194,11 @@ export const TimerConfigProvider = ({ children }) => {
   // premier niveau (usePersistedState.js), donc ce blob écrase entièrement
   // le nouveau défaut display.shouldPulse=true, y compris au chemin
   // d'upgrade v2.1.6 → reborn (la clé @ResetPulse:config existe déjà depuis
-  // la consolidation ADR-009, décembre 2025 — la migration OLD_KEYS
-  // (ci-dessus) ne se déclenche donc jamais pour ces installs, elle n'est
-  // pas l'autrice de ce blob). showActivityEmoji n'existe dans AUCUN build
+  // la consolidation ADR-009, décembre 2025 — l'ancienne migration OLD_KEYS
+  // (retirée, morte par construction : usePersistedObject sauvegarde les
+  // défauts avant que son getItem ne s'exécute) ne s'est donc jamais
+  // déclenchée pour ces installs, elle n'est pas l'autrice de ce blob).
+  // showActivityEmoji n'existe dans AUCUN build
   // courant : sa seule présence signe un blob fossile, jamais un choix
   // utilisateur délibéré — même patron one-shot que les gardes ci-dessus,
   // ne se redéclenche jamais une fois le fossile purgé.
