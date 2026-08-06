@@ -189,16 +189,24 @@ export const PurchaseProvider = ({ children }) => {
 
         if (targetPackage) {
           logger.log('[RevenueCat] 📦 Found package, using purchasePackage:', targetPackage.identifier);
-          const { customerInfo: info } = await Purchases.purchasePackage(targetPackage);
+          const { customerInfo: info, transaction } = await Purchases.purchasePackage(targetPackage);
           updateCustomerInfo(info);
 
-          // Get transaction details for analytics
-          const latestTransaction = info.nonSubscriptionTransactions?.[0] || info.latestExpirationDate;
-          const transactionId = latestTransaction?.transactionIdentifier || 'unknown';
-          const price = latestTransaction?.price || 4.99;
+          // Prix + devise RÉELS (correctif audit fiabilité 06/08) : avant,
+          // lus depuis info.nonSubscriptionTransactions[0] (toujours vide
+          // ici) avec repli sur info.latestExpirationDate (une date, pas
+          // une transaction) — le fallback 4.99/'unknown' était donc TOUJOURS
+          // celui qui partait, y compris hors zone euro. Source correcte :
+          // le package RevenueCat effectivement acheté (product.price /
+          // product.currencyCode, même source que le prix affiché au
+          // paywall) et le transaction du résultat d'achat lui-même
+          // (MakePurchaseResult.transaction.transactionIdentifier).
+          const transactionId = transaction?.transactionIdentifier ?? null;
+          const price = targetPackage.product.price ?? null;
+          const currency = targetPackage.product.currencyCode ?? null;
 
           // Track purchase completed (M7.5)
-          Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
+          Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId, currency);
 
           // L'alerte de bienvenue vit dans PremiumModalContent.handlePurchase
           // (elle porte onClose) — un doublon ici affichait deux Alert.alert
@@ -210,16 +218,19 @@ export const PurchaseProvider = ({ children }) => {
 
       // Fallback to purchaseProduct if package not found
       logger.log('[RevenueCat] ⚠️ Package not found, falling back to purchaseProduct');
-      const { customerInfo: info } = await Purchases.purchaseProduct(productIdentifier);
+      const { customerInfo: info, transaction } = await Purchases.purchaseProduct(productIdentifier);
       updateCustomerInfo(info);
 
-      // Get transaction details for analytics
-      const latestTransaction = info.nonSubscriptionTransactions?.[0] || info.latestExpirationDate;
-      const transactionId = latestTransaction?.transactionIdentifier || 'unknown';
-      const price = latestTransaction?.price || 4.99; // Default price
+      // Pas de package RevenueCat dans ce chemin (repli sans offering) : pas
+      // de source fiable pour price/currency — null explicite plutôt que le
+      // faux 4.99 d'avant (cf. commentaire du chemin purchasePackage
+      // ci-dessus pour le détail du correctif).
+      const transactionId = transaction?.transactionIdentifier ?? null;
+      const price = null;
+      const currency = null;
 
       // Track purchase completed (M7.5)
-      Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
+      Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId, currency);
 
       // L'alerte de bienvenue vit dans PremiumModalContent.handlePurchase
       // (elle porte onClose) — un doublon ici affichait deux Alert.alert

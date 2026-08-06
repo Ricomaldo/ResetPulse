@@ -137,8 +137,8 @@ const analyticsAdapter = {
     this.track('trial_started', { product_id: productId });
   },
 
-  trackPurchaseCompleted(productId, price, transactionId) {
-    this.track('purchase_completed', { product_id: productId, price, transaction_id: transactionId });
+  trackPurchaseCompleted(productId, price, transactionId, currency = null) {
+    this.track('purchase_completed', { product_id: productId, price, transaction_id: transactionId, currency });
   },
 
   trackPurchaseFailed(errorCode, errorMessage, productId) {

@@ -43,10 +43,17 @@ describe('PurchaseContext.purchaseProduct — trackTrialStarted supprimé', () =
 
     expect(purchaseResult.success).toBe(true);
     expect(mockTrackTrialStarted).not.toHaveBeenCalled();
+    // Lambda F2 (audit fiabilité 06/08) : ce test emprunte le chemin de
+    // repli purchaseProduct (offerings.current = null dans le mock par
+    // défaut) — sans package RevenueCat, pas de source fiable pour
+    // price/currency (null explicite, plus de faux 4.99) ; le mock
+    // purchaseProduct par défaut ne porte pas de champ transaction, donc
+    // transaction_id est également null (plus de faux 'unknown').
     expect(mockTrackPurchaseCompleted).toHaveBeenCalledWith(
       'premium_lifetime',
-      expect.any(Number),
-      expect.any(String)
+      null,
+      null,
+      null
     );
   });
 });
