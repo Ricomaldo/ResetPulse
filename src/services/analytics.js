@@ -160,8 +160,25 @@ const analyticsAdapter = {
     this.track('paywall_viewed', { source });
   },
 
+  // Comble le trou du funnel entre paywall_viewed et purchase_completed
+  // (audit analytics 06/08, décision Eric 07/08) : émis au tap sur le CTA
+  // d'achat, AVANT l'appel purchaseProduct — même `source` que
+  // trackPaywallViewed (jointure du funnel). product_id null si pas encore
+  // résolu au moment du tap (offerings non chargées).
+  trackCtaBuyTapped(source, productId = null) {
+    this.track('cta_buy_tapped', { source, product_id: productId });
+  },
+
   trackPurchaseCompleted(productId, price, transactionId, currency = null) {
     this.track('purchase_completed', { product_id: productId, price, transaction_id: transactionId, currency });
+  },
+
+  // Annulation utilisateur sur la feuille de paiement native (PurchaseContext,
+  // seul point d'émission — cf. commentaire au call site). L'UI reste
+  // silencieuse (result.cancelled géré sans Alert dans
+  // PremiumModalContent) : cet événement est la seule trace qui reste.
+  trackPurchaseCancelled(productId) {
+    this.track('purchase_cancelled', { product_id: productId });
   },
 
   trackPurchaseFailed(errorCode, errorMessage, productId) {

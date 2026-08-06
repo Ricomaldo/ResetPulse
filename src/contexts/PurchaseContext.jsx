@@ -239,7 +239,17 @@ export const PurchaseProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       // Handle user cancellation (not an error)
+      // Seul point d'émission de purchase_cancelled (audit analytics 06/08,
+      // décision Eric 07/08) : couvre les deux chemins d'achat
+      // (purchasePackage ET purchaseProduct de repli, cf. try ci-dessus)
+      // puisqu'ils partagent ce même catch. L'UI (PremiumModalContent.
+      // handlePurchase, result.cancelled) reste STRICTEMENT silencieuse —
+      // aucune Alert, seule la trace analytics change. La garde
+      // « already_in_flight » (début de cette fonction) ne passe jamais
+      // par ce catch : elle n'émet donc jamais cet événement, ce n'est pas
+      // une annulation utilisateur.
       if (error.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
+        Analytics.trackPurchaseCancelled(productIdentifier);
         return { success: false, cancelled: true };
       }
 
