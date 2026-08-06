@@ -5,22 +5,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Svg, { Path, Circle } from 'react-native-svg';
-import {
-  RotateCw as LucideRotateCw,
-  RotateCcw as LucideRotateCcw,
-  ChevronLeft as LucideChevronLeft,
-  ChevronRight as LucideChevronRight,
-  Plus as LucidePlus,
-  Minus as LucideMinus,
-  Lock as LucideLock,
-  Pencil as LucidePencil,
-  Gem as LucideGem,
-  Timer as LucideTimer,
-  Focus as LucideFocus,
-  Eye as LucideEye,
-  EyeOff as LucideEyeOff,
-} from 'lucide-react-native';
+import Svg, { Path } from 'react-native-svg';
 
 export const PlayIcon = React.memo(function PlayIcon({ size = 24, color }) {
   return (
@@ -34,22 +19,6 @@ export const PlayIcon = React.memo(function PlayIcon({ size = 24, color }) {
 });
 
 PlayIcon.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.number,
-};
-
-export const PauseIcon = React.memo(function PauseIcon({ size = 24, color }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"
-        fill={color}
-      />
-    </Svg>
-  );
-});
-
-PauseIcon.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.number,
 };
@@ -85,111 +54,3 @@ ResetIcon.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.number,
 };
-
-export const ReverseIcon = React.memo(function ReverseIcon({ size = 24, color }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
-        fill={color}
-      />
-    </Svg>
-  );
-});
-
-ReverseIcon.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.number,
-};
-
-export const SettingsIcon = React.memo(function SettingsIcon({ size = 24, color }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"
-        fill={color}
-      />
-    </Svg>
-  );
-});
-
-SettingsIcon.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.number,
-};
-
-export const CircleGaugeIcon = React.memo(function CircleGaugeIcon({ size = 24, color }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M15.6 2.7a10 10 0 1 0 5.7 5.7"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Circle
-        cx="12"
-        cy="12"
-        r="2"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M13.4 10.6 19 5"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-});
-
-CircleGaugeIcon.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.number,
-};
-
-// Icon wrapper component
-const iconMap = {
-  pause: PauseIcon,
-  play: PlayIcon,
-  stop: StopIcon,
-  reset: ResetIcon,
-  reverse: ReverseIcon,
-  settings: SettingsIcon,
-  'circle-gauge': CircleGaugeIcon,
-  // Lucide mapped icons
-  chevronLeft: LucideChevronLeft,
-  chevronRight: LucideChevronRight,
-  plus: LucidePlus,
-  minus: LucideMinus,
-  lock: LucideLock,
-  edit: LucidePencil,
-  premium: LucideGem,
-  rotateCw: LucideRotateCw,
-  rotateCcw: LucideRotateCcw,
-  timer: LucideTimer,
-  focus: LucideFocus,
-  eye: LucideEye,
-  eyeOff: LucideEyeOff,
-};
-
-const Icons = function Icons({ name, size = 24, color }) {
-  const IconComponent = iconMap[name];
-  if (!IconComponent) {
-    return null;
-  }
-  return <IconComponent size={size} color={color} />;
-};
-
-Icons.propTypes = {
-  color: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  size: PropTypes.number,
-};
-
-export default Icons;
