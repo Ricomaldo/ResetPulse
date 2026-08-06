@@ -26,7 +26,7 @@
  *   TimerRemainingContext lui-même supprimé, écriture morte avec lui)
  */
 
-import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useRef, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import { usePersistedObject } from '../hooks/usePersistedState';
@@ -152,64 +152,20 @@ export const TimerConfigProvider = ({ children }) => {
   };
 
   // Persisted state using new single-key strategy
-  const { values, updateValue, setValues, isLoading } = usePersistedObject(
+  const { values, setValues, isLoading } = usePersistedObject(
     NEW_STORAGE_KEY,
     getDefaultValues(),
     { migrate: migrateConfigSchema }
   );
 
-  // C5 : « none » retiré de la barre d'activités (asymétrie 3 activités |
-  // 4 couleurs, ADR-014) — bascule tout état persisté qui le référence encore.
-  useEffect(() => {
-    if (!isLoading && values.timer.currentActivity?.id === 'none') {
-      updateValue('timer', { ...values.timer, currentActivity: getDefaultActivity() });
-    }
-  }, [isLoading, values.timer, updateValue]);
-
-  // C6.2 : mode « complet » mort (segmenté à 2 entrées) — bascule tout état
-  // persisté qui le référence encore vers le défaut (même patron que le
-  // garde « none » ci-dessus, pas une couche de migration générique).
-  useEffect(() => {
-    if (!isLoading && values.mode.current === 'complet') {
-      updateValue('mode', { current: 'mixte' });
-    }
-  }, [isLoading, values.mode, updateValue]);
-
-  // Verdicts CD 25/07 : darkLaser/autumn supprimées de TIMER_PALETTES —
-  // bascule tout état persisté qui référence encore une palette morte vers
-  // serenity (même patron que les gardes « none »/« complet » ci-dessus).
-  useEffect(() => {
-    if (!isLoading && !TIMER_PALETTES[values.palette.currentPalette]) {
-      updateValue('palette', {
-        ...values.palette,
-        currentPalette: 'serenity',
-        currentColor: TIMER_PALETTES.serenity.colors[0],
-      });
-    }
-  }, [isLoading, values.palette, updateValue]);
-
-  // Lambda X (04/08, correctifs QA visuelle #1, bug 1) : les blobs
-  // @ResetPulse:config écrits par un build antérieur à ec76ff2 (halo ON par
-  // défaut, 31/07) portent encore shouldPulse:false ET le champ mort
-  // showActivityEmoji (purgé du code par 7c2984e, plus jamais écrit depuis)
-  // — usePersistedObject ne fait qu'un merge SHALLOW au niveau des clés de
-  // premier niveau (usePersistedState.js), donc ce blob écrase entièrement
-  // le nouveau défaut display.shouldPulse=true, y compris au chemin
-  // d'upgrade v2.1.6 → reborn (la clé @ResetPulse:config existe déjà depuis
-  // la consolidation ADR-009, décembre 2025 — l'ancienne migration des clés
-  // legacy (retirée, morte par construction : usePersistedObject sauvegarde
-  // les défauts avant que son getItem ne s'exécute) ne s'est donc jamais
-  // déclenchée pour ces installs, elle n'est pas l'autrice de ce blob).
-  // showActivityEmoji n'existe dans AUCUN build
-  // courant : sa seule présence signe un blob fossile, jamais un choix
-  // utilisateur délibéré — même patron one-shot que les gardes ci-dessus,
-  // ne se redéclenche jamais une fois le fossile purgé.
-  useEffect(() => {
-    if (!isLoading && values.display.showActivityEmoji !== undefined) {
-      const { showActivityEmoji, ...cleanDisplay } = values.display;
-      updateValue('display', { ...cleanDisplay, shouldPulse: true });
-    }
-  }, [isLoading, values.display, updateValue]);
+  // Les 4 gardes-fossiles every-boot qui vivaient ici (activité « none »,
+  // mode « complet », palette morte, détecteur showActivityEmoji/shouldPulse)
+  // sont consolidées en une migration run-once — lot gardes-v3 (07/08),
+  // cf. CONFIG_MIGRATIONS[2] dans src/config/config-schema.js. Ce contexte
+  // ne porte plus de correction de blob stale, seulement du gating d'accès
+  // vivant (cf. usePaletteGating.js / resolvePaletteOnLaunch, appelé
+  // ailleurs — pas une correction de blob, un arbitrage premium/free
+  // toujours valide every-boot).
 
   // Handle activity selection with flash feedback (ADR-007 messaging)
   const handleActivitySelect = useCallback((activity) => {

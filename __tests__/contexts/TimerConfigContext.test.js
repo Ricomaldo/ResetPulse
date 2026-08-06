@@ -1,16 +1,17 @@
-// Tests for TimerConfigContext — garde-fossile shouldPulse (QA visuelle #1,
-// bug 1, Lambda X 04/08).
+// Tests for TimerConfigContext — absence de garde-fossile shouldPulse
+// (lot gardes-v3, 07/08).
 //
-// Contexte du bug : un blob @ResetPulse:config écrit par un build antérieur
-// à ec76ff2 (halo ON par défaut, 31/07) porte encore shouldPulse:false ET le
-// champ mort showActivityEmoji (purgé du code par 7c2984e, jamais réécrit
-// depuis — v2.1.6 en prod contient déjà la clé @ResetPulse:config, cf.
-// consolidation ADR-009 déc. 2025). usePersistedObject ne fait qu'un merge
-// SHALLOW au premier niveau (usePersistedState.js) : ce blob écrase
-// entièrement le nouveau défaut display.shouldPulse=true, y compris au
-// chemin d'upgrade — l'ancienne migration des clés legacy ne se déclenche
-// jamais pour ces installs (@ResetPulse:config existe déjà), elle n'est
-// pas l'autrice.
+// Historique : la garde-fossile every-boot qui vivait ici (QA visuelle #1
+// bug 1, Lambda X 04/08 — un blob @ResetPulse:config écrit avant ec76ff2,
+// halo ON par défaut 31/07, portait shouldPulse:false + le champ mort
+// showActivityEmoji) a été consolidée dans CONFIG_MIGRATIONS[2]
+// (src/config/config-schema.js), run-once, cf. équivalence détaillée dans
+// __tests__/config/config-migrations.test.js. Ce fichier ne teste donc plus
+// une correction du CONTEXTE, mais l'inverse : le contexte n'en fait plus
+// aucune — il fait confiance à ce que usePersistedObject (migration +
+// deepMergeDefaults) lui a déjà livré, même sur un blob qui contient encore
+// le fossile (le mock ci-dessous simule un usePersistedObject qui n'a PAS
+// fait tourner la migration, pour isoler le comportement du contexte seul).
 //
 // Calqué sur useCustomActivities.test.js/useSessionCount.test.js :
 // usePersistedObject mocké avec état simulé, pas d'AsyncStorage réel pour
@@ -70,7 +71,7 @@ jest.mock('../../src/hooks/usePersistedState', () => ({
   })),
 }));
 
-describe('TimerConfigContext — garde-fossile shouldPulse', () => {
+describe('TimerConfigContext — plus de garde-fossile shouldPulse (consolidée en migration, lot gardes-v3)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -84,7 +85,7 @@ describe('TimerConfigContext — garde-fossile shouldPulse', () => {
     expect(mockUpdateValue).not.toHaveBeenCalledWith('display', expect.anything());
   });
 
-  it('blob fossile (showActivityEmoji présent, shouldPulse:false) : la garde force true et purge le fossile', () => {
+  it('blob fossile (showActivityEmoji présent, shouldPulse:false) livré tel quel par usePersistedObject : le contexte ne le corrige plus', () => {
     mockValues = baseValues({
       shouldPulse: false,
       showDigitalTimer: false,
@@ -92,13 +93,14 @@ describe('TimerConfigContext — garde-fossile shouldPulse', () => {
       showTime: true,
     });
 
-    renderHook(() => useTimerConfig(), { wrapper });
+    const { result } = renderHook(() => useTimerConfig(), { wrapper });
 
-    expect(mockUpdateValue).toHaveBeenCalledWith('display', {
-      shouldPulse: true,
-      showDigitalTimer: false,
-      showTime: true,
-    });
+    // Le contexte n'a plus de useEffect de correction : il expose la valeur
+    // reçue telle quelle. C'est CONFIG_MIGRATIONS[2] (config-schema.js) qui
+    // porte désormais cette correction, en amont, run-once — cf.
+    // __tests__/config/config-migrations.test.js pour son équivalence.
+    expect(result.current.display.shouldPulse).toBe(false);
+    expect(mockUpdateValue).not.toHaveBeenCalledWith('display', expect.anything());
   });
 
   it('préférence utilisateur explicite (pas de fossile, shouldPulse:false) : jamais écrasée', () => {

@@ -99,15 +99,17 @@ describe('migrateConfigSchema', () => {
   });
 });
 
-describe('migrateConfigSchema + deepMergeDefaults — équivalence comportementale (socle v3, table vide)', () => {
+describe('migrateConfigSchema + deepMergeDefaults — équivalence comportementale (lot gardes-v3)', () => {
   // Reproduit le pipeline réel de usePersistedObject : migrate() sur le blob
-  // brut, PUIS deepMergeDefaults. Le socle v3 (table de migrations vide)
-  // doit être un pur no-op sur tout ce qui n'est pas `version` — en
-  // particulier, le fossile `showActivityEmoji` et `shouldPulse:false`
-  // (garde-fossile every-boot de TimerConfigContext.jsx, cf.
-  // __tests__/contexts/TimerConfigContext.test.js) doivent traverser le
-  // socle intacts pour que la garde continue à les détecter et les purger.
-  it('blob stale réaliste (shouldPulse:false + fossile showActivityEmoji) : identique après le socle v3, hors version', () => {
+  // brut, PUIS deepMergeDefaults. Depuis lot gardes-v3 (07/08),
+  // CONFIG_MIGRATIONS[2] n'est PLUS une table vide : le fossile
+  // `showActivityEmoji` et `shouldPulse:false` qu'il signe sont corrigés ICI,
+  // à la migration — la garde-fossile every-boot correspondante a été
+  // retirée de TimerConfigContext.jsx (cf. équivalence détaillée par garde
+  // dans __tests__/config/config-migrations.test.js). Ce test documente
+  // l'inversion : ce qui était un no-op au socle v3 initial (06/08) est
+  // maintenant la correction elle-même.
+  it('blob stale réaliste (shouldPulse:false + fossile showActivityEmoji) : corrigé par la migration, plus par une garde', () => {
     const staleBlob = {
       version: 2,
       timer: { clockwise: false },
@@ -128,15 +130,15 @@ describe('migrateConfigSchema + deepMergeDefaults — équivalence comportementa
     const merged = deepMergeDefaults(defaults, migrated);
 
     expect(merged.display).toEqual({
-      shouldPulse: false,
+      shouldPulse: true,
       showDigitalTimer: false,
-      showActivityEmoji: true,
       showTime: true,
     });
+    expect(merged.display.showActivityEmoji).toBeUndefined();
     expect(merged.version).toBe(CONFIG_SCHEMA_VERSION);
   });
 
-  it('préférence utilisateur explicite (pas de fossile, shouldPulse:false) : jamais altérée par le socle', () => {
+  it('préférence utilisateur explicite (pas de fossile, shouldPulse:false) : jamais altérée par la migration', () => {
     const blob = {
       version: 2,
       display: { shouldPulse: false, showDigitalTimer: false, showTime: true },
