@@ -38,7 +38,7 @@
  * ère-CD mal interprétée) — l'idée d'origine d'Eric (image perso en FOND de
  * l'app, item Ambiances) est tracée au backlog.
  */
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -144,6 +144,13 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   useEffect(() => {
     onOpenChange?.(isOpen);
   }, [isOpen, onOpenChange]);
+  // Miroir JS-thread d'isOpen (lecture dans handleGestureEnd, cf. plus bas) —
+  // le worklet .onEnd tourne sur le thread UI et capture isOpen à la création
+  // du useMemo (deps sans isOpen), donc une lecture directe y serait périmée.
+  const isOpenRef = useRef(isOpen);
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
   // Sous-écran Rituels (bloc 3, C6) — remplace les blocs 1-4 quand ouvert.
   const [ritualsOpen, setRitualsOpen] = useState(false);
   // Sous-écran Palettes (bloc 4, C6.1) — même mécanisme.
@@ -273,6 +280,18 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   // est inchangé. `handlePanGesture` (poignée seule, pas de ScrollView
   // dessous) garde le bidirectionnel par défaut — ouverture ET fermeture
   // depuis cette petite zone.
+  // Pont JS-thread pour la fin de geste (appelé via runOnJS depuis .onEnd,
+  // thread UI) — anti-doublon sheet_opened : seule une transition false→true
+  // RÉSULTANT du geste émet (isOpenRef lu ici, sur JS thread, jamais dans le
+  // worklet). Un swipe qui referme (open=false), ou un swipe qui confirme un
+  // état déjà ouvert, n'émet rien.
+  const handleGestureEnd = (open) => {
+    if (open && !isOpenRef.current) {
+      analytics.trackSheetOpened('swipe');
+    }
+    setIsOpen(open);
+  };
+
   const makePanGesture = (enabled, offsetY = [-20, 20]) => Gesture.Pan()
     .enabled(enabled)
     .activeOffsetY(offsetY)
@@ -296,7 +315,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
         restDisplacementThreshold: 0.01,
         restSpeedThreshold: 0.01,
       });
-      runOnJS(setIsOpen)(open);
+      runOnJS(handleGestureEnd)(open);
     });
 
   const panGesture = useMemo(() => makePanGesture(!boundedSubScreen, 20),
@@ -557,7 +576,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
               onPress={() => {
                 haptics.selection().catch(() => {});
                 if (!isOpen) {
-                  analytics.trackSheetOpened();
+                  analytics.trackSheetOpened('tap');
                 }
                 snapTo(!isOpen);
               }}
