@@ -256,10 +256,6 @@ export const getDefaultActivity = () => getFreeActivities()[0];
 // Check if an activity is custom (created by user)
 export const isCustomActivity = (activity) => activity?.isCustom === true;
 
-// Get activity by ID (checks built-in activities only)
-// For custom activities, use useCustomActivities hook
-export const isBuiltInActivity = (activity) => !activity?.isCustom;
-
 // ===== ADR-017 §4 — la vitrine ===============================================
 // Curation PROVISOIRE (à juger devant l'écran, porte Eric — cf. ADR-017
 // « reste à trancher »). Critère : couvrir les trois cerveaux plutôt que

@@ -45,19 +45,4 @@ i18n.locale = Localization.getLocales()[0].languageCode;
 i18n.enableFallback = true;
 i18n.defaultLocale = 'en';
 
-// Helper function to get current locale
-export const getCurrentLocale = () => {
-  return Localization.getLocales()[0];
-};
-
-// Helper function to get available locales
-export const getAvailableLocales = () => {
-  return Object.keys(i18n.translations);
-};
-
-// Helper function to change locale programmatically
-export const setLocale = (locale) => {
-  i18n.locale = locale;
-};
-
 export default i18n;
