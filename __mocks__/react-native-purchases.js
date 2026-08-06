@@ -115,6 +115,16 @@ const Purchases = {
   addCustomerInfoUpdateListener: jest.fn(() => jest.fn()), // Returns unsubscribe function
 
   // Constants
+  // Ajoutés pour tester purchase_cancelled/purchase_failed (lot funnel
+  // paiement, 06-08/08) : PurchaseContext.jsx lit ces codes dans son catch
+  // (error.code === Purchases.PURCHASES_ERROR_CODE.XXX) — absents jusqu'ici,
+  // aucun test n'exerçait ce chemin.
+  PURCHASES_ERROR_CODE: {
+    PURCHASE_CANCELLED_ERROR: 'PURCHASE_CANCELLED_ERROR',
+    NETWORK_ERROR: 'NETWORK_ERROR',
+    STORE_PROBLEM_ERROR: 'STORE_PROBLEM_ERROR',
+    PAYMENT_PENDING_ERROR: 'PAYMENT_PENDING_ERROR',
+  },
   PURCHASE_TYPE: {
     SUBS: 'subs',
     INAPP: 'inapp',
