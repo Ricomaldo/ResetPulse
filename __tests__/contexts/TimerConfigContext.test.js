@@ -8,8 +8,9 @@
 // consolidation ADR-009 déc. 2025). usePersistedObject ne fait qu'un merge
 // SHALLOW au premier niveau (usePersistedState.js) : ce blob écrase
 // entièrement le nouveau défaut display.shouldPulse=true, y compris au
-// chemin d'upgrade — la migration OLD_KEYS ne se déclenche jamais pour ces
-// installs (@ResetPulse:config existe déjà), elle n'est pas l'autrice.
+// chemin d'upgrade — l'ancienne migration des clés legacy ne se déclenche
+// jamais pour ces installs (@ResetPulse:config existe déjà), elle n'est
+// pas l'autrice.
 //
 // Calqué sur useCustomActivities.test.js/useSessionCount.test.js :
 // usePersistedObject mocké avec état simulé, pas d'AsyncStorage réel pour

@@ -194,9 +194,9 @@ export const TimerConfigProvider = ({ children }) => {
   // premier niveau (usePersistedState.js), donc ce blob écrase entièrement
   // le nouveau défaut display.shouldPulse=true, y compris au chemin
   // d'upgrade v2.1.6 → reborn (la clé @ResetPulse:config existe déjà depuis
-  // la consolidation ADR-009, décembre 2025 — l'ancienne migration OLD_KEYS
-  // (retirée, morte par construction : usePersistedObject sauvegarde les
-  // défauts avant que son getItem ne s'exécute) ne s'est donc jamais
+  // la consolidation ADR-009, décembre 2025 — l'ancienne migration des clés
+  // legacy (retirée, morte par construction : usePersistedObject sauvegarde
+  // les défauts avant que son getItem ne s'exécute) ne s'est donc jamais
   // déclenchée pour ces installs, elle n'est pas l'autrice de ce blob).
   // showActivityEmoji n'existe dans AUCUN build
   // courant : sa seule présence signe un blob fossile, jamais un choix
