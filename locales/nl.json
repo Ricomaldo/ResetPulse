@@ -121,7 +121,10 @@
     "marimba_dry": "Marimba",
     "marimba_ascending": "Oplopende marimba",
     "up_chime": "Klokkenspel",
-    "success_glissando": "Glissando"
+    "success_glissando": "Glissando",
+    "timer_complete": "Volbracht",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Scherm wakker houden",
@@ -155,7 +158,12 @@
     "chooseCustomEmoji": "Een ander emoji via het toetsenbord kiezen",
     "deleteRitual": "Ritueel %{name} verwijderen",
     "favoriteRitual": "Favoriet ritueel %{name}",
-    "distraction": "Afleiding"
+    "distraction": "Afleiding",
+    "soundItem": "Geluid: %{name}",
+    "activityLocked": "%{name}, vergrendeld — Ambiances ontdekken",
+    "customEmojiLocked": "Eigen emoji vergrendeld — Ambiances ontdekken",
+    "renameRitual": "Ritueel %{name} hernoemen",
+    "renameRitualHint": "Houd ingedrukt om te hernoemen"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "Laten we beginnen met het kiezen van een activiteit 👇",
     "companion": "Deze emoji houdt je gezelschap. Schuif de schijf om je tijd in te stellen.",
     "dialColor": "Een kleur? Die verandert meteen.",
-    "ready": "Helemaal klaar. Raak de schijf aan om te starten."
+    "ready": "Helemaal klaar. Raak de schijf aan om te starten.",
+    "thresholdHint": "tik om verder te gaan",
+    "keepMoment": "dit moment bewaren?",
+    "momentKept": "bewaard ✨"
   },
   "aside": {
     "exitFocus": "Focus verlaten",
@@ -309,14 +320,24 @@
     "closedLabel": "Rituelen & instellingen",
     "settingsRow": "Instellingen",
     "scaleLock": "Schaal vergrendelen",
-    "scaleLockHint": "de wijzerplaat houdt zijn huidige schaal, ook bij een korte duur"
+    "scaleLockHint": "de wijzerplaat houdt zijn huidige schaal, ook bij een korte duur",
+    "rotation": {
+      "counterclockwise": "Tegen de klok in",
+      "clockwise": "Met de klok mee"
+    }
   },
   "dormantTips": {
     "palettes": "al gezien? je kleuren hebben hele paletten — schuif de lade onderin open.",
     "focus": "zin in een kaal scherm? de focusmodus wacht in de lade onderin."
   },
   "soundsPanel": {
-    "counterFooter": "alle 8 geluiden, voorgoed van jou — %{price}, eenmalig ›"
+    "counterFooter": "alle 8 geluiden, voorgoed van jou — %{price}, eenmalig ›",
+    "sheetRow": "Geluiden",
+    "title": "Geluiden",
+    "included": "Inbegrepen",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-geluid — probeer het vrij uit",
+    "ambiancesDiscover": "Ambiances ontdekken"
   },
   "coach": {
     "borrowedPalette": "%{name} is te leen — bij de volgende start gaat het weer naar huis.",

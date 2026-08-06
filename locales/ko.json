@@ -121,7 +121,10 @@
     "marimba_dry": "마림바",
     "marimba_ascending": "상승하는 마림바",
     "up_chime": "차임",
-    "success_glissando": "글리산도"
+    "success_glissando": "글리산도",
+    "timer_complete": "완료",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "화면 켜짐 유지",
@@ -155,7 +158,12 @@
     "closeRitualForm": "루틴 양식 닫기",
     "chooseCustomEmoji": "키보드로 다른 이모지 선택",
     "deleteRitual": "%{name} 루틴 삭제",
-    "favoriteRitual": "즐겨찾기 루틴 %{name}"
+    "favoriteRitual": "즐겨찾기 루틴 %{name}",
+    "soundItem": "사운드: %{name}",
+    "activityLocked": "%{name} 잠김 — Ambiances 둘러보기",
+    "customEmojiLocked": "커스텀 이모지 잠김 — Ambiances 둘러보기",
+    "renameRitual": "%{name} 루틴 이름 바꾸기",
+    "renameRitualHint": "길게 눌러 이름 바꾸기"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "먼저 활동을 선택해볼까요 👇",
     "companion": "이 이모지가 곁에 있어줄 거예요. 디스크를 밀어서 시간을 맞춰보세요.",
     "dialColor": "색상요? 바로 바뀌어요.",
-    "ready": "준비 완료. 디스크를 눌러 시작하세요."
+    "ready": "준비 완료. 디스크를 눌러 시작하세요.",
+    "thresholdHint": "탭하여 계속",
+    "keepMoment": "이 순간을 간직할까요?",
+    "momentKept": "간직했어요 ✨"
   },
   "aside": {
     "exitFocus": "포커스 종료",
@@ -309,14 +320,24 @@
     "closedLabel": "루틴 및 설정",
     "settingsRow": "설정",
     "scaleLock": "눈금 고정",
-    "scaleLockHint": "짧은 시간이어도 다이얼은 현재 눈금을 유지해요"
+    "scaleLockHint": "짧은 시간이어도 다이얼은 현재 눈금을 유지해요",
+    "rotation": {
+      "counterclockwise": "반시계 방향",
+      "clockwise": "시계 방향"
+    }
   },
   "dormantTips": {
     "palettes": "봤어요? 색상마다 팔레트 전체가 있어요 — 아래 서랍을 위로 밀어보세요.",
     "focus": "깔끔한 화면이 좋다면? 포커스 모드가 아래 서랍에서 기다려요."
   },
   "soundsPanel": {
-    "counterFooter": "8가지 사운드 전부, 영원히 당신 것 — %{price}, 한 번에 ›"
+    "counterFooter": "8가지 사운드 전부, 영원히 당신 것 — %{price}, 한 번에 ›",
+    "sheetRow": "사운드",
+    "title": "사운드",
+    "included": "기본 포함",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances 사운드 — 자유롭게 체험해보세요",
+    "ambiancesDiscover": "Ambiances 둘러보기"
   },
   "coach": {
     "borrowedPalette": "%{name}은(는) 빌린 거예요 — 다음 실행 때 제자리로 돌아가요.",

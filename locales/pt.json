@@ -121,7 +121,10 @@
     "marimba_dry": "Marimba",
     "marimba_ascending": "Marimba ascendente",
     "up_chime": "Carrilhão",
-    "success_glissando": "Glissando"
+    "success_glissando": "Glissando",
+    "timer_complete": "Concluído",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Manter ecrã ativo",
@@ -155,7 +158,12 @@
     "closeRitualForm": "Fechar o formulário de ritual",
     "chooseCustomEmoji": "Escolher outro emoji a partir do teclado",
     "deleteRitual": "Eliminar o ritual %{name}",
-    "favoriteRitual": "Ritual favorito %{name}"
+    "favoriteRitual": "Ritual favorito %{name}",
+    "soundItem": "Som: %{name}",
+    "activityLocked": "%{name}, bloqueado — descobrir Ambiances",
+    "customEmojiLocked": "Emoji personalizado bloqueado — descobrir Ambiances",
+    "renameRitual": "Renomear o ritual %{name}",
+    "renameRitualHint": "Mantém premido para renomear"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "vamos começar por escolher uma atividade 👇",
     "companion": "este emoji faz-te companhia. desliza o disco para ajustar a duração.",
     "dialColor": "uma cor? muda logo.",
-    "ready": "tudo pronto. toca no disco para começar."
+    "ready": "tudo pronto. toca no disco para começar.",
+    "thresholdHint": "toca para continuar",
+    "keepMoment": "guardar este momento?",
+    "momentKept": "guardado ✨"
   },
   "aside": {
     "exitFocus": "sair do focus",
@@ -309,14 +320,24 @@
     "closedLabel": "rituais e definições",
     "settingsRow": "Definições",
     "scaleLock": "Bloquear a escala",
-    "scaleLockHint": "o mostrador mantém a escala atual, mesmo para uma duração curta"
+    "scaleLockHint": "o mostrador mantém a escala atual, mesmo para uma duração curta",
+    "rotation": {
+      "counterclockwise": "Sentido anti-horário",
+      "clockwise": "Sentido horário"
+    }
   },
   "dormantTips": {
     "palettes": "reparaste? as tuas cores têm paletas inteiras — desliza a gaveta de baixo.",
     "focus": "queres um ecrã limpo? o modo focus espera na gaveta de baixo."
   },
   "soundsPanel": {
-    "counterFooter": "os 8 sons, teus para sempre — %{price}, uma vez ›"
+    "counterFooter": "os 8 sons, teus para sempre — %{price}, uma vez ›",
+    "sheetRow": "Sons",
+    "title": "Sons",
+    "included": "Incluídos",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "som Ambiances — experimenta-o livremente",
+    "ambiancesDiscover": "descobrir Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name} está emprestada — no próximo arranque, volta para casa.",

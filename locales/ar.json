@@ -134,7 +134,10 @@
     "marimba_dry": "ماريمبا",
     "marimba_ascending": "ماريمبا صاعدة",
     "up_chime": "رنين الجرس",
-    "success_glissando": "غليساندو"
+    "success_glissando": "غليساندو",
+    "timer_complete": "تمّ",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "إبقاء الشاشة مضاءة",
@@ -168,7 +171,12 @@
     "closeRitualForm": "إغلاق نموذج الطقس",
     "chooseCustomEmoji": "اختيار رمز تعبيري آخر عبر لوحة المفاتيح",
     "deleteRitual": "حذف الطقس %{name}",
-    "favoriteRitual": "الطقس المفضل %{name}"
+    "favoriteRitual": "الطقس المفضل %{name}",
+    "soundItem": "صوت: %{name}",
+    "activityLocked": "%{name}، مقفل — اكتشف Ambiances",
+    "customEmojiLocked": "الإيموجي المخصص مقفل — اكتشف Ambiances",
+    "renameRitual": "إعادة تسمية طقس %{name}",
+    "renameRitualHint": "اضغط مطوّلًا لإعادة التسمية"
   },
   "twoTimers": {
     "title": "لقد أنشأت لحظتين!",
@@ -301,7 +309,10 @@
     "welcome": "لنبدأ باختيار نشاط 👇",
     "companion": "هذا الرمز التعبيري يرافقك. مرر القرص لتحديد الوقت.",
     "dialColor": "لون؟ يتغيّر فوراً.",
-    "ready": "كل شيء جاهز. المس القرص للبدء."
+    "ready": "كل شيء جاهز. المس القرص للبدء.",
+    "thresholdHint": "المس الشاشة للمتابعة",
+    "keepMoment": "تحتفظ بهذه اللحظة؟",
+    "momentKept": "تمّ الحفظ ✨"
   },
   "aside": {
     "exitFocus": "الخروج من وضع التركيز",
@@ -309,14 +320,24 @@
     "closedLabel": "الطقوس والإعدادات",
     "settingsRow": "الإعدادات",
     "scaleLock": "قفل المقياس",
-    "scaleLockHint": "يحتفظ القرص بمقياسه الحالي، حتى لمدة قصيرة"
+    "scaleLockHint": "يحتفظ القرص بمقياسه الحالي، حتى لمدة قصيرة",
+    "rotation": {
+      "counterclockwise": "عكس عقارب الساعة",
+      "clockwise": "باتجاه عقارب الساعة"
+    }
   },
   "dormantTips": {
     "palettes": "هل لاحظت؟ ألوانك لها لوحات كاملة — اسحب الدرج السفلي للأعلى.",
     "focus": "تريد شاشة صافية؟ وضع التركيز في انتظارك في الدرج السفلي."
   },
   "soundsPanel": {
-    "counterFooter": "الأصوات الثمانية كلها، ملكك إلى الأبد — %{price} مرة واحدة ›"
+    "counterFooter": "الأصوات الثمانية كلها، ملكك إلى الأبد — %{price} مرة واحدة ›",
+    "sheetRow": "الأصوات",
+    "title": "الأصوات",
+    "included": "مضمّنة",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "صوت Ambiances — جرّبه بحرية",
+    "ambiancesDiscover": "اكتشف Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name} مُستعارة — عند التشغيل التالي، تعود إلى بيتها.",

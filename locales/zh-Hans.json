@@ -94,7 +94,10 @@
     "singing_bowl": "颂钵",
     "success_glissando": "滑音",
     "up_chime": "钟声",
-    "vibraphone_chord": "颤音琴"
+    "vibraphone_chord": "颤音琴",
+    "timer_complete": "完成",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "保持屏幕常亮",
@@ -128,7 +131,12 @@
     "closeRitualForm": "关闭仪式表单",
     "chooseCustomEmoji": "通过键盘选择其他表情符号",
     "deleteRitual": "删除仪式「%{name}」",
-    "favoriteRitual": "收藏仪式「%{name}」"
+    "favoriteRitual": "收藏仪式「%{name}」",
+    "soundItem": "声音：%{name}",
+    "activityLocked": "%{name}已锁定 — 发现 Ambiances",
+    "customEmojiLocked": "自定义表情已锁定 — 发现 Ambiances",
+    "renameRitual": "重命名仪式%{name}",
+    "renameRitualHint": "长按重命名"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "先选一个活动开始吧 👇",
     "companion": "这个表情陪伴着你。滑动圆盘设置时长。",
     "dialColor": "颜色?马上就能看到变化。",
-    "ready": "准备就绪。点击圆盘开始。"
+    "ready": "准备就绪。点击圆盘开始。",
+    "thresholdHint": "点按继续",
+    "keepMoment": "留住这一刻？",
+    "momentKept": "已留住 ✨"
   },
   "aside": {
     "exitFocus": "退出专注",
@@ -309,14 +320,24 @@
     "closedLabel": "仪式与设置",
     "settingsRow": "设置",
     "scaleLock": "锁定刻度",
-    "scaleLockHint": "即使时长很短，表盘也会保持当前刻度"
+    "scaleLockHint": "即使时长很短，表盘也会保持当前刻度",
+    "rotation": {
+      "counterclockwise": "逆时针",
+      "clockwise": "顺时针"
+    }
   },
   "dormantTips": {
     "palettes": "发现了吗？你的颜色都配有完整的调色板 — 向上滑开底部抽屉。",
     "focus": "想要一个纯净的屏幕？专注模式就在底部抽屉里等你。"
   },
   "soundsPanel": {
-    "counterFooter": "全部8种音效，永远属于你 — %{price}，一次性 ›"
+    "counterFooter": "全部8种音效，永远属于你 — %{price}，一次性 ›",
+    "sheetRow": "声音",
+    "title": "声音",
+    "included": "已包含",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances 声音 — 自由试用",
+    "ambiancesDiscover": "发现 Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name}是借来的 — 下次启动时会回家。",

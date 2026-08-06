@@ -121,7 +121,10 @@
     "marimba_dry": "Marimba",
     "marimba_ascending": "Marimba ascendente",
     "up_chime": "Campanilla",
-    "success_glissando": "Glissando"
+    "success_glissando": "Glissando",
+    "timer_complete": "Cumplido",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Mantener pantalla activa",
@@ -155,7 +158,12 @@
     "closeRitualForm": "Cerrar el formulario de ritual",
     "chooseCustomEmoji": "Elegir otro emoji desde el teclado",
     "deleteRitual": "Eliminar el ritual %{name}",
-    "favoriteRitual": "Ritual favorito %{name}"
+    "favoriteRitual": "Ritual favorito %{name}",
+    "soundItem": "Sonido: %{name}",
+    "activityLocked": "%{name}, bloqueado — descubrir Ambiances",
+    "customEmojiLocked": "Emoji personalizado bloqueado — descubrir Ambiances",
+    "renameRitual": "Renombrar el ritual %{name}",
+    "renameRitualHint": "Mantén pulsado para renombrar"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "empecemos eligiendo una actividad 👇",
     "companion": "este emoji te hace compañía. desliza el disco para ajustar la duración.",
     "dialColor": "¿un color? cambia al instante.",
-    "ready": "todo listo. toca el disco para empezar."
+    "ready": "todo listo. toca el disco para empezar.",
+    "thresholdHint": "toca para continuar",
+    "keepMoment": "¿guardar este momento?",
+    "momentKept": "guardado ✨"
   },
   "aside": {
     "exitFocus": "salir del focus",
@@ -309,14 +320,24 @@
     "closedLabel": "rituales y ajustes",
     "settingsRow": "Ajustes",
     "scaleLock": "Bloquear la escala",
-    "scaleLockHint": "el disco conserva su escala actual, incluso para una duración corta"
+    "scaleLockHint": "el disco conserva su escala actual, incluso para una duración corta",
+    "rotation": {
+      "counterclockwise": "En sentido antihorario",
+      "clockwise": "En sentido horario"
+    }
   },
   "dormantTips": {
     "palettes": "¿te fijaste? tus colores tienen paletas enteras — desliza el cajón de abajo.",
     "focus": "¿quieres una pantalla desnuda? el modo focus te espera en el cajón de abajo."
   },
   "soundsPanel": {
-    "counterFooter": "los 8 sonidos, tuyos para siempre — %{price}, una vez ›"
+    "counterFooter": "los 8 sonidos, tuyos para siempre — %{price}, una vez ›",
+    "sheetRow": "Sonidos",
+    "title": "Sonidos",
+    "included": "Incluidos",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "sonido Ambiances — pruébalo libremente",
+    "ambiancesDiscover": "descubrir Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name} está prestada — en el próximo inicio, vuelve a casa.",

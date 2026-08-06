@@ -121,7 +121,10 @@
     "marimba_dry": "Marimba",
     "marimba_ascending": "Marimba ascendente",
     "up_chime": "Carillon",
-    "success_glissando": "Glissando"
+    "success_glissando": "Glissando",
+    "timer_complete": "Compiuto",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Mantieni schermo attivo",
@@ -155,7 +158,12 @@
     "closeRitualForm": "Chiudi il modulo del rituale",
     "chooseCustomEmoji": "Scegli un'altra emoji dalla tastiera",
     "deleteRitual": "Elimina il rituale %{name}",
-    "favoriteRitual": "Rituale preferito %{name}"
+    "favoriteRitual": "Rituale preferito %{name}",
+    "soundItem": "Suono: %{name}",
+    "activityLocked": "%{name}, bloccato — scopri Ambiances",
+    "customEmojiLocked": "Emoji personalizzato bloccato — scopri Ambiances",
+    "renameRitual": "Rinomina il rituale %{name}",
+    "renameRitualHint": "Tieni premuto per rinominare"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "iniziamo scegliendo un'attività 👇",
     "companion": "questa emoji ti fa compagnia. scorri il disco per impostare la durata.",
     "dialColor": "un colore? cambia subito.",
-    "ready": "tutto pronto. tocca il disco per iniziare."
+    "ready": "tutto pronto. tocca il disco per iniziare.",
+    "thresholdHint": "tocca per continuare",
+    "keepMoment": "conservare questo momento?",
+    "momentKept": "conservato ✨"
   },
   "aside": {
     "exitFocus": "uscire dal focus",
@@ -309,14 +320,24 @@
     "closedLabel": "rituali e impostazioni",
     "settingsRow": "Impostazioni",
     "scaleLock": "Blocca la scala",
-    "scaleLockHint": "il quadrante mantiene la sua scala attuale, anche per una breve durata"
+    "scaleLockHint": "il quadrante mantiene la sua scala attuale, anche per una breve durata",
+    "rotation": {
+      "counterclockwise": "In senso antiorario",
+      "clockwise": "In senso orario"
+    }
   },
   "dormantTips": {
     "palettes": "hai visto? i tuoi colori hanno intere palette — scorri il cassetto in basso.",
     "focus": "vuoi uno schermo essenziale? la modalità focus ti aspetta nel cassetto in basso."
   },
   "soundsPanel": {
-    "counterFooter": "tutti gli 8 suoni, tuoi per sempre — %{price}, una volta ›"
+    "counterFooter": "tutti gli 8 suoni, tuoi per sempre — %{price}, una volta ›",
+    "sheetRow": "Suoni",
+    "title": "Suoni",
+    "included": "Inclusi",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "suono Ambiances — provalo liberamente",
+    "ambiancesDiscover": "scopri Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name} è in prestito — al prossimo avvio, torna a casa.",

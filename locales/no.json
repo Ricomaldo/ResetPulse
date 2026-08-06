@@ -134,7 +134,10 @@
     "marimba_dry": "Marimba",
     "marimba_ascending": "Stigende marimba",
     "up_chime": "Klokkespill",
-    "success_glissando": "Glissando"
+    "success_glissando": "Glissando",
+    "timer_complete": "Fullført",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Hold skjermen våken",
@@ -168,7 +171,12 @@
     "closeRitualForm": "Lukk ritualskjemaet",
     "chooseCustomEmoji": "Velg en annen emoji via tastaturet",
     "deleteRitual": "Slett ritualet %{name}",
-    "favoriteRitual": "Favorittritual %{name}"
+    "favoriteRitual": "Favorittritual %{name}",
+    "soundItem": "Lyd: %{name}",
+    "activityLocked": "%{name}, låst — utforsk Ambiances",
+    "customEmojiLocked": "Egen emoji låst — utforsk Ambiances",
+    "renameRitual": "Gi ritualet %{name} nytt navn",
+    "renameRitualHint": "Hold inne for å gi nytt navn"
   },
   "twoTimers": {
     "title": "Du har opprettet 2 øyeblikk!",
@@ -301,7 +309,10 @@
     "welcome": "La oss starte med å velge en aktivitet 👇",
     "companion": "Denne emojien holder deg med selskap. Skyv skiven for å stille inn tiden.",
     "dialColor": "En farge? Den endres med en gang.",
-    "ready": "Alt er klart. Trykk på skiven for å starte."
+    "ready": "Alt er klart. Trykk på skiven for å starte.",
+    "thresholdHint": "trykk for å fortsette",
+    "keepMoment": "beholde dette øyeblikket?",
+    "momentKept": "beholdt ✨"
   },
   "aside": {
     "exitFocus": "Forlat fokus",
@@ -309,14 +320,24 @@
     "closedLabel": "Ritualer og innstillinger",
     "settingsRow": "Innstillinger",
     "scaleLock": "Lås skalaen",
-    "scaleLockHint": "skiven beholder sin nåværende skala, selv for en kort varighet"
+    "scaleLockHint": "skiven beholder sin nåværende skala, selv for en kort varighet",
+    "rotation": {
+      "counterclockwise": "Mot klokken",
+      "clockwise": "Med klokken"
+    }
   },
   "dormantTips": {
     "palettes": "har du sett? fargene dine har hele paletter — dra opp skuffen nederst.",
     "focus": "vil du ha en ren skjerm? fokusmodus venter i skuffen nederst."
   },
   "soundsPanel": {
-    "counterFooter": "alle 8 lydene, dine for godt — %{price}, én gang ›"
+    "counterFooter": "alle 8 lydene, dine for godt — %{price}, én gang ›",
+    "sheetRow": "Lyder",
+    "title": "Lyder",
+    "included": "Inkludert",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-lyd — prøv den fritt",
+    "ambiancesDiscover": "Utforsk Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name} er lånt — ved neste start går den hjem igjen.",

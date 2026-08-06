@@ -121,7 +121,10 @@
     "marimba_dry": "Marimba",
     "marimba_ascending": "Stigande marimba",
     "up_chime": "Klockspel",
-    "success_glissando": "Glissando"
+    "success_glissando": "Glissando",
+    "timer_complete": "Klart",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Håll skärmen vaken",
@@ -155,7 +158,12 @@
     "chooseCustomEmoji": "Välj en annan emoji via tangentbordet",
     "deleteRitual": "Ta bort ritualen %{name}",
     "favoriteRitual": "Favoritritual %{name}",
-    "distraction": "Distraktion"
+    "distraction": "Distraktion",
+    "soundItem": "Ljud: %{name}",
+    "activityLocked": "%{name}, låst — upptäck Ambiances",
+    "customEmojiLocked": "Egen emoji låst — upptäck Ambiances",
+    "renameRitual": "Byt namn på ritualen %{name}",
+    "renameRitualHint": "Håll intryckt för att byta namn"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "Vi börjar med att välja en aktivitet 👇",
     "companion": "Den här emojin håller dig sällskap. Dra i skivan för att ställa in din tid.",
     "dialColor": "En färg? Den ändras direkt.",
-    "ready": "Allt klart. Tryck på skivan för att starta."
+    "ready": "Allt klart. Tryck på skivan för att starta.",
+    "thresholdHint": "tryck för att fortsätta",
+    "keepMoment": "behålla den här stunden?",
+    "momentKept": "sparat ✨"
   },
   "aside": {
     "exitFocus": "Lämna fokus",
@@ -309,14 +320,24 @@
     "closedLabel": "Ritualer & inställningar",
     "settingsRow": "Inställningar",
     "scaleLock": "Lås skalan",
-    "scaleLockHint": "urtavlan behåller sin nuvarande skala, även för en kort stund"
+    "scaleLockHint": "urtavlan behåller sin nuvarande skala, även för en kort stund",
+    "rotation": {
+      "counterclockwise": "Moturs",
+      "clockwise": "Medurs"
+    }
   },
   "dormantTips": {
     "palettes": "har du sett? dina färger har hela paletter — dra upp lådan längst ner.",
     "focus": "vill du ha en ren skärm? fokusläget väntar i lådan längst ner."
   },
   "soundsPanel": {
-    "counterFooter": "alla 8 ljud, dina för alltid — %{price}, en gång ›"
+    "counterFooter": "alla 8 ljud, dina för alltid — %{price}, en gång ›",
+    "sheetRow": "Ljud",
+    "title": "Ljud",
+    "included": "Ingår",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-ljud — prova det fritt",
+    "ambiancesDiscover": "Upptäck Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name} är lånad — vid nästa start går den hem igen.",

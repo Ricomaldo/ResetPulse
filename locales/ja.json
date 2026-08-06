@@ -121,7 +121,10 @@
     "marimba_dry": "マリンバ",
     "marimba_ascending": "上昇するマリンバ",
     "up_chime": "チャイム",
-    "success_glissando": "グリッサンド"
+    "success_glissando": "グリッサンド",
+    "timer_complete": "達成",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "画面をスリープさせない",
@@ -155,7 +158,12 @@
     "closeRitualForm": "ルーティンフォームを閉じる",
     "chooseCustomEmoji": "キーボードで別の絵文字を選択",
     "deleteRitual": "ルーティン%{name}を削除",
-    "favoriteRitual": "お気に入りルーティン%{name}"
+    "favoriteRitual": "お気に入りルーティン%{name}",
+    "soundItem": "サウンド：%{name}",
+    "activityLocked": "%{name}はロック中——Ambiancesを見てみる",
+    "customEmojiLocked": "カスタム絵文字はロック中——Ambiancesを見てみる",
+    "renameRitual": "ルーティン「%{name}」の名前を変更",
+    "renameRitualHint": "長押しで名前を変更"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "まずはアクティビティを選ぼう 👇",
     "companion": "この絵文字が一緒にいるよ。ディスクをスライドして時間を設定してね。",
     "dialColor": "色を変える? すぐに反映されるよ。",
-    "ready": "準備完了。ディスクをタップしてスタート。"
+    "ready": "準備完了。ディスクをタップしてスタート。",
+    "thresholdHint": "タップして続ける",
+    "keepMoment": "この瞬間をとっておく？",
+    "momentKept": "とっておいた ✨"
   },
   "aside": {
     "exitFocus": "フォーカスを終了",
@@ -309,14 +320,24 @@
     "closedLabel": "ルーティンと設定",
     "settingsRow": "設定",
     "scaleLock": "スケールを固定",
-    "scaleLockHint": "短い時間でも、文字盤は今のスケールを保つ"
+    "scaleLockHint": "短い時間でも、文字盤は今のスケールを保つ",
+    "rotation": {
+      "counterclockwise": "反時計回り",
+      "clockwise": "時計回り"
+    }
   },
   "dormantTips": {
     "palettes": "気づいた？色にはパレットがまるごとあるよ — 下の引き出しを引いてみて。",
     "focus": "何もない画面がいい？フォーカスモードが下の引き出しで待ってるよ。"
   },
   "soundsPanel": {
-    "counterFooter": "8種のサウンド全部、ずっとあなたのものに — %{price}、一度きり ›"
+    "counterFooter": "8種のサウンド全部、ずっとあなたのものに — %{price}、一度きり ›",
+    "sheetRow": "サウンド",
+    "title": "サウンド",
+    "included": "標準",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiancesサウンド——自由に試してみて",
+    "ambiancesDiscover": "Ambiancesを見てみる"
   },
   "coach": {
     "borrowedPalette": "%{name}は借り物 — 次に起動すると家に帰るよ。",

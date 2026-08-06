@@ -134,7 +134,10 @@
     "marimba_dry": "Маримба",
     "marimba_ascending": "Восходящая маримба",
     "up_chime": "Перезвон",
-    "success_glissando": "Глиссандо"
+    "success_glissando": "Глиссандо",
+    "timer_complete": "Готово",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Не блокировать экран",
@@ -168,7 +171,12 @@
     "closeRitualForm": "Закрыть форму ритуала",
     "chooseCustomEmoji": "Выбрать другой эмодзи с клавиатуры",
     "deleteRitual": "Удалить ритуал %{name}",
-    "favoriteRitual": "Избранный ритуал %{name}"
+    "favoriteRitual": "Избранный ритуал %{name}",
+    "soundItem": "Звук: %{name}",
+    "activityLocked": "%{name}, заблокировано — открой Ambiances",
+    "customEmojiLocked": "Свой эмодзи заблокирован — открой Ambiances",
+    "renameRitual": "Переименовать ритуал %{name}",
+    "renameRitualHint": "Удерживай, чтобы переименовать"
   },
   "twoTimers": {
     "title": "Вы создали 2 момента!",
@@ -301,7 +309,10 @@
     "welcome": "Начнём с выбора активности 👇",
     "companion": "Этот эмодзи составит тебе компанию. Проведи по диску, чтобы задать время.",
     "dialColor": "Цвет? Он меняется сразу же.",
-    "ready": "Всё готово. Коснись диска, чтобы начать."
+    "ready": "Всё готово. Коснись диска, чтобы начать.",
+    "thresholdHint": "коснись, чтобы продолжить",
+    "keepMoment": "сохранить этот момент?",
+    "momentKept": "сохранено ✨"
   },
   "aside": {
     "exitFocus": "Выйти из фокуса",
@@ -309,14 +320,24 @@
     "closedLabel": "Ритуалы и настройки",
     "settingsRow": "Настройки",
     "scaleLock": "Зафиксировать шкалу",
-    "scaleLockHint": "циферблат сохраняет текущую шкалу, даже для короткой длительности"
+    "scaleLockHint": "циферблат сохраняет текущую шкалу, даже для короткой длительности",
+    "rotation": {
+      "counterclockwise": "Против часовой стрелки",
+      "clockwise": "По часовой стрелке"
+    }
   },
   "dormantTips": {
     "palettes": "заметил? у твоих цветов есть целые палитры — потяни ящик снизу вверх.",
     "focus": "хочется чистого экрана? режим фокуса ждёт в ящике снизу."
   },
   "soundsPanel": {
-    "counterFooter": "все 8 звуков — твои навсегда — %{price}, один раз ›"
+    "counterFooter": "все 8 звуков — твои навсегда — %{price}, один раз ›",
+    "sheetRow": "Звуки",
+    "title": "Звуки",
+    "included": "В комплекте",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Звук Ambiances — попробуй бесплатно",
+    "ambiancesDiscover": "Открой Ambiances"
   },
   "coach": {
     "borrowedPalette": "%{name} одолжена — при следующем запуске она вернётся домой.",

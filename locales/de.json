@@ -121,7 +121,10 @@
     "marimba_dry": "Marimba",
     "marimba_ascending": "Aufsteigende Marimba",
     "up_chime": "Glockenspiel",
-    "success_glissando": "Glissando"
+    "success_glissando": "Glissando",
+    "timer_complete": "Geschafft",
+    "microwave_ping": "Ping",
+    "toaster_bell": "Pop"
   },
   "accessibility": {
     "keepAwake": "Bildschirm wach halten",
@@ -155,7 +158,12 @@
     "chooseCustomEmoji": "Ein anderes Emoji über die Tastatur wählen",
     "deleteRitual": "Ritual %{name} löschen",
     "favoriteRitual": "Favoritritual %{name}",
-    "distraction": "Ablenkung"
+    "distraction": "Ablenkung",
+    "soundItem": "Klang: %{name}",
+    "activityLocked": "%{name}, gesperrt — Ambiances entdecken",
+    "customEmojiLocked": "Eigenes Emoji gesperrt — Ambiances entdecken",
+    "renameRitual": "Ritual %{name} umbenennen",
+    "renameRitualHint": "Zum Umbenennen lange drücken"
   },
   "controls": {
     "digitalTimer": {
@@ -301,7 +309,10 @@
     "welcome": "Beginnen wir mit der Wahl einer Aktivität 👇",
     "companion": "Dieses Emoji leistet dir Gesellschaft. Schiebe die Scheibe, um deine Zeit einzustellen.",
     "dialColor": "Eine Farbe? Sie ändert sich sofort.",
-    "ready": "Alles bereit. Tippe auf die Scheibe, um zu starten."
+    "ready": "Alles bereit. Tippe auf die Scheibe, um zu starten.",
+    "thresholdHint": "tippe, um weiterzugehen",
+    "keepMoment": "diesen Moment behalten?",
+    "momentKept": "behalten ✨"
   },
   "aside": {
     "exitFocus": "Fokus verlassen",
@@ -309,14 +320,24 @@
     "closedLabel": "Rituale & Einstellungen",
     "settingsRow": "Einstellungen",
     "scaleLock": "Skala sperren",
-    "scaleLockHint": "das Zifferblatt behält seine aktuelle Skala, auch bei kurzer Dauer"
+    "scaleLockHint": "das Zifferblatt behält seine aktuelle Skala, auch bei kurzer Dauer",
+    "rotation": {
+      "counterclockwise": "Gegen den Uhrzeigersinn",
+      "clockwise": "Im Uhrzeigersinn"
+    }
   },
   "dormantTips": {
     "palettes": "schon gesehen? deine Farben haben ganze Paletten — wisch die Schublade unten hoch.",
     "focus": "Lust auf einen leeren Bildschirm? der Fokus-Modus wartet in der Schublade unten."
   },
   "soundsPanel": {
-    "counterFooter": "alle 8 Klänge, dir für immer — %{price}, einmalig ›"
+    "counterFooter": "alle 8 Klänge, dir für immer — %{price}, einmalig ›",
+    "sheetRow": "Klänge",
+    "title": "Klänge",
+    "included": "Enthalten",
+    "ambiances": "Ambiances",
+    "ambiancesTrialHint": "Ambiances-Klang — probier ihn frei aus",
+    "ambiancesDiscover": "Ambiances entdecken"
   },
   "coach": {
     "borrowedPalette": "%{name} ist geliehen — beim nächsten Start kehrt sie heim.",
