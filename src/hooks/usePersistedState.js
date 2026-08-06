@@ -124,9 +124,16 @@ export function deepMergeDefaults(defaults, stored) {
  * Hook pour persister plusieurs états dans un seul objet
  * @param {string} key - Clé unique pour le stockage
  * @param {Object} defaultValues - Objet avec les valeurs par défaut
+ * @param {Object} [options] - Options optionnelles
+ * @param {(stored: *) => *} [options.migrate] - Callback appliqué au blob
+ *   BRUT (JSON.parse'é) AVANT deepMergeDefaults — permet à une migration de
+ *   schéma versionné (cf. src/config/config-schema.js) de voir le blob tel
+ *   quel, sans que les défauts n'aient déjà comblé les champs manquants.
+ *   Défaut : identité, comportement inchangé pour tout appelant existant.
  * @returns {Object} {values, setValues, updateValue, isLoading}
  */
-export function usePersistedObject(key, defaultValues) {
+export function usePersistedObject(key, defaultValues, options = {}) {
+  const { migrate = (stored) => stored } = options;
   const [values, setValues] = useState(defaultValues);
   const [isLoading, setIsLoading] = useState(true);
   const isMountedRef = useRef(true);
@@ -139,12 +146,16 @@ export function usePersistedObject(key, defaultValues) {
         if (storedValue !== null && isMountedRef.current) {
           try {
             const parsed = JSON.parse(storedValue);
+            // migrate() voit le blob BRUT, avant tout comblement de champ —
+            // une migration de schéma (version) doit pouvoir distinguer un
+            // champ réellement absent d'un champ comblé par le merge.
+            const migrated = migrate(parsed);
             // Merge récursif avec les valeurs par défaut pour gérer les
             // nouvelles propriétés (deepMergeDefaults) — un simple spread
             // shallow écrase entièrement un sous-objet dès qu'une seule de
             // ses clés est nouvelle (classe MISSING-FIELD, cf. bug
             // shouldPulse/lockedScale).
-            setValues(deepMergeDefaults(defaultValues, parsed));
+            setValues(deepMergeDefaults(defaultValues, migrated));
           } catch (parseError) {
             logger.warn(`JSON parse error for key "${key}"`, parseError.message);
             // Keep default values
