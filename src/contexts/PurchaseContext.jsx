@@ -4,7 +4,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Platform, Alert } from 'react-native';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Purchases from 'react-native-purchases';
 import { REVENUECAT_CONFIG, ENTITLEMENTS } from '../config/revenuecat';
@@ -194,12 +194,9 @@ export const PurchaseProvider = ({ children }) => {
           // Track purchase completed (M7.5)
           Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
 
-          // Show celebration alert
-          Alert.alert(
-            i18n.t('premium.welcomeTitle'),
-            i18n.t('premium.welcomeMessage'),
-            [{ text: i18n.t('common.ok'), style: 'default' }]
-          );
+          // L'alerte de bienvenue vit dans PremiumModalContent.handlePurchase
+          // (elle porte onClose) — un doublon ici affichait deux Alert.alert
+          // successives à chaque achat réussi.
 
           return { success: true };
         }
@@ -218,12 +215,9 @@ export const PurchaseProvider = ({ children }) => {
       // Track purchase completed (M7.5)
       Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
 
-      // Show celebration alert
-      Alert.alert(
-        i18n.t('premium.welcomeTitle'),
-        i18n.t('premium.welcomeMessage'),
-        [{ text: i18n.t('common.ok'), style: 'default' }]
-      );
+      // L'alerte de bienvenue vit dans PremiumModalContent.handlePurchase
+      // (elle porte onClose) — un doublon ici affichait deux Alert.alert
+      // successives à chaque achat réussi.
 
       return { success: true };
     } catch (error) {
