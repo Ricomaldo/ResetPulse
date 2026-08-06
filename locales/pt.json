@@ -49,7 +49,8 @@
     "errorStore": "Problema com a loja. Tenta novamente mais tarde.",
     "errorPaymentPending": "Pagamento pendente. Verifica as tuas compras dentro de alguns minutos.",
     "errorRestoreGeneric": "Erro de restauro",
-    "errorGeneric": "Ocorreu um erro"
+    "errorGeneric": "Ocorreu um erro",
+    "dismiss": "Talvez mais tarde"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "distraction": {
       "tryMe": "surpreende-me"
     }
-  },
-  "twoTimers": {
-    "dismiss": "Talvez mais tarde"
   },
   "timerMessages": {
     "none": {

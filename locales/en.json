@@ -62,7 +62,8 @@
     "restoreError": "Unable to restore your purchases.",
     "unexpectedError": "An unexpected error occurred.",
     "contactSupport": "Contact Support",
-    "tooManyAttempts": "Please contact support if the issue persists."
+    "tooManyAttempts": "Please contact support if the issue persists.",
+    "dismiss": "Maybe later"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "favoriteRitual": "Favorite ritual %{name}",
     "renameRitual": "Rename the %{name} ritual",
     "renameRitualHint": "Long press to rename"
-  },
-  "twoTimers": {
-    "dismiss": "Maybe later"
   },
   "timerMessages": {
     "none": {

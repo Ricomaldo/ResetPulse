@@ -62,7 +62,8 @@
     "errorStore": "Проблема с магазином. Повторите попытку позже.",
     "errorPaymentPending": "Платёж обрабатывается. Проверьте покупки через несколько минут.",
     "errorRestoreGeneric": "Ошибка восстановления",
-    "errorGeneric": "Произошла ошибка"
+    "errorGeneric": "Произошла ошибка",
+    "dismiss": "Может быть, позже"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "customEmojiLocked": "Свой эмодзи заблокирован — открой Ambiances",
     "renameRitual": "Переименовать ритуал %{name}",
     "renameRitualHint": "Удерживай, чтобы переименовать"
-  },
-  "twoTimers": {
-    "dismiss": "Может быть, позже"
   },
   "timerMessages": {
     "none": {

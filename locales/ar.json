@@ -62,7 +62,8 @@
     "errorStore": "مشكلة في المتجر. حاول مرة أخرى لاحقاً.",
     "errorPaymentPending": "الدفع قيد الانتظار. تحقق من مشترياتك خلال دقائق قليلة.",
     "errorRestoreGeneric": "خطأ في الاستعادة",
-    "errorGeneric": "حدث خطأ"
+    "errorGeneric": "حدث خطأ",
+    "dismiss": "ربما لاحقاً"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "customEmojiLocked": "الإيموجي المخصص مقفل — اكتشف Ambiances",
     "renameRitual": "إعادة تسمية طقس %{name}",
     "renameRitualHint": "اضغط مطوّلًا لإعادة التسمية"
-  },
-  "twoTimers": {
-    "dismiss": "ربما لاحقاً"
   },
   "timerMessages": {
     "none": {

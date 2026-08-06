@@ -49,7 +49,8 @@
     "errorStore": "Probleem met de store. Probeer het later opnieuw.",
     "errorPaymentPending": "Betaling in behandeling. Controleer je aankopen over een paar minuten.",
     "errorRestoreGeneric": "Herstelfout",
-    "errorGeneric": "Er is een fout opgetreden"
+    "errorGeneric": "Er is een fout opgetreden",
+    "dismiss": "Misschien later"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "distraction": {
       "tryMe": "Verras me"
     }
-  },
-  "twoTimers": {
-    "dismiss": "Misschien later"
   },
   "timerMessages": {
     "none": {

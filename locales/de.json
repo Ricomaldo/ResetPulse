@@ -49,7 +49,8 @@
     "errorStore": "Problem mit dem Store. Versuche es später erneut.",
     "errorPaymentPending": "Zahlung ausstehend. Überprüfe deine Käufe in ein paar Minuten.",
     "errorRestoreGeneric": "Fehler bei der Wiederherstellung",
-    "errorGeneric": "Ein Fehler ist aufgetreten"
+    "errorGeneric": "Ein Fehler ist aufgetreten",
+    "dismiss": "Vielleicht später"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "distraction": {
       "tryMe": "Überrasche mich"
     }
-  },
-  "twoTimers": {
-    "dismiss": "Vielleicht später"
   },
   "timerMessages": {
     "none": {

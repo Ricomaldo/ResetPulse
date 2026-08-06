@@ -49,7 +49,8 @@
     "errorStore": "ストアで問題が発生しました。後でもう一度お試しください。",
     "errorPaymentPending": "支払い処理中です。数分後に購入状況をご確認ください。",
     "errorRestoreGeneric": "復元エラー",
-    "errorGeneric": "エラーが発生しました"
+    "errorGeneric": "エラーが発生しました",
+    "dismiss": "また今度"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "distraction": {
       "tryMe": "驚かせて"
     }
-  },
-  "twoTimers": {
-    "dismiss": "また今度"
   },
   "timerMessages": {
     "none": {

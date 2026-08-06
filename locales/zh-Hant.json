@@ -49,7 +49,8 @@
     "errorStore": "商店出現問題，請稍後再試。",
     "errorPaymentPending": "付款處理中。請稍後幾分鐘查看您的購買記錄。",
     "errorRestoreGeneric": "恢復錯誤",
-    "errorGeneric": "發生錯誤"
+    "errorGeneric": "發生錯誤",
+    "dismiss": "以後再說"
   },
   "activities": {
     "none": "基礎",
@@ -150,9 +151,6 @@
     "distraction": {
       "tryMe": "給我一個驚喜"
     }
-  },
-  "twoTimers": {
-    "dismiss": "以後再說"
   },
   "timerMessages": {
     "none": {

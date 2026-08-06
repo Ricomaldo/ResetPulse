@@ -62,7 +62,8 @@
     "restoreError": "Impossible de restaurer vos achats.",
     "unexpectedError": "Une erreur inattendue est survenue.",
     "contactSupport": "Contacter le support",
-    "tooManyAttempts": "Veuillez contacter le support si le problème persiste."
+    "tooManyAttempts": "Veuillez contacter le support si le problème persiste.",
+    "dismiss": "Peut-être plus tard"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "favoriteRitual": "Rituel favori %{name}",
     "renameRitual": "Renommer le rituel %{name}",
     "renameRitualHint": "Appui long pour renommer"
-  },
-  "twoTimers": {
-    "dismiss": "Peut-être plus tard"
   },
   "timerMessages": {
     "none": {

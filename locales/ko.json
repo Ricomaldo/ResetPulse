@@ -49,7 +49,8 @@
     "errorStore": "스토어에 문제가 있습니다. 나중에 다시 시도해 주세요.",
     "errorPaymentPending": "결제 대기 중입니다. 몇 분 후 구매 내역을 확인해 주세요.",
     "errorRestoreGeneric": "복원 오류",
-    "errorGeneric": "오류가 발생했습니다"
+    "errorGeneric": "오류가 발생했습니다",
+    "dismiss": "나중에요"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,9 +178,6 @@
     "distraction": {
       "tryMe": "놀라게 해줘"
     }
-  },
-  "twoTimers": {
-    "dismiss": "나중에요"
   },
   "timerMessages": {
     "none": {
