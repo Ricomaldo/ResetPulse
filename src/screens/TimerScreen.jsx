@@ -47,7 +47,7 @@ import { getPaletteInfo } from '../config/timer-palettes';
 import { getSoundById } from '../config/sounds';
 import { pickDistraction } from '../components/dial/movements/pickDistraction';
 import { pickVariant } from '../components/dial/movements/movements';
-import { shouldShowBreatheInvitation } from '../utils/breatheInvitation';
+import { shouldShowBreatheInvitation, shouldEvaluateBreatheInvitation } from '../utils/breatheInvitation';
 import haptics from '../utils/haptics';
 
 // Immersion (cadrage 3c) : durée du fondu chrome ↔ décor, et l'échelle que
@@ -456,7 +456,12 @@ function TimerScreenContent() {
   const t = useTranslation();
   const analytics = useAnalytics();
   const { completedSessions, incrementSessionCount, isLoading: sessionCountLoading } = useSessionCount();
-  const { isPremium } = usePremiumStatus();
+  // isLoading exposé aussi pour garder l'invitation « fais-le respirer »
+  // (plus bas) hors du tir tant que le statut premium n'est pas confirmé —
+  // c'est un effet à déclenchement UNIQUE (ref verrouillée + flag persisté),
+  // une décision prise sur un isPremium=false par défaut ne se corrige
+  // JAMAIS (audit fiabilité 06/08, décision Eric 07/08).
+  const { isPremium, isLoading: isPremiumLoading } = usePremiumStatus();
   const modalStack = useModalStack();
   // Soft-gating palettes (Lot 3b) : mémoire du dernier inclus + retour au
   // lancement si FREE et Ambiances actif — monté une fois ici, cf.
@@ -760,7 +765,7 @@ function TimerScreenContent() {
     if (breatheInvitationFiredRef.current) {
       return;
     }
-    if (sessionCountLoading || breatheInvitationLoading) {
+    if (!shouldEvaluateBreatheInvitation({ sessionCountLoading, breatheInvitationLoading, isPremiumLoading })) {
       return;
     }
     if (
@@ -779,6 +784,7 @@ function TimerScreenContent() {
   }, [
     snapshot.isCompleted,
     isPremium,
+    isPremiumLoading,
     completedSessions,
     hasSeenBreatheInvitation,
     sessionCountLoading,
