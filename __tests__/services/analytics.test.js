@@ -148,6 +148,27 @@ describe('services/analytics', () => {
     });
   });
 
+  describe('trackSheetOpened(via)', () => {
+    it("transmet via='tap' (poignée, AsideZone.jsx handleContainer.onPress)", async () => {
+      const analytics = loadAnalytics({ devMode: false });
+      await analytics.init();
+
+      analytics.trackSheetOpened('tap');
+
+      expect(mockCapture).toHaveBeenCalledWith('sheet_opened', { via: 'tap' });
+    });
+
+    it("transmet via='swipe' (pan gesture, AsideZone.jsx handleGestureEnd)", async () => {
+      const analytics = loadAnalytics({ devMode: false });
+      await analytics.init();
+
+      analytics.trackSheetOpened('swipe');
+
+      expect(mockCapture).toHaveBeenCalledWith('sheet_opened', { via: 'swipe' });
+
+    });
+  });
+
   describe('gate DEV_MODE dans init()', () => {
     it('ne crée pas de client PostHog quand DEV_MODE=true, même clé présente', async () => {
       const analytics = loadAnalytics({ devMode: true, apiKey: 'phc_test_key' });

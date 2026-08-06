@@ -105,12 +105,10 @@ const analyticsAdapter = {
     this.track('dice_rolled');
   },
 
-  trackSheetOpened() {
-    this.track('sheet_opened');
-  },
-
-  trackActivitySelected(activityIdValue) {
-    this.track('activity_selected', { activity_id: activityIdValue });
+  // via : 'tap' (poignée) | 'swipe' (pan gesture) — le produit supporte les
+  // deux chemins d'ouverture, la mesure doit distinguer lequel (audit 06/08).
+  trackSheetOpened(via) {
+    this.track('sheet_opened', { via });
   },
 
   // Appelée depuis useTimer.js (démarrage d'un timer sur une activité
