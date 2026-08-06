@@ -179,9 +179,6 @@
     }
   },
   "twoTimers": {
-    "title": "2つの瞬間を作成しました！",
-    "message": "もっと色やアクティビティを試してみますか？",
-    "explore": "発見する",
     "dismiss": "また今度"
   },
   "timerMessages": {

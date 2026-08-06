@@ -179,9 +179,6 @@
     }
   },
   "twoTimers": {
-    "title": "Criaste 2 momentos!",
-    "message": "Queres explorar mais cores e atividades?",
-    "explore": "Descobrir",
     "dismiss": "Talvez mais tarde"
   },
   "timerMessages": {

@@ -179,9 +179,6 @@
     }
   },
   "twoTimers": {
-    "title": "2개의 순간을 만들었어요!",
-    "message": "더 많은 색상과 활동을 살펴보시겠어요?",
-    "explore": "발견하다",
     "dismiss": "나중에요"
   },
   "timerMessages": {

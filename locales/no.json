@@ -179,9 +179,6 @@
     "renameRitualHint": "Hold inne for å gi nytt navn"
   },
   "twoTimers": {
-    "title": "Du har opprettet 2 øyeblikk!",
-    "message": "Vil du utforske flere farger og aktiviteter?",
-    "explore": "Oppdag",
     "dismiss": "Kanskje senere"
   },
   "timerMessages": {

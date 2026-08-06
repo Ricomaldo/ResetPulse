@@ -179,9 +179,6 @@
     }
   },
   "twoTimers": {
-    "title": "Du har skapat 2 ögonblick!",
-    "message": "Vill du utforska fler färger och aktiviteter?",
-    "explore": "Upptäck",
     "dismiss": "Kanske senare"
   },
   "timerMessages": {

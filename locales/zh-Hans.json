@@ -152,9 +152,6 @@
     }
   },
   "twoTimers": {
-    "title": "你已创建了2个时刻！",
-    "message": "想探索更多颜色和活动吗？",
-    "explore": "发现",
     "dismiss": "以后再说"
   },
   "timerMessages": {

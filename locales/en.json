@@ -179,9 +179,6 @@
     "renameRitualHint": "Long press to rename"
   },
   "twoTimers": {
-    "title": "You've created 2 moments!",
-    "message": "Want to explore more colors and activities?",
-    "explore": "Discover",
     "dismiss": "Maybe later"
   },
   "timerMessages": {
