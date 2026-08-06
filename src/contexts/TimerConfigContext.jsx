@@ -155,7 +155,7 @@ export const TimerConfigProvider = ({ children }) => {
       },
       palette: {
         currentPalette: 'serenity',
-        selectedColorIndex: 0,
+        currentColor: TIMER_PALETTES.serenity.colors[0],
       },
     };
   };

@@ -38,8 +38,8 @@ ResetPulse est une application Time Timer visuel pour utilisateurs neuroatypique
 - **Framework**: React Native 0.83.6 + Expo SDK 55 (New Architecture activée)
 - **React**: 19.1.0
 - **État**: Context API (TimerConfigContext consolidé ADR-009, PurchaseContext)
-- **i18n**: i18n-js (15 langues — refonte en FR/EN, batch final en fin de Lot 3)
-- **Analytics**: sortie Mixpanel faite (adaptateur no-op) → PostHog au Lot 2
+- **i18n**: i18n-js (15 langues COMPLÈTES — passe copies Claude design + delta intégrés 08/2026)
+- **Analytics**: PostHog ACTIF (cloud EU, clé réelle) — funnel complet activation/conversion par porte
 - **IAP**: RevenueCat (react-native-purchases)
 - **Package manager**: npm
 
@@ -73,7 +73,10 @@ src/
 ├── components/
 │   ├── dial/             # TimeTimer, TimerDial, DialCenter… (noyau visuel, récolté)
 │   ├── layout/           # AsideZone (sheet léger SCR-10), Icons
-│   └── modals/           # 🕰️ legacy — meurent en C6 (Rituels/Ambiances)
+│   ├── modals/           # PremiumModalContent (+PaywallHero), ModalStack
+│   ├── rituals/          # RitualsPanel, RitualForm (frontière ADR-017)
+│   ├── sounds/           # SoundsPanel (essai libre)
+│   └── first-run/        # Seuil (PulseLogo), tips, previews (ADR-016)
 ├── config/
 │   ├── activities.js     # Activités (atomes d'identité, ADR-015)
 │   ├── timer-palettes.js # Palettes de couleurs
@@ -88,14 +91,15 @@ src/
 └── theme/                # ThemeProvider, tokens, colors
 ```
 
-## Modèle Freemium — 🕰️ en refonte (ADR-014)
+## Modèle Freemium — ADR-017 (actif)
 
-Le modèle cible : **cœur gratuit entier** (disque, emoji, couleur en direct,
-activités et 3 rituels de base) + pack **Ambiances** en achat unique ≈ 4,99 €
-(mouvements, plein écran, exports, palettes complètes, rituels illimités).
-Détail : `_docs/specs/recentrage.md`. La répartition gratuit/payant des palettes
-est parquée — à trancher devant les écrans (C6+). L'ancien comportement
-(carrousels + modale Discovery) meurt en C6.
+**ADR-017 « vivre est gratuit, garder est payant »** (remplace « cœur
+gratuit entier ») : free = 3 rituels-templates FIGÉS + UN rituel perso
+(slot 4, né de « garde ce moment ») + vitrine 6 emojis + 3 palettes et
+4 sons (essai libre du reste, retombée au relancement). Ambiances 4,99 €
+une fois = tout, illimité, éditable. Portes = modale unique à héros par
+source (`paywall_viewed` ventilé) + guichet volontaire au sheet.
+ADR-018 « la parole hors les murs » gouverne notification/Live Activity.
 
 ## Mode développement
 
@@ -108,9 +112,8 @@ Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests
 ## État actuel du projet
 
 ### En production
-- v2.1.6 sur Apple App Store et Google Play (code d'AVANT le recentrage)
-- Analytics : Mixpanel sorti ; PostHog branché dormant (clé `null` dans
-  `src/config/posthog.js` — no-op tant qu'Eric n'a pas collé sa clé)
+- v2.1.6 sur les stores (code d'avant) ; **3.0.0 sur `main`, release train en cours** (icône E, fiches, builds autonomes)
+- Analytics : PostHog ACTIF (événements timer_*, ritual_*, first_moment_*, paywall_viewed par source, purchase_*)
 
 ### En cours
 - **`main` = le reborn 3.0** (merge 26/07/2026, Lots 1-2 + 3a) — pas encore
