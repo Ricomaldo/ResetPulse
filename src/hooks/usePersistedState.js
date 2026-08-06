@@ -62,6 +62,64 @@ export function usePersistedState(key, defaultValue) {
   return [value, setValue, isLoading];
 }
 
+function isPlainObject(val) {
+  return val !== null && typeof val === 'object' && !Array.isArray(val);
+}
+
+/**
+ * Merge récursif d'un objet stocké (AsyncStorage) sur des valeurs par
+ * défaut, pour combler les champs MISSING (nouvelles clés ajoutées au
+ * modèle depuis l'écriture du blob persisté) — classe distincte de la
+ * garde-fossile shouldPulse (TimerConfigContext), qui traite les valeurs
+ * INVALID, pas les champs absents. Les deux sont complémentaires : ce merge
+ * ne touche jamais un champ présent dans `stored`, y compris à `false`.
+ *
+ * Règles :
+ * - objets simples : récursif, `stored` gagne feuille par feuille : un
+ *   champ présent dans `defaults` et ABSENT de `stored` est injecté.
+ * - arrays et scalaires de `stored` : gagnent EN BLOC (jamais mergé avec
+ *   l'array par défaut).
+ * - `undefined` dans `stored` : traité comme absent → défaut injecté.
+ * - `null` explicite dans `stored` : conservé tel quel (null est une
+ *   valeur, cf. display.lockedScale).
+ *
+ * Fonction pure — aucune dépendance à AsyncStorage/React.
+ *
+ * @param {*} defaults - Valeurs par défaut
+ * @param {*} stored - Valeurs parsées depuis le storage
+ * @returns {*} Résultat fusionné
+ */
+export function deepMergeDefaults(defaults, stored) {
+  if (!isPlainObject(defaults) || !isPlainObject(stored)) {
+    return stored === undefined ? defaults : stored;
+  }
+
+  const result = {};
+  const keys = new Set([...Object.keys(defaults), ...Object.keys(stored)]);
+
+  keys.forEach((key) => {
+    const defaultVal = defaults[key];
+
+    if (!(key in stored)) {
+      result[key] = defaultVal;
+      return;
+    }
+
+    const storedVal = stored[key];
+
+    if (storedVal === undefined) {
+      result[key] = defaultVal;
+    } else if (isPlainObject(defaultVal) && isPlainObject(storedVal)) {
+      result[key] = deepMergeDefaults(defaultVal, storedVal);
+    } else {
+      // Array, scalaire ou null : stored gagne en bloc.
+      result[key] = storedVal;
+    }
+  });
+
+  return result;
+}
+
 /**
  * Hook pour persister plusieurs états dans un seul objet
  * @param {string} key - Clé unique pour le stockage
@@ -81,8 +139,12 @@ export function usePersistedObject(key, defaultValues) {
         if (storedValue !== null && isMountedRef.current) {
           try {
             const parsed = JSON.parse(storedValue);
-            // Merge avec les valeurs par défaut pour gérer les nouvelles propriétés
-            setValues({ ...defaultValues, ...parsed });
+            // Merge récursif avec les valeurs par défaut pour gérer les
+            // nouvelles propriétés (deepMergeDefaults) — un simple spread
+            // shallow écrase entièrement un sous-objet dès qu'une seule de
+            // ses clés est nouvelle (classe MISSING-FIELD, cf. bug
+            // shouldPulse/lockedScale).
+            setValues(deepMergeDefaults(defaultValues, parsed));
           } catch (parseError) {
             logger.warn(`JSON parse error for key "${key}"`, parseError.message);
             // Keep default values
