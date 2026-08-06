@@ -5,12 +5,5 @@
  */
 
 export { default as ErrorBoundary } from './ErrorBoundary';
-export {
-  default as Icons,
-  PlayIcon,
-  PauseIcon,
-  ResetIcon,
-  ReverseIcon,
-  SettingsIcon,
-} from './Icons';
+export { PlayIcon, ResetIcon } from './Icons';
 export { default as AsideZone } from './AsideZone';

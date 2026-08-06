@@ -1,6 +1,6 @@
 /**
  * @fileoverview Shared button styles utility for ResetPulse
- * Central location for button styling logic used by Button.jsx and IconButton.jsx
+ * Central location for button styling logic used by Button.jsx
  * @created 2025-12-19
  */
 
