@@ -1,0 +1,13 @@
+appId: com.irimwebforge.resetpulse
+---
+- launchApp
+- waitForAnimationToEnd
+- takeScreenshot: p3f-01-home
+- tapOn:
+    point: "50%,87%"
+- waitForAnimationToEnd
+- takeScreenshot: p3f-02-sheet-racine
+- tapOn:
+    point: "50%,71%"
+- waitForAnimationToEnd
+- takeScreenshot: p3f-03-modale-restore

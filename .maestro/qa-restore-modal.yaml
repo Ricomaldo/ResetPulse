@@ -1,0 +1,15 @@
+# QA ciblée passe 3 — sheet + modale Ambiances (Restore remonté)
+appId: com.irimwebforge.resetpulse
+---
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    text: "RITUELS & RÉGLAGES"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: p3-01-sheet-racine
+- tapOn:
+    text: "Ambiances"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: p3-02-modale-restore
