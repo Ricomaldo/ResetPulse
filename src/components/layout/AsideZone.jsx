@@ -111,7 +111,11 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
   // Guichet Ambiances (Lambda T, 1a) — masqué pour un premium, rien à
   // vendre. Prix dynamique même source RevenueCat que PremiumModalContent
   // (cf. useAmbiancesPrice) ; repli '4,99 €' tant que l'offre ne répond pas.
-  const { isPremium } = usePremiumStatus();
+  // Gate isLoading (audit fiabilité 06/08, décision Eric 07/08 « rien
+  // plutôt que skeleton ») : pendant l'init RevenueCat, un premium sans
+  // cache valide ne doit JAMAIS voir cette rangée d'achat — même
+  // transitoirement. Ni free ni skeleton : rien, jusqu'à statut confirmé.
+  const { isPremium, isLoading: isPremiumLoading } = usePremiumStatus();
   const ambiancesPrice = useAmbiancesPrice();
   const counterSwatchColors = TIMER_PALETTES.serenity.colors;
   // Continuité paysage (3c) : useWindowDimensions (pas Dimensions.get figé
@@ -768,7 +772,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
                             les autres sont réactives). Tap → paywall
                             générique, SANS highlightedFeature (décision CD :
                             le guichet n'a pas de héros). Masqué en premium. */}
-                        {!isPremium && (
+                        {!isPremiumLoading && !isPremium && (
                           <TouchableOpacity
                             testID="aside.ambiancesCounter"
                             style={styles.counterRow}

@@ -40,7 +40,11 @@ export default function PalettesPanel({ onBack, maxHeight, onBorrowed }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
-  const { isPremium } = usePremiumStatus();
+  // Gate isLoading (audit fiabilité 06/08, décision Eric 07/08 « rien
+  // plutôt que skeleton ») : pendant l'init RevenueCat, ni le pied de
+  // section guichet ni la ligne d'invitation « emprunt actif » ne doivent
+  // se rendre pour un premium sans cache valide, même transitoirement.
+  const { isPremium, isLoading: isPremiumLoading } = usePremiumStatus();
   const modalStack = useModalStack();
   // Pied de section guichet (Lambda T, 1b) — prix dynamique même source
   // RevenueCat que PremiumModalContent (cf. useAmbiancesPrice).
@@ -67,7 +71,7 @@ export default function PalettesPanel({ onBack, maxHeight, onBorrowed }) {
   // (pas un state) qui verrouille dès le premier affichage de ce montage,
   // pas à chaque re-render/changement de palette pendant que le panel reste
   // ouvert.
-  const showAmbiancesHint = !isPremium && isPalettePremium(currentPalette);
+  const showAmbiancesHint = !isPremiumLoading && !isPremium && isPalettePremium(currentPalette);
   const hasTrackedShownRef = useRef(false);
   useEffect(() => {
     if (showAmbiancesHint && !hasTrackedShownRef.current) {
@@ -246,7 +250,7 @@ export default function PalettesPanel({ onBack, maxHeight, onBorrowed }) {
         {/* Pied de section guichet (Lambda T, 1b) — entrée volontaire,
             toujours visible pour un FREE (coexiste avec la ligne d'emprunt
             actif ci-dessous, décision CD). Masqué en premium. */}
-        {!isPremium && (
+        {!isPremiumLoading && !isPremium && (
           <TouchableOpacity
             testID="palettesPanel.counterFooter"
             style={styles.counterFooter}

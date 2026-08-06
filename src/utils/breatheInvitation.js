@@ -18,4 +18,20 @@ export function shouldShowBreatheInvitation({
   );
 }
 
+// Gate isLoading (audit fiabilité 06/08, décision Eric 07/08 « rien plutôt
+// que skeleton ») : cette invitation se décide dans un effet à
+// déclenchement UNIQUE (ref verrouillée côté TimerScreen + flag persisté
+// `hasSeenBreatheInvitation`) — une décision prise sur `isPremium=false`
+// pendant l'init RevenueCat (avant confirmation du statut réel) ne se
+// corrige JAMAIS, contrairement aux surfaces qui se re-rendent à chaque
+// changement d'état. Extraite en fonction pure (comme shouldShowBreatheInvitation
+// ci-dessus) pour rester testable sans monter TimerScreen.
+export function shouldEvaluateBreatheInvitation({
+  sessionCountLoading,
+  breatheInvitationLoading,
+  isPremiumLoading,
+}) {
+  return !sessionCountLoading && !breatheInvitationLoading && !isPremiumLoading;
+}
+
 export default shouldShowBreatheInvitation;

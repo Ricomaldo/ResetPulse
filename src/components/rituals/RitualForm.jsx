@@ -163,7 +163,14 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
   const theme = useTheme();
   const t = useTranslation();
   const { customActivities, createActivity, canCreateActivity } = useCustomActivities();
-  const { isPremium } = usePremiumStatus();
+  // Gate isLoading (audit fiabilité 06/08, décision Eric 07/08 « rien
+  // plutôt que skeleton ») : la grille étendue (reste du catalogue built-in
+  // + emoji custom) est un vrai MUR, pas un essai libre (cf. `unlocked`/
+  // `customEmojiUnlocked` plus bas) — pendant l'init RevenueCat on NE PEUT
+  // PAS deviner un état sans risquer soit un faux verrou (premium sans
+  // cache), soit une fuite (free vu comme débloqué, activité payante
+  // appliquée sans porte). On masque la grille entière le temps du chargement.
+  const { isPremium, isLoading: isPremiumLoading } = usePremiumStatus();
   const modalStack = useModalStack();
   const [showEmojiGrid, setShowEmojiGrid] = useState(false);
   // porte-3 (demande Eric) : « autre… » — en complément de la grille curée,
@@ -539,7 +546,7 @@ export default function RitualForm({ initialRitual, onSave, onCancel, onDelete, 
               )}
             </TouchableOpacity>
           </View>
-          {showEmojiGrid && (
+          {showEmojiGrid && !isPremiumLoading && (
             <View style={styles.emojiGrid}>
               {/* ADR-017 §4 : le reste du catalogue built-in — grisé, porte
                   Ambiances au tap. Sauf l'activité DÉJÀ appliquée à ce
