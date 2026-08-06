@@ -3,7 +3,6 @@
     "cancel": "Avbryt",
     "ok": "OK",
     "retry": "Försök igen",
-    "continue": "Fortsätt",
     "back": "Tillbaka",
     "delete": "Ta bort"
   },
@@ -12,176 +11,22 @@
   },
   "invitation": "Redo?",
   "onboarding": {
-    "restartGuide": "Starta om guiden",
-    "restartGuideDescription": "Visa välkomstskärmen och tipsen igen",
-    "paywall": {
-      "title": "Du skapade ditt första moment",
-      "profile": "Profil:",
-      "question": "Vill du skapa mer?",
-      "valueProposition": "15 paletter · 16 aktiviteter · Obegränsad kreativitet",
-      "price": "4,99€ — En gång, för alltid",
-      "ctaTrial": "Prova 7 dagar gratis"
-    },
-    "intentions": {
-      "title": "Vad är det till för?",
-      "relax": {
-        "label": "Koppla av",
-        "defaultName": "Meditation"
-      },
-      "work": {
-        "label": "Arbeta",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "Skapa",
-        "defaultName": "Skapande"
-      },
-      "learn": {
-        "label": "Lära",
-        "defaultName": "Studier"
-      },
-      "move": {
-        "label": "Röra på sig",
-        "defaultName": "Träning"
-      },
-      "other": {
-        "label": "Annat",
-        "defaultName": "Mitt ögonblick"
-      },
-      "q1": {
-        "title": "Din timer skulle vara för...",
-        "focus": "Fokusera bättre",
-        "launch": "Hjälpa mig komma igång",
-        "breathe": "Ta tid för mig själv",
-        "children": "Rama in en stund med mina barn",
-        "other": "Något annat...",
-        "otherPlaceholder": "Som vad?"
-      },
-      "q2": {
-        "title": "Lite hjälp med...",
-        "starting": "Komma igång",
-        "finishing": "Fullfölja",
-        "staying": "Hålla fokus",
-        "managing": "Hantera min tid bättre",
-        "other": "Något annat...",
-        "otherPlaceholder": "Som vad?"
-      }
-    },
     "creation": {
-      "sectionTitle": "Ditt första ögonblick",
-      "cta": "Skapa mitt ögonblick",
-      "durationLabel": "Hur länge?",
-      "namePlaceholder": "Namnge ditt ögonblick..."
-    },
-    "launch": {
-      "title": "Nu kör vi!",
-      "subtitle": "Ditt första ögonblick är klart. Tryck för att börja.",
-      "cta": "Starta min timer",
-      "ctaHint": "Starta din första timer",
-      "defaultActivity": "Mitt ögonblick"
+      "cta": "Skapa mitt ögonblick"
     },
     "v2": {
-      "filter0": {
-        "breathe": "Din tid tillhör dig",
-        "tapToContinue": "När du är redo"
-      },
       "filter1": {
-        "title": "en timer som anpassar sig efter dig.",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "Missa inte när dina ögonblick tar slut",
-        "body": "Din timer meddelar dig även om du använder en annan app eller din skärm är låst.",
-        "ctaPrimary": "Ja, meddela mig",
-        "ctaSecondary": "Kanske senare"
-      },
-      "filter5b": {
-        "title": "Din ringsignal",
-        "skip": "Hoppa över →"
+        "title": "en timer som anpassar sig efter dig."
       }
     }
   },
   "settings": {
     "title": "Inställningar",
-    "interface": {},
-    "timer": {
-      "soundDescription": "Välj ljudet som ska spelas när timern tar slut",
-      "keepAwakeDescriptionOn": "Skärmen förblir vaken under timern",
-      "keepAwakeDescriptionOff": "Skärmen kan låsas under timern",
-      "dialScale": "Skivans intervall",
-      "dialScaleDescription": "Maximal längd som visas på skivan",
-      "longPressStart": "Aktivera långtryck för att starta",
-      "longPressStartDescriptionOn": "Håll intryckt för att starta timern",
-      "longPressStartDescriptionOff": "Enkel tryckning för att starta",
-      "longPressStop": "Aktivera långtryck för att stoppa",
-      "longPressStopDescriptionOn": "Håll intryckt för att stoppa timern",
-      "longPressStopDescriptionOff": "Enkel tryckning för att stoppa"
-    },
-    "appearance": {
-      "themeLight": "☀️ Ljust",
-      "themeDark": "🌙 Mörkt",
-      "themeAuto": "📱 Auto",
-      "themeDescriptionAuto": "Automatiskt (system)",
-      "themeDescriptionDark": "Mörkt",
-      "themeDescriptionLight": "Ljust"
-    },
-    "about": {
-      "title": "Om",
-      "appName": "ResetPulse",
-      "appDescription": "Anpassningsbar visuell timer",
-      "version": "Version"
-    },
-    "tool": {
-      "sectionTitle": "Minimalt visningsläge",
-      "creative": {
-        "label": "Kreativ",
-        "description": "Färgkarusell"
-      },
-      "multitask": {
-        "label": "Multitasking",
-        "description": "Aktivitetskarusell"
-      },
-      "precision": {
-        "label": "Precision",
-        "description": "Digital timer med +/- kontroller"
-      }
-    },
-    "sections": {
-      "configuration": "KONFIGURATION",
-      "timerOptions": "Timeralternativ",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "Aviseringsljud",
-      "theme": "Tema",
-      "favorites": "DINA FAVORITER",
-      "ambiance": "AMBIANCE",
-      "info": "INFO"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "Favoritpaletter",
-        "description": "Välj upp till 4 favoritpaletter (%{count}/4)",
-        "morePalettes": "Fler paletter"
-      },
-      "activities": {
-        "title": "Favoritaktiviteter",
-        "description": "Välj upp till 4 favoritaktiviteter (%{count}/4)",
-        "more": "Mer"
-      }
-    },
     "options": {
-      "activityEmoji": "Aktivitetsemoji i mitten",
-      "activityEmojiDescriptionOn": "Emoji visas i mitten av skivan",
-      "activityEmojiDescriptionOff": "Emoji är dold",
       "pulseAnimation": "andande glöd"
     }
   },
   "premium": {
-    "title": "Lås upp allt",
-    "description": "Alla färger.\nAlla aktiviteter.\nDin maximala komfort.",
-    "features": "7 DAGAR GRATIS",
-    "price": "Sedan %{price} en gång.\nDin för alltid.",
     "restore": "Återställ mina köp",
     "welcomeTitle": "Välkommen till Ambiances! 🎉",
     "welcomeMessage": "Alla paletter, obegränsade ritualer och Ambiances-ljud är nu upplåsta.",
@@ -282,18 +127,12 @@
     "keepAwake": "Håll skärmen vaken",
     "rotationDirection": "Rotationsriktning",
     "colorNumber": "Färg %{number}",
-    "discoverMorePalettes": "Tryck för att upptäcka fler paletter",
     "celebrationEmoji": "Firande",
-    "closeCreateActivity": "Stäng skapa aktivitet",
-    "closeEditActivity": "Stäng redigera aktivitet",
     "closeModalHint": "Stänger den här dialogrutan och återgår till appen",
     "closePremiumModal": "Stäng Ambiances-erbjudande",
-    "createActivityHint": "Skapar den anpassade aktiviteten och lägger till den i din lista",
-    "deleteActivityHint": "Tar bort den här anpassade aktiviteten permanent",
     "exploreSettingsHint": "Öppnar inställningar för att upptäcka premiumfunktioner",
     "restorePurchases": "Återställ tidigare köp",
     "restorePurchasesHint": "Återställ Ambiances-åtkomst om du redan har köpt",
-    "saveActivityHint": "Sparar ändringar för den här aktiviteten",
     "timer": {
       "dialAdjustable": "Justerbar. Svep upp eller ner för att ändra längden.",
       "dialTapToToggle": "Tryck för att starta eller pausa timern",
@@ -304,7 +143,6 @@
       "activityCompleted": "%{activity} avslutad",
       "startTimer": "Starta timer",
       "stopTimer": "Stoppa timer",
-      "resetTimer": "Återställ timer",
       "dial": "Timerskiva, %{minutes} minuter inställda, %{activity}"
     },
     "unlockPremium": "Lås upp Ambiances för %{price}",
@@ -315,53 +153,14 @@
     "createRitual": "Skapa en ritual",
     "closeRitualForm": "Stäng ritualformuläret",
     "chooseCustomEmoji": "Välj en annan emoji via tangentbordet",
-    "ritualNamePreset": "Förinställd ritual %{name}",
     "deleteRitual": "Ta bort ritualen %{name}",
     "favoriteRitual": "Favoritritual %{name}",
     "distraction": "Distraktion"
   },
-  "customActivities": {
-    "toast": {
-      "created": "Moment créé avec succès",
-      "updated": "Moment mis à jour",
-      "deleted": "Moment supprimé"
-    },
-    "addButton": "Ajouter un moment",
-    "create": {
-      "title": "Skapa aktivitet",
-      "namePlaceholder": "T.ex: Gitarr, Matlagning...",
-      "nameLabel": "Aktivitetens namn",
-      "emojiLabel": "Välj emoji",
-      "emojiPlaceholder": "Tryck för att välja",
-      "durationLabel": "Standardlängd",
-      "preview": "Förhandsgranskning",
-      "previewPlaceholder": "Min aktivitet",
-      "buttonCreate": "Skapa",
-      "errorTitle": "Information saknas",
-      "errorEmoji": "Välj en emoji för din aktivitet.",
-      "errorName": "Ange ett namn för din aktivitet."
-    },
-    "edit": {
-      "title": "Redigera aktivitet",
-      "buttonSave": "Spara",
-      "buttonDelete": "Ta bort",
-      "deleteConfirmTitle": "Ta bort?",
-      "deleteConfirmMessage": "Den här åtgärden kan inte ångras.",
-      "usageStats": "Använd %{count} gånger"
-    },
-    "duration": {
-      "minutes": "min"
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Minska längd",
-      "increaseDuration": "Öka längd",
-      "timeLabel": "Tid: %{time}",
-      "durationLabel": "Längd: %{time}",
-      "showTime": "Visa tid",
-      "tapToHide": "Tryck för att dölja",
-      "tapToShow": "Tryck för att visa"
+      "increaseDuration": "Öka längd"
     },
     "rotation": {
       "clockwise": "Medurs",
@@ -461,14 +260,12 @@
     "list": {
       "title": "Mina ritualer",
       "createRow": "Skapa en ritual",
-      "empty": "Inga ritualer än",
-      "durationBadge": "%{minutes} min"
+      "empty": "Inga ritualer än"
     },
     "form": {
       "createTitle": "Skapa en ritual",
       "editTitle": "Redigera ritual",
       "emojiLabel": "Emoji",
-      "emojiCustomButton": "Annan emoji",
       "colorLabel": "Färg",
       "durationLabel": "Varaktighet",
       "soundLabel": "Slutljud",
@@ -508,7 +305,6 @@
   },
   "aside": {
     "exitFocus": "Lämna fokus",
-    "doubleTapHint": "Tips: dubbeltryck på bakgrunden för att växla",
     "handle": "Öppna inställningar",
     "closedLabel": "Ritualer & inställningar",
     "settingsRow": "Inställningar",

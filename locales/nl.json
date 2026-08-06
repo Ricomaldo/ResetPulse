@@ -3,7 +3,6 @@
     "cancel": "Annuleren",
     "ok": "OK",
     "retry": "Opnieuw proberen",
-    "continue": "Doorgaan",
     "back": "Terug",
     "delete": "Verwijderen"
   },
@@ -12,176 +11,22 @@
   },
   "invitation": "Klaar?",
   "onboarding": {
-    "restartGuide": "Handleiding opnieuw starten",
-    "restartGuideDescription": "Welkomstscherm en tips opnieuw tonen",
-    "paywall": {
-      "title": "Je hebt je eerste moment gemaakt",
-      "profile": "Profiel:",
-      "question": "Zin om meer te maken?",
-      "valueProposition": "15 paletten · 16 activiteiten · Onbeperkt creatief",
-      "price": "4,99€ — Eenmaal, voor altijd",
-      "ctaTrial": "7 dagen gratis proberen"
-    },
-    "intentions": {
-      "title": "Waarvoor is het?",
-      "relax": {
-        "label": "Ontspannen",
-        "defaultName": "Meditatie"
-      },
-      "work": {
-        "label": "Werken",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "Creëren",
-        "defaultName": "Creatie"
-      },
-      "learn": {
-        "label": "Leren",
-        "defaultName": "Studeren"
-      },
-      "move": {
-        "label": "Bewegen",
-        "defaultName": "Work-out"
-      },
-      "other": {
-        "label": "Anders",
-        "defaultName": "Mijn moment"
-      },
-      "q1": {
-        "title": "Jouw timer zou zijn voor...",
-        "focus": "Beter focussen",
-        "launch": "Mij helpen op gang te komen",
-        "breathe": "Tijd voor mezelf nemen",
-        "children": "Een moment met mijn kinderen afbakenen",
-        "other": "Iets anders...",
-        "otherPlaceholder": "Zoals wat?"
-      },
-      "q2": {
-        "title": "Een beetje hulp bij...",
-        "starting": "Op gang komen",
-        "finishing": "Het afmaken",
-        "staying": "Gefocust blijven",
-        "managing": "Mijn tijd beter beheren",
-        "other": "Iets anders...",
-        "otherPlaceholder": "Zoals wat?"
-      }
-    },
     "creation": {
-      "sectionTitle": "Jouw eerste moment",
-      "cta": "Mijn moment maken",
-      "durationLabel": "Hoe lang?",
-      "namePlaceholder": "Geef je moment een naam..."
-    },
-    "launch": {
-      "title": "Daar gaan we!",
-      "subtitle": "Jouw eerste moment is klaar. Tik om te beginnen.",
-      "cta": "Mijn timer starten",
-      "ctaHint": "Start je eerste timer",
-      "defaultActivity": "Mijn moment"
+      "cta": "Mijn moment maken"
     },
     "v2": {
-      "filter0": {
-        "breathe": "Jouw tijd is van jou",
-        "tapToContinue": "Wanneer je klaar bent"
-      },
       "filter1": {
-        "title": "een timer die zich aan jou aanpast.",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "Mis het einde van je momenten niet",
-        "body": "Je timer waarschuwt je, ook als je een andere app gebruikt of je scherm vergrendeld is.",
-        "ctaPrimary": "Ja, waarschuw me",
-        "ctaSecondary": "Misschien later"
-      },
-      "filter5b": {
-        "title": "Jouw geluid",
-        "skip": "Overslaan →"
+        "title": "een timer die zich aan jou aanpast."
       }
     }
   },
   "settings": {
     "title": "Instellingen",
-    "interface": {},
-    "timer": {
-      "soundDescription": "Kies het geluid dat aan het einde van de timer wordt afgespeeld",
-      "keepAwakeDescriptionOn": "Scherm blijft wakker tijdens timer",
-      "keepAwakeDescriptionOff": "Scherm kan vergrendelen tijdens timer",
-      "longPressStart": "Lang indrukken om te starten inschakelen",
-      "longPressStartDescriptionOn": "Ingedrukt houden om de timer te starten",
-      "longPressStartDescriptionOff": "Eenvoudige tik om te starten",
-      "longPressStop": "Lang indrukken om te stoppen inschakelen",
-      "longPressStopDescriptionOn": "Ingedrukt houden om de timer te stoppen",
-      "longPressStopDescriptionOff": "Eenvoudige tik om te stoppen",
-      "dialScale": "Wijzerplaatbereik",
-      "dialScaleDescription": "Maximale duur die op de wijzerplaat wordt weergegeven"
-    },
-    "appearance": {
-      "themeLight": "☀️ Licht",
-      "themeDark": "🌙 Donker",
-      "themeAuto": "📱 Auto",
-      "themeDescriptionAuto": "Automatisch (systeem)",
-      "themeDescriptionDark": "Donker",
-      "themeDescriptionLight": "Licht"
-    },
-    "about": {
-      "title": "Over",
-      "appName": "ResetPulse",
-      "appDescription": "Aanpasbare visuele timer",
-      "version": "Versie"
-    },
-    "tool": {
-      "sectionTitle": "Minimale weergavemodus",
-      "creative": {
-        "label": "Creatief",
-        "description": "Kleurcarrousel"
-      },
-      "multitask": {
-        "label": "Multitasken",
-        "description": "Activiteitencarrousel"
-      },
-      "precision": {
-        "label": "Precisie",
-        "description": "Digitale timer met +/- bediening"
-      }
-    },
-    "sections": {
-      "configuration": "CONFIGURATIE",
-      "timerOptions": "Timeropties",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "Meldingsgeluid",
-      "theme": "Thema",
-      "favorites": "JOUW FAVORIETEN",
-      "ambiance": "AMBIANCE",
-      "info": "INFO"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "Favoriete paletten",
-        "description": "Selecteer tot 4 favoriete paletten (%{count}/4)",
-        "morePalettes": "Meer paletten"
-      },
-      "activities": {
-        "title": "Favoriete activiteiten",
-        "description": "Selecteer tot 4 favoriete activiteiten (%{count}/4)",
-        "more": "Meer"
-      }
-    },
     "options": {
-      "activityEmoji": "Activiteitsemoji in het midden",
-      "activityEmojiDescriptionOn": "Emoji wordt in het midden van de wijzerplaat getoond",
-      "activityEmojiDescriptionOff": "Emoji is verborgen",
       "pulseAnimation": "ademende gloed"
     }
   },
   "premium": {
-    "title": "Ontgrendel alles",
-    "description": "Alle kleuren.\nAlle activiteiten.\nJouw maximale comfort.",
-    "features": "7 DAGEN GRATIS",
-    "price": "Daarna %{price} eenmalig.\nVan jou voor altijd.",
     "restore": "Mijn aankopen herstellen",
     "welcomeTitle": "Welkom bij Ambiances! 🎉",
     "welcomeMessage": "Alle paletten, onbeperkte rituelen en Ambiances-geluiden zijn nu ontgrendeld.",
@@ -282,18 +127,12 @@
     "keepAwake": "Scherm wakker houden",
     "rotationDirection": "Draairichting",
     "colorNumber": "Kleur %{number}",
-    "discoverMorePalettes": "Tik om meer paletten te ontdekken",
     "celebrationEmoji": "Viering",
-    "closeCreateActivity": "Activiteit maken sluiten",
-    "closeEditActivity": "Activiteit bewerken sluiten",
     "closeModalHint": "Sluit dit dialoogvenster en keert terug naar de app",
     "closePremiumModal": "Ambiances-aanbieding sluiten",
-    "createActivityHint": "Maakt de aangepaste activiteit en voegt deze toe aan je lijst",
-    "deleteActivityHint": "Verwijdert deze aangepaste activiteit permanent",
     "exploreSettingsHint": "Opent instellingen om premium functies te ontdekken",
     "restorePurchases": "Eerdere aankopen herstellen",
     "restorePurchasesHint": "Ambiances-toegang herstellen als je al hebt gekocht",
-    "saveActivityHint": "Slaat wijzigingen aan deze activiteit op",
     "timer": {
       "dialAdjustable": "Aanpasbaar. Veeg omhoog of omlaag om de duur te wijzigen.",
       "dialTapToToggle": "Tik om de timer te starten of te pauzeren",
@@ -304,7 +143,6 @@
       "activityCompleted": "%{activity} voltooid",
       "startTimer": "Timer starten",
       "stopTimer": "Timer stoppen",
-      "resetTimer": "Timer resetten",
       "dial": "Timerwijzerplaat, %{minutes} minuten ingesteld, %{activity}"
     },
     "unlockPremium": "Ambiances ontgrendelen voor %{price}",
@@ -315,53 +153,14 @@
     "createRitual": "Een ritueel maken",
     "closeRitualForm": "Het ritueelformulier sluiten",
     "chooseCustomEmoji": "Een ander emoji via het toetsenbord kiezen",
-    "ritualNamePreset": "Vooraf ingesteld ritueel %{name}",
     "deleteRitual": "Ritueel %{name} verwijderen",
     "favoriteRitual": "Favoriet ritueel %{name}",
     "distraction": "Afleiding"
   },
-  "customActivities": {
-    "toast": {
-      "created": "Moment créé avec succès",
-      "updated": "Moment mis à jour",
-      "deleted": "Moment supprimé"
-    },
-    "addButton": "Ajouter un moment",
-    "create": {
-      "title": "Activiteit aanmaken",
-      "namePlaceholder": "Bijv: Gitaar, Koken...",
-      "nameLabel": "Naam van de activiteit",
-      "emojiLabel": "Emoji kiezen",
-      "emojiPlaceholder": "Tik om te kiezen",
-      "durationLabel": "Standaardduur",
-      "preview": "Voorbeeld",
-      "previewPlaceholder": "Mijn activiteit",
-      "buttonCreate": "Aanmaken",
-      "errorTitle": "Ontbrekende informatie",
-      "errorEmoji": "Kies een emoji voor je activiteit.",
-      "errorName": "Voer een naam in voor je activiteit."
-    },
-    "edit": {
-      "title": "Activiteit bewerken",
-      "buttonSave": "Opslaan",
-      "buttonDelete": "Verwijderen",
-      "deleteConfirmTitle": "Verwijderen?",
-      "deleteConfirmMessage": "Deze actie is onomkeerbaar.",
-      "usageStats": "%{count} keer gebruikt"
-    },
-    "duration": {
-      "minutes": "min"
-    }
-  },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "Duur verlagen",
-      "increaseDuration": "Duur verhogen",
-      "timeLabel": "Tijd: %{time}",
-      "durationLabel": "Duur: %{time}",
-      "showTime": "Tijd tonen",
-      "tapToHide": "Tik om te verbergen",
-      "tapToShow": "Tik om te tonen"
+      "increaseDuration": "Duur verhogen"
     },
     "rotation": {
       "clockwise": "Met de klok mee",
@@ -461,14 +260,12 @@
     "list": {
       "title": "Mijn rituelen",
       "createRow": "Een ritueel maken",
-      "empty": "Nog geen rituelen",
-      "durationBadge": "%{minutes} min"
+      "empty": "Nog geen rituelen"
     },
     "form": {
       "createTitle": "Een ritueel maken",
       "editTitle": "Ritueel bewerken",
       "emojiLabel": "Emoji",
-      "emojiCustomButton": "Ander emoji",
       "colorLabel": "Kleur",
       "durationLabel": "Duur",
       "soundLabel": "Eindgeluid",
@@ -508,7 +305,6 @@
   },
   "aside": {
     "exitFocus": "Focus verlaten",
-    "doubleTapHint": "Tip: dubbeltik op de achtergrond om te wisselen",
     "handle": "Instellingen openen",
     "closedLabel": "Rituelen & instellingen",
     "settingsRow": "Instellingen",

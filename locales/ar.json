@@ -3,19 +3,13 @@
     "cancel": "إلغاء",
     "ok": "حسناً",
     "retry": "إعادة محاولة",
-    "continue": "متابعة",
     "back": "رجوع",
     "delete": "حذف"
   },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "تقليل المدة",
-      "increaseDuration": "زيادة المدة",
-      "timeLabel": "الوقت: %{time}",
-      "durationLabel": "المدة: %{time}",
-      "showTime": "إظهار الوقت",
-      "tapToHide": "اضغط للإخفاء",
-      "tapToShow": "اضغط للإظهار"
+      "increaseDuration": "زيادة المدة"
     },
     "rotation": {
       "clockwise": "باتجاه عقارب الساعة",
@@ -30,176 +24,22 @@
     "title": "أهلًا بك."
   },
   "onboarding": {
-    "restartGuide": "إعادة تشغيل الدليل",
-    "restartGuideDescription": "عرض شاشة الترحيب والنصائح مرة أخرى",
-    "intentions": {
-      "title": "لأي غرض؟",
-      "relax": {
-        "label": "استرخِ",
-        "defaultName": "تأمل"
-      },
-      "work": {
-        "label": "عمل",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "إبداع",
-        "defaultName": "إبداع"
-      },
-      "learn": {
-        "label": "تعلّم",
-        "defaultName": "دراسة"
-      },
-      "move": {
-        "label": "تحرّك",
-        "defaultName": "رياضة"
-      },
-      "other": {
-        "label": "آخر",
-        "defaultName": "لحظتي"
-      },
-      "q1": {
-        "title": "مؤقتك سيكون من أجل...",
-        "focus": "التركيز بشكل أفضل",
-        "launch": "مساعدتي على البدء",
-        "breathe": "أخذ وقت لنفسي",
-        "children": "تخصيص لحظة مع أطفالي",
-        "other": "شيء آخر...",
-        "otherPlaceholder": "مثل ماذا؟"
-      },
-      "q2": {
-        "title": "مساعدة صغيرة في...",
-        "starting": "البدء",
-        "finishing": "الاستمرار حتى النهاية",
-        "staying": "البقاء مركزاً",
-        "managing": "إدارة وقتي بشكل أفضل",
-        "other": "شيء آخر...",
-        "otherPlaceholder": "مثل ماذا؟"
-      }
-    },
     "creation": {
-      "sectionTitle": "لحظتك الأولى",
-      "cta": "أنشئ لحظتي",
-      "durationLabel": "كم من الوقت؟",
-      "namePlaceholder": "سمِّ لحظتك..."
-    },
-    "paywall": {
-      "title": "لقد أنشأت لحظتك الأولى",
-      "profile": "الملف الشخصي:",
-      "question": "هل تريد إنشاء المزيد?",
-      "valueProposition": "15 لوح · 16 نشاط · إنشاءات غير محدودة",
-      "price": "4,99€ — مرة واحدة، إلى الأبد",
-      "ctaTrial": "جرب 7 أيام مجاناً"
-    },
-    "launch": {
-      "title": "لننطلق!",
-      "subtitle": "لحظتك الأولى جاهزة. اضغط للبدء.",
-      "cta": "ابدأ مؤقتي",
-      "ctaHint": "ابدأ مؤقتك الأول",
-      "defaultActivity": "لحظتي"
+      "cta": "أنشئ لحظتي"
     },
     "v2": {
-      "filter0": {
-        "breathe": "وقتك ملك لك",
-        "tapToContinue": "عندما تكون مستعداً"
-      },
       "filter1": {
-        "title": "مؤقّت يتكيّف معك.",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "لا تفوّت نهاية لحظاتك",
-        "body": "سينبهك مؤقتك حتى لو كنت تستخدم تطبيقاً آخر أو كانت شاشتك مقفلة.",
-        "ctaPrimary": "نعم، نبّهني",
-        "ctaSecondary": "ربما لاحقاً"
-      },
-      "filter5b": {
-        "title": "نغمتك",
-        "skip": "تخطي →"
+        "title": "مؤقّت يتكيّف معك."
       }
     }
   },
   "settings": {
     "title": "الإعدادات",
-    "interface": {},
-    "timer": {
-      "soundDescription": "اختر الصوت الذي سيتم تشغيله عند انتهاء المؤقت",
-      "keepAwakeDescriptionOn": "تبقى الشاشة مضاءة أثناء المؤقت",
-      "keepAwakeDescriptionOff": "يمكن قفل الشاشة أثناء المؤقت",
-      "longPressStart": "تفعيل الضغط المطول للبدء",
-      "longPressStartDescriptionOn": "اضغط مطولاً لبدء المؤقت",
-      "longPressStartDescriptionOff": "ضغطة بسيطة للبدء",
-      "longPressStop": "تفعيل الضغط المطول للإيقاف",
-      "longPressStopDescriptionOn": "اضغط مطولاً لإيقاف المؤقت",
-      "longPressStopDescriptionOff": "ضغطة بسيطة للإيقاف",
-      "dialScale": "نطاق القرص",
-      "dialScaleDescription": "المدة القصوى المعروضة على القرص"
-    },
-    "appearance": {
-      "themeLight": "☀️ فاتح",
-      "themeDark": "🌙 داكن",
-      "themeAuto": "📱 تلقائي",
-      "themeDescriptionAuto": "تلقائي (النظام)",
-      "themeDescriptionDark": "داكن",
-      "themeDescriptionLight": "فاتح"
-    },
-    "about": {
-      "title": "حول",
-      "appName": "ResetPulse",
-      "appDescription": "مؤقت بصري قابل للتخصيص",
-      "version": "الإصدار"
-    },
-    "tool": {
-      "sectionTitle": "وضع العرض المبسط",
-      "creative": {
-        "label": "إبداعي",
-        "description": "دائري الألوان"
-      },
-      "multitask": {
-        "label": "متعدد المهام",
-        "description": "دائري الأنشطة"
-      },
-      "precision": {
-        "label": "دقة",
-        "description": "مؤقت رقمي مع أزرار +/-"
-      }
-    },
-    "sections": {
-      "configuration": "الإعدادات",
-      "timerOptions": "خيارات المؤقت",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "صوت الإشعار",
-      "theme": "المظهر",
-      "favorites": "المفضلة لديك",
-      "ambiance": "AMBIANCE",
-      "info": "معلومات"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "اللوحات المفضلة",
-        "description": "اختر حتى 4 لوحات مفضلة (%{count}/4)",
-        "morePalettes": "المزيد من اللوحات"
-      },
-      "activities": {
-        "title": "الأنشطة المفضلة",
-        "description": "اختر حتى 4 أنشطة مفضلة (%{count}/4)",
-        "more": "المزيد"
-      }
-    },
     "options": {
-      "activityEmoji": "رمز النشاط التعبيري في المنتصف",
-      "activityEmojiDescriptionOn": "يظهر الرمز التعبيري في منتصف القرص",
-      "activityEmojiDescriptionOff": "الرمز التعبيري مخفي",
       "pulseAnimation": "هالة تتنفّس"
     }
   },
   "premium": {
-    "title": "افتح كل شيء",
-    "description": "كل الألوان.\nكل الأنشطة.\nراحتك القصوى.",
-    "features": "7 أيام مجاناً",
-    "price": "ثم %{price} مرة واحدة.\nملكك للأبد.",
     "restore": "استعادة مشترياتي",
     "welcomeTitle": "مرحباً بك في Ambiances! 🎉",
     "welcomeMessage": "جميع اللوحات، الطقوس غير المحدودة وأصوات Ambiances مفتوحة الآن.",
@@ -301,18 +141,12 @@
     "rotationDirection": "اتجاه الدوران",
     "showTime": "إظهار الوقت",
     "colorNumber": "اللون %{number}",
-    "discoverMorePalettes": "اضغط لاكتشاف المزيد من اللوحات",
     "celebrationEmoji": "احتفال",
-    "closeCreateActivity": "إغلاق إنشاء نشاط",
-    "closeEditActivity": "إغلاق تعديل النشاط",
     "closeModalHint": "يغلق مربع الحوار هذا ويعود إلى التطبيق",
     "closePremiumModal": "إغلاق عرض Ambiances",
-    "createActivityHint": "ينشئ النشاط المخصص ويضيفه إلى قائمتك",
-    "deleteActivityHint": "يحذف هذا النشاط المخصص نهائياً",
     "exploreSettingsHint": "يفتح الإعدادات لاكتشاف الميزات المميزة",
     "restorePurchases": "استعادة المشتريات السابقة",
     "restorePurchasesHint": "استعادة الوصول إلى Ambiances إذا كنت قد اشتريت بالفعل",
-    "saveActivityHint": "يحفظ التغييرات على هذا النشاط",
     "distraction": "إلهاء",
     "timer": {
       "dialAdjustable": "قابل للتعديل. اسحب لأعلى أو لأسفل لتغيير المدة.",
@@ -324,7 +158,6 @@
       "activityCompleted": "%{activity} اكتمل",
       "startTimer": "بدء المؤقت",
       "stopTimer": "إيقاف المؤقت",
-      "resetTimer": "إعادة تعيين المؤقت",
       "dial": "قرص المؤقت، %{minutes} دقيقة محددة، %{activity}"
     },
     "unlockPremium": "فتح Ambiances مقابل %{price}",
@@ -334,7 +167,6 @@
     "createRitual": "إنشاء طقس",
     "closeRitualForm": "إغلاق نموذج الطقس",
     "chooseCustomEmoji": "اختيار رمز تعبيري آخر عبر لوحة المفاتيح",
-    "ritualNamePreset": "طقس جاهز %{name}",
     "deleteRitual": "حذف الطقس %{name}",
     "favoriteRitual": "الطقس المفضل %{name}"
   },
@@ -343,39 +175,6 @@
     "message": "هل تريد استكشاف المزيد من الألوان والأنشطة؟",
     "explore": "اكتشف",
     "dismiss": "ربما لاحقاً"
-  },
-  "customActivities": {
-    "toast": {
-      "created": "Moment créé avec succès",
-      "updated": "Moment mis à jour",
-      "deleted": "Moment supprimé"
-    },
-    "addButton": "Ajouter un moment",
-    "create": {
-      "title": "إنشاء نشاط",
-      "namePlaceholder": "مثال: غيتار، طبخ...",
-      "nameLabel": "اسم النشاط",
-      "emojiLabel": "اختر رمزاً تعبيرياً",
-      "emojiPlaceholder": "اضغط للاختيار",
-      "durationLabel": "المدة الافتراضية",
-      "preview": "معاينة",
-      "previewPlaceholder": "نشاطي",
-      "buttonCreate": "إنشاء",
-      "errorTitle": "معلومات ناقصة",
-      "errorEmoji": "يرجى اختيار رمز تعبيري لنشاطك.",
-      "errorName": "يرجى إدخال اسم لنشاطك."
-    },
-    "edit": {
-      "title": "تعديل النشاط",
-      "buttonSave": "حفظ",
-      "buttonDelete": "حذف",
-      "deleteConfirmTitle": "حذف؟",
-      "deleteConfirmMessage": "هذا الإجراء لا رجعة فيه.",
-      "usageStats": "استُخدم %{count} مرة"
-    },
-    "duration": {
-      "minutes": "د"
-    }
   },
   "timerMessages": {
     "none": {
@@ -461,14 +260,12 @@
     "list": {
       "title": "طقوسي",
       "createRow": "إنشاء طقس",
-      "empty": "لا توجد طقوس بعد",
-      "durationBadge": "%{minutes} د"
+      "empty": "لا توجد طقوس بعد"
     },
     "form": {
       "createTitle": "إنشاء طقس",
       "editTitle": "تعديل الطقس",
       "emojiLabel": "الرمز التعبيري",
-      "emojiCustomButton": "رمز تعبيري آخر",
       "colorLabel": "اللون",
       "durationLabel": "المدة",
       "soundLabel": "صوت النهاية",
@@ -508,7 +305,6 @@
   },
   "aside": {
     "exitFocus": "الخروج من وضع التركيز",
-    "doubleTapHint": "نصيحة: انقر مرتين على الخلفية للتبديل",
     "handle": "فتح الإعدادات",
     "closedLabel": "الطقوس والإعدادات",
     "settingsRow": "الإعدادات",

@@ -3,7 +3,6 @@
     "cancel": "取消",
     "ok": "确定",
     "retry": "重试",
-    "continue": "继续",
     "back": "返回",
     "delete": "删除"
   },
@@ -12,176 +11,22 @@
   },
   "invitation": "准备好了吗?",
   "onboarding": {
-    "restartGuide": "重新开始引导",
-    "restartGuideDescription": "再次显示欢迎屏幕和提示",
-    "paywall": {
-      "title": "你创建了第一个时刻",
-      "profile": "个人资料:",
-      "question": "想要创建更多?",
-      "valueProposition": "15 调色板 · 16 活动 · 无限创建",
-      "price": "4,99€ — 一次性，永久拥有",
-      "ctaTrial": "免费试用 7 天"
-    },
-    "intentions": {
-      "title": "这是为了什么？",
-      "relax": {
-        "label": "放松",
-        "defaultName": "冥想"
-      },
-      "work": {
-        "label": "工作",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "创作",
-        "defaultName": "创作"
-      },
-      "learn": {
-        "label": "学习",
-        "defaultName": "学习"
-      },
-      "move": {
-        "label": "运动",
-        "defaultName": "锻炼"
-      },
-      "other": {
-        "label": "其他",
-        "defaultName": "我的时刻"
-      },
-      "q1": {
-        "title": "你的计时器是为了...",
-        "focus": "更好地专注",
-        "launch": "帮我开始行动",
-        "breathe": "留些时间给自己",
-        "children": "与孩子共度一段专属时光",
-        "other": "其他...",
-        "otherPlaceholder": "比如说？"
-      },
-      "q2": {
-        "title": "需要一点帮助...",
-        "starting": "开始行动",
-        "finishing": "坚持到底",
-        "staying": "保持专注",
-        "managing": "更好地管理时间",
-        "other": "其他...",
-        "otherPlaceholder": "比如说？"
-      }
-    },
     "creation": {
-      "sectionTitle": "你的第一个时刻",
-      "cta": "创建我的时刻",
-      "durationLabel": "多长时间？",
-      "namePlaceholder": "为你的时刻命名..."
-    },
-    "launch": {
-      "title": "出发！",
-      "subtitle": "你的第一个时刻已准备好，点按开始。",
-      "cta": "启动我的计时器",
-      "ctaHint": "启动你的第一个计时器",
-      "defaultActivity": "我的时刻"
+      "cta": "创建我的时刻"
     },
     "v2": {
-      "filter0": {
-        "breathe": "你的时间属于你",
-        "tapToContinue": "准备好的时候"
-      },
       "filter1": {
-        "title": "一个懂你的计时器。",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "别错过你的时刻结束的瞬间",
-        "body": "即使你在使用其他应用或屏幕已锁定，计时器也会提醒你。",
-        "ctaPrimary": "好，提醒我",
-        "ctaSecondary": "以后再说"
-      },
-      "filter5b": {
-        "title": "你的提示音",
-        "skip": "跳过 →"
+        "title": "一个懂你的计时器。"
       }
     }
   },
   "settings": {
     "title": "设置",
-    "interface": {},
-    "timer": {
-      "soundDescription": "选择计时器结束时播放的声音",
-      "keepAwakeDescriptionOn": "计时器运行时屏幕保持常亮",
-      "keepAwakeDescriptionOff": "计时器运行时屏幕可以锁定",
-      "longPressStart": "启用长按启动",
-      "longPressStartDescriptionOn": "长按以启动计时器",
-      "longPressStartDescriptionOff": "轻按即可启动",
-      "longPressStop": "启用长按停止",
-      "longPressStopDescriptionOn": "长按以停止计时器",
-      "longPressStopDescriptionOff": "轻按即可停止",
-      "dialScale": "表盘范围",
-      "dialScaleDescription": "表盘上显示的最长时长"
-    },
-    "appearance": {
-      "themeLight": "☀️ 浅色",
-      "themeDark": "🌙 深色",
-      "themeAuto": "📱 自动",
-      "themeDescriptionAuto": "自动(系统)",
-      "themeDescriptionDark": "深色",
-      "themeDescriptionLight": "浅色"
-    },
-    "about": {
-      "title": "关于",
-      "appName": "ResetPulse",
-      "appDescription": "可定制的视觉计时器",
-      "version": "版本"
-    },
-    "tool": {
-      "sectionTitle": "极简显示模式",
-      "creative": {
-        "label": "创意",
-        "description": "颜色轮播"
-      },
-      "multitask": {
-        "label": "多任务",
-        "description": "活动轮播"
-      },
-      "precision": {
-        "label": "精确",
-        "description": "带+/-控制的数字计时器"
-      }
-    },
-    "sections": {
-      "configuration": "配置",
-      "timerOptions": "计时器选项",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "通知声音",
-      "theme": "主题",
-      "favorites": "你的收藏",
-      "ambiance": "AMBIANCE",
-      "info": "信息"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "喜爱的调色板",
-        "description": "最多选择4个喜爱的调色板 (%{count}/4)",
-        "morePalettes": "更多调色板"
-      },
-      "activities": {
-        "title": "喜爱的活动",
-        "description": "最多选择4个喜爱的活动 (%{count}/4)",
-        "more": "更多"
-      }
-    },
     "options": {
-      "activityEmoji": "中心显示活动表情符号",
-      "activityEmojiDescriptionOn": "表情符号显示在表盘中心",
-      "activityEmojiDescriptionOff": "表情符号已隐藏",
       "pulseAnimation": "呼吸光晕"
     }
   },
   "premium": {
-    "title": "解锁全部",
-    "description": "所有颜色。\n所有活动。\n你的最大舒适。",
-    "features": "7天免费",
-    "price": "之后 %{price} 一次性。\n永远属于你。",
     "restore": "恢复我的购买",
     "welcomeTitle": "欢迎使用 Ambiances！🎉",
     "welcomeMessage": "所有调色板、无限仪式和 Ambiances 音效现已解锁。",
@@ -255,18 +100,12 @@
     "keepAwake": "保持屏幕常亮",
     "rotationDirection": "旋转方向",
     "colorNumber": "颜色 %{number}",
-    "discoverMorePalettes": "点按以发现更多调色板",
     "celebrationEmoji": "庆祝",
-    "closeCreateActivity": "关闭创建活动",
-    "closeEditActivity": "关闭编辑活动",
     "closeModalHint": "关闭此对话框并返回应用",
     "closePremiumModal": "关闭 Ambiances 优惠",
-    "createActivityHint": "创建自定义活动并添加到您的列表",
-    "deleteActivityHint": "永久删除此自定义活动",
     "exploreSettingsHint": "打开设置以探索高级功能",
     "restorePurchases": "恢复以前的购买",
     "restorePurchasesHint": "如果您已购买，恢复 Ambiances 访问权限",
-    "saveActivityHint": "保存对此活动的更改",
     "timer": {
       "dialAdjustable": "可调整。向上或向下滑动以更改时长。",
       "dialTapToToggle": "点按以启动或暂停计时器",
@@ -277,7 +116,6 @@
       "activityCompleted": "%{activity} 已完成",
       "startTimer": "启动计时器",
       "stopTimer": "停止计时器",
-      "resetTimer": "重置计时器",
       "dial": "计时器表盘，已设置 %{minutes} 分钟，%{activity}"
     },
     "unlockPremium": "以 %{price} 解锁 Ambiances",
@@ -289,52 +127,13 @@
     "createRitual": "创建仪式",
     "closeRitualForm": "关闭仪式表单",
     "chooseCustomEmoji": "通过键盘选择其他表情符号",
-    "ritualNamePreset": "预设仪式「%{name}」",
     "deleteRitual": "删除仪式「%{name}」",
     "favoriteRitual": "收藏仪式「%{name}」"
-  },
-  "customActivities": {
-    "toast": {
-      "created": "Moment créé avec succès",
-      "updated": "Moment mis à jour",
-      "deleted": "Moment supprimé"
-    },
-    "addButton": "Ajouter un moment",
-    "create": {
-      "title": "创建活动",
-      "namePlaceholder": "例如：吉他、烹饪...",
-      "nameLabel": "活动名称",
-      "emojiLabel": "选择表情符号",
-      "emojiPlaceholder": "点按以选择",
-      "durationLabel": "默认时长",
-      "preview": "预览",
-      "previewPlaceholder": "我的活动",
-      "buttonCreate": "创建",
-      "errorTitle": "信息缺失",
-      "errorEmoji": "请为您的活动选择一个表情符号。",
-      "errorName": "请为您的活动输入名称。"
-    },
-    "edit": {
-      "title": "编辑活动",
-      "buttonSave": "保存",
-      "buttonDelete": "删除",
-      "deleteConfirmTitle": "删除？",
-      "deleteConfirmMessage": "此操作不可撤销。",
-      "usageStats": "已使用 %{count} 次"
-    },
-    "duration": {
-      "minutes": "分钟"
-    }
   },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "减少时长",
-      "increaseDuration": "增加时长",
-      "timeLabel": "时间：%{time}",
-      "durationLabel": "时长：%{time}",
-      "showTime": "显示时间",
-      "tapToHide": "点按以隐藏",
-      "tapToShow": "点按以显示"
+      "increaseDuration": "增加时长"
     },
     "rotation": {
       "clockwise": "顺时针",
@@ -461,14 +260,12 @@
     "list": {
       "title": "我的仪式",
       "createRow": "创建仪式",
-      "empty": "还没有仪式",
-      "durationBadge": "%{minutes} 分钟"
+      "empty": "还没有仪式"
     },
     "form": {
       "createTitle": "创建仪式",
       "editTitle": "编辑仪式",
       "emojiLabel": "表情符号",
-      "emojiCustomButton": "其他表情符号",
       "colorLabel": "颜色",
       "durationLabel": "时长",
       "soundLabel": "结束音效",
@@ -508,7 +305,6 @@
   },
   "aside": {
     "exitFocus": "退出专注",
-    "doubleTapHint": "提示:双击背景切换",
     "handle": "打开设置",
     "closedLabel": "仪式与设置",
     "settingsRow": "设置",

@@ -3,7 +3,6 @@
     "cancel": "キャンセル",
     "ok": "OK",
     "retry": "再試行",
-    "continue": "続ける",
     "back": "戻る",
     "delete": "削除"
   },
@@ -12,176 +11,22 @@
   },
   "invitation": "準備はいい?",
   "onboarding": {
-    "restartGuide": "ガイドを再表示",
-    "restartGuideDescription": "ウェルカム画面とヒントを再度表示",
-    "paywall": {
-      "title": "最初のモーメントを作成しました",
-      "profile": "プロフィール:",
-      "question": "もっと作りたい?",
-      "valueProposition": "15パレット・16アクティビティ・無制限の作成",
-      "price": "4,99€ — 一度だけ、永遠に",
-      "ctaTrial": "7日間無料で試す"
-    },
-    "intentions": {
-      "title": "何のため？",
-      "relax": {
-        "label": "くつろぐ",
-        "defaultName": "瞑想"
-      },
-      "work": {
-        "label": "働く",
-        "defaultName": "Focus"
-      },
-      "create": {
-        "label": "創作する",
-        "defaultName": "創作"
-      },
-      "learn": {
-        "label": "学ぶ",
-        "defaultName": "勉強"
-      },
-      "move": {
-        "label": "動く",
-        "defaultName": "運動"
-      },
-      "other": {
-        "label": "その他",
-        "defaultName": "自分の瞬間"
-      },
-      "q1": {
-        "title": "タイマーの目的は...",
-        "focus": "もっと集中する",
-        "launch": "始めるのを助けてもらう",
-        "breathe": "自分の時間を持つ",
-        "children": "子どもとの時間を区切る",
-        "other": "その他...",
-        "otherPlaceholder": "たとえば？"
-      },
-      "q2": {
-        "title": "ちょっとした助けが欲しいのは...",
-        "starting": "始めること",
-        "finishing": "最後までやり遂げる",
-        "staying": "集中し続けること",
-        "managing": "時間をもっと上手に使う",
-        "other": "その他...",
-        "otherPlaceholder": "たとえば？"
-      }
-    },
     "creation": {
-      "sectionTitle": "はじめての瞬間",
-      "cta": "自分の瞬間を作る",
-      "durationLabel": "どのくらいの時間？",
-      "namePlaceholder": "瞬間に名前をつける..."
-    },
-    "launch": {
-      "title": "さあ、始めよう！",
-      "subtitle": "最初の瞬間の準備ができました。タップして始めましょう。",
-      "cta": "自分のタイマーを開始",
-      "ctaHint": "最初のタイマーを開始しよう",
-      "defaultActivity": "自分の瞬間"
+      "cta": "自分の瞬間を作る"
     },
     "v2": {
-      "filter0": {
-        "breathe": "あなたの時間はあなたのもの",
-        "tapToContinue": "準備ができたら"
-      },
       "filter1": {
-        "title": "あなたに合わせるタイマー。",
-        "subtitle": ""
-      }
-    },
-    "v3": {
-      "filter3_5": {
-        "title": "瞬間の終わりを見逃さないで",
-        "body": "他のアプリを使用中でも、画面がロックされていても、タイマーがお知らせします。",
-        "ctaPrimary": "はい、通知してください",
-        "ctaSecondary": "あとで"
-      },
-      "filter5b": {
-        "title": "あなたの着信音",
-        "skip": "スキップ →"
+        "title": "あなたに合わせるタイマー。"
       }
     }
   },
   "settings": {
     "title": "設定",
-    "interface": {},
-    "timer": {
-      "soundDescription": "タイマー終了時に再生するサウンドを選択",
-      "keepAwakeDescriptionOn": "タイマー動作中は画面をスリープさせない",
-      "keepAwakeDescriptionOff": "タイマー動作中も画面をスリープ可能",
-      "longPressStart": "長押しで開始を有効にする",
-      "longPressStartDescriptionOn": "長押しでタイマーを開始",
-      "longPressStartDescriptionOff": "タップで開始",
-      "longPressStop": "長押しで停止を有効にする",
-      "longPressStopDescriptionOn": "長押しでタイマーを停止",
-      "longPressStopDescriptionOff": "タップで停止",
-      "dialScale": "ダイヤルの範囲",
-      "dialScaleDescription": "ダイヤルに表示される最大時間"
-    },
-    "appearance": {
-      "themeLight": "☀️ ライト",
-      "themeDark": "🌙 ダーク",
-      "themeAuto": "📱 自動",
-      "themeDescriptionAuto": "自動(システム設定)",
-      "themeDescriptionDark": "ダーク",
-      "themeDescriptionLight": "ライト"
-    },
-    "about": {
-      "title": "このアプリについて",
-      "appName": "ResetPulse",
-      "appDescription": "カスタマイズ可能なビジュアルタイマー",
-      "version": "バージョン"
-    },
-    "tool": {
-      "sectionTitle": "ミニマル表示モード",
-      "creative": {
-        "label": "クリエイティブ",
-        "description": "カラーカルーセル"
-      },
-      "multitask": {
-        "label": "マルチタスク",
-        "description": "アクティビティカルーセル"
-      },
-      "precision": {
-        "label": "精密",
-        "description": "+/- ボタン付きデジタルタイマー"
-      }
-    },
-    "sections": {
-      "configuration": "設定",
-      "timerOptions": "タイマーのオプション",
-      "keepAwake": "Keep Awake",
-      "notificationSound": "通知音",
-      "theme": "テーマ",
-      "favorites": "お気に入り",
-      "ambiance": "AMBIANCE",
-      "info": "情報"
-    },
-    "favorites": {
-      "palettes": {
-        "title": "お気に入りのパレット",
-        "description": "お気に入りのパレットを4つまで選択（%{count}/4）",
-        "morePalettes": "もっとパレットを見る"
-      },
-      "activities": {
-        "title": "お気に入りのアクティビティ",
-        "description": "お気に入りのアクティビティを4つまで選択（%{count}/4）",
-        "more": "もっと見る"
-      }
-    },
     "options": {
-      "activityEmoji": "中央にアクティビティの絵文字を表示",
-      "activityEmojiDescriptionOn": "絵文字がダイヤルの中央に表示されます",
-      "activityEmojiDescriptionOff": "絵文字は非表示です",
       "pulseAnimation": "呼吸するハロー"
     }
   },
   "premium": {
-    "title": "すべてを解放",
-    "description": "すべてのカラー。\nすべてのアクティビティ。\n最高の快適さ。",
-    "features": "7日間無料",
-    "price": "その後 %{price} で一度だけ。\nずっとあなたのもの。",
     "restore": "購入を復元",
     "welcomeTitle": "Ambiancesへようこそ 🎉",
     "welcomeMessage": "すべてのパレット、無制限のルーティン、Ambiancesのサウンドがアンロックされました。",
@@ -283,18 +128,12 @@
     "rotationDirection": "回転方向",
     "showTime": "時間を表示",
     "colorNumber": "カラー %{number}",
-    "discoverMorePalettes": "タップしてさらにパレットを見る",
     "celebrationEmoji": "お祝い",
-    "closeCreateActivity": "アクティビティ作成を閉じる",
-    "closeEditActivity": "アクティビティ編集を閉じる",
     "closeModalHint": "このダイアログを閉じてアプリに戻ります",
     "closePremiumModal": "Ambiancesのオファーを閉じる",
-    "createActivityHint": "カスタムアクティビティを作成してリストに追加します",
-    "deleteActivityHint": "このカスタムアクティビティを完全に削除します",
     "exploreSettingsHint": "設定を開いてプレミアム機能を見る",
     "restorePurchases": "以前の購入を復元",
     "restorePurchasesHint": "すでに購入済みの場合はAmbiancesへのアクセスを復元",
-    "saveActivityHint": "このアクティビティへの変更を保存します",
     "timer": {
       "dialAdjustable": "調整可能。上下にスワイプして時間を変更します。",
       "dialTapToToggle": "タップしてタイマーを開始または一時停止",
@@ -305,7 +144,6 @@
       "activityCompleted": "%{activity} が完了しました",
       "startTimer": "タイマーを開始",
       "stopTimer": "タイマーを停止",
-      "resetTimer": "タイマーをリセット",
       "dial": "タイマーダイヤル、%{minutes}分設定、%{activity}"
     },
     "unlockPremium": "%{price}でAmbiancesをアンロック",
@@ -316,52 +154,13 @@
     "createRitual": "ルーティンを作成",
     "closeRitualForm": "ルーティンフォームを閉じる",
     "chooseCustomEmoji": "キーボードで別の絵文字を選択",
-    "ritualNamePreset": "プリセットルーティン%{name}",
     "deleteRitual": "ルーティン%{name}を削除",
     "favoriteRitual": "お気に入りルーティン%{name}"
-  },
-  "customActivities": {
-    "toast": {
-      "created": "Moment créé avec succès",
-      "updated": "Moment mis à jour",
-      "deleted": "Moment supprimé"
-    },
-    "addButton": "Ajouter un moment",
-    "create": {
-      "title": "アクティビティを作成",
-      "namePlaceholder": "例：ギター、料理...",
-      "nameLabel": "アクティビティ名",
-      "emojiLabel": "絵文字を選ぶ",
-      "emojiPlaceholder": "タップして選択",
-      "durationLabel": "デフォルトの時間",
-      "preview": "プレビュー",
-      "previewPlaceholder": "自分のアクティビティ",
-      "buttonCreate": "作成",
-      "errorTitle": "情報が不足しています",
-      "errorEmoji": "アクティビティの絵文字を選んでください。",
-      "errorName": "アクティビティの名前を入力してください。"
-    },
-    "edit": {
-      "title": "アクティビティを編集",
-      "buttonSave": "保存",
-      "buttonDelete": "削除",
-      "deleteConfirmTitle": "削除しますか？",
-      "deleteConfirmMessage": "この操作は元に戻せません。",
-      "usageStats": "%{count}回使用"
-    },
-    "duration": {
-      "minutes": "分"
-    }
   },
   "controls": {
     "digitalTimer": {
       "decreaseDuration": "時間を減らす",
-      "increaseDuration": "時間を増やす",
-      "timeLabel": "時間: %{time}",
-      "durationLabel": "時間: %{time}",
-      "showTime": "時間を表示",
-      "tapToHide": "タップして隠す",
-      "tapToShow": "タップして表示"
+      "increaseDuration": "時間を増やす"
     },
     "rotation": {
       "clockwise": "時計回り",
@@ -461,14 +260,12 @@
     "list": {
       "title": "マイルーティン",
       "createRow": "ルーティンを作成",
-      "empty": "まだルーティンがありません",
-      "durationBadge": "%{minutes}分"
+      "empty": "まだルーティンがありません"
     },
     "form": {
       "createTitle": "ルーティンを作成",
       "editTitle": "ルーティンを編集",
       "emojiLabel": "絵文字",
-      "emojiCustomButton": "他の絵文字",
       "colorLabel": "カラー",
       "durationLabel": "時間",
       "soundLabel": "終了音",
@@ -508,7 +305,6 @@
   },
   "aside": {
     "exitFocus": "フォーカスを終了",
-    "doubleTapHint": "ヒント: 背景をダブルタップで切り替え",
     "handle": "設定を開く",
     "closedLabel": "ルーティンと設定",
     "settingsRow": "設定",
