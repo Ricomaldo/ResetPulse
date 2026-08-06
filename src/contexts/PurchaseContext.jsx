@@ -191,9 +191,6 @@ export const PurchaseProvider = ({ children }) => {
           const transactionId = latestTransaction?.transactionIdentifier || 'unknown';
           const price = latestTransaction?.price || 4.99;
 
-          // Track trial started (M7.5)
-          Analytics.trackTrialStarted(productIdentifier);
-
           // Track purchase completed (M7.5)
           Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
 
@@ -217,9 +214,6 @@ export const PurchaseProvider = ({ children }) => {
       const latestTransaction = info.nonSubscriptionTransactions?.[0] || info.latestExpirationDate;
       const transactionId = latestTransaction?.transactionIdentifier || 'unknown';
       const price = latestTransaction?.price || 4.99; // Default price
-
-      // Track trial started (M7.5)
-      Analytics.trackTrialStarted(productIdentifier);
 
       // Track purchase completed (M7.5)
       Analytics.trackPurchaseCompleted(productIdentifier, price, transactionId);
