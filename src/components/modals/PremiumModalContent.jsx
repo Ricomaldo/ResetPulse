@@ -572,7 +572,7 @@ export default function PremiumModalContent({ onClose, highlightedFeature, sourc
           accessibilityHint={t('accessibility.closeModalHint')}
         >
           <Text style={styles.secondaryButtonText}>
-            {t('twoTimers.dismiss')}
+            {t('premium.dismiss')}
           </Text>
         </TouchableOpacity>
 

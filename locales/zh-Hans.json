@@ -49,7 +49,8 @@
     "errorStore": "商店出现问题，请稍后再试。",
     "errorPaymentPending": "付款处理中。请稍后几分钟查看您的购买记录。",
     "errorRestoreGeneric": "恢复错误",
-    "errorGeneric": "发生错误"
+    "errorGeneric": "发生错误",
+    "dismiss": "以后再说"
   },
   "activities": {
     "none": "基础",
@@ -150,12 +151,6 @@
     "distraction": {
       "tryMe": "给我个惊喜"
     }
-  },
-  "twoTimers": {
-    "title": "你已创建了2个时刻！",
-    "message": "想探索更多颜色和活动吗？",
-    "explore": "发现",
-    "dismiss": "以后再说"
   },
   "timerMessages": {
     "none": {

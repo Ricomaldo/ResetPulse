@@ -17,7 +17,6 @@
  *
  * Examples:
  * - modalStack.push('premium', { highlightedFeature: 'activity' })
- * - modalStack.push('twoTimers', { onExplore: handleExplore })
  *
  * References:
  * - BottomSheetModal wrapper: ./BottomSheetModal.jsx
@@ -33,6 +32,3 @@ export { default as BottomSheetModal } from './BottomSheetModal';
 // === Modal Content Components (All use ModalStack pattern) ===
 // Premium
 export { default as PremiumModalContent } from './PremiumModalContent';
-
-// System
-export { default as TwoTimersModalContent } from './TwoTimersModalContent';

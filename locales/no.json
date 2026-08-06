@@ -62,7 +62,8 @@
     "errorStore": "Problem med butikken. Prøv igjen senere.",
     "errorPaymentPending": "Betaling venter. Sjekk kjøpene dine om noen minutter.",
     "errorRestoreGeneric": "Gjenopprettingsfeil",
-    "errorGeneric": "En feil oppstod"
+    "errorGeneric": "En feil oppstod",
+    "dismiss": "Kanskje senere"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,12 +178,6 @@
     "customEmojiLocked": "Egen emoji låst — utforsk Ambiances",
     "renameRitual": "Gi ritualet %{name} nytt navn",
     "renameRitualHint": "Hold inne for å gi nytt navn"
-  },
-  "twoTimers": {
-    "title": "Du har opprettet 2 øyeblikk!",
-    "message": "Vil du utforske flere farger og aktiviteter?",
-    "explore": "Oppdag",
-    "dismiss": "Kanskje senere"
   },
   "timerMessages": {
     "none": {

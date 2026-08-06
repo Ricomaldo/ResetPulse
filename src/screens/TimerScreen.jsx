@@ -165,19 +165,22 @@ function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomen
             style={[styles.activityButton, isActive && styles.activityButtonActive]}
             onPress={() => {
               haptics.impact('light').catch(() => {});
+              let ritualMode;
               if (checkMomentDirty?.()) {
                 // Moment déjà réglé à la main (Q3b) : le chip ne touche
                 // QUE l'activité — durée/couleur/son en cours restent.
                 setCurrentActivity(payload.activity);
+                ritualMode = 'activity_only';
               } else {
                 setCurrentActivity(payload.activity);
                 setCurrentDuration(payload.duration);
                 setSelectedSoundId(payload.soundId);
                 setColorByValue(payload.color);
                 markMomentEvent?.(MOMENT_EVENTS.RITUAL_APPLIED);
+                ritualMode = 'full';
               }
               analytics.trackActivitySelected(payload.activity?.id);
-              analytics.trackRitualApplied('home_row');
+              analytics.trackRitualApplied('home_row', ritualMode);
               onActivityTouch?.();
             }}
             activeOpacity={0.7}

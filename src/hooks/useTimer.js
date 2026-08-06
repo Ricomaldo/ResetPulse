@@ -103,7 +103,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
         setHasCompleted(true);
 
         // Track timer completion
-        analytics.trackTimerCompleted(durationRef.current, currentActivityRef.current, 100);
+        analytics.trackTimerCompleted(durationRef.current, currentActivityRef.current);
 
         // Vérifier si l'app était en background (notification a déjà sonné)
         const skipSound = wasInBackgroundRef.current;

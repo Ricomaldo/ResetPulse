@@ -8,7 +8,6 @@ import React from 'react';
 import { useModalStack } from '../../contexts/ModalStackContext';
 import BottomSheetModal from './BottomSheetModal';
 import PremiumModalContent from './PremiumModalContent';
-import TwoTimersModalContent from './TwoTimersModalContent';
 import logger from '../../utils/logger';
 
 /**
@@ -16,11 +15,9 @@ import logger from '../../utils/logger';
  *
  * Usage:
  * - modalStack.push('premium', { highlightedFeature: 'activity' })
- * - modalStack.push('twoTimers', { onExplore: handleExplore })
  */
 const MODAL_TYPES = {
   premium: PremiumModalContent,
-  twoTimers: TwoTimersModalContent,
 };
 
 /**

@@ -49,7 +49,8 @@
     "errorStore": "Problema con lo store. Riprova più tardi.",
     "errorPaymentPending": "Pagamento in sospeso. Controlla i tuoi acquisti tra qualche minuto.",
     "errorRestoreGeneric": "Errore di ripristino",
-    "errorGeneric": "Si è verificato un errore"
+    "errorGeneric": "Si è verificato un errore",
+    "dismiss": "Forse più tardi"
   },
   "ambiances": {
     "title": "Ambiances",
@@ -177,12 +178,6 @@
     "distraction": {
       "tryMe": "sorprendimi"
     }
-  },
-  "twoTimers": {
-    "title": "Hai creato 2 momenti!",
-    "message": "Vuoi esplorare altri colori e attività?",
-    "explore": "Scopri",
-    "dismiss": "Forse più tardi"
   },
   "timerMessages": {
     "none": {
