@@ -2,12 +2,16 @@ import i18n from '../i18n';
 
 export const TIMER_PALETTES = {
   serenity: {
-    colors: ['#E89665', '#D4A853', '#8B7D72', '#5A5A5A'],
+    colors: ['#E89665', '#D4A853', '#7D9B5E', '#8B7D72'],
     get name() {
       return i18n.t('palettes.serenity');
     },
     isPremium: false,
-    description: 'Palette système ResetPulse (brand colors - logo gradient)',
+    // Palette système ResetPulse. Vert d'ancrage olive (#7D9B5E) ajouté en slot
+    // « calme » (validé Eric 07/08) — comble l'absence de tône naturel : le gris
+    // mort (#5A5A5A) sort, le taupe glisse en « deep ». energy=corail, focus=doré,
+    // calm=olive, deep=taupe.
+    description: 'Palette système ResetPulse (brand + vert d\'ancrage)',
   },
   softLaser: {
     colors: ['#5DB88A', '#6BC4C4', '#C584B8', '#D4C65E'],

@@ -177,8 +177,9 @@ export default function SheetSettingsPanel({ onBack }) {
         })}
       </View>
 
-      {/* Verrou d'échelle — ON fige l'échelle DÉRIVÉE COURANTE (scaleMode du
-          contexte, déjà verrou-ou-auto), OFF rend à la dérivation. */}
+      {/* Verrou d'échelle — ON = cadran horloge FIXE 60 (défaut, hyp. Eric 07/08),
+          OFF = échelle adaptative (dérivée de la durée). Verrouille sur '60min' EN
+          DUR (pas l'échelle courante) → ON↔OFF réversible, retour garanti à 60. */}
       <View style={styles.optionRow}>
         <Text style={styles.optionLabel}>{t('aside.scaleLock')}</Text>
         <Switch
@@ -189,7 +190,7 @@ export default function SheetSettingsPanel({ onBack }) {
           value={!!lockedScale}
           onValueChange={(value) => {
             haptics.switchToggle().catch(() => {});
-            setLockedScale(value ? scaleMode : null);
+            setLockedScale(value ? '60min' : null);
           }}
           {...theme.styles.switch(!!lockedScale)}
         />

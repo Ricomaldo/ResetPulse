@@ -61,11 +61,11 @@ describe('rituals Configuration', () => {
       expect(getDefaultRituals().map((r) => r.id)).toEqual(rituals.map((r) => r.id));
     });
 
-    test('durations match the brief (5 / 15 / 50 min)', () => {
+    test('durations match the brief (méditation 20 / pause 5 / travail 50 min — Eric 07/08)', () => {
       const byActivity = Object.fromEntries(rituals.map((r) => [r.activityId, r.duration]));
-      expect(byActivity.meditation).toBe(300);
-      expect(byActivity.break).toBe(900);
-      expect(byActivity.work).toBe(3000);
+      expect(byActivity.meditation).toBe(1200); // 20 min — signature MT
+      expect(byActivity.break).toBe(300); // 5 min — Pomodoro
+      expect(byActivity.work).toBe(3000); // 50 min
     });
 
     test('names are non-empty strings', () => {

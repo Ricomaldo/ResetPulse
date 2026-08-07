@@ -37,8 +37,8 @@ export const suggestedColorFor = (activity) =>
 // 3 rituels de base (C6) — chacun référence une activité gratuite existante,
 // zéro nouveau contenu d'identité.
 const BASE_RITUALS_SEED = [
-  { activityId: 'meditation', duration: 300 }, // 5 min
-  { activityId: 'break', duration: 900 }, // 15 min
+  { activityId: 'meditation', duration: 1200 }, // 20 min — signature MT (Eric 07/08)
+  { activityId: 'break', duration: 300 }, // 5 min — Pomodoro (Eric 07/08)
   { activityId: 'work', duration: 3000 }, // 50 min
 ];
 

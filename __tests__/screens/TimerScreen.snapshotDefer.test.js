@@ -74,6 +74,8 @@ jest.mock('../../src/hooks/useAnalytics', () => ({
     trackAmbiancesInvitationShown: jest.fn(),
     trackAmbiancesInvitationTapped: jest.fn(),
     trackRitualKept: jest.fn(),
+    trackRitualKeepShown: jest.fn(),
+    trackRitualDismissed: jest.fn(),
   }),
 }));
 

@@ -28,6 +28,7 @@ import { useDevPremium } from '../DevPremiumContext';
 import { useRituals } from '../../hooks/useRituals';
 import { useCustomActivities } from '../../hooks/useCustomActivities';
 import { useSessionCount } from '../../hooks/useSessionCount';
+import { useTimerConfig } from '../../contexts/TimerConfigContext';
 
 /**
  * Dev FAB component for dev tools during testing
@@ -46,6 +47,7 @@ export default function DevFab({
   const { resetRituals } = useRituals();
   const { resetActivities } = useCustomActivities();
   const { resetSessionCount } = useSessionCount();
+  const { resetToDefaults } = useTimerConfig();
 
   if (!SHOW_DEV_FAB) {return null;}
 
@@ -89,11 +91,15 @@ export default function DevFab({
   // on y ajoute les mêmes resets de contexte que ci-dessus pour que la clé
   // ajoutée à sa liste (rituels/activités/séances) ait un effet visible
   // immédiat, pas seulement au prochain redémarrage.
+  // resetToDefaults() (07/08) : le timer (activité/durée/couleur) vit AUSSI
+  // dans un Provider au-dessus d'AppContent — sans cet appel, Vanilla laissait
+  // la durée et la couleur d'avant (bug constaté passe 3).
   const handleResetToVanilla = () => {
     onResetToVanilla?.();
     resetRituals();
     resetActivities();
     resetSessionCount();
+    resetToDefaults();
   };
 
   const menuTranslateY = menuAnim.interpolate({

@@ -74,7 +74,7 @@ export const TimerConfigProvider = ({ children }) => {
         },
         display: {
           shouldPulse: true,
-          lockedScale: null,
+          lockedScale: '60min', // défaut = cadran horloge fixe (hyp. Eric 07/08) — l'adaptatif redevient l'exception
           showDigitalTimer: false,
           showTime: true,
         },
@@ -110,7 +110,7 @@ export const TimerConfigProvider = ({ children }) => {
       version: CONFIG_SCHEMA_VERSION,
       timer: {
         currentActivity: getDefaultActivity(),
-        currentDuration: 1500, // 25 minutes
+        currentDuration: 1200, // 20 minutes (signature méditation, Eric 07/08)
         selectedSoundId: DEFAULT_SOUND_ID,
         clockwise: false,
         // scaleMode retiré (hotfix-porte-1 B2) : le défaut '25min' était une
@@ -255,6 +255,13 @@ export const TimerConfigProvider = ({ children }) => {
     },
 
     // === ACTIONS ===
+    // Reset complet aux défauts (outil dev « Vanilla », 07/08). Le provider
+    // vit AU-DESSUS d'AppContent et ne remonte pas au resetTrigger : effacer
+    // AsyncStorage + remonter ne remet donc PAS activité/durée/couleur à zéro.
+    // C'est cette action, appelée par le DevFab, qui le fait.
+    resetToDefaults: () => {
+      setValues(getDefaultValues());
+    },
     // Timer
     setCurrentActivity: (activity) => {
       setValues(prev => ({

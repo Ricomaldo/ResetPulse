@@ -33,7 +33,7 @@ export const ACTIVITIES = [
     },
     defaultDuration: 1800, // 30 minutes (aligned with 5 scales, closest to Pomodoro)
     isPremium: false,
-    suggestedColor: 'deep',
+    suggestedColor: 'focus', // doré (serenity) — vif à l'ouverture, cf. recolor 07/08
     description: 'Sessions de travail concentré',
     pulseDuration: 600, // Rapide - focus intense
     movement: 'beat', // MOT-e Bat
@@ -46,7 +46,7 @@ export const ACTIVITIES = [
     },
     defaultDuration: 900, // 15 minutes
     isPremium: false, // Complète le Pomodoro
-    suggestedColor: 'calm',
+    suggestedColor: 'calm', // olive/vert (serenity) — pause, cf. recolor 07/08
     description: 'Vraie déconnexion',
     pulseDuration: 1000, // Plus lent - repos
     movement: 'breathe', // MOT-a Respire
@@ -59,7 +59,7 @@ export const ACTIVITIES = [
     },
     defaultDuration: 900, // 15 minutes (aligned with 5 scales)
     isPremium: false, // FREE - ancrage bien-être
-    suggestedColor: 'calm',
+    suggestedColor: 'energy', // corail signature (serenity) — méditation = rituel signature, cf. 07/08
     description: 'Sessions de méditation guidée',
     pulseDuration: 1200, // Très lent - calme profond
     movement: 'breathe', // MOT-a Respire
@@ -250,8 +250,9 @@ export const getAllActivities = () => ACTIVITIES;
 export const getActivityById = (id) =>
   ACTIVITIES.find((activity) => activity.id === id);
 
-// Get default activity — première des activités gratuites (« none » retiré, ADR-014)
-export const getDefaultActivity = () => getFreeActivities()[0];
+// Get default activity — méditation (signature, défaut général — Eric 07/08).
+// Repli sur la première activité gratuite si méditation absente.
+export const getDefaultActivity = () => getActivityById('meditation') || getFreeActivities()[0];
 
 // Check if an activity is custom (created by user)
 export const isCustomActivity = (activity) => activity?.isCustom === true;

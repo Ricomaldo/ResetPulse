@@ -35,7 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState, isMomentDirty } from '../config/moment';
+import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
 import { useSessionCount } from '../hooks/useSessionCount';
@@ -64,7 +64,7 @@ const LONG_SESSION_THRESHOLD_SECONDS = 1800; // 30 minutes
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
 
-function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomentEvent }) {
+function CompactRow({ onActivityTouch, onColorTouch, markMomentEvent }) {
   const theme = useTheme();
   const t = useTranslation();
   const analytics = useAnalytics();
@@ -82,16 +82,11 @@ function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomen
   // tap = activité + couleur + durée + son, tout est prêt (la signature
   // remonte à la surface). Créer/étoiler un rituel met la rangée à jour
   // (même store useRituals). Les couleurs restent à côté : réglage en direct.
-  // Chip intelligent (Lambda R2, Q3b — « à essayer ») : ce tap tout-prêt ne
-  // s'applique en ENTIER que sur un Moment VIERGE (cf. src/config/moment.js).
-  // Sur un Moment déjà réglé à la main (SALE), le tap ne change QUE
-  // l'activité — durée/couleur/son en cours restent (`checkMomentDirty`,
-  // relu au tap, jamais au render). Le panneau « Mes rituels »
-  // (RitualsPanel) n'est jamais partiel — toujours complet, non touché par
-  // `checkMomentDirty` — mais SON apply nettoie quand même le tracker (cf.
-  // AsideZone.onRitualApplied plus bas) : un rituel posé depuis le panneau
-  // remplit le cadran au même titre qu'un chip d'accueil, le chip suivant
-  // doit donc redevenir complet lui aussi.
+  // NOTE (Eric 07/08) : le « chip intelligent » (Q3b, apply partiel sur cadran
+  // déjà réglé) a été RETIRÉ — il avait remplacé le lancement direct des favoris.
+  // Le chip applique de nouveau TOUJOURS le rituel en entier (cf. onPress). La
+  // friction durée→couleur→activité (le chip écrase les réglages manuels) est
+  // assumée pour l'instant, à repenser plus tard.
   const { favoriteRituals } = useRituals();
   const { customActivities } = useCustomActivities();
 
@@ -165,21 +160,18 @@ function CompactRow({ onActivityTouch, onColorTouch, checkMomentDirty, markMomen
             style={[styles.activityButton, isActive && styles.activityButtonActive]}
             onPress={() => {
               haptics.impact('light').catch(() => {});
-              let ritualMode;
-              if (checkMomentDirty?.()) {
-                // Moment déjà réglé à la main (Q3b) : le chip ne touche
-                // QUE l'activité — durée/couleur/son en cours restent.
-                setCurrentActivity(payload.activity);
-                ritualMode = 'activity_only';
-              } else {
-                setCurrentActivity(payload.activity);
-                setCurrentDuration(payload.duration);
-                setSelectedSoundId(payload.soundId);
-                setColorByValue(payload.color);
-                markMomentEvent?.(MOMENT_EVENTS.RITUAL_APPLIED);
-                ritualMode = 'full';
-              }
-              analytics.trackRitualApplied('home_row', ritualMode);
+              // « Remet comme avant » (Eric 07/08) : le chip d'un rituel favori
+              // applique TOUJOURS le rituel en ENTIER (activité + durée + couleur
+              // + son). Le « chip intelligent » (Q3b, activity_only sur cadran
+              // déjà réglé) est retiré — il avait remplacé le lancement direct
+              // des favoris. La friction (durée→couleur→activité qui écrase) est
+              // assumée, à repenser plus tard.
+              setCurrentActivity(payload.activity);
+              setCurrentDuration(payload.duration);
+              setSelectedSoundId(payload.soundId);
+              setColorByValue(payload.color);
+              markMomentEvent?.(MOMENT_EVENTS.RITUAL_APPLIED);
+              analytics.trackRitualApplied('home_row', 'full');
               onActivityTouch?.();
             }}
             activeOpacity={0.7}
@@ -320,6 +312,82 @@ function CoachPill({ text, onPress, testID }) {
   return (
     <View style={styles.pill} testID={testID}>
       <Text style={styles.text}>{text}</Text>
+    </View>
+  );
+}
+
+// « garde ce moment ? » — contrôle persistant (Option A, 07/08). Pastille
+// tappable « garder » + « passer » discret dessous. Famille CoachPill (surface
+// + ombre douce), jamais un mur. `kept` → confirmation muette « gardé ✨ ».
+// Ancré en absolu (coachAnchor) : ne bouge jamais le cadran.
+function KeepMomentControl({ kept, onKeep, onDismiss }) {
+  const theme = useTheme();
+  const t = useTranslation();
+
+  const styles = StyleSheet.create({
+    wrap: {
+      alignItems: 'center',
+      gap: theme.spacing.xxs,
+    },
+    pill: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.borderRadius.round,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
+      ...theme.shadow('sm'),
+    },
+    pillText: {
+      color: theme.colors.text,
+      fontSize: rs(13, 'min'),
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+    skip: {
+      paddingHorizontal: theme.spacing.sm,
+      paddingVertical: theme.spacing.xxs,
+    },
+    skipText: {
+      color: theme.colors.textSecondary,
+      fontSize: rs(12, 'min'),
+      textAlign: 'center',
+    },
+  });
+
+  if (kept) {
+    return (
+      <View style={styles.wrap}>
+        <View style={styles.pill} testID="keepMoment.kept">
+          <Text style={styles.pillText}>{t('firstRun.momentKept')}</Text>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.wrap}>
+      <TouchableOpacity
+        style={styles.pill}
+        testID="keepMoment.keep"
+        onPress={onKeep}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={t('firstRun.keepMoment')}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.pillText}>{t('firstRun.keepMoment')}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.skip}
+        testID="keepMoment.dismiss"
+        onPress={onDismiss}
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={t('firstRun.skip')}
+        activeOpacity={0.6}
+      >
+        <Text style={styles.skipText}>{t('firstRun.skip')}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -693,15 +761,14 @@ function TimerScreenContent() {
     [applySnapshotFromRef],
   );
 
-  // Chip intelligent (Lambda R2, Q3b — cf. src/config/moment.js) : ref pure,
-  // pas de state — aucun rendu n'en dépend, seul le tap du chip (CompactRow)
-  // relit sa valeur fraîche via `checkMomentDirty`. Alimentée par les
-  // événements EXISTANTS de l'écran ci-dessous (jamais dans useTimer, sacré).
+  // Tracker Moment SALE/VIERGE (cf. src/config/moment.js) : ref pure, alimentée
+  // par les événements existants de l'écran. Son lecteur (le « chip intelligent »)
+  // a été retiré (revert 07/08, « remet comme avant » Eric) ; on garde
+  // markMomentEvent/momentStateRef en dormance pour la refonte de la friction.
   const momentStateRef = useRef(MOMENT_VIERGE);
   const markMomentEvent = useCallback((event) => {
     momentStateRef.current = nextMomentState(momentStateRef.current, event);
   }, []);
-  const checkMomentDirty = useCallback(() => isMomentDirty(momentStateRef.current), []);
 
   const handleDialTap = useCallback(() => {
     const timer = timerRef.current;
@@ -827,9 +894,17 @@ function TimerScreenContent() {
     usePersistedState('@ResetPulse:hasSeenKeepMoment', false);
   const [keepMomentFired, setKeepMomentFired] = useState(false);
   const keepMomentFiredRef = useRef(false);
-  // Confirmation discrète après le tap (« gardé ✨ ») — dure ce que dure
-  // l'état complété, ne se repropose jamais (flag déjà posé à l'affichage).
+  // Confirmation discrète après « garder » (« gardé ✨ ») — Option A (07/08) :
+  // n'est plus calée sur l'état complété (qui s'auto-efface à ~4,1 s) mais sur
+  // un timeout dédié (keepConfirmTimeoutRef) armé au tap.
   const [momentKept, setMomentKept] = useState(false);
+  const keepConfirmTimeoutRef = useRef(null);
+  // Purge le timeout de confirmation en vol au démontage — pas de setState après.
+  useEffect(() => () => {
+    if (keepConfirmTimeoutRef.current != null) {
+      clearTimeout(keepConfirmTimeoutRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     if (keepMomentFiredRef.current) {
@@ -838,10 +913,13 @@ function TimerScreenContent() {
     if (sessionCountLoading || keepMomentLoading) {
       return;
     }
+    // Option A (07/08) : le verrou persisté hasSeenKeepMoment n'est PLUS posé
+    // ici (à l'affichage) — il se consomme à l'ACTION (garder/passer). Le ref
+    // keepMomentFiredRef suffit à ne déclencher qu'une fois par montage.
     if (snapshot.isCompleted && completedSessions === 1 && !hasSeenKeepMoment) {
       keepMomentFiredRef.current = true;
       setKeepMomentFired(true);
-      setHasSeenKeepMoment(true);
+      analytics.trackRitualKeepShown();
     }
   }, [
     snapshot.isCompleted,
@@ -849,17 +927,27 @@ function TimerScreenContent() {
     hasSeenKeepMoment,
     sessionCountLoading,
     keepMomentLoading,
-    setHasSeenKeepMoment,
+    analytics,
   ]);
 
-  const showKeepMoment = keepMomentFired && snapshot.isCompleted;
+  // Option A : persiste après l'auto-effacement d'isCompleted (~4,1 s) — jusqu'à
+  // garder / passer / démarrer une nouvelle séance (teardown ci-dessous).
+  const showKeepMoment = keepMomentFired;
 
+  // Teardown Option A : l'invitation se retire quand l'user démarre une NOUVELLE
+  // séance (il passe à autre chose) — plus à l'auto-effacement d'isCompleted.
+  // Garder/passer font leur propre teardown. Ne consomme pas le verrou : la garde
+  // completedSessions === 1 empêche déjà tout retour.
   useEffect(() => {
-    if (!snapshot.isCompleted && keepMomentFired) {
+    if (snapshot.running && keepMomentFired) {
+      if (keepConfirmTimeoutRef.current != null) {
+        clearTimeout(keepConfirmTimeoutRef.current);
+        keepConfirmTimeoutRef.current = null;
+      }
       setKeepMomentFired(false);
       setMomentKept(false);
     }
-  }, [snapshot.isCompleted, keepMomentFired]);
+  }, [snapshot.running, keepMomentFired]);
 
   const handleKeepMomentTap = useCallback(() => {
     if (momentKept) {
@@ -897,6 +985,16 @@ function TimerScreenContent() {
     }
     analytics.trackRitualKept();
     setMomentKept(true);
+    setHasSeenKeepMoment(true); // Option A : verrou consommé sur GARDER
+    // Confirmation « gardé ✨ » ~1,8 s puis retrait (isCompleted ne la porte plus).
+    if (keepConfirmTimeoutRef.current != null) {
+      clearTimeout(keepConfirmTimeoutRef.current);
+    }
+    keepConfirmTimeoutRef.current = setTimeout(() => {
+      setKeepMomentFired(false);
+      setMomentKept(false);
+      keepConfirmTimeoutRef.current = null;
+    }, 1800);
   }, [
     momentKept,
     rituals,
@@ -908,7 +1006,22 @@ function TimerScreenContent() {
     createRitual,
     ensureRitualFavorite,
     analytics,
+    setHasSeenKeepMoment,
   ]);
+
+  // Option A : « passer » — retire l'invitation et consomme le verrou, sans rien
+  // sauvegarder. Terminal (ne revient pas — garde completedSessions === 1).
+  const handleKeepMomentDismiss = useCallback(() => {
+    haptics.selection().catch(() => {});
+    setHasSeenKeepMoment(true);
+    analytics.trackRitualDismissed();
+    if (keepConfirmTimeoutRef.current != null) {
+      clearTimeout(keepConfirmTimeoutRef.current);
+      keepConfirmTimeoutRef.current = null;
+    }
+    setKeepMomentFired(false);
+    setMomentKept(false);
+  }, [analytics, setHasSeenKeepMoment]);
 
   // Immersion (cadrage 3c) : RUNNING + IMMERSION_DELAY sans toucher → le
   // chrome s'efface, le disque devient décor. Machine d'état extraite
@@ -972,8 +1085,11 @@ function TimerScreenContent() {
   // occupe déjà la ligne de fin (completedSessions === 1). Sans ce garde,
   // une séance longue dès le 1er Moment ferait apparaître DEUX voix à la
   // fois (constat avisé en review, mandat W).
+  // `!showKeepMoment` (Option A, 07/08) : keep-moment survit désormais à
+  // l'état complété (persiste au repos jusqu'à action) — on étend le garde
+  // « une seule voix » à toute sa fenêtre, pas juste isCompleted.
   const dormantTips = useDormantTips({
-    enabled: canShowDormantTips && !borrowCoach.activeMessage && !snapshot.isCompleted,
+    enabled: canShowDormantTips && !borrowCoach.activeMessage && !snapshot.isCompleted && !showKeepMoment,
     hadLongSession,
     isCompleted: snapshot.isCompleted,
   });
@@ -1211,45 +1327,27 @@ function TimerScreenContent() {
                 >
                   {snapshot.displayMessage || ' '}
                 </Text>
-                {/* Ligne partagée : « fais-le respirer » (>= 2 séances) et
-                    « garde ce moment ? » (1re séance) ne coexistent jamais
-                    (cf. showKeepMoment ci-dessus) — même slot réservé,
-                    jamais les deux montées en même temps. */}
+                {/* « fais-le respirer » (>= 2 séances) seule ici. « garde ce
+                    moment ? » (1re séance) a quitté ce slot (Option A, 07/08) :
+                    rendue en contrôle persistant à coachAnchor plus bas. */}
                 <Text
                   style={[
                     styles.breatheInvitationText,
-                    !(showBreatheInvitation || showKeepMoment) && styles.completionMessageHidden,
+                    !showBreatheInvitation && styles.completionMessageHidden,
                   ]}
                   numberOfLines={1}
-                  onPress={
-                    showBreatheInvitation
-                      ? handleBreatheInvitationTap
-                      : showKeepMoment && !momentKept
-                        ? handleKeepMomentTap
-                        : undefined
-                  }
-                  accessible={showBreatheInvitation || (showKeepMoment && !momentKept)}
+                  onPress={showBreatheInvitation ? handleBreatheInvitationTap : undefined}
+                  accessible={showBreatheInvitation}
                   accessibilityRole="button"
-                  accessibilityLabel={
-                    showBreatheInvitation
-                      ? t('ambiances.breatheInvitation')
-                      : momentKept
-                        ? t('firstRun.momentKept')
-                        : t('firstRun.keepMoment')
-                  }
+                  accessibilityLabel={t('ambiances.breatheInvitation')}
                 >
-                  {showBreatheInvitation
-                    ? t('ambiances.breatheInvitation')
-                    : showKeepMoment
-                      ? (momentKept ? t('firstRun.momentKept') : t('firstRun.keepMoment'))
-                      : ' '}
+                  {showBreatheInvitation ? t('ambiances.breatheInvitation') : ' '}
                 </Text>
               </View>
               <View ref={barRef} onLayout={handleBarLayout}>
                 <CompactRow
                   onActivityTouch={firstRun.markActivityTouched}
                   onColorTouch={firstRun.markColorTouched}
-                  checkMomentDirty={checkMomentDirty}
                   markMomentEvent={markMomentEvent}
                 />
               </View>
@@ -1269,7 +1367,17 @@ function TimerScreenContent() {
             entre le dé et la bande, jamais dessous, quelle que soit la
             hauteur du contenu au-dessus. Une seule voix coach à la fois
             (Lambda V) : le prêt gagne le canal, l'astuce dormante sinon. */}
-        {coachChannel && (
+        {/* « garde ce moment ? » (Option A) prime sur le canal coach — une seule
+            voix à l'ancre. Gaté !isFocus : invisible en Focus (statu quo). */}
+        {!isFocus && showKeepMoment ? (
+          <View style={styles.coachAnchor} pointerEvents="box-none">
+            <KeepMomentControl
+              kept={momentKept}
+              onKeep={handleKeepMomentTap}
+              onDismiss={handleKeepMomentDismiss}
+            />
+          </View>
+        ) : coachChannel ? (
           <View style={styles.coachAnchor} pointerEvents="box-none">
             {coachChannel.kind === 'coach' && (
               <CoachPill
@@ -1280,7 +1388,7 @@ function TimerScreenContent() {
             )}
             {coachChannel.kind === 'dormant' && <DormantTipPill tip={coachChannel.tip} />}
           </View>
-        )}
+        ) : null}
         {isFocus && !snapshot.running && !snapshot.isCompleted && <FocusHint />}
         <AsideZone
           isTimerRunning={snapshot.running}

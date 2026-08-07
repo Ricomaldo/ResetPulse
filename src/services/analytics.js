@@ -223,6 +223,18 @@ const analyticsAdapter = {
   trackRitualKept() {
     this.track('ritual_kept');
   },
+
+  // Option A « garde ce moment ? » (07/08) : l'affichage et l'action sont
+  // désormais séparés (verrou consommé à l'action). Définis EN DUR (jamais via
+  // le Proxy no-op, cf. incident « événements avalés ») pour tracer le funnel
+  // montrée → gardée / passée.
+  trackRitualKeepShown() {
+    this.track('ritual_keep_shown');
+  },
+
+  trackRitualDismissed() {
+    this.track('ritual_dismissed');
+  },
 };
 
 // Proxy : absorbe toute méthode d'événement sans maintenir la liste exhaustive

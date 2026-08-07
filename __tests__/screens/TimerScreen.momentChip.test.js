@@ -70,6 +70,8 @@ jest.mock('../../src/hooks/useAnalytics', () => ({
     trackAmbiancesInvitationShown: jest.fn(),
     trackAmbiancesInvitationTapped: jest.fn(),
     trackRitualKept: jest.fn(),
+    trackRitualKeepShown: jest.fn(),
+    trackRitualDismissed: jest.fn(),
   }),
 }));
 
@@ -201,91 +203,24 @@ describe('TimerScreen — chip intelligent (CompactRow, Q3b)', () => {
     expect(mockTrackRitualApplied).toHaveBeenCalledWith('home_row', 'full');
   });
 
-  it('Moment sale (couleur réglée à la main) : le tap ne touche QUE l\'activité', async () => {
+  it('même après un réglage manuel de couleur, le tap applique le rituel EN ENTIER (chip intelligent retiré, Eric 07/08)', async () => {
     await act(async () => {
       renderer = create(<TimerScreen />);
     });
 
-    // Réglage manuel de couleur (rangée d'accueil) — salit le Moment.
+    // Réglage manuel de couleur (rangée d'accueil). L'ancien « chip
+    // intelligent » (Q3b) aurait alors limité le tap à l'activité seule ; il a
+    // été retiré (« remet comme avant », Eric 07/08) → le chip applique
+    // toujours le rituel favori complet, la friction durée/couleur assumée.
     pressColorDot(1);
     mockSetCurrentActivity.mockClear(); // isole le tap chip qui suit
 
     pressChip();
 
     expect(mockSetCurrentActivity).toHaveBeenCalledTimes(1);
-    expect(mockSetCurrentDuration).not.toHaveBeenCalled();
-    expect(mockSetSelectedSoundId).not.toHaveBeenCalled();
-    expect(mockSetColorByValue).not.toHaveBeenCalled();
-    // mode 'activity_only' toujours porté par ritual_applied, même chemin
-    // partiel — ce n'est plus activity_selected qui distingue ce cas.
-    expect(mockTrackRitualApplied).toHaveBeenCalledTimes(1);
-    expect(mockTrackRitualApplied).toHaveBeenCalledWith('home_row', 'activity_only');
-  });
-
-  it('un rembobinage (stopTimer, tap pendant la séance) remet le Moment à vierge : le chip redevient complet', async () => {
-    await act(async () => {
-      renderer = create(<TimerScreen />);
-    });
-
-    pressColorDot(1); // salit
-    mockSetCurrentActivity.mockClear();
-
-    pressChip(); // sale : partiel, l'activité seule
-    expect(mockSetCurrentDuration).not.toHaveBeenCalled();
-
-    // Rembobinage (ADR-007) : tap pendant la séance → handleDialTap lit
-    // timerRef.current.running et appelle stopTimer() — événement de
-    // nettoyage du Moment (cf. src/config/moment.js).
-    const fakeTimer = {
-      running: true,
-      isCompleted: false,
-      remaining: 100,
-      displayMessage: '',
-      startTimer: jest.fn(),
-      stopTimer: jest.fn(),
-      resetTimer: jest.fn(),
-    };
-    act(() => {
-      capturedTimeTimerProps.onTimerRef(fakeTimer);
-    });
-    act(() => {
-      capturedTimeTimerProps.onDialTap();
-    });
-    expect(fakeTimer.stopTimer).toHaveBeenCalledTimes(1);
-
-    mockSetCurrentDuration.mockClear();
-    mockSetSelectedSoundId.mockClear();
-    mockSetColorByValue.mockClear();
-
-    pressChip(); // vierge à nouveau : apply complet
-
     expect(mockSetCurrentDuration).toHaveBeenCalledWith(1500);
     expect(mockSetSelectedSoundId).toHaveBeenCalledWith('chime');
     expect(mockSetColorByValue).toHaveBeenCalledWith('#111111');
-  });
-
-  it('un apply complet depuis le panneau "Mes rituels" (AsideZone.onRitualApplied) remet aussi le Moment à vierge', async () => {
-    await act(async () => {
-      renderer = create(<TimerScreen />);
-    });
-
-    pressColorDot(1); // salit
-    expect(typeof capturedAsideZoneProps.onRitualApplied).toBe('function');
-
-    // Signal que RitualsPanel envoie à CHAQUE apply (toujours complet) —
-    // relayé par AsideZone, cf. AsideZone.jsx onApplied.
-    act(() => {
-      capturedAsideZoneProps.onRitualApplied();
-    });
-
-    mockSetCurrentDuration.mockClear();
-    mockSetSelectedSoundId.mockClear();
-    mockSetColorByValue.mockClear();
-
-    pressChip(); // vierge à nouveau : apply complet, pas seulement l'activité
-
-    expect(mockSetCurrentDuration).toHaveBeenCalledWith(1500);
-    expect(mockSetSelectedSoundId).toHaveBeenCalledWith('chime');
-    expect(mockSetColorByValue).toHaveBeenCalledWith('#111111');
+    expect(mockTrackRitualApplied).toHaveBeenCalledWith('home_row', 'full');
   });
 });

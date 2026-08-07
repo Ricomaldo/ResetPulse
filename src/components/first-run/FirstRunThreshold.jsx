@@ -122,7 +122,7 @@ function ThresholdPageTwo({ onComplete }) {
     <View style={styles.page} testID="firstRun.threshold.page2">
       <View style={styles.center}>
         <Text style={styles.title}>{t('onboarding.v2.filter1.title')}</Text>
-        <TimerDialPreview size={DIAL_SIZE} centerEmoji={activityEmoji} />
+        <TimerDialPreview size={DIAL_SIZE} centerEmoji={activityEmoji} progress={0.33} />
         <PrimaryButton
           label={t('onboarding.creation.cta')}
           onPress={onComplete}
