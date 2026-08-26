@@ -113,12 +113,12 @@ export default function FirstRunTips({ moment, barAnchor, dialAnchor, onSkip }) 
     return null;
   }
 
-  // Moment 1 : d'abord la place ENTRE cadran et rangée (P1-7). Sans cette
-  // place (petit écran, ou anchors pas encore mesurées), repli identique
-  // aux moments 2-4 : au-dessus du cadran (dialAnchor + DIAL_FALLBACK_RATIO)
-  // — jamais l'ancien calcul qui ancrait au haut de la rangée sans jamais
-  // vérifier la présence du cadran.
-  const topBetween = moment === 1 ? topOffsetForFirstMoment(barAnchor, dialAnchor, overlayTopY) : null;
+  // TOUS les moments visent d'abord la place ENTRE cadran et rangée (P1-7,
+  // étendu Gate 0 26/08 : le placement « au-dessus du cadran » des moments
+  // 2-4 posait la bulle SUR le temps digital — TopTime masqué, vu par Eric).
+  // Sans cette place (petit écran, ou anchors pas encore mesurées), repli :
+  // au-dessus du cadran (dialAnchor + DIAL_FALLBACK_RATIO).
+  const topBetween = topOffsetForFirstMoment(barAnchor, dialAnchor, overlayTopY);
   const tipPositionStyle = topBetween !== null
     ? { top: topBetween }
     : { bottom: bottomOffsetFromAnchor(dialAnchor, DIAL_FALLBACK_RATIO) };

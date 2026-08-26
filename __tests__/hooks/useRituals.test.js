@@ -461,8 +461,11 @@ describe('useRituals', () => {
         false,
       ]);
     };
-    const mk = (id, favorite) => ({
-      id, name: id, activityId: 'work', color: DEFAULT_RITUAL_COLOR,
+    // activityId = id par défaut (activités toutes distinctes) — la règle
+    // d'éviction préfère le favori de MÊME activité (Gate 0 26/08), donc un
+    // activityId partagé partout fausserait les scénarios « pas de jumeau ».
+    const mk = (id, favorite, activityId = id) => ({
+      id, name: id, activityId, color: DEFAULT_RITUAL_COLOR,
       duration: 600, soundId: 'timer_complete', steps: [],
       ...(favorite === undefined ? {} : { favorite }),
     });
@@ -526,8 +529,11 @@ describe('useRituals', () => {
         false,
       ]);
     };
-    const mk = (id, favorite) => ({
-      id, name: id, activityId: 'work', color: DEFAULT_RITUAL_COLOR,
+    // activityId = id par défaut (activités toutes distinctes) — la règle
+    // d'éviction préfère le favori de MÊME activité (Gate 0 26/08), donc un
+    // activityId partagé partout fausserait les scénarios « pas de jumeau ».
+    const mk = (id, favorite, activityId = id) => ({
+      id, name: id, activityId, color: DEFAULT_RITUAL_COLOR,
       duration: 600, soundId: 'timer_complete', steps: [],
       ...(favorite === undefined ? {} : { favorite }),
     });
@@ -565,6 +571,32 @@ describe('useRituals', () => {
       );
       const byId = Object.fromEntries(written.map((r) => [r.id, r.favorite]));
       expect(byId).toEqual({ a: true, b: true, c: false, perso: true });
+    });
+
+    it('éviction jumeau (fail Gate 0 26/08) : si un favori partage l\'activité du rituel gardé, C\'EST LUI qui cède sa place — jamais deux fois le même emoji sur la rangée', () => {
+      // « perso » est né d'un moment ☕ (même activité que le template break) :
+      // il remplace SA tasse, pas le dernier favori (work resterait visible).
+      const seedArray = [
+        mk('ritual_meditation', true, 'meditation'),
+        mk('ritual_break', true, 'break'),
+        mk('ritual_work', true, 'work'),
+        mk('perso', false, 'break'),
+      ];
+      seed(seedArray);
+      const { result } = renderHook(() => useRituals(), { wrapper });
+
+      act(() => {
+        result.current.ensureRitualFavorite('perso');
+      });
+
+      const written = mockSetRituals.mock.calls[0][0](seedArray);
+      const byId = Object.fromEntries(written.map((r) => [r.id, r.favorite]));
+      expect(byId).toEqual({
+        ritual_meditation: true,
+        ritual_break: false, // le jumeau ☕ cède sa place
+        ritual_work: true, // le dernier favori SURVIT
+        perso: true,
+      });
     });
 
     it('rituel déjà favori : no-op, la visibilité était déjà acquise', () => {

@@ -317,9 +317,10 @@ function CoachPill({ text, onPress, testID }) {
 }
 
 // « garde ce moment ? » — contrôle persistant (Option A, 07/08). Pastille
-// tappable « garder » + « passer » discret dessous. Famille CoachPill (surface
-// + ombre douce), jamais un mur. `kept` → confirmation muette « gardé ✨ ».
-// Ancré en absolu (coachAnchor) : ne bouge jamais le cadran.
+// tappable « garder » + « passer » discret dessous. Registre COACH (bulle
+// sombre, comme les tips first-run — Gate 0 26/08 : la version surface
+// blanche rompait le registre), jamais un mur. `kept` → confirmation muette
+// « gardé ✨ ». Ancré en absolu (coachAnchor) : ne bouge jamais le cadran.
 function KeepMomentControl({ kept, onKeep, onDismiss }) {
   const theme = useTheme();
   const t = useTranslation();
@@ -331,14 +332,14 @@ function KeepMomentControl({ kept, onKeep, onDismiss }) {
     },
     pill: {
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.text,
       borderRadius: theme.borderRadius.round,
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.xs,
       ...theme.shadow('sm'),
     },
     pillText: {
-      color: theme.colors.text,
+      color: theme.colors.background,
       fontSize: rs(13, 'min'),
       fontWeight: '600',
       textAlign: 'center',
@@ -1263,6 +1264,11 @@ function TimerScreenContent() {
       position: 'absolute',
       right: 0,
     },
+    // Dé silencieux pendant « garde ce moment ? » — invisible mais monté
+    // (garde sa place, le centrage du cadran ne bouge pas).
+    distractionMuted: {
+      opacity: 0,
+    },
     // Overlay de sortie d'immersion (cadrage 3c) : monté SEULEMENT quand
     // immersed — au-dessus de tout (AsideZone = zIndex 50), il capte le
     // PREMIER toucher pour qu'il n'atteigne jamais le disque (sinon
@@ -1351,10 +1357,20 @@ function TimerScreenContent() {
                   markMomentEvent={markMomentEvent}
                 />
               </View>
-              <DistractionButton
-                showLabel={showDistractionLabel}
-                onDistraction={handleDistraction}
-              />
+              {/* Une seule voix (Gate 0 26/08) : pendant que « garde ce
+                  moment ? » parle à l'ancre coach, le dé s'efface — il
+                  chevauchait la pastille, et proposer une distraction au
+                  sommet émotionnel est un contresens. Opacité (pas un
+                  démontage) : il garde sa place, rien ne bouge à l'écran. */}
+              <View
+                style={showKeepMoment ? styles.distractionMuted : null}
+                pointerEvents={showKeepMoment ? 'none' : 'auto'}
+              >
+                <DistractionButton
+                  showLabel={showDistractionLabel}
+                  onDistraction={handleDistraction}
+                />
+              </View>
             </Animated.View>
           )}
         </View>

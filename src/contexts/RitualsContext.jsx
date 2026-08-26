@@ -168,10 +168,13 @@ export function RitualsProvider({ children }) {
    *
    * Contrairement à `toggleFavorite` (geste utilisateur explicite, qui
    * REFUSE une 4e étoile tant qu'une place n'a pas été libérée), celui-ci
-   * fait de la place lui-même : évince le DERNIER favori du tableau
-   * (ordre `rituals` — les 3 templates sont en tête à l'état initial, donc
-   * en pratique c'est le 3e template qui cède sa place ; le rituel gardé
-   * se retrouve à côté de 2 templates, jamais seul, jamais un mur). Même
+   * fait de la place lui-même. L'éviction préfère le favori de MÊME
+   * activité que le rituel promu s'il en existe un (fail Gate 0 26/08 :
+   * garder un moment ☕ évinçait 💻 et laissait DEUX tasses sur la rangée
+   * — règle Eric : le perso remplace son jumeau) ; sinon, le DERNIER
+   * favori du tableau cède sa place (ordre `rituals` — templates en tête
+   * à l'état initial ; le rituel gardé reste à côté de templates, jamais
+   * seul, jamais un mur). Même
    * migration douce que `toggleFavorite` : sans aucun favori explicite,
    * les 3 premiers sont matérialisés avant l'éviction. No-op si le rituel
    * est déjà favori (ou introuvable).
@@ -192,8 +195,11 @@ export function RitualsProvider({ children }) {
         return materialized === prev ? prev : materialized;
       }
       const favorites = materialized.filter((ritual) => ritual.favorite);
+      const sameActivityFavorite = favorites.find(
+        (ritual) => ritual.activityId === current.activityId,
+      );
       const evictId = favorites.length >= MAX_FAVORITES
-        ? favorites[favorites.length - 1].id
+        ? (sameActivityFavorite ?? favorites[favorites.length - 1]).id
         : null;
       return materialized.map((ritual) => {
         if (ritual.id === id) {
