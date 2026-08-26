@@ -49,6 +49,7 @@ SHOTS = {
     '04': {'en': 'your colors, your sounds, your pace.', 'fr': 'ses couleurs, ses sons, son rythme.', 'bg': CREAM},
     '05': (None, COAL),
     '06': {'en': 'palettes & sounds, to unlock.', 'fr': 'palettes & sons, à débloquer.', 'bg': CREAM},
+    '07': {'en': 'it keeps going without you.', 'fr': 'il continue sans vous.', 'bg': COAL},
 }
 
 
@@ -162,7 +163,7 @@ def feature_graphic(lang: str) -> Path:
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else 'proof'
-    raws = sorted(RAW.glob('*.png'))
+    raws = sorted(p for p in RAW.glob('*.png') if not p.name.startswith('_'))
     done = []
     for raw in raws:
         num = raw.name[:2]
