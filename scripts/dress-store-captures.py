@@ -40,7 +40,7 @@ SHOTS = {
     '01': (None, CREAM),
     '02': {'en': 'yours, not a stopwatch.', 'fr': 'le sien, pas un chrono.', 'bg': CREAM},
     '03': {'en': 'your rituals, one tap each.', 'fr': 'ses rituels, un tap chacun.', 'bg': CREAM},
-    '04': {'en': 'made yours, day after day.', 'fr': 'à sa main, jour après jour.', 'bg': CREAM},
+    '04': {'en': 'your colors, your sounds, your pace.', 'fr': 'ses couleurs, ses sons, son rythme.', 'bg': CREAM},
     '05': (None, COAL),
     '06': {'en': 'palettes & sounds, to unlock.', 'fr': 'palettes & sons, à débloquer.', 'bg': CREAM},
 }
