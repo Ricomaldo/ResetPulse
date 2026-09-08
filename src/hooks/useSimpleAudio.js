@@ -16,9 +16,9 @@ const configureAudioOnce = async () => {
   try {
     await setAudioModeAsync({
       playsInSilentMode: true,              // iOS: joue même en mode silencieux
-      shouldPlayInBackground: true,          // Continue en background
+      shouldPlayInBackground: false,         // Pas d'audio persistant (guideline 2.5.4 — la fin de timer passe par les notifications)
       interruptionMode: 'duckOthers',       // Baisse le volume des autres apps
-      staysActiveInBackground: true,         // Reste actif en background
+      staysActiveInBackground: false,        // Pas d'audio persistant (idem)
       shouldDuckAndroid: true,              // Android: baisse le volume des autres
       playThroughEarpieceAndroid: false,    // Android: joue sur haut-parleur
     });
