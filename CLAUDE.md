@@ -1,322 +1,99 @@
----
-created: '2025-12-07'
-updated: '2026-07-24'
-status: active
-type: project-framework
----
+# CLAUDE.md — arc enow
 
-# CLAUDE.md - ResetPulse
-
-## 🏗️ Framework (Stable Reference)
-
-This document defines the **project architecture, tech stack, and conventions**. It changes rarely.
-
-> ⚠️ **RECENTRAGE EN COURS (07/2026)** — l'app est en reconstruction par cycles
-> (ADR-014). Sources de vérité, dans l'ordre :
-> 1. `CONTEXT.md` (racine) — vocabulaire du domaine, obligatoire
-> 2. `_docs/decisions/adr-014-recentrage-signature.md` + `adr-015-modele-rituel-activite.md`
-> 3. `_docs/specs/recentrage.md` — spec des écrans cibles (SCR-x)
-> 4. `_cockpit/missions/active/recentrage.md` — méthode, suivi cycles, règles
+> **Tu n'es pas sur ResetPulse 3.0. Tu es sur l'arc `enow`.**
 >
-> Toute section ci-dessous marquée 🕰️ décrit l'app d'avant — encore
-> partiellement en place, en cours de remplacement cycle par cycle.
+> Lis `_cockpit/missions/active/arc-enow.md` **en premier** — c'est l'amorce de
+> l'arc : la thèse, ce qui est décidé, ce qui est ouvert, ce qui est interdit,
+> et le temps en cours. Ce fichier-ci ne vit que sur la branche `enow`.
 
-For **current missions, workflows, or next steps**, see:
-- **Orientation session** → `_cockpit/README.md` ← lire en premier
-- **Mission active** → `_cockpit/missions/active/recentrage.md`
-- **Vision & cap** → `_cockpit/vision/index.md`
-- **Règles de pilotage** → `_cockpit/flow-rules.md`
+## Où tu es
 
----
+- **Copie de travail** : `~/_forge/experimental/enow`, branche `enow`.
+- **Témoin figé de la 3.0** : `~/_codebase/apps/resetpulse-3.0` (branche `main`).
+  On ne le touche pas. Il existe pour qu'on puisse regarder ce qui était.
+- La 3.0 est **en ligne sur les deux stores et gelée**. Il n'y aura pas de 3.1.
 
-## 📱 Vue d'ensemble
+## Ce qu'on fabrique
 
-ResetPulse est une application Time Timer visuel pour utilisateurs neuroatypiques (TDAH, TSA). App React Native/Expo en production sur Apple App Store et Google Play. Modèle freemium avec RevenueCat pour les IAP.
+Une 4.0 beta, jamais publiée en l'état. La thèse, en bref — le détail est dans
+l'amorce :
 
-## Stack technique
+- Le premier geste n'est pas une durée, c'est une intention : **`no more`**
+  (un plafond, pas plus) ou **`no less`** (un plancher, pas moins).
+- **La forme part vide et se remplit** pendant la séance. La récompense est la
+  complétude. Le Time Timer classique se vide ; celui-ci dépose.
+- Parcours visé : **mode → intention → start**. Pas d'étape de durée.
 
-- **Framework**: React Native 0.83.6 + Expo SDK 55 (New Architecture activée)
-- **React**: 19.1.0
-- **État**: Context API (TimerConfigContext consolidé ADR-009, PurchaseContext)
-- **i18n**: i18n-js (15 langues COMPLÈTES — passe copies Claude design + delta intégrés 08/2026)
-- **Analytics**: PostHog ACTIF (cloud EU, clé réelle) — funnel complet activation/conversion par porte
-- **IAP**: RevenueCat (react-native-purchases)
-- **Package manager**: npm
+## Le juge
 
-## Commandes essentielles
+**L'usage d'Eric au quotidien, puis celui d'Arthur.** Pas le marché, pas les
+métriques, pas les trois cerveaux théoriques. Rien ne part sur TestFlight tant
+qu'Eric n'est pas conquis.
+
+## Règles de l'arc
+
+- **Sketch sauvage.** Cacher un module jusqu'à nouvel ordre, essayer une forme,
+  la jeter — c'est permis et souhaité. On avance avec joie et légèreté.
+- **La 3.0 témoigne de l'état, elle n'est pas la référence.** Ne pas « rester
+  cohérent avec l'existant » par réflexe : c'est l'existant qu'on interroge.
+- **Ne rien trancher par accident.** La section « Ouvert » de l'amorce liste ce
+  qui doit rester ouvert (polarité, sort du drag, forme, plafond, nom, bundle
+  id). Si un geste y touche, on le dit avant.
+- **Interdit** : toucher `main` · viser les stores, la review, l'i18n complète,
+  les assets · traiter cette branche comme une release.
+- Commits au fil sur `enow`, **un seul push en fin de passe**.
+
+## Le noyau qu'on ne casse pas
+
+Le reste est matière à sketch — ceci ne l'est pas :
+
+- `src/hooks/useTimer.js` et la state machine du timer (ADR-007)
+- Les tests de ce noyau, dans `__tests__/`
+
+Ailleurs, **les tests suivent le code** : un composant supprimé emporte ses
+tests dans le même commit.
+
+## Stack & commandes
+
+React Native 0.83.6 · Expo SDK 55 (New Architecture) · React 19.1.0 · npm.
+État Context API, i18n-js, RevenueCat, PostHog.
 
 ```bash
-# Développement
-npx expo start          # Démarrer le serveur dev
-npm run ios             # Lancer sur iOS
-npm run android         # Lancer sur Android
-
-# Tests
-npm run test            # Tous les tests
-npm run test:hooks      # Tests des hooks uniquement
-npm run test:timer      # Tests useTimer
-
-# Versioning
-npm run version:patch   # Bump patch (1.2.3 → 1.2.4)
-npm run version:minor   # Bump minor (1.2.3 → 1.3.0)
-npm run version:set 1.2.5  # Set version spécifique
-
-# Build production
-# iOS: ouvrir ios/ResetPulse.xcworkspace dans Xcode → Archive
-# Android: cd android && ./gradlew bundleRelease
+npm install                # requis — le clone est neuf
+npx expo prebuild          # requis — ios/ et android/ sont gitignorés
+npx expo start             # serveur dev
+npm run ios / npm run android
+npm run test               # jest
 ```
 
-## Architecture des dossiers
+Le build iOS passe par Xcode (`ios/ResetPulse.xcworkspace`), jamais par EAS.
+
+## Architecture (héritée, à interroger)
 
 ```
 src/
-├── components/
-│   ├── dial/             # TimeTimer, TimerDial, DialCenter… (noyau visuel, récolté)
-│   ├── layout/           # AsideZone (sheet léger SCR-10), Icons
-│   ├── modals/           # PremiumModalContent (+PaywallHero), ModalStack
-│   ├── rituals/          # RitualsPanel, RitualForm (frontière ADR-017)
-│   ├── sounds/           # SoundsPanel (essai libre)
-│   └── first-run/        # Seuil (PulseLogo), tips, previews (ADR-016)
-├── config/
-│   ├── activities.js     # Activités (atomes d'identité, ADR-015)
-│   ├── timer-palettes.js # Palettes de couleurs
-│   ├── revenuecat.js     # Config RevenueCat
-│   └── test-mode.js      # DEV_MODE toggle
-├── contexts/             # TimerConfigContext (consolidé ADR-009), PurchaseContext
-├── dev/                  # DevPremiumContext + composants dev
-├── hooks/                # useTimer (noyau sacré), useNotificationTimer, useTranslation
-├── i18n/                 # Traductions (15 langues)
-├── screens/              # TimerScreen.jsx (écran neuf, reconstruction C1+)
-├── services/             # analytics.js (no-op, en attente PostHog)
-└── theme/                # ThemeProvider, tokens, colors
+├── components/   dial/ · layout/ · modals/ · rituals/ · sounds/ · first-run/
+├── config/       activities.js · timer-palettes.js · revenuecat.js · test-mode.js
+├── contexts/     TimerConfigContext · PurchaseContext
+├── hooks/        useTimer ← noyau · useNotificationTimer · useTranslation
+├── i18n/         15 langues
+├── screens/      TimerScreen.jsx
+├── services/     analytics.js (PostHog)
+└── theme/        ThemeProvider · tokens · colors
 ```
 
-## Modèle Freemium — ADR-017 (actif)
+## Conventions de code
 
-**ADR-017 « vivre est gratuit, garder est payant »** (remplace « cœur
-gratuit entier ») : free = 3 rituels-templates FIGÉS + UN rituel perso
-(slot 4, né de « garde ce moment ») + vitrine 6 emojis + 3 palettes et
-4 sons (essai libre du reste, retombée au relancement). Ambiances 4,99 €
-une fois = tout, illimité, éditable. Portes = modale unique à héros par
-source (`paywall_viewed` ventilé) + guichet volontaire au sheet.
-ADR-018 « la parole hors les murs » gouverne notification/Live Activity.
+- Fichiers et dossiers : kebab-case · Composants : PascalCase ·
+  Variables : camelCase · Constantes : SCREAMING_SNAKE
+- Français pour la conversation, anglais pour le code
+- Textes visibles : `t('key')` via `useTranslation()` — mais pendant le sketch,
+  du texte en dur est toléré tant qu'il est provisoire
 
-## Mode développement
+## Ce qui n'est PAS à charger en orientation de session
 
-Le fichier `src/config/test-mode.js` contient `DEV_MODE`:
-- `true`: Affiche DevFab (coin haut-gauche) pour toggle App/Onboarding et Free/Premium
-- `false`: Production normale
-
-Contexte dev: `src/dev/DevPremiumContext.js` simule le statut premium pour tests.
-
-## État actuel du projet
-
-### En production
-- v2.1.6 sur les stores (code d'avant) ; **3.0.0 sur `main`, release train en cours** (icône E, fiches, builds autonomes)
-- Analytics : PostHog ACTIF (événements timer_*, ritual_*, first_moment_*, paywall_viewed par source, purchase_*)
-
-### En cours
-- **`main` = le reborn 3.0** (merge 26/07/2026, Lots 1-2 + 3a) — pas encore
-  buildable en release stores : voir « Reste avant deploy » dans
-  `_cockpit/README.md`
-- **Mission Recentrage** (ADR-014) : Lots 1-2 clos, Lot 3 (Ambiances) en cours
-  3a→3f, cible v3.0.0
-- Suivi : `_cockpit/missions/active/recentrage.md` · Spec : `_docs/specs/recentrage.md`
-
-### Tests
-- Les tests suivent le code (règle recentrage) : supprimés avec leurs composants,
-  sacrés pour le noyau (`useTimer`, state machine ADR-007). Compte courant dans
-  le dernier rapport de cycle.
-
-## Fichiers clés à connaître
-
-- `CONTEXT.md` - Glossaire du domaine (Rituel, Activité, Mode…) — lire en premier
-- `App.js` - Point d'entrée
-- `src/screens/TimerScreen.jsx` - Écran principal (neuf, reconstruction C1+)
-- `src/components/layout/AsideZone.jsx` - Sheet léger (SCR-10)
-- `src/components/dial/` - Noyau visuel du disque (récolté)
-- `CHANGELOG.md` - Historique des versions
-
-## Conventions
-
-- i18n: Tous les textes visibles doivent utiliser `t('key')` via `useTranslation()`
-- Modales: Regroupées dans `src/components/modals/` avec export centralisé via `index.js`
-- Premium check: Utiliser `usePremiumStatus()` hook
-- Haptics: Via `src/utils/haptics.js`
-- Analytics: Via `useAnalytics()` hook
-
-## Notes importantes
-
-- iOS build nécessite Xcode (pas EAS Build) pour support IAP
-- Le hook `useTimer` est critique - bien testé dans `__tests__/`
-- Les palettes utilisent un système séparé du thème global (voir `timerPalettes.js`)
-
----
-
-## 🎨 Color System Architecture
-
-ResetPulse utilise un système de couleurs à 3 niveaux pour garantir cohérence visuelle et maintenabilité.
-
-### Architecture (src/theme/colors.js)
-
-| Niveau | Nom | Usage | Mutabilité |
-|--------|-----|-------|-----------|
-| **1** | `baseColors` | Constantes brand (coral, fixed colors) | Jamais changé |
-| **2** | `lightTheme`/`darkTheme` | Tokens sémantiques contextuels | Adaptatif au thème |
-| **3** | `devColors` | Dev-only (DevFab uniquement) | Dev/testing seulement |
-
-### Visual Hierarchy (Light Mode)
-
-| Couleur | Token | Usage | Exemples Composants |
-|---------|-------|-------|---------------------|
-| **Cream** (#ebe8e3) | `theme.colors.background` | Containers/screen backgrounds | TimerScreen, Drawer, Onboarding, Carousel navigation |
-| **White** (#FFFFFF) | `theme.colors.surface` | Interactive surfaces | Activity items, command buttons, preset pills |
-| **Coral** | `theme.colors.brand.primary` | Active/highlighted states | Selected pill, active button, highlights |
-
-### Usage Guidelines
-
-**Utiliser `theme.colors.background` pour:**
-- Backgrounds d'écrans (TimerScreen, Onboarding)
-- Containers non-interactifs (Drawer, Modals)
-- Boutons de navigation de carrousel
-- Labels de feedback
-
-**Utiliser `theme.colors.surface` pour:**
-- Items interactifs (ActivityItem, CommandButton)
-- Pills et cards (PresetPills, PaletteItems)
-- Surfaces qui "flottent" au-dessus du background
-
-**Utiliser `theme.colors.brand.primary` pour:**
-- États actifs/sélectionnés
-- Highlights utilisateur
-- Accents de marque
-
-### Platform-Specific Patterns
-
-**Borders subtiles (iOS uniquement):**
-```javascript
-...Platform.select({
-  ios: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.border + '30', // 30% opacity
-  },
-  android: {}, // Rely on shadow/elevation
-})
-```
-
-**Utilisé dans:** Drawer, Modals (SettingsModal, PremiumModal)
-
-### Accessibility
-
-Tous les ratios de contraste respectent **WCAG AA** :
-- `brand.primary` sur cream: **5.1:1**
-- `textSecondary` sur cream: **5.2:1**
-- `textLight` sur cream: **4.8:1**
-
-### Source de vérité
-
-→ `src/theme/colors.js` (documentation complète inline)
-
-### Le motif pulse — deux états
-
-Le motif de marque (anneau extérieur, anneau intérieur, disque central) existe en
-deux états, jamais mélangés :
-
-- **au repos** : les deux anneaux **pleins**, peut émettre — usages in-app
-  (`PulseLogo`), splash.
-- **en séance** : l'anneau **extérieur** entamé d'~60°, brèche débutant à 0
-  (12h) et s'ouvrant dans le sens horaire — icône app, adaptive-icon Android,
-  favicon, store, et tout support qui promet le produit depuis l'extérieur.
-
-L'anneau intérieur et le disque central restent toujours pleins ; seul
-l'anneau extérieur porte la brèche.
-
-Génération : `assets/generate-brand-assets.sh` (masters SVG + rasterisation).
-
----
-
-## 📚 Documentation Framework
-
-La documentation du projet est organisée dans `_docs/` :
-
-| Catégorie | Emplacement | Contenu |
-|-----------|-------------|---------|
-| **Guides** | `_docs/guides/` | How-to (builds, deployment, testing) |
-| **Decisions** | `_docs/decisions/` | ADRs projet |
-| **Testing** | `_docs/testing/` | Checklists, procédures QA |
-| **Templates** | `_docs/templates/` | Modèles réutilisables |
-| **Reports/Audits** | `_library/resetpulse/` (Hyperion) | Archives audits (bougées lors du revival avril 2026) |
-
-→ See [`_docs/INDEX.md`](_docs/INDEX.md) for complete structure.
-
----
-
-## 🚀 Cockpit & Missions
-
-Project execution (missions, vision, findings) is orchestrated in `_cockpit/` :
-
-- **Orientation session** → [`_cockpit/README.md`](_cockpit/README.md) ← lire en premier
-- **Mission active** → `_cockpit/missions/active/`
-- **Vision & séquence** → `_cockpit/vision/index.md`
-- **Règles de pilotage** → `_cockpit/flow-rules.md`
-
----
-
-## 🔧 System References
-
-Ce projet suit le système aegis. Sources de vérité :
-
-| Document | Emplacement |
-|----------|-------------|
-| Nommage & frontmatter | `~/_aegis/decisions/records/adr-001-naming-and-format.md` |
-| Versioning | `~/_aegis/decisions/records/adr-014-versioning.md` |
-| Git strategy | `~/_aegis/decisions/records/adr-041-git-strategy.md` |
-| Cockpit structure | `~/_aegis/decisions/records/adr-081-cockpit.md` |
-| Règles projet | `_cockpit/flow-rules.md` |
-
-### Conventions Appliquées (ADR-001)
-
-| Contexte | Convention | Exemple |
-|----------|------------|---------|
-| Fichiers/dossiers | kebab-case | `user-profile.tsx` |
-| Composants | PascalCase | `UserProfile` |
-| Variables/fonctions | camelCase | `getUserData` |
-| Constantes | SCREAMING_SNAKE | `MAX_RETRIES` |
-
-### Frontmatter Obligatoire
-
-Tous les fichiers `.md` :
-
-```yaml
----
-created: 'YYYY-MM-DD'
-updated: 'YYYY-MM-DD'
-status: draft | active | archived
----
-```
-
----
-
-## 🗺️ Navigation session
-
-**You're here**: Working on ResetPulse (React Native timer app).
-
-### Nouvelle session — lire dans cet ordre
-1. `_cockpit/README.md` — état actuel, mission active, ce qui est stale
-2. `_cockpit/missions/active/` — périmètre en cours
-3. `_cockpit/changelog.md` — ce qui s'est passé avant
-
-### Travail actif
-- **Mission active** → `_cockpit/missions/active/`
-- **Vision séquence** → `_cockpit/vision/fiverr-engagement.md`
-- **Findings & devlogs** → `_cockpit/findings/` / `_cockpit/devlogs/`
-
-### Standards projet
-- **ADRs projet** → `_docs/decisions/`
-- **Guides techniques** → `_docs/guides/`
-- **Règles cockpit** → `_cockpit/flow-rules.md`
-
-### Standards système (aegis)
-- **Nommage** → `~/_aegis/decisions/records/adr-001-naming-and-format.md`
-- **Versioning** → `~/_aegis/decisions/records/adr-014-versioning.md`
-- **Cockpit** → `~/_aegis/decisions/records/adr-081-cockpit.md`
+`_docs/` (les ADR de la 3.0), `CONTEXT.md`, `_cockpit/README.md`,
+`_cockpit/missions/done/recentrage.md` — tout cela décrit le monde 3.0. À ouvrir
+**sur demande explicite**, jamais par réflexe d'orientation. Deux exceptions
+utiles : ADR-004 et ADR-011 (mécanismes de durée, auto-scale) — ce sont eux que
+l'arc révoque, et l'ADR-019 les supersédera au temps 4.
