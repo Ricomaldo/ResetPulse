@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Svg, { Line } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { ENOW_FILL_UP } from '../../../config/enow-sketch';
 import { TIMER_VISUAL } from '../timerConstants';
 
 /**
@@ -47,7 +48,7 @@ const DialGraduations = React.memo(
             y1={mark.y1}
             x2={mark.x2}
             y2={mark.y2}
-            stroke={graduationColor}
+            stroke={mark.isMajor && ENOW_FILL_UP ? theme.colors.text : graduationColor}
             strokeWidth={mark.strokeWidth || (mark.isMajor ? TIMER_VISUAL.TICK_WIDTH_MAJOR : TIMER_VISUAL.TICK_WIDTH_MINOR)}
             opacity={mark.opacity || (mark.isMajor ? TIMER_VISUAL.TICK_OPACITY_MAJOR : TIMER_VISUAL.TICK_OPACITY_MINOR)}
           />

@@ -139,7 +139,9 @@ function TimerDial({
   }, [dial, radiusBackground, centerX, centerY]);
 
   const minuteNumbers = useMemo(() => {
-    const numberRadius = radiusBackground + TIMER_PROPORTIONS.NUMBER_RADIUS; // À l'extérieur du cercle blanc
+    // SKETCH enow : nombres plus loin (R+26), poignée plus courte (R+6) — les
+    // deux dimensions pour supprimer le chevauchement (retour Eric 21/09).
+    const numberRadius = radiusBackground + (ENOW_FILL_UP ? 26 : TIMER_PROPORTIONS.NUMBER_RADIUS);
     const positions = dial.getNumberPositions(numberRadius, centerX, centerY);
     return positions.map((pos, index) => ({
       key: `num-${index}`,
@@ -413,7 +415,7 @@ function TimerDial({
   // dépasser franchement du cadran (retour Eric 21/09).
   const handleInnerRadius = isDragging ? R - 20 * handleScale : R - 16 * handleScale;
   const handleOuterRadius = ENOW_FILL_UP
-    ? (isDragging ? R + 14 * handleScale : R + 12 * handleScale)
+    ? (isDragging ? R + 8 * handleScale : R + 6 * handleScale)
     : (isDragging ? R + 4 * handleScale : R + 2 * handleScale);
   const handleStrokeWidth = (isDragging ? 5 : ENOW_FILL_UP ? 5 : 4) * handleScale;
   const handleOpacity = isDragging ? 1.0 : ENOW_FILL_UP ? 0.9 : 0.55;
@@ -424,6 +426,12 @@ function TimerDial({
   const handleY1 = ENOW_FILL_UP ? centerY : centerY + radialY * handleInnerRadius;
   const handleX2 = centerX + radialX * handleOuterRadius;
   const handleY2 = centerY + radialY * handleOuterRadius;
+  // SKETCH enow : le disque translucide du drag COMMENCE au bout de la
+  // poignée (centre = bout + rayon), il recouvre le nombre au passage.
+  const handleHaloX = ENOW_FILL_UP ? handleX2 + radialX * handleHaloRadius : handleX2;
+  const handleHaloY = ENOW_FILL_UP ? handleY2 + radialY * handleHaloRadius : handleY2;
+  // Poignée à la couleur de l'activité (retour Eric 21/09).
+  const handleColor = ENOW_FILL_UP ? arcColor : theme.colors.text;
 
   // Static styles (moved outside render for performance)
   const staticStyles = StyleSheet.create({
@@ -552,11 +560,11 @@ function TimerDial({
               >
                 {isDragging && (
                   <Circle
-                    cx={handleX2}
-                    cy={handleY2}
+                    cx={handleHaloX}
+                    cy={handleHaloY}
                     r={handleHaloRadius}
-                    fill={ENOW_FILL_UP ? theme.colors.textSecondary : theme.colors.text}
-                    opacity={0.08}
+                    fill={handleColor}
+                    opacity={ENOW_FILL_UP ? 0.9 : 0.08}
                   />
                 )}
                 <Line
@@ -564,7 +572,7 @@ function TimerDial({
                   y1={handleY1}
                   x2={handleX2}
                   y2={handleY2}
-                  stroke={ENOW_FILL_UP ? theme.colors.textSecondary : theme.colors.text}
+                  stroke={handleColor}
                   strokeWidth={handleStrokeWidth}
                   strokeLinecap="round"
                   opacity={handleOpacity}
