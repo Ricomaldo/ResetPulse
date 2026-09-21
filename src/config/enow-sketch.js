@@ -23,3 +23,6 @@ export const ENOW_GHOST_OPACITY = 0.22;
 
 /** Au lancement, durée à zéro : repos sans preset (retour Eric 21/09). */
 export const ENOW_START_EMPTY = true;
+
+/** Tap central = pause / reprise ; double tap = réinitialisation (retour Eric 21/09). */
+export const ENOW_TAP_PAUSE = true;

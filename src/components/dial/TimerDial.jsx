@@ -536,7 +536,7 @@ function TimerDial({
           {/* Drag handle: barre radiale sur le bord de l'arc (verdicts CD
               25/07) — jamais un rayon plein centre→bord, bouts ronds.
               Visible même en séance pour permettre l'ajustement du temps. */}
-          {displayProgress > 0 && (
+          {(ENOW_FILL_UP ? targetFraction > 0 : displayProgress > 0) && (
             <View style={staticStyles.absoluteOverlay} pointerEvents="none">
               <Svg
                 width={svgSize}

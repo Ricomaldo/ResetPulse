@@ -389,6 +389,21 @@ export default function useTimer(initialDuration = 240, onComplete) {
   }, [scheduleTimerNotification, cancelTimerNotification, requestNotificationPermission,
     activityDurations, saveActivityDuration, t]);
 
+  // pauseTimer (SKETCH enow, temps 3) : suspend sans rembobiner — remaining
+  // est conservé, startTime effacé ; startTimer reprend depuis remaining
+  // (effectiveRemaining) et l'effet 1 recale startTime sur l'écoulé.
+  // Additif : ADR-007 (start/stop/reset) intouché.
+  const pauseTimer = useCallback(() => {
+    if (!runningRef.current) {
+      return;
+    }
+    setRunning(false);
+    setStartTime(null);
+    cancelTimerNotification();
+    haptics.selection().catch(() => {});
+    logger.log(`⏸️ Timer en pause, ${remainingRef.current}s restants`);
+  }, [cancelTimerNotification]);
+
   // stopTimer: Called by long-press "rewind" gesture (ADR-007)
   const stopTimer = useCallback(() => {
     // Can only stop if running
@@ -479,6 +494,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     startTimer,
     stopTimer,
     resetTimer,
+    pauseTimer,
     setDuration: setDurationSync,
     setPresetDuration,
 

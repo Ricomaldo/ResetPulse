@@ -35,7 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { ENOW_FILL_UP } from '../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_TAP_PAUSE } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -775,9 +775,27 @@ function TimerScreenContent() {
     momentStateRef.current = nextMomentState(momentStateRef.current, event);
   }, []);
 
+  // SKETCH enow (temps 3) : tap = pause / reprise, double tap (< 350 ms) =
+  // réinitialisation (retour Eric 21/09). Le premier tap agit tout de suite,
+  // le second rembobine — aucun délai ajouté au geste simple.
+  const lastDialTapRef = useRef(0);
   const handleDialTap = useCallback(() => {
     const timer = timerRef.current;
     if (!timer) {
+      return;
+    }
+    if (ENOW_TAP_PAUSE) {
+      const now = Date.now();
+      const isDoubleTap = now - lastDialTapRef.current < 350;
+      lastDialTapRef.current = now;
+      if (isDoubleTap || timer.isCompleted) {
+        timer.resetTimer();
+        markMomentEvent(MOMENT_EVENTS.RESET);
+      } else if (timer.running) {
+        timer.pauseTimer();
+      } else {
+        timer.startTimer();
+      }
       return;
     }
     if (timer.isCompleted) {
