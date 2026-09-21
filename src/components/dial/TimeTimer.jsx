@@ -22,6 +22,7 @@ import {
   getNextScaleUp,
   shouldEscalateOnRelease,
 } from '../../utils/scaleHelpers';
+import { ENOW_LOCKED_SCALE } from '../../config/enow-sketch';
 
 // Mandat P1 (2e tentative, crash « Maximum update depth exceeded » au drag) :
 // chaque MOVE appelait setCurrentDuration → TimerConfigContext reconstruit
@@ -94,7 +95,10 @@ export default function TimeTimer({
   // Échelle effective rendue : max(dérivée du contexte, plancher, gel du
   // geste). OFF : échelle du contexte, comportement actuel intact.
   const derivedScale = modeToScale(scaleMode);
-  const effectiveScale = Math.max(derivedScale, scaleFloor || 0, gestureScaleRef.current || 0);
+  // SKETCH enow (temps 3) : échelle verrouillée, l'auto-scale ne joue plus.
+  const effectiveScale = ENOW_LOCKED_SCALE
+    ? ENOW_LOCKED_SCALE
+    : Math.max(derivedScale, scaleFloor || 0, gestureScaleRef.current || 0);
   const effectiveScaleMode = scaleToMode(effectiveScale);
   // ======================================================================
 

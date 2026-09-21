@@ -9,6 +9,7 @@ import { Animated } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { useDialOrientation } from '../../../hooks/useDialOrientation';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { ENOW_GHOST_OPACITY } from '../../../config/enow-sketch';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -33,6 +34,7 @@ const DialProgress = React.memo(function DialProgress({
   centerX,
   centerY,
   color,
+  ghostProgress = 0,
   isClockwise,
   isRunning = false,
   progress,
@@ -60,6 +62,13 @@ const DialProgress = React.memo(function DialProgress({
     return dial.getProgressPath(progress, centerX, centerY, centerRadius);
   }, [progress, dial, centerX, centerY, centerRadius]);
 
+  // SKETCH enow (temps 3) : fantôme de la cible, sous l'arc qui se remplit.
+  const ghostPath = useMemo(() => {
+    if (ghostProgress <= 0) {return '';}
+    if (ghostProgress >= 0.9999) {return null;} // Full circle
+    return dial.getProgressPath(ghostProgress, centerX, centerY, centerRadius);
+  }, [ghostProgress, dial, centerX, centerY, centerRadius]);
+
   // Use provided animated color or default
   const fillColor = animatedColor || color || theme.colors.energy;
 
@@ -86,7 +95,7 @@ const DialProgress = React.memo(function DialProgress({
     outputRange: [1.0, 1.0],
   });
 
-  if (progress <= 0) {return null;}
+  if (progress <= 0 && ghostProgress <= 0) {return null;}
 
   return (
     <Svg
@@ -97,7 +106,12 @@ const DialProgress = React.memo(function DialProgress({
       accessible={false}
       importantForAccessibility="no"
     >
-      {progress >= 0.9999 ? (
+      {ghostProgress >= 0.9999 ? (
+        <Circle cx={centerX} cy={centerY} r={centerRadius} fill={color || theme.colors.energy} opacity={ENOW_GHOST_OPACITY} />
+      ) : ghostPath ? (
+        <Path d={ghostPath} fill={color || theme.colors.energy} opacity={ENOW_GHOST_OPACITY} />
+      ) : null}
+      {progress <= 0 ? null : progress >= 0.9999 ? (
         // Full circle
         <AnimatedCircle
           cx={centerX}
@@ -123,6 +137,7 @@ const DialProgress = React.memo(function DialProgress({
   // l'arc gardait son ancien rayon et débordait de l'anneau.
   return (
     prevProps.progress === nextProps.progress &&
+    prevProps.ghostProgress === nextProps.ghostProgress &&
     prevProps.isClockwise === nextProps.isClockwise &&
     prevProps.scaleMode === nextProps.scaleMode &&
     prevProps.color === nextProps.color &&
@@ -141,6 +156,7 @@ DialProgress.propTypes = {
   centerX: PropTypes.number.isRequired,
   centerY: PropTypes.number.isRequired,
   color: PropTypes.string,
+  ghostProgress: PropTypes.number,
   isClockwise: PropTypes.bool.isRequired,
   isRunning: PropTypes.bool,
   progress: PropTypes.number.isRequired,

@@ -42,6 +42,7 @@ import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialGraduations from './dial/DialGraduations';
 import DialCenter from './dial/DialCenter';
+import { ENOW_FILL_UP } from '../../config/enow-sketch';
 import Svg, { Circle, Line, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 /**
@@ -85,9 +86,16 @@ function TimerDial({
   // entier se remplit — pas seulement l'arc proportionnel à la durée réglée
   // sur l'échelle du cadran. Affichage seulement, la state machine (progress
   // réel de useTimer) reste intouchée.
+  // SKETCH enow (temps 3) : rendu INVERSÉ. La cible (durée réglée) reste
+  // visible en fantôme ; l'arc plein part vide et se remplit avec l'écoulé.
+  // Le plein = la cible atteinte ; l'accompli garde le disque entier (C2).
+  const targetFraction = Math.min(1, currentMinutesForScale / maxMinutesForScale);
   const displayProgress = isCompleted
     ? 1
-    : Math.min(1, currentMinutesForScale / maxMinutesForScale) * progress;
+    : ENOW_FILL_UP
+      ? targetFraction * (1 - progress)
+      : targetFraction * progress;
+  const ghostProgress = ENOW_FILL_UP && !isCompleted ? targetFraction : 0;
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);
@@ -380,7 +388,8 @@ function TimerDial({
 
   // Compute handle segment position on the edge of the progress arc
   // Uses displayProgress for smooth animation on graduation taps
-  const handleAngleDeg = displayProgress * 360;
+  // Rendu inversé : la poignée reste sur la cible, pas sur le remplissage.
+  const handleAngleDeg = (ENOW_FILL_UP ? (isCompleted ? 1 : targetFraction) : displayProgress) * 360;
   const handleAngleRad = (handleAngleDeg * Math.PI) / 180;
 
   // Direction vector (radial - pointing outward from center)
@@ -479,6 +488,7 @@ function TimerDial({
             outerRadius={radiusBackground}
             strokeWidth={strokeWidth}
             progress={displayProgress}
+            ghostProgress={ghostProgress}
             color={arcColor}
             isClockwise={clockwise}
             scaleMode={scaleMode}
