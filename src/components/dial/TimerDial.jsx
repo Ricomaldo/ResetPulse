@@ -42,7 +42,7 @@ import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialGraduations from './dial/DialGraduations';
 import DialCenter from './dial/DialCenter';
-import { ENOW_FILL_UP } from '../../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_SNAP_MIN_VELOCITY } from '../../config/enow-sketch';
 import Svg, { Circle, Line, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 /**
@@ -121,6 +121,7 @@ function TimerDial({
   const lastTouchMinutesRef = useRef(null);
   // Track timestamp for velocity calculation
   const lastMoveTimeRef = useRef(null);
+  const lastVelocityRef = useRef(0); // SKETCH enow : vitesse du dernier mouvement (min/s)
   // Track if drag is valid (started outside dead zone)
   const isDragValid = useSharedValue(false);
   // PROTO drag-échelle : échelle (maxMinutes) vue au dernier événement du
@@ -228,6 +229,7 @@ function TimerDial({
 
     // Update time reference
     lastMoveTimeRef.current = now;
+    lastVelocityRef.current = velocity;
 
     // Calculate new value based on last value plus resisted delta
     let newMinutes = lastMinutesRef.current + resistedDelta;
@@ -246,8 +248,9 @@ function TimerDial({
   const handlePanEnd = useCallback(() => {
     // Apply snap on release
     if (lastMinutesRef.current !== null) {
-      onGraduationTap?.(lastMinutesRef.current, true);
+      onGraduationTap?.(lastMinutesRef.current, true, { fast: lastVelocityRef.current >= ENOW_SNAP_MIN_VELOCITY });
     }
+    lastVelocityRef.current = 0;
     setIsDragging(false);
     lastMinutesRef.current = null;
     lastTouchMinutesRef.current = null;
@@ -514,7 +517,7 @@ function TimerDial({
           />
 
           {/* Zero-state radial segment from center to 12 o'clock (visual cue) */}
-          {isZeroState && (
+          {isZeroState && !ENOW_FILL_UP && (
             <Svg
               width={svgSize}
               height={svgSize}
@@ -539,7 +542,7 @@ function TimerDial({
           {/* Drag handle: barre radiale sur le bord de l'arc (verdicts CD
               25/07) — jamais un rayon plein centre→bord, bouts ronds.
               Visible même en séance pour permettre l'ajustement du temps. */}
-          {!hideHandle && (ENOW_FILL_UP ? targetFraction > 0 : displayProgress > 0) && (
+          {!hideHandle && (ENOW_FILL_UP || displayProgress > 0) && (
             <View style={staticStyles.absoluteOverlay} pointerEvents="none">
               <Svg
                 width={svgSize}

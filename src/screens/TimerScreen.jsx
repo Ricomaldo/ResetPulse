@@ -429,7 +429,17 @@ function formatTime(totalSecondsRaw) {
 // hotfix-porte-1 B3/D3 : pur affichage, plus de tap ici — montrer/masquer
 // vit dans le sheet (toggle `showTime` existant, AsideZone). Masqué : ni le
 // temps ni le glyphe ⏱ ne montent (plus de `••:••` fantôme).
-function TopTime({ seconds, targetSeconds = null }) {
+// SKETCH enow : double tap sur le temps digital = durée à zéro (proposition
+// Eric 21/09, build jetable). Aucun geste simple ajouté.
+function TopTime({ seconds, targetSeconds = null, onDoubleTap = null }) {
+  const lastTapRef = useRef(0);
+  const handlePress = useCallback(() => {
+    const now = Date.now();
+    if (now - lastTapRef.current < 350) {
+      onDoubleTap?.();
+    }
+    lastTapRef.current = now;
+  }, [onDoubleTap]);
   const theme = useTheme();
   const { display: { showTime } } = useTimerConfig();
 
@@ -477,12 +487,12 @@ function TopTime({ seconds, targetSeconds = null }) {
   return (
     <View style={styles.slot} testID="timer.digital">
       {showTime && (
-        <View style={styles.pill}>
+        <Pressable style={styles.pill} onPress={handlePress} accessibilityRole="none">
           <Text style={styles.glyph}>⏱</Text>
           <Text style={styles.text}>
             {formatTime(seconds)}{targetSeconds != null ? ` / ${formatTime(targetSeconds)}` : ''}
           </Text>
-        </View>
+        </Pressable>
       )}
     </View>
   );
@@ -547,6 +557,7 @@ function TimerScreenContent() {
     mode: { current: currentMode },
     timer: { currentDuration, currentActivity, selectedSoundId, clockwise },
     palette: { currentColor },
+    setCurrentDuration,
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
   // porte-2 (retour Eric « le mode horizontal est complètement raté ») :
@@ -733,6 +744,7 @@ function TimerScreenContent() {
         running: timer.running,
         remaining: timer.remaining,
         elapsed: timer.elapsed,
+        isPaused: timer.isPaused,
         isCompleted: timer.isCompleted,
         displayMessage: timer.displayMessage,
       };
@@ -1312,11 +1324,19 @@ function TimerScreenContent() {
   // toujours le même élément, seuls les chiffres changent (zéro saut).
   // SKETCH enow : en séance, ÉCOULÉ sur cible (« 37:10 / 45:00 ») — le
   // restant contredisait le remplissage (retour Eric 21/09).
-  const inSession = snapshot.running || snapshot.isCompleted;
+  const inSession = snapshot.running || snapshot.isCompleted || snapshot.isPaused;
   const topTimeSeconds = inSession
     ? (ENOW_FILL_UP ? (snapshot.elapsed ?? 0) : snapshot.remaining)
     : currentDuration;
   const topTargetSeconds = ENOW_FILL_UP && inSession ? currentDuration : null;
+  const handleTopTimeZero = useCallback(() => {
+    const timer = timerRef.current;
+    if (timer && (timer.running || timer.isPaused || timer.isCompleted)) {
+      timer.resetTimer();
+      markMomentEvent(MOMENT_EVENTS.RESET);
+    }
+    setCurrentDuration(0);
+  }, [markMomentEvent, setCurrentDuration]);
 
   return (
     <SafeAreaView
@@ -1330,7 +1350,7 @@ function TimerScreenContent() {
             onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
             pointerEvents={immersed ? 'none' : 'auto'}
           >
-            <TopTime seconds={topTimeSeconds} targetSeconds={topTargetSeconds} />
+            <TopTime seconds={topTimeSeconds} targetSeconds={topTargetSeconds} onDoubleTap={handleTopTimeZero} />
           </Animated.View>
         )}
         <View style={styles.content}>

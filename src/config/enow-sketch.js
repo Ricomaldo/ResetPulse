@@ -26,3 +26,8 @@ export const ENOW_START_EMPTY = true;
 
 /** Tap central = pause / reprise ; double tap = réinitialisation (retour Eric 21/09). */
 export const ENOW_TAP_PAUSE = true;
+
+/** Drag lent = durée fine à la seconde ; l'aimantage à la minute ne joue que sur un drag rapide. */
+export const ENOW_FINE_DRAG = true;
+/** Vitesse (minutes/s) à partir de laquelle le relâcher aimante à la minute. */
+export const ENOW_SNAP_MIN_VELOCITY = 10;

@@ -20,6 +20,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const [remaining, setRemaining] = useState(initialDuration);
   const [running, setRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
+  // SKETCH enow (temps 3) : pause — vrai entre pauseTimer et start/stop/reset.
+  const pausedRef = useRef(false);
 
   // UI states
   const [hasCompleted, setHasCompleted] = useState(false);
@@ -218,7 +220,8 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // Update remaining when duration changes (only if not running)
   // BUT: Don't reset if timer just completed (remaining is already at 0)
   useEffect(() => {
-    if (!running && remaining !== 0) {
+    // SKETCH enow : en pause, remaining est la position — on ne rembobine pas.
+    if (!running && remaining !== 0 && !pausedRef.current) {
       setRemaining(duration);
     }
   }, [duration, running, remaining]);
@@ -330,6 +333,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     if (runningRef.current) {
       return;
     }
+    pausedRef.current = false;
 
     // If remaining is 0 (after completion), reset to duration before starting
     const effectiveRemaining = remainingRef.current === 0 ? durationRef.current : remainingRef.current;
@@ -397,6 +401,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     if (!runningRef.current) {
       return;
     }
+    pausedRef.current = true;
     setRunning(false);
     setStartTime(null);
     cancelTimerNotification();
@@ -416,6 +421,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     analytics.trackTimerAbandoned(durationRef.current, elapsed, 'reset', currentActivityRef.current);
 
     // Reset to initial state
+    pausedRef.current = false;
     setRemaining(durationRef.current);
     setRunning(false);
     setStartTime(null);
@@ -441,6 +447,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
       analytics.trackTimerAbandoned(durationRef.current, elapsed, 'reset', currentActivityRef.current);
     }
 
+    pausedRef.current = false;
     setRemaining(durationRef.current);
     setRunning(false);
     setStartTime(null);
@@ -466,6 +473,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
   const setDurationSync = useCallback((newDuration) => {
     setDuration(newDuration);
     if (!running) {
+      pausedRef.current = false; // un réglage au repos/pause repart de zéro
       setRemaining(newDuration);
     }
   }, [running]);
@@ -474,11 +482,17 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // en séance — `duration - remaining` a une frame de retard à chaque
   // setDuration (remaining n'est recalculé qu'au tick suivant). Dérivé,
   // lecture seule : la state machine (ADR-007) est intouchée.
+  // Au repos, ZÉRO strict : entre setDuration et setRemaining (deux setState
+  // au drag) `duration - remaining` valait une frame ≠ 0 — l'écoulé
+  // clignotait au réglage. Seule la pause lit la position.
+  const isPaused = !running && !hasCompleted && pausedRef.current;
   const elapsed = running && startTime
     ? Math.min(duration, Math.max(0, Math.floor((Date.now() - startTime) / 1000)))
     : hasCompleted
       ? duration
-      : Math.max(0, duration - remaining);
+      : isPaused
+        ? Math.max(0, duration - remaining)
+        : 0;
 
   return {
     // State
@@ -487,6 +501,7 @@ export default function useTimer(initialDuration = 240, onComplete) {
     running,
     progress,
     elapsed,
+    isPaused,
     displayMessage: getDisplayMessage(),
     isCompleted: hasCompleted,
 

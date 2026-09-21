@@ -22,7 +22,7 @@ import {
   getNextScaleUp,
   shouldEscalateOnRelease,
 } from '../../utils/scaleHelpers';
-import { ENOW_LOCKED_SCALE } from '../../config/enow-sketch';
+import { ENOW_LOCKED_SCALE, ENOW_FINE_DRAG } from '../../config/enow-sketch';
 
 // Mandat P1 (2e tentative, crash « Maximum update depth exceeded » au drag) :
 // chaque MOVE appelait setCurrentDuration → TimerConfigContext reconstruit
@@ -141,7 +141,8 @@ export default function TimeTimer({
   // Update timer duration when currentDuration changes from context (NOT from drag)
   useEffect(() => {
     // Only sync if context duration changed since last sync (ignores local drag changes)
-    if (currentDuration && currentDuration !== lastSyncedContextDurationRef.current) {
+    // SKETCH enow : 0 est une valeur (repos à zéro), pas une absence.
+    if (currentDuration != null && currentDuration !== lastSyncedContextDurationRef.current) {
       timer.setDuration(currentDuration);
       lastSyncedContextDurationRef.current = currentDuration;
       // Changement de contexte (Rituel qui pose sa durée) : SEUL cas où le
@@ -213,7 +214,7 @@ export default function TimeTimer({
    * @param {number} minutes - Raw minutes value from dial interaction
    * @param {boolean} isRelease - True if this is the final value (release), false if dragging
    */
-  const handleGraduationTap = useCallback((minutes, isRelease = false) => {
+  const handleGraduationTap = useCallback((minutes, isRelease = false, meta = null) => {
     // ========== OFF : comportement actuel (saturé), intact ==========
     // scaleMode vient du contexte, désormais DÉRIVÉ de currentDuration
     // (hotfix-porte-1 B2, deriveScaleMode). Limite structurelle : `minutes`
@@ -236,7 +237,10 @@ export default function TimeTimer({
 
     const clampedMinutes = Math.max(0, Math.min(gestureScale, minutes));
     let newDuration = clampedMinutes * 60;
-    newDuration = isRelease
+    // SKETCH enow : drag lent = seconde près ; l'aimantage à la minute ne
+    // joue qu'au relâcher d'un drag rapide (retour Eric 21/09).
+    const snapOnRelease = !ENOW_FINE_DRAG || meta == null || meta.fast;
+    newDuration = isRelease && snapOnRelease
       ? snapToInterval(newDuration, gestureScaleMode)
       : Math.round(newDuration);
 
