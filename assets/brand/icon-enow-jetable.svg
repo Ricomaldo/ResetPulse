@@ -1,11 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <!-- Icône JETABLE du temps 3 (arc enow, 21/09/2026). Même géométrie que
-       icon-en-seance.svg ; fond vert plat #1FA85C, motif noir #0F1A12.
+  <!-- Icône JETABLE du temps 3 (arc enow, 21/09/2026). Géométrie de
+       icon-en-seance.svg en MIROIR horizontal (creux de l'arc à gauche,
+       choix Eric 21/09) ; fond vert plat #1FA85C, motif noir plein #0F1A12.
        Sert à distinguer le build d'essai de la 3.0 et à tester le vert.
        N'est PAS l'icône de la 4.0 (logo aux deux ronds, temps 5). -->
   <rect x="0" y="0" width="1024" height="1024" fill="#1FA85C"/>
-  <path d="M 781.7380,356.2667 A 311.4667,311.4667 0 1,1 512.0000,200.5333"
-        fill="none" stroke="#0F1A12" stroke-opacity="0.5" stroke-width="34.1333" stroke-linecap="round"/>
-  <circle cx="512.0000" cy="512.0000" r="213.3333" fill="none" stroke="#0F1A12" stroke-opacity="0.7" stroke-width="34.1333"/>
-  <circle cx="512.0000" cy="512.0000" r="98.1333" fill="#0F1A12"/>
+  <g transform="translate(1024,0) scale(-1,1)">
+    <path d="M 781.7380,356.2667 A 311.4667,311.4667 0 1,1 512.0000,200.5333"
+          fill="none" stroke="#0F1A12" stroke-width="34.1333" stroke-linecap="round"/>
+    <circle cx="512.0000" cy="512.0000" r="213.3333" fill="none" stroke="#0F1A12" stroke-width="34.1333"/>
+    <circle cx="512.0000" cy="512.0000" r="98.1333" fill="#0F1A12"/>
+  </g>
 </svg>
