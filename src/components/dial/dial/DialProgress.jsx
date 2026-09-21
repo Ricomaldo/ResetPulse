@@ -107,9 +107,9 @@ const DialProgress = React.memo(function DialProgress({
       importantForAccessibility="no"
     >
       {ghostProgress >= 0.9999 ? (
-        <Circle cx={centerX} cy={centerY} r={centerRadius} fill={color || theme.colors.energy} opacity={ENOW_GHOST_OPACITY} />
+        <Circle cx={centerX} cy={centerY} r={centerRadius} fill={theme.colors.brand.neutral} opacity={ENOW_GHOST_OPACITY} />
       ) : ghostPath ? (
-        <Path d={ghostPath} fill={color || theme.colors.energy} opacity={ENOW_GHOST_OPACITY} />
+        <Path d={ghostPath} fill={theme.colors.brand.neutral} opacity={ENOW_GHOST_OPACITY} />
       ) : null}
       {progress <= 0 ? null : progress >= 0.9999 ? (
         // Full circle

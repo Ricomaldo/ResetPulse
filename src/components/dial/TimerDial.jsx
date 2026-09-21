@@ -555,7 +555,7 @@ function TimerDial({
                     cx={handleX2}
                     cy={handleY2}
                     r={handleHaloRadius}
-                    fill={theme.colors.text}
+                    fill={ENOW_FILL_UP ? theme.colors.textSecondary : theme.colors.text}
                     opacity={0.08}
                   />
                 )}
@@ -564,7 +564,7 @@ function TimerDial({
                   y1={handleY1}
                   x2={handleX2}
                   y2={handleY2}
-                  stroke={theme.colors.text}
+                  stroke={ENOW_FILL_UP ? theme.colors.textSecondary : theme.colors.text}
                   strokeWidth={handleStrokeWidth}
                   strokeLinecap="round"
                   opacity={handleOpacity}

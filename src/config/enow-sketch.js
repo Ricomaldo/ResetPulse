@@ -18,8 +18,9 @@ export const ENOW_FILL_UP = true;
 /** Échelle verrouillée en minutes (null = auto-scale 3.0). */
 export const ENOW_LOCKED_SCALE = 60;
 
-/** Opacité du fantôme de la cible (durée réglée) quand le rendu est inversé. */
-export const ENOW_GHOST_OPACITY = 0.22;
+/** Opacité du fantôme de la cible (gris clair du thème, brand.neutral) — teintes Eric 21/09 :
+ *  nombres et bordure en encre, poignée gris foncé, fantôme gris clair. */
+export const ENOW_GHOST_OPACITY = 0.45;
 
 /** Au lancement, durée à zéro : repos sans preset (retour Eric 21/09). */
 export const ENOW_START_EMPTY = true;

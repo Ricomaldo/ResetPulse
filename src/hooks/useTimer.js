@@ -486,8 +486,12 @@ export default function useTimer(initialDuration = 240, onComplete) {
   // au drag) `duration - remaining` valait une frame ≠ 0 — l'écoulé
   // clignotait au réglage. Seule la pause lit la position.
   const isPaused = !running && !hasCompleted && pausedRef.current;
-  const elapsed = running && startTime
-    ? Math.min(duration, Math.max(0, Math.floor((Date.now() - startTime) / 1000)))
+  // À la reprise, startTime est null pendant un rendu (effet 1) : on lit la
+  // position (remaining conservé) plutôt que zéro — sinon « 00:00 » fugace.
+  const elapsed = running
+    ? (startTime
+      ? Math.min(duration, Math.max(0, Math.floor((Date.now() - startTime) / 1000)))
+      : Math.max(0, duration - remaining))
     : hasCompleted
       ? duration
       : isPaused
