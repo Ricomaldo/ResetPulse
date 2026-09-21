@@ -26,7 +26,8 @@
  *   TimerRemainingContext lui-même supprimé, écriture morte avec lui)
  */
 
-import React, { createContext, useContext, useRef, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { ENOW_START_EMPTY } from '../config/enow-sketch';
 import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import { usePersistedObject } from '../hooks/usePersistedState';
@@ -157,6 +158,16 @@ export const TimerConfigProvider = ({ children }) => {
     getDefaultValues(),
     { migrate: migrateConfigSchema }
   );
+
+  // SKETCH enow (temps 3) : au lancement, durée à zéro — repos sans preset,
+  // le blob persisté ne dicte plus la première vue (retour Eric 21/09).
+  const enowEmptiedRef = useRef(false);
+  useEffect(() => {
+    if (ENOW_START_EMPTY && !isLoading && !enowEmptiedRef.current) {
+      enowEmptiedRef.current = true;
+      setValues((prev) => ({ ...prev, timer: { ...prev.timer, currentDuration: 0 } }));
+    }
+  }, [isLoading, setValues]);
 
   // Les 4 gardes-fossiles every-boot qui vivaient ici (activité « none »,
   // mode « complet », palette morte, détecteur showActivityEmoji/shouldPulse)

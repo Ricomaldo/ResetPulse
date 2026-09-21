@@ -313,6 +313,7 @@ export default function TimeTimer({
             progress={timer.progress}
             duration={timer.duration}
             remaining={timer.remaining}
+            elapsed={timer.elapsed}
             color={currentColor}
             size={circleSize}
             clockwise={clockwise}

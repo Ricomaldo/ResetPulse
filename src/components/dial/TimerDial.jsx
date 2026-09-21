@@ -53,6 +53,7 @@ function TimerDial({
   progress = 1,
   duration = 0,
   remaining = 0,
+  elapsed = 0,
   color,
   size = null,
   clockwise = false,
@@ -90,10 +91,12 @@ function TimerDial({
   // visible en fantôme ; l'arc plein part vide et se remplit avec l'écoulé.
   // Le plein = la cible atteinte ; l'accompli garde le disque entier (C2).
   const targetFraction = Math.min(1, currentMinutesForScale / maxMinutesForScale);
+  // Remplissage ABSOLU sur l'échelle (écoulé / tour), pas une proportion de
+  // la cible : un drag en séance ne fait plus sauter l'arc (retour Eric 21/09).
   const displayProgress = isCompleted
     ? 1
     : ENOW_FILL_UP
-      ? targetFraction * (1 - progress)
+      ? Math.min(1, (elapsed / 60) / maxMinutesForScale)
       : targetFraction * progress;
   const ghostProgress = ENOW_FILL_UP && !isCompleted ? targetFraction : 0;
 
@@ -402,10 +405,14 @@ function TimerDial({
   // rayon plein centre→bord : repos R−16→R+2, drag R−20→R+4.
   const R = radiusBackground;
   const handleScale = R / 105;
+  // SKETCH enow : la poignée marque la CIBLE sur un arc vide, elle doit
+  // dépasser franchement du cadran (retour Eric 21/09).
   const handleInnerRadius = isDragging ? R - 20 * handleScale : R - 16 * handleScale;
-  const handleOuterRadius = isDragging ? R + 4 * handleScale : R + 2 * handleScale;
-  const handleStrokeWidth = (isDragging ? 5 : 4) * handleScale;
-  const handleOpacity = isDragging ? 1.0 : 0.55;
+  const handleOuterRadius = ENOW_FILL_UP
+    ? (isDragging ? R + 14 * handleScale : R + 12 * handleScale)
+    : (isDragging ? R + 4 * handleScale : R + 2 * handleScale);
+  const handleStrokeWidth = (isDragging ? 5 : ENOW_FILL_UP ? 5 : 4) * handleScale;
+  const handleOpacity = isDragging ? 1.0 : ENOW_FILL_UP ? 0.9 : 0.55;
   const handleHaloRadius = (22 * handleScale) / 2;
   const handleX1 = centerX + radialX * handleInnerRadius;
   const handleY1 = centerY + radialY * handleInnerRadius;
@@ -679,6 +686,7 @@ TimerDial.propTypes = {
   progress: PropTypes.number,
   duration: PropTypes.number,
   remaining: PropTypes.number,
+  elapsed: PropTypes.number,
   color: PropTypes.string,
   size: PropTypes.number,
   clockwise: PropTypes.bool,
@@ -706,6 +714,7 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.progress === nextProps.progress &&
     prevProps.duration === nextProps.duration &&
     prevProps.remaining === nextProps.remaining &&
+    prevProps.elapsed === nextProps.elapsed &&
     prevProps.color === nextProps.color &&
     prevProps.size === nextProps.size &&
     prevProps.clockwise === nextProps.clockwise &&

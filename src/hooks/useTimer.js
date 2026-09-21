@@ -455,12 +455,23 @@ export default function useTimer(initialDuration = 240, onComplete) {
     }
   }, [running]);
 
+  // Écoulé STABLE (source : startTime), indépendant des changements de durée
+  // en séance — `duration - remaining` a une frame de retard à chaque
+  // setDuration (remaining n'est recalculé qu'au tick suivant). Dérivé,
+  // lecture seule : la state machine (ADR-007) est intouchée.
+  const elapsed = running && startTime
+    ? Math.min(duration, Math.max(0, Math.floor((Date.now() - startTime) / 1000)))
+    : hasCompleted
+      ? duration
+      : Math.max(0, duration - remaining);
+
   return {
     // State
     duration,
     remaining,
     running,
     progress,
+    elapsed,
     displayMessage: getDisplayMessage(),
     isCompleted: hasCompleted,
 

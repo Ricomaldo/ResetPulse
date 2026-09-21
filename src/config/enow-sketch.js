@@ -20,3 +20,6 @@ export const ENOW_LOCKED_SCALE = 60;
 
 /** Opacité du fantôme de la cible (durée réglée) quand le rendu est inversé. */
 export const ENOW_GHOST_OPACITY = 0.22;
+
+/** Au lancement, durée à zéro : repos sans preset (retour Eric 21/09). */
+export const ENOW_START_EMPTY = true;

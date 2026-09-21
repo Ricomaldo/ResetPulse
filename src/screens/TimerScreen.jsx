@@ -35,6 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
+import { ENOW_FILL_UP } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -428,7 +429,7 @@ function formatTime(totalSecondsRaw) {
 // hotfix-porte-1 B3/D3 : pur affichage, plus de tap ici — montrer/masquer
 // vit dans le sheet (toggle `showTime` existant, AsideZone). Masqué : ni le
 // temps ni le glyphe ⏱ ne montent (plus de `••:••` fantôme).
-function TopTime({ seconds }) {
+function TopTime({ seconds, targetMinutes = null }) {
   const theme = useTheme();
   const { display: { showTime } } = useTimerConfig();
 
@@ -478,7 +479,9 @@ function TopTime({ seconds }) {
       {showTime && (
         <View style={styles.pill}>
           <Text style={styles.glyph}>⏱</Text>
-          <Text style={styles.text}>{formatTime(seconds)}</Text>
+          <Text style={styles.text}>
+            {formatTime(seconds)}{targetMinutes != null ? ` / ${targetMinutes}` : ''}
+          </Text>
         </View>
       )}
     </View>
@@ -729,6 +732,7 @@ function TimerScreenContent() {
       return {
         running: timer.running,
         remaining: timer.remaining,
+        elapsed: timer.elapsed,
         isCompleted: timer.isCompleted,
         displayMessage: timer.displayMessage,
       };
@@ -1288,9 +1292,13 @@ function TimerScreenContent() {
 
   // Temps digital (top bar) : restant en séance/fin, durée réglée au repos —
   // toujours le même élément, seuls les chiffres changent (zéro saut).
-  const topTimeSeconds = snapshot.running || snapshot.isCompleted
-    ? snapshot.remaining
+  // SKETCH enow : en séance, ÉCOULÉ sur cible (« 37:10 / 45 ») — le restant
+  // contredisait le remplissage (retour Eric 21/09).
+  const inSession = snapshot.running || snapshot.isCompleted;
+  const topTimeSeconds = inSession
+    ? (ENOW_FILL_UP ? (snapshot.elapsed ?? 0) : snapshot.remaining)
     : currentDuration;
+  const topTargetMinutes = ENOW_FILL_UP && inSession ? Math.round(currentDuration / 60) : null;
 
   return (
     <SafeAreaView
@@ -1304,7 +1312,7 @@ function TimerScreenContent() {
             onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
             pointerEvents={immersed ? 'none' : 'auto'}
           >
-            <TopTime seconds={topTimeSeconds} />
+            <TopTime seconds={topTimeSeconds} targetMinutes={topTargetMinutes} />
           </Animated.View>
         )}
         <View style={styles.content}>

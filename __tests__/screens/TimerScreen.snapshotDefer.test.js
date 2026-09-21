@@ -144,7 +144,9 @@ jest.mock('../../src/contexts/ModalStackContext', () => ({
 }));
 
 function makeTimer({ running = false, remaining = 240, isCompleted = false, displayMessage = 'Ready' } = {}) {
-  return { running, remaining, isCompleted, displayMessage, duration: 240, progress: 1 };
+  // elapsed : dérivé exposé par useTimer (sketch enow, temps 3) — le temps
+  // digital affiche l'ÉCOULÉ sur cible en séance.
+  return { running, remaining, isCompleted, displayMessage, duration: 240, progress: 1, elapsed: 240 - remaining };
 }
 
 describe('TimerScreen — handleTimerRef casse la chaîne imbriquée (fix drag rapide)', () => {
@@ -200,14 +202,15 @@ describe('TimerScreen — handleTimerRef casse la chaîne imbriquée (fix drag r
       jest.runAllTimers();
     });
 
-    // 236 s = 03:56 — le temps digital (TopTime) ne montre que la DERNIÈRE
-    // valeur de la rafale, jamais une valeur intermédiaire (03:59/03:58/
-    // 03:57) : la coalescence est invisible pour l'utilisateur.
+    // 236 s restants = 4 s écoulés = 00:04 (sketch enow : écoulé sur cible)
+    // — le temps digital (TopTime) ne montre que la DERNIÈRE valeur de la
+    // rafale, jamais une valeur intermédiaire (00:01/00:02/00:03) : la
+    // coalescence est invisible pour l'utilisateur.
     const tree = JSON.stringify(renderer.toJSON());
-    expect(tree).toContain('03:56');
-    expect(tree).not.toContain('03:59');
-    expect(tree).not.toContain('03:58');
-    expect(tree).not.toContain('03:57');
+    expect(tree).toContain('00:04');
+    expect(tree).not.toContain('00:01');
+    expect(tree).not.toContain('00:02');
+    expect(tree).not.toContain('00:03');
   });
 
   it('handleDialTap (tap) lit timerRef.current de façon synchrone, sans attendre le différé', async () => {
