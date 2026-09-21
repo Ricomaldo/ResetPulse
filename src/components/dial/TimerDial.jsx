@@ -418,7 +418,8 @@ function TimerDial({
     ? (isDragging ? R + 8 * handleScale : R + 6 * handleScale)
     : (isDragging ? R + 4 * handleScale : R + 2 * handleScale);
   const handleStrokeWidth = (isDragging ? 5 : ENOW_FILL_UP ? 5 : 4) * handleScale;
-  const handleOpacity = isDragging ? 1.0 : ENOW_FILL_UP ? 0.9 : 0.55;
+  const handleTint = 0.45; // opacité éclaircie de l'ancien fantôme
+  const handleOpacity = ENOW_FILL_UP ? handleTint : (isDragging ? 1.0 : 0.55);
   const handleHaloRadius = (22 * handleScale) / 2;
   // SKETCH enow : le segment part du CENTRE jusqu'au bord (retour Eric 21/09,
   // « on ne retravaille pas le design de la poignée »).
@@ -430,7 +431,9 @@ function TimerDial({
   // poignée (centre = bout + rayon), il recouvre le nombre au passage.
   const handleHaloX = ENOW_FILL_UP ? handleX2 + radialX * handleHaloRadius : handleX2;
   const handleHaloY = ENOW_FILL_UP ? handleY2 + radialY * handleHaloRadius : handleY2;
-  // Poignée à la couleur de l'activité (retour Eric 21/09).
+  // Poignée à la couleur de l'activité ADOUCIE (même teinte que l'arc, même
+  // opacité éclaircie que l'ancien fantôme) — la couleur pleine se confondait
+  // avec l'écoulé (retour Eric 21/09). Repli : theme.colors.textSecondary.
   const handleColor = ENOW_FILL_UP ? arcColor : theme.colors.text;
 
   // Static styles (moved outside render for performance)
@@ -564,7 +567,7 @@ function TimerDial({
                     cy={handleHaloY}
                     r={handleHaloRadius}
                     fill={handleColor}
-                    opacity={ENOW_FILL_UP ? 0.9 : 0.08}
+                    opacity={ENOW_FILL_UP ? 0.35 : 0.08}
                   />
                 )}
                 <Line
