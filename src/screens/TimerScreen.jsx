@@ -429,7 +429,7 @@ function formatTime(totalSecondsRaw) {
 // hotfix-porte-1 B3/D3 : pur affichage, plus de tap ici — montrer/masquer
 // vit dans le sheet (toggle `showTime` existant, AsideZone). Masqué : ni le
 // temps ni le glyphe ⏱ ne montent (plus de `••:••` fantôme).
-function TopTime({ seconds, targetMinutes = null }) {
+function TopTime({ seconds, targetSeconds = null }) {
   const theme = useTheme();
   const { display: { showTime } } = useTimerConfig();
 
@@ -480,7 +480,7 @@ function TopTime({ seconds, targetMinutes = null }) {
         <View style={styles.pill}>
           <Text style={styles.glyph}>⏱</Text>
           <Text style={styles.text}>
-            {formatTime(seconds)}{targetMinutes != null ? ` / ${targetMinutes}` : ''}
+            {formatTime(seconds)}{targetSeconds != null ? ` / ${formatTime(targetSeconds)}` : ''}
           </Text>
         </View>
       )}
@@ -1310,13 +1310,13 @@ function TimerScreenContent() {
 
   // Temps digital (top bar) : restant en séance/fin, durée réglée au repos —
   // toujours le même élément, seuls les chiffres changent (zéro saut).
-  // SKETCH enow : en séance, ÉCOULÉ sur cible (« 37:10 / 45 ») — le restant
-  // contredisait le remplissage (retour Eric 21/09).
+  // SKETCH enow : en séance, ÉCOULÉ sur cible (« 37:10 / 45:00 ») — le
+  // restant contredisait le remplissage (retour Eric 21/09).
   const inSession = snapshot.running || snapshot.isCompleted;
   const topTimeSeconds = inSession
     ? (ENOW_FILL_UP ? (snapshot.elapsed ?? 0) : snapshot.remaining)
     : currentDuration;
-  const topTargetMinutes = ENOW_FILL_UP && inSession ? Math.round(currentDuration / 60) : null;
+  const topTargetSeconds = ENOW_FILL_UP && inSession ? currentDuration : null;
 
   return (
     <SafeAreaView
@@ -1330,7 +1330,7 @@ function TimerScreenContent() {
             onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
             pointerEvents={immersed ? 'none' : 'auto'}
           >
-            <TopTime seconds={topTimeSeconds} targetMinutes={topTargetMinutes} />
+            <TopTime seconds={topTimeSeconds} targetSeconds={topTargetSeconds} />
           </Animated.View>
         )}
         <View style={styles.content}>
@@ -1338,6 +1338,7 @@ function TimerScreenContent() {
               (scale + recentrage vertical), zéro redraw du dial. */}
           <Animated.View style={dialAnimatedStyle}>
             <TimeTimer
+              immersed={immersed}
               onDialTap={handleDialTap}
               onTimerRef={handleTimerRef}
               onDialRef={handleDialRef}

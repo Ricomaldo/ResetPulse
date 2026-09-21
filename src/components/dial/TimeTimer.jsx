@@ -42,6 +42,7 @@ export default function TimeTimer({
   onTimerComplete,
   onDurationCommit,
   distraction = null,
+  immersed = false,
 }) {
   const {
     timer: { clockwise, scaleMode, currentActivity, currentDuration },
@@ -314,6 +315,7 @@ export default function TimeTimer({
             duration={timer.duration}
             remaining={timer.remaining}
             elapsed={timer.elapsed}
+            hideHandle={immersed || currentMode === 'focus'}
             color={currentColor}
             size={circleSize}
             clockwise={clockwise}

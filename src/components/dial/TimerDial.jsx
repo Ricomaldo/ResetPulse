@@ -54,6 +54,7 @@ function TimerDial({
   duration = 0,
   remaining = 0,
   elapsed = 0,
+  hideHandle = false,
   color,
   size = null,
   clockwise = false,
@@ -414,8 +415,10 @@ function TimerDial({
   const handleStrokeWidth = (isDragging ? 5 : ENOW_FILL_UP ? 5 : 4) * handleScale;
   const handleOpacity = isDragging ? 1.0 : ENOW_FILL_UP ? 0.9 : 0.55;
   const handleHaloRadius = (22 * handleScale) / 2;
-  const handleX1 = centerX + radialX * handleInnerRadius;
-  const handleY1 = centerY + radialY * handleInnerRadius;
+  // SKETCH enow : le segment part du CENTRE jusqu'au bord (retour Eric 21/09,
+  // « on ne retravaille pas le design de la poignée »).
+  const handleX1 = ENOW_FILL_UP ? centerX : centerX + radialX * handleInnerRadius;
+  const handleY1 = ENOW_FILL_UP ? centerY : centerY + radialY * handleInnerRadius;
   const handleX2 = centerX + radialX * handleOuterRadius;
   const handleY2 = centerY + radialY * handleOuterRadius;
 
@@ -536,7 +539,7 @@ function TimerDial({
           {/* Drag handle: barre radiale sur le bord de l'arc (verdicts CD
               25/07) — jamais un rayon plein centre→bord, bouts ronds.
               Visible même en séance pour permettre l'ajustement du temps. */}
-          {(ENOW_FILL_UP ? targetFraction > 0 : displayProgress > 0) && (
+          {!hideHandle && (ENOW_FILL_UP ? targetFraction > 0 : displayProgress > 0) && (
             <View style={staticStyles.absoluteOverlay} pointerEvents="none">
               <Svg
                 width={svgSize}
@@ -687,6 +690,7 @@ TimerDial.propTypes = {
   duration: PropTypes.number,
   remaining: PropTypes.number,
   elapsed: PropTypes.number,
+  hideHandle: PropTypes.bool,
   color: PropTypes.string,
   size: PropTypes.number,
   clockwise: PropTypes.bool,
@@ -715,6 +719,7 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.duration === nextProps.duration &&
     prevProps.remaining === nextProps.remaining &&
     prevProps.elapsed === nextProps.elapsed &&
+    prevProps.hideHandle === nextProps.hideHandle &&
     prevProps.color === nextProps.color &&
     prevProps.size === nextProps.size &&
     prevProps.clockwise === nextProps.clockwise &&
