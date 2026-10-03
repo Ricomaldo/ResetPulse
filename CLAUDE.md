@@ -3,26 +3,32 @@
 > **Tu n'es pas sur ResetPulse 3.0. Tu es sur l'arc `enow`.**
 >
 > Lis `_cockpit/missions/active/arc-enow.md` **en premier** — c'est l'amorce de
-> l'arc : la thèse, ce qui est décidé, ce qui est ouvert, ce qui est interdit,
-> et le temps en cours. Ce fichier-ci ne vit que sur la branche `enow`.
+> l'arc. Elle renvoie au **dernier devlog**, qui liste les lectures de la
+> séance. Ce fichier-ci ne vit que sur la branche `enow`.
 
 ## Où tu es
 
 - **Copie de travail** : `~/_forge/experimental/enow`, branche `enow`.
 - **Témoin figé de la 3.0** : `~/_codebase/apps/resetpulse-3.0` (branche `main`).
   On ne le touche pas. Il existe pour qu'on puisse regarder ce qui était.
-- La 3.0 est **en ligne sur les deux stores et gelée**. Il n'y aura pas de 3.1.
+- La 3.0 est **en ligne sur les deux stores et gelée**. « Pas de 3.1 » est
+  rouvert par la cible RP3.1 — à trancher, voir le devlog du 03/10.
 
 ## Ce qu'on fabrique
 
-Une 4.0 beta, jamais publiée en l'état. La thèse, en bref — le détail est dans
-l'amorce :
+La branche porte deux cibles :
 
-- Le premier geste n'est pas une durée, c'est une intention : **`no more`**
-  (un plafond, pas plus) ou **`no less`** (un plancher, pas moins).
-- **La forme part vide et se remplit** pendant la séance. La récompense est la
-  complétude. Le Time Timer classique se vide ; celui-ci dépose.
-- Parcours visé : **mode → intention → start**. Pas d'étape de durée.
+- **RP3.1** — la 3.0 relancée avec les améliorations du cadran.
+- **enow** — la proposition neuve : un écran d'accueil qui fait choisir entre
+  deux régimes.
+
+Le détail vit dans `_cockpit/rd/` (lexique, registre, collecteurs), pas ici.
+
+## Langage
+
+Le lexique R&D (`_cockpit/rd/lexique-rd-rp3-enow.md`) fait foi. La thèse
+parle français, le dev anglais — chaque terme a son équivalent. « RP4 » ne
+désigne plus rien. « T3 » seul désigne le temps 3 ; un build se nomme Tx-n.
 
 ## Le juge
 
