@@ -510,7 +510,7 @@ function TimerDial({
             strokeWidth={strokeWidth}
             minuteNumbers={minuteNumbers}
             showNumbers={showNumbers}
-            color={color}
+            color={arcColor}
           />
 
           {/* Progress layer: animated arc */}

@@ -64,3 +64,6 @@ export const ENOW_HUB_TRANSPARENT = true;
 
 /** Chip d'activité sélectionnée : anneau encre épais au lieu du fond sombre. */
 export const ENOW_CHIP_RING = true;
+
+/** Encre échangée : bordure du cadran à la couleur active, pivot du moyeu en encre. */
+export const ENOW_SWAP_INK = true;

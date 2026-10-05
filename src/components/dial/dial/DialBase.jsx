@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { ENOW_FILL_UP } from '../../../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_SWAP_INK } from '../../../config/enow-sketch';
 
 /**
  * DialBase - Static SVG elements (circles, graduations, numbers)
@@ -27,7 +27,7 @@ const DialBase = React.memo(
   function DialBase({
     centerX,
     centerY,
-    color: _color,
+    color,
     minuteNumbers,
     radius,
     showNumbers = true,
@@ -49,7 +49,7 @@ const DialBase = React.memo(
           cx={centerX}
           cy={centerY}
           r={radius}
-          stroke={ENOW_FILL_UP ? theme.colors.text : theme.colors.brand.neutral}
+          stroke={ENOW_SWAP_INK && color ? color : (ENOW_FILL_UP ? theme.colors.text : theme.colors.brand.neutral)}
           strokeWidth={strokeWidth}
           fill={theme.colors.surfaceElevated}
         />
