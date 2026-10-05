@@ -76,3 +76,6 @@ export const ENOW_INK_LABELS = true;
 
 /** Opacité de la bordure du cadran quand elle porte la couleur active (ENOW_SWAP_INK) ; 1 = pleine. */
 export const ENOW_BORDER_OPACITY = 0.45;
+
+/** Token `theme.colors.*` du mobilier : pivot du moyeu et textes d'indication ('text' = encre pleine). */
+export const ENOW_FURNITURE_INK = 'textSecondary';

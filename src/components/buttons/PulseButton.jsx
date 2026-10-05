@@ -19,7 +19,7 @@ import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
-import { ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT, ENOW_SWAP_INK } from '../../config/enow-sketch';
+import { ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT, ENOW_SWAP_INK, ENOW_FURNITURE_INK } from '../../config/enow-sketch';
 import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
@@ -174,7 +174,7 @@ const PulseButton = React.memo(function PulseButton({
             width: pivot,
             height: pivot,
             borderRadius: pivot / 2,
-            backgroundColor: ENOW_SWAP_INK ? theme.colors.text : (color || theme.colors.text),
+            backgroundColor: ENOW_SWAP_INK ? theme.colors[ENOW_FURNITURE_INK] : (color || theme.colors.text),
           }}
         />
       );

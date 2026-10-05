@@ -15,6 +15,7 @@ describe('enow-sketch flags', () => {
     ['ENOW_SWAP_INK', 'boolean'],
     ['ENOW_INK_LABELS', 'boolean'],
     ['ENOW_BORDER_OPACITY', 'number'],
+    ['ENOW_FURNITURE_INK', 'string'],
     ['ENOW_SCREEN_TAPS', 'boolean'],
     ['ENOW_DICE', 'boolean'],
     ['ENOW_NONE_CHIP', 'boolean'],

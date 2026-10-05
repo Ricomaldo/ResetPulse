@@ -159,3 +159,29 @@ describe('useDialOrientation - Core functionality', () => {
     });
   });
 });
+
+describe('useDialOrientation - getArcPath', () => {
+  const arc = (cw, p) => renderHook(() => useDialOrientation(cw, '60min')).result.current.getArcPath(p, 100, 100, 50);
+
+  it('0 → null', () => {
+    expect(arc(true, 0)).toBeNull();
+  });
+
+  it('0.25 horaire : de midi à 3 h, sweep 1, sans L ni Z', () => {
+    const d = arc(true, 0.25);
+    expect(d).toBe('M 100 50 A 50 50 0 0 1 150 100');
+    expect(d).not.toMatch(/[LZ]/);
+  });
+
+  it('0.25 antihoraire : de midi à 9 h, sweep 0', () => {
+    expect(arc(false, 0.25)).toBe('M 100 50 A 50 50 0 0 0 50 100');
+  });
+
+  it('0.75 : grand arc', () => {
+    expect(arc(true, 0.75)).toContain('A 50 50 0 1 1');
+  });
+
+  it('1 → cercle complet en deux demi-arcs', () => {
+    expect(arc(true, 1)).toBe('M 100 50 A 50 50 0 1 1 100 150 A 50 50 0 1 1 100 50');
+  });
+});

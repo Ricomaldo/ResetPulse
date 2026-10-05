@@ -9,7 +9,7 @@ import { Animated } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { useDialOrientation } from '../../../hooks/useDialOrientation';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { ENOW_GHOST_OPACITY } from '../../../config/enow-sketch';
+import { ENOW_GHOST_OPACITY, ENOW_SWAP_INK } from '../../../config/enow-sketch';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -72,6 +72,13 @@ const DialProgress = React.memo(function DialProgress({
   // Use provided animated color or default
   const fillColor = animatedColor || color || theme.colors.energy;
 
+  // T3-2 (ENOW_SWAP_INK) : la bordure suit le front en couleur pleine, au rayon
+  // et à la largeur de la bordure de DialBase (r = outerRadius, trait centré dessus).
+  const borderArcPath = useMemo(
+    () => (ENOW_SWAP_INK ? dial.getArcPath(progress, centerX, centerY, outerRadius) : null),
+    [progress, dial, centerX, centerY, outerRadius]
+  );
+
   // Trigger glow animation when timer starts
   useEffect(() => {
     // Detect transition from not running to running
@@ -126,6 +133,15 @@ const DialProgress = React.memo(function DialProgress({
           d={progressPath}
           fill={fillColor}
           opacity={arcOpacity}
+        />
+      ) : null}
+      {borderArcPath ? (
+        <Path
+          d={borderArcPath}
+          stroke={fillColor}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeLinecap="butt"
         />
       ) : null}
     </Svg>

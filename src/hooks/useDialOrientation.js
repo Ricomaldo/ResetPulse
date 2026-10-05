@@ -148,6 +148,25 @@ export function useDialOrientation(isClockwise, scaleMode) {
   }, [isClockwise]);
 
   /**
+   * Arc de bordure seul (sans rayon vers le centre ni fermeture), de midi
+   * jusqu'au front, dans le sens du cadran.
+   * @returns {string|null} path, null à progress <= 0 ; cercle complet en
+   *   deux demi-arcs à >= 0.9999
+   */
+  const getArcPath = useCallback((progress, centerX, centerY, radius) => {
+    if (progress <= 0) {return null;}
+    const sweep = isClockwise ? 1 : 0;
+    const startY = centerY - radius;
+    if (progress >= 0.9999) {
+      return `M ${centerX} ${startY} A ${radius} ${radius} 0 1 ${sweep} ${centerX} ${centerY + radius} A ${radius} ${radius} 0 1 ${sweep} ${centerX} ${startY}`;
+    }
+    const angle = (progress * 360 * Math.PI) / 180;
+    const endX = centerX + (isClockwise ? 1 : -1) * radius * Math.sin(angle);
+    const endY = centerY - radius * Math.cos(angle);
+    return `M ${centerX} ${startY} A ${radius} ${radius} 0 ${progress > 0.5 ? 1 : 0} ${sweep} ${endX} ${endY}`;
+  }, [isClockwise]);
+
+  /**
    * Get positions for number labels around the dial
    * @param {number} radius - Radius for number placement
    * @param {number} centerX - Center X
@@ -253,6 +272,7 @@ export function useDialOrientation(isClockwise, scaleMode) {
 
     // SVG rendering helpers
     getProgressPath,
+    getArcPath,
     getNumberPositions,
     getGraduationMarks,
   };
