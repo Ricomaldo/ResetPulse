@@ -13,6 +13,11 @@
   On ne le touche pas. Il existe pour qu'on puisse regarder ce qui était.
 - La 3.0 est **en ligne sur les deux stores et gelée**. « Pas de 3.1 » est
   rouvert par la cible RP3.1 — à trancher, voir le devlog du 03/10.
+- **Build en main : T3-2**, installé sur l'iPhone d'Eric le 05/10 (tag
+  `enow-t3-build-2`, app « enow 2 », bundle `com.irimwebforge.enow2`), à
+  côté de la 3.0 et de T3-1 (`enow-t3-build-1`). En usage, sans retouche,
+  jusqu'au crible. Son log d'intégration :
+  `_cockpit/missions/active/P0-build-t3-2.md`.
 
 ## Ce qu'on fabrique
 
@@ -72,7 +77,13 @@ npm run ios / npm run android
 npm run test               # jest
 ```
 
-Le build iOS passe par Xcode (`ios/ResetPulse.xcworkspace`), jamais par EAS.
+Le build iOS passe par Xcode (`ios/enow2.xcworkspace` depuis le prebuild
+du 05/10), jamais par EAS. Signature GUI pour les deux cibles (app +
+widget) après chaque prebuild propre. **Simulateur en Release
+seulement** : `npx expo run:ios --configuration Release --no-bundler
+--device <udid>` — le Debug ne lie plus avec les pods précompilés de RN
+0.83 (`RCTPackagerConnection` manquant pour `expo-dev-launcher`). Le JS
+est embarqué : recompiler après chaque changement.
 
 ## Architecture (héritée, à interroger)
 
