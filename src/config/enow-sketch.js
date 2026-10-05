@@ -75,7 +75,7 @@ export const ENOW_SCREEN_TAPS = true;
 export const ENOW_INK_LABELS = true;
 
 /** Opacité de la bordure du cadran quand elle porte la couleur active (ENOW_SWAP_INK) ; 1 = pleine. */
-export const ENOW_BORDER_OPACITY = 0.45;
+export const ENOW_BORDER_OPACITY = 0.3;
 
 /** Token `theme.colors.*` du mobilier : pivot du moyeu et textes d'indication ('text' = encre pleine). */
 export const ENOW_FURNITURE_INK = 'textSecondary';
@@ -85,7 +85,7 @@ export const ENOW_OUTER_RING = true;
 /** Écart entre bordure et anneau extérieur, en fraction de strokeWidth (négatif = léger recouvrement, anti-filet). */
 export const ENOW_OUTER_RING_GAP = -0.1;
 /** Épaisseur de l'anneau extérieur, en fraction de strokeWidth. */
-export const ENOW_OUTER_RING_WIDTH = 0.45;
+export const ENOW_OUTER_RING_WIDTH = 0.8;
 
 /** Halo en onde : part du centre, grandit jusqu'à la bordure du cadran et revient (période réglable). */
 export const ENOW_HALO_WAVE = true;
