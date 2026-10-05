@@ -70,6 +70,7 @@ function TimerDial({
   onGraduationTap = null,
   onDialTap = null,
   isCompleted = false,
+  isPaused = false,
   currentActivity = null,
   showNumbers = true,
   showGraduations = true,
@@ -111,6 +112,8 @@ function TimerDial({
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);
+  // T3-2 : moyeu vide hors séance (l'emoji n'apparaît qu'une fois lancé).
+  const inSession = isRunning || isPaused || isCompleted;
 
   // Calculate responsive sizes
   const circleSize = size || rs(280, 'min');
@@ -651,7 +654,7 @@ function TimerDial({
               le tap est géré par `handleTapOnGraduation` ci-dessus. */}
           {showPlayButton && (
             <DialCenter
-              activity={showActivityEmoji ? currentActivity : null}
+              activity={showActivityEmoji && inSession ? currentActivity : null}
               isRunning={isRunning}
               isCompleted={isCompleted}
               color={arcColor}
@@ -723,6 +726,7 @@ TimerDial.propTypes = {
   onGraduationTap: PropTypes.func,
   onDialTap: PropTypes.func,
   isCompleted: PropTypes.bool,
+  isPaused: PropTypes.bool,
   currentActivity: PropTypes.object,
   showNumbers: PropTypes.bool,
   showGraduations: PropTypes.bool,
@@ -751,6 +755,7 @@ export default React.memo(TimerDial, (prevProps, nextProps) => {
     prevProps.onDialTap === nextProps.onDialTap &&
     prevProps.onGraduationTap === nextProps.onGraduationTap &&
     prevProps.isCompleted === nextProps.isCompleted &&
+    prevProps.isPaused === nextProps.isPaused &&
     prevProps.currentActivity === nextProps.currentActivity &&
     prevProps.showNumbers === nextProps.showNumbers &&
     prevProps.showGraduations === nextProps.showGraduations &&

@@ -165,7 +165,11 @@ export const TimerConfigProvider = ({ children }) => {
   useEffect(() => {
     if (ENOW_START_EMPTY && !isLoading && !enowEmptiedRef.current) {
       enowEmptiedRef.current = true;
-      setValues((prev) => ({ ...prev, timer: { ...prev.timer, currentDuration: 0 } }));
+      // Moyeu vide au repos : pas d'activité préchargée (T3-2).
+      setValues((prev) => ({
+        ...prev,
+        timer: { ...prev.timer, currentDuration: 0, currentActivity: null },
+      }));
     }
   }, [isLoading, setValues]);
 

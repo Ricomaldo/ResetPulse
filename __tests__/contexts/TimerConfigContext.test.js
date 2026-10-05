@@ -111,4 +111,13 @@ describe('TimerConfigContext — plus de garde-fossile shouldPulse (consolidée 
     expect(result.current.display.shouldPulse).toBe(false);
     expect(mockUpdateValue).not.toHaveBeenCalledWith('display', expect.anything());
   });
+
+  it('sous ENOW_START_EMPTY : après chargement, activité null et durée 0 (moyeu vide au démarrage, T3-2)', () => {
+    mockValues = baseValues({ shouldPulse: true, showDigitalTimer: false, showTime: true });
+
+    renderHook(() => useTimerConfig(), { wrapper });
+
+    expect(mockValues.timer.currentActivity).toBeNull();
+    expect(mockValues.timer.currentDuration).toBe(0);
+  });
 });

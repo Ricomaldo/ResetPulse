@@ -329,6 +329,7 @@ export default function TimeTimer({
             onGraduationTap={handleGraduationTap}
             onDialTap={onDialTap}
             isCompleted={timer.isCompleted}
+            isPaused={timer.isPaused}
             currentActivity={currentActivity}
             showNumbers={ENOW_GRADUATIONS}
             showGraduations={ENOW_GRADUATIONS}

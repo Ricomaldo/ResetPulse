@@ -558,6 +558,7 @@ function TimerScreenContent() {
     timer: { currentDuration, currentActivity, selectedSoundId, clockwise },
     palette: { currentColor },
     setCurrentDuration,
+    setCurrentActivity,
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
   // porte-2 (retour Eric « le mode horizontal est complètement raté ») :
@@ -791,6 +792,11 @@ function TimerScreenContent() {
   // réinitialisation (retour Eric 21/09). Le premier tap agit tout de suite,
   // le second rembobine — aucun délai ajouté au geste simple.
   const lastDialTapRef = useRef(0);
+  // Roue de durée native (T3-2) : ouverte au tap sur le compteur ou sur un moyeu au repos sans durée.
+  const openDurationPicker = useCallback(() => {
+    modalStack.push('duration', { snapPoints: ['45%'] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modalStack.push]);
   const handleDialTap = useCallback(() => {
     const timer = timerRef.current;
     if (!timer) {
@@ -801,10 +807,16 @@ function TimerScreenContent() {
       const isDoubleTap = now - lastDialTapRef.current < 350;
       lastDialTapRef.current = now;
       if (isDoubleTap || timer.isCompleted) {
+        // Retour au démarrage complet : durée 0, moyeu vide (T3-2).
         timer.resetTimer();
+        setCurrentDuration(0);
+        setCurrentActivity(null);
         markMomentEvent(MOMENT_EVENTS.RESET);
       } else if (timer.running) {
         timer.pauseTimer();
+      } else if (!timer.isPaused && currentDuration === 0) {
+        // Rien à lancer : la roue de durée s'ouvre à la place (T3-2, lot d).
+        openDurationPicker();
       } else {
         timer.startTimer();
       }
@@ -819,7 +831,7 @@ function TimerScreenContent() {
     } else {
       timer.startTimer();
     }
-  }, [markMomentEvent]);
+  }, [markMomentEvent, setCurrentDuration, setCurrentActivity, currentDuration, openDurationPicker]);
 
   // Seuil composé Focus (P2-Focus) : « 1re séance accomplie >= 30 min » —
   // posé une fois pour toutes (one-shot, jamais désarmé), lu par
