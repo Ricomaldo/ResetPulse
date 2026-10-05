@@ -17,6 +17,7 @@ describe('enow-sketch flags', () => {
     ['ENOW_BORDER_OPACITY', 'number'],
     ['ENOW_FURNITURE_INK', 'string'],
     ['ENOW_OUTER_RING', 'boolean'],
+    ['ENOW_HALO_WAVE', 'boolean'],
     ['ENOW_OUTER_RING_GAP', 'number'],
     ['ENOW_OUTER_RING_WIDTH', 'number'],
     ['ENOW_SCREEN_TAPS', 'boolean'],

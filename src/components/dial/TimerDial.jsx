@@ -662,6 +662,7 @@ function TimerDial({
               color={arcColor}
               clockwise={clockwise}
               size={circleSize * 0.34} // hub structurel Ø 34 % du cadran (verdicts CD 25/07)
+              haloMaxScale={radiusBackground / ((circleSize * 0.34) / 2)} // onde du halo : du centre à la bordure
               distraction={distraction}
               frontProgress={ENOW_SESSION_DIAL ? displayProgress : null}
             />

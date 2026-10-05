@@ -25,9 +25,10 @@ export default function SheetSettingsPanel({ onBack }) {
   const {
     timer: { clockwise, scaleMode },
     setClockwise,
-    display: { shouldPulse, emojiMotion, showTime, lockedScale },
+    display: { shouldPulse, emojiMotion, haloSlow, showTime, lockedScale },
     setShouldPulse,
     setEmojiMotion,
+    setHaloSlow,
     setShowTime,
     setLockedScale,
     system: { keepAwakeEnabled },
@@ -44,6 +45,7 @@ export default function SheetSettingsPanel({ onBack }) {
     { key: 'showTime', label: t('accessibility.showTime'), value: showTime, onChange: setShowTime },
     { key: 'shouldPulse', label: t('settings.options.pulseAnimation'), value: shouldPulse, onChange: setShouldPulse },
     { key: 'emojiMotion', label: 'Emoji animé', value: emojiMotion, onChange: setEmojiMotion },
+    { key: 'haloSlow', label: 'Halo lent (2 s)', value: haloSlow, onChange: setHaloSlow },
   ];
 
   const styles = StyleSheet.create({

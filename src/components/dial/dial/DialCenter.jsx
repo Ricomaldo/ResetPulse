@@ -34,8 +34,9 @@ const DialCenter = React.memo(function DialCenter({
   size = 72,
   distraction = null,
   frontProgress = null,
+  haloMaxScale = 3,
 }) {
-  const { display: { shouldPulse, emojiMotion } } = useTimerConfig();
+  const { display: { shouldPulse, emojiMotion, haloSlow } } = useTimerConfig();
 
   // Déterminer l'état du bouton
   const getState = () => {
@@ -58,6 +59,8 @@ const DialCenter = React.memo(function DialCenter({
         size={size}
         shouldPulse={shouldPulse}
         emojiMotion={emojiMotion}
+        haloPeriod={haloSlow ? 2000 : 1000}
+        haloMaxScale={haloMaxScale}
         distraction={distraction}
         frontProgress={frontProgress}
       />
@@ -76,6 +79,7 @@ DialCenter.propTypes = {
   color: PropTypes.string,
   distraction: PropTypes.shape({ movement: PropTypes.string, variant: PropTypes.object }),
   frontProgress: PropTypes.number,
+  haloMaxScale: PropTypes.number,
   isCompleted: PropTypes.bool,
   isRunning: PropTypes.bool.isRequired,
   size: PropTypes.number,

@@ -35,6 +35,8 @@ const PulseButton = React.memo(function PulseButton({
   shouldPulse = false,
   clockwise = false,   // reserved — dial rotation direction, no movement use yet
   distraction = null,
+  haloPeriod = 1000,   // T3-2 : période de l'onde (ms), display.haloSlow
+  haloMaxScale = 3,    // T3-2 : scale du halo à la bordure du cadran
   emojiMotion = true,  // T3-2 : mouvements de l'emoji (réglage display.emojiMotion)
   frontProgress = null, // T3-2 : si non null, l'emoji est traversé par le front
 }) {
@@ -86,7 +88,12 @@ const PulseButton = React.memo(function PulseButton({
   // de la SÉANCE, pas de l'Activité — HALO_TEMPO fixe, jamais `tempo`. Le
   // mouvement de l'emoji (useEmojiMovement ci-dessus) garde son tempo propre.
   const haloActive = state === 'running' && shouldPulse && !compact;
-  const haloAnimatedStyle = useBreathingHalo({ tempo: HALO_TEMPO, active: haloActive });
+  const haloAnimatedStyle = useBreathingHalo({
+    tempo: HALO_TEMPO,
+    active: haloActive,
+    wavePeriod: haloPeriod,
+    waveMaxScale: haloMaxScale,
+  });
 
   // === DIMENSIONS ===
   // Hub structurel (verdicts CD 25/07) : Ø = 34 % du cadran (fourni par
@@ -245,6 +252,8 @@ PulseButton.propTypes = {
   }),
   emoji:               PropTypes.string,
   emojiMotion:         PropTypes.bool,
+  haloMaxScale:        PropTypes.number,
+  haloPeriod:          PropTypes.number,
   frontProgress:       PropTypes.number,
   shouldPulse:         PropTypes.bool,
   size:                PropTypes.number,

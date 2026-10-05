@@ -50,10 +50,17 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { ENOW_HALO_WAVE } from '../../../config/enow-sketch';
 
 const HALO_SCALE = 1.45;
 const HALO_OPACITY = 0.35;
 const DEFAULT_TEMPO = 800;
+
+// Mode onde (ENOW_HALO_WAVE) : naît au centre, aller-retour = la période exacte.
+const WAVE_MIN_SCALE = 0.05;
+const WAVE_OPACITY = 0.18;
+const DEFAULT_WAVE_PERIOD = 1000;
+const DEFAULT_WAVE_MAX_SCALE = 3;
 
 // Fractions de la période (safeTempo × 2) — doivent sommer à 1.
 const BIRTH_FRACTION = 0.10;
@@ -68,12 +75,19 @@ const HALO_START_DELAY_FRACTION = 0.5;
  * @param {Object} params
  * @param {number} params.tempo - pulseDuration (ms) de l'Activité
  * @param {boolean} params.active - Halo autorisé (shouldPulse && état non-complete)
+ * @param {number} [params.wavePeriod] - Période de l'onde en ms (ENOW_HALO_WAVE)
+ * @param {number} [params.waveMaxScale] - Scale max de l'onde (ENOW_HALO_WAVE)
  * @returns {Object} Style animé à poser sur le View du halo (cercle absolu)
  */
-export default function useBreathingHalo({ tempo, active }) {
+export default function useBreathingHalo({
+  tempo,
+  active,
+  wavePeriod = DEFAULT_WAVE_PERIOD, // ms, aller-retour complet (mode onde)
+  waveMaxScale = DEFAULT_WAVE_MAX_SCALE, // scale atteint à la bordure du cadran (mode onde)
+}) {
   const reduceMotionEnabled = useReducedMotion();
 
-  const scale = useSharedValue(1);
+  const scale = useSharedValue(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1);
   const opacity = useSharedValue(0);
 
   const isActive = Boolean(active) && !reduceMotionEnabled;
@@ -85,8 +99,25 @@ export default function useBreathingHalo({ tempo, active }) {
 
     if (!isActive) {
       opacity.value = withTiming(0, { duration: 200 });
-      scale.value = withTiming(1, { duration: 200 });
+      scale.value = withTiming(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1, { duration: 200 });
       return undefined;
+    }
+
+    if (ENOW_HALO_WAVE) {
+      scale.value = WAVE_MIN_SCALE;
+      scale.value = withRepeat(
+        withSequence(
+          withTiming(waveMaxScale, { duration: wavePeriod / 2, easing: Easing.inOut(Easing.ease) }),
+          withTiming(WAVE_MIN_SCALE, { duration: wavePeriod / 2, easing: Easing.inOut(Easing.ease) })
+        ),
+        -1,
+        false
+      );
+      opacity.value = withTiming(WAVE_OPACITY, { duration: 200 });
+      return () => {
+        cancelAnimation(scale);
+        cancelAnimation(opacity);
+      };
     }
 
     const period = safeTempo * 2;
@@ -130,7 +161,7 @@ export default function useBreathingHalo({ tempo, active }) {
       cancelAnimation(opacity);
     };
     // Deps restreintes : scale/opacity sont des refs stables (useSharedValue).
-  }, [safeTempo, isActive]);
+  }, [safeTempo, isActive, wavePeriod, waveMaxScale]);
 
   return useAnimatedStyle(() => ({
     opacity: opacity.value,
