@@ -35,7 +35,7 @@ const DialCenter = React.memo(function DialCenter({
   distraction = null,
   frontProgress = null,
 }) {
-  const { display: { shouldPulse } } = useTimerConfig();
+  const { display: { shouldPulse, emojiMotion } } = useTimerConfig();
 
   // Déterminer l'état du bouton
   const getState = () => {
@@ -57,6 +57,7 @@ const DialCenter = React.memo(function DialCenter({
         clockwise={clockwise}
         size={size}
         shouldPulse={shouldPulse}
+        emojiMotion={emojiMotion}
         distraction={distraction}
         frontProgress={frontProgress}
       />

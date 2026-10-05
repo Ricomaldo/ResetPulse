@@ -9,7 +9,7 @@
  * - timer: currentActivity, currentDuration, selectedSoundId, clockwise,
  *   scaleMode (DÉRIVÉ de currentDuration depuis hotfix-porte-1 B2 — jamais
  *   persisté ni settable, cf. deriveScaleMode/utils/scaleHelpers.js)
- * - display: shouldPulse, showDigitalTimer, showTime
+ * - display: shouldPulse, emojiMotion, showDigitalTimer, showTime
  * - system: keepAwakeEnabled
  * - mode: current (Mixte/Focus — Complet mort C6.2 ; ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
@@ -75,6 +75,7 @@ export const TimerConfigProvider = ({ children }) => {
         },
         display: {
           shouldPulse: false,
+          emojiMotion: true,
           lockedScale: '60min', // défaut = cadran horloge fixe (hyp. Eric 07/08) — l'adaptatif redevient l'exception
           showDigitalTimer: false,
           showTime: true,
@@ -121,6 +122,7 @@ export const TimerConfigProvider = ({ children }) => {
       },
       display: {
         shouldPulse: false,
+        emojiMotion: true,
         lockedScale: null,
         showDigitalTimer: false,
         showTime: true,
@@ -232,6 +234,7 @@ export const TimerConfigProvider = ({ children }) => {
     },
     display: {
       shouldPulse: values.display.shouldPulse,
+      emojiMotion: values.display.emojiMotion ?? true,
       lockedScale: values.display.lockedScale ?? null,
       showDigitalTimer: values.display.showDigitalTimer,
       showTime: values.display.showTime,
@@ -312,6 +315,13 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         display: { ...prev.display, shouldPulse }
+      }));
+    },
+    // Animation de l'emoji du moyeu (T3-2).
+    setEmojiMotion: (emojiMotion) => {
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, emojiMotion }
       }));
     },
     // Verrou d'échelle (sheet-racine) : null = dérivation auto ; une valeur

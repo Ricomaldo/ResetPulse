@@ -19,7 +19,7 @@ import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
-import { ENOW_HUB_MOTION, ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT } from '../../config/enow-sketch';
+import { ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT } from '../../config/enow-sketch';
 import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
@@ -35,6 +35,7 @@ const PulseButton = React.memo(function PulseButton({
   shouldPulse = false,
   clockwise = false,   // reserved — dial rotation direction, no movement use yet
   distraction = null,
+  emojiMotion = true,  // T3-2 : mouvements de l'emoji (réglage display.emojiMotion)
   frontProgress = null, // T3-2 : si non null, l'emoji est traversé par le front
 }) {
   const theme = useTheme();
@@ -147,7 +148,7 @@ const PulseButton = React.memo(function PulseButton({
     const displayEmoji = emoji || activity?.emoji;
     if (displayEmoji && frontProgress != null) {
       return (
-        <Animated.View style={ENOW_HUB_MOTION ? emojiAnimatedStyle : undefined}>
+        <Animated.View style={emojiMotion ? emojiAnimatedStyle : undefined}>
           <HubFrontEmoji
             emoji={displayEmoji}
             size={buttonSize}
@@ -159,7 +160,7 @@ const PulseButton = React.memo(function PulseButton({
     }
     if (displayEmoji) {
       return (
-        <Animated.View style={ENOW_HUB_MOTION ? emojiAnimatedStyle : undefined}>
+        <Animated.View style={emojiMotion ? emojiAnimatedStyle : undefined}>
           <Text style={[styles.emoji, { fontSize: emojiSize }]}>{displayEmoji}</Text>
         </Animated.View>
       );
@@ -243,6 +244,7 @@ PulseButton.propTypes = {
     variant: PropTypes.object,
   }),
   emoji:               PropTypes.string,
+  emojiMotion:         PropTypes.bool,
   frontProgress:       PropTypes.number,
   shouldPulse:         PropTypes.bool,
   size:                PropTypes.number,

@@ -47,6 +47,7 @@ import {
   ENOW_SNAP_MIN_VELOCITY,
   ENOW_SESSION_DIAL,
   ENOW_HANDLE,
+  ENOW_HUB_PIVOT,
 } from '../../config/enow-sketch';
 import Svg, { Circle, Line, Defs, RadialGradient, Stop } from 'react-native-svg';
 
@@ -596,7 +597,7 @@ function TimerDial({
           )}
 
           {/* Physical fixation dots - hide when PulseButton is displayed */}
-          {(showActivityEmoji || isRunning) && (
+          {!ENOW_HUB_PIVOT && (showActivityEmoji || isRunning) && (
             <Svg
               width={svgSize}
               height={svgSize}

@@ -25,8 +25,9 @@ export default function SheetSettingsPanel({ onBack }) {
   const {
     timer: { clockwise, scaleMode },
     setClockwise,
-    display: { shouldPulse, showTime, lockedScale },
+    display: { shouldPulse, emojiMotion, showTime, lockedScale },
     setShouldPulse,
+    setEmojiMotion,
     setShowTime,
     setLockedScale,
     system: { keepAwakeEnabled },
@@ -42,6 +43,7 @@ export default function SheetSettingsPanel({ onBack }) {
     { key: 'keepAwake', label: t('accessibility.keepAwake'), value: keepAwakeEnabled, onChange: setKeepAwakeEnabled },
     { key: 'showTime', label: t('accessibility.showTime'), value: showTime, onChange: setShowTime },
     { key: 'shouldPulse', label: t('settings.options.pulseAnimation'), value: shouldPulse, onChange: setShouldPulse },
+    { key: 'emojiMotion', label: 'Emoji animé', value: emojiMotion, onChange: setEmojiMotion },
   ];
 
   const styles = StyleSheet.create({

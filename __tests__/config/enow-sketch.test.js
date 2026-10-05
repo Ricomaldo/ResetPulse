@@ -11,7 +11,7 @@ describe('enow-sketch flags', () => {
     ['ENOW_GRADUATIONS', 'boolean'],
     ['ENOW_HUB_GHOST_OPACITY', 'number'],
     ['ENOW_DEFAULT_DURATION', 'number'],
-    ['ENOW_HUB_MOTION', 'boolean'],
+    ['ENOW_CHIP_RING', 'boolean'],
     ['ENOW_DICE', 'boolean'],
     ['ENOW_NONE_CHIP', 'boolean'],
     ['ENOW_HUB_PIVOT', 'boolean'],

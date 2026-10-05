@@ -35,7 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE, ENOW_NONE_CHIP } from '../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE, ENOW_NONE_CHIP, ENOW_CHIP_RING } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -102,10 +102,10 @@ function CompactRow({ onActivityTouch, onColorTouch, markMomentEvent }) {
       justifyContent: 'center',
       width: ACTIVITY_SIZE,
     },
-    activityButtonActive: {
-      backgroundColor: theme.colors.text,
-      borderColor: theme.colors.text,
-    },
+    // T3-2 (ENOW_CHIP_RING) : sélection = anneau encre, fond inchangé.
+    activityButtonActive: ENOW_CHIP_RING
+      ? { borderColor: theme.colors.text, borderWidth: 2.5 }
+      : { backgroundColor: theme.colors.text, borderColor: theme.colors.text },
     activityEmoji: {
       fontSize: rs(20, 'min'),
     },
