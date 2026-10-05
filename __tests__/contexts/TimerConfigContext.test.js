@@ -118,12 +118,6 @@ describe('TimerConfigContext — plus de garde-fossile shouldPulse (consolidée 
     expect(result.current.display.emojiMotion).toBe(true);
   });
 
-  it('défaut display.haloSlow exposé à false', () => {
-    mockValues = baseValues({ shouldPulse: false, showDigitalTimer: false, showTime: true });
-    const { result } = renderHook(() => useTimerConfig(), { wrapper });
-    expect(result.current.display.haloSlow).toBe(false);
-  });
-
   it('sous ENOW_START_EMPTY : après chargement, activité null et durée par défaut 3600 (moyeu vide au démarrage, T3-2)', () => {
     mockValues = baseValues({ shouldPulse: true, showDigitalTimer: false, showTime: true });
 
