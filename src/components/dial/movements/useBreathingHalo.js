@@ -42,7 +42,6 @@ import { useEffect } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
-  useAnimatedProps,
   withRepeat,
   withSequence,
   withTiming,
@@ -60,7 +59,6 @@ const DEFAULT_TEMPO = 800;
 // Mode onde (ENOW_HALO_WAVE) : naît au centre, aller-retour = la période exacte.
 const WAVE_MIN_SCALE = 0.05;
 const WAVE_OPACITY = 0.18;
-const RIPPLE_MIN = 0.5; // plancher de r / strokeWidth : à 0 ou NaN, RNSVGCircle produit une géométrie NaN (crash CALayer)
 const DEFAULT_WAVE_PERIOD = 1000;
 const DEFAULT_WAVE_MAX_SCALE = 3;
 
@@ -79,25 +77,18 @@ const HALO_START_DELAY_FRACTION = 0.5;
  * @param {boolean} params.active - Halo autorisé (shouldPulse && état non-complete)
  * @param {number} [params.wavePeriod] - Période de l'onde en ms (ENOW_HALO_WAVE)
  * @param {number} [params.waveMaxScale] - Scale max de l'onde (ENOW_HALO_WAVE)
- * @param {boolean} [params.ripple] - Onde creuse (grandit puis se vide depuis le centre)
- * @param {number} [params.rippleRadius] - Rayon R (px) du cadran, extérieur final de l'onde creuse
- * @returns {{style: Object, animatedProps: Object}} style animé du View du halo
- *   (cercle absolu) et animatedProps du Circle SVG de l'onde creuse
+ * @returns {Object} Style animé à poser sur le View du halo (cercle absolu)
  */
 export default function useBreathingHalo({
   tempo,
   active,
   wavePeriod = DEFAULT_WAVE_PERIOD, // ms, aller-retour complet (mode onde)
   waveMaxScale = DEFAULT_WAVE_MAX_SCALE, // scale atteint à la bordure du cadran (mode onde)
-  ripple = false, // onde creuse : le disque grandit puis se vide depuis le centre
-  rippleRadius = 100, // rayon (px) du cadran : l'onde creuse y atteint son extérieur (R)
 }) {
   const reduceMotionEnabled = useReducedMotion();
 
   const scale = useSharedValue(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1);
   const opacity = useSharedValue(0);
-  const outer = useSharedValue(RIPPLE_MIN); // onde creuse : rayon extérieur (px), 0 → R
-  const inner = useSharedValue(0); // onde creuse : rayon intérieur (px), 0 → R
 
   const isActive = Boolean(active) && !reduceMotionEnabled;
   const safeTempo = tempo > 0 ? tempo : DEFAULT_TEMPO;
@@ -110,36 +101,6 @@ export default function useBreathingHalo({
       opacity.value = withTiming(0, { duration: 200 });
       scale.value = withTiming(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1, { duration: 200 });
       return undefined;
-    }
-
-    if (ENOW_HALO_WAVE && ripple) {
-      const half = wavePeriod / 2;
-      // Reset invisible en début de boucle : outer repart à RIPPLE_MIN (jamais 0), inner à 0.
-      // PHASE 1 : le disque plein grandit du centre (outer 0 → R, inner 0).
-      // PHASE 2 : outer tenu à R, inner 0 → R (in) — le trou grandit depuis
-      // le centre, l'anneau s'amincit vers la bordure puis disparaît.
-      outer.value = withRepeat(
-        withSequence(
-          withTiming(RIPPLE_MIN, { duration: 0 }),
-          withTiming(rippleRadius, { duration: half, easing: Easing.out(Easing.ease) }),
-          withTiming(rippleRadius, { duration: half })
-        ),
-        -1,
-        false
-      );
-      inner.value = withRepeat(
-        withSequence(
-          withTiming(0, { duration: 0 }),
-          withTiming(0, { duration: half }),
-          withTiming(rippleRadius, { duration: half, easing: Easing.in(Easing.ease) })
-        ),
-        -1,
-        false
-      );
-      return () => {
-        cancelAnimation(outer);
-        cancelAnimation(inner);
-      };
     }
 
     if (ENOW_HALO_WAVE) {
@@ -200,23 +161,10 @@ export default function useBreathingHalo({
       cancelAnimation(opacity);
     };
     // Deps restreintes : scale/opacity sont des refs stables (useSharedValue).
-  }, [safeTempo, isActive, wavePeriod, waveMaxScale, ripple, rippleRadius]);
+  }, [safeTempo, isActive, wavePeriod, waveMaxScale]);
 
-  const style = useAnimatedStyle(() => ({
+  return useAnimatedStyle(() => ({
     opacity: opacity.value,
     transform: [{ scale: scale.value }],
   }));
-
-  // Onde creuse (SVG) : cercle dont le rayon médian et l'épaisseur dérivent
-  // des rayons extérieur et intérieur.
-  const animatedProps = useAnimatedProps(() => {
-    const r = (outer.value + inner.value) / 2;
-    const strokeWidth = outer.value - inner.value;
-    if (!Number.isFinite(r) || !Number.isFinite(strokeWidth)) {
-      return { r: RIPPLE_MIN, strokeWidth: RIPPLE_MIN };
-    }
-    return { r: Math.max(r, RIPPLE_MIN), strokeWidth: Math.max(strokeWidth, RIPPLE_MIN) };
-  });
-
-  return { style, animatedProps };
 }
