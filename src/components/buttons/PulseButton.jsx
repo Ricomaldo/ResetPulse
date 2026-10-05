@@ -14,6 +14,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import PropTypes from 'prop-types';
+import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeProvider';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
@@ -24,6 +25,8 @@ import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
 const HALO_TEMPO = 1100; // rythme UNIQUE du halo (période 2,2s = HALO_TEMPO×2, useBreathingHalo) — indépendant du pulseDuration de l'Activité (verdict Eric hotfix-porte-1 B1/D1)
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PulseButton = React.memo(function PulseButton({
   state = 'rest',
@@ -89,13 +92,13 @@ const PulseButton = React.memo(function PulseButton({
   // de la SÉANCE, pas de l'Activité — HALO_TEMPO fixe, jamais `tempo`. Le
   // mouvement de l'emoji (useEmojiMovement ci-dessus) garde son tempo propre.
   const haloActive = state === 'running' && shouldPulse && !compact;
-  const haloAnimatedStyle = useBreathingHalo({
+  const { style: haloAnimatedStyle, animatedProps: haloRippleProps } = useBreathingHalo({
     tempo: HALO_TEMPO,
     active: haloActive,
     wavePeriod: haloPeriod,
     waveMaxScale: haloMaxScale,
     ripple: haloRipple,
-    hubRadius: buttonSize / 2,
+    rippleRadius: (buttonSize / 2) * haloMaxScale,
   });
 
   // === DIMENSIONS ===
@@ -202,18 +205,38 @@ const PulseButton = React.memo(function PulseButton({
   // 'adjustable'/'timer' + action 'activate') — ce View ne doit pas être un
   // arrêt VoiceOver séparé.
   const haloColor = color || theme.colors.text;
+  const rippleR = (buttonSize / 2) * haloMaxScale;
   return (
     <View style={styles.container} accessible={false} importantForAccessibility="no">
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.halo,
-          ENOW_HALO_WAVE && haloRipple
-            ? { backgroundColor: 'transparent', borderColor: haloColor } // onde creuse : disque dessiné par la bordure animée
-            : { backgroundColor: haloColor },
-          haloAnimatedStyle,
-        ]}
-      />
+      {ENOW_HALO_WAVE && haloRipple ? (
+        // Onde creuse en SVG (borderWidth animé : rien à l'écran en New Arch).
+        // Carré de côté 2R centré sur le moyeu, jamais coupé (overflow visible).
+        haloActive && (
+          <Svg
+            pointerEvents="none"
+            width={2 * rippleR}
+            height={2 * rippleR}
+            overflow="visible"
+            style={{ position: 'absolute', left: buttonSize / 2 - rippleR, top: buttonSize / 2 - rippleR }}
+            accessible={false}
+            importantForAccessibility="no"
+          >
+            <AnimatedCircle
+              cx={rippleR}
+              cy={rippleR}
+              fill="none"
+              stroke={haloColor}
+              opacity={0.18}
+              animatedProps={haloRippleProps}
+            />
+          </Svg>
+        )
+      ) : (
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.halo, { backgroundColor: haloColor }, haloAnimatedStyle]}
+        />
+      )}
       <View
         style={[
           styles.button,

@@ -42,6 +42,7 @@ import { useEffect } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
+  useAnimatedProps,
   withRepeat,
   withSequence,
   withTiming,
@@ -78,8 +79,9 @@ const HALO_START_DELAY_FRACTION = 0.5;
  * @param {number} [params.wavePeriod] - Période de l'onde en ms (ENOW_HALO_WAVE)
  * @param {number} [params.waveMaxScale] - Scale max de l'onde (ENOW_HALO_WAVE)
  * @param {boolean} [params.ripple] - Onde creuse (grandit puis se vide depuis le centre)
- * @param {number} [params.hubRadius] - Rayon local du halo, borne du borderWidth plein
- * @returns {Object} Style animé à poser sur le View du halo (cercle absolu)
+ * @param {number} [params.rippleRadius] - Rayon R (px) du cadran, extérieur final de l'onde creuse
+ * @returns {{style: Object, animatedProps: Object}} style animé du View du halo
+ *   (cercle absolu) et animatedProps du Circle SVG de l'onde creuse
  */
 export default function useBreathingHalo({
   tempo,
@@ -87,13 +89,14 @@ export default function useBreathingHalo({
   wavePeriod = DEFAULT_WAVE_PERIOD, // ms, aller-retour complet (mode onde)
   waveMaxScale = DEFAULT_WAVE_MAX_SCALE, // scale atteint à la bordure du cadran (mode onde)
   ripple = false, // onde creuse : le disque grandit puis se vide depuis le centre
-  hubRadius = 40, // rayon local du halo (px, avant scale) — borne du borderWidth plein
+  rippleRadius = 100, // rayon (px) du cadran : l'onde creuse y atteint son extérieur (R)
 }) {
   const reduceMotionEnabled = useReducedMotion();
 
   const scale = useSharedValue(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1);
   const opacity = useSharedValue(0);
-  const border = useSharedValue(0); // onde creuse : épaisseur locale de la bordure (px avant scale)
+  const outer = useSharedValue(0); // onde creuse : rayon extérieur (px), 0 → R
+  const inner = useSharedValue(0); // onde creuse : rayon intérieur (px), 0 → R
 
   const isActive = Boolean(active) && !reduceMotionEnabled;
   const safeTempo = tempo > 0 ? tempo : DEFAULT_TEMPO;
@@ -110,33 +113,31 @@ export default function useBreathingHalo({
 
     if (ENOW_HALO_WAVE && ripple) {
       const half = wavePeriod / 2;
-      // Scale : repart au centre, PHASE 1 grandit (out), PHASE 2 tenu au max.
-      scale.value = withRepeat(
+      // Reset invisible en début de boucle : outer et inner repartent à 0.
+      // PHASE 1 : le disque plein grandit du centre (outer 0 → R, inner 0).
+      // PHASE 2 : outer tenu à R, inner 0 → R (in) — le trou grandit depuis
+      // le centre, l'anneau s'amincit vers la bordure puis disparaît.
+      outer.value = withRepeat(
         withSequence(
-          withTiming(WAVE_MIN_SCALE, { duration: 0 }),
-          withTiming(waveMaxScale, { duration: half, easing: Easing.out(Easing.ease) }),
-          withTiming(waveMaxScale, { duration: half })
+          withTiming(0, { duration: 0 }),
+          withTiming(rippleRadius, { duration: half, easing: Easing.out(Easing.ease) }),
+          withTiming(rippleRadius, { duration: half })
         ),
         -1,
         false
       );
-      // Bordure : PHASE 1 pleine (= rayon, le disque est plein), PHASE 2 va
-      // de pleine à 0 (in) : le disque se vide depuis le centre en anneau
-      // qui s'amincit vers la bordure puis disparaît.
-      border.value = withRepeat(
+      inner.value = withRepeat(
         withSequence(
-          withTiming(hubRadius, { duration: 0 }),
-          withTiming(hubRadius, { duration: half }),
-          withTiming(0, { duration: half, easing: Easing.in(Easing.ease) })
+          withTiming(0, { duration: 0 }),
+          withTiming(0, { duration: half }),
+          withTiming(rippleRadius, { duration: half, easing: Easing.in(Easing.ease) })
         ),
         -1,
         false
       );
-      opacity.value = withTiming(WAVE_OPACITY, { duration: 200 });
       return () => {
-        cancelAnimation(scale);
-        cancelAnimation(border);
-        cancelAnimation(opacity);
+        cancelAnimation(outer);
+        cancelAnimation(inner);
       };
     }
 
@@ -198,19 +199,19 @@ export default function useBreathingHalo({
       cancelAnimation(opacity);
     };
     // Deps restreintes : scale/opacity sont des refs stables (useSharedValue).
-  }, [safeTempo, isActive, wavePeriod, waveMaxScale, ripple, hubRadius]);
+  }, [safeTempo, isActive, wavePeriod, waveMaxScale, ripple, rippleRadius]);
 
-  return useAnimatedStyle(() => {
-    if (ripple) {
-      return {
-        opacity: opacity.value,
-        borderWidth: border.value,
-        transform: [{ scale: scale.value }],
-      };
-    }
-    return {
-      opacity: opacity.value,
-      transform: [{ scale: scale.value }],
-    };
-  });
+  const style = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
+
+  // Onde creuse (SVG) : cercle dont le rayon médian et l'épaisseur dérivent
+  // des rayons extérieur et intérieur.
+  const animatedProps = useAnimatedProps(() => ({
+    r: (outer.value + inner.value) / 2,
+    strokeWidth: Math.max(outer.value - inner.value, 0),
+  }));
+
+  return { style, animatedProps };
 }
