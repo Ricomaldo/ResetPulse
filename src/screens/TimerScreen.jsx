@@ -1419,14 +1419,17 @@ function TimerScreenContent() {
     ? (ENOW_FILL_UP ? (snapshot.elapsed ?? 0) : snapshot.remaining)
     : currentDuration;
   const topTargetSeconds = ENOW_FILL_UP && inSession ? currentDuration : null;
-  // Tap sur le compteur : roue de durée (T3-2). En séance (en cours ou en
-  // pause), la roue part du temps restant ; OK = nouvelle séance de la durée
+  // Tap sur le compteur : roue de durée (T3-2). En séance, le tap met en
+  // pause et la roue part du temps restant ; OK = nouvelle séance de la durée
   // choisie (retour au repos, durée posée, démarrage) — hors noyau, via
   // resetTimer/startTimer. Terme atteint : retour au repos, roue normale.
   const pendingStartRef = useRef(null);
   const handleTopTimePress = useCallback(() => {
     const timer = timerRef.current;
     if (timer && (timer.running || timer.isPaused)) {
+      if (timer.running) {
+        timer.pauseTimer(); // la roue s'ouvre sur une séance en pause
+      }
       openDurationPicker({
         initialSeconds: timer.remaining,
         onConfirm: (seconds) => {
