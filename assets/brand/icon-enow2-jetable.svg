@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Icône JETABLE du build T3-2 (arc enow, 05/10/2026) — dérivée de icon-enow-jetable.svg. Géométrie de
+       icon-en-seance.svg en MIROIR horizontal (creux de l'arc à gauche,
+       choix Eric 21/09) ; fond menthe plat #97DFC6 (choix Eric 05/10, aussi couleur brand T3-2), motif noir plein #0F1A12.
+       Sert à distinguer le build d'essai de la 3.0 et à tester le vert.
+       N'est PAS l'icône de la 4.0 (logo aux deux ronds, temps 5). -->
+  <rect x="0" y="0" width="1024" height="1024" fill="#97DFC6"/>
+  <g transform="translate(1024,0) scale(-1,1)">
+    <path d="M 781.7380,356.2667 A 311.4667,311.4667 0 1,1 512.0000,200.5333"
+          fill="none" stroke="#0F1A12" stroke-width="34.1333" stroke-linecap="round"/>
+    <circle cx="512.0000" cy="512.0000" r="213.3333" fill="none" stroke="#0F1A12" stroke-width="34.1333"/>
+    <circle cx="512.0000" cy="512.0000" r="98.1333" fill="#0F1A12"/>
+  </g>
+</svg>

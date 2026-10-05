@@ -7,7 +7,7 @@
       "policy": "appVersion"
     },
     "orientation": "default",
-    "icon": "./assets/icon-enow-jetable.png",
+    "icon": "./assets/icon-enow2-jetable.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -29,7 +29,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon-enow-jetable.png",
+          "icon": "./assets/icon-enow2-jetable.png",
           "color": "#4A5568",
           "sounds": [
             "./assets/sounds/aj_heels__timercomplete01.wav",
@@ -68,7 +68,7 @@
       "@react-native-community/datetimepicker"
     ],
     "notification": {
-      "icon": "./assets/icon-enow-jetable.png",
+      "icon": "./assets/icon-enow2-jetable.png",
       "color": "#4A5568",
       "androidMode": "default",
       "androidCollapsedTitle": "ResetPulse"
@@ -76,7 +76,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1FA85C"
+        "backgroundColor": "#97DFC6"
       },
       "package": "com.irimwebforge.enow2",
       "permissions": [
