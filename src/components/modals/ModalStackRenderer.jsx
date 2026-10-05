@@ -7,6 +7,7 @@
 import React from 'react';
 import { useModalStack } from '../../contexts/ModalStackContext';
 import BottomSheetModal from './BottomSheetModal';
+import DurationPickerContent from './DurationPickerContent';
 import PremiumModalContent from './PremiumModalContent';
 import logger from '../../utils/logger';
 
@@ -15,8 +16,10 @@ import logger from '../../utils/logger';
  *
  * Usage:
  * - modalStack.push('premium', { highlightedFeature: 'activity' })
+ * - modalStack.push('duration', { snapPoints: ['45%'] })  (roue de durée, T3-2)
  */
 const MODAL_TYPES = {
+  duration: DurationPickerContent,
   premium: PremiumModalContent,
 };
 

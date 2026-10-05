@@ -429,17 +429,12 @@ function formatTime(totalSecondsRaw) {
 // hotfix-porte-1 B3/D3 : pur affichage, plus de tap ici — montrer/masquer
 // vit dans le sheet (toggle `showTime` existant, AsideZone). Masqué : ni le
 // temps ni le glyphe ⏱ ne montent (plus de `••:••` fantôme).
-// SKETCH enow : double tap sur le temps digital = durée à zéro (proposition
-// Eric 21/09, build jetable). Aucun geste simple ajouté.
-function TopTime({ seconds, targetSeconds = null, onDoubleTap = null }) {
-  const lastTapRef = useRef(0);
+// SKETCH enow (T3-2) : tap sur le temps digital = roue de durée iOS (au repos
+// seulement, géré par l'appelant). Le retour au démarrage vit sur le cadran.
+function TopTime({ seconds, targetSeconds = null, onPress = null }) {
   const handlePress = useCallback(() => {
-    const now = Date.now();
-    if (now - lastTapRef.current < 350) {
-      onDoubleTap?.();
-    }
-    lastTapRef.current = now;
-  }, [onDoubleTap]);
+    onPress?.();
+  }, [onPress]);
   const theme = useTheme();
   const { display: { showTime } } = useTimerConfig();
 
@@ -1341,14 +1336,14 @@ function TimerScreenContent() {
     ? (ENOW_FILL_UP ? (snapshot.elapsed ?? 0) : snapshot.remaining)
     : currentDuration;
   const topTargetSeconds = ENOW_FILL_UP && inSession ? currentDuration : null;
-  const handleTopTimeZero = useCallback(() => {
+  // Tap sur le compteur : roue de durée, seulement hors séance (T3-2).
+  const handleTopTimePress = useCallback(() => {
     const timer = timerRef.current;
     if (timer && (timer.running || timer.isPaused || timer.isCompleted)) {
-      timer.resetTimer();
-      markMomentEvent(MOMENT_EVENTS.RESET);
+      return;
     }
-    setCurrentDuration(0);
-  }, [markMomentEvent, setCurrentDuration]);
+    openDurationPicker();
+  }, [openDurationPicker]);
 
   return (
     <SafeAreaView
@@ -1362,7 +1357,7 @@ function TimerScreenContent() {
             onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
             pointerEvents={immersed ? 'none' : 'auto'}
           >
-            <TopTime seconds={topTimeSeconds} targetSeconds={topTargetSeconds} onDoubleTap={handleTopTimeZero} />
+            <TopTime seconds={topTimeSeconds} targetSeconds={topTargetSeconds} onPress={handleTopTimePress} />
           </Animated.View>
         )}
         <View style={styles.content}>
