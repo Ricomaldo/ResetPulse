@@ -61,3 +61,6 @@ export const ENOW_NONE_CHIP = true;
 
 /** Sans emoji, le moyeu montre une puce ronde (pivot d'aiguille) au lieu des icônes play/stop/reset. */
 export const ENOW_HUB_PIVOT = true;
+
+/** Le moyeu est transparent : le secteur écoulé le traverse, continu du pivot à la bordure. */
+export const ENOW_HUB_TRANSPARENT = true;

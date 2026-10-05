@@ -15,6 +15,7 @@ describe('enow-sketch flags', () => {
     ['ENOW_DICE', 'boolean'],
     ['ENOW_NONE_CHIP', 'boolean'],
     ['ENOW_HUB_PIVOT', 'boolean'],
+    ['ENOW_HUB_TRANSPARENT', 'boolean'],
     ['ENOW_GHOST_OPACITY', 'number'],
     ['ENOW_SNAP_MIN_VELOCITY', 'number'],
   ])('%s est un %s', (name, type) => {

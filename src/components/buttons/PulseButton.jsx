@@ -19,7 +19,7 @@ import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
-import { ENOW_HUB_MOTION, ENOW_HUB_PIVOT } from '../../config/enow-sketch';
+import { ENOW_HUB_MOTION, ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT } from '../../config/enow-sketch';
 import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
@@ -197,7 +197,14 @@ const PulseButton = React.memo(function PulseButton({
         pointerEvents="none"
         style={[styles.halo, { backgroundColor: haloColor }, haloAnimatedStyle]}
       />
-      <View style={[styles.button, { backgroundColor: bgColor }]}>
+      <View
+        style={[
+          styles.button,
+          ENOW_HUB_TRANSPARENT
+            ? { backgroundColor: 'transparent', borderWidth: 0 }
+            : { backgroundColor: bgColor },
+        ]}
+      >
         {renderContent()}
         {/* ✨ fin de séance = badge superposé, coin haut-droit du hub — l'emoji
             d'activité reste SEUL plein cadre dans le Text (hotfix-porte-1
