@@ -69,12 +69,12 @@ export const TimerConfigProvider = ({ children }) => {
           currentActivity: devActivity,
           currentDuration: DEV_DEFAULT_TIMER_CONFIG.duration,
           selectedSoundId: DEFAULT_SOUND_ID,
-          clockwise: false,
+          clockwise: true,
           // scaleMode retiré (hotfix-porte-1 B2) : toujours dérivé de
           // currentDuration via deriveScaleMode, plus jamais stocké/choisi.
         },
         display: {
-          shouldPulse: true,
+          shouldPulse: false,
           lockedScale: '60min', // défaut = cadran horloge fixe (hyp. Eric 07/08) — l'adaptatif redevient l'exception
           showDigitalTimer: false,
           showTime: true,
@@ -113,14 +113,14 @@ export const TimerConfigProvider = ({ children }) => {
         currentActivity: getDefaultActivity(),
         currentDuration: 1200, // 20 minutes (signature méditation, Eric 07/08)
         selectedSoundId: DEFAULT_SOUND_ID,
-        clockwise: false,
+        clockwise: true,
         // scaleMode retiré (hotfix-porte-1 B2) : le défaut '25min' était une
         // échelle DÉPRÉCIÉE (DIAL_MODES ne la porte plus depuis 2026-01-15),
         // repli silencieux vers 30min — toujours dérivé de currentDuration
         // désormais, cf. deriveScaleMode plus bas.
       },
       display: {
-        shouldPulse: true,
+        shouldPulse: false,
         lockedScale: null,
         showDigitalTimer: false,
         showTime: true,

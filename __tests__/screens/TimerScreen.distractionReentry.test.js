@@ -20,6 +20,12 @@ import { create, act } from 'react-test-renderer';
 import TimerScreen from '../../src/screens/TimerScreen';
 import { MOVEMENTS } from '../../src/components/dial/movements/movements';
 
+// T3-2 : le dé est masqué par défaut (ENOW_DICE) ; ce test en a besoin.
+jest.mock('../../src/config/enow-sketch', () => ({
+  ...jest.requireActual('../../src/config/enow-sketch'),
+  ENOW_DICE: true,
+}));
+
 jest.mock('react-native-safe-area-context', () =>
   require('react-native-safe-area-context/jest/mock').default,
 );

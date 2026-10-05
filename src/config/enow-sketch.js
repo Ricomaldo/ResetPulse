@@ -49,3 +49,9 @@ export const ENOW_HUB_GHOST_OPACITY = 0.3;
 
 /** Durée par défaut au démarrage et après double tap sur le compteur, en secondes (60 min). */
 export const ENOW_DEFAULT_DURATION = 3600;
+
+/** Animation (mouvements, dé Distraction) de l'emoji du moyeu ; false = emoji immobile. */
+export const ENOW_HUB_MOTION = false;
+
+/** Bouton dé 🎲 (Distraction) rendu à l'écran ; false = masqué, le tirage reste intact. */
+export const ENOW_DICE = false;

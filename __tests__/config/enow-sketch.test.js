@@ -11,6 +11,8 @@ describe('enow-sketch flags', () => {
     ['ENOW_GRADUATIONS', 'boolean'],
     ['ENOW_HUB_GHOST_OPACITY', 'number'],
     ['ENOW_DEFAULT_DURATION', 'number'],
+    ['ENOW_HUB_MOTION', 'boolean'],
+    ['ENOW_DICE', 'boolean'],
     ['ENOW_GHOST_OPACITY', 'number'],
     ['ENOW_SNAP_MIN_VELOCITY', 'number'],
   ])('%s est un %s', (name, type) => {

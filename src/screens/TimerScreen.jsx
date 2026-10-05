@@ -35,7 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION } from '../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -1437,15 +1437,17 @@ function TimerScreenContent() {
                   chevauchait la pastille, et proposer une distraction au
                   sommet émotionnel est un contresens. Opacité (pas un
                   démontage) : il garde sa place, rien ne bouge à l'écran. */}
-              <View
-                style={showKeepMoment ? styles.distractionMuted : null}
-                pointerEvents={showKeepMoment ? 'none' : 'auto'}
-              >
-                <DistractionButton
-                  showLabel={showDistractionLabel}
-                  onDistraction={handleDistraction}
-                />
-              </View>
+              {ENOW_DICE && (
+                <View
+                  style={showKeepMoment ? styles.distractionMuted : null}
+                  pointerEvents={showKeepMoment ? 'none' : 'auto'}
+                >
+                  <DistractionButton
+                    showLabel={showDistractionLabel}
+                    onDistraction={handleDistraction}
+                  />
+                </View>
+              )}
             </Animated.View>
           )}
         </View>

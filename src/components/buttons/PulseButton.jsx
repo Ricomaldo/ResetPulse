@@ -19,6 +19,7 @@ import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
+import { ENOW_HUB_MOTION } from '../../config/enow-sketch';
 import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
@@ -146,7 +147,7 @@ const PulseButton = React.memo(function PulseButton({
     const displayEmoji = emoji || activity?.emoji;
     if (displayEmoji && frontProgress != null) {
       return (
-        <Animated.View style={emojiAnimatedStyle}>
+        <Animated.View style={ENOW_HUB_MOTION ? emojiAnimatedStyle : undefined}>
           <HubFrontEmoji
             emoji={displayEmoji}
             size={buttonSize}
@@ -158,7 +159,7 @@ const PulseButton = React.memo(function PulseButton({
     }
     if (displayEmoji) {
       return (
-        <Animated.View style={emojiAnimatedStyle}>
+        <Animated.View style={ENOW_HUB_MOTION ? emojiAnimatedStyle : undefined}>
           <Text style={[styles.emoji, { fontSize: emojiSize }]}>{displayEmoji}</Text>
         </Animated.View>
       );
