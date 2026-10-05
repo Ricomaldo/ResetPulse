@@ -70,3 +70,9 @@ export const ENOW_SWAP_INK = true;
 
 /** Gestes d'écran : le cadran ne réagit plus au doigt ; tap = start/pause, double = Focus, triple = reset (hors compteur et barre). */
 export const ENOW_SCREEN_TAPS = true;
+
+/** Textes d'indication (swipe up, rituals & settings) en encre, comme le pivot. */
+export const ENOW_INK_LABELS = true;
+
+/** Opacité de la bordure du cadran quand elle porte la couleur active (ENOW_SWAP_INK) ; 1 = pleine. */
+export const ENOW_BORDER_OPACITY = 0.45;

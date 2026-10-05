@@ -36,7 +36,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE, ENOW_NONE_CHIP, ENOW_CHIP_RING, ENOW_SCREEN_TAPS } from '../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE, ENOW_NONE_CHIP, ENOW_CHIP_RING, ENOW_SCREEN_TAPS, ENOW_INK_LABELS } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -380,7 +380,7 @@ function KeepMomentControl({ kept, onKeep, onDismiss }) {
       paddingVertical: theme.spacing.xxs,
     },
     skipText: {
-      color: theme.colors.textSecondary,
+      color: ENOW_INK_LABELS ? theme.colors.text : theme.colors.textSecondary,
       fontSize: rs(12, 'min'),
       textAlign: 'center',
     },

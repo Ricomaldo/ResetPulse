@@ -65,6 +65,7 @@ import PalettesPanel from '../palettes/PalettesPanel';
 import SoundsPanel from '../sounds/SoundsPanel';
 import SheetSettingsPanel from './SheetSettingsPanel';
 import { TIMER_PALETTES } from '../../config/timer-palettes';
+import { ENOW_INK_LABELS } from '../../config/enow-sketch';
 
 // 2 snaps : fermé (bande CLOSED_VISIBLE) / ouvert (hauteur du contenu, openY).
 // Porte Eric 25/07 : la bande fermée vivait dans la zone gestuelle iOS (home
@@ -419,7 +420,7 @@ export default function AsideZone({ isTimerRunning, hidden = false, onPaletteOpe
     // discrète, interlettre large, encre légère. Un seul élément, pas de
     // caret orphelin : la barre-poignée porte déjà le geste.
     closedLabelText: {
-      color: theme.colors.textLight,
+      color: ENOW_INK_LABELS ? theme.colors.text : theme.colors.textLight,
       fontSize: rs(11, 'min'),
       fontWeight: '600',
       letterSpacing: rs(11, 'min') * 0.14,
