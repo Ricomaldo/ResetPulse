@@ -78,6 +78,20 @@ describe('DurationPickerContent', () => {
     expect(mockSetCurrentDuration).toHaveBeenCalledWith(1);
   });
 
+  it('en séance : part du restant et délègue OK à onConfirm', () => {
+    mockCurrentDuration = 3600;
+    const onConfirm = jest.fn();
+    let r;
+    act(() => {
+      r = create(<DurationPickerContent onClose={jest.fn()} initialSeconds={754} onConfirm={onConfirm} />);
+    });
+    expect(wheel(r, 'minutes').props.selectedValue).toBe(12);
+    expect(wheel(r, 'seconds').props.selectedValue).toBe(34);
+    pressOk(r);
+    expect(onConfirm).toHaveBeenCalledWith(754);
+    expect(mockSetCurrentDuration).not.toHaveBeenCalled();
+  });
+
   it('clampDuration borne à 1..3600', () => {
     expect(clampDuration(0)).toBe(1);
     expect(clampDuration(5000)).toBe(3600);

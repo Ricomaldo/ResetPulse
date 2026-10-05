@@ -3,6 +3,8 @@
  * Ouverte au tap sur le compteur au repos : deux colonnes natives
  * (`@react-native-picker/picker`), minutes 0..60 et secondes 0..59, bornées
  * à 0:01..60:00, validées par « OK ».
+ * En séance (`initialSeconds` + `onConfirm`), la roue part du temps restant
+ * et OK délègue à l'appelant au lieu de poser la durée.
  * Remplace le mode countdown de DateTimePicker (heures/minutes seulement, et
  * lu dans le fuseau local : 60 min s'affichaient « 22 hours »).
  */
@@ -22,18 +24,26 @@ const SECONDS = Array.from({ length: 60 }, (_, i) => i);
 // Plafond 60:00, plancher 0:01 (0:00 ne lance rien).
 export const clampDuration = (seconds) => Math.max(1, Math.min(seconds, MAX_SECONDS));
 
-export default function DurationPickerContent({ onClose }) {
+export default function DurationPickerContent({ onClose, initialSeconds = null, onConfirm = null }) {
   const theme = useTheme();
   const t = useTranslation();
   const { timer: { currentDuration }, setCurrentDuration } = useTimerConfig();
-  const initial = currentDuration > 0 ? Math.min(currentDuration, MAX_SECONDS) : DEFAULT_SECONDS;
+  const base = initialSeconds != null ? initialSeconds : currentDuration;
+  const initial = base > 0
+    ? Math.min(base, MAX_SECONDS)
+    : DEFAULT_SECONDS;
   const [minutes, setMinutes] = useState(Math.floor(initial / 60));
   const [seconds, setSeconds] = useState(initial % 60);
 
   const handleOk = useCallback(() => {
-    setCurrentDuration(clampDuration(minutes * 60 + seconds));
+    const picked = clampDuration(minutes * 60 + seconds);
+    if (onConfirm) {
+      onConfirm(picked);
+    } else {
+      setCurrentDuration(picked);
+    }
     onClose?.();
-  }, [minutes, seconds, setCurrentDuration, onClose]);
+  }, [minutes, seconds, setCurrentDuration, onClose, onConfirm]);
 
   const itemStyle = { color: theme.colors.text, fontSize: 22 };
 
@@ -75,7 +85,9 @@ export default function DurationPickerContent({ onClose }) {
 }
 
 DurationPickerContent.propTypes = {
+  initialSeconds: PropTypes.number,
   onClose: PropTypes.func,
+  onConfirm: PropTypes.func,
 };
 
 const styles = StyleSheet.create({

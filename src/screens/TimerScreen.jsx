@@ -833,8 +833,8 @@ function TimerScreenContent() {
   // le second rembobine — aucun délai ajouté au geste simple.
   const lastDialTapRef = useRef(0);
   // Roue de durée native (T3-2) : ouverte au tap sur le compteur ou sur un moyeu au repos sans durée.
-  const openDurationPicker = useCallback(() => {
-    modalStack.push('duration', { snapPoints: ['45%'] });
+  const openDurationPicker = useCallback((extraProps = {}) => {
+    modalStack.push('duration', { snapPoints: ['45%'], ...extraProps });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalStack.push]);
   const handleDialTap = useCallback(() => {
@@ -1419,14 +1419,43 @@ function TimerScreenContent() {
     ? (ENOW_FILL_UP ? (snapshot.elapsed ?? 0) : snapshot.remaining)
     : currentDuration;
   const topTargetSeconds = ENOW_FILL_UP && inSession ? currentDuration : null;
-  // Tap sur le compteur : roue de durée, seulement hors séance (T3-2).
+  // Tap sur le compteur : roue de durée (T3-2). En séance (en cours ou en
+  // pause), la roue part du temps restant ; OK = nouvelle séance de la durée
+  // choisie (retour au repos, durée posée, démarrage) — hors noyau, via
+  // resetTimer/startTimer. Terme atteint : retour au repos, roue normale.
+  const pendingStartRef = useRef(null);
   const handleTopTimePress = useCallback(() => {
     const timer = timerRef.current;
-    if (timer && (timer.running || timer.isPaused || timer.isCompleted)) {
+    if (timer && (timer.running || timer.isPaused)) {
+      openDurationPicker({
+        initialSeconds: timer.remaining,
+        onConfirm: (seconds) => {
+          timerRef.current?.resetTimer();
+          markMomentEvent(MOMENT_EVENTS.RESET);
+          pendingStartRef.current = seconds;
+          setCurrentDuration(seconds);
+        },
+      });
       return;
     }
+    if (timer?.isCompleted) {
+      timer.resetTimer();
+      markMomentEvent(MOMENT_EVENTS.RESET);
+    }
     openDurationPicker();
-  }, [openDurationPicker]);
+  }, [openDurationPicker, markMomentEvent, setCurrentDuration]);
+  // Démarrage différé : attend que le timer soit au repos sur la nouvelle durée.
+  useEffect(() => {
+    const pending = pendingStartRef.current;
+    const timer = timerRef.current;
+    if (pending == null || !timer || timer.running || timer.isPaused) {
+      return;
+    }
+    if (timer.duration === pending && timer.remaining === pending) {
+      pendingStartRef.current = null;
+      timer.startTimer();
+    }
+  }, [snapshot, currentDuration]);
   // Double tap sur le compteur : durée par défaut, hors séance seulement.
   const handleTopTimeDoubleTap = useCallback(() => {
     const timer = timerRef.current;
