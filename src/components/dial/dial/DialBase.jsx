@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { ENOW_FILL_UP, ENOW_SWAP_INK, ENOW_BORDER_OPACITY } from '../../../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_SWAP_INK, ENOW_BORDER_OPACITY, ENOW_OUTER_RING, ENOW_OUTER_RING_GAP, ENOW_OUTER_RING_WIDTH } from '../../../config/enow-sketch';
 
 /**
  * DialBase - Static SVG elements (circles, graduations, numbers)
@@ -54,6 +54,18 @@ const DialBase = React.memo(
           strokeWidth={strokeWidth}
           fill={theme.colors.surfaceElevated}
         />
+
+        {/* Double bordure (T3-2) : anneau fin extérieur, détaché */}
+        {ENOW_OUTER_RING && (
+          <Circle
+            cx={centerX}
+            cy={centerY}
+            r={radius + strokeWidth / 2 + strokeWidth * ENOW_OUTER_RING_GAP + (strokeWidth * ENOW_OUTER_RING_WIDTH) / 2}
+            stroke={ENOW_SWAP_INK && color ? color : theme.colors.text}
+            strokeWidth={strokeWidth * ENOW_OUTER_RING_WIDTH}
+            fill="none"
+          />
+        )}
 
         {/* Minute numbers (0 always at top) */}
         {showNumbers &&

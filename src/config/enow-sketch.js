@@ -79,3 +79,10 @@ export const ENOW_BORDER_OPACITY = 0.45;
 
 /** Token `theme.colors.*` du mobilier : pivot du moyeu et textes d'indication ('text' = encre pleine). */
 export const ENOW_FURNITURE_INK = 'textSecondary';
+
+/** Double bordure : anneau fin extérieur, détaché de la bordure du cadran. */
+export const ENOW_OUTER_RING = true;
+/** Écart entre bordure et anneau extérieur, en fraction de strokeWidth. */
+export const ENOW_OUTER_RING_GAP = 0.6;
+/** Épaisseur de l'anneau extérieur, en fraction de strokeWidth. */
+export const ENOW_OUTER_RING_WIDTH = 0.45;
