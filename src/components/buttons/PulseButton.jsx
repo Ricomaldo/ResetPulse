@@ -19,6 +19,7 @@ import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
+import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
 const HALO_TEMPO = 1100; // rythme UNIQUE du halo (période 2,2s = HALO_TEMPO×2, useBreathingHalo) — indépendant du pulseDuration de l'Activité (verdict Eric hotfix-porte-1 B1/D1)
@@ -33,6 +34,7 @@ const PulseButton = React.memo(function PulseButton({
   shouldPulse = false,
   clockwise = false,   // reserved — dial rotation direction, no movement use yet
   distraction = null,
+  frontProgress = null, // T3-2 : si non null, l'emoji est traversé par le front
 }) {
   const theme = useTheme();
 
@@ -142,6 +144,18 @@ const PulseButton = React.memo(function PulseButton({
   // === CONTENT ===
   const renderContent = () => {
     const displayEmoji = emoji || activity?.emoji;
+    if (displayEmoji && frontProgress != null) {
+      return (
+        <Animated.View style={emojiAnimatedStyle}>
+          <HubFrontEmoji
+            emoji={displayEmoji}
+            size={buttonSize}
+            clockwise={clockwise}
+            frontProgress={frontProgress}
+          />
+        </Animated.View>
+      );
+    }
     if (displayEmoji) {
       return (
         <Animated.View style={emojiAnimatedStyle}>
@@ -207,6 +221,7 @@ PulseButton.propTypes = {
     variant: PropTypes.object,
   }),
   emoji:               PropTypes.string,
+  frontProgress:       PropTypes.number,
   shouldPulse:         PropTypes.bool,
   size:                PropTypes.number,
   state:               PropTypes.oneOf(['rest', 'running', 'complete']),

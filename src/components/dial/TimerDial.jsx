@@ -661,6 +661,7 @@ function TimerDial({
               clockwise={clockwise}
               size={circleSize * 0.34} // hub structurel Ø 34 % du cadran (verdicts CD 25/07)
               distraction={distraction}
+              frontProgress={ENOW_SESSION_DIAL ? displayProgress : null}
             />
           )}
 
