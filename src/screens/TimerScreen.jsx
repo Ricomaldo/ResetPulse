@@ -896,11 +896,11 @@ function TimerScreenContent() {
     screenTapRef.current[kind]();
   }, []);
   const screenGesture = useMemo(() => {
-    const triple = Gesture.Tap().numberOfTaps(3).onEnd((e, ok) => {
+    const triple = Gesture.Tap().numberOfTaps(3).maxDelay(250).onEnd((e, ok) => {
       'worklet';
       if (ok) {runOnJS(screenTap)('triple', e.y);}
     });
-    const double = Gesture.Tap().numberOfTaps(2).onEnd((e, ok) => {
+    const double = Gesture.Tap().numberOfTaps(2).maxDelay(250).onEnd((e, ok) => {
       'worklet';
       if (ok) {runOnJS(screenTap)('double', e.y);}
     });
