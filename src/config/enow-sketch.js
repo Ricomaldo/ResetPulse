@@ -32,3 +32,17 @@ export const ENOW_TAP_PAUSE = true;
 export const ENOW_FINE_DRAG = true;
 /** Vitesse (minutes/s) à partir de laquelle le relâcher aimante à la minute. */
 export const ENOW_SNAP_MIN_VELOCITY = 10;
+
+// --- Build T3-2 : le cadran entier vaut la séance ---
+
+/** Le cadran entier = la séance : l'arc monte de 0 au plein quelle que soit la durée, plus de fantôme. */
+export const ENOW_SESSION_DIAL = true;
+
+/** Poignée de durée et halo de drag rendus (false = invisibles, le pan reste câblé). */
+export const ENOW_HANDLE = false;
+
+/** Graduations et nombres du cadran rendus (false = cadran nu, bordure en encre). */
+export const ENOW_GRADUATIONS = false;
+
+/** Opacité de l'emoji fantôme du moyeu, derrière la couche en couleur traversée par le front. */
+export const ENOW_HUB_GHOST_OPACITY = 0.3;

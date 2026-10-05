@@ -22,7 +22,7 @@ import {
   getNextScaleUp,
   shouldEscalateOnRelease,
 } from '../../utils/scaleHelpers';
-import { ENOW_LOCKED_SCALE, ENOW_FINE_DRAG } from '../../config/enow-sketch';
+import { ENOW_LOCKED_SCALE, ENOW_FINE_DRAG, ENOW_GRADUATIONS } from '../../config/enow-sketch';
 
 // Mandat P1 (2e tentative, crash « Maximum update depth exceeded » au drag) :
 // chaque MOVE appelait setCurrentDuration → TimerConfigContext reconstruit
@@ -330,8 +330,8 @@ export default function TimeTimer({
             onDialTap={onDialTap}
             isCompleted={timer.isCompleted}
             currentActivity={currentActivity}
-            showNumbers={true}
-            showGraduations={true}
+            showNumbers={ENOW_GRADUATIONS}
+            showGraduations={ENOW_GRADUATIONS}
             distraction={distraction}
             resyncTouchOnScaleChange={true}
           />

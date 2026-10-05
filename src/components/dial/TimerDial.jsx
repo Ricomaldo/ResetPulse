@@ -42,7 +42,12 @@ import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
 import DialGraduations from './dial/DialGraduations';
 import DialCenter from './dial/DialCenter';
-import { ENOW_FILL_UP, ENOW_SNAP_MIN_VELOCITY } from '../../config/enow-sketch';
+import {
+  ENOW_FILL_UP,
+  ENOW_SNAP_MIN_VELOCITY,
+  ENOW_SESSION_DIAL,
+  ENOW_HANDLE,
+} from '../../config/enow-sketch';
 import Svg, { Circle, Line, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 /**
@@ -94,12 +99,15 @@ function TimerDial({
   const targetFraction = Math.min(1, currentMinutesForScale / maxMinutesForScale);
   // Remplissage ABSOLU sur l'échelle (écoulé / tour), pas une proportion de
   // la cible : un drag en séance ne fait plus sauter l'arc (retour Eric 21/09).
+  // T3-2 (ENOW_SESSION_DIAL) : le cadran entier = la séance, pas de fantôme.
   const displayProgress = isCompleted
     ? 1
-    : ENOW_FILL_UP
-      ? Math.min(1, (elapsed / 60) / maxMinutesForScale)
-      : targetFraction * progress;
-  const ghostProgress = ENOW_FILL_UP && !isCompleted ? targetFraction : 0;
+    : ENOW_SESSION_DIAL
+      ? (duration > 0 ? Math.min(1, elapsed / duration) : 0)
+      : ENOW_FILL_UP
+        ? Math.min(1, (elapsed / 60) / maxMinutesForScale)
+        : targetFraction * progress;
+  const ghostProgress = ENOW_SESSION_DIAL ? 0 : (ENOW_FILL_UP && !isCompleted ? targetFraction : 0);
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);
@@ -553,7 +561,7 @@ function TimerDial({
           {/* Drag handle: barre radiale sur le bord de l'arc (verdicts CD
               25/07) — jamais un rayon plein centre→bord, bouts ronds.
               Visible même en séance pour permettre l'ajustement du temps. */}
-          {!hideHandle && (ENOW_FILL_UP || displayProgress > 0) && (
+          {ENOW_HANDLE && !hideHandle && (ENOW_FILL_UP || displayProgress > 0) && (
             <View style={staticStyles.absoluteOverlay} pointerEvents="none">
               <Svg
                 width={svgSize}
