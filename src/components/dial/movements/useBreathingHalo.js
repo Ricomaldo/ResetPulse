@@ -60,6 +60,7 @@ const DEFAULT_TEMPO = 800;
 // Mode onde (ENOW_HALO_WAVE) : naît au centre, aller-retour = la période exacte.
 const WAVE_MIN_SCALE = 0.05;
 const WAVE_OPACITY = 0.18;
+const RIPPLE_MIN = 0.5; // plancher de r / strokeWidth : à 0 ou NaN, RNSVGCircle produit une géométrie NaN (crash CALayer)
 const DEFAULT_WAVE_PERIOD = 1000;
 const DEFAULT_WAVE_MAX_SCALE = 3;
 
@@ -95,7 +96,7 @@ export default function useBreathingHalo({
 
   const scale = useSharedValue(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1);
   const opacity = useSharedValue(0);
-  const outer = useSharedValue(0); // onde creuse : rayon extérieur (px), 0 → R
+  const outer = useSharedValue(RIPPLE_MIN); // onde creuse : rayon extérieur (px), 0 → R
   const inner = useSharedValue(0); // onde creuse : rayon intérieur (px), 0 → R
 
   const isActive = Boolean(active) && !reduceMotionEnabled;
@@ -113,13 +114,13 @@ export default function useBreathingHalo({
 
     if (ENOW_HALO_WAVE && ripple) {
       const half = wavePeriod / 2;
-      // Reset invisible en début de boucle : outer et inner repartent à 0.
+      // Reset invisible en début de boucle : outer repart à RIPPLE_MIN (jamais 0), inner à 0.
       // PHASE 1 : le disque plein grandit du centre (outer 0 → R, inner 0).
       // PHASE 2 : outer tenu à R, inner 0 → R (in) — le trou grandit depuis
       // le centre, l'anneau s'amincit vers la bordure puis disparaît.
       outer.value = withRepeat(
         withSequence(
-          withTiming(0, { duration: 0 }),
+          withTiming(RIPPLE_MIN, { duration: 0 }),
           withTiming(rippleRadius, { duration: half, easing: Easing.out(Easing.ease) }),
           withTiming(rippleRadius, { duration: half })
         ),
@@ -208,10 +209,14 @@ export default function useBreathingHalo({
 
   // Onde creuse (SVG) : cercle dont le rayon médian et l'épaisseur dérivent
   // des rayons extérieur et intérieur.
-  const animatedProps = useAnimatedProps(() => ({
-    r: (outer.value + inner.value) / 2,
-    strokeWidth: Math.max(outer.value - inner.value, 0),
-  }));
+  const animatedProps = useAnimatedProps(() => {
+    const r = (outer.value + inner.value) / 2;
+    const strokeWidth = outer.value - inner.value;
+    if (!Number.isFinite(r) || !Number.isFinite(strokeWidth)) {
+      return { r: RIPPLE_MIN, strokeWidth: RIPPLE_MIN };
+    }
+    return { r: Math.max(r, RIPPLE_MIN), strokeWidth: Math.max(strokeWidth, RIPPLE_MIN) };
+  });
 
   return { style, animatedProps };
 }

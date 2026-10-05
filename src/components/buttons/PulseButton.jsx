@@ -91,6 +91,9 @@ const PulseButton = React.memo(function PulseButton({
   // Rythme UNIQUE (hotfix-porte-1 B1/D1, verdict Eric) : le halo bat au pouls
   // de la SÉANCE, pas de l'Activité — HALO_TEMPO fixe, jamais `tempo`. Le
   // mouvement de l'emoji (useEmojiMovement ci-dessus) garde son tempo propre.
+  // R (px) gardé fini et > 0 : un NaN fait crasher RNSVGCircle (CALayer).
+  const rippleRaw = (buttonSize / 2) * haloMaxScale;
+  const rippleR = Number.isFinite(rippleRaw) && rippleRaw > 0 ? rippleRaw : 1;
   const haloActive = state === 'running' && shouldPulse && !compact;
   const { style: haloAnimatedStyle, animatedProps: haloRippleProps } = useBreathingHalo({
     tempo: HALO_TEMPO,
@@ -98,7 +101,7 @@ const PulseButton = React.memo(function PulseButton({
     wavePeriod: haloPeriod,
     waveMaxScale: haloMaxScale,
     ripple: haloRipple,
-    rippleRadius: (buttonSize / 2) * haloMaxScale,
+    rippleRadius: rippleR,
   });
 
   // === DIMENSIONS ===
@@ -205,13 +208,12 @@ const PulseButton = React.memo(function PulseButton({
   // 'adjustable'/'timer' + action 'activate') — ce View ne doit pas être un
   // arrêt VoiceOver séparé.
   const haloColor = color || theme.colors.text;
-  const rippleR = (buttonSize / 2) * haloMaxScale;
   return (
     <View style={styles.container} accessible={false} importantForAccessibility="no">
       {ENOW_HALO_WAVE && haloRipple ? (
         // Onde creuse en SVG (borderWidth animé : rien à l'écran en New Arch).
         // Carré de côté 2R centré sur le moyeu, jamais coupé (overflow visible).
-        haloActive && (
+        haloActive && rippleR > 1 && (
           <Svg
             pointerEvents="none"
             width={2 * rippleR}
