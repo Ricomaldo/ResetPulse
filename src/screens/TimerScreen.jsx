@@ -35,7 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE } from '../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE, ENOW_NONE_CHIP } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -145,6 +145,23 @@ function CompactRow({ onActivityTouch, onColorTouch, markMomentEvent }) {
 
   return (
     <View style={styles.row}>
+      {ENOW_NONE_CHIP && (
+        <TouchableOpacity
+          testID="timer.chip.none"
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel="aucune activité"
+          accessibilityState={{ selected: currentActivity == null }}
+          style={[styles.activityButton, currentActivity == null && styles.activityButtonActive]}
+          onPress={() => {
+            haptics.impact('light').catch(() => {});
+            setCurrentActivity(null);
+          }}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.activityEmoji, { color: theme.colors.text }]}>•</Text>
+        </TouchableOpacity>
+      )}
       {favoriteRituals.map((ritual) => {
         const payload = buildRitualApplyPayload(ritual, customActivities);
         const isActive = currentActivity?.id === payload.activity?.id;

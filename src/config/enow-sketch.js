@@ -55,3 +55,9 @@ export const ENOW_HUB_MOTION = false;
 
 /** Bouton dé 🎲 (Distraction) rendu à l'écran ; false = masqué, le tirage reste intact. */
 export const ENOW_DICE = false;
+
+/** Chip « aucune activité » (puce •) en tête de la rangée d'accueil. */
+export const ENOW_NONE_CHIP = true;
+
+/** Sans emoji, le moyeu montre une puce ronde (pivot d'aiguille) au lieu des icônes play/stop/reset. */
+export const ENOW_HUB_PIVOT = true;
