@@ -9,7 +9,7 @@ const DEBUG_MODE = false;
 
 // --- Brand Palettes ---
 const brandLightProd = {
-  primary: '#E89665', // Coral-orange (logo gradient)
+  primary: '#97DFC6', // Menthe (T3-2, remplace le corail #E89665)
   secondary: '#8B7D72', // Stone réchauffé
   accent: '#D4A853', // Or classique
   deep: '#6B5F55', // Brun-gris foncé (réchauffé)
@@ -27,7 +27,7 @@ const brandLightDebug = {
 const brandLight = DEBUG_MODE ? brandLightDebug : brandLightProd;
 
 const brandDark = {
-  primary: '#E89665', // Coral-orange (même que light = cohérence brand)
+  primary: '#97DFC6', // Menthe (même que light = cohérence brand)
   secondary: '#A8A29E', // Gris chaud éclairci (stone-400)
   accent: '#D4A853', // Or éclairci
   deep: '#8A8A8A',

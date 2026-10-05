@@ -2,7 +2,8 @@ import i18n from '../i18n';
 
 export const TIMER_PALETTES = {
   serenity: {
-    colors: ['#E89665', '#D4A853', '#7D9B5E', '#8B7D72'],
+    // T3-2 : menthe #97DFC6 en slot energy à la demande d'Eric 05/10, remplace le corail
+    colors: ['#97DFC6', '#D4A853', '#7D9B5E', '#8B7D72'],
     get name() {
       return i18n.t('palettes.serenity');
     },
