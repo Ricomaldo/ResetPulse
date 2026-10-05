@@ -71,7 +71,7 @@ function TimerDial({
   onGraduationTap = null,
   onDialTap = null,
   isCompleted = false,
-  isPaused = false,
+  isPaused: _isPaused = false, // gardée en prop (le moyeu n'en dépend plus)
   currentActivity = null,
   showNumbers = true,
   showGraduations = true,
@@ -113,8 +113,6 @@ function TimerDial({
 
   // Use centralized dial orientation logic
   const dial = useDialOrientation(clockwise, scaleMode);
-  // T3-2 : moyeu vide hors séance (l'emoji n'apparaît qu'une fois lancé).
-  const inSession = isRunning || isPaused || isCompleted;
 
   // Calculate responsive sizes
   const circleSize = size || rs(280, 'min');
@@ -655,7 +653,7 @@ function TimerDial({
               le tap est géré par `handleTapOnGraduation` ci-dessus. */}
           {showPlayButton && (
             <DialCenter
-              activity={showActivityEmoji && inSession ? currentActivity : null}
+              activity={showActivityEmoji ? currentActivity : null}
               isRunning={isRunning}
               isCompleted={isCompleted}
               color={arcColor}
