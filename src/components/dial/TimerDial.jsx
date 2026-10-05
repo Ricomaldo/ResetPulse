@@ -48,6 +48,7 @@ import {
   ENOW_SESSION_DIAL,
   ENOW_HANDLE,
   ENOW_HUB_PIVOT,
+  ENOW_SCREEN_TAPS,
 } from '../../config/enow-sketch';
 import Svg, { Circle, Line, Defs, RadialGradient, Stop } from 'react-native-svg';
 
@@ -296,6 +297,7 @@ function TimerDial({
 
   const panGesture = useMemo(() =>
     Gesture.Pan()
+      .enabled(!ENOW_SCREEN_TAPS) // T3-2 : le cadran ne règle plus la durée au doigt
       .minDistance(10) // Minimum distance to start pan (differentiates from tap)
       // Régression tap-start (2e cause, trouvée en retest avec Eric) :
       // Gesture.Race(pan, tap) donne la main au PREMIER geste qui devient
@@ -370,6 +372,7 @@ function TimerDial({
   // usages. Repli sur le défaut RNGH (500ms), pas de valeur maison.
   const tapGesture = useMemo(() =>
     Gesture.Tap()
+      .enabled(!ENOW_SCREEN_TAPS) // T3-2 : le tap vit sur l'écran (TimerScreen)
       .onEnd((event) => {
         'worklet';
         runOnJS(handleTapOnGraduation)(event.x, event.y);

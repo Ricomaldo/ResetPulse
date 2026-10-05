@@ -221,11 +221,21 @@ jest.mock('react-native-worklets', () => ({
 jest.mock('react-native-gesture-handler', () => {
   const View = require('react-native').View;
   return {
-    Gesture: {
-      Tap: () => ({ onStart: () => ({}) }),
-      LongPress: () => ({ onStart: () => ({}) }),
-      Pan: () => ({ onStart: () => ({}) }),
-    },
+    // Chaînable : toute méthode (enabled, numberOfTaps, onEnd…) renvoie le même objet.
+    Gesture: (() => {
+      const chain = () => {
+        const g = new Proxy({}, { get: (_t, prop) => (prop === 'then' ? undefined : () => g) });
+        return g;
+      };
+      return {
+        Tap: chain,
+        LongPress: chain,
+        Pan: chain,
+        Race: chain,
+        Exclusive: chain,
+        Simultaneous: chain,
+      };
+    })(),
     GestureDetector: ({ children }) => children,
     GestureHandlerRootView: View,
     ScrollView: View,

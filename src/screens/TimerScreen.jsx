@@ -15,10 +15,11 @@
  * n'ajoute qu'un hint discret au repos ; la fin ✨ plein-vert est déjà portée
  * par le dial (`DialCenter`), pas par ce fichier.
  */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useTheme } from '../theme/ThemeProvider';
 import { useTimerConfig } from '../contexts/TimerConfigContext';
 import { useTranslation } from '../hooks/useTranslation';
@@ -35,7 +36,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE, ENOW_NONE_CHIP, ENOW_CHIP_RING } from '../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION, ENOW_DICE, ENOW_NONE_CHIP, ENOW_CHIP_RING, ENOW_SCREEN_TAPS } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -64,6 +65,18 @@ const LONG_SESSION_THRESHOLD_SECONDS = 1800; // 30 minutes
 
 const ACTIVITY_SIZE = rs(40, 'min');
 const COLOR_DOT_SIZE = rs(26, 'min');
+
+// Zone de tap plein écran (T3-2) : GestureDetector seulement si activé.
+function ScreenTapZone({ enabled, gesture, style, children }) {
+  if (!enabled) {
+    return <View style={style}>{children}</View>;
+  }
+  return (
+    <GestureDetector gesture={gesture}>
+      <View style={style} collapsable={false}>{children}</View>
+    </GestureDetector>
+  );
+}
 
 function CompactRow({ onActivityTouch, onColorTouch, markMomentEvent }) {
   const theme = useTheme();
@@ -585,6 +598,7 @@ function TimerScreenContent() {
     palette: { currentColor },
     setCurrentDuration,
     setCurrentActivity,
+    setMode,
   } = useTimerConfig();
   const isFocus = currentMode === 'focus';
   // porte-2 (retour Eric « le mode horizontal est complètement raté ») :
@@ -830,7 +844,8 @@ function TimerScreenContent() {
     }
     if (ENOW_TAP_PAUSE) {
       const now = Date.now();
-      const isDoubleTap = now - lastDialTapRef.current < 350;
+      // T3-2 (ENOW_SCREEN_TAPS) : le double tap appartient à la zone d'écran (Focus).
+      const isDoubleTap = !ENOW_SCREEN_TAPS && now - lastDialTapRef.current < 350;
       lastDialTapRef.current = now;
       if (isDoubleTap || timer.isCompleted) {
         // Retour au repos : la durée et l'activité réglées restent (T3-2).
@@ -856,6 +871,45 @@ function TimerScreenContent() {
       timer.startTimer();
     }
   }, [markMomentEvent, currentDuration, openDurationPicker]);
+
+  // T3-2 (ENOW_SCREEN_TAPS) : zone de tap = tout `content` sauf la barre du bas
+  // (le compteur est hors `content`). simple = start/pause, double = bascule
+  // Focus, triple = retour au repos (durée et activité conservées).
+  const belowChromeRectRef = useRef(null);
+  const screenTapRef = useRef({});
+  screenTapRef.current = {
+    single: handleDialTap,
+    double: () => setMode(currentMode === 'focus' ? 'mixte' : 'focus'),
+    triple: () => {
+      timerRef.current?.resetTimer();
+      markMomentEvent(MOMENT_EVENTS.RESET);
+    },
+    inBar: (y) => {
+      const r = belowChromeRectRef.current;
+      return !isFocus && !!r && y >= r.y && y <= r.y + r.height;
+    },
+  };
+  const screenTap = useCallback((kind, y) => {
+    if (screenTapRef.current.inBar(y)) {
+      return;
+    }
+    screenTapRef.current[kind]();
+  }, []);
+  const screenGesture = useMemo(() => {
+    const triple = Gesture.Tap().numberOfTaps(3).onEnd((e, ok) => {
+      'worklet';
+      if (ok) {runOnJS(screenTap)('triple', e.y);}
+    });
+    const double = Gesture.Tap().numberOfTaps(2).onEnd((e, ok) => {
+      'worklet';
+      if (ok) {runOnJS(screenTap)('double', e.y);}
+    });
+    const single = Gesture.Tap().onEnd((e, ok) => {
+      'worklet';
+      if (ok) {runOnJS(screenTap)('single', e.y);}
+    });
+    return Gesture.Exclusive(triple, double, single);
+  }, [screenTap]);
 
   // Seuil composé Focus (P2-Focus) : « 1re séance accomplie >= 30 min » —
   // posé une fois pour toutes (one-shot, jamais désarmé), lu par
@@ -1398,7 +1452,7 @@ function TimerScreenContent() {
               onDoubleTap={handleTopTimeDoubleTap} />
           </Animated.View>
         )}
-        <View style={styles.content}>
+        <ScreenTapZone enabled={ENOW_SCREEN_TAPS} gesture={screenGesture} style={styles.content}>
           {/* Le disque devient décor en immersion : transform pur
               (scale + recentrage vertical), zéro redraw du dial. */}
           <Animated.View style={dialAnimatedStyle}>
@@ -1415,7 +1469,10 @@ function TimerScreenContent() {
           {!isFocus && (
             <Animated.View
               style={[styles.chromeBelow, chromeAnimatedStyle]}
-              onLayout={(e) => setBelowChromeHeight(e.nativeEvent.layout.height)}
+              onLayout={(e) => {
+                belowChromeRectRef.current = e.nativeEvent.layout;
+                setBelowChromeHeight(e.nativeEvent.layout.height);
+              }}
               pointerEvents={immersed ? 'none' : 'auto'}
             >
               <View style={styles.completionMessageWrap}>
@@ -1467,7 +1524,7 @@ function TimerScreenContent() {
               )}
             </Animated.View>
           )}
-        </View>
+        </ScreenTapZone>
         {/* QA visuelle passe 5, bug 1 : la ligne coach (prêt ou astuce
             dormante) vivait dans le flux de `chromeBelow`, centré par
             `content` — sur les stacks hautes (dé + message + rangée + dé

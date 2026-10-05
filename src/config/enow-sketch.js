@@ -67,3 +67,6 @@ export const ENOW_CHIP_RING = true;
 
 /** Encre échangée : bordure du cadran à la couleur active, pivot du moyeu en encre. */
 export const ENOW_SWAP_INK = true;
+
+/** Gestes d'écran : le cadran ne réagit plus au doigt ; tap = start/pause, double = Focus, triple = reset (hors compteur et barre). */
+export const ENOW_SCREEN_TAPS = true;
