@@ -19,7 +19,7 @@ import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
-import { ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT, ENOW_SWAP_INK, ENOW_FURNITURE_INK } from '../../config/enow-sketch';
+import { ENOW_HALO_WAVE, ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT, ENOW_SWAP_INK, ENOW_FURNITURE_INK } from '../../config/enow-sketch';
 import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
@@ -36,6 +36,7 @@ const PulseButton = React.memo(function PulseButton({
   clockwise = false,   // reserved — dial rotation direction, no movement use yet
   distraction = null,
   haloPeriod = 1000,   // T3-2 : période de l'onde (ms)
+  haloRipple = false,  // T3-2 : onde creuse (display.haloRipple)
   haloMaxScale = 3,    // T3-2 : scale du halo à la bordure du cadran
   emojiMotion = true,  // T3-2 : mouvements de l'emoji (réglage display.emojiMotion)
   frontProgress = null, // T3-2 : si non null, l'emoji est traversé par le front
@@ -93,6 +94,8 @@ const PulseButton = React.memo(function PulseButton({
     active: haloActive,
     wavePeriod: haloPeriod,
     waveMaxScale: haloMaxScale,
+    ripple: haloRipple,
+    hubRadius: buttonSize / 2,
   });
 
   // === DIMENSIONS ===
@@ -203,7 +206,13 @@ const PulseButton = React.memo(function PulseButton({
     <View style={styles.container} accessible={false} importantForAccessibility="no">
       <Animated.View
         pointerEvents="none"
-        style={[styles.halo, { backgroundColor: haloColor }, haloAnimatedStyle]}
+        style={[
+          styles.halo,
+          ENOW_HALO_WAVE && haloRipple
+            ? { backgroundColor: 'transparent', borderColor: haloColor } // onde creuse : disque dessiné par la bordure animée
+            : { backgroundColor: haloColor },
+          haloAnimatedStyle,
+        ]}
       />
       <View
         style={[
@@ -253,6 +262,7 @@ PulseButton.propTypes = {
   emoji:               PropTypes.string,
   emojiMotion:         PropTypes.bool,
   haloMaxScale:        PropTypes.number,
+  haloRipple:          PropTypes.bool,
   haloPeriod:          PropTypes.number,
   frontProgress:       PropTypes.number,
   shouldPulse:         PropTypes.bool,

@@ -9,7 +9,7 @@
  * - timer: currentActivity, currentDuration, selectedSoundId, clockwise,
  *   scaleMode (DÉRIVÉ de currentDuration depuis hotfix-porte-1 B2 — jamais
  *   persisté ni settable, cf. deriveScaleMode/utils/scaleHelpers.js)
- * - display: shouldPulse, emojiMotion, showDigitalTimer, showTime
+ * - display: shouldPulse, emojiMotion, haloPeriodSec, haloRipple, showDigitalTimer, showTime
  * - system: keepAwakeEnabled
  * - mode: current (Mixte/Focus — Complet mort C6.2 ; ADR-014, réglage global unique)
  * - favorites: favoriteActivities, favoritePalettes
@@ -76,6 +76,8 @@ export const TimerConfigProvider = ({ children }) => {
         display: {
           shouldPulse: false,
           emojiMotion: true,
+          haloPeriodSec: 4,
+          haloRipple: false,
           lockedScale: '60min', // défaut = cadran horloge fixe (hyp. Eric 07/08) — l'adaptatif redevient l'exception
           showDigitalTimer: false,
           showTime: true,
@@ -123,6 +125,8 @@ export const TimerConfigProvider = ({ children }) => {
       display: {
         shouldPulse: false,
         emojiMotion: true,
+        haloPeriodSec: 4,
+        haloRipple: false,
         lockedScale: null,
         showDigitalTimer: false,
         showTime: true,
@@ -235,6 +239,8 @@ export const TimerConfigProvider = ({ children }) => {
     display: {
       shouldPulse: values.display.shouldPulse,
       emojiMotion: values.display.emojiMotion ?? true,
+      haloPeriodSec: values.display.haloPeriodSec ?? 4,
+      haloRipple: values.display.haloRipple ?? false,
       lockedScale: values.display.lockedScale ?? null,
       showDigitalTimer: values.display.showDigitalTimer,
       showTime: values.display.showTime,
@@ -315,6 +321,22 @@ export const TimerConfigProvider = ({ children }) => {
       setValues(prev => ({
         ...prev,
         display: { ...prev.display, shouldPulse }
+      }));
+    },
+    // Période du halo en onde, en secondes, bornée 0.5..60 (T3-2).
+    setHaloPeriodSec: (sec) => {
+      if (!Number.isFinite(sec)) {return;}
+      const haloPeriodSec = Math.min(60, Math.max(0.5, sec));
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, haloPeriodSec }
+      }));
+    },
+    // Halo en onde creuse (T3-2).
+    setHaloRipple: (haloRipple) => {
+      setValues(prev => ({
+        ...prev,
+        display: { ...prev.display, haloRipple }
       }));
     },
     // Animation de l'emoji du moyeu (T3-2).

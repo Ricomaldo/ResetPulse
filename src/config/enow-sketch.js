@@ -89,6 +89,3 @@ export const ENOW_OUTER_RING_WIDTH = 0.45;
 
 /** Halo en onde : part du centre, grandit jusqu'à la bordure du cadran et revient (période réglable). */
 export const ENOW_HALO_WAVE = true;
-
-/** Halo en onde : aller-retour complet, en ms. */
-export const ENOW_HALO_PERIOD_MS = 4000;

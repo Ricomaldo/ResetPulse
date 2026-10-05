@@ -118,6 +118,21 @@ describe('TimerConfigContext — plus de garde-fossile shouldPulse (consolidée 
     expect(result.current.display.emojiMotion).toBe(true);
   });
 
+  it('défauts display.haloPeriodSec 4 et haloRipple false ; setHaloPeriodSec borne 0.5..60', () => {
+    mockValues = baseValues({ shouldPulse: false, showDigitalTimer: false, showTime: true });
+    const { result } = renderHook(() => useTimerConfig(), { wrapper });
+    expect(result.current.display.haloPeriodSec).toBe(4);
+    expect(result.current.display.haloRipple).toBe(false);
+    result.current.setHaloPeriodSec(100);
+    expect(mockValues.display.haloPeriodSec).toBe(60);
+    result.current.setHaloPeriodSec(0.1);
+    expect(mockValues.display.haloPeriodSec).toBe(0.5);
+    result.current.setHaloPeriodSec(2.5);
+    expect(mockValues.display.haloPeriodSec).toBe(2.5);
+    result.current.setHaloPeriodSec(NaN);
+    expect(mockValues.display.haloPeriodSec).toBe(2.5);
+  });
+
   it('sous ENOW_START_EMPTY : après chargement, activité null et durée par défaut 3600 (moyeu vide au démarrage, T3-2)', () => {
     mockValues = baseValues({ shouldPulse: true, showDigitalTimer: false, showTime: true });
 

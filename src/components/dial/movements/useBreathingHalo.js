@@ -77,6 +77,8 @@ const HALO_START_DELAY_FRACTION = 0.5;
  * @param {boolean} params.active - Halo autorisé (shouldPulse && état non-complete)
  * @param {number} [params.wavePeriod] - Période de l'onde en ms (ENOW_HALO_WAVE)
  * @param {number} [params.waveMaxScale] - Scale max de l'onde (ENOW_HALO_WAVE)
+ * @param {boolean} [params.ripple] - Onde creuse (grandit puis se vide depuis le centre)
+ * @param {number} [params.hubRadius] - Rayon local du halo, borne du borderWidth plein
  * @returns {Object} Style animé à poser sur le View du halo (cercle absolu)
  */
 export default function useBreathingHalo({
@@ -84,11 +86,14 @@ export default function useBreathingHalo({
   active,
   wavePeriod = DEFAULT_WAVE_PERIOD, // ms, aller-retour complet (mode onde)
   waveMaxScale = DEFAULT_WAVE_MAX_SCALE, // scale atteint à la bordure du cadran (mode onde)
+  ripple = false, // onde creuse : le disque grandit puis se vide depuis le centre
+  hubRadius = 40, // rayon local du halo (px, avant scale) — borne du borderWidth plein
 }) {
   const reduceMotionEnabled = useReducedMotion();
 
   const scale = useSharedValue(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1);
   const opacity = useSharedValue(0);
+  const border = useSharedValue(0); // onde creuse : épaisseur locale de la bordure (px avant scale)
 
   const isActive = Boolean(active) && !reduceMotionEnabled;
   const safeTempo = tempo > 0 ? tempo : DEFAULT_TEMPO;
@@ -101,6 +106,38 @@ export default function useBreathingHalo({
       opacity.value = withTiming(0, { duration: 200 });
       scale.value = withTiming(ENOW_HALO_WAVE ? WAVE_MIN_SCALE : 1, { duration: 200 });
       return undefined;
+    }
+
+    if (ENOW_HALO_WAVE && ripple) {
+      const half = wavePeriod / 2;
+      // Scale : repart au centre, PHASE 1 grandit (out), PHASE 2 tenu au max.
+      scale.value = withRepeat(
+        withSequence(
+          withTiming(WAVE_MIN_SCALE, { duration: 0 }),
+          withTiming(waveMaxScale, { duration: half, easing: Easing.out(Easing.ease) }),
+          withTiming(waveMaxScale, { duration: half })
+        ),
+        -1,
+        false
+      );
+      // Bordure : PHASE 1 pleine (= rayon, le disque est plein), PHASE 2 va
+      // de pleine à 0 (in) : le disque se vide depuis le centre en anneau
+      // qui s'amincit vers la bordure puis disparaît.
+      border.value = withRepeat(
+        withSequence(
+          withTiming(hubRadius, { duration: 0 }),
+          withTiming(hubRadius, { duration: half }),
+          withTiming(0, { duration: half, easing: Easing.in(Easing.ease) })
+        ),
+        -1,
+        false
+      );
+      opacity.value = withTiming(WAVE_OPACITY, { duration: 200 });
+      return () => {
+        cancelAnimation(scale);
+        cancelAnimation(border);
+        cancelAnimation(opacity);
+      };
     }
 
     if (ENOW_HALO_WAVE) {
@@ -161,10 +198,19 @@ export default function useBreathingHalo({
       cancelAnimation(opacity);
     };
     // Deps restreintes : scale/opacity sont des refs stables (useSharedValue).
-  }, [safeTempo, isActive, wavePeriod, waveMaxScale]);
+  }, [safeTempo, isActive, wavePeriod, waveMaxScale, ripple, hubRadius]);
 
-  return useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
+  return useAnimatedStyle(() => {
+    if (ripple) {
+      return {
+        opacity: opacity.value,
+        borderWidth: border.value,
+        transform: [{ scale: scale.value }],
+      };
+    }
+    return {
+      opacity: opacity.value,
+      transform: [{ scale: scale.value }],
+    };
+  });
 }

@@ -11,7 +11,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTimerConfig } from '../../contexts/TimerConfigContext';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -19,15 +19,53 @@ import { fontWeights } from '../../theme/tokens';
 import { rs } from '../../styles/responsive';
 import haptics from '../../utils/haptics';
 
+// Champ numérique des secondes du halo : valeur locale pendant la frappe,
+// commit à la fin d'édition ; valeur invalide → on garde l'ancienne.
+function HaloPeriodInput({ value, onCommit, style, label }) {
+  const [text, setText] = React.useState(String(value));
+  React.useEffect(() => {
+    setText(String(value));
+  }, [value]);
+  const commit = () => {
+    const parsed = parseFloat(String(text).replace(',', '.'));
+    if (Number.isFinite(parsed)) {
+      onCommit(parsed);
+    } else {
+      setText(String(value));
+    }
+  };
+  return (
+    <TextInput
+      accessibilityLabel={label}
+      keyboardType="decimal-pad"
+      value={text}
+      onChangeText={setText}
+      onEndEditing={commit}
+      onBlur={commit}
+      style={style}
+      testID="settings.haloPeriod"
+    />
+  );
+}
+
+HaloPeriodInput.propTypes = {
+  label: PropTypes.string,
+  onCommit: PropTypes.func.isRequired,
+  style: PropTypes.any,
+  value: PropTypes.number.isRequired,
+};
+
 export default function SheetSettingsPanel({ onBack }) {
   const theme = useTheme();
   const t = useTranslation();
   const {
     timer: { clockwise, scaleMode },
     setClockwise,
-    display: { shouldPulse, emojiMotion, showTime, lockedScale },
+    display: { shouldPulse, emojiMotion, haloPeriodSec, haloRipple, showTime, lockedScale },
     setShouldPulse,
     setEmojiMotion,
+    setHaloPeriodSec,
+    setHaloRipple,
     setShowTime,
     setLockedScale,
     system: { keepAwakeEnabled },
@@ -44,6 +82,8 @@ export default function SheetSettingsPanel({ onBack }) {
     { key: 'showTime', label: t('accessibility.showTime'), value: showTime, onChange: setShowTime },
     { key: 'shouldPulse', label: t('settings.options.pulseAnimation'), value: shouldPulse, onChange: setShouldPulse },
     { key: 'emojiMotion', label: 'Emoji animé', value: emojiMotion, onChange: setEmojiMotion },
+    { key: 'haloPeriod', type: 'number', label: 'Halo (secondes)', value: haloPeriodSec, onChange: setHaloPeriodSec },
+    { key: 'haloRipple', label: 'Halo en onde creuse', value: haloRipple, onChange: setHaloRipple },
   ];
 
   const styles = StyleSheet.create({
@@ -68,6 +108,17 @@ export default function SheetSettingsPanel({ onBack }) {
       flexDirection: 'row',
       gap: theme.spacing.sm,
       marginBottom: theme.spacing.md,
+    },
+    haloInput: {
+      borderColor: theme.colors.chipBorder,
+      borderRadius: theme.borderRadius.sm,
+      borderWidth: StyleSheet.hairlineWidth * 2,
+      color: theme.colors.text,
+      fontSize: rs(15, 'min'),
+      paddingHorizontal: theme.spacing.xs,
+      paddingVertical: theme.spacing.xxs,
+      textAlign: 'right',
+      width: 64,
     },
     optionLabel: {
       color: theme.colors.text,
@@ -204,6 +255,14 @@ export default function SheetSettingsPanel({ onBack }) {
         return (
           <View key={toggle.key} style={[styles.optionRow, isLast && styles.optionRowLast]}>
             <Text style={styles.optionLabel}>{toggle.label}</Text>
+            {toggle.type === 'number' ? (
+              <HaloPeriodInput
+                value={toggle.value}
+                onCommit={toggle.onChange}
+                style={styles.haloInput}
+                label={toggle.label}
+              />
+            ) : (
             <Switch
               accessible
               accessibilityLabel={toggle.label}
@@ -216,6 +275,7 @@ export default function SheetSettingsPanel({ onBack }) {
               }}
               {...theme.styles.switch(toggle.value)}
             />
+            )}
           </View>
         );
       })}

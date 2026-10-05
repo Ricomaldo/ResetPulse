@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PulseButton } from '../../buttons';
-import { ENOW_HALO_PERIOD_MS } from '../../../config/enow-sketch';
 import { useTimerConfig } from '../../../contexts/TimerConfigContext';
 
 /**
@@ -37,7 +36,7 @@ const DialCenter = React.memo(function DialCenter({
   frontProgress = null,
   haloMaxScale = 3,
 }) {
-  const { display: { shouldPulse, emojiMotion } } = useTimerConfig();
+  const { display: { shouldPulse, emojiMotion, haloPeriodSec, haloRipple } } = useTimerConfig();
 
   // Déterminer l'état du bouton
   const getState = () => {
@@ -60,7 +59,8 @@ const DialCenter = React.memo(function DialCenter({
         size={size}
         shouldPulse={shouldPulse}
         emojiMotion={emojiMotion}
-        haloPeriod={ENOW_HALO_PERIOD_MS}
+        haloPeriod={haloPeriodSec * 1000}
+        haloRipple={haloRipple}
         haloMaxScale={haloMaxScale}
         distraction={distraction}
         frontProgress={frontProgress}
