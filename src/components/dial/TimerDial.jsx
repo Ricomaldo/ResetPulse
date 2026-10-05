@@ -40,6 +40,7 @@ const easeOut = (t) => t * (2 - t);
 // Import modular components
 import DialBase from './dial/DialBase';
 import DialProgress from './dial/DialProgress';
+import RippleLayer from './dial/RippleLayer';
 import DialGraduations from './dial/DialGraduations';
 import DialCenter from './dial/DialCenter';
 import {
@@ -514,6 +515,18 @@ function TimerDial({
             minuteNumbers={minuteNumbers}
             showNumbers={showNumbers}
             color={arcColor}
+          />
+
+          {/* Onde creuse du halo (T3-2) : entre la base et le secteur — elle passe
+              derrière l'écoulé, l'emoji et le pivot. Rayon = cœur de la bordure
+              moins sa demi-épaisseur : ne recouvre pas la bordure. */}
+          <RippleLayer
+            active={isRunning}
+            size={2 * (radiusBackground - strokeWidth / 2)}
+            color={arcColor}
+            surfaceColor={theme.colors.surfaceElevated}
+            centerX={centerX}
+            centerY={centerY}
           />
 
           {/* Progress layer: animated arc */}

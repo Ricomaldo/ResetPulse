@@ -178,6 +178,8 @@ jest.mock('react-native-reanimated', () => {
       withSpring: (value) => value,
       withRepeat: (value) => value,
       withSequence: (...values) => values[values.length - 1],
+      withDelay: (_delay, value) => value,
+      cancelAnimation: jest.fn(),
       interpolate: (value, config) => config.outputRange?.[0] || 0,
       addWhitelistedUIProps: jest.fn(),
       FadeIn: createFadeAnimation(),

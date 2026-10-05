@@ -11,24 +11,19 @@
  * la trotteuse legacy reste abandonnée, hors spec recentrage).
  */
 import React from 'react';
-import { Animated as RNAnimated, StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import PropTypes from 'prop-types';
-import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeProvider';
 import { PlayIcon, StopIcon, ResetIcon } from '../layout/Icons';
 import { rs } from '../../styles/responsive';
 import useEmojiMovement from '../dial/movements/useEmojiMovement';
 import useBreathingHalo from '../dial/movements/useBreathingHalo';
-import useRippleHalo from '../dial/movements/useRippleHalo';
 import { ENOW_HALO_WAVE, ENOW_HUB_PIVOT, ENOW_HUB_TRANSPARENT, ENOW_SWAP_INK, ENOW_FURNITURE_INK } from '../../config/enow-sketch';
 import HubFrontEmoji from '../dial/dial/HubFrontEmoji';
 
 const DEFAULT_TEMPO = 800; // repli si l'activité ne porte pas de pulseDuration
 const HALO_TEMPO = 1100; // rythme UNIQUE du halo (période 2,2s = HALO_TEMPO×2, useBreathingHalo) — indépendant du pulseDuration de l'Activité (verdict Eric hotfix-porte-1 B1/D1)
-
-// Onde creuse : API Animated de RN (Reanimated n'applique pas r/strokeWidth au Circle).
-const AnimatedCircle = RNAnimated.createAnimatedComponent(Circle);
 
 const PulseButton = React.memo(function PulseButton({
   state = 'rest',
@@ -41,7 +36,7 @@ const PulseButton = React.memo(function PulseButton({
   clockwise = false,   // reserved — dial rotation direction, no movement use yet
   distraction = null,
   haloPeriod = 1000,   // T3-2 : période de l'onde (ms)
-  haloRipple = false,  // T3-2 : onde creuse (display.haloRipple)
+  haloRipple = false,  // T3-2 : onde creuse (RippleLayer) — masque l'onde pleine d'ici
   haloMaxScale = 3,    // T3-2 : scale du halo à la bordure du cadran
   emojiMotion = true,  // T3-2 : mouvements de l'emoji (réglage display.emojiMotion)
   frontProgress = null, // T3-2 : si non null, l'emoji est traversé par le front
@@ -93,20 +88,12 @@ const PulseButton = React.memo(function PulseButton({
   // Rythme UNIQUE (hotfix-porte-1 B1/D1, verdict Eric) : le halo bat au pouls
   // de la SÉANCE, pas de l'Activité — HALO_TEMPO fixe, jamais `tempo`. Le
   // mouvement de l'emoji (useEmojiMovement ci-dessus) garde son tempo propre.
-  // R (px) gardé fini et > 0 : un NaN fait crasher RNSVGCircle (CALayer).
-  const rippleRaw = (buttonSize / 2) * haloMaxScale;
-  const rippleR = Number.isFinite(rippleRaw) && rippleRaw > 0 ? rippleRaw : 1;
   const haloActive = state === 'running' && shouldPulse && !compact;
   const haloAnimatedStyle = useBreathingHalo({
     tempo: HALO_TEMPO,
-    active: haloActive,
+    active: haloActive && !(ENOW_HALO_WAVE && haloRipple), // l'onde creuse vit dans RippleLayer
     wavePeriod: haloPeriod,
     waveMaxScale: haloMaxScale,
-  });
-  const haloRippleProps = useRippleHalo({
-    active: haloActive && haloRipple,
-    period: haloPeriod,
-    radius: rippleR,
   });
 
   // === DIMENSIONS ===
@@ -215,31 +202,9 @@ const PulseButton = React.memo(function PulseButton({
   const haloColor = color || theme.colors.text;
   return (
     <View style={styles.container} accessible={false} importantForAccessibility="no">
-      {ENOW_HALO_WAVE && haloRipple ? (
-        // Onde creuse en SVG (borderWidth animé : rien à l'écran en New Arch).
-        // Carré de côté 2R centré sur le moyeu, jamais coupé (overflow visible).
-        haloActive && rippleR > 1 && (
-          <Svg
-            pointerEvents="none"
-            width={2 * rippleR}
-            height={2 * rippleR}
-            overflow="visible"
-            style={{ position: 'absolute', left: buttonSize / 2 - rippleR, top: buttonSize / 2 - rippleR }}
-            accessible={false}
-            importantForAccessibility="no"
-          >
-            <AnimatedCircle
-              cx={rippleR}
-              cy={rippleR}
-              fill="none"
-              stroke={haloColor}
-              opacity={0.18}
-              r={haloRippleProps.r}
-              strokeWidth={haloRippleProps.strokeWidth}
-            />
-          </Svg>
-        )
-      ) : (
+      {/* Onde creuse (haloRipple) : portée par RippleLayer, derrière le secteur ;
+          ici seulement l'onde pleine. */}
+      {!(ENOW_HALO_WAVE && haloRipple) && (
         <Animated.View
           pointerEvents="none"
           style={[styles.halo, { backgroundColor: haloColor }, haloAnimatedStyle]}
