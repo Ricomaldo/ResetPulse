@@ -27,7 +27,7 @@
  */
 
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { ENOW_START_EMPTY } from '../config/enow-sketch';
+import { ENOW_START_EMPTY, ENOW_DEFAULT_DURATION } from '../config/enow-sketch';
 import PropTypes from 'prop-types';
 import logger from '../utils/logger';
 import { usePersistedObject } from '../hooks/usePersistedState';
@@ -165,10 +165,10 @@ export const TimerConfigProvider = ({ children }) => {
   useEffect(() => {
     if (ENOW_START_EMPTY && !isLoading && !enowEmptiedRef.current) {
       enowEmptiedRef.current = true;
-      // Moyeu vide au repos : pas d'activité préchargée (T3-2).
+      // Durée par défaut 60 min, moyeu vide au repos : pas d'activité préchargée (T3-2).
       setValues((prev) => ({
         ...prev,
-        timer: { ...prev.timer, currentDuration: 0, currentActivity: null },
+        timer: { ...prev.timer, currentDuration: ENOW_DEFAULT_DURATION, currentActivity: null },
       }));
     }
   }, [isLoading, setValues]);

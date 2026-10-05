@@ -35,7 +35,7 @@ import AsideZone, { CLOSED_VISIBLE } from '../components/layout/AsideZone';
 import FirstRunTips from '../components/first-run/FirstRunTips';
 import FirstRunThreshold from '../components/first-run/FirstRunThreshold';
 import { buildRitualApplyPayload, findRitualToKeep, deriveRitualName } from '../config/rituals';
-import { ENOW_FILL_UP, ENOW_TAP_PAUSE } from '../config/enow-sketch';
+import { ENOW_FILL_UP, ENOW_TAP_PAUSE, ENOW_DEFAULT_DURATION } from '../config/enow-sketch';
 import { MOMENT_VIERGE, MOMENT_EVENTS, nextMomentState } from '../config/moment';
 import { useRituals } from '../hooks/useRituals';
 import { useCustomActivities } from '../hooks/useCustomActivities';
@@ -431,10 +431,24 @@ function formatTime(totalSecondsRaw) {
 // temps ni le glyphe ⏱ ne montent (plus de `••:••` fantôme).
 // SKETCH enow (T3-2) : tap sur le temps digital = roue de durée iOS (au repos
 // seulement, géré par l'appelant). Le retour au démarrage vit sur le cadran.
-function TopTime({ seconds, targetSeconds = null, onPress = null }) {
+function TopTime({ seconds, targetSeconds = null, onPress = null, onDoubleTap = null }) {
+  // Tap simple différé de 300 ms, annulé par un second tap (double tap) :
+  // la roue ne s'ouvre pas au-dessus du double tap.
+  const lastTapRef = useRef(0);
+  const pressTimeoutRef = useRef(null);
+  useEffect(() => () => clearTimeout(pressTimeoutRef.current), []);
   const handlePress = useCallback(() => {
-    onPress?.();
-  }, [onPress]);
+    const now = Date.now();
+    if (now - lastTapRef.current < 350) {
+      lastTapRef.current = 0;
+      clearTimeout(pressTimeoutRef.current);
+      onDoubleTap?.();
+      return;
+    }
+    lastTapRef.current = now;
+    clearTimeout(pressTimeoutRef.current);
+    pressTimeoutRef.current = setTimeout(() => onPress?.(), 300);
+  }, [onPress, onDoubleTap]);
   const theme = useTheme();
   const { display: { showTime } } = useTimerConfig();
 
@@ -802,10 +816,8 @@ function TimerScreenContent() {
       const isDoubleTap = now - lastDialTapRef.current < 350;
       lastDialTapRef.current = now;
       if (isDoubleTap || timer.isCompleted) {
-        // Retour au démarrage complet : durée 0, moyeu vide (T3-2).
+        // Retour au repos : la durée et l'activité réglées restent (T3-2).
         timer.resetTimer();
-        setCurrentDuration(0);
-        setCurrentActivity(null);
         markMomentEvent(MOMENT_EVENTS.RESET);
       } else if (timer.running) {
         timer.pauseTimer();
@@ -826,7 +838,7 @@ function TimerScreenContent() {
     } else {
       timer.startTimer();
     }
-  }, [markMomentEvent, setCurrentDuration, setCurrentActivity, currentDuration, openDurationPicker]);
+  }, [markMomentEvent, currentDuration, openDurationPicker]);
 
   // Seuil composé Focus (P2-Focus) : « 1re séance accomplie >= 30 min » —
   // posé une fois pour toutes (one-shot, jamais désarmé), lu par
@@ -1344,6 +1356,14 @@ function TimerScreenContent() {
     }
     openDurationPicker();
   }, [openDurationPicker]);
+  // Double tap sur le compteur : durée par défaut, hors séance seulement.
+  const handleTopTimeDoubleTap = useCallback(() => {
+    const timer = timerRef.current;
+    if (timer && (timer.running || timer.isPaused || timer.isCompleted)) {
+      return;
+    }
+    setCurrentDuration(ENOW_DEFAULT_DURATION);
+  }, [setCurrentDuration]);
 
   return (
     <SafeAreaView
@@ -1357,7 +1377,8 @@ function TimerScreenContent() {
             onLayout={(e) => setAboveChromeHeight(e.nativeEvent.layout.height)}
             pointerEvents={immersed ? 'none' : 'auto'}
           >
-            <TopTime seconds={topTimeSeconds} targetSeconds={topTargetSeconds} onPress={handleTopTimePress} />
+            <TopTime seconds={topTimeSeconds} targetSeconds={topTargetSeconds} onPress={handleTopTimePress}
+              onDoubleTap={handleTopTimeDoubleTap} />
           </Animated.View>
         )}
         <View style={styles.content}>

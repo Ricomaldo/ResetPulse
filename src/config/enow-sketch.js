@@ -46,3 +46,6 @@ export const ENOW_GRADUATIONS = false;
 
 /** Opacité de l'emoji fantôme du moyeu, derrière la couche en couleur traversée par le front. */
 export const ENOW_HUB_GHOST_OPACITY = 0.3;
+
+/** Durée par défaut au démarrage et après double tap sur le compteur, en secondes (60 min). */
+export const ENOW_DEFAULT_DURATION = 3600;
